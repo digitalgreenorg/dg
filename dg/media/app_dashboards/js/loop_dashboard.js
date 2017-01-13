@@ -710,15 +710,27 @@ function set_filterlistener() {
             xhttp.open("POST", "/loop/get_payment_sheet/", true);
             xhttp.setRequestHeader("Content-Type", "application/json");
             xhttp.responseType = 'blob';
+
+            aggregator_data_set_copy = aggregator_data_set.slice();
+            gaddidar_data_set_copy = gaddidar_data_set.slice();
+
+            for(var i = 0; i < aggregator_data_set_copy.length; i++){
+                aggregator_data_set_copy[i] = aggregator_data_set_copy[i].slice(0,9);
+            }
+
+            for(var i = 0; i < gaddidar_data_set_copy.length; i++){
+                gaddidar_data_set_copy[i] = gaddidar_data_set_copy[i].slice(0,6);
+            }
+
             var data_json = {
                 aggregator_data: {
                     name: aggregator_sheet_name,
-                    data: aggregator_data_set
+                    data: aggregator_data_set_copy
                 },
 
                 gaddidar_data: {
                     name: gaddidar_sheet_name,
-                    data: gaddidar_data_set
+                    data: gaddidar_data_set_copy
                 },
 
                 transporter_data: {
@@ -2949,6 +2961,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2))]);
         }
     }
+    transporter_data_set = transporter_data_set.sort(function(first,second){
+       return new Date(first[0]) - new Date(second[0]);
+   });
 
     var total_volume = 0;
     var total_payment = 0;
@@ -3394,7 +3409,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                 aggregatorAjaxSuccess=1;
                                 for (var keys in rows_table2) {
 
-                                    aggregator_data_set[keys - 1][4] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
+                                    aggregator_data_set[keys - 1][4] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
                                     aggregator_data_set[keys - 1][11] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[9].innerHTML;
                                 }
                                 rows_table2 = [];
@@ -3418,7 +3433,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                 alert("success");
                                 farmerAjaxSuccess=1;
                                 for (var keys in rows_table2_farmer) {
-                                    aggregator_data_set[keys - 1][6] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+                                    aggregator_data_set[keys - 1][6] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
                                     aggregator_data_set[keys - 1][12] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML;
                                 }
                                 rows_table2_farmer = [];
@@ -3728,11 +3743,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                     for (var keys in rows_table3) {
                                         console.log($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML)
                                         if(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%')>=0)
-                                            gaddidar_data_set[keys - 1][4] = ($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]/100;
+                                            gaddidar_data_set[keys - 1][4] = (parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0])/100;
                                         else
-                                            gaddidar_data_set[keys - 1][4] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
-                                        gaddidar_data_set[keys - 1][5] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
-                                        gaddidar_data_set[keys - 1][6] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+                                            gaddidar_data_set[keys - 1][4] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
+                                        gaddidar_data_set[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
+                                        gaddidar_data_set[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
                                     }
                                     rows_table3 = [];
                                 },
