@@ -171,7 +171,6 @@ function hide_nav(tab) {
 //To show the second navigation bar that comes on analytics and time series page only
 function show_nav(tab) {
     if (initialLoadComplete) {
-
         $("#home_tab").removeClass('active');
         $("#payments_tab").removeClass('active');
         $("#analytics_tab").removeClass('active');
@@ -186,7 +185,6 @@ function show_nav(tab) {
         if (answer) {
             hide_nav(PAYMENTS_PAGE);
             tab = PAYMENTS_PAGE;
-
         }
         //if login modal is being shown disable it.
 
@@ -2739,9 +2737,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             }
         }
     }
-    var gaddidar_data_set_clone = gaddidar_data_set.slice();
-    for (var i = 0; i < gaddidar_data_set_clone.length; i++) {
-        if (gaddidar_data_set_clone[i][11] == 1)
+    var gaddidar_data_set_clone = [];
+    for (var i = 0; i < gaddidar_data_set.length; i++) {
+        gaddidar_data_set_clone.push(gaddidar_data_set[i].slice());
+        if (gaddidar_data_set[i][11] == 1)
             gaddidar_data_set_clone[i][4] = parseFloat(gaddidar_data_set_clone[i][4]) * 100 + '%';
     }
     $(window).on('beforeunload', function() {
@@ -2932,7 +2931,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 $this.addClass('editedcelledge');
                 $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcell';
                 $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcell';
-
             } else {
                 $this.removeAttr('class');
                 $this.addClass('editedcell');
@@ -3264,7 +3262,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         if (!inputValidation($('#gaddidar_share_row'))) {
             actionOnInvalidValidation($('#gaddidar_share_row'), $('#gaddidar_error_div'), $('#gaddidar_error_message'));
         } else {
-
             if ($('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 11).data() == 0) {
                 $('#gaddidar_commission_row').val(parseFloat($('#gaddidar_share_row').val() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2));
             } else {
@@ -3393,119 +3390,118 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     }
 
     $('#table3').DataTable({
-        destroy: true,
-        data: gaddidar_data_set_clone,
-        columns: [{
-            title: "Date"
-        }, {
-            title: "Commission Agent"
-        }, {
-            title: "Market"
-        }, {
-            title: "Quantity[Q] (in Kg)"
-        }, {
-            title: "Commission Agent Discount[CAD] (in Rs/Kg)"
-        }, {
-            title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)"
-        }, {
-            title: "Mandi Id",
-            visible: false
-        }, {
-            title: "Gaddidar Id",
-            visible: false
-        }, {
-            title: "Aggregator Id",
-            visible: false
-        }, {
-            title: "Comment"
-        }, {
-            title: "Amount",
-            visible: false
-        }, {
-            title: "Discount Criteria",
-            visible: false
-        }],
-        "dom": 'T<"clear">rtip',
-        //"dom":'Bfrtip',
-        "pageLength": 1000,
-        "oTableTools": {
-            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
-            "aButtons": [{
-
-                "sExtends": "text",
-                "sButtonText": "Edit",
-                "fnClick": function(nButton, oConfig) {
-                    $('#aggregator_payment_tab :input')[0].disabled = true;
-                    $('#ToolTables_table3_1').removeClass('disable-button');
-                    //$('#ToolTables_table3_0').addClass('disable-button');
-                    flag_edit_Table3 = true;
-                    $('#table3').find('tr td:nth-child(5)').addClass('editcolumn');
-                    $('#table3').find('tr td:nth-child(6)').addClass('editcolumn');
-                    var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
-                    for (var column = 0; column < colCount; column++)
-                        $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = false;
-                }
+            destroy: true,
+            data: gaddidar_data_set_clone,
+            columns: [{
+                title: "Date"
             }, {
-                "sExtends": "ajax",
-                "sButtonText": "Submit",
-                "sButtonClass": "disable-button",
-                "sAjaxUrl": "/loop/api/v1/gaddidarshareoutliers/",
-                "fnClick": function(nButton, oConfig) {
-                    var editedDataGaddidar = [];
-                    var gaddidarAjaxSuccess = 0;
-                    editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
-                    var sData = this.fnGetTableData(oConfig);
-                    var gaddidarObjects = {
-                        "objects": editedDataGaddidar
+                title: "Commission Agent"
+            }, {
+                title: "Market"
+            }, {
+                title: "Quantity[Q] (in Kg)"
+            }, {
+                title: "Commission Agent Discount[CAD] (in Rs/Kg)"
+            }, {
+                title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)"
+            }, {
+                title: "Mandi Id",
+                visible: false
+            }, {
+                title: "Gaddidar Id",
+                visible: false
+            }, {
+                title: "Aggregator Id",
+                visible: false
+            }, {
+                title: "Comment"
+            }, {
+                title: "Amount",
+                visible: false
+            }, {
+                title: "Discount Criteria",
+                visible: false
+            }],
+            "dom": 'T<"clear">rtip',
+            //"dom":'Bfrtip',
+            "pageLength": 1000,
+            "oTableTools": {
+                "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
+                "aButtons": [{
+                        "sExtends": "text",
+                        "sButtonText": "Edit",
+                        "fnClick": function(nButton, oConfig) {
+                            $('#aggregator_payment_tab :input')[0].disabled = true;
+                            $('#ToolTables_table3_1').removeClass('disable-button');
+                            //$('#ToolTables_table3_0').addClass('disable-button');
+                            flag_edit_Table3 = true;
+                            $('#table3').find('tr td:nth-child(5)').addClass('editcolumn');
+                            $('#table3').find('tr td:nth-child(6)').addClass('editcolumn');
+                            var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
+                            for (var column = 0; column < colCount; column++)
+                                $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = false;
+                        }
+                    }, {
+                        "sExtends": "ajax",
+                        "sButtonText": "Submit",
+                        "sButtonClass": "disable-button",
+                        "sAjaxUrl": "/loop/api/v1/gaddidarshareoutliers/",
+                        "fnClick": function(nButton, oConfig) {
+                            var editedDataGaddidar = [];
+                            var gaddidarAjaxSuccess = 0;
+                            editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
+                            var sData = this.fnGetTableData(oConfig);
+                            var gaddidarObjects = {
+                                "objects": editedDataGaddidar
 
-                    };
-                    if (Object.keys(rows_table3).length > 0)
-                        $.ajax({
-                            url: oConfig.sAjaxUrl,
-                            type: 'patch',
-                            dataType: 'json',
-                            contentType: "application/json; charset=utf-8",
-                            headers: {
-                                "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
-                            },
-                            data: JSON.stringify(gaddidarObjects),
-                            success: function() {
-                                alert("success");
-                                gaddidarAjaxSuccess = 1;
-                                for (var keys in rows_table3) {
-                                    if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0)
-                                        gaddidar_data_set[keys - 1][4] = parseFloat(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]) / 100;
-                                    else
-                                        gaddidar_data_set[keys - 1][4] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
-                                    gaddidar_data_set[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
-                                    gaddidar_data_set[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
-                                }
-                                rows_table3 = [];
-                            },
-                            error: function() {
-                                alert("Error");
-                                gaddidarAjaxSuccess = -1;
-                                /*  $('#table3').dataTable().fnClearTable();
-                                  $('#table3').dataTable().fnAddData(gaddidar_data_set);
-                                  rows_table3 = [];*/
-                            },
-                            timeout: 10000
-                        });
-                    if (gaddidarAjaxSuccess != -1) {
-                        $('#aggregator_payment_tab :input')[0].disabled = false;
-                        var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
-                        for (var column = 0; column < colCount; column++)
-                            $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = true;
-                        $('#table3').find('td').removeClass("editcolumn");
-                        $('#table3').find('td').removeClass("editedcell");
-                        $('#table3').find('td').removeClass("editedcelledge");
-                        flag_edit_Table3 = false;
-                        $('#ToolTables_table3_1').addClass('disable-button');
-                        //$('#ToolTables_table3_0').removeClass('disable-button');
+                            };
+                            if (Object.keys(rows_table3).length > 0)
+                                $.ajax({
+                                    url: oConfig.sAjaxUrl,
+                                    type: 'patch',
+                                    dataType: 'json',
+                                    contentType: "application/json; charset=utf-8",
+                                    headers: {
+                                        "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
+                                    },
+                                    data: JSON.stringify(gaddidarObjects),
+                                    success: function() {
+                                        alert("success");
+                                        gaddidarAjaxSuccess = 1;
+                                        for (var keys in rows_table3) {
+                                            if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0)
+                                                gaddidar_data_set[keys - 1][4] = parseFloat(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]) / 100;
+                                            else
+                                                gaddidar_data_set[keys - 1][4] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
+                                            gaddidar_data_set[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
+                                            gaddidar_data_set[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
+                                        }
+                                        rows_table3 = [];
+                                    },
+                                    error: function() {
+                                        alert("Error");
+                                        gaddidarAjaxSuccess = -1;
+                                        /*  $('#table3').dataTable().fnClearTable();
+                                          $('#table3').dataTable().fnAddData(gaddidar_data_set);
+                                          rows_table3 = [];*/
+                                    },
+                                    timeout: 10000
+                                });
+                            if (gaddidarAjaxSuccess != -1) {
+                                $('#aggregator_payment_tab :input')[0].disabled = false;
+                                var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
+                                for (var column = 0; column < colCount; column++)
+                                    $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = true;
+                                $('#table3').find('td').removeClass("editcolumn");
+                                $('#table3').find('td').removeClass("editedcell");
+                                $('#table3').find('td').removeClass("editedcelledge");
+                                flag_edit_Table3 = false;
+                                $('#ToolTables_table3_1').addClass('disable-button');
+                                //$('#ToolTables_table3_0').removeClass('disable-button');
+                            }
+                        }
                     }
-                }
-
-            }]
+                ]
         },
         "footerCallback": function(row, data, start, end, display) {
             var api = this.api(),
@@ -3522,101 +3518,101 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     });
 
 
-    /*   $('#table4').on('click', 'tbody td', function(e) {
-            $this = $(this);
-            if (($this.context.cellIndex === 5 || $this.context.cellIndex === 6) && editTable4 == 1) {
-                $('#transportation_date_row').val($this.parent()[0].childNodes[0].innerHTML);
-                $('#mandi_row').val($this.parent()[0].childNodes[1].innerHTML);
-                $('#transporter_row').val($this.parent()[0].childNodes[2].innerHTML);
-                $('#vehicle_row').val($this.parent()[0].childNodes[3].innerHTML);
-                $('#vehicle_number_row').val($this.parent()[0].childNodes[4].innerHTML);
-                $('#cost_row').val($this.parent()[0].childNodes[5].textContent);
-                $('#comment_row').val($this.parent()[0].childNodes[6].textContent);
-                $('#modal4').openModal();
-                if ($this.context.cellIndex === 5) {
-                    $('#cost_row').focus();
-                } else if ($this.context.cellIndex === 6) {
-                    $('#comment_row').focus();
-                }
-            }
-        });
-
-        $('#cost_row').keypress(function(event) {
-            if (event.keyCode === 13) {
+/*   $('#table4').on('click', 'tbody td', function(e) {
+        $this = $(this);
+        if (($this.context.cellIndex === 5 || $this.context.cellIndex === 6) && editTable4 == 1) {
+            $('#transportation_date_row').val($this.parent()[0].childNodes[0].innerHTML);
+            $('#mandi_row').val($this.parent()[0].childNodes[1].innerHTML);
+            $('#transporter_row').val($this.parent()[0].childNodes[2].innerHTML);
+            $('#vehicle_row').val($this.parent()[0].childNodes[3].innerHTML);
+            $('#vehicle_number_row').val($this.parent()[0].childNodes[4].innerHTML);
+            $('#cost_row').val($this.parent()[0].childNodes[5].textContent);
+            $('#comment_row').val($this.parent()[0].childNodes[6].textContent);
+            $('#modal4').openModal();
+            if ($this.context.cellIndex === 5) {
+                $('#cost_row').focus();
+            } else if ($this.context.cellIndex === 6) {
                 $('#comment_row').focus();
             }
-        });
-        $('#comment_row').keypress(function(event) {
-            if (event.keyCode === 13) {
-                $('#submit_modal').trigger('click');
-            }
-        });
-
-        $('#submit_modal4').on('click', function(ev) {
-
-            if (!($('#cost_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
-                ev.preventDefault();
-                $('#share_row').val($this.parent()[0].childNodes[5].textContent);
-                alert('Please fill Share Correctly');
-            } else {
-                //console.log($this.parent()[0]);
-                $('#modal4').closeModal();
-                $this.parent()[0].childNodes[5].innerHTML = $('#cost_row').val();
-                $this.parent()[0].childNodes[6].innerHTML = $('#comment_row').val();
-                $this.css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
-                var row_id = $this.context.parentNode.rowIndex;
-                rows_table4[row_id] = true;
-            }
-        });*/
-    $('#table4').DataTable({
-        destroy: true,
-        data: transporter_data_set,
-        columns: [{
-            title: "Date"
-        }, {
-            title: "Market"
-        }, {
-            title: "Transporter"
-        }, {
-            title: "Vehicle Type"
-        }, {
-            title: "Vehicle Number"
-        }, {
-            title: "Transport Cost (in Rs)"
-        }, {
-            title: "Comment",
-            defaultContent: " "
-        }],
-        "dom": 'T<"clear">rtip',
-        "pageLength": 1000,
-        "oTableTools": {
-            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
-            "aButtons": []
-        },
-        "footerCallback": function(row, data, start, end, display) {
-            var api = this.api(),
-                data;
-
-            // Total over all pages
-            total5 = api
-                .column(5)
-                .data()
-                .reduce(function(a, b) {
-                    return a + b;
-
-                }, 0);
-
-
-            // Update footer
-            $(api.column(5).footer()).html(
-                finalFormat(total5 + "")
-            );
         }
     });
 
-    aggregator_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
-    gaddidar_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details";
-    transporter_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details";
+    $('#cost_row').keypress(function(event) {
+        if (event.keyCode === 13) {
+            $('#comment_row').focus();
+        }
+    });
+    $('#comment_row').keypress(function(event) {
+        if (event.keyCode === 13) {
+            $('#submit_modal').trigger('click');
+        }
+    });
+
+    $('#submit_modal4').on('click', function(ev) {
+
+        if (!($('#cost_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
+            ev.preventDefault();
+            $('#share_row').val($this.parent()[0].childNodes[5].textContent);
+            alert('Please fill Share Correctly');
+        } else {
+            //console.log($this.parent()[0]);
+            $('#modal4').closeModal();
+            $this.parent()[0].childNodes[5].innerHTML = $('#cost_row').val();
+            $this.parent()[0].childNodes[6].innerHTML = $('#comment_row').val();
+            $this.css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+            var row_id = $this.context.parentNode.rowIndex;
+            rows_table4[row_id] = true;
+        }
+    });*/
+$('#table4').DataTable({
+    destroy: true,
+    data: transporter_data_set,
+    columns: [{
+        title: "Date"
+    }, {
+        title: "Market"
+    }, {
+        title: "Transporter"
+    }, {
+        title: "Vehicle Type"
+    }, {
+        title: "Vehicle Number"
+    }, {
+        title: "Transport Cost (in Rs)"
+    }, {
+        title: "Comment",
+        defaultContent: " "
+    }],
+    "dom": 'T<"clear">rtip',
+    "pageLength": 1000,
+    "oTableTools": {
+        "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
+        "aButtons": []
+    },
+    "footerCallback": function(row, data, start, end, display) {
+        var api = this.api(),
+            data;
+
+        // Total over all pages
+        total5 = api
+            .column(5)
+            .data()
+            .reduce(function(a, b) {
+                return a + b;
+
+            }, 0);
+
+
+        // Update footer
+        $(api.column(5).footer()).html(
+            finalFormat(total5 + "")
+        );
+    }
+});
+
+aggregator_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
+gaddidar_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details";
+transporter_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details";
 
 }
 
