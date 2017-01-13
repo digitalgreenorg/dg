@@ -37,10 +37,10 @@ def add_cocouser(request):
                 message = "coco user object with primary key u'%s' does not exist."%(coco_user_id)
                 raise Http404(message)
             current_user_videos = coco_user_obj.videos.values('id', 'title')
-            current_villages = coco_user_obj.villages.values('id','village_name','block__district__district_name','block__district__state__state_name')
+            current_villages = coco_user_obj.villages.values('id','village_name','block__block_name','block__district__district_name','block__district__state__state_name')
             current_user_villages = []
             for village in current_villages:
-                current_user_villages.append({'id':village['id'],'village_name':'%s [%s] [%s]'%(village['village_name'],village['block__district__district_name'],village['block__district__state__state_name'])})
+                current_user_villages.append({'id':village['id'],'village_name':'%s [%s] [%s] [%s]'%(village['village_name'],village['block__block_name'],village['block__district__district_name'],village['block__district__state__state_name'])})
             current_auth_user_id = coco_user_obj.user_id
             current_partner_id = coco_user_obj.partner_id
             template_variables['current_auth_user_id'] = current_auth_user_id
@@ -149,10 +149,10 @@ def state_wise_district(request):
 @login_required
 def district_wise_village(request):
     district_id = request.GET.getlist('district_id')[0]
-    all_villages = Village.objects.filter(block__district_id=district_id).values('id','village_name','block__district__district_name','block__district__state__state_name')
+    all_villages = Village.objects.filter(block__district_id=district_id).values('id','village_name','block__block_name','block__district__district_name','block__district__state__state_name')
     village_list = []
     for village in all_villages:
-        village_list.append({'id':village['id'],'village_name':'%s [%s] [%s]'%(village['village_name'],village['block__district__district_name'],village['block__district__state__state_name'])})
+        village_list.append({'id':village['id'],'village_name':'%s [%s] [%s] [%s]'%(village['village_name'],village['block__block_name'],village['block__district__district_name'],village['block__district__state__state_name'])})
     village_list = json.dumps(village_list)
     return HttpResponse(village_list)
 
