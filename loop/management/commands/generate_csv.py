@@ -161,7 +161,7 @@ class Command(BaseCommand):
 
         #post request to library for excel generation
         try:
-            r = requests.post('http://sandbox.digitalgreen.org/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
+            r = requests.post('http://www.digitalgreen.org/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
             excel_file = open(excel_workbook_name + '.xlsx', 'w')
             excel_file.write(r.content)
             excel_file.close()
