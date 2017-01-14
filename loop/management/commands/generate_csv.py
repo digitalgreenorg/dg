@@ -23,7 +23,7 @@ class Command(BaseCommand):
         group = parser.add_mutually_exclusive_group()
         group.add_argument('-fd',
             dest='from_date',
-            default=20150701)
+            default=None)
 
         group.add_argument('-nd',
             dest='num_days',
@@ -35,20 +35,24 @@ class Command(BaseCommand):
 
         parser.add_argument('-td',
             dest='to_date',
-            default=(datetime.now() - timedelta(days=4)).strftime('%Y%m%d'))
+            default=(datetime.now() - timedelta(days=15)).strftime('%Y%m%d'))
 
 
     
     #generate the excel for the given command line arguments
     def handle(self, *args, **options):
         generate_sheet_for = str(options.get('aggregator'))
-        from_date = str(options.get('from_date'))
         to_date = str(options.get('to_date'))
         num_days = int(options.get('num_days'))
         header_json = {}
         data_json = {}
         final_json_to_send = {}
         excel_workbook_name = None
+        if(options.get('from_date')):
+            from_date=str(options.get('from_date'))
+        else:
+            from_date=to_date[0:6]+(datetime.now() - timedelta(days=14)).strftime('%Y%m%d')[-2:]
+
 
         if num_days < 0: 
             raise CommandError('-nd flag should be > 0')
