@@ -38,7 +38,9 @@ var QUANTITY__SUM = "quantity__sum",
     MANDI__ID = "mandi__id",
     USER_CREATED__ID = "user_created__id",
     GADDIDAR__ID = "gaddidar__id";
-var MASTER_HOME = 3, MASTER_TIME_SERIES_VOL_AMT = 1, MASTER_TIME_SERIES_CPK_SPK = 2;
+var MASTER_HOME = 3,
+    MASTER_TIME_SERIES_VOL_AMT = 1,
+    MASTER_TIME_SERIES_CPK_SPK = 2;
 
 var aggregator_sheet_name = "",
     gaddidar_sheet_name = "",
@@ -908,37 +910,40 @@ function set_filterlistener() {
             xhttp.responseType = 'blob';
 
             var data_json = {
-                aggregator_data:{
+                aggregator_data: {
                     sheet_heading: aggregator_sheet_name,
-                    sheet_name : 'Aggregator',
-                    data : aggregator_data_set
+                    sheet_name: 'Aggregator',
+                    data: aggregator_data_set
                 },
 
                 gaddidar_data: {
-                    sheet_heading : gaddidar_sheet_name,
-                    sheet_name : 'Commission Agent',
-                    data : gaddidar_data_set
+                    sheet_heading: gaddidar_sheet_name,
+                    sheet_name: 'Commission Agent',
+                    data: gaddidar_data_set
                 },
 
-                transporter_data:{
-                    sheet_heading : transporter_sheet_name,
-                    sheet_name : 'Transporter',
-                    data : transporter_data_set
-                 }
+                transporter_data: {
+                    sheet_heading: transporter_sheet_name,
+                    sheet_name: 'Transporter',
+                    data: transporter_data_set
+                }
             };
 
             var header_json = header_dict;
 
             var cell_format = {
-                bold:0, font_size: 10, num_format:'#,##0.00',text_wrap: true
+                bold: 0,
+                font_size: 10,
+                num_format: '#,##0.00',
+                text_wrap: true
             }
 
             var json_to_send = {
                 header: header_json,
-                data : data_json,
-                cell_format : cell_format,
-                sheet_header : 'Loop India Bihar',
-                sheet_footer : 'This is an automated generated sheet'
+                data: data_json,
+                cell_format: cell_format,
+                sheet_header: 'Loop India Bihar',
+                sheet_footer: 'This is an automated generated sheet'
 
             }
 
@@ -977,10 +982,9 @@ function set_filterlistener() {
             var from_date = new Date(new Date(start_date));
             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
             if (from_date.getDate() >= 16) {
-                if(from_date.getFullYear()%4 == 0 && from_date.getMonth() == 1) {
+                if (from_date.getFullYear() % 4 == 0 && from_date.getMonth() == 1) {
                     $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + "29");
-                }
-                else{
+                } else {
                     $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + daysInMonth[from_date.getMonth()]);
                 }
             } else {
@@ -1807,7 +1811,7 @@ function farmer_crop_visits(container, json_data) {
         }
     }
     // plot_stacked_chart(container, series);
-    plot_drilldown(container, series, {}, false, json_data[0]['farmer__count'],'bar');
+    plot_drilldown(container, series, {}, false, json_data[0]['farmer__count'], 'bar');
 }
 
 //Data for Time series grpahs request is being made here
@@ -2973,7 +2977,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     $('#table2').find('tr td:nth-child(5)').addClass('editcolumn');
                     $('#table2').find('tr td:nth-child(7)').addClass('editcolumn');
                     $('#aggregator_payment_tab :input')[0].disabled = true;
-                    //$('#ToolTables_table2_0').addClass('disable-button');
+                    $('#ToolTables_table2_0').addClass('disable-button');
 
                 }
             }, {
@@ -2987,6 +2991,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     var farmerAjaxSuccess = 0;
                     var editedDataAggregator = [];
                     var editedDataFarmer = [];
+                    $('#ToolTables_table2_0').removeClass('disable-button');
                     editedDataAggregator = processAggregatorRow(rows_table2, editedDataAggregator);
                     editedDataFarmer = processFarmerRow(rows_table2_farmer, editedDataFarmer);
                     var sData = this.fnGetTableData(oConfig);
@@ -3050,7 +3055,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     }
 
                     if (aggregatorAjaxSuccess != -1 && farmerAjaxSuccess != -1) {
-                        //          $('#ToolTables_table2_0').removeClass('disable-button');
                         $('#aggregator_payment_tab :input')[0].disabled = false;
                         $('#table2').find('td').removeClass("editcolumn");
                         $('#table2').find('td').removeClass("editedcell");
@@ -3184,6 +3188,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].innerHTML);
         delete rows_table3[$this.context.parentNode.rowIndex];
         $this.removeAttr('class');
+        $this.closest('tr').children('td:nth-child(5)')[0].className = 'editcolumn';
+        $this.closest('tr').children('td:nth-child(6)')[0].className = 'editcolumn';
         $this.closest('tr').children('td:nth-child(7)')[0].className = '';
         $this.addClass('editcolumn');
     });
@@ -3259,118 +3265,121 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     }
 
     $('#table3').DataTable({
-            destroy: true,
-            data: gaddidar_data_set_clone,
-            columns: [{
-                title: "Date"
-            }, {
-                title: "Commission Agent"
-            }, {
-                title: "Market"
-            }, {
-                title: "Quantity[Q] (in Kg)"
-            }, {
-                title: "Commission Agent Discount[CAD] (in Rs/Kg)"
-            }, {
-                title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)"
-            }, {
-                title: "Mandi Id",
-                visible: false
-            }, {
-                title: "Gaddidar Id",
-                visible: false
-            }, {
-                title: "Aggregator Id",
-                visible: false
-            }, {
-                title: "Comment"
-            }, {
-                title: "Amount",
-                visible: false
-            }, {
-                title: "Discount Criteria",
-                visible: false
-            }],
-            "dom": 'T<"clear">rtip',
-            //"dom":'Bfrtip',
-            "pageLength": 1000,
-            "oTableTools": {
-                "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
-                "aButtons": [{
-                        "sExtends": "text",
-                        "sButtonText": "Edit",
-                        "fnClick": function(nButton, oConfig) {
-                            $('#aggregator_payment_tab :input')[0].disabled = true;
-                            $('#ToolTables_table3_1').removeClass('disable-button');
-                            //$('#ToolTables_table3_0').addClass('disable-button');
-                            flag_edit_Table3 = true;
-                            $('#table3').find('tr td:nth-child(5)').addClass('editcolumn');
-                            $('#table3').find('tr td:nth-child(6)').addClass('editcolumn');
-                            var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
-                            for (var column = 0; column < colCount; column++)
-                                $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = false;
-                        }
-                    }, {
-                        "sExtends": "ajax",
-                        "sButtonText": "Submit",
-                        "sButtonClass": "disable-button",
-                        "sAjaxUrl": "/loop/api/v1/gaddidarshareoutliers/",
-                        "fnClick": function(nButton, oConfig) {
-                            var editedDataGaddidar = [];
-                            var gaddidarAjaxSuccess = 0;
-                            editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
-                            var sData = this.fnGetTableData(oConfig);
-                            var gaddidarObjects = {
-                                "objects": editedDataGaddidar
+        destroy: true,
+        data: gaddidar_data_set_clone,
+        columns: [{
+            title: "Date"
+        }, {
+            title: "Commission Agent"
+        }, {
+            title: "Market"
+        }, {
+            title: "Quantity[Q] (in Kg)"
+        }, {
+            title: "Commission Agent Discount[CAD] (in Rs/Kg)"
+        }, {
+            title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)"
+        }, {
+            title: "Mandi Id",
+            visible: false
+        }, {
+            title: "Gaddidar Id",
+            visible: false
+        }, {
+            title: "Aggregator Id",
+            visible: false
+        }, {
+            title: "Comment"
 
-                            };
-                            if (Object.keys(rows_table3).length > 0)
-                                $.ajax({
-                                    url: oConfig.sAjaxUrl,
-                                    type: 'patch',
-                                    dataType: 'json',
-                                    contentType: "application/json; charset=utf-8",
-                                    headers: {
-                                        "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
-                                    },
-                                    data: JSON.stringify(gaddidarObjects),
-                                    success: function() {
-                                        alert("success");
-                                        gaddidarAjaxSuccess = 1;
-                                        for (var keys in rows_table3) {
-                                            if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0)
-                                                gaddidar_data_set[keys - 1][4] = parseFloat(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]) / 100;
-                                            else
-                                                gaddidar_data_set[keys - 1][4] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
-                                            gaddidar_data_set[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
-                                            gaddidar_data_set[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
-                                        }
-                                        rows_table3 = [];
-                                    },
-                                    error: function() {
-                                        alert("Error");
-                                        gaddidarAjaxSuccess = -1;
-                                        /*  $('#table3').dataTable().fnClearTable();
-                                          $('#table3').dataTable().fnAddData(gaddidar_data_set);
-                                          rows_table3 = [];*/
-                                    },
-                                    timeout: 10000
-                                });
-                            if (gaddidarAjaxSuccess != -1) {
-                                $('#aggregator_payment_tab :input')[0].disabled = false;
-                                var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
-                                for (var column = 0; column < colCount; column++)
-                                    $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = true;
-                                $('#table3').find('td').removeClass("editcolumn");
-                                $('#table3').find('td').removeClass("editedcell");
-                                $('#table3').find('td').removeClass("editedcelledge");
-                                flag_edit_Table3 = false;
-                                $('#ToolTables_table3_1').addClass('disable-button');
-                                //$('#ToolTables_table3_0').removeClass('disable-button');
-                            }
-                        }
+        }, {
+            title: "Amount",
+            visible: false
+        }, {
+            title: "Discount Criteria",
+            visible: false
+        }],
+        "dom": 'T<"clear">rtip',
+        //"dom":'Bfrtip',
+
+        "pageLength": 1000,
+
+        "oTableTools": {
+            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
+            "aButtons": [{
+
+                "sExtends": "text",
+                "sButtonText": "Edit",
+                "fnClick": function(nButton, oConfig) {
+                    $('#aggregator_payment_tab :input')[0].disabled = true;
+                    $('#ToolTables_table3_1').removeClass('disable-button');
+                    $('#ToolTables_table3_0').addClass('disable-button');
+                    flag_edit_Table3 = true;
+                    $('#table3').find('tr td:nth-child(5)').addClass('editcolumn');
+                    $('#table3').find('tr td:nth-child(6)').addClass('editcolumn');
+                    var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
+                    for (var column = 0; column < colCount; column++)
+                        $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = false;
+                }
+            }, {
+                "sExtends": "ajax",
+                "sButtonText": "Submit",
+                "sButtonClass": "disable-button",
+                "sAjaxUrl": "/loop/api/v1/gaddidarshareoutliers/",
+                "fnClick": function(nButton, oConfig) {
+                    var editedDataGaddidar = [];
+                    var gaddidarAjaxSuccess = 0;
+                    $('#ToolTables_table3_0').removeClass('disable-button');
+                    editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
+                    var sData = this.fnGetTableData(oConfig);
+                    var gaddidarObjects = {
+                        "objects": editedDataGaddidar
+
+                    };
+                    if (Object.keys(rows_table3).length > 0)
+                        $.ajax({
+                            url: oConfig.sAjaxUrl,
+                            type: 'patch',
+                            dataType: 'json',
+                            contentType: "application/json; charset=utf-8",
+                            headers: {
+                                "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
+                            },
+                            data: JSON.stringify(gaddidarObjects),
+                            success: function() {
+                                alert("success");
+                                gaddidarAjaxSuccess = 1;
+                                for (var keys in rows_table3) {
+                                    if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0)
+                                        gaddidar_data_set[keys - 1][4] = parseFloat(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]) / 100;
+                                    else
+                                        gaddidar_data_set[keys - 1][4] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
+                                    gaddidar_data_set[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
+                                    gaddidar_data_set[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
+                                }
+                                rows_table3 = [];
+                            },
+                            error: function() {
+                                alert("Error");
+                                gaddidarAjaxSuccess = -1;
+                                /*  $('#table3').dataTable().fnClearTable();
+                                  $('#table3').dataTable().fnAddData(gaddidar_data_set);
+                                  rows_table3 = [];*/
+                            },
+                            timeout: 10000
+                        });
+                    if (gaddidarAjaxSuccess != -1) {
+                        $('#aggregator_payment_tab :input')[0].disabled = false;
+                        var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
+                        for (var column = 0; column < colCount; column++)
+                            $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = true;
+                        $('#table3').find('td').removeClass("editcolumn");
+                        $('#table3').find('td').removeClass("editedcell");
+                        $('#table3').find('td').removeClass("editedcelledge");
+                        flag_edit_Table3 = false;
+                        $('#ToolTables_table3_1').addClass('disable-button');
                     }
-                ]
+                }
+            }]
         },
         "footerCallback": function(row, data, start, end, display) {
             var api = this.api(),
@@ -3387,97 +3396,97 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     });
 
 
-/*   $('#table4').on('click', 'tbody td', function(e) {
-        $this = $(this);
-        if (($this.context.cellIndex === 5 || $this.context.cellIndex === 6) && editTable4 == 1) {
-            $('#transportation_date_row').val($this.parent()[0].childNodes[0].innerHTML);
-            $('#mandi_row').val($this.parent()[0].childNodes[1].innerHTML);
-            $('#transporter_row').val($this.parent()[0].childNodes[2].innerHTML);
-            $('#vehicle_row').val($this.parent()[0].childNodes[3].innerHTML);
-            $('#vehicle_number_row').val($this.parent()[0].childNodes[4].innerHTML);
-            $('#cost_row').val($this.parent()[0].childNodes[5].textContent);
-            $('#comment_row').val($this.parent()[0].childNodes[6].textContent);
-            $('#modal4').openModal();
-            if ($this.context.cellIndex === 5) {
-                $('#cost_row').focus();
-            } else if ($this.context.cellIndex === 6) {
+    /*   $('#table4').on('click', 'tbody td', function(e) {
+            $this = $(this);
+            if (($this.context.cellIndex === 5 || $this.context.cellIndex === 6) && editTable4 == 1) {
+                $('#transportation_date_row').val($this.parent()[0].childNodes[0].innerHTML);
+                $('#mandi_row').val($this.parent()[0].childNodes[1].innerHTML);
+                $('#transporter_row').val($this.parent()[0].childNodes[2].innerHTML);
+                $('#vehicle_row').val($this.parent()[0].childNodes[3].innerHTML);
+                $('#vehicle_number_row').val($this.parent()[0].childNodes[4].innerHTML);
+                $('#cost_row').val($this.parent()[0].childNodes[5].textContent);
+                $('#comment_row').val($this.parent()[0].childNodes[6].textContent);
+                $('#modal4').openModal();
+                if ($this.context.cellIndex === 5) {
+                    $('#cost_row').focus();
+                } else if ($this.context.cellIndex === 6) {
+                    $('#comment_row').focus();
+                }
+            }
+        });
+
+        $('#cost_row').keypress(function(event) {
+            if (event.keyCode === 13) {
                 $('#comment_row').focus();
             }
+        });
+        $('#comment_row').keypress(function(event) {
+            if (event.keyCode === 13) {
+                $('#submit_modal').trigger('click');
+            }
+        });
+
+        $('#submit_modal4').on('click', function(ev) {
+
+            if (!($('#cost_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
+                ev.preventDefault();
+                $('#share_row').val($this.parent()[0].childNodes[5].textContent);
+                alert('Please fill Share Correctly');
+            } else {
+                //console.log($this.parent()[0]);
+                $('#modal4').closeModal();
+                $this.parent()[0].childNodes[5].innerHTML = $('#cost_row').val();
+                $this.parent()[0].childNodes[6].innerHTML = $('#comment_row').val();
+                $this.css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
+                var row_id = $this.context.parentNode.rowIndex;
+                rows_table4[row_id] = true;
+            }
+        });*/
+    $('#table4').DataTable({
+        destroy: true,
+        data: transporter_data_set,
+        columns: [{
+            title: "Date"
+        }, {
+            title: "Market"
+        }, {
+            title: "Transporter"
+        }, {
+            title: "Vehicle Type"
+        }, {
+            title: "Vehicle Number"
+        }, {
+            title: "Transport Cost (in Rs)"
+        }, {
+            title: "Comment",
+            defaultContent: " "
+        }],
+        "dom": 'T<"clear">rtip',
+        "pageLength": 1000,
+        "oTableTools": {
+            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
+            "aButtons": []
+        },
+        "footerCallback": function(row, data, start, end, display) {
+            var api = this.api(),
+                data;
+
+            // Total over all pages
+            total5 = api
+                .column(5)
+                .data()
+                .reduce(function(a, b) {
+                    return a + b;
+
+                }, 0);
+
+
+            // Update footer
+            $(api.column(5).footer()).html(
+                finalFormat(total5 + "")
+            );
         }
     });
-
-    $('#cost_row').keypress(function(event) {
-        if (event.keyCode === 13) {
-            $('#comment_row').focus();
-        }
-    });
-    $('#comment_row').keypress(function(event) {
-        if (event.keyCode === 13) {
-            $('#submit_modal').trigger('click');
-        }
-    });
-
-    $('#submit_modal4').on('click', function(ev) {
-
-        if (!($('#cost_row').val().toString()).match(/^[0-9]*[.]?[0-9]+$/)) {
-            ev.preventDefault();
-            $('#share_row').val($this.parent()[0].childNodes[5].textContent);
-            alert('Please fill Share Correctly');
-        } else {
-            //console.log($this.parent()[0]);
-            $('#modal4').closeModal();
-            $this.parent()[0].childNodes[5].innerHTML = $('#cost_row').val();
-            $this.parent()[0].childNodes[6].innerHTML = $('#comment_row').val();
-            $this.css('background-color', '#FAE112').css('font-weight', 'bold').css('color', '#009');
-            var row_id = $this.context.parentNode.rowIndex;
-            rows_table4[row_id] = true;
-        }
-    });*/
-$('#table4').DataTable({
-    destroy: true,
-    data: transporter_data_set,
-    columns: [{
-        title: "Date"
-    }, {
-        title: "Market"
-    }, {
-        title: "Transporter"
-    }, {
-        title: "Vehicle Type"
-    }, {
-        title: "Vehicle Number"
-    }, {
-        title: "Transport Cost (in Rs)"
-    }, {
-        title: "Comment",
-        defaultContent: " "
-    }],
-    "dom": 'T<"clear">rtip',
-    "pageLength": 1000,
-    "oTableTools": {
-        "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf",
-        "aButtons": []
-    },
-    "footerCallback": function(row, data, start, end, display) {
-        var api = this.api(),
-            data;
-
-        // Total over all pages
-        total5 = api
-            .column(5)
-            .data()
-            .reduce(function(a, b) {
-                return a + b;
-
-            }, 0);
-
-
-        // Update footer
-        $(api.column(5).footer()).html(
-            finalFormat(total5 + "")
-        );
-    }
-});
 
     aggregator_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
     gaddidar_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details";
@@ -3485,93 +3494,138 @@ $('#table4').DataTable({
     create_data_for_excel_download();
 }
 
-function create_data_for_excel_download()
-{
-    header_dict = {'aggregator':[{'coloumn_width': 3,
-                                          'formula': null,
-                                          'label': 'S No',
-                                          'total': false},
-                                         {'coloumn_width': 9,
-                                          'formula': null,
-                                          'label': 'Date',
-                                          'total': false},
-                                         {'coloumn_width': 10,
-                                         'formula': null,
-                                         'label': 'Market',
-                                         'total': false},
-                                         {'coloumn_width': 8,
-                                          'formula': null,
-                                          'label': 'Quantity [Q] (in Kg)',
-                                          'total': true},
-                                         {'coloumn_width': 12,
-                                          'formula': '0.25 * D',
-                                          'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
-                                          'total': true},
-                                         {'coloumn_width': 8,
-                                          'formula': null,
-                                          'label': 'Transport Cost [TC] (in Rs)',
-                                          'total': true},
-                                         {'coloumn_width': 10,
-                                          'formula': null,
-                                          'label': "Farmers' Contribution [FC] (in Rs)",
-                                          'total': true},
-                                         {'coloumn_width': 10,
-                                          'formula': null,
-                                          'label': 'Commission Agent Contribution [CAC] (in Rs)',
-                                          'total': true},
-                                         {'coloumn_width': 10.7,
-                                          'formula': 'E + F - G - H',
-                                          'label': 'Total Payment (in Rs) (AP + TC - FC - CAC)',
-                                          'total': true}],
-              'gaddidar': [{'coloumn_width': 9.4,
-                                          'formula': null,
-                                          'label': 'Date',
-                                          'total': false},
-                                         {'coloumn_width': 18.3,
-                                          'formula': null,
-                                          'label': 'Commission Agent',
-                                          'total': false},
-                                         {'coloumn_width': 11,
-                                          'formula': null,
-                                          'label': 'Market',
-                                          'total': false},
-                                         {'coloumn_width': 10,
-                                          'formula': null,
-                                          'label': 'Quantity [Q] (in Kg)',
-                                          'total': true},
-                                         {'coloumn_width': 13,
-                                          'formula': null,
-                                          'label': 'Commission Agent Discount [CAD] (in Rs/Kg)',
-                                          'total': false},
-                                         {'coloumn_width': 16,
-                                          'formula': 'D * E',
-                                          'label': 'Commission Agent Contribution [CAC] (in Rs) (Q*CAD)',
-                                          'total': true}],
-              'transporter': [{'coloumn_width': 9.4,
-                                          'formula': null,
-                                          'label': 'Date',
-                                          'total': false},
-                                         {'coloumn_width': 11,
-                                          'formula': null,
-                                          'label': 'Market',
-                                          'total': false},
-                                         {'coloumn_width': 18.3,
-                                          'formula': null,
-                                          'label': 'Transporter',
-                                          'total': false},
-                                         {'coloumn_width': 11,
-                                          'formula': null,
-                                          'label': 'Vehicle Type',
-                                          'total': false},
-                                         {'coloumn_width': 13,
-                                          'formula': null,
-                                          'label': 'Vehicle Number',
-                                          'total': false},
-                                         {'coloumn_width': 13,
-                                          'formula': null,
-                                          'label': 'Tranport Cost (in Rs)',
-                                          'total': true}]
-            };
+function create_data_for_excel_download() {
+    header_dict = {
+        'aggregator': [{
+                'coloumn_width': 3,
+                'formula': null,
+                'label': 'S No',
+                'total': false
+            },
+            {
+                'coloumn_width': 9,
+                'formula': null,
+                'label': 'Date',
+                'total': false
+            },
+            {
+                'coloumn_width': 10,
+                'formula': null,
+                'label': 'Market',
+                'total': false
+            },
+            {
+                'coloumn_width': 8,
+                'formula': null,
+                'label': 'Quantity [Q] (in Kg)',
+                'total': true
+            },
+            {
+                'coloumn_width': 12,
+                'formula': '0.25 * D',
+                'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
+                'total': true
+            },
+            {
+                'coloumn_width': 8,
+                'formula': null,
+                'label': 'Transport Cost [TC] (in Rs)',
+                'total': true
+            },
+            {
+                'coloumn_width': 10,
+                'formula': null,
+                'label': "Farmers' Contribution [FC] (in Rs)",
+                'total': true
+            },
+            {
+                'coloumn_width': 10,
+                'formula': null,
+                'label': 'Commission Agent Contribution [CAC] (in Rs)',
+                'total': true
+            },
+            {
+                'coloumn_width': 10.7,
+                'formula': 'E + F - G - H',
+                'label': 'Total Payment (in Rs) (AP + TC - FC - CAC)',
+                'total': true
+            }
+        ],
+        'gaddidar': [{
+                'coloumn_width': 9.4,
+                'formula': null,
+                'label': 'Date',
+                'total': false
+            },
+            {
+                'coloumn_width': 18.3,
+                'formula': null,
+                'label': 'Commission Agent',
+                'total': false
+            },
+            {
+                'coloumn_width': 11,
+                'formula': null,
+                'label': 'Market',
+                'total': false
+            },
+            {
+                'coloumn_width': 10,
+                'formula': null,
+                'label': 'Quantity [Q] (in Kg)',
+                'total': true
+            },
+            {
+                'coloumn_width': 13,
+                'formula': null,
+                'label': 'Commission Agent Discount [CAD] (in Rs/Kg)',
+                'total': false
+            },
+            {
+                'coloumn_width': 16,
+                'formula': 'D * E',
+                'label': 'Commission Agent Contribution [CAC] (in Rs) (Q*CAD)',
+                'total': true
+            }
+        ],
+        'transporter': [{
+                'coloumn_width': 9.4,
+                'formula': null,
+                'label': 'Date',
+                'total': false
+            },
+            {
+                'coloumn_width': 11,
+                'formula': null,
+                'label': 'Market',
+                'total': false
+            },
+            {
+                'coloumn_width': 18.3,
+                'formula': null,
+                'label': 'Transporter',
+                'total': false
+            },
+            {
+                'coloumn_width': 11,
+                'formula': null,
+                'label': 'Vehicle Type',
+                'total': false
+            },
+            {
+                'coloumn_width': 13,
+                'formula': null,
+                'label': 'Vehicle Number',
+                'total': false
+            },
+            {
+                'coloumn_width': 13,
+                'formula': null,
+                'label': 'Tranport Cost (in Rs)',
+                'total': true
+            }
+        ]
+    };
 }
 
 function getFormattedDate(aggregator_id) {
