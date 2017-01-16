@@ -47,6 +47,10 @@ var aggregator_sheet_name = "",
     transporter_sheet_name = "";
 
 var globalApi;
+var initialLoadComplete;
+var gaddidar, table_created;
+var dates, stats, transportation, gaddidar_contribution_recent_graph, aggregator_incentive_cost;
+var detailChartHome, detailChartTimeSeriesVol, detailChartTimeSeriesCPK;
 
 function initialize() {
     initialLoadComplete = false;
@@ -221,7 +225,7 @@ function PlotTimeSeriesGraphs() {
     crop_prices_graph(-1);
 }
 
-bullet_options = {
+var bullet_options = {
     type: "bullet",
     width: "100",
     height: "30",
@@ -230,7 +234,7 @@ bullet_options = {
     targetColor: '#ffffff'
 }
 
-sparkline_option = {
+var sparkline_option = {
     type: 'line',
     width: '150',
     height: '60',
@@ -239,7 +243,7 @@ sparkline_option = {
     lineWidth: 2
 }
 
-generalOptions = {
+var generalOptions = {
     title: {
         text: null
     },
@@ -257,7 +261,7 @@ generalOptions = {
     }
 }
 
-timeSeriesMasterOptions = {
+var timeSeriesMasterOptions = {
     yAxis: [{
         gridLineWidth: 0,
         labels: {
@@ -307,7 +311,7 @@ timeSeriesMasterOptions = {
         }
     }
 }
-timeSeriesDetailOptions = {
+var timeSeriesDetailOptions = {
     xAxis: {
         type: 'datetime'
     },
@@ -365,7 +369,7 @@ timeSeriesDetailOptions = {
     }
 }
 
-drilldownGraphOptions = {
+var drilldownGraphOptions = {
     chart: {
         height: 300,
         zoomType: 'x'
@@ -423,7 +427,7 @@ function total_static_data() {
 //To request data for recent graphs on home page
 function recent_graphs_data(language) {
     $.get("/loop/recent_graphs_data/", {}).done(function(data) {
-        json_data = JSON.parse(data);
+        var json_data = JSON.parse(data);
         dates = json_data['dates'];
         stats = json_data['stats'];
         transportation = json_data['transportation_cost'];
@@ -2091,8 +2095,6 @@ function get_frequency_cpk(start_date, end_date, series, frequency, averaged) {
     temp_series_spk['type'] = series[1]['type'];
     temp_series_spk['pointStart'] = new_x_axis[0];
     temp_series_spk['pointInterval'] = time_series_frequency * 24 * 3600 * 1000;
-    var count = 0;
-    var temp = 0;
     var index = 0;
     var new_transport_cost = new Array(new_x_axis.length).fill(0);
     var new_farmer_share = new Array(new_x_axis.length).fill(0);
@@ -2170,6 +2172,7 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
     var myDict = [];
     var detailData = [],
         detailStart = dict[0]['data'][0][0];
+    var axis;
 
     $.each(masterChart.series, function() {
         if (this.name == "volume") {
@@ -2446,11 +2449,7 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
 }
 
 function plot_area_range_graph(container, dict) {
-    //Initially width of container3 is 0
-    container_width = $("#container3").width();
-    if (container_width == 0) {
-        container_width = $("#container2").width();
-    }
+    var container_width = $("#container3").width();
     container.highcharts(Highcharts.merge(generalOptions, {
         chart: {
             zoomType: 'x',
