@@ -3371,7 +3371,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     $('#table2').find('tr td:nth-child(5)').addClass('editcolumn');
                     $('#table2').find('tr td:nth-child(7)').addClass('editcolumn');
                     $('#aggregator_payment_tab :input')[0].disabled = true;
-                    //$('#ToolTables_table2_0').addClass('disable-button');
+                    $('#ToolTables_table2_0').addClass('disable-button');
 
                 }
             }, {
@@ -3385,6 +3385,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     var farmerAjaxSuccess = 0;
                     var editedDataAggregator = [];
                     var editedDataFarmer = [];
+                    $('#ToolTables_table2_0').removeClass('disable-button');
                     editedDataAggregator = processAggregatorRow(rows_table2, editedDataAggregator);
                     editedDataFarmer = processFarmerRow(rows_table2_farmer, editedDataFarmer);
                     var sData = this.fnGetTableData(oConfig);
@@ -3448,7 +3449,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     }
 
                     if (aggregatorAjaxSuccess != -1 && farmerAjaxSuccess != -1) {
-                        //          $('#ToolTables_table2_0').removeClass('disable-button');
                         $('#aggregator_payment_tab :input')[0].disabled = false;
                         $('#table2').find('td').removeClass("editcolumn");
                         $('#table2').find('td').removeClass("editedcell");
@@ -3707,7 +3707,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     "fnClick": function(nButton, oConfig) {
                         $('#aggregator_payment_tab :input')[0].disabled = true;
                         $('#ToolTables_table3_1').removeClass('disable-button');
-                        //$('#ToolTables_table3_0').addClass('disable-button');
+                        $('#ToolTables_table3_0').addClass('disable-button');
                         flag_edit_Table3 = true;
                         $('#table3').find('tr td:nth-child(5)').addClass('editcolumn');
                         $('#table3').find('tr td:nth-child(6)').addClass('editcolumn');
@@ -3723,6 +3723,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     "fnClick": function(nButton, oConfig) {
                         var editedDataGaddidar = [];
                         var gaddidarAjaxSuccess = 0;
+                        $('#ToolTables_table3_0').removeClass('disable-button');
                         editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
                         var sData = this.fnGetTableData(oConfig);
                         var gaddidarObjects = {
@@ -3771,7 +3772,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             $('#table3').find('td').removeClass("editedcelledge");
                             flag_edit_Table3 = false;
                             $('#ToolTables_table3_1').addClass('disable-button');
-                            //$('#ToolTables_table3_0').removeClass('disable-button');
+                            
                         }
                     }
                 }
