@@ -1806,7 +1806,8 @@ function farmer_crop_visits(container, json_data) {
             series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
         }
     }
-    plot_stacked_chart(container, series);
+    // plot_stacked_chart(container, series);
+    plot_drilldown(container, series, {}, false, json_data[0]['farmer__count'],'bar');
 }
 
 //Data for Time series grpahs request is being made here
@@ -2113,70 +2114,18 @@ function get_frequency_cpk(start_date, end_date, series, frequency, averaged) {
     return new_series;
 }
 
-
-function plot_stacked_chart(container_obj, dict) {
-    if (dict[0]['data'].length >= 6) {
-        var max = 5;
-    } else {
-        var max = dict[0]['data'].length - 1;
-    }
-    container_obj.highcharts(Highcharts.merge(generalOptions, {
-        chart: {
-            height: 300
-        },
-        xAxis: {
-            type: 'category',
-            labels: {
-                rotation: 0
-            },
-            min: 0,
-            max: max
-        },
-        scrollbar: {
-            enabled: true
-        },
-        yAxis: [{
-            min: 0,
-            title: {
-                text: null
-            },
-            gridLineColor: 'transparent'
-        }],
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            borderWidth: 0
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> <br/>'
-        },
-
-        plotOptions: {
-            bar: {
-                grouping: false,
-                showCheckbox: true,
-                dataLabels: {
-                    enabled: true
-                }
-            }
-        },
-        series: dict
-    }));
-}
-
 function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart_type) {
+    var max, format;
     if (dict[0]['data'].length >= 6) {
-        var max = 5;
+        max = 5;
     } else {
-        var max = dict[0]['data'].length - 1;
+        max = dict[0]['data'].length - 1;
     }
 
     if (floats) {
-        format = '{point.y:.2f}'
+        format = '{point.y:.2f}';
     } else {
-        format = '{point.y:.0f}'
+        format = '{point.y:.0f}';
     }
 
     var chart1 = container_obj.highcharts(Highcharts.merge(generalOptions, drilldownGraphOptions, {
@@ -2186,7 +2135,7 @@ function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart
         },
         xAxis: [{
             type: 'category',
-            max: max
+            max: max,
         }, {
             type: 'category',
             max: null
@@ -2237,12 +2186,12 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
                 temp['data'].push(this.y);
             }
         });
-        myDict.push(temp)
+        myDict.push(temp);
     });
 
     // create a detail chart referenced by a global variable
     var width = detail_container.width();
-    detailChart = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
+    detailChartHome = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
         chart: {
             width: width
         },
@@ -2316,7 +2265,7 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     var width = detail_container.width();
-    detailChart1 = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
+    detailChartTimeSeriesVol = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
         chart: {
             width: width
         },
@@ -2392,11 +2341,11 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
                     var pos = 0;
                     $.each(this.series, function() {
                         if (chart == MASTER_TIME_SERIES_VOL_AMT) {
-                            detailChart1.series[pos].setData(myDict[pos].data);
+                            detailChartTimeSeriesVol.series[pos].setData(myDict[pos].data);
                         } else if (chart == MASTER_TIME_SERIES_CPK_SPK) {
-                            detailChart2.series[pos].setData(myDict[pos].data);
+                            detailChartTimeSeriesCPK.series[pos].setData(myDict[pos].data);
                         } else if (chart == MASTER_HOME) {
-                            detailChart.series[pos].setData(myDict[pos].data);
+                            detailChartHome.series[pos].setData(myDict[pos].data);
                         }
                         pos++;
                     });
@@ -2471,7 +2420,7 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
 
     // create a detail chart referenced by a global variable
     var width = detail_container.width();
-    detailChart2 = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
+    detailChartTimeSeriesCPK = detail_container.highcharts(Highcharts.merge(generalOptions, timeSeriesDetailOptions, {
         chart: {
             width: width
         },

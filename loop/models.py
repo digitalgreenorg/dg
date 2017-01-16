@@ -400,11 +400,11 @@ class GaddidarCommission(LoopModel):
 class GaddidarShareOutliers(LoopModel):
     mandi = ChainedForeignKey(Mandi, chained_field="aggregator", chained_model_field="assigned_mandis")
     gaddidar = ChainedForeignKey(Gaddidar, chained_field="mandi", chained_model_field="mandi")
-    aggregator = models.ForeignKey(LoopUser,null=True,related_name="aggreagtor")
+    aggregator = models.ForeignKey(LoopUser)
     date = models.DateField(auto_now=False)
     amount = models.FloatField()
     comment = models.CharField(max_length=200, null=True, blank=True)
-    loop_user = models.ForeignKey(LoopUser,null=True,related_name="loop_user")
+    # loop_user = models.ForeignKey(LoopUser,null=True,related_name="loop_user")
 
     def __unicode__(self):
         return "%s (%s)" % (
@@ -426,7 +426,7 @@ class IncentiveParameter(models.Model):
 
 class IncentiveModel(models.Model):
     calculation_method = models.TextField(null=True, blank=True)
-    
+
     def __unicode__(self):
         return "%s" % (self.calculation_method)
 
@@ -446,12 +446,12 @@ class AggregatorIncentive(LoopModel):
         return "%s" % (self.incentive_model.calculation_method)
 
 class AggregatorShareOutliers(LoopModel):
-    aggregator = models.ForeignKey(LoopUser,null=True)
+    aggregator = models.ForeignKey(LoopUser)
     mandi = ChainedForeignKey(Mandi, chained_field="aggregator", chained_model_field="assigned_mandis")
     date = models.DateField(auto_now=False)
     amount = models.FloatField()
     comment = models.CharField(max_length=200, null=True, blank=True)
-    loop_user = models.ForeignKey(LoopUser,null=True,related_name="loopuser")
+    # loop_user = models.ForeignKey(LoopUser,null=True,related_name="loopuser")
 
     def __mandi__(self):
         return "%s" % (self.mandi.mandi_name)
