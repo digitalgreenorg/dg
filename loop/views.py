@@ -558,7 +558,7 @@ def calculate_gaddidar_share_payments(start_date, end_date):
     result = []
     # gso_list = [gso.date for gso in gso_queryset]
     for CT in combined_ct_queryset:
-        sum = 0
+        amount_sum = 0
         comment = ""
         gc_discount = 0
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
@@ -567,12 +567,12 @@ def calculate_gaddidar_share_payments(start_date, end_date):
                 gc_list_set = gc_queryset.filter(start_date__lte=CT['date'], gaddidar=CT[
                     'gaddidar']).order_by('-start_date')
                 if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count() > 0:
-                    sum += CT['quantity__sum'] * \
+                    amount_sum += CT['quantity__sum'] * \
                            gc_list_set[0].discount_percent
-                    gc_discount = sum / CT['quantity__sum']
+                    gc_discount = amount_sum / CT['quantity__sum']
                 elif gc_list_set.count() > 0:
-                    sum += CT['amount__sum'] * gc_list_set[0].discount_percent
-                    gc_discount = sum / CT['amount__sum']
+                    amount_sum += CT['amount__sum'] * gc_list_set[0].discount_percent
+                    gc_discount = amount_sum / CT['amount__sum']
 
             except GaddidarCommission.DoesNotExist:
                 pass
@@ -581,16 +581,16 @@ def calculate_gaddidar_share_payments(start_date, end_date):
                 gso_gaddidar_date_aggregator = gso_queryset.filter(
                     date=CT['date'], aggregator=user.id, gaddidar=CT['gaddidar']).values('amount', 'comment')
                 if gso_gaddidar_date_aggregator.count():
-                    sum += gso_gaddidar_date_aggregator[0]['amount']
+                    amount_sum += gso_gaddidar_date_aggregator[0]['amount']
                     comment = gso_gaddidar_date_aggregator[0]['comment']
                     if CT['gaddidar__discount_criteria'] == 0:
-                        gc_discount = sum / CT['quantity__sum']
+                        gc_discount = amount_sum / CT['quantity__sum']
                     else:
-                        gc_discount = sum / CT['amount__sum']
+                        gc_discount = amount_sum / CT['amount__sum']
             except GaddidarShareOutliers.DoesNotExist:
                 pass
         result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__name': CT[
-            'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': round(sum,2),
+            'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': round(amount_sum,2),
                        'gaddidar_discount': round(gc_discount,3), 'comment': comment})
     return result
 
