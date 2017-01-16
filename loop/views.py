@@ -296,7 +296,7 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     incentive_param_queryset = IncentiveParameter.objects.all()
 
     for CT in combined_ct_queryset:
-        sum = 0.0
+        amount_sum = 0.0
         comment = ""
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
         if CT['date'] not in [aso.date for aso in aso_queryset.filter(mandi=CT['mandi'], aggregator=user.id)]:
@@ -308,20 +308,20 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                     for param in paramter_list:
                         param_to_apply = incentive_param_queryset.get(notation=param)
                         x = calculate_inc(CT[param_to_apply.notation_equivalent])
-                    sum += x
-            except Exception as e:
+                    amount_sum += x
+            except Exception:
                 pass
         else:
             try:
                 aso_share_date_aggregator = aso_queryset.filter(
                     date=CT['date'], aggregator=user.id, mandi=CT['mandi']).values('amount', 'comment')
                 if aso_share_date_aggregator.count():
-                    sum += aso_share_date_aggregator[0]['amount']
+                    amount_sum += aso_share_date_aggregator[0]['amount']
                     comment = aso_share_date_aggregator[0]['comment']
             except AggregatorShareOutliers.DoesNotExist:
                 pass
         result.append(
-            {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': round(sum,2), 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
+            {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': round(amount_sum,2), 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
     return result
 
 
@@ -365,17 +365,17 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
     result = []
     # gso_list = [gso.date for gso in gso_queryset.filter(gaddidar=CT['gaddidar'], aggregator=user.id)]
     for CT in combined_ct_queryset:
-        sum = 0
+        amount_sum = 0
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
         if CT['date'] not in [gso.date for gso in gso_queryset.filter(gaddidar=CT['gaddidar'], aggregator=user.id)]:
             try:
                 gc_list_set = gc_queryset.filter(start_date__lte=CT['date'], gaddidar=CT[
                     'gaddidar']).order_by('-start_date')
                 if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count() > 0:
-                    sum += CT['quantity__sum'] * \
+                    amount_sum += CT['quantity__sum'] * \
                            gc_list_set[0].discount_percent
                 elif gc_list_set.count() > 0:
-                    sum += CT['amount__sum'] * gc_list_set[0].discount_percent
+                    amount_sum += CT['amount__sum'] * gc_list_set[0].discount_percent
             except GaddidarCommission.DoesNotExist:
                 pass
         else:
@@ -383,11 +383,11 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
                 gso_gaddidar_date_aggregator = gso_queryset.filter(
                     date=CT['date'], aggregator=user.id, gaddidar=CT['gaddidar']).values_list('amount', flat=True)
                 if gso_gaddidar_date_aggregator.count():
-                    sum += gso_gaddidar_date_aggregator[0]
+                    amount_sum += gso_gaddidar_date_aggregator[0]
             except GaddidarShareOutliers.DoesNotExist:
                 pass
         result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__id': CT[
-            'gaddidar'], 'mandi__id': CT['mandi'], 'amount': round(sum,2), 'quantity__sum': round(CT['quantity__sum'],2)})
+            'gaddidar'], 'mandi__id': CT['mandi'], 'amount': round(amount_sum,2), 'quantity__sum': round(CT['quantity__sum'],2)})
     return result
 
 

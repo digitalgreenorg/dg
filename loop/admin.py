@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.admin import SimpleListFilter
-from django.forms import TextInput, Textarea
 
 from models import *
 
