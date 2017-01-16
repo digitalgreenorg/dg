@@ -3583,6 +3583,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
         $('#gaddidar_comment_row').val($this.parent()[0].childNodes[6].innerHTML);
         delete rows_table3[$this.context.parentNode.rowIndex];
         $this.removeAttr('class');
+        $this.closest('tr').children('td:nth-child(6)')[0].className = 'editcolumn';
         $this.closest('tr').children('td:nth-child(7)')[0].className = '';
         $this.addClass('editcolumn');
     });
