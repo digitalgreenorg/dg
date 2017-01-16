@@ -716,7 +716,12 @@ function set_filterlistener() {
             var from_date = new Date(new Date(start_date));
             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
             if (from_date.getDate() >= 16 && daysInMonth[from_date.getMonth()] != (from_date.getDate() + 16)) {
-                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + daysInMonth[from_date.getMonth()]);
+                if(from_date.getFullYear()%4 == 0 && from_date.getMonth() == 1) {
+                    $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + "29");
+                }
+                else{
+                    $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + daysInMonth[from_date.getMonth()]);
+                }
             } else {
                 $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 14));
             }
