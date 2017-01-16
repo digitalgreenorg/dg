@@ -2457,7 +2457,7 @@ function plot_area_range_graph(container, dict) {
         },
         yAxis: {
             title: {
-                text: null
+                text: 'Price'
             },
             min: 0
         },
