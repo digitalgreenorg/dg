@@ -26,6 +26,9 @@ class Command(BaseCommand):
             msg.attach_file(files, 'text/csv' )
         msg.send()
 
+    def utf_8(self,obj):
+        return str(obj.encode('utf-8'))
+
     def handle(self, *args, **options): 
 
         months_dic = dict(January=1, February=2, March=3, April=4, May=5, June=6, July=7,
@@ -55,16 +58,16 @@ class Command(BaseCommand):
             year = str(entry.date.strftime('%Y'))
             month = str(entry.date.strftime('%B'))
             video_id = entry.video_id
-            video_title = str(entry.video.title.encode('utf-8'))
-            reviewer_name = str(entry.qareviewername.name.encode('utf-8'))
-            mediator_name = str(entry.mediator.name.encode('utf-8'))
+            video_title = self.utf_8(entry.video.title)
+            reviewer_name = self.utf_8(entry.qareviewername.name)
+            mediator_name = self.utf_8(entry.mediator.name)
             pico_working = "Working" if entry.pico == '1' else "Not Working"
             speaker_working = "Working" if entry.speaker == '1' else "Not Working"
-            country = str(entry.village.block.district.state.country.country_name.encode('utf-8'))
-            state = str(entry.village.block.district.state.state_name.encode('utf-8'))
-            district = str(entry.village.block.district.district_name.encode('utf-8'))
-            block = str(entry.village.block.block_name.encode('utf-8'))
-            village = str(entry.village.village_name.encode('utf-8'))
+            country = self.utf_8(entry.village.block.district.state.country.country_name)
+            state = self.utf_8(entry.village.block.district.state.state_name)
+            district = self.utf_8(entry.village.block.district.district_name)
+            block = self.utf_8(entry.village.block.block_name)
+            village = self.utf_8(entry.village.village_name)
             user_created = str(entry.user_created.username)
             dissemination_quality_data.append({'Year':year, 'Month':month, 'Country':country, 'State':state, 'District':district, 'Block':block, 'Village':village, 'Date':entry.date, 'Video ID':video_id, 'Video Title':video_title, 'Mediator':mediator_name, 'Pico':pico_working, 'Speaker':speaker_working, 'Equipments setup handling':entry.equipments_setup_handling, 'context_setting':entry.context_setting, 'Topic Introduction':entry.introduce_topic, 'Paused video at important places':entry.paused_video, 'Encouraged for Adoption':entry.encouraged_adoption, 'Summarized Video':entry.summarized_video, 'Subject knowledge':entry.subject_knowledge, 'Filled Dissemination':entry.filled_dissemination, 'Total Score':entry.total_score, 'Video Grade':entry.video_grade, 'Reviewed By':reviewer_name, 'Remarks':entry.remark, 'Created By':user_created})
         del dissemination_quality
@@ -81,16 +84,16 @@ class Command(BaseCommand):
             year = str(entry.verification_date.strftime('%Y'))
             month = str(entry.verification_date.strftime('%B'))
             video_id = entry.video_id
-            video_title = str(entry.video.title.encode('utf-8'))
-            reviewer_name = str(entry.qareviewername.name.encode('utf-8'))
-            mediator_name = str(entry.mediator.name.encode('utf-8'))
+            video_title = self.utf_8(entry.video.title)
+            reviewer_name = self.utf_8(entry.qareviewername.name)
+            mediator_name = self.utf_8(entry.mediator.name)
             person_id = entry.person_id
             person_name = entry.person.person_name
-            country = str(entry.village.block.district.state.country.country_name.encode('utf-8'))
-            state = str(entry.village.block.district.state.state_name.encode('utf-8'))
-            district = str(entry.village.block.district.district_name.encode('utf-8'))
-            block = str(entry.village.block.block_name.encode('utf-8'))
-            village = str(entry.village.village_name.encode('utf-8'))
+            country = self.utf_8(entry.village.block.district.state.country.country_name)
+            state = self.utf_8(entry.village.block.district.state.state_name)
+            district = self.utf_8(entry.village.block.district.district_name)
+            block = self.utf_8(entry.village.block.block_name)
+            village = self.utf_8(entry.village.village_name)
             user_created = str(entry.user_created.username)
             nonnego_adopted = adoption_nonnego_verification.filter(adoptionverification=entry)
             non_nego_adopted['n1_adopted'] = non_nego_adopted['n2_adopted'] = non_nego_adopted['n3_adopted'] = non_nego_adopted['n4_adopted'] = non_nego_adopted['n5_adopted'] = "N/A"
@@ -104,4 +107,4 @@ class Command(BaseCommand):
         self.make_csv(csv_headers,adoption_verification_data,file_save_path+"adoption_verification.csv")
         del adoption_verification_data
 
-        self.send_mail([file_save_path+"video_quality_review.csv",file_save_path+"dissemination_quality.csv",file_save_path+"adoption_verification.csv"])
+        #self.send_mail([file_save_path+"video_quality_review.csv",file_save_path+"dissemination_quality.csv",file_save_path+"adoption_verification.csv"])
