@@ -282,7 +282,7 @@ query_for_farmer_transaction_all_aggregator = '''
                                   dt.user_created_id,
                                       date,
                                       lm.mandi_name mandi_,
-                                      SUM(farmer_share) Share_
+                                      AVG(farmer_share) Share_
                               FROM
                                   loop_daytransportation dt
                               JOIN loop_mandi lm ON dt.mandi_id = lm.id
@@ -340,7 +340,7 @@ query_for_farmer_transaction_single_aggregator = '''
                                     dt.user_created_id,
                                         date,
                                         lm.mandi_name mandi_,
-                                        SUM(farmer_share) Share_
+                                        AVG(farmer_share) Share_
                                 FROM
                                     loop_daytransportation dt
                                 JOIN loop_mandi lm ON dt.mandi_id = lm.id
