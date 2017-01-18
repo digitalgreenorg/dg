@@ -27,17 +27,6 @@ class Command(BaseCommand):
                 try:
                     screenings_list = PersonMeetingAttendance.objects.filter(person=row.person).values_list('screening',
                                                                                                             flat=True)
-                    if len(screenings_list) == 0:
-                        animator_id = AnimatorAssignedVillage.objects.filter(village_id=row.person.village_id).values_list('animator_id',flat=True)
-                        if len(animator_id) == 0:
-                            print "This is the bad case man :D"
-                            with open(filename, 'ab') as csvfile:
-                                    fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-                                    fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
-                                count += 1
-                        else:
-                            row.animator = animator_id[0]
-                            continue
                     try:
                         screening = Screening.objects.filter(
                             date__lte=row.date_of_adoption,
@@ -51,6 +40,21 @@ class Command(BaseCommand):
                                 if len(screening) == 0 or not row.time_created:
                                     screening = Screening.objects.filter(date__lte=row.time_modified.date(),
                                     id__in=screenings_list, videoes_screened=row.video).order_by('-date')
+                                if len(screening) == 0:
+                                    screening = Screening.objects.filter(id__in=screenings_list, videoes_screened=row.video).order_by('-date')
+                                if len(screening) == 0:
+                                    screening = Screening.objects.filter(id__in=screenings_list).order_by('-date')
+                                if len(screening) == 0:
+                                    animator_id = AnimatorAssignedVillage.objects.filter(village_id=row.person.village_id).values_list('animator_id',flat=True)
+                                    if len(animator_id) == 0:
+                                        print "This is the bad case man :D"
+                                        with open(filename, 'ab') as csvfile:
+                                            fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+                                            fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
+                                            count += 1
+                                    else:
+                                        row.animator = animator_id[0]
+                                        continue
 #                                print "working>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
                                 screening = screening[0]
 #                                print "CC@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
