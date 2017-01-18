@@ -357,3 +357,6 @@ query_for_farmer_transaction_single_aggregator = '''
 
 RECIPIENTS = ['amandeep@digitalgreen.org', 'lokesh@digitalgreen.org', 'divish@digitalgreen.org']
 
+RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
+
+

@@ -162,9 +162,9 @@ class Command(BaseCommand):
             excel_file.write(r.content)
             excel_file.close()
             #send email to concerned people with excel file attached    
-            #common_send_email('Farmers List with Incorrect Mobile Numbers', 
-            #                  RECIPIENTS, excel_file, [],EMAIL_HOST_USER)
-            #os.remove(excel_workbook_name + '.xlsx')
+            common_send_email('Farmers Transaction Data', 
+                             RECIPIENTS_TEMP, excel_file, [],EMAIL_HOST_USER)
+            os.remove(excel_workbook_name + '.xlsx')
         except Exception as e:
             raise CommandError(e)
         
