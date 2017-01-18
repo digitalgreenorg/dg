@@ -11,18 +11,11 @@ import datetime
 
 class Command(BaseCommand):
 
-    def make_csv(self,csv_headers,csv_data,reporting_file_path):
-
-        with open(reporting_file_path,'wb') as final_output:
-            dict_writer = csv.DictWriter(final_output,csv_headers)
-            dict_writer.writeheader()
-            dict_writer.writerows(csv_data)
-
     def send_mail(self,attached_files):
         till_date = datetime.datetime.now().strftime("%Y-%m-%d")
         subject = "QA COCO: Data received till %s"%(till_date)
         from_email = dg.settings.EMAIL_HOST_USER
-        to_email = ['vikas@digitalgreen.org']#['system@digitalgreen.org', 'swati@digitalgreen.org', 'kaushik@digitalgreen.org', 'aditya@digitalgreen.org', 'vivek@digitalgreen.org', 'vikas@digitalgreen.org', 'abhishekchandran@digitalgreen.org']
+        to_email = ['vikas@digitalgreen.org','vivek@digitalgreen.org']#['system@digitalgreen.org', 'swati@digitalgreen.org', 'kaushik@digitalgreen.org', 'aditya@digitalgreen.org', 'vivek@digitalgreen.org', 'vikas@digitalgreen.org', 'abhishekchandran@digitalgreen.org']
         body = "Dear Team,\n\nPlease find the attached QA COCO data entered till %s.\nPlease contact system@digitalgreen.org for any question or clarification.\n\nThank you."%(till_date)
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         for files in attached_files:
@@ -138,7 +131,7 @@ class Command(BaseCommand):
         '''
 
         adoption_verification_query = '''SELECT 
-            af.id 'av_id',
+            af.id 'af_id',
             YEAR(af.verification_date) Year,
             MONTHNAME(af.verification_date) Month,
             gc.country_name Country,
@@ -181,20 +174,22 @@ class Command(BaseCommand):
         '''
 
         adoption_verification_nonnego_query = '''SELECT 
-            av.id 'av_id',
+            af.id 'af_id',
             GROUP_CONCAT(IF(ann.adopted = '1', 'Yes', 'No')) 'Non Negotiable Adopted'
         FROM
-            qacoco_adoptionverification av
+            qacoco_adoptionverification af
                 JOIN
-            qacoco_adoptionnonnegotiableverfication ann ON av.id = ann.adoptionverification_id
-            group by av.id
+            qacoco_adoptionnonnegotiableverfication ann ON af.id = ann.adoptionverification_id
+            group by af.id
         '''
 
-        screening_df = self.run_query(adoption_verification_query)
-        adoption_df = self.run_query(adoption_verification_nonnego_query)
-        combine_df = pd.merge(screening_df, adoption_df, how='outer')
-        combine_df.to_csv(reporting_file_path+"adoption_verification.csv", sep=',', encoding='utf-8', index=False)
-
-
-        self.send_mail([file_save_path+"adoption_verification.csv"])      
-        #self.send_mail([file_save_path+"video_quality_review.csv",file_save_path+"dissemination_quality.csv",file_save_path+"adoption_verification.csv"])
+        video_quality_df = self.run_query(video_quality_query)
+        dissemination_quality_df = self.run_query(dissemination_quality_query)
+        adoption_verification_df = self.run_query(adoption_verification_query)
+        adoption_verification_nonnego_df = self.run_query(adoption_verification_nonnego_query)
+        combine_df = pd.merge(adoption_verification_df, adoption_verification_nonnego_df, how='inner')
+        combine_df = combine_df.drop('af_id', axis=1)
+        video_quality_df.to_csv(file_save_path+"video_quality_review.csv", sep=',', encoding='utf-8', index=False)
+        dissemination_quality_df.to_csv(file_save_path+"dissemination_quality.csv", sep=',', encoding='utf-8', index=False)
+        combine_df.to_csv(file_save_path+"adoption_verification.csv", sep=',', encoding='utf-8', index=False)
+        self.send_mail([file_save_path+"video_quality_review.csv",file_save_path+"dissemination_quality.csv",file_save_path+"adoption_verification.csv"])
