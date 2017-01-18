@@ -14,7 +14,7 @@ class Command(BaseCommand):
         pap_query = Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True), 20000)
         print pap_query.num_pages
 #        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
-        filename = '/home/ubuntu/code/dg_git/activities/management/exceptions.csv'
+        filename = 'activities/management/exceptions.csv'
         #filename = 'D:/Digital Green/project/activities/management/exception.csv'
         for page in range(1, pap_query.num_pages + 1):
             count = 0
