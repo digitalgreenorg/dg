@@ -254,6 +254,8 @@ def aggregator_incentive_for_total_static_data():
         total_aggregator_incentive += entry['amount']
     return round(total_aggregator_incentive,2)
 
+def calculate_inc_default(V):
+    return 0.25*V
 
 def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=None, aggregator_list=None):
     if aggregator_list is not None:
@@ -309,6 +311,8 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                         param_to_apply = incentive_param_queryset.get(notation=param)
                         x = calculate_inc(CT[param_to_apply.notation_equivalent])
                     amount_sum += x
+                else:
+                    amount_sum += calculate_inc_default(CT['quantity__sum'])
             except Exception:
                 pass
         else:
