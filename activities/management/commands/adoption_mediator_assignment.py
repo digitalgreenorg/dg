@@ -1,4 +1,5 @@
 from activities.models import PersonAdoptPractice, Screening, PersonMeetingAttendance
+from people.models import AnimatorAssignedVillage
 from django.core.management.base import BaseCommand
 from django.core.paginator import Paginator
 from datetime import datetime
@@ -14,6 +15,7 @@ class Command(BaseCommand):
         print pap_query.num_pages
 #        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
         filename = '/home/ubuntu/code/dg_git/activities/management/exceptions.csv'
+        #filename = 'D:/Digital Green/project/activities/management/exception.csv'
         for page in range(1, pap_query.num_pages + 1):
             count = 0
             adoption_list = pap_query.page(page).object_list
@@ -25,6 +27,17 @@ class Command(BaseCommand):
                 try:
                     screenings_list = PersonMeetingAttendance.objects.filter(person=row.person).values_list('screening',
                                                                                                             flat=True)
+                    if len(screenings_list) == 0:
+                        animator_id = AnimatorAssignedVillage.objects.filter(village_id=row.person.village_id).values_list('animator_id',flat=True)
+                        if len(animator_id) == 0:
+                            print "This is the bad case man :D"
+                            with open(filename, 'ab') as csvfile:
+                                    fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+                                    fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
+                                count += 1
+                        else:
+                            row.animator = animator_id[0]
+                            continue
                     try:
                         screening = Screening.objects.filter(
                             date__lte=row.date_of_adoption,
