@@ -2823,8 +2823,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 //  $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
                 $this.removeAttr('class');
                 $this.addClass('editedcelledge');
-                $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcell';
-                $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcell';
+                $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcelledge';
+                
             } else {
                 $this.removeAttr('class');
                 $this.addClass('editedcell');
@@ -2879,7 +2879,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             if (parseFloat($this.parent()[0].childNodes[4].innerHTML / $this.parent()[0].childNodes[3].innerHTML) > 0.5) {
                 $this.removeAttr('class');
                 $this.addClass('editedcelledge');
-                $this.closest('tr').children('td:nth-child(10)')[0].className = 'editedcell';
+                $this.closest('tr').children('td:nth-child(10)')[0].className = 'editedcelledge';
             } else {
                 $this.removeAttr('class');
                 $this.addClass('editedcell');
@@ -3249,7 +3249,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 if (parseFloat($this.parent()[0].childNodes[4].innerHTML) / 100 > 0.1) {
                     $this.closest('tr').children('td:nth-child(5)')[0].className = 'editedcelledge';
                     $this.closest('tr').children('td:nth-child(6)')[0].className = 'editedcelledge';
-                    $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
+                    $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcelledge';
                 } else {
                     $this.closest('tr').children('td:nth-child(5)')[0].className = 'editedcell';
                     $this.closest('tr').children('td:nth-child(6)')[0].className = 'editedcell';
@@ -3259,7 +3259,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 if (parseFloat($this.parent()[0].childNodes[4].innerHTML) > 1) {
                     $this.closest('tr').children('td:nth-child(5)')[0].className = 'editedcelledge';
                     $this.closest('tr').children('td:nth-child(6)')[0].className = 'editedcelledge';
-                    $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
+                    $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcelledge';
                 } else {
                     $this.closest('tr').children('td:nth-child(5)')[0].className = 'editedcell';
                     $this.closest('tr').children('td:nth-child(6)')[0].className = 'editedcell';
