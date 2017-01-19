@@ -725,7 +725,7 @@ class CategoryResource(ModelResource):
     hydrate_parent_category = partial(dict_to_foreign_uri, field_name='parent_category', resource_name='parentcategory')
 
     def dehydrate_parent_category(self, bundle):
-        return bundle.obj.parent_category.id if buncle.obj.parent_category else None
+        return bundle.obj.parent_category.id
 
 
 class SubCategoryResource(ModelResource):  
