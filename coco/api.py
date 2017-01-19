@@ -713,14 +713,20 @@ class LanguageResource(ModelResource):
         authorization = Authorization()
 
 class CategoryResource(ModelResource):    
+    parent_category = fields.ForeignKey(ParentCategoryResource, 'parent_category')
+    
     class Meta:
         max_limit = None
         queryset = Category.objects.all()
         resource_name = 'category'
         authentication = SessionAuthentication()
         authorization = Authorization()
-    dehydrate_parent_category = partial(foreign_key_to_id, field_name='parent_category',sub_field_names=['id','parent_category_name'])
+    # dehydrate_parent_category = partial(foreign_key_to_id, field_name='parent_category',sub_field_names=['id','parent_category_name'])
     hydrate_parent_category = partial(dict_to_foreign_uri, field_name='parent_category', resource_name='parentcategory')
+
+    def dehydrate_parent_category(self, bundle):
+        return bundle.obj.parent_category.id
+
 
 class SubCategoryResource(ModelResource):  
     category = fields.ForeignKey(CategoryResource, 'category')

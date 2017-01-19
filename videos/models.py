@@ -103,6 +103,13 @@ class Category(CocoModel):
     category_name = models.CharField(max_length=100, unique='True')
     parent_category = models.ForeignKey(ParentCategory, null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.category_name == "Agriculture":
+            self.parent_category_id=2
+        if self.category_name in ['Child Health and Nutrition', 'Nutrition-sensitive approaches', "Women's Health and Nutrition"]:
+            self.parent_category_id=1
+            return super(Category, self).save(*args, **kwargs)
+
     def get_village(self):
         return None
 

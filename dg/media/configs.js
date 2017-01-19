@@ -272,7 +272,8 @@ function() {
             'category': {
                 "category": {
                     'placeholder': 'id_category',
-                    'name_field': 'category_name'
+                    'name_field': 'category_name',
+                    'parent_name_field': 'parent_category',
                 }
             },
             'subcategory': {
@@ -656,14 +657,14 @@ function() {
         'config_Français': 'Projections',
         'labels_हिन्दी': {screening:"दिखाए गए वीडियो", date: "विडियो दिखने की तिथि", start_time: "आरंभ करने की तिथि", village: "गाँव", mediator: "मध्यस्थ",
             videos_screened: "वीडियो जो दिखाया गया", groups_attended: "ग्राम संगठन जिन्होने भाग लिया", person: "सदस्य", questions_asked: "पूछे गये सवाल",
-            del: "हटाओ", sr_no: "क्रम संख्या", person_attended: "सदस्य जिन्होने भाग लिया", form_type: 'प्रपत्र प्रकार', age: 'आयु', gender: 'लिंग', health_provider_present: "स्वास्थ्य प्रदाता वर्तमान"},
+            del: "हटाओ", sr_no: "क्रम संख्या", person_attended: "सदस्य जिन्होने भाग लिया", form_type: 'वर्ग', age: 'आयु', gender: 'लिंग', health_provider_present: "स्वास्थ्य प्रदाता वर्तमान"},
         'labels_Français': {screening:"Projections", date: "Date de projection", start_time: "Heure de début", village: "Village", mediator: "Disséminateur",
             videos_screened: "Vidéo projectée", groups_attended: "Groupe concerné", person: "Personne", questions_asked: "Questions posées",
-            del: "effacer", sr_no: "Serie de Numéro", person_attended: "Personne", parentcategory: 'Type de formulaire', age: 'Âge', gender: 'Le genre',
+            del: "effacer", sr_no: "Serie de Numéro", person_attended: "Personne", parentcategory: 'Catégorie', age: 'Âge', gender: 'Le genre',
             category: "Catégorie", health_provider_present: "Prestataire de santé présent"},
         'labels_English': {screening:"Screening",date: "Date", start_time: "Start Time", village: "Village", mediator: "mediator",
             videos_screened: "Videos Screened", groups_attended: "Groups Attended", person: "Person", questions_asked: "Questions Asked",
-            del: "Delete", sr_no: "Sr. No.", person_attended: "Person", parentcategory: 'Form Type', age: 'Age', gender: 'Gender', category: "Category", health_provider_present: "Health Provider Present"},
+            del: "Delete", sr_no: "Sr. No.", person_attended: "Person", parentcategory: 'Category', age: 'Age', gender: 'Gender', category: "Category", health_provider_present: "Health Provider Present"},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'विडियो दिखने की तिथि','element':'date'},{'header':'मध्यस्थ','element':'animator.name'},{'header':'गाँव','element':'village.village_name'},{'header':'ग्राम संगठन जिन्होने भाग लिया','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'वीडियो जो दिखाया गया','subelement':'title','element':'videoes_screened'}],
         'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':'Date de projection','element':'date'},{'header':'Disséminateur','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groupe concerné','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Vidéo projectée','subelement':'title','element':'videoes_screened'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Videos Screened','subelement':'title','element':'videoes_screened'}],
@@ -674,6 +675,8 @@ function() {
         'fetch_element': 'person',
         'fetch_child_element': 'directbeneficiaries',
         'fetch_key_element': 'id',
+        'combination_display_field': '#id_group',
+        'combination_display_field_with_value': ['#id_parentcategory', '#id_village'],
         'show_health_provider_present': 1,
         'fetch_element_that_manipulate': 'parentcategory',
         'parent_element_to_hide': 'health_provider_present',
@@ -760,7 +763,8 @@ function() {
                     'dependency': [{
                         'source_form_element': 'parentcategory',
                         'dep_attr': 'parent_category',
-                        'parent_attr': 'category'
+                        'parent_attr': 'category',
+                        'forced_filter_attr': 'category_name'
                     }]
                 },
             },
@@ -899,6 +903,8 @@ function() {
         'entity_name': 'adoption',
         'show_health_provider_present': 1,
         'fetch_element_that_manipulate': 'parentcategory',
+        'combination_display_field': '#id_group',
+        'combination_display_field_with_value': ['#id_parentcategory', '#id_village'],
         'parent_element_to_hide': 'adopt_practice_chosen',
         'parent_element_label_to_hide': 'label_id_member_adopt',
         'fetch_key_element': 'id',
