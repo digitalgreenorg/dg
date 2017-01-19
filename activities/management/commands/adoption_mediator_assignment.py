@@ -10,19 +10,30 @@ from django.db.models import Q
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        a = AnimatorAssignedVillage.objects.values('village_id','animator_id')
+        village_ani = {}
+        for e in a:
+            if e['village_id'] not in village_ani:
+                village_ani[e['village_id']] = set()
+            village_ani[e['village_id']].add(e['animator_id'])
         print datetime.now()
-        pap_query = Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True), 20000)
+        #pap_query = Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True), 20000)
+        pap_query = Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True), 5000)
         print pap_query.num_pages
 #        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
         filename = 'activities/management/exceptions.csv'
         #filename = 'D:/Digital Green/project/activities/management/exception.csv'
-        for page in range(1, pap_query.num_pages + 1):
+        #for page in range(1, pap_query.num_pages + 1):
+        i = 0
+        for page in range(1, 2):
             count = 0
             adoption_list = pap_query.page(page).object_list
             print len(adoption_list)
             # for page in range(1, pap_query.num_pages + 1):
             # print "----------------------------------------------------------------------------------------------------"
             for row in adoption_list:
+                print i
+                i = i+1
 #                print row.id #273164
                 try:
                     screenings_list = PersonMeetingAttendance.objects.filter(person=row.person).values_list('screening',
@@ -45,6 +56,17 @@ class Command(BaseCommand):
                                 if len(screening) == 0:
                                     screening = Screening.objects.filter(id__in=screenings_list).order_by('-date')
                                 if len(screening) == 0:
+                                    if row.person.village_id in village_ani:
+                                        animator_id = next(iter(village_ani[row.person.village_id]))
+                                        row.animator = animator_id                                        
+                                    else:
+                                        print "This is the bad case man :D"
+                                        with open(filename, 'ab') as csvfile:
+                                            fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+                                            fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
+                                            count += 1
+                                    continue
+                                    '''
                                     animator_id = AnimatorAssignedVillage.objects.filter(village_id=row.person.village_id).values_list('animator_id',flat=True)
                                     if len(animator_id) == 0:
                                         print "This is the bad case man :D"
@@ -52,9 +74,11 @@ class Command(BaseCommand):
                                             fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
                                             fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
                                             count += 1
+                                        continue
                                     else:
                                         row.animator = animator_id[0]
                                         continue
+                                    '''
 #                                print "working>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
                                 screening = screening[0]
 #                                print "CC@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
