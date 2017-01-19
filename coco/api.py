@@ -713,7 +713,7 @@ class LanguageResource(ModelResource):
         authorization = Authorization()
 
 class CategoryResource(ModelResource):    
-    parent_category = fields.ForeignKey(ParentCategoryResource, 'parent_category')
+    parent_category = fields.ForeignKey(ParentCategoryResource, 'parent_category', null=True)
     
     class Meta:
         max_limit = None
