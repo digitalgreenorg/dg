@@ -36,14 +36,12 @@ class Command(BaseCommand):
                 i = i+1
 #                print row.id #273164
                 try:
-                    screenings_list = PersonMeetingAttendance.objects.filter(person=row.person).values_list('screening',
-                                                                                                            flat=True)
+                    #screenings_list = PersonMeetingAttendance.objects.filter(person=row.person).values_list('screening',flat=True)
                     try:
-                        screening = Screening.objects.filter(
-                            date__lte=row.date_of_adoption,
-                            id__in=screenings_list, videoes_screened=row.video).order_by('-date')
-                        if len(screening) == 0:
-                            try:
+                        #screening = Screening.objects.filter(date__lte=row.date_of_adoption,id__in=screenings_list, videoes_screened=row.video).order_by('-date')
+                        #if len(screening) == 0:
+                        try:
+                                '''
                                 if row.time_created:
                                     screening = Screening.objects.filter(
                                     date__lte=row.time_created.date(),
@@ -67,31 +65,30 @@ class Command(BaseCommand):
                                             count += 1
                                     continue
                                     '''
-                                    animator_id = AnimatorAssignedVillage.objects.filter(village_id=row.person.village_id).values_list('animator_id',flat=True)
-                                    if len(animator_id) == 0:
-                                        print "This is the bad case man :D"
-                                        with open(filename, 'ab') as csvfile:
-                                            fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-                                            fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
-                                            count += 1
-                                        continue
-                                    else:
-                                        row.animator = animator_id[0]
-                                        continue
-                                    '''
-#                                print "working>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-                                screening = screening[0]
-#                                print "CC@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                                row.animator = screening.animator
-                            except Exception as e:
-#                                print "Main Exception" + str(e)
+                            animator_id = AnimatorAssignedVillage.objects.filter(village_id=row.person.village_id).values_list('animator_id',flat=True)
+                            if len(animator_id) == 0:
+                                print "This is the bad case man :D"
                                 with open(filename, 'ab') as csvfile:
                                     fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-                                    fileWrite.writerow(['ID', row.id])
-                                count += 1
-                        else:
-                            screening = screening[0]
-                            row.animator = screening.animator
+                                    fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
+                                    count += 1
+                                #continue
+                            else:
+                                row.animator = animator_id[0]
+                                #continue
+#                                print "working>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+                                #screening = screening[0]
+#                                print "CC@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+                                #row.animator = screening.animator
+                        except Exception as e:
+#                           print "Main Exception" + str(e)
+                            with open(filename, 'ab') as csvfile:
+                                fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+                                fileWrite.writerow(['ID', row.id])
+                            count += 1
+                    #else:
+                    #    screening = screening[0]
+                    #    row.animator = screening.animator
                     except Exception as e:
                         count += 1
                         with open(filename, 'ab') as csvfile:
