@@ -2247,10 +2247,8 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
     $.each(masterChart.series, function() {
         if (this.name == "Volume") {
             axis = 0;
-        } else if (this.name == "Amount") {
-            axis = 1;
         } else {
-            axis = 2;
+            axis = 1;
         }
         var temp = {};
         temp['name'] = this.name;
@@ -2286,12 +2284,7 @@ function createDetailForVolAmtTimeSeries(detail_container, masterChart, dict) {
             }
         }, {
             title: {
-                text: 'Amount'
-            },
-            opposite: true
-        }, {
-            title: {
-                text: 'No. of Farmers'
+                text: null
             },
             opposite: true
         }]
@@ -2404,7 +2397,7 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
         detailStart = dict[0]['data'][0][0];
 
     $.each(masterChart.series, function() {
-        if (this.name == "Cost per Kg") {
+        if (this.name == "cpk") {
             axis = 0;
         } else {
             axis = 1;
@@ -2437,11 +2430,11 @@ function createDetailForCpkSpkTimeSeries(detail_container, masterChart, dict) {
         series: myDict,
         yAxis: [{
             title: {
-                text: 'CPK'
+                text: null
             }
         }, {
             title: {
-                text: 'SPK'
+                text: null
             },
             opposite: true
         }]
@@ -2785,11 +2778,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
     });
     $('#farmer_reset_modal').on('click', function() {
         farmerResetClick=true;
-        
+
         $('#farmer_share_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data());
         $('#farmer_commission_row').val(parseFloat($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2))
         $('#farmer_comment_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 12).data());
-        
+
     });
     $('#farmer_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#farmer_commission_row'))) {
@@ -2824,7 +2817,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 $this.removeAttr('class');
                 $this.addClass('editedcelledge');
                 $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcelledge';
-                
+
             } else {
                 $this.removeAttr('class');
                 $this.addClass('editedcell');
@@ -2870,7 +2863,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
             $this.removeAttr('class');
             $this.closest('tr').children('td:nth-child(10)')[0].className = '';
             $this.addClass('editcolumn');
-            aggregatorResetClick=false;    
+            aggregatorResetClick=false;
         }else if (editedAggregator != 0) {
             $('#aggregator_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
