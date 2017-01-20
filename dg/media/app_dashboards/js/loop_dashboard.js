@@ -2991,6 +2991,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     $('#aggregator_payment_tab :input')[0].disabled = true;
                     $('#ToolTables_table2_0').addClass('disable-button');
                     $('#payments_from_date').parent().parent().addClass('disable-button');
+                    $('#payments_from_date').removeClass('black-text');
+                    $('#payments_to_date').removeClass('black-text');
 
                 }
             }, {
@@ -3071,6 +3073,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                         if(!($('#ToolTables_table3_0').hasClass('disable-button'))){
                             $('#aggregator_payment_tab :input')[0].disabled = false;
                             $('#payments_from_date').parent().parent().removeClass('disable-button');
+                            $('#payments_from_date').addClass('black-text');
+                            $('#payments_to_date').addClass('black-text');
                         }
                         $('#table2').find('td').removeClass("editcolumn");
                         $('#table2').find('td').removeClass("editedcell");
@@ -3343,6 +3347,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     $('#ToolTables_table3_1').removeClass('disable-button');
                     $('#ToolTables_table3_0').addClass('disable-button');
                     $('#payments_from_date').parent().parent().addClass('disable-button');
+                    $('#payments_from_date').removeClass('black-text');
+                    $('#payments_to_date').removeClass('black-text');
                     flag_edit_Table3 = true;
                     $('#table3').find('tr td:nth-child(5)').addClass('editcolumn');
                     $('#table3').find('tr td:nth-child(6)').addClass('editcolumn');
@@ -3380,10 +3386,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                 alert("Success : Gaddidar Data");
                                 gaddidarAjaxSuccess = 1;
                                 for (var keys in rows_table3) {
-                                    if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0)
+                                    if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0){
                                         gaddidar_data_set[keys - 1][4] = parseFloat(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]) / 100;
-                                    else
+                                    }
+                                    else{
                                         gaddidar_data_set[keys - 1][4] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
+                                    }
                                     gaddidar_data_set[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
                                     gaddidar_data_set[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
                                 }
@@ -3402,6 +3410,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                         if(!($('#ToolTables_table2_0').hasClass('disable-button'))){
                             $('#aggregator_payment_tab :input')[0].disabled = false;
                             $('#payments_from_date').parent().parent().removeClass('disable-button');
+                            $('#payments_from_date').addClass('black-text');
+                            $('#payments_to_date').addClass('black-text');
                         }
                         var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
                         for (var column = 0; column < colCount; column++)

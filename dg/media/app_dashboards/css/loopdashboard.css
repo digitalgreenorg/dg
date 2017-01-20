@@ -303,6 +303,7 @@ hr {
 .disable-button {
     pointer-events: none;
     cursor: default;
+    color:rgba(0,0,0,0.3);
 }
 .modal {
     width: 80% !important;
