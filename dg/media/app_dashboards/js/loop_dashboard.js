@@ -3379,6 +3379,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                                         gaddidar_data_set[keys - 1][4] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
                                     gaddidar_data_set[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
                                     gaddidar_data_set[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
+                                    gaddidar_data_set_clone[keys - 1][4] = $('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
+                                    gaddidar_data_set_clone[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
+                                    gaddidar_data_set_clone[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
                                 }
                                 rows_table3 = [];
                             },
