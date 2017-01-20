@@ -290,8 +290,8 @@ class AnalyticsSync():
                     dt][vil][partner]['tot_exp_att'] + gr_size
             del scs
 
-            vids = Video.objects.filter(video_type=1).values_list(
-                'id', 'production_date', 'village', 'partner').order_by('id')
+            vids = Video.objects.values_list('id', 'production_date', 
+                    'village', 'partner').order_by('id')
             cur_id = None
             for id, dt, vil, partner in vids:
                 counts = main_data_dst[dt][vil][partner]
