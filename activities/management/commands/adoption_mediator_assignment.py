@@ -10,99 +10,84 @@ from django.db.models import Q
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        a = AnimatorAssignedVillage.objects.values('village_id','animator_id')
-        village_ani = {}
-        for e in a:
-            if e['village_id'] not in village_ani:
-                village_ani[e['village_id']] = set()
-            village_ani[e['village_id']].add(e['animator_id'])
-        print datetime.now()
-        #pap_query = Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True), 20000)
-        pap_query = Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True), 5000)
-        print pap_query.num_pages
+        animator_villages = AnimatorAssignedVillage.objects.values('village_id','animator_id')
+        village_wise_animator = {}
+        for entry in animator_villages:
+            if entry['village_id'] not in village_wise_animator:
+                village_wise_animator[entry['village_id']] = set()
+            village_wise_animator[entry['village_id']].add(entry['animator_id'])
+        print "Current Time: ",datetime.now()
+        pap_query = Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True), 20000)
+        print "No. of Pages: ",pap_query.num_pages
 #        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
         filename = 'activities/management/exceptions.csv'
-        #filename = 'D:/Digital Green/project/activities/management/exception.csv'
-        #for page in range(1, pap_query.num_pages + 1):
-        i = 0
-        for page in range(1, 2):
-            count = 0
+        count = 0
+        for page in range(1, pap_query.num_pages + 1):
             adoption_list = pap_query.page(page).object_list
-            print len(adoption_list)
-            # for page in range(1, pap_query.num_pages + 1):
-            # print "----------------------------------------------------------------------------------------------------"
+            print "No. of Adoption objects in this page: ",len(adoption_list)
+            person_list = adoption_list.values_list('person_id',flat=True)
+            person_list = list(set(person_list))
+            pma =  PersonMeetingAttendance.objects.filter(person_id__in=person_list).values('screening_id','person_id')
+            person_wise_screening = {}
+            for entry in pma:
+                if entry['person_id'] not in person_wise_screening:
+                    person_wise_screening[entry['person_id']] = set()
+                person_wise_screening[entry['person_id']].add(entry['screening_id'])
             for row in adoption_list:
-                print i
-                i = i+1
-#                print row.id #273164
+                print count
+                count += 1
                 try:
-                    #screenings_list = PersonMeetingAttendance.objects.filter(person=row.person).values_list('screening',flat=True)
+                    if row.person.id in person_wise_screening:
+                        screenings_list = list(person_wise_screening[row.person.id])
+                    else:
+                        screenings_list = []
                     try:
-                        #screening = Screening.objects.filter(date__lte=row.date_of_adoption,id__in=screenings_list, videoes_screened=row.video).order_by('-date')
-                        #if len(screening) == 0:
-                        try:
-                                '''
+                        screening = Screening.objects.filter(date__lte=row.date_of_adoption,id__in=screenings_list, videoes_screened=row.video).order_by('-date')
+                        if len(screening) == 0:
+                            try:
                                 if row.time_created:
                                     screening = Screening.objects.filter(
                                     date__lte=row.time_created.date(),
                                     id__in=screenings_list, videoes_screened=row.video).order_by('-date')
-                                if len(screening) == 0 or not row.time_created:
+                                if (row.time_modified) and (len(screening) == 0 or not row.time_created):
                                     screening = Screening.objects.filter(date__lte=row.time_modified.date(),
                                     id__in=screenings_list, videoes_screened=row.video).order_by('-date')
                                 if len(screening) == 0:
                                     screening = Screening.objects.filter(id__in=screenings_list, videoes_screened=row.video).order_by('-date')
                                 if len(screening) == 0:
                                     screening = Screening.objects.filter(id__in=screenings_list).order_by('-date')
-                                if len(screening) == 0:
-                                    if row.person.village_id in village_ani:
-                                        animator_id = next(iter(village_ani[row.person.village_id]))
-                                        row.animator = animator_id                                        
-                                    else:
-                                        print "This is the bad case man :D"
-                                        with open(filename, 'ab') as csvfile:
-                                            fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-                                            fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
-                                            count += 1
-                                    continue
-                                    '''
-                            animator_id = AnimatorAssignedVillage.objects.filter(village_id=row.person.village_id).values_list('animator_id',flat=True)
-                            if len(animator_id) == 0:
-                                print "This is the bad case man :D"
+                                if len(screening) > 0:
+                                    screening = screening[0]
+                                    row.animator = screening.animator
+                                    continue                 
+                                if row.person.village_id in village_wise_animator:
+                                    animator_id = Screening.objects.filter(animator_id__in=list(village_wise_animator[row.person.village_id])).order_by('-date')[0].animator_id
+                                    #animator_id = next(iter(village_wise_animator[row.person.village_id]))
+                                    row.animator_id = animator_id 
+                                    continue                                      
+                                else:
+                                    print "This is the bad case man :D"
+                                    with open(filename, 'ab') as csvfile:
+                                        fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+                                        fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
+                            except Exception as e:
                                 with open(filename, 'ab') as csvfile:
                                     fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-                                    fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
-                                    count += 1
-                                #continue
-                            else:
-                                row.animator = animator_id[0]
-                                #continue
-#                                print "working>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-                                #screening = screening[0]
-#                                print "CC@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-                                #row.animator = screening.animator
-                        except Exception as e:
-#                           print "Main Exception" + str(e)
-                            with open(filename, 'ab') as csvfile:
-                                fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-                                fileWrite.writerow(['ID', row.id])
-                            count += 1
-                    #else:
-                    #    screening = screening[0]
-                    #    row.animator = screening.animator
+                                    fileWrite.writerow(['ID', row.id])
+                                count += 1
+                        else:
+                            screening = screening[0]
+                            row.animator = screening.animator
                     except Exception as e:
                         count += 1
                         with open(filename, 'ab') as csvfile:
                             fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
                             fileWrite.writerow(['HELLO', row.id])
-#                        print "Internal Exception" + str(e)
                 except Exception as e:
                     count += 1
-#                    print "Exception" + str(e)
                     with open(filename, 'ab') as csvfile:
                         fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
                         fileWrite.writerow(['THIRD', row.id])
-#                    print row.id
-            #                    print '##################################################################################################'
             bulk_update(adoption_list)
             print "Done Successful"
             print "Failed : " + str(count)
