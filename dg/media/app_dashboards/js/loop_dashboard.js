@@ -911,7 +911,7 @@ function set_filterlistener() {
     });
 
     $("#download-payment-sheet").click(function () {
-        if (superModeEdit == 1) {
+        if (superEditMode == 1) {
             window.alert('Please finish editing first');
         }
         else {
