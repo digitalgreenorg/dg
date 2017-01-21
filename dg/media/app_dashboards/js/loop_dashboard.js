@@ -51,6 +51,7 @@ var initialLoadComplete;
 var gaddidar, table_created;
 var dates, stats, transportation, gaddidar_contribution_recent_graph, aggregator_incentive_cost;
 var detailChartHome, detailChartTimeSeriesVol, detailChartTimeSeriesCPK;
+var superEditMode = 0;
 
 function initialize() {
     initialLoadComplete = false;
@@ -805,17 +806,33 @@ function change_graph(parameter) {
 
 function change_payment(parameter) {
     if (parameter == 'summary_payments') {
-        $('#table2_wrapper').parent().removeAttr('style');
-        $('#table3_wrapper').parent().css('display', 'none');
-        $('#table4_wrapper').parent().css('display', 'none');
+        if (superEditMode == 1) {
+            window.alert("Please submit currently edited table first");
+        }
+        else {
+            $('#table2_wrapper').parent().removeAttr('style');
+            $('#table3_wrapper').parent().css('display', 'none');
+            $('#table4_wrapper').parent().css('display', 'none');
+        }
     } else if (parameter == 'gaddidar_payments') {
-        $('#table2_wrapper').parent().css('display', 'none');
-        $('#table3_wrapper').parent().removeAttr('style');
-        $('#table4_wrapper').parent().css('display', 'none');
-    } else {
-        $('#table2_wrapper').parent().css('display', 'none');
-        $('#table3_wrapper').parent().css('display', 'none');
-        $('#table4_wrapper').parent().removeAttr('style');
+        if (superEditMode == 1) {
+            window.alert("Please submit currently edited table first");
+        }
+        else {
+            $('#table2_wrapper').parent().css('display', 'none');
+            $('#table3_wrapper').parent().removeAttr('style');
+            $('#table4_wrapper').parent().css('display', 'none');
+        }
+    }
+    else {
+        if (superEditMode == 1) {
+            window.alert("Please submit currently edited table first");
+        }
+        else {
+            $('#table2_wrapper').parent().css('display', 'none');
+            $('#table3_wrapper').parent().css('display', 'none');
+            $('#table4_wrapper').parent().removeAttr('style');
+        }
     }
 }
 //To check for any items data change (textview, drop downs, button click)
@@ -958,10 +975,12 @@ function set_filterlistener() {
     $("#aggregator_payments").change(function() {
         var aggregator_id = $('#aggregator_payments :selected').val();
         var agg_id = $(this).children(":selected").attr("id");
+        var aggregator_name_input = $('#aggregator_payment_tab :input').val();
         if (table_created) {
             $('#outliers_data').html("");
         }
-        aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id, agg_id);
+        aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id, agg_id, aggregator_name_input);
+//      console.log(payments_data.aggregator_data);
         $("#download_payment_sheets").show();
         $('#aggregator_payment_details').show();
         outliers_summary(aggregator_id);
@@ -2488,7 +2507,7 @@ function fill_drop_down(container, data_json, id_parameter, name_parameter, capt
     $('select').material_select();
 }
 //To compute aggregator, transporter, gaddidar payments table
-function aggregator_payment_sheet(data_json, aggregator, agg_id) {
+function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name_input) {
     var aggregator_payment = payments_data.aggregator_data;
     var transport_payment = payments_data.transportation_data;
     var gaddidar_contribution_data = payments_data.gaddidar_data;
@@ -2976,6 +2995,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 "fnClick": function(nButton, oConfig) {
                     $('#ToolTables_table2_1').removeClass('disable-button');
                     flag_edit_Table2 = true;
+                    superEditMode=1;
                     var colCount = $('#table2').dataTable().fnSettings().aoColumns.length - 1;
                     for (var column = 0; column < colCount; column++)
                         $('#table2').dataTable().fnSettings().aoColumns[column].bSortable = false;
@@ -2986,7 +3006,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     $('#payments_from_date').parent().parent().addClass('disable-button');
                     $('#payments_from_date').removeClass('black-text');
                     $('#payments_to_date').removeClass('black-text');
-
                 }
             }, {
                 "sExtends": "ajax",
@@ -2997,6 +3016,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 "fnClick": function(nButton, oConfig) {
                     var aggregatorAjaxSuccess = 0;
                     var farmerAjaxSuccess = 0;
+                    superEditMode=0;
                     var editedDataAggregator = [];
                     var editedDataFarmer = [];
                     $('#ToolTables_table2_0').removeClass('disable-button');
@@ -3337,6 +3357,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 "sButtonText": "Edit",
                 "fnClick": function(nButton, oConfig) {
                     $('#aggregator_payment_tab :input')[0].disabled = true;
+                    superEditMode=1;
                     $('#ToolTables_table3_1').removeClass('disable-button');
                     $('#ToolTables_table3_0').addClass('disable-button');
                     $('#payments_from_date').parent().parent().addClass('disable-button');
@@ -3348,6 +3369,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                     var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
                     for (var column = 0; column < colCount; column++)
                         $('#table3').dataTable().fnSettings().aoColumns[column].bSortable = false;
+
                 }
             }, {
                 "sExtends": "ajax",
@@ -3357,6 +3379,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                 "fnClick": function(nButton, oConfig) {
                     var editedDataGaddidar = [];
                     var gaddidarAjaxSuccess = 0;
+                    superEditMode=0;
                     $('#ToolTables_table3_0').removeClass('disable-button');
                     editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
                     var sData = this.fnGetTableData(oConfig);
@@ -3408,6 +3431,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id) {
                             $('#payments_from_date').parent().parent().removeClass('disable-button');
                             $('#payments_from_date').addClass('black-text');
                             $('#payments_to_date').addClass('black-text');
+                                get_payments_data();
+                                delay = 3000;
+                                setTimeout(function(){
+                                    $("#aggregator_payment_tab :input").val(aggregator_name_input);
+                                    $("#aggregator_payments").val(aggregator).change();
+                                },delay);
                         }
                         var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
                         for (var column = 0; column < colCount; column++)
@@ -3692,6 +3721,9 @@ function get_payments_data() {
         }).done(function(data) {
             $('#aggregator_payment_tab').show();
             payments_data = JSON.parse(data);
+
+//            console.log(payments_data)
+
             outliers_data = payments_data.outlier_data;
             outliers_transport_data = payments_data.outlier_transport_data;
             outlier_daily_data = payments_data.outlier_daily_data;
