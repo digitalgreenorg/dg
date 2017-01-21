@@ -957,7 +957,7 @@ function set_filterlistener() {
                 transporter_data: {
                     sheet_heading: transporter_sheet_name,
                     sheet_name: 'Transporter',
-                    data: transporter_data_set_copy
+                    data: transporter_data_set
                 }
             };
 
