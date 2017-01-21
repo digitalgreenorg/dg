@@ -3591,7 +3591,7 @@ function create_data_for_excel_download() {
             },
             {
                 'coloumn_width': 12,
-                'formula': '0.25 * D',
+                'formula': null,
                 'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
                 'total': true
             },
