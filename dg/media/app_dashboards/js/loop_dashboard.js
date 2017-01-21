@@ -3043,6 +3043,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                     var aggregatorAjaxSuccess = 0;
                     var farmerAjaxSuccess = 0;
                     superEditMode=0;
+                    $("#gaddidar_payments").parent().addClass('disabled');
+                    $("#transportation_payments").parent().addClass('disabled');
                     var editedDataAggregator = [];
                     var editedDataFarmer = [];
                     $('#ToolTables_table2_0').removeClass('disable-button');
@@ -3408,6 +3410,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                     var editedDataGaddidar = [];
                     var gaddidarAjaxSuccess = 0;
                     superEditMode=0;
+                    $("#summary_payments").parent().removeClass('disabled');
+                    $("#transportation_payments").parent().removeClass('disabled');
                     $('#ToolTables_table3_0').removeClass('disable-button');
                     editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
                     var sData = this.fnGetTableData(oConfig);
