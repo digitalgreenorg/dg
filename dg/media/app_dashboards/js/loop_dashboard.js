@@ -916,6 +916,7 @@ function set_filterlistener() {
 
     $("#summary_payments").click(function(){
         if (superEditMode == 1) {
+            $("#summary_payments").parent().addClass('disabled');
             window.alert("Please submit currently edited table first");
         }
         else {
