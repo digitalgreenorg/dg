@@ -910,76 +910,82 @@ function set_filterlistener() {
         crop_prices_graph(crop_id);
     });
 
-    $("#download-payment-sheet").click(function() {
-        if ($('#aggregator_payments :selected').val() == '') {
-            alert("Please select an aggregator to download the payment sheet");
-        } else {
-            xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                var a;
-                if (xhttp.readyState === 4 && xhttp.status === 200) {
-                    a = document.createElement('a');
-                    a.href = window.URL.createObjectURL(xhttp.response);
-                    a.download = aggregator_sheet_name;
-                    a.style.display = 'none';
-                    document.body.appendChild(a);
-                    return a.click();
+    $("#download-payment-sheet").click(function () {
+        if (superModeEdit == 1) {
+            window.alert('Please finish editing first');
+        }
+        else {
+
+            if ($('#aggregator_payments :selected').val() == '') {
+                alert("Please select an aggregator to download the payment sheet");
+            } else {
+                xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    var a;
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        a = document.createElement('a');
+                        a.href = window.URL.createObjectURL(xhttp.response);
+                        a.download = aggregator_sheet_name;
+                        a.style.display = 'none';
+                        document.body.appendChild(a);
+                        return a.click();
+                    }
+                };
+                xhttp.open("POST", "/loop/get_payment_sheet/", true);
+                xhttp.setRequestHeader("Content-Type", "application/json");
+                xhttp.responseType = 'blob';
+
+                aggregator_data_set_copy = aggregator_data_set.slice();
+                gaddidar_data_set_copy = gaddidar_data_set.slice();
+
+                for (var i = 0; i < aggregator_data_set_copy.length; i++) {
+                    aggregator_data_set_copy[i] = aggregator_data_set_copy[i].slice(0, 9);
                 }
-            };
-            xhttp.open("POST", "/loop/get_payment_sheet/", true);
-            xhttp.setRequestHeader("Content-Type", "application/json");
-            xhttp.responseType = 'blob';
 
-            aggregator_data_set_copy = aggregator_data_set.slice();
-            gaddidar_data_set_copy = gaddidar_data_set.slice();
-
-            for (var i = 0; i < aggregator_data_set_copy.length; i++) {
-                aggregator_data_set_copy[i] = aggregator_data_set_copy[i].slice(0, 9);
-            }
-
-            for (var i = 0; i < gaddidar_data_set_copy.length; i++) {
-                gaddidar_data_set_copy[i] = gaddidar_data_set_copy[i].slice(0, 6);
-            }
-
-            var data_json = {
-                aggregator_data: {
-                    sheet_heading: aggregator_sheet_name,
-                    sheet_name: 'Aggregator',
-                    data: aggregator_data_set_copy
-                },
-
-                gaddidar_data: {
-                    sheet_heading: gaddidar_sheet_name,
-                    sheet_name: 'Commission Agent',
-                    data: gaddidar_data_set_copy
-                },
-
-                transporter_data: {
-                    sheet_heading: transporter_sheet_name,
-                    sheet_name: 'Transporter',
-                    data: transporter_data_set
+                for (var i = 0; i < gaddidar_data_set_copy.length; i++) {
+                    gaddidar_data_set_copy[i] = gaddidar_data_set_copy[i].slice(0, 6);
                 }
-            };
 
-            var header_json = header_dict;
+                var data_json = {
+                    aggregator_data: {
+                        sheet_heading: aggregator_sheet_name,
+                        sheet_name: 'Aggregator',
+                        data: aggregator_data_set_copy
+                    },
 
-            var cell_format = {
-                bold: 0,
-                font_size: 10,
-                num_format: '#,##0.00',
-                text_wrap: true
+                    gaddidar_data: {
+                        sheet_heading: gaddidar_sheet_name,
+                        sheet_name: 'Commission Agent',
+                        data: gaddidar_data_set_copy
+                    },
+
+                    transporter_data: {
+                        sheet_heading: transporter_sheet_name,
+                        sheet_name: 'Transporter',
+                        data: transporter_data_set
+                    }
+                };
+
+                var header_json = header_dict;
+
+                var cell_format = {
+                    bold: 0,
+                    font_size: 10,
+                    num_format: '#,##0.00',
+                    text_wrap: true
+                }
+
+                var json_to_send = {
+                    header: header_json,
+                    data: data_json,
+                    cell_format: cell_format,
+                    sheet_header: 'Loop India Bihar',
+                    sheet_footer: 'This is an automated generated sheet'
+
+                }
+
+                xhttp.send(JSON.stringify(json_to_send));
             }
-
-            var json_to_send = {
-                header: header_json,
-                data: data_json,
-                cell_format: cell_format,
-                sheet_header: 'Loop India Bihar',
-                sheet_footer: 'This is an automated generated sheet'
-
-            }
-
-            xhttp.send(JSON.stringify(json_to_send));
         }
     });
 
