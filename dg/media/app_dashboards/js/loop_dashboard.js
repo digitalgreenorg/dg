@@ -808,18 +808,21 @@ function change_graph(parameter) {
 
 
 function change_payment(parameter) {
-    //    if (parameter == 'summary_payments') {
-//        if (superEditMode == 1) {
-//            window.alert("Please submit currently edited table first");
-//        }
-//        else {
-//            $('#table2_wrapper').parent().removeAttr('style');
-//            $('#table3_wrapper').parent().css('display', 'none');
-//            $('#table4_wrapper').parent().css('display', 'none');
-//        }
-//    } else
-    if (parameter == 'gaddidar_payments') {
+        if (parameter == 'summary_payments') {
         if (superEditMode == 1) {
+           $("#gaddidar_payments").parent().addClass('disabled');
+           $("#transportation_payments").parent().addClass('disabled');
+            window.alert("Please submit currently edited table first");
+        }
+        else {
+            $('#table2_wrapper').parent().removeAttr('style');
+            $('#table3_wrapper').parent().css('display', 'none');
+            $('#table4_wrapper').parent().css('display', 'none');
+        }
+    } else if (parameter == 'gaddidar_payments') {
+        if (superEditMode == 1) {
+           $("#summary_payments").parent().addClass('disabled');
+           $("#transportation_payments").parent().addClass('disabled');
             window.alert("Please submit currently edited table first");
         }
         else {
@@ -830,6 +833,8 @@ function change_payment(parameter) {
     }
     else {
         if (superEditMode == 1) {
+           $("#gaddidar_payments").parent().addClass('disabled');
+           $("#summary_payments").parent().addClass('disabled');
             window.alert("Please submit currently edited table first");
         }
         else {
@@ -913,19 +918,6 @@ function set_filterlistener() {
         var crop_id = $('#crop_max_min_avg :selected').val();
         crop_prices_graph(crop_id);
     });
-
-    $("#summary_payments").click(function(){
-        if (superEditMode == 1) {
-            $("#summary_payments").parent().addClass('disabled');
-            window.alert("Please submit currently edited table first");
-        }
-        else {
-            $('#table2_wrapper').parent().removeAttr('style');
-            $('#table3_wrapper').parent().css('display', 'none');
-            $('#table4_wrapper').parent().css('display', 'none');
-        }
-    });
-
 
     $("#download-payment-sheet").click(function () {
         if (superEditMode == 1) {
