@@ -3043,8 +3043,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                     var aggregatorAjaxSuccess = 0;
                     var farmerAjaxSuccess = 0;
                     superEditMode=0;
-                    $("#gaddidar_payments").parent().addClass('disabled');
-                    $("#transportation_payments").parent().addClass('disabled');
+                    $("#gaddidar_payments").parent().removeClass('disabled');
+                    $("#transportation_payments").parent().removeClass('disabled');
                     var editedDataAggregator = [];
                     var editedDataFarmer = [];
                     $('#ToolTables_table2_0').removeClass('disable-button');
