@@ -930,23 +930,34 @@ function set_filterlistener() {
             xhttp.setRequestHeader("Content-Type", "application/json");
             xhttp.responseType = 'blob';
 
+            aggregator_data_set_copy = aggregator_data_set.slice();
+            gaddidar_data_set_copy = gaddidar_data_set.slice();
+
+            for (var i = 0; i < aggregator_data_set_copy.length; i++) {
+                aggregator_data_set_copy[i] = aggregator_data_set_copy[i].slice(0, 9);
+            }
+
+            for (var i = 0; i < gaddidar_data_set_copy.length; i++) {
+                gaddidar_data_set_copy[i] = gaddidar_data_set_copy[i].slice(0, 6);
+            }
+
             var data_json = {
                 aggregator_data: {
                     sheet_heading: aggregator_sheet_name,
                     sheet_name: 'Aggregator',
-                    data: aggregator_data_set
+                    data: aggregator_data_set_copy
                 },
 
                 gaddidar_data: {
                     sheet_heading: gaddidar_sheet_name,
                     sheet_name: 'Commission Agent',
-                    data: gaddidar_data_set
+                    data: gaddidar_data_set_copy
                 },
 
                 transporter_data: {
                     sheet_heading: transporter_sheet_name,
                     sheet_name: 'Transporter',
-                    data: transporter_data_set
+                    data: transporter_data_set_copy
                 }
             };
 
@@ -3566,129 +3577,129 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 function create_data_for_excel_download() {
     header_dict = {
         'aggregator': [{
-                'coloumn_width': 3,
+                'column_width': 3,
                 'formula': null,
                 'label': 'S No',
                 'total': false
             },
             {
-                'coloumn_width': 9,
+                'column_width': 9,
                 'formula': null,
                 'label': 'Date',
                 'total': false
             },
             {
-                'coloumn_width': 10,
+                'column_width': 10,
                 'formula': null,
                 'label': 'Market',
                 'total': false
             },
             {
-                'coloumn_width': 8,
+                'column_width': 8,
                 'formula': null,
                 'label': 'Quantity [Q] (in Kg)',
                 'total': true
             },
             {
-                'coloumn_width': 12,
+                'column_width': 12,
                 'formula': null,
                 'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
                 'total': true
             },
             {
-                'coloumn_width': 8,
+                'column_width': 8,
                 'formula': null,
                 'label': 'Transport Cost [TC] (in Rs)',
                 'total': true
             },
             {
-                'coloumn_width': 10,
+                'column_width': 10,
                 'formula': null,
                 'label': "Farmers' Contribution [FC] (in Rs)",
                 'total': true
             },
             {
-                'coloumn_width': 10,
+                'column_width': 10,
                 'formula': null,
                 'label': 'Commission Agent Contribution [CAC] (in Rs)',
                 'total': true
             },
             {
-                'coloumn_width': 10.7,
+                'column_width': 10.7,
                 'formula': 'E + F - G - H',
                 'label': 'Total Payment (in Rs) (AP + TC - FC - CAC)',
                 'total': true
             }
         ],
         'gaddidar': [{
-                'coloumn_width': 9.4,
+                'column_width': 9.4,
                 'formula': null,
                 'label': 'Date',
                 'total': false
             },
             {
-                'coloumn_width': 18.3,
+                'column_width': 18.3,
                 'formula': null,
                 'label': 'Commission Agent',
                 'total': false
             },
             {
-                'coloumn_width': 11,
+                'column_width': 11,
                 'formula': null,
                 'label': 'Market',
                 'total': false
             },
             {
-                'coloumn_width': 10,
+                'column_width': 10,
                 'formula': null,
                 'label': 'Quantity [Q] (in Kg)',
                 'total': true
             },
             {
-                'coloumn_width': 13,
+                'column_width': 13,
                 'formula': null,
                 'label': 'Commission Agent Discount [CAD] (in Rs/Kg)',
                 'total': false
             },
             {
-                'coloumn_width': 16,
+                'column_width': 16,
                 'formula': 'D * E',
                 'label': 'Commission Agent Contribution [CAC] (in Rs) (Q*CAD)',
                 'total': true
             }
         ],
         'transporter': [{
-                'coloumn_width': 9.4,
+                'column_width': 9.4,
                 'formula': null,
                 'label': 'Date',
                 'total': false
             },
             {
-                'coloumn_width': 11,
+                'column_width': 11,
                 'formula': null,
                 'label': 'Market',
                 'total': false
             },
             {
-                'coloumn_width': 18.3,
+                'column_width': 18.3,
                 'formula': null,
                 'label': 'Transporter',
                 'total': false
             },
             {
-                'coloumn_width': 11,
+                'column_width': 11,
                 'formula': null,
                 'label': 'Vehicle Type',
                 'total': false
             },
             {
-                'coloumn_width': 13,
+                'column_width': 13,
                 'formula': null,
                 'label': 'Vehicle Number',
                 'total': false
             },
             {
-                'coloumn_width': 13,
+                'column_width': 13,
                 'formula': null,
                 'label': 'Tranport Cost (in Rs)',
                 'total': true
