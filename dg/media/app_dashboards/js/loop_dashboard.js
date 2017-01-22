@@ -3042,9 +3042,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 "fnClick": function(nButton, oConfig) {
                     var aggregatorAjaxSuccess = 0;
                     var farmerAjaxSuccess = 0;
-                    superEditMode=0;
-                    $("#gaddidar_payments").parent().removeClass('disabled');
-                    $("#transportation_payments").parent().removeClass('disabled');
                     var editedDataAggregator = [];
                     var editedDataFarmer = [];
                     $('#ToolTables_table2_0').removeClass('disable-button');
@@ -3117,6 +3114,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             $('#payments_from_date').addClass('black-text');
                             $('#payments_to_date').addClass('black-text');
                         }
+                        superEditMode=0;
+                        $("#gaddidar_payments").parent().removeClass('disabled');
+                        $("#transportation_payments").parent().removeClass('disabled');
                         $('#table2').find('td').removeClass("editcolumn");
                         $('#table2').find('td').removeClass("editedcell");
                         $('#table2').find('td').removeClass("editedcelledge");
@@ -3409,9 +3409,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 "fnClick": function(nButton, oConfig) {
                     var editedDataGaddidar = [];
                     var gaddidarAjaxSuccess = 0;
-                    superEditMode=0;
-                    $("#summary_payments").parent().removeClass('disabled');
-                    $("#transportation_payments").parent().removeClass('disabled');
                     $('#ToolTables_table3_0').removeClass('disable-button');
                     editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
                     var sData = this.fnGetTableData(oConfig);
@@ -3433,6 +3430,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             success: function() {
                                 alert("Success : Gaddidar Data");
                                 gaddidarAjaxSuccess = 1;
+                                superEditMode=0;
+                                $("#summary_payments").parent().removeClass('disabled');
+                                $("#transportation_payments").parent().removeClass('disabled');
                                 for (var keys in rows_table3) {
                                     if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0){
                                         gaddidar_data_set[keys - 1][4] = parseFloat(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]) / 100;
