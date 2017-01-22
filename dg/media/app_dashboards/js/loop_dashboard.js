@@ -3430,9 +3430,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             success: function() {
                                 alert("Success : Gaddidar Data");
                                 gaddidarAjaxSuccess = 1;
-                                superEditMode=0;
-                                $("#summary_payments").parent().removeClass('disabled');
-                                $("#transportation_payments").parent().removeClass('disabled');
                                 for (var keys in rows_table3) {
                                     if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0){
                                         gaddidar_data_set[keys - 1][4] = parseFloat(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]) / 100;
@@ -3479,6 +3476,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                         $('#table3').find('td').removeClass("editedcelledge");
                         flag_edit_Table3 = false;
                         $('#ToolTables_table3_1').addClass('disable-button');
+                        superEditMode=0;
+                        $("#summary_payments").parent().removeClass('disabled');
+                        $("#transportation_payments").parent().removeClass('disabled');
                     }
                 }
             }]
