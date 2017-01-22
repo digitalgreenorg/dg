@@ -3447,6 +3447,13 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                     gaddidar_data_set_clone[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
                                 }
                                 rows_table3 = [];
+                                get_payments_data();
+                                delay = 3000;
+                                setTimeout(function(){
+                                    $("#aggregator_payment_tab :input").val(aggregator_name_input);
+                                    $("#aggregator_payments").val(aggregator).change();
+                                },delay);
+
                             },
                             error: function() {
                                 alert("Error While Syncing Gaddidar Data");
@@ -3463,12 +3470,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             $('#payments_from_date').parent().parent().removeClass('disable-button');
                             $('#payments_from_date').addClass('black-text');
                             $('#payments_to_date').addClass('black-text');
-                                get_payments_data();
-                                delay = 3000;
-                                setTimeout(function(){
-                                    $("#aggregator_payment_tab :input").val(aggregator_name_input);
-                                    $("#aggregator_payments").val(aggregator).change();
-                                },delay);
                         }
                         var colCount = $('#table3').dataTable().fnSettings().aoColumns.length;
                         for (var column = 0; column < colCount; column++)
