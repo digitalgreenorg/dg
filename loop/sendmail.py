@@ -8,7 +8,7 @@ from dg.settings import EMAIL_HOST_USER
 from loop.config import *
 #-------------------------------------------------------------------------------
 
-def common_send_email(subject, recipients, file, bcc=[], from_email=None):
+def common_send_email(subject, recipients, files, bcc=[], from_email=None):
     """
     This method is a common method to send email via the bhane system.
     """
@@ -16,7 +16,7 @@ def common_send_email(subject, recipients, file, bcc=[], from_email=None):
     if not from_email:
         from_email = EMAIL_HOST_USER
     #get templates from file system
-    attach_file_name = os.getcwd() + '/'+ file.name
+    
     text_content = 'This is an important message.'
 
     #render the raw data in the template
@@ -24,7 +24,9 @@ def common_send_email(subject, recipients, file, bcc=[], from_email=None):
 
     #contstruct the message and send it
     msg = EmailMultiAlternativesWithEncoding(subject, text_content, from_email, recipients)
-    msg.attach_file(attach_file_name)
+    for file in files:
+        attach_file_name = os.getcwd() + '/'+ file.name
+        msg.attach_file(attach_file_name)
     msg.send()
     return
 
