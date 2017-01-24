@@ -125,12 +125,10 @@ class Command(BaseCommand):
             excel_workbook_name = 'Incorrect_Mobile_Numbers_' + generate_sheet_for + '_ ' + from_day + '-' + \
                         from_month + '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
 
-        print query
-        print '#############'
+    
         cur.execute(query)
         result = cur.fetchall()
         data = [list(row) for row in result]
-        print len(data)
         #create list copy for filtering
         temp_data = copy.deepcopy(data)
         if generate_sheet_for_all_flag is True:
@@ -196,12 +194,10 @@ class Command(BaseCommand):
             excel_workbook_name_second = 'Incorrect_Mobile_Numbers_' + generate_sheet_for + '_ ' + default_from_day + '-' + \
                         default_from_month + '-' + default_from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
 
-        print query
         cur2 = mysql_cn.cursor()                
         cur2.execute(query)
         result = cur2.fetchall()
         data2 = [list(row) for row in result]
-        print len(data2)
         #create list copy for filtering
         temp_data2 = copy.deepcopy(data2)
         if generate_sheet_for_all_flag is True:
@@ -259,13 +255,13 @@ class Command(BaseCommand):
 
         #post request to library for excel generation
         try:
-            r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
+            r = requests.post('http://localhost:5000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
             files = []
             excel_file = open(excel_workbook_name + '.xlsx', 'w')
             excel_file.write(r.content)
             excel_file.close()
             files.append(excel_file)
-            r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send_second))
+            r = requests.post('http://localhost:5000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send_second))
             excel_file = open(excel_workbook_name_second + '.xlsx', 'w')
             excel_file.write(r.content)
             excel_file.close()
@@ -276,7 +272,7 @@ class Command(BaseCommand):
             common_send_email('Farmers List with Incorrect Mobile Numbers', 
                               RECIPIENTS_TEMP, files, [],EMAIL_HOST_USER)
             os.remove(excel_workbook_name + '.xlsx')
-            #os.remove(excel_workbook_name_second + '.xlsx')
+            os.remove(excel_workbook_name_second + '.xlsx')
         except Exception as e:
             raise CommandError('There is some problem, please contact the administrator')
         
