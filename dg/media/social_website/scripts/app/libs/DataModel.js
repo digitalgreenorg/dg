@@ -9,6 +9,7 @@ define(function(require) {
         _data: undefined,
 
         constructor: function(indexed) {
+
             this._state = {};
 
             this._state.indexed = !!indexed;

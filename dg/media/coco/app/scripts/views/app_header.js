@@ -6,7 +6,8 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
     var HeaderView = Backbone.Layout.extend({
         template: "#page_header",
         events: {
-            "click #logout": "logout"
+            "click #logout": "logout",
+            "click .js_language": "language",
         },
         
         initialize: function() {
@@ -19,8 +20,11 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
         serialize: function() {
             // Send username 
             var username = User.get("username");
+            var language = User.get("language");
             return {
                 username: username,
+                language: language,
+                configs: configs
             }
         },
 
@@ -76,10 +80,18 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
                 .always(function() {
                 window.location.href = window.location.origin + window.location.pathname;
             });
+        },
+
+        //this function is called when user clicks on language change options
+        language: function(e) {
+            e.preventDefault();
+            var language_chosen = $(e.currentTarget).text();
+            var language_current = User.get("language");
+            if(language_chosen!=language_current){
+                User.save({"language":language_chosen});
+            }
         }
     });
-
-
     // Our module now returns our view
     return HeaderView;
 });

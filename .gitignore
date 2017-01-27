@@ -317,3 +317,8 @@
 *.prefs
 .DS_Store
 /apache/*
+py_env/*
+training_env/*
+.idea/
+/scripts/*.sql
+/scripts/*.gz

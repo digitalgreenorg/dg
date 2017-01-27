@@ -7,12 +7,13 @@ from django.db.models import Count, Sum
 
 import gdata.youtube.service
 from libs.youtube_utils import cleanup_youtubeid, get_youtube_entry, get_online_stats
-from social_website.models import Collection, Comment, Partner, Person, PersonVideoRecord, Video
+from social_website.models import Collection, Comment, Partner, Person, Animator, PersonVideoRecord, Video
 
 
 S3_VIDEO_BUCKET = r'http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
 S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg-farmerbook/2/"
+S3_FARMERBOOK_URL_ANIMATOR = "https://s3.amazonaws.com/dg-farmerbook/csp/"
 
 def initial_personvideorecord():
     from activities.models import PersonAdoptPractice, PersonMeetingAttendance
@@ -26,10 +27,10 @@ def initial_personvideorecord():
     del paps
     
     person_screening_dict = defaultdict(list)        
-    pmas = PersonMeetingAttendance.objects.all().values('person_id', 'screening__videoes_screened', 'interested')
+    pmas = PersonMeetingAttendance.objects.all().values('person_id', 'screening__videoes_screened')
     for pma_row in pmas:
         if pma_row['screening__videoes_screened']:
-            person_screening_dict[pma_row['person_id']].append({'vid' : pma_row['screening__videoes_screened'], 'interested' : pma_row['interested']})
+            person_screening_dict[pma_row['person_id']].append({'vid' : pma_row['screening__videoes_screened']})
     del pmas
     gc.collect()
     record_list = []
@@ -40,15 +41,12 @@ def initial_personvideorecord():
         for row in videos_info:
             if row['vid'] in vid_dict:
                 vid_dict[row['vid']]['views'] += 1
-                if row['interested']:
-                    vid_dict[row['vid']]['interested'] = 1
             else:
                 vid_dict[row['vid']]['views'] = 1
-                vid_dict[row['vid']]['interested'] = 1 if row['interested'] else 0
             
         for vid_id, vals in vid_dict.iteritems():
             adopted = person_video_adoption_dict[person_id][vid_id] if vid_id in person_video_adoption_dict[person_id] else 0 
-            record_list.append(PersonVideoRecord(personID = person_id, videoID = vid_id, views = vals['views'], like =  vals['interested'], adopted = adopted))
+            record_list.append(PersonVideoRecord(personID = person_id, videoID = vid_id, views = vals['views'], adopted = adopted))
             i += 1
             if i%chunk == 0:
                 PersonVideoRecord.objects.bulk_create(record_list)
@@ -75,10 +73,8 @@ def update_person_video_record(pma, videos):
         try:
             person_video_obj = PersonVideoRecord.objects.get(personID = pma.person_id, videoID = video.id)
             person_video_obj.views += 1
-            if pma.interested:
-                person_video_obj.like = 1
         except ObjectDoesNotExist:
-            person_video_obj = PersonVideoRecord(personID = pma.person_id, videoID = video.id, like = pma.interested, views = 1)
+            person_video_obj = PersonVideoRecord(personID = pma.person_id, videoID = video.id, views = 1)
         person_video_obj.save()
 
 def populate_adoptions(pap):
@@ -99,8 +95,9 @@ def update_website_video(vid):
         except Partner.DoesNotExist:
             return
         language  = vid.language.language_name
+        country = vid.village.block.district.state.country.country_name
         state = vid.village.block.district.state.state_name
-        date = vid.video_production_end_date
+        date = vid.production_date
         offline_stats = get_offline_stats(vid.id)
         online_stats = get_online_stats(yt_entry)
         temp = vid.duration if vid.duration is not None else datetime.time(0,0,0)
@@ -119,18 +116,18 @@ def update_website_video(vid):
             website_vid = Video.objects.get(coco_id = str(vid.id))
             # There is just one result for a filter, but we want to use update here.
             website_vid = Video.objects.filter(coco_id = str(vid.id))
-            website_vid.update(title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
+            website_vid.update(title = vid.title, description = vid.benefit, youtubeID = vid.youtubeid, date = vid.production_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
-                                language = language, partner = partner, state = state,
-                                offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
+                                language = language, partner = partner, state = state, country = country,
+                                offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                                 onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
         except Video.DoesNotExist:
-            website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.summary, youtubeID = vid.youtubeid, date = vid.video_production_end_date,
+            website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.benefit, youtubeID = vid.youtubeid, date = vid.production_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
-                                language = language, partner = partner, state = state,
-                                offlineLikes = offline_stats['like__sum'], offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
+                                language = language, partner = partner, state = state, country = country,
+                                offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                                 onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
                                 thumbnailURL = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
                                 thumbnailURL16by9 = "http://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
@@ -147,11 +144,11 @@ def get_collection_pracs(videos,field1,field2,field3,field4,field5):
         
 def create_collections():
     ####### COLLECTIONS BASED ON TOPIC ##############################
-    collection_combinations = Video.objects.exclude(topic = '').values_list('partner_id','language','topic','state').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
-    for partner, language, topic, state, count in collection_combinations:
-        videos = Video.objects.filter(partner_id = partner, language = language ,topic = topic, state = state)
+    collection_combinations = Video.objects.exclude(topic = '').values_list('partner_id','language','topic','state','country').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
+    for partner, language, topic, state, country, count in collection_combinations:
+        videos = Video.objects.filter(partner_id = partner, language = language ,topic = topic, state = state, country = country)
         collection_pracs = get_collection_pracs(videos,'category','subcategory','topic','subtopic','subject')
-        website_collection = Collection(state = state, partner = Partner.objects.get(uid=partner), language = language,
+        website_collection = Collection(country = country, state = state, partner = Partner.objects.get(uid=partner), language = language,
                                         category = collection_pracs['category'], subcategory = collection_pracs['subcategory'], topic = topic, 
                                         subtopic = collection_pracs['subtopic'],  subject = collection_pracs['subject'],
                                         title = videos[0].topic, thumbnailURL = '') # update thumbnail with Aadish's migration
@@ -160,11 +157,11 @@ def create_collections():
             website_collection.videos.add(video)
     
     ####### COLLECTIONS BASED ON SUBJECT #############################    
-    collection_combinations = Video.objects.exclude(subject = '').values_list('partner_id','language','subject','state').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
-    for partner, language, subject, state, count in collection_combinations:
-        videos = Video.objects.filter(partner_id = partner, language = language, subject = subject, state = state)
+    collection_combinations = Video.objects.exclude(subject = '').values_list('partner_id','language','subject','state', 'country').annotate(vids = Count('uid')).filter(vids__gte=5, vids__lte=25)
+    for partner, language, subject, state, country, count in collection_combinations:
+        videos = Video.objects.filter(partner_id = partner, language = language, subject = subject, state = state, country=country)
         collection_pracs = get_collection_pracs(videos,'category','subcategory','topic','subtopic','subject')
-        website_collection = Collection(state = state, partner = Partner.objects.get(uid=partner), language = language,
+        website_collection = Collection( country=country, state = state, partner = Partner.objects.get(uid=partner), language = language,
                                         category = collection_pracs['category'], subcategory = collection_pracs['subcategory'], topic = collection_pracs['topic'], 
                                         subtopic = collection_pracs['subtopic'],  subject = subject,
                                         title = videos[0].subject, thumbnailURL = '') # update thumbnail with Aadish's migration
@@ -174,17 +171,17 @@ def create_collections():
         
 def populate_collection_stats(collection):
     if collection.videos.all().count() != 0:
-        stats = collection.videos.all().aggregate(Sum('offlineLikes'), Sum('offlineViews'), Sum('adoptions'), Sum('onlineLikes'), Sum('onlineViews'))
-        collection.likes = stats['offlineLikes__sum'] + stats['onlineLikes__sum']
+        stats = collection.videos.all().aggregate(Sum('offlineViews'), Sum('adoptions'), Sum('onlineLikes'), Sum('onlineViews'))
+        collection.likes = stats['onlineLikes__sum']
         collection.views = stats['offlineViews__sum'] + stats['onlineViews__sum']
         collection.adoptions = stats['adoptions__sum']
         collection.save()    
     
 def populate_partner_stats(partner):
-    stats = Video.objects.filter(partner_id = partner.uid).aggregate(Count('uid'), Sum('onlineLikes'), Sum('offlineLikes'), Sum('onlineViews'), Sum('offlineViews'), Sum('adoptions'))
+    stats = Video.objects.filter(partner_id = partner.uid).aggregate(Count('uid'), Sum('onlineLikes'), Sum('onlineViews'), Sum('offlineViews'), Sum('adoptions'))
     if stats['uid__count'] > 0:                 #check if partner has at least one video
         partner.video_count = stats['uid__count']
-        partner.likes = stats['onlineLikes__sum'] + stats['offlineLikes__sum']
+        partner.likes = stats['onlineLikes__sum']
         partner.views = stats['onlineViews__sum'] + stats['offlineViews__sum']
         partner.adoptions = stats['adoptions__sum']
     partner.collection_count = Collection.objects.filter(partner = partner).count()
@@ -197,22 +194,38 @@ def populate_farmers(person):
         # There is just one result for a filter, but we want to use update here.
         website_farmer = Person.objects.filter(coco_id = str(person.id))
         website_farmer.update(coco_id = str(person.id), name = person.person_name, 
-                                                                                partner = partner,thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
+                                                                                partner = partner, thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
     except Person.DoesNotExist:
         website_farmer = Person(coco_id = str(person.id), name = person.person_name, partner = partner,
                                 thumbnailURL = S3_FARMERBOOK_URL + str(person.id) + '.jpg')
         website_farmer.save()
 
-def update_questions_asked(pma):
-    if pma.expressed_question != '':
-        videos = [video for video in pma.screening.videoes_screened.all()]
+def populate_animators(animator):
+    try:
+        partner = Partner.objects.get(coco_id = str(animator.partner.id))
+        website_animator = Animator.objects.get(coco_id = str(animator.id))
+        # There is just one result for a filter, but we want to use update here.
+        website_animator = Animator.objects.filter(coco_id = str(animator.id))
+        website_animator.update(coco_id = str(animator.id), name = animator.name, 
+                                                                                partner = partner, thumbnailURL = S3_FARMERBOOK_URL_ANIMATOR + str(animator.id) + '.jpg')
+    except Animator.DoesNotExist:
+        website_animator = Animator(coco_id = str(animator.id), name = animator.name, partner = partner,
+                                thumbnailURL = S3_FARMERBOOK_URL_ANIMATOR + str(animator.id) + '.jpg')
+        website_animator.save()
+
+    except Partner.DoesNotExist:
+        pass
+
+def update_questions_asked(scr):
+    if scr.questions_asked != '':
+        videos = [video for video in scr.videoes_screened.all()]
         for dashboard_video in videos:
             try:
                 video = Video.objects.get(coco_id = str(dashboard_video.id))
-                if Comment.objects.filter(video = video, text = pma.expressed_question):
+                if Comment.objects.filter(video = video, text = scr.questions_asked):
                     return 
-                person = Person.objects.get(coco_id = str(pma.person_id))
-                comment = Comment(date = pma.screening.date, text = pma.expressed_question, isOnline=False, person = person, video = video) 
+                animator = Animator.objects.get(coco_id = str(scr.animator.id))
+                comment = Comment(date = scr.date, text = scr.questions_asked, isOnline=False, animator = animator, video = video) 
                 comment.save()
             except Exception as ex:
                 # this means either person or video does not exist on website DB
@@ -220,9 +233,13 @@ def update_questions_asked(pma):
             
 def delete_person(person):
     website_person = Person.objects.get(coco_id = str(person.id))
-    comments = Comment.objects.filter(person = website_person)
-    comments.delete()
     website_person.delete()
+
+def delete_animator(animator):
+    website_animator = Animator.objects.get(coco_id = str(animator.id))
+    comments = Comment.objects.filter(animator = website_animator)
+    comments.delete()
+    website_animator.delete()
     
 def delete_video(video):
     website_video = Video.objects.get(coco_id = str(video.id))

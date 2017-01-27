@@ -66,7 +66,7 @@ def get_storyboard_prepared(geog, id, from_date, to_date, partners):
     sql_ds['select'].append('COUNT(DISTINCT VID.ID) as count')
     sql_ds['from'].append('videos_video VID')
     sql_ds['where'].append("STORYBOARD_FILENAME != ''")
-    old_filter_partner_geog_date(sql_ds,"VID","VID.VIDEO_PRODUCTION_END_DATE",geog,id,from_date,to_date,partners)
+    old_filter_partner_geog_date(sql_ds,"VID","VID.VIDEO_PRODUCTION_DATE",geog,id,from_date,to_date,partners)
     return join_sql_ds(sql_ds);
 
 def get_video_edited(geog, id, from_date, to_date, partners):
@@ -82,16 +82,6 @@ def get_quality_check(geog, id, from_date, to_date, partners):
     sql_ds['from'].append("videos_video VID")
     old_filter_partner_geog_date(sql_ds,"VID","VID.APPROVAL_DATE",geog,id,from_date,to_date,partners)
     return join_sql_ds(sql_ds);
-
-def get_interest_per_dissemination(geog, id, from_date, to_date, partners):
-    inner_sql = get_init_sql_ds();
-    inner_sql['select'].append('SUM(PMA.interested) AS interest')
-    inner_sql['from'].append("activities_personmeetingattendance PMA")
-    inner_sql['join'].append(["activities_screening SC", "SC.id = PMA.screening_id"])
-    inner_sql['group by'].append("SC.id")
-    old_filter_partner_geog_date(inner_sql,"SC","SC.DATE",geog,id,from_date,to_date,partners)
-    
-    return "SELECT AVG(interest) as count from ("+join_sql_ds(inner_sql)+") T";
 
 def get_village_identified(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
@@ -132,7 +122,7 @@ def get_videos_uploaded(geog, id, from_date, to_date, partners):
     sql_ds['select'].append("COUNT(VID.id) as count")
     sql_ds['from'].append("videos_video VID")
     sql_ds['where'].append("YOUTUBEID != ''")
-    old_filter_partner_geog_date(sql_ds,"VID","VID.VIDEO_PRODUCTION_END_DATE",geog,id,from_date,to_date,partners)
+    old_filter_partner_geog_date(sql_ds,"VID","VID.VIDEO_PRODUCTION_DATE",geog,id,from_date,to_date,partners)
     
     return join_sql_ds(sql_ds)
 
