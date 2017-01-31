@@ -10,6 +10,7 @@ RoleChoice = ((1, "Admin"), (2, "Aggregator"), (3, "Testing"))
 ModelChoice = ((1, "Direct Sell"),  (2, "Aggregate"))
 DISCOUNT_CRITERIA = ((0, "Volume"), (1, "Amount"))
 MODEL_TYPES = ((0, "Direct"), (1, "Tax Based"), (2, "Slab Based"))
+CALL_STATUS = ((0, "Pending"),  (1, "Completed"))
 
 
 class LoopModel(models.Model):
@@ -472,3 +473,33 @@ class Log(models.Model):
     action = models.IntegerField()
     entry_table = models.CharField(max_length=100)
     model_id = models.IntegerField(null=True)
+
+
+class HelplineIncoming(LoopModel):
+    id = models.AutoField(primary_key=True)
+    call_id = models.CharField()
+    from_number = models.CharField(db_index=True) #User
+    to_number = models.CharField()                #DG
+    incoming_time = models.DateTimeField(db_index=True)
+    call_status = models.IntegerField(choices=CALL_STATUS, default=0)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.from_number, self.incoming_time)
+
+    class Meta:
+        unique_together = ("call_id", "from_number", "incoming_time")
+
+
+class HelplineOutgoing(LoopModel):
+    id = models.AutoField(primary_key=True)
+    call_id = models.CharField()
+    incoming_call = models.ForeignKey(HelplineIncoming)
+    from_number = models.CharField(db_index=True) #DG
+    to_number = models.CharField()                #User
+    outgoing_time = models.DateTimeField(db_index=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.from_number, self.to_number)
+
+    class Meta:
+        unique_together = ("call_id", "incoming_call", "from_number", "outgoing_time")
