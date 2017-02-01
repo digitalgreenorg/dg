@@ -10,7 +10,7 @@ RoleChoice = ((1, "Admin"), (2, "Aggregator"), (3, "Testing"))
 ModelChoice = ((1, "Direct Sell"),  (2, "Aggregate"))
 DISCOUNT_CRITERIA = ((0, "Volume"), (1, "Amount"))
 MODEL_TYPES = ((0, "Direct"), (1, "Tax Based"), (2, "Slab Based"))
-CALL_STATUS = ((0, "Pending"),  (1, "Completed"))
+CALL_STATUS = ((0, "Pending"),  (1, "Completed"), (2, "Hold"))
 
 
 class LoopModel(models.Model):
@@ -503,3 +503,13 @@ class HelplineOutgoing(LoopModel):
 
     class Meta:
         unique_together = ("call_id", "incoming_call", "from_number", "outgoing_time")
+
+
+class HelplineNumber(LoopModel):
+    id = models.AutoField(primary_key=True)
+    phone_number = models.CharField(unique=True)
+
+    def __unicode__(self):
+        return "%s" % (self.phone_number)
+
+

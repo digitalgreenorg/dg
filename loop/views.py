@@ -1,7 +1,9 @@
 import json
 import xlsxwriter
+import requests
 from django.http import JsonResponse
 from io import BytesIO
+import xml.etree.ElementTree as xml_parse
 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -14,11 +16,13 @@ from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
-    AggregatorShareOutliers, IncentiveParameter, IncentiveModel
+    AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineIncoming, HelplineOutgoing, HelplineNumber
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
 import inspect
+
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER
 # Create your views here.
 HELPLINE_NUMBER = "09891256494"
 ROLE_AGGREGATOR = 2
@@ -659,3 +663,54 @@ def payments(request):
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)
+
+
+def make_helpline_call(incoming_call_obj,from_number,to_number):
+    call_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    call_response_url = 'http://www.digitalgreen.org/helpline_call_response/'
+    parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
+    response = requests.post(url,data=parameters)
+    if response.status_code == 200:
+        response_tree = xml_parse.parse(response.text).getroot()
+        call_detail = response_tree.findall('Call')[0]
+        outgoing_call_id = call_detail.find('Sid').text
+        outgoing_call_time = call_detail.find('StartTime').text
+        outgoing_obj = HelplineOutgoing(call_id=outgoing_call_id,incoming_call=incoming_call_obj,outgoing_time=outgoing_call_time,from_number=from_number,to_number=to_number)
+        try:
+            outgoing_obj.save()    
+        except Exception as e:
+            pass
+    else:
+        
+
+
+def helpline_incoming(request):
+    if request.method == 'GET':
+        call_id = str(request.GET.getlist('CallSid')[0])
+        farmer_number = str(request.GET.getlist('From')[0])
+        dg_number = str(request.GET.getlist('To')[0])
+        incoming_time = str(request.GET.getlist('StartTime')[0])
+        incoming_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
+        if len(incoming_obj) == 0:
+            incoming_obj = HelplineIncoming(call_id=call_id,from_number=farmer_number,to_number=dg_number,incoming_time=incoming_time)
+            try:
+                incoming_obj.save()
+            except Exception as e:
+                return HttpResponse(status=500)
+            status_code = make_helpline_call(incoming_obj,from_number,farmer_number)
+            return HttpResponse(status=status_code)
+            
+    else:
+        return HttpResponse(status=403)
+
+
+def helpline_offline(request):
+    if request.method == 'GET':
+
+    else:
+        return HttpResponse(status=403)
+
+
+def helpline_call_response(request):
+    if request.method == 'POST':
+
