@@ -10,7 +10,9 @@ RoleChoice = ((1, "Admin"), (2, "Aggregator"), (3, "Testing"))
 ModelChoice = ((1, "Direct Sell"),  (2, "Aggregate"))
 DISCOUNT_CRITERIA = ((0, "Volume"), (1, "Amount"))
 MODEL_TYPES = ((0, "Direct"), (1, "Tax Based"), (2, "Slab Based"))
-CALL_STATUS = ((0, "Pending"),  (1, "Completed"), (2, "Hold"))
+CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
+CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
+EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
 
 
 class LoopModel(models.Model):
@@ -475,13 +477,28 @@ class Log(models.Model):
     model_id = models.IntegerField(null=True)
 
 
+class HelplineExpert(LoopModel):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=20, unique=True)
+    email_id = models.CharField(max_length=50)
+    expert_status = models.IntegerField(choices=EXPERT_STATUS, default=1)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.name, self.phone_number)
+
+
 class HelplineIncoming(LoopModel):
     id = models.AutoField(primary_key=True)
-    call_id = models.CharField()
-    from_number = models.CharField(db_index=True) #User
-    to_number = models.CharField()                #DG
+    call_id = models.CharField(max_length=100)
+    from_number = models.CharField(max_length=20, db_index=True) #User No.
+    to_number = models.CharField(max_length=20)                  #DG Exotel No.
     incoming_time = models.DateTimeField(db_index=True)
+    last_incoming_time = models.DateTimeField()
+    resolved_time = models.DateTimeField(null=True, blank=True)
     call_status = models.IntegerField(choices=CALL_STATUS, default=0)
+    recording_url = models.CharField(max_length=200, null=True , blank=True)
+    resolved_by = models.ForeignKey(HelplineExpert, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.from_number, self.incoming_time)
@@ -492,10 +509,10 @@ class HelplineIncoming(LoopModel):
 
 class HelplineOutgoing(LoopModel):
     id = models.AutoField(primary_key=True)
-    call_id = models.CharField()
+    call_id = models.CharField(max_length=100)
     incoming_call = models.ForeignKey(HelplineIncoming)
-    from_number = models.CharField(db_index=True) #DG
-    to_number = models.CharField()                #User
+    from_number = models.ForeignKey(HelplineExpert) #DG Expert No.
+    to_number = models.CharField(max_length=20)     #User No.
     outgoing_time = models.DateTimeField(db_index=True)
 
     def __unicode__(self):
@@ -505,11 +522,13 @@ class HelplineOutgoing(LoopModel):
         unique_together = ("call_id", "incoming_call", "from_number", "outgoing_time")
 
 
-class HelplineNumber(LoopModel):
+class HelplineCallLog(LoopModel):
     id = models.AutoField(primary_key=True)
-    phone_number = models.CharField(unique=True)
+    call_id = models.CharField(max_length=100)
+    from_number = models.CharField(max_length=20)
+    to_number = models.CharField(max_length=20)
+    call_type = models.IntegerField(choices=CALL_TYPES)
+    start_time = models.DateTimeField()
 
     def __unicode__(self):
-        return "%s" % (self.phone_number)
-
-
+        return "%s (%s) (%s)" % (self.from_number, self.to_number, self.call_type)
