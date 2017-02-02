@@ -16,7 +16,8 @@ from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
-    AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineIncoming, HelplineOutgoing, HelplineNumber
+    AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
+    HelplineCallLog
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
@@ -665,22 +666,57 @@ def payments(request):
     return HttpResponse(data)
 
 
-def make_helpline_call(incoming_call_obj,from_number,to_number):
+def save_call_log(call_id,from_number,to_number,call_type,start_time):
+    call_obj = HelplineCallLog(call_id=call_id,from_number=from_number,to_number=to_number,call_type=call_type,start_time=start_time)
+    try:
+        call_obj.save()
+    except Exception as e:
+        pass
+
+
+def get_status(call_id):
+    call_status_url = "https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/%s?details=true"%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID,call_id)
+    response = requests.get(url)
+    call_status = ''
+    if response.status_code == 200:
+        response_tree = xml_parse.parse(response.text).getroot()
+        call_detail = response_tree.findall('Call')[0]
+        call_status = str(call_detail.find('Status').text)
+    return call_status
+
+
+def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
     call_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     call_response_url = 'http://www.digitalgreen.org/helpline_call_response/'
+    from_number = from_number_obj.phone_number
     parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
     response = requests.post(url,data=parameters)
     if response.status_code == 200:
         response_tree = xml_parse.parse(response.text).getroot()
         call_detail = response_tree.findall('Call')[0]
-        outgoing_call_id = call_detail.find('Sid').text
-        outgoing_call_time = call_detail.find('StartTime').text
-        outgoing_obj = HelplineOutgoing(call_id=outgoing_call_id,incoming_call=incoming_call_obj,outgoing_time=outgoing_call_time,from_number=from_number,to_number=to_number)
+        outgoing_call_id = str(call_detail.find('Sid').text)
+        outgoing_call_time = str(call_detail.find('StartTime').text)
+        save_call_log(outgoing_call_id,from_number,to_number,1,outgoing_call_time)
+        outgoing_obj = HelplineOutgoing(call_id=outgoing_call_id,incoming_call=incoming_call_obj,outgoing_time=outgoing_call_time,from_number=from_number_obj,to_number=to_number)
         try:
             outgoing_obj.save()    
         except Exception as e:
             pass
+    elif response.status_code == 429:
+        # send sms or greeting
+        pass
     else:
+        # send sms or greeting
+        '''
+        <TwilioResponse>
+          <RestException>
+            <Status>404</Status>
+            <Message>No matching results</Message>
+          </RestException>
+        </TwilioResponse>
+        '''
+        pass
+    return response.status_code
         
 
 
@@ -690,16 +726,40 @@ def helpline_incoming(request):
         farmer_number = str(request.GET.getlist('From')[0])
         dg_number = str(request.GET.getlist('To')[0])
         incoming_time = str(request.GET.getlist('StartTime')[0])
-        incoming_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
-        if len(incoming_obj) == 0:
-            incoming_obj = HelplineIncoming(call_id=call_id,from_number=farmer_number,to_number=dg_number,incoming_time=incoming_time)
+        save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
+        incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
+        if len(incoming_call_obj) == 0:
+            incoming_call_obj = HelplineIncoming(call_id=call_id, from_number=farmer_number, to_number=dg_number, incoming_time=incoming_time, last_incoming_time=incoming_time)
             try:
-                incoming_obj.save()
+                incoming_call_obj.save()
             except Exception as e:
                 return HttpResponse(status=500)
-            status_code = make_helpline_call(incoming_obj,from_number,farmer_number)
-            return HttpResponse(status=status_code)
-            
+            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            if len(expert_obj) > 0:
+                make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
+            else:
+                # sms or greeting
+                pass
+            return HttpResponse(status=200)
+        else:
+            incoming_call_obj = incoming_call_obj[0]
+            incoming_call_obj.last_incoming_time = incoming_time
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                pass
+            latest_outgoing_of_incoming = HelplineOutgoing.objects.filter(incoming_call=incoming_call_obj).order_by('-id').values_list('call_id', flat=True)[:1]
+            if len(latest_outgoing_of_incoming) != 0:
+                call_status = get_status(latest_outgoing_of_incoming[0])
+            else: 
+                call_status = ''
+            if ## check conditions for make a call
+                expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+                if len(expert_obj) > 0:
+                    make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
+                else:
+                    # sms or greeting
+                    pass
     else:
         return HttpResponse(status=403)
 
