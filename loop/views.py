@@ -764,13 +764,62 @@ def helpline_incoming(request):
         return HttpResponse(status=403)
 
 
+@csrf_exempt
+def helpline_call_response(request):
+    if request.method == 'POST':
+        status = str(request.GET.getlist('Status')[0])
+        outgoing_call_id = str(request.GET.getlist('CallSid')[0])
+        if status == 'completed':
+            recording_url = str(request.GET.getlist('RecordingUrl')[0])
+            resolved_time = str(request.GET.getlist('DateUpdated')[0])
+            outgoing_obj = HelplineOutgoing.objects.filter(call_id=outgoing_call_id)
+            if len(outgoing_obj) > 0:
+                incoming_obj = outgoing_obj.incoming_call
+                expert_obj = outgoing_obj.from_number
+                incoming_obj.call_status = 1
+                incoming_obj.recording_url = recording_url
+                incoming_obj.resolved_by = expert_obj
+                incoming_obj.resolved_time = resolved_time
+                try:
+                    incoming_obj.save()
+                except Exception as e:
+                    # do something
+                    pass
+                return HttpResponse(status=200)
+            else:
+                #do something
+                pass
+        elif status == 'no-answer':  ## check conditions
+            outgoing_obj = HelplineOutgoing.objects.filter(call_id=outgoing_call_id).select_related('incoming_call','from_number')
+            if len(outgoing_obj) > 0:
+                incoming_obj = outgoing_obj.incoming_call
+                expert_obj = outgoing_obj.from_number
+                to_number = outgoing_obj.to_number
+                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1))
+                try:
+                    expert_numbers = expert_numbers[expert_numbers.index(expert_obj)+1:]
+                except Exception as e:
+                    expert_numbers = []
+                    pass
+                if len(expert_numbers) > 0:
+                    make_helpline_call(incoming_obj,expert_numbers[0],to_number)
+                else:
+                    # sms or greeting
+                    pass
+                return HttpResponse(status=200)
+            else:
+                #
+                pass
+        else:
+            #check conditions
+            pass
+    else:
+        return HttpResponse(status=403)
+
+
 def helpline_offline(request):
     if request.method == 'GET':
 
     else:
         return HttpResponse(status=403)
-
-
-def helpline_call_response(request):
-    if request.method == 'POST':
 
