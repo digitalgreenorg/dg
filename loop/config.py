@@ -108,6 +108,37 @@ header_dict_for_farmer_transaction = [{'column_width': 3.64,
                                           }]
 
 
+
+header_dict_for_transport_details = [{'column_width': 3.64,
+                                          'label': 'क्रम संख्या',
+                                          },
+                                         {'column_width': 13 ,
+                                          'label': 'जमाकर्ता का नाम',
+                                          },
+                                         {'column_width': 12,
+                                          'label': 'तारीख',
+                                          },
+                                         {'column_width': 8,
+                                          'label': 'मंडी का नाम',
+                                          },
+                                         {'column_width': 15,
+                                          'label': 'गाड़ी मालिक',
+                                          },
+                                          {'column_width': 8,
+                                          'label': 'गाड़ी नं',
+                                          },
+                                         {'column_width': 10,
+                                          'label': 'गाड़ी का किराया (रु)',
+                                          },
+                                         {'column_width': 10,
+                                          'label': '✓/ X',
+                                          },
+                                          {
+                                          'column_width': 20,
+                                          'label': 'टिप्पडी'
+                                          }]
+
+
 query_for_incorrect_phone_no_all_aggregator = '''SELECT 
                               Aggregator,
                               Village,
@@ -352,6 +383,66 @@ query_for_farmer_transaction_single_aggregator = '''
                             WHERE
                                 t1.date BETWEEN %s AND %s
                                     AND t1.Agg = %s'''
+
+
+query_for_transport_details_all_aggregator = '''
+                          SELECT 
+                              ll.name Agg_Id,
+                              ct.date Date_,
+                              lm.mandi_name Mandi,
+                              lt.transporter_name T_name,
+                              tv.vehicle_number Vehicle_Num,
+                              AVG(dt.transportation_cost) Cost
+                          FROM
+                              loop_combinedtransaction ct
+                                  JOIN
+                              loop_daytransportation dt ON ct.user_created_id = dt.user_created_id
+                                  AND ct.mandi_id = dt.mandi_id
+                                  AND ct.date = dt.date
+                                  JOIN
+                              loop_transportationvehicle tv ON tv.id = dt.transportation_vehicle_id
+                                  JOIN
+                              loop_mandi lm ON lm.id = ct.mandi_id
+                                  JOIN
+                              loop_transporter lt ON lt.id = tv.transporter_id
+                                  JOIN
+                              loop_vehicle lv ON lv.id = tv.vehicle_id
+                                  JOIN
+                              loop_loopuser ll ON ll.user_id = ct.user_created_id
+                          WHERE
+                              ct.date BETWEEN %s AND %s
+                          GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
+                          '''
+
+
+query_for_transport_details_single_aggregator = '''
+                          SELECT 
+                              ll.name Agg_Id,
+                              ct.date Date_,
+                              lm.mandi_name Mandi,
+                              lt.transporter_name T_name,
+                              tv.vehicle_number Vehicle_Num,
+                              AVG(dt.transportation_cost) Cost
+                          FROM
+                              loop_combinedtransaction ct
+                                  JOIN
+                              loop_daytransportation dt ON ct.user_created_id = dt.user_created_id
+                                  AND ct.mandi_id = dt.mandi_id
+                                  AND ct.date = dt.date
+                                  JOIN
+                              loop_transportationvehicle tv ON tv.id = dt.transportation_vehicle_id
+                                  JOIN
+                              loop_mandi lm ON lm.id = ct.mandi_id
+                                  JOIN
+                              loop_transporter lt ON lt.id = tv.transporter_id
+                                  JOIN
+                              loop_vehicle lv ON lv.id = tv.vehicle_id
+                                  JOIN
+                              loop_loopuser ll ON ll.user_id = ct.user_created_id
+                          WHERE
+                              ct.date BETWEEN %s AND %s AND ll.name = \'%s\'
+                          GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
+                          '''
 
 
 
