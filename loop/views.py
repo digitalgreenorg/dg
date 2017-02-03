@@ -679,7 +679,7 @@ def get_status(call_id):
     response = requests.get(url)
     call_status = dict()
     if response.status_code == 200:
-        response_tree = xml_parse.parse(response.text).getroot()
+        response_tree = xml_parse.fromstring(response.text)
         call_detail = response_tree.findall('Call')[0]
         call_status['response_code'] = 200
         call_status['status'] = str(call_detail.find('Status').text)
@@ -687,6 +687,9 @@ def get_status(call_id):
         call_status['from'] = str(call_detail.find('From').text)
         call_status['start_time'] = str(call_detail.find('StartTime').text)
         call_status['end_time'] = str(call_detail.find('EndTime').text)
+        extra_detail = call_detail.findall('Details')[0]
+        call_status['from_status'] = str(extra_detail.find('Leg1Status').text)
+        call_status['to_status'] = str(extra_detail.find('Leg2Status').text)
     elif response.status_code == 429:
         call_status['response_code'] = 429
     else:
@@ -702,7 +705,7 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
     parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
     response = requests.post(url,data=parameters)
     if response.status_code == 200:
-        response_tree = xml_parse.parse(response.text).getroot()
+        response_tree = xml_parse.fromstring(response.text)
         call_detail = response_tree.findall('Call')[0]
         outgoing_call_id = str(call_detail.find('Sid').text)
         outgoing_call_time = str(call_detail.find('StartTime').text)
@@ -811,12 +814,17 @@ def helpline_call_response(request):
                         incoming_obj = incoming_obj[0]
                         expert_obj = expert_obj[0]
                         update_incoming_obj(incoming_obj,1,recording_url,expert_obj,resolved_time)
-            return HttpResponse(status=200)
         elif status == 'busy':
             if outgoing_obj:
                 farmer_number = outgoing_obj.to_number
                 #send sms for later call
         elif status == 'no-answer':  ## check conditions
+            call_status = get_status(outgoing_call_id)
+            if call_status['response_code'] == 200:
+                # if expert pick call and farmer not
+                if call_status['from_status'] == 'completed':
+                    #send sms for later call
+                    return HttpResponse(status=200)
             if outgoing_obj:
                 incoming_obj = outgoing_obj.incoming_call
                 expert_obj = outgoing_obj.from_number
@@ -830,15 +838,34 @@ def helpline_call_response(request):
                 if len(expert_numbers) > 0:
                     make_helpline_call(incoming_obj,expert_numbers[0],to_number)
                 else:
-                    # sms or greeting
+                    # greeting
                     pass
-                return HttpResponse(status=200)
             else:
-                #
-                pass
+                # if outgoing object not found then get detail by call Exotel API
+                call_status = get_status(outgoing_call_id)
+                if call_status['response_code'] == 200:
+                    # Search latest pending Incoming object
+                    incoming_obj = HelplineIncoming.objects.filter(from_number=call_status['to'],call_status=0).order_by('-id')
+                    expert_obj = HelplineExpert.objects.filter(phone_number=call_status['from'])
+                    if len(incoming_obj) > 0 and len(expert_obj) > 0:
+                        incoming_obj = incoming_obj[0]
+                        expert_obj = expert_obj[0]
+                        to_number = call_status['to']
+                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1))
+                try:
+                    expert_numbers = expert_numbers[expert_numbers.index(expert_obj)+1:]
+                except Exception as e:
+                    expert_numbers = []
+                    pass
+                if len(expert_numbers) > 0:
+                    make_helpline_call(incoming_obj,expert_numbers[0],to_number)
+                else:
+                    # greeting
+                    pass                     
         else:
-            #check conditions
+            #For other conditions
             pass
+        return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
 
