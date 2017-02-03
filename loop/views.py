@@ -701,7 +701,7 @@ def get_status(call_id):
 
 def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
     call_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    call_response_url = 'http://www.digitalgreen.org/helpline_call_response/'
+    call_response_url = 'http://www.digitalgreen.org/loop/helpline_call_response/'
     from_number = from_number_obj.phone_number
     parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
     response = requests.post(url,data=parameters)
