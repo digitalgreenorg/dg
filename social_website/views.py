@@ -20,18 +20,18 @@ from django.views.decorators.csrf import csrf_exempt
 
 from dg.settings import PERMISSION_DENIED_URL
 
-from elastic_search import get_related_collections, get_related_videos 
+from elastic_search import get_related_collections, get_related_videos
 from social_website.models import  Collection, Partner, FeaturedCollection, Video, ResourceVideo
 from videos.models import Practice, Video as Dashboard_Video
 
 from mezzanine.blog.models import BlogPost
-
+import logging
 class CustomUserCreationForm(UserCreationForm):
     username = forms.EmailField(label=("Username"), help_text=("Enter Email Address"))
 
 
 def social_home(request):
-    language = Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections 
+    language = Collection.objects.exclude(language = None).values_list('language',flat=True) # only using those languages that have collections
     language = sorted(set(language))
     blog = BlogPost.objects.all()[:3]
     context= {
@@ -46,9 +46,10 @@ def social_home(request):
                 }
     return render_to_response('home.html', context, context_instance = RequestContext(request))
 
-def collection_view(request, partner, state, language, title, video=1):
+
+def collection_view(request, partner, country, state, language, title, video=1):
     try:
-        collection = Collection.objects.get(partner__name__iexact = partner, state__iexact = state, language__iexact = language, title__iexact = title)
+        collection = Collection.objects.get(partner__name__iexact = partner, country__iexact = country, state__iexact = state, language__iexact = language, title__iexact = title)
     except Collection.DoesNotExist:
         return HttpResponseRedirect(reverse('discover'))
     try:
@@ -79,7 +80,7 @@ def collection_view(request, partner, state, language, title, video=1):
               }
     if collection.featured :
       return render_to_response('featured-collections-view.html' , context, context_instance = RequestContext(request))
-    return render_to_response('collections-view.html' , context, context_instance = RequestContext(request)) 
+    return render_to_response('collections-view.html' , context, context_instance = RequestContext(request))
 
 
 def picoseekho_view(request, uid=1):
@@ -89,7 +90,9 @@ def picoseekho_view(request, uid=1):
     {'uid':3,'title':"Playing a video",'description':"Birju demonstrates the various steps that need to be followed for selecting and playing a specific video. Videos are sometimes loaded on the pico projector. They could also be loaded on external memory such as USB keys or SD cards. Once the external memory device is chosen, the list of videos available on the device can be browsed.",'youtubeID':'011IvbCIfuM'},
     {'uid':4,'title':"Increasing volume and connecting external speakers",'description':"Savita devi points out that viewers should be able to listen to the video as well as they can view it. Birju demonstrates how to increase the sound on a pico projector and attach external speakers if required.",'youtubeID':'xC57bLoWqnI'},
     {'uid':5,'title':"Pausing and rewinding for discussion and repetition",'description':"Birju explains how to pause the video to encourage recall and discussion. Nisar chacha asks how to rewind a video to show certain points again.",'youtubeID':'DAs3Pcr8d68'},
-    {'uid':6,'title':"Benefits of following practices",'description':"In conclusion, the group highlights the need to keep the room dark during screening,checking the pico projector and playing the video before people arrive, keeping the picture and sound clear, and pausing and rewinding the video. Following these practices would benefit the rural community members watching a video.",'youtubeID':'7jUv6A9kAKI'}]
+    {'uid':6,'title':"Benefits of following practices",'description':"In conclusion, the group highlights the need to keep the room dark during screening,checking the pico projector and playing the video before people arrive, keeping the picture and sound clear, and pausing and rewinding the video. Following these practices would benefit the rural community members watching a video.",'youtubeID':'7jUv6A9kAKI'}
+    ]
+
     try:
         video_index = int(uid)
     except (IndexError, AssertionError):
@@ -106,7 +109,85 @@ def picoseekho_view(request, uid=1):
               'video' : video,
               'video_index' : video_index,
               }
-    return render_to_response('pico_seekho.html' , context, context_instance = RequestContext(request)) 
+    return render_to_response('pico_seekho.html' , context, context_instance = RequestContext(request))
+
+
+def disseminationprep_view(request, uid=1):
+    video_list = [
+    {'uid':1, 'title':"Pre-video dissemination preparation", 'description':"Preparing for the video dissemination beforehand can ensure that the dissemination goes smoothly. They can prepare by watching the video, noting down non-negotiables, charging the equipment and reminding SHG members a day before the dissemination. Abha, an experienced mediator, invites two other new mediators to learn the process from her.", 'youtubeID':'gIKNVu4XTw4'},
+    {'uid':2, 'title':"Understanding non-negotiables", 'description':"One of the essential aspects while preparing for dissemination is to understand the non-negotiables. Non-negotiable's are those points that make a practice successful. If a community member does not adopt all the non-negotiables, they may not get the desired results.", 'youtubeID':'EPcb7dbKReM'}
+    ]
+
+    try:
+        video_index = int(uid)
+    except (IndexError, AssertionError):
+        video_index = 1
+    video = video_list[video_index-1]
+    context= {
+              'header': {
+                         'jsController':'ViewCollections',
+                         'currentPage':'Discover',
+                         'loggedIn':False
+                         },
+              'is_collection': True,
+              'video_list': video_list,
+              'video' : video,
+              'video_index' : video_index,
+              }
+    return render_to_response('dissemination_prep.html' , context, context_instance = RequestContext(request))
+
+
+def disseminationform_view(request, uid=1):
+    video_list = [
+    {'uid':1, 'title':"Filling the upper-left hand part of the form", 'description':"The mediator fills a form to document which video was shown and who came. The new mediators observe how Abha fills her form and conducts her dissemination. This part explains the upper left hand of the form. This part contains information about the video being shown, the date and time and the groups attending.", 'youtubeID':'rytq0SLzJdw'},
+    {'uid':2, 'title':"Filling the upper-right hand part of the form", 'description':"The upper-right hand of the form consists of basic information about the place where the screening is to be conducted, including the village, block and district name.", 'youtubeID':'kAyrh7mj-ig'},
+    {'uid':3, 'title':"Filling  member's information", 'description':"One of the more important parts of the form is filling information about the group members who are attending the screening. This part explains how to easily fill this information in the form, specially when there are multiple groups attending the training.", 'youtubeID':'zbB9xzzOcgQ'},
+    {'uid':4, 'title':"Conducting dissemination", 'description':"Disseminations conducted by mediators follow a standard procedure, where the mediator welcomes the group members, introduces the video, shows the video, pauses the video in critical places, takes questions from the audience and summarizes the video with the non-negotiables adoption points. At the end of the dissemination, the mediator has to take signature/thumb-print of all the group members who attended the training. This also helps them to later on follow up with those who adopted the practice.", 'youtubeID':'7OG6npRQbiM'}
+    ]
+
+    try:
+        video_index = int(uid)
+    except (IndexError, AssertionError):
+        video_index = 1
+    video = video_list[video_index-1]
+    context= {
+              'header': {
+                         'jsController':'ViewCollections',
+                         'currentPage':'Discover',
+                         'loggedIn':False
+                         },
+              'is_collection': True,
+              'video_list': video_list,
+              'video' : video,
+              'video_index' : video_index,
+              }
+    return render_to_response('dissemination_form.html' , context, context_instance = RequestContext(request))
+
+
+def adoptionverification_view(request, uid=1):
+    video_list = [
+    {'uid':1, 'title':"Understanding the adoption verification form", 'description':"Adoption verification part of the form contains information about group members who adopted the practice, when thy adopted the practice and which all non-negotiable points they adopted. Abha explains the two new mediators what each field means.", 'youtubeID':'1LT9xdLFagc'},
+    {'uid':2, 'title':"Conducting an adoption verification", 'description':"The filling of the form in a real scenario is demonstrated through Abha and the other two mediators by visiting one of the group members in her field and verifying all the non-negotiable points.", 'youtubeID':'Z5LVB8qTKtc'},
+    {'uid':3, 'title':"Adoption verification assessment", 'description':"You can assess your own knowledge of filling the adoption verification form by following the case that is being shown in this part of the video.", 'youtubeID':'55hru37cOuk'}
+    ]
+
+    try:
+        video_index = int(uid)
+    except (IndexError, AssertionError):
+        video_index = 1
+    video = video_list[video_index-1]
+    context= {
+              'header': {
+                         'jsController':'ViewCollections',
+                         'currentPage':'Discover',
+                         'loggedIn':False
+                         },
+              'is_collection': True,
+              'video_list': video_list,
+              'video' : video,
+              'video_index' : video_index,
+              }
+    return render_to_response('adoption_verification.html' , context, context_instance = RequestContext(request))
 
 
 def video_view(request, uid):
@@ -157,6 +238,7 @@ def search_view(request):
     searchString = request.GET.get('searchString', None)
     partner = request.GET.get('partner', None)
     title = request.GET.get('title', None)
+    country = request.GET.get('country', None)
     state = request.GET.get('state', None)
     language = request.GET.get('language', None)
     category = request.GET.get('category', None)
@@ -164,6 +246,7 @@ def search_view(request):
     topic = request.GET.get('topic', None)
     subject = request.GET.get('subject', None)
     order = request.GET.get('order_by', None)
+    
     context= {
               'header': {
                          'jsController':'Collections',
@@ -173,6 +256,7 @@ def search_view(request):
               'searchString' : searchString,
               'partner' : partner,
               'title' : title,
+              'country': country,
               'state' : state,
               'language' : language,
               'category' : category,
@@ -182,15 +266,16 @@ def search_view(request):
               'order': order,
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
-    
+
 def make_sub_filter(filters, field, active_filter_list, facet_dict):
     kwargs = {}
     kwargs[field] = ''
     filters[field] = {}
     filters[field]['title'] = field.title()
     filters[field]['options'] = []
+    facet_dict = {k.lower():v for k,v in facet_dict.items()}
     for obj in sorted(set(Collection.objects.exclude(**kwargs).values_list(field, flat=True))): #works same as .exclude(field = '')
-        facet_count = facet_dict[obj] if facet_dict.has_key(obj) else 0
+        facet_count = facet_dict[obj.lower()] if facet_dict.has_key(obj.lower()) else 0
         if facet_count or facet_dict == {}:
             filters[field]['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in active_filter_list, "count" : facet_count})
     return filters
@@ -209,32 +294,33 @@ def searchFilters(request):
         facet_dict = {}
         facets = ast.literal_eval(facets)
         for row in facets:
-            facet_dict[row['term']] = int(row['count']) 
-            
+            facet_dict[row['term']] = int(row['count'])
+
     language = params.getlist('filters[language][]', None)
     subcategory = params.getlist('filters[subcategory][]', None)
     category = params.getlist('filters[category][]', None)
     partner = params.getlist('filters[partner][]', None)
     state = params.getlist('filters[state][]', None)
+    country = params.getlist('filters[country][]', None)
     topic = params.getlist('filters[topic][]', None)
     subject = params.getlist('filters[subject][]', None)
-    
     filters = {}
     filters['partner'] = {}
     filters['partner']['title'] = 'Partner'
     filters['partner']['options'] = []
+    facet_dict = {k.lower():v for k,v in facet_dict.items()}
     for obj in Partner.objects.all().order_by('name'):
-        facet_count = facet_dict[obj.name] if facet_dict.has_key(obj.name) else 0
+        facet_count = facet_dict[obj.name.lower()] if facet_dict.has_key(obj.name.lower()) else 0
         if facet_count or facet_dict == {}:
             filters['partner']['options'].append({"title" : obj.name,"value" : obj.name, "filterActive" : obj.name in partner, "count" : facet_count })
-        
+
     filters = make_sub_filter(filters, 'category', category, facet_dict)
     filters = make_sub_filter(filters, 'subcategory', subcategory, facet_dict)
     filters = make_sub_filter(filters, 'topic', topic, facet_dict)
+    filters = make_sub_filter(filters, 'country', country, facet_dict)
     filters = make_sub_filter(filters, 'state', state, facet_dict)
     filters = make_sub_filter(filters, 'subject', subject, facet_dict)
     filters = make_sub_filter(filters, 'language', language, facet_dict)
-
     data = json.dumps({"categories" : filters})
     return HttpResponse(data)
 
@@ -260,6 +346,7 @@ def featuredCollection(request):
     featured_collection_dict = {
         'title': collection.title,
         'state': collection.state,
+        'country': collection.country,
         'likes': collection.likes,
         'views': collection.views,
         'adoptions': collection.adoptions,
@@ -273,6 +360,7 @@ def featuredCollection(request):
         'duration': str(datetime.timedelta(seconds=time)),
     }
     resp = json.dumps({"featured_collection": featured_collection_dict})
+
     return HttpResponse(resp)
 
 
@@ -321,6 +409,9 @@ def collection_edit_view(request, collection):
     partner = sorted(partner)
     state = video.values_list('state',flat=True)
     state = sorted(set(state))
+    country = video.values_list('country',flat=True)
+    country = sorted(set(country))
+    
     context= {
               'header': {
                          'jsController':'CollectionAdd',
@@ -330,6 +421,7 @@ def collection_edit_view(request, collection):
               'language': language,
               'partner' : partner,
               'state' : state,
+              'country': country,
               }
     return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
 
@@ -344,6 +436,9 @@ def collection_add_view(request):
     partner = sorted(partner)
     state = video.values_list('state',flat=True)
     state = sorted(set(state))
+    country = video.values_list('country',flat=True)
+    country = sorted(set(country))
+
     context= {
               'header': {
                          'jsController':'CollectionAdd',
@@ -351,6 +446,7 @@ def collection_add_view(request):
               'language': language,
               'partner' : partner,
               'state' : state,
+              'country': country,
               }
     return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
 
@@ -382,8 +478,7 @@ def mapping(request):
 
     resp = json.dumps({"mapping_dropdown": practice_dictionary})
     return HttpResponse(resp)
-
-
+  
 def login_view(request, template_name='registration/login.html',
                       redirect_field_name=REDIRECT_FIELD_NAME,
                       authentication_form=AuthenticationForm,
@@ -394,27 +489,26 @@ def login_view(request, template_name='registration/login.html',
     else:
         return django_login_view(request, template_name, redirect_field_name, authentication_form, current_app, extra_context)
 
-
 def signup_view(request, template_name='social_website/signup.html',
                 redirect_field_name=REDIRECT_FIELD_NAME,
                 signup_form=CustomUserCreationForm,
                 current_app=None, extra_context=None):
-
     if request.user.is_authenticated():
         return HttpResponseRedirect('/')
 
     redirect_to = request.REQUEST.get(redirect_field_name, '')
 
     if request.method == "POST":
+
         form = signup_form(data=request.POST)
         if form.is_valid():
             a = form.save()
             a.email = a.username
             a.save()
-            
+
             new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
             login(request, new_user)
-            
+
             return HttpResponseRedirect(redirect_to)
     else:
         form = signup_form(None)

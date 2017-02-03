@@ -7,7 +7,7 @@
         <div class="inner-wrapper layout-vr-md" id="collection-view">
             <div class="grid layout-vr-sm">
                 <div class="grid-col grid-size4of5">
-                    <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}}</h1>
+                    <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}} ({{ object.country}}) </h1>
                 </div>
                 <div class="grid-col grid-size1of5">
                     {% for group in user.groups.all %}
@@ -45,7 +45,7 @@
                         <ul>
                             {% for carousel_video in video_list %}
                             <li class="featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
-                                <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}#player-section" >
+                                <a href="{% url 'collection_video_page' object.partner.name object.country object.state object.language object.title forloop.counter %}#player-section" >
                                     <div class="featured-collection-indicator"></div>
                                     <div class="featured-collection-title">
                                         {{ carousel_video.title }}
@@ -176,13 +176,11 @@
                                     <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
                                         <div class="icon likes"></div>
                                         <div class="stat-bar-container">
-                                            <div class="left-value js-left-value"></div>
                                             <div class="right-value js-right-value"></div>
-                                            <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineLikes}}" data-right-value="{{video.offlineLikes}}">
+                                            <div class="stat-bar js-stat-bar" data-left-value="0" data-right-value="{{video.onlineLikes}}">
                                                 <div class="stat-indicator js-stat-indicator"></div>
                                             </div>
-                                            <div class="left-stat-label">Online Likes</div>
-                                            <div class="right-stat-label">Offline Likes</div>
+                                            <div class="right-stat-label">Likes</div>
                                         </div>
                                     </div>
                                 </div>

@@ -18,6 +18,7 @@ from dimagi.models import CommCareUser
 def write_type_info(workbook):
     sheet = workbook.add_worksheet('types')
     row = 0
+    #header row
     sheet.write(row, 0, "name")
     sheet.write(row, 1, "tag")
     sheet.write(row, 2, "field 1")
@@ -53,6 +54,7 @@ def write_type_info(workbook):
 def write_village_info(village_dict_list, workbook):
     sheet = workbook.add_worksheet('village')
     row = 0
+    #header row
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
     sheet.write(row, 2, "user 1")
@@ -69,6 +71,7 @@ def write_village_info(village_dict_list, workbook):
 def write_mediator_info(mediator_dict_list, workbook):
     sheet = workbook.add_worksheet('mediator')
     row = 0
+    #header row
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
     sheet.write(row, 2, "field: village_id")
@@ -89,6 +92,7 @@ def write_mediator_info(mediator_dict_list, workbook):
 def write_group_info(group_dict_list, workbook):
     sheet = workbook.add_worksheet('group')
     row = 0
+    #header row
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name ")
     sheet.write(row, 2, "field: village_id")
@@ -107,6 +111,7 @@ def write_group_info(group_dict_list, workbook):
 def write_distinct_video(vid_list, workbook, group_name):
     sheet = workbook.add_worksheet('unique_video')
     row = 0
+    #header row
     sheet.write(row, 0, "field: id")
     sheet.write(row, 1, "field: name")
     sheet.write(row, 2, 'group 1')
@@ -142,7 +147,7 @@ def write_latest_video_info(vid_dict, workbook, group_name):
     return sheet
 
 
-def create_fixture(users, project_name, list_group, list_village, list_mediator):
+def create_fixture(users, project_name, list_group, list_village, list_mediator, Update):
     # getting user information in list of dictionaries; dictionary contains ursrname, uder_id and villages assigned
     data = []
     for user in users:
@@ -151,9 +156,11 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator)
         write_type_info(workbook)
         username = user.username
         user_id = user.guid
+        
         village_dict_list = []
         mediator_dict_list = []
         group_dict_list = []
+        
         villages = user.coco_user.villages.all()
         if villages:
             for vil in villages:
@@ -189,8 +196,10 @@ def create_fixture(users, project_name, list_group, list_village, list_mediator)
             url = "".join(["https://www.commcarehq.org/a/", project_name, "/fixtures/fixapi/"])
             payload = {'replace': 'false'}
             files = {'file-to-upload': open(filename, 'rb')}
+            print "Upload start" + filename
             r = requests.post(url, data=payload, files=files, auth=HTTPDigestAuth(DIMAGI_USERNAME, DIMAGI_PASSWORD))
             r.content
+            print "Uploaded: "+filename
         else:
             print 'No villages assigned to %s' % user.username
 
@@ -229,18 +238,26 @@ def create_fixture_video(project_name, users, group_name):
 
     village_list = []
     partner_list = []
+    
     for user in users:
         village_list.append(list(user.coco_user.villages.all().values_list('id', flat=True)))
         if user.coco_user.partner_id not in partner_list:
             partner_list.append(user.coco_user.partner_id)
     villages = reduce(lambda x, y: x + y, village_list)
     user_states = State.objects.filter(district__block__village__id__in=villages).distinct().values_list('id', flat=True)
-    video_list = Screening.objects.filter(village__block__district__state__id__in=user_states, partner_id__in=partner_list).values_list('videoes_screened', flat=True).order_by('-date')
-    video_list = [i for i in video_list if i is not None]
-    video_list = set(video_list)
-    write_distinct_video(video_list, workbook, group_name)
+    
+    #Video List from Videos Screened
+    #video_list = Screening.objects.filter(village__block__district__state__id__in=user_states, partner_id__in=partner_list).values_list('videoes_screened', flat=True).order_by('-date')
+    #video_list = [i for i in video_list if i is not None]
+    #video_list = set(video_list)
+
+    #Video List from Video Table
+    videos_list = Video.objects.filter(village__block__district__state__id__in=user_states, partner_id__in=partner_list).values_list('id', flat=True)
+    videos_list = [i for i in videos_list if i is not None]
+
+    write_distinct_video(videos_list, workbook, group_name)
     video_schedule_list_of_dict = []
-    for id in list(video_list):
+    for id in list(videos_list):
         video_schedule_list_of_dict.append({'id': id,
                                         'low_val': '2013-01-01',
                                         'high_val': '2020-01-01'})

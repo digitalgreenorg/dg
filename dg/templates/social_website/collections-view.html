@@ -7,7 +7,7 @@
                 <div class="inner-wrapper" id="collection-view">
                     <div class="grid layout-vr-sm">
                         <div class="grid-col grid-size2of3">
-                            <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}}</h1>
+                            <h1 class="hdg-bold hdg-a layout-vr-tiny">{{ object.title}} in {{ object.state}} ({{ object.country}}) </h1>
                         </div>
                         {% if is_collection %}
                         
@@ -53,8 +53,8 @@
                                     <a class="hdg-bold copy" href="{% url 'partner' object.partner.name %}">{{ object.partner.collection_count }} Collections</a>
                                 </div>
                             </div> <!-- End .media -->
-                            <h3 class="copy hdg-bold layout-vr-tiny">{{ object.state}}</h3>
-                            <h3 class="copy layout-vr-md">{{ object.language}}</h3>
+                            <h3 class="copy hdg-bold layout-vr-tiny">{{ object.state }}</h3>
+                            <h3 class="copy layout-vr-md">{{ object.language }}</h3>
                             
                             <!-- Video Stats -->
                             <div class="collection-stats">
@@ -86,13 +86,11 @@
                                 <div class="stat-bar-wrapper clearfix js-stat-bar-wrapper">
                                     <div class="icon likes"></div>
                                     <div class="stat-bar-container">
-                                        <div class="left-value js-left-value"></div>
                                         <div class="right-value js-right-value"></div>
-                                        <div class="stat-bar js-stat-bar" data-left-value="{{video.onlineLikes}}" data-right-value="{{video.offlineLikes}}">
+                                        <div class="stat-bar js-stat-bar" data-left-value="0" data-right-value="{{video.onlineLikes}}">
                                             <div class="stat-indicator js-stat-indicator"></div>
                                         </div>
-                                        <div class="left-stat-label">Online Likes</div>
-                                        <div class="right-stat-label">Offline Likes</div>
+                                        <div class="right-stat-label">Likes</div>
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +143,7 @@
                                             <li class="vidDrawer-video show-playing js-vidDrawer-video">
                                                 <div class="vidDrawer-image">
                                                     {% if is_collection %}
-                                                    <a href="{% url 'collection_video_page' object.partner.name object.state object.language object.title forloop.counter %}" >
+                                                    <a href="{% url 'collection_video_page' object.partner.name object.country object.state object.language object.title forloop.counter %}" >
                                                     {% else %}
                                                     <a href="{{carousel_video.url}}" >
                                                     {% endif %}

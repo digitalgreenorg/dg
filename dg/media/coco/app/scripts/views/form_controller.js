@@ -11,8 +11,9 @@ define([
     'convert_namespace',
     'offline_utils',
     'online_utils',
+    'models/user_model',
     'indexeddb-backbone'
-], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, ConvertNamespace, Offline, Online) {
+], function(jquery, underscore, layoutmanager, notifs_view, indexeddb, configs, Form, upload_collection, ConvertNamespace, Offline, Online, User) {
 
     // FormController: Brings up the Add/Edit form
 
@@ -32,16 +33,19 @@ var message_combined_failure = "";
             console.log("FORMCONTROLLER: initializing a new FormControllerView");
             this.params = params;
             _.bindAll(this);
+            User.on('change', this.render);
         },
         template: "<div><div id = 'form'></div></div>",
 
         //setting up the form view
         beforeRender: function() {
             console.log(this.params);
+            var language = User.get("language");
+            var button = configs['misc']['meta_'+language]['save'];
             // pass on the params to the form view - also add desired names of the buttons on form - null hides the button
             this.params = $.extend(this.params, {
                 serialize: {
-                    button1: "Save and Add Another",
+                    button1: button,
                     button2: null
                 }
             });
@@ -103,7 +107,7 @@ var message_combined_failure = "";
                     //separate inlines from final json - since they would be saved separately
                     delete this.form.final_json.inlines;
                     // add a dummy dfd for inlines - resolve it when inlines have been saved
-                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable) && (this.form.final_json.video_type != this.form.inline.exemption_video_type))
+                    if((!this.form.edit_case) && (this.form.inline.req_nonnegotiable))
                     {
                         if ( this.form.inline.req_nonnegotiable > this.inline_models.length){
                             var err = {};

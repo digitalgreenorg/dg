@@ -21,12 +21,12 @@ class VideoCollectionInline(admin.TabularInline):
 
 
 class CollectionAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['title', 'thumbnailURL', 'state', 'partner', 'language', 'category', 'subcategory', 'topic', 'subtopic', 'subject', 'featured', 'description']
+    fieldsets = [(None,  {'fields': ['title', 'thumbnailURL', 'country', 'state', 'partner', 'language', 'category', 'subcategory', 'topic', 'subtopic', 'subject', 'featured', 'description']
                           }
                   )]
     inlines = [VideoCollectionInline,]
-    list_display = ('title', 'category', 'partner', 'state', 'language')
-    search_fields = ['title', 'partner__name', 'state', 'language']
+    list_display = ('title', 'category', 'partner', 'country', 'state', 'language')
+    search_fields = ['title', 'partner__name', 'country', 'state', 'language']
     filter_horizontal = ('videos',)
 
 class FeaturedCollectionAdmin(admin.ModelAdmin):

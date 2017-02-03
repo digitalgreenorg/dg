@@ -10,10 +10,12 @@ define([
     'configs',
     'collections/upload_collection',
     'views/notification',
+    'models/user_model',
     'offline_utils',
     'models/user_model',
     'indexeddb-backbone'
-], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, Offline, user) {
+
+], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, User, Offline) {
 
     var StatusView = Backbone.Layout.extend({
         template: "#status",
@@ -26,13 +28,17 @@ define([
         },
 
         initialize: function() {
-            _(this).bindAll('fill_status');
+            _(this).bindAll('render');
             this.fill_status();
+            User.on('change', this.render);
         },
 
         serialize: function() {
             // send the following to the template
+            var language = User.get('language');
             return {
+                language: language,
+                configs: configs,
                 full_d_timestamp: this.full_download_timestamp,
                 inc_d_timestamp: this.inc_download_timestamp,
                 num_upload_entries: this.upload_entries,
@@ -117,9 +123,18 @@ define([
 
         // Resets the offline db
         reset: function() {
-            var val = confirm("Your database will be deleted and downloaded again. Are you sure you want to continue?")
-            if (val == true) {
-                Offline.reset_database();
+            // check if user has unsynced data in upload queue
+            if(upload_collection.length > 0){
+                var val = confirm("You will lose unsynced data. Click 'Ok' to proceed and 'Cancel' to abort")
+                if (val == true) {
+                    Offline.reset_database();
+                }    
+            }
+            else {
+                var val = confirm("Your database will be deleted and downloaded again. Are you sure you want to continue?")
+                if (val == true) {
+                    Offline.reset_database();
+                }
             }
         },
         
@@ -188,7 +203,6 @@ define([
                 }
             }
         }
-
     });
 
     // Our module now returns our view

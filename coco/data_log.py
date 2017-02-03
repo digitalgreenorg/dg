@@ -602,13 +602,14 @@ def save_log(sender, **kwargs ):
     print model_id
     if sender == "Village":
         village_id = instance.id
-    elif sender == "Animator" or sender == 'Language' or sender == 'NonNegotiable':
+    elif sender == "Animator" or sender == 'Language' or sender == 'NonNegotiable' or sender == 'Category' or sender == 'SubCategory'or sender == 'VideoPractice':
         village_id = None
     elif sender == "PersonAdoptPractice":
         village_id = instance.person.village.id
     else:
         village_id = instance.village.id
-    partner_id = None if sender is ["Village", 'Language', 'NonNegotiable'] else instance.partner.id
+    partner_id = None if sender in ["Village", 'Language', 'NonNegotiable', 'Category', 'SubCategory', 'VideoPractice'] else instance.partner.id
+
     ServerLog = get_model('coco', 'ServerLog')
     log = ServerLog(village=village_id, user=user, action=action, entry_table=sender,
                     model_id=model_id, partner=partner_id)
@@ -657,7 +658,7 @@ def send_updated_log(request):
             rows = rows | ServerLog.objects.filter(timestamp__gte=timestamp, village__in=villages)
         if rows:
             data = serializers.serialize('json', rows, fields=('action','entry_table','model_id', 'timestamp'))
-            return HttpResponse(data, mimetype="application/json")
+            return HttpResponse(data, content_type="application/json")
     return HttpResponse("0")
 
 
