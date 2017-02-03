@@ -671,6 +671,7 @@ def save_call_log(call_id,from_number,to_number,call_type,start_time):
     try:
         call_obj.save()
     except Exception as e:
+        # if error then log
         pass
 
 
@@ -766,13 +767,14 @@ def helpline_incoming(request):
                 call_status = get_status(latest_outgoing_of_incoming[0])
             else: 
                 call_status = ''
-            if ## check conditions for make a call
-                expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
-                if len(expert_obj) > 0:
-                    make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
-                else:
-                    # sms or greeting
-                    pass
+            if call_status != '' and call_status['response_code'] == 200 and (call_status['status'] in ('ringing', 'in-progress')):
+                    return HttpResponse(status=202)
+            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            if len(expert_obj) > 0:
+                make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
+            else:
+                # sms or greeting
+                pass
     else:
         return HttpResponse(status=403)
 
@@ -787,6 +789,20 @@ def update_incoming_obj(incoming_obj,call_status,recording_url,expert_obj,resolv
     except Exception as e:
         # if error in updating incoming object then Log
         pass
+
+
+def get_info_through_api(outgoing_call_id):
+    call_status = get_status(outgoing_call_id)
+    if call_status['response_code'] == 200:
+        # Search latest pending Incoming object
+        incoming_obj = HelplineIncoming.objects.filter(from_number=call_status['to'],call_status=0).order_by('-id')
+        expert_obj = HelplineExpert.objects.filter(phone_number=call_status['from'])
+        if len(incoming_obj) > 0 and len(expert_obj) > 0:
+            incoming_obj = incoming_obj[0]
+            expert_obj = expert_obj[0]
+            to_number = call_status['to']
+            return (incoming_obj,expert_obj,to_number)
+    return ''
 
 
 @csrf_exempt
@@ -805,63 +821,55 @@ def helpline_call_response(request):
                 update_incoming_obj(incoming_obj,1,recording_url,expert_obj,resolved_time)
             else:
                 # if outgoing object not found then get detail by call Exotel API
-                call_status = get_status(outgoing_call_id)
-                if call_status['response_code'] == 200:
-                    # Search latest pending Incoming object
-                    incoming_obj = HelplineIncoming.objects.filter(from_number=call_status['to'],call_status=0).order_by('-id')
-                    expert_obj = HelplineExpert.objects.filter(phone_number=call_status['from'])
-                    if len(incoming_obj) > 0 and len(expert_obj) > 0:
-                        incoming_obj = incoming_obj[0]
-                        expert_obj = expert_obj[0]
-                        update_incoming_obj(incoming_obj,1,recording_url,expert_obj,resolved_time)
+                call_detail = get_info_through_api(outgoing_call_id)
+                if call_detail != '':
+                    incoming_obj = call_detail[0]
+                    expert_obj = call_detail[1]
+                    update_incoming_obj(incoming_obj,1,recording_url,expert_obj,resolved_time)
         elif status == 'busy':
             if outgoing_obj:
                 farmer_number = outgoing_obj.to_number
                 #send sms for later call
-        elif status == 'no-answer':  ## check conditions
+            else:
+                call_detail = get_info_through_api(outgoing_call_id)
+                if call_detail != '':
+                    farmer_number = call_detail[2]
+                    #send sms for later call
+        elif status == 'no-answer':  
             call_status = get_status(outgoing_call_id)
             if call_status['response_code'] == 200:
                 # if expert pick call and farmer not
                 if call_status['from_status'] == 'completed':
                     #send sms for later call
                     return HttpResponse(status=200)
+            make_call = 0
             if outgoing_obj:
                 incoming_obj = outgoing_obj.incoming_call
                 expert_obj = outgoing_obj.from_number
                 to_number = outgoing_obj.to_number
-                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1))
-                try:
-                    expert_numbers = expert_numbers[expert_numbers.index(expert_obj)+1:]
-                except Exception as e:
-                    expert_numbers = []
-                    pass
-                if len(expert_numbers) > 0:
-                    make_helpline_call(incoming_obj,expert_numbers[0],to_number)
-                else:
-                    # greeting
-                    pass
+                make_call = 1
             else:
-                # if outgoing object not found then get detail by call Exotel API
-                call_status = get_status(outgoing_call_id)
-                if call_status['response_code'] == 200:
-                    # Search latest pending Incoming object
-                    incoming_obj = HelplineIncoming.objects.filter(from_number=call_status['to'],call_status=0).order_by('-id')
-                    expert_obj = HelplineExpert.objects.filter(phone_number=call_status['from'])
-                    if len(incoming_obj) > 0 and len(expert_obj) > 0:
-                        incoming_obj = incoming_obj[0]
-                        expert_obj = expert_obj[0]
-                        to_number = call_status['to']
+                call_detail = get_info_through_api(outgoing_call_id)
+                if call_detail != '':
+                    incoming_obj = call_detail[0]
+                    expert_obj = call_detail[1]
+                    to_number = call_detail[2]
+                    make_call = 1
+            if make_call == 1:
+                # Find next expert
                 expert_numbers = list(HelplineExpert.objects.filter(expert_status=1))
                 try:
                     expert_numbers = expert_numbers[expert_numbers.index(expert_obj)+1:]
                 except Exception as e:
                     expert_numbers = []
                     pass
+                # Make a call if next expert found
                 if len(expert_numbers) > 0:
                     make_helpline_call(incoming_obj,expert_numbers[0],to_number)
+                # Send greeting if no expert is available
                 else:
                     # greeting
-                    pass                     
+                    pass
         else:
             #For other conditions
             pass
