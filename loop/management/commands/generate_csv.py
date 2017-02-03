@@ -92,8 +92,8 @@ class Command(BaseCommand):
         default_from_year = default_start_date.get('year')
         
 
-        AGGREGATOR_LIST = list(LoopUser.objects.exclude(name='Loop Test').values_list('name', flat=True))
-        AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(name_en='Loop Test').values_list('name_en', flat=True))
+        AGGREGATOR_LIST = list(LoopUser.objects.exclude(role=1).values_list('name', flat=True))
+        AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(role=1).values_list('name_en', flat=True))
 
         if type(generate_sheet_for) != str or type(from_date) != str or len(from_date) != 8 \
             or type(to_date) != str or len(to_date) != 8:

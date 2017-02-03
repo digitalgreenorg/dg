@@ -85,7 +85,7 @@ class Command(BaseCommand):
 
 
         #map to get aggregator name from id in result set        
-        obj = LoopUser.objects.exclude(name_en='Loop Test').values_list('name', 'user_id')
+        obj = LoopUser.objects.exclude(role=1).values_list('name', 'user_id')
         for item in obj:
             id_map[item[0]] = item[1]            
 

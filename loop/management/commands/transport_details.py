@@ -92,8 +92,8 @@ class Command(BaseCommand):
         default_from_year = default_start_date.get('year')
         
 
-        AGGREGATOR_LIST = list(LoopUser.objects.exclude(name='Loop Test').values_list('name', flat=True))
-        AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(name_en='Loop Test').values_list('name_en', flat=True))
+        AGGREGATOR_LIST = list(LoopUser.objects.exclude(role=1).values_list('name', flat=True))
+        AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(role=1).values_list('name_en', flat=True))
 
         if type(generate_sheet_for) != str or type(from_date) != str or len(from_date) != 8 \
             or type(to_date) != str or len(to_date) != 8:
@@ -136,7 +136,7 @@ class Command(BaseCommand):
             for sno in range(1,len(data) + 1):
                 data[sno - 1].insert(0, str(sno))
 
-            sheet_heading = 'गलत मोबाइल नंबर की लिस्ट_'+ from_day + '-' + from_month + '-' + from_year + \
+            sheet_heading = 'गाड़ी के किराये की जानकारी_'+ from_day + '-' + from_month + '-' + from_year + \
                             ' to ' + to_day + '-' + to_month + '-' + to_year
             data_json['all'] = {'sheet_heading': sheet_heading,
                                     'sheet_name': 'सारे किसान', 'data': data
@@ -151,7 +151,7 @@ class Command(BaseCommand):
                 for sno in range(1,len(filtered_data_copy) + 1):
                     filtered_data_copy[sno - 1].insert(0, str(sno))
                     
-                sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + from_day + '-' + from_month + \
+                sheet_heading = aggregator_name.encode('utf-8') + '_गाड़ी के किराये की जानकारी_' + from_day + '-' + from_month + \
                                                 '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year 
                 data_json[aggregator_name] = {'sheet_heading': sheet_heading,
                                     'sheet_name': aggregator_name, 'data': filtered_data_copy
@@ -162,7 +162,7 @@ class Command(BaseCommand):
             for sno in range(1,len(data) + 1):
                 data[sno - 1].insert(0, str(sno))
 
-            sheet_heading = generate_sheet_for.encode('utf-8') +'_गलत मोबाइल नंबर की लिस्ट_' + \
+            sheet_heading = generate_sheet_for.encode('utf-8') +'_गाड़ी के किराये की जानकारी_' + \
                                 from_day + '-' + from_month + '-' + from_year + ' to ' + to_day + '-' +  \
                                 to_month + '-' + to_year 
             data_json[generate_sheet_for] = {'sheet_heading': sheet_heading ,
@@ -264,8 +264,8 @@ class Command(BaseCommand):
 
 
             #send email to concerned people with excel file attached    
-            common_send_email('Farmers List with Incorrect Mobile Numbers', 
-                              RECIPIENTS_TEMP, files, [],EMAIL_HOST_USER)
+            common_send_email('Transportation Details', 
+                              RECIPIENTS, files, [],EMAIL_HOST_USER)
             os.remove(excel_workbook_name + '.xlsx')
             # os.remove(excel_workbook_name_second + '.xlsx')
         except Exception as e:

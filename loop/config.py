@@ -173,7 +173,7 @@ query_for_incorrect_phone_no_all_aggregator = '''SELECT
                               JOIN loop_farmer lf ON lf.village_id = llv.village_id
                               JOIN loop_village lv ON lf.village_id = lv.id
                               WHERE
-                                  ll.name_en <> 'Loop Test') t2 ON t1.f_id = t2.Farmer_ID
+                                  ll.role = 2) t2 ON t1.f_id = t2.Farmer_ID
                                   AND t1.user_created_id = t2.user_id
                                   JOIN
                               (SELECT 
@@ -238,7 +238,7 @@ query_for_incorrect_phone_no_single_aggregator = '''SELECT
                                 JOIN loop_farmer lf ON lf.village_id = llv.village_id
                                 JOIN loop_village lv ON lf.village_id = lv.id
                                 WHERE
-                                    ll.name_en <> 'Loop Test' and ll.name = \'%s\') t2 ON t1.f_id = t2.Farmer_ID
+                                    ll.role = 2 and ll.name = \'%s\') t2 ON t1.f_id = t2.Farmer_ID
                                     AND t1.user_created_id = t2.user_id
                                     JOIN
                                 (SELECT 
@@ -408,9 +408,9 @@ query_for_transport_details_all_aggregator = '''
                                   JOIN
                               loop_vehicle lv ON lv.id = tv.vehicle_id
                                   JOIN
-                              loop_loopuser ll ON ll.user_id = ct.user_created_id
+                              loop_loopuser ll ON ll.user_id = ct.user_created_id 
                           WHERE
-                              ct.date BETWEEN %s AND %s
+                              ct.date BETWEEN %s AND %s AND ll.role = '2'
                           GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
                           '''
 
@@ -440,7 +440,7 @@ query_for_transport_details_single_aggregator = '''
                                   JOIN
                               loop_loopuser ll ON ll.user_id = ct.user_created_id
                           WHERE
-                              ct.date BETWEEN %s AND %s AND ll.name = \'%s\'
+                              ct.date BETWEEN %s AND %s AND ll.name = \'%s\' and ll.role = '2'
                           GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
                           '''
 
