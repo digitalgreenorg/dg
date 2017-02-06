@@ -17,7 +17,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog
+    HelplineCallLog, HelplineSmsLog
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
@@ -675,6 +675,15 @@ def save_call_log(call_id,from_number,to_number,call_type,start_time):
         pass
 
 
+def save_sms_log(sms_id,from_number,to_number,sms_body,sent_time):
+    sms_obj = HelplineCallLog(sms_id=sms_id,from_number=from_number,to_number=to_number,sms_body=sms_body,sent_time=sent_time)
+    try:
+        sms_obj.save()
+    except Exception as e:
+        # if error then log
+        pass
+
+
 def get_status(call_id):
     call_status_url = "https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/%s?details=true"%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID,call_id)
     response = requests.get(call_status_url)
@@ -696,7 +705,6 @@ def get_status(call_id):
     else:
         call_status['response_code'] = response.status_code
     return call_status
-
 
 
 def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
@@ -733,6 +741,21 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
         '''
         pass
     return response.status_code
+
+
+def send_helpline_sms(from_number,to_number,sms_body):
+    sms_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Sms/send'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    parameters = {'From':from_number,'To':to_number,'Body':sms_body,'Priority':'high'}
+    response = requests.post(sms_request_url,data=parameters)
+    if response.status_code == 200:
+        response_tree = xml_parse.fromstring(response.text)
+        sms_detail = response_tree.findall('SMSMessage')[0]
+        sms_id = str(sms_detail.find('Sid').text)
+        sent_time = str(sms_detail.find('DateCreated').text)
+        save_sms_log(sms_id,from_number,to_number,sms_body,sent_time)
+    else:
+        # Log in log file
+        pass
 
 
 def fetch_info_of_incoming_call(request):

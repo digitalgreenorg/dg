@@ -532,3 +532,15 @@ class HelplineCallLog(LoopModel):
 
     def __unicode__(self):
         return "%s (%s) (%s)" % (self.from_number, self.to_number, self.call_type)
+
+
+class HelplineSmsLog(LoopModel):
+    id = models.AutoField(primary_key=True)
+    sms_id = models.CharField(max_length=100)
+    from_number = models.CharField(max_length=20)
+    to_number = models.CharField(max_length=20)
+    sms_body = models.CharField(max_length=2000,null=True,blank=True)
+    sent_time = models.DateTimeField()
+
+    def __unicode__(self):
+        return "%s (%s) (%s)" % (self.from_number, self.to_number, self.sent_time)
