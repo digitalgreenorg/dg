@@ -782,6 +782,7 @@ def helpline_incoming(request):
                 print "Incoming No expert available"
                 # sms or greeting
                 pass
+            return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
 
