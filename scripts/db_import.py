@@ -13,7 +13,7 @@ password = DATABASES['default']['PASSWORD']
 #script to download db from S3
 execfile("download_from_s3.py")
 
-dg_gz = glob.glob("*.gz")[-1]
+dg_gz = sorted(glob.glob("*.gz"))[-1]
 db_name = dg_gz.split('_')
 
 # Unrar gz file
@@ -44,8 +44,9 @@ db.close()
 # To use current DB replace database = DATABASES['default']['NAME']
 database = custom_db_name
 
+print ("Import started : %s" %dg_gz[:-3])
 #mysql command to import db
-dumpcmd = 'mysql -u' + user_name + ' -p' + password + ' ' + database + '<' +  glob.glob("*.sql")[0]
+dumpcmd = 'mysql -u' + user_name + ' -p' + password + ' ' + database + '<' +  dg_gz[:-3]
 os.system(dumpcmd)
 
 # #set buffer size to remove previous sql and gz files
