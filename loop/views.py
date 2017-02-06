@@ -870,12 +870,16 @@ def helpline_call_response(request):
         elif status == 'failed':
             if outgoing_obj:
                 farmer_number = outgoing_obj.to_number
-                #send sms for later call
+                #send sms to Notify User about Later Call
+                sms_body = "Hello,You will receive call later."
+                send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
             else:
                 call_detail = get_info_through_api(outgoing_call_id)
                 if call_detail != '':
                     farmer_number = call_detail[2]
-                    #send sms for later call
+                    #send sms to Notify User about Later Call
+                    sms_body = "Hello,You will receive call later."
+                    send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
         elif status == 'no-answer' or status == 'busy':  
             call_status = get_status(outgoing_call_id)
             if call_status['response_code'] == 200:
@@ -885,7 +889,9 @@ def helpline_call_response(request):
                         farmer_number = outgoing_obj.to_number
                     else:
                         farmer_number = call_status['to']                    
-                    #send sms for later call
+                    #send sms to Notify User about Later Call
+                    sms_body = "Hello,You will receive call later."
+                    send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
                     return HttpResponse(status=200)
             make_call = 0
             if outgoing_obj:
