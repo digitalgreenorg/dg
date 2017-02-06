@@ -716,6 +716,7 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
         try:
             outgoing_obj.save()    
         except Exception as e:
+            print "Error in saving Outgoing call -->  %s"%(str(e),)
             pass
     elif response.status_code == 429:
         # send sms or greeting
@@ -734,9 +735,9 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
     return response.status_code
         
 
-
 def helpline_incoming(request):
     if request.method == 'GET':
+        print "Incoming Call receive"
         call_id = str(request.GET.getlist('CallSid')[0])
         farmer_number = str(request.GET.getlist('From')[0])
         dg_number = str(request.GET.getlist('To')[0])
@@ -744,10 +745,12 @@ def helpline_incoming(request):
         save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
         incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
         if len(incoming_call_obj) == 0:
+            print "No Pending Call"
             incoming_call_obj = HelplineIncoming(call_id=call_id, from_number=farmer_number, to_number=dg_number, incoming_time=incoming_time, last_incoming_time=incoming_time)
             try:
                 incoming_call_obj.save()
             except Exception as e:
+                print "Exception in saving New Call ->> %s"%(str(e),)
                 return HttpResponse(status=500)
             expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
             if len(expert_obj) > 0:
@@ -762,6 +765,7 @@ def helpline_incoming(request):
             try:
                 incoming_call_obj.save()
             except Exception as e:
+                print "Exception in saving Old Call ->> %s"%(str(e),)
                 pass
             latest_outgoing_of_incoming = HelplineOutgoing.objects.filter(incoming_call=incoming_call_obj).order_by('-id').values_list('call_id', flat=True)[:1]
             if len(latest_outgoing_of_incoming) != 0:
@@ -769,11 +773,13 @@ def helpline_incoming(request):
             else: 
                 call_status = ''
             if call_status != '' and call_status['response_code'] == 200 and (call_status['status'] in ('ringing', 'in-progress')):
-                    return HttpResponse(status=202)
+                    print "Call Already in in-progress"
+                    return HttpResponse(status=200)
             expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
             if len(expert_obj) > 0:
                 make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
             else:
+                print "Incoming No expert available"
                 # sms or greeting
                 pass
     else:
