@@ -677,7 +677,7 @@ def save_call_log(call_id,from_number,to_number,call_type,start_time):
 
 def get_status(call_id):
     call_status_url = "https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/%s?details=true"%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID,call_id)
-    response = requests.get(url)
+    response = requests.get(call_status_url)
     call_status = dict()
     if response.status_code == 200:
         response_tree = xml_parse.fromstring(response.text)
@@ -704,7 +704,7 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
     call_response_url = 'http://www.digitalgreen.org/loop/helpline_call_response/'
     from_number = from_number_obj.phone_number
     parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
-    response = requests.post(url,data=parameters)
+    response = requests.post(call_request_url,data=parameters)
     if response.status_code == 200:
         response_tree = xml_parse.fromstring(response.text)
         call_detail = response_tree.findall('Call')[0]
@@ -880,7 +880,7 @@ def helpline_call_response(request):
 
 def helpline_offline(request):
     if request.method == 'GET':
-
+        return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
 
