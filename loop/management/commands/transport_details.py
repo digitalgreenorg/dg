@@ -36,7 +36,7 @@ class Command(BaseCommand):
 
         parser.add_argument('-td',
             dest='to_date',
-            default=(datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
+            default=(datetime.now() - timedelta(days=6)).strftime('%Y%m%d'))
 
 
     
@@ -58,23 +58,13 @@ class Command(BaseCommand):
         if(options.get('from_date')):
             from_date=str(options.get('from_date'))
         else:
-            from_date=to_date[0:6]+(datetime.now() - timedelta(days=0)).strftime('%Y%m%d')[-2:]
+            from_date=to_date[0:6]+(datetime.now() - timedelta(days=5)).strftime('%Y%m%d')[-2:]
 
         if num_days < 0: 
             raise CommandError('-nd flag should be > 0')
         elif num_days != 0:
             temp_date = datetime.strptime(to_date, '%Y%m%d')
             from_date = (temp_date - timedelta(days=num_days)).strftime('%Y%m%d')
-
-        #get time period in days and month
-        # from_day = str(datetime.strptime(from_date, '%Y%m%d').day)
-        # to_day = str(datetime.strptime(to_date, '%Y%m%d').day)
-
-        # from_month = calendar.month_abbr[datetime.strptime(from_date, '%Y%m%d').month]
-        # to_month = calendar.month_abbr[datetime.strptime(to_date, '%Y%m%d').month]
-
-        # from_year = str(datetime.strptime(from_date, '%Y%m%d').year)
-        # to_year = str(datetime.strptime(to_date, '%Y%m%d').year)
 
         start_date = get_data_from_date(from_date)
         from_day = start_date.get('day')
@@ -177,75 +167,6 @@ class Command(BaseCommand):
                                                     'text_wrap': True}
 
 
-        # if generate_sheet_for == 'all' or generate_sheet_for == None:
-        #     query = query_for_incorrect_phone_no_all_aggregator % (default_from_date, to_date, default_from_date, to_date)
-        #     excel_workbook_name_second = 'Incorrect Mobile Numbers_' + default_from_day + '-' + default_from_month + '-' + default_from_year + \
-        #                                                         ' to ' + to_day + '-' + to_month + '-' + to_year
-        # else:
-        #     generate_sheet_for_all_flag = False
-        #     generate_sheet_for = AGGREGATOR_LIST[AGGREGATOR_LIST_EN.index(generate_sheet_for)]
-        #     query = query_for_incorrect_phone_no_single_aggregator % (default_from_date, to_date, generate_sheet_for, default_from_date, to_date)
-        #     excel_workbook_name_second = 'Incorrect_Mobile_Numbers_' + generate_sheet_for + '_ ' + default_from_day + '-' + \
-        #                 default_from_month + '-' + default_from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
-
-        # cur2 = mysql_cn.cursor()                
-        # cur2.execute(query)
-        # result = cur2.fetchall()
-        # data2 = [list(row) for row in result]
-        # #create list copy for filtering
-        # temp_data2 = copy.deepcopy(data2)
-        # if generate_sheet_for_all_flag is True:
-        #     #Write data for all aggregators in sheet
-        #     for sno in range(1,len(data2) + 1):
-        #         data2[sno - 1].insert(0, str(sno))
-        #         if int(data2[sno - 1][6]) >= 9999999999:
-        #             data2[sno - 1][6] = 'नंबर नहीं है'
-
-        #     sheet_heading = 'गलत मोबाइल नंबर की लिस्ट_'+ default_from_day + '-' + default_from_month + '-' + default_from_year + \
-        #                     ' to ' + to_day + '-' + to_month + '-' + to_year
-        #     data_json2['all'] = {'sheet_heading': sheet_heading,
-        #                             'sheet_name': 'सारे किसान', 'data': data2
-        #                         }
-                    
-        #     header_json2['all'] = header_dict_for_loop_email_mobile_numbers
-        #     #write data for every aggregator in their respective sheet
-        #     for aggregator_name in AGGREGATOR_LIST:
-        #         #filter data to get rows for the current aggregator
-        #         filtered_data = [row for row in temp_data2 if row[0] == aggregator_name]
-        #         filtered_data_copy = copy.deepcopy(filtered_data)
-        #         for sno in range(1,len(filtered_data_copy) + 1):
-        #             filtered_data_copy[sno - 1].insert(0, str(sno))
-        #             if int(filtered_data_copy[sno - 1][6]) >= 9999999999:
-        #                 filtered_data_copy[sno - 1][6] = 'नंबर नहीं है'
-                    
-        #         sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + default_from_day + '-' + default_from_month + \
-        #                                         '-' + default_from_year + ' to ' + to_day + '-' + to_month + '-' + to_year 
-        #         data_json2[aggregator_name] = {'sheet_heading': sheet_heading,
-        #                             'sheet_name': aggregator_name, 'data': filtered_data_copy
-        #                         }
-        #         header_json2[aggregator_name] = header_dict_for_loop_email_mobile_numbers
-        # else:
-        #     #write data for a given aggregator from command line
-        #     for sno in range(1,len(data2) + 1):
-        #         data2[sno - 1].insert(0, str(sno))
-        #         if int(data2[sno - 1][6]) >= 9999999999:
-        #             data2[sno - 1][6] = 'नंबर नहीं है'
-
-        #     sheet_heading = generate_sheet_for.encode('utf-8') +'_गलत मोबाइल नंबर की लिस्ट_' + \
-        #                         default_from_day + '-' + default_from_month + '-' + default_from_year + ' to ' + to_day + '-' +  \
-        #                         to_month + '-' + to_year 
-        #     data_json2[generate_sheet_for] = {'sheet_heading': sheet_heading ,
-        #                             'sheet_name': generate_sheet_for, 'data': data2
-        #                         }
-            
-        #     header_json2[generate_sheet_for] = header_dict_for_loop_email_mobile_numbers
-
-        # final_json_to_send_second['header'] = header_json2
-        # final_json_to_send_second['data'] = data_json2
-        # final_json_to_send_second['cell_format'] = {'bold':0, 'font_size': 10, 'border' : 1,
-        #                                             'text_wrap': True}
-
-        
 
         #post request to library for excel generation
         try:
@@ -256,12 +177,6 @@ class Command(BaseCommand):
             excel_file.write(r.content)
             excel_file.close()
             files.append(excel_file)
-            # r = requests.post('http://localhost:5000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send_second))
-            # excel_file = open(excel_workbook_name_second + '.xlsx', 'w')
-            # excel_file.write(r.content)
-            # excel_file.close()
-            # files.append(excel_file)
-
 
             #send email to concerned people with excel file attached    
             common_send_email('Transportation Details', 
