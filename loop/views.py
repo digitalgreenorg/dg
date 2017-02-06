@@ -23,7 +23,7 @@ from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
 import inspect
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID
 # Create your views here.
 HELPLINE_NUMBER = "09891256494"
 ROLE_AGGREGATOR = 2
@@ -758,6 +758,13 @@ def send_helpline_sms(from_number,to_number,sms_body):
         pass
 
 
+def send_greeting(to_number):
+    greeting_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    greeting_app_url = 'http://my.exotel.in/exoml/start/%s'%(NO_EXPERT_GREETING_APP_ID,)
+    parameters = {'From':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','Url':greeting_app_url}
+    response = requests.post(greeting_request_url,data=parameters)
+    
+
 def fetch_info_of_incoming_call(request):
     call_id = str(request.GET.getlist('CallSid')[0])
     farmer_number = str(request.GET.getlist('From')[0])
@@ -785,8 +792,7 @@ def helpline_incoming(request):
                 make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
             # Send Greeting if No Expert is available
             else:
-                # sms or greeting
-                pass
+                send_greeting(farmer_number)
             return HttpResponse(status=200)
         # If pending call exist for this number
         else:
@@ -812,8 +818,7 @@ def helpline_incoming(request):
                 make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
             # Send Greeting if No Expert is available
             else:
-                # sms or greeting
-                pass
+                send_greeting(farmer_number)
             return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
@@ -919,8 +924,7 @@ def helpline_call_response(request):
                     make_helpline_call(incoming_obj,expert_numbers[0],to_number)
                 # Send greeting if no expert is available
                 else:
-                    # greeting
-                    pass
+                    send_greeting(to_number)
         else:
             #For other conditions
             pass
