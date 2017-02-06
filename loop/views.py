@@ -816,13 +816,13 @@ def get_info_through_api(outgoing_call_id):
 @csrf_exempt
 def helpline_call_response(request):
     if request.method == 'POST':
-        status = str(request.GET.getlist('Status')[0])
-        outgoing_call_id = str(request.GET.getlist('CallSid')[0])
+        status = str(request.POST.getlist('Status')[0])
+        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
         outgoing_obj = HelplineOutgoing.objects.filter(call_id=outgoing_call_id).select_related('incoming_call','from_number').order_by('-id')
         outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
         if status == 'completed':
-            recording_url = str(request.GET.getlist('RecordingUrl')[0])
-            resolved_time = str(request.GET.getlist('EndTime')[0])            
+            recording_url = str(request.POST.getlist('RecordingUrl')[0])
+            resolved_time = str(request.POST.getlist('EndTime')[0])            
             if outgoing_obj:
                 incoming_obj = outgoing_obj.incoming_call
                 expert_obj = outgoing_obj.from_number
