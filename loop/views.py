@@ -733,14 +733,19 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
         '''
         pass
     return response.status_code
-        
+
+
+def fetch_info_of_incoming_call(request):
+    call_id = str(request.GET.getlist('CallSid')[0])
+    farmer_number = str(request.GET.getlist('From')[0])
+    dg_number = str(request.GET.getlist('To')[0])
+    incoming_time = str(request.GET.getlist('StartTime')[0])
+    return (call_id,farmer_number,dg_number,incoming_time)
+
 
 def helpline_incoming(request):
     if request.method == 'GET':
-        call_id = str(request.GET.getlist('CallSid')[0])
-        farmer_number = str(request.GET.getlist('From')[0])
-        dg_number = str(request.GET.getlist('To')[0])
-        incoming_time = str(request.GET.getlist('StartTime')[0])
+        call_id,farmer_number,dg_number,incoming_time = fetch_info_of_incoming_call(request)
         save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
         incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
         # If No pending call with this number
@@ -897,7 +902,26 @@ def helpline_call_response(request):
 
 def helpline_offline(request):
     if request.method == 'GET':
+        call_id,farmer_number,dg_number,incoming_time = fetch_info_of_incoming_call(request)
+        save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
+        incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
+        if len(incoming_call_obj) == 0:
+            incoming_call_obj = HelplineIncoming(call_id=call_id, from_number=farmer_number, to_number=dg_number, incoming_time=incoming_time, last_incoming_time=incoming_time)
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                return HttpResponse(status=500)
+        else:
+            # Update last incoming time for this pending call
+            incoming_call_obj = incoming_call_obj[0]
+            incoming_call_obj.last_incoming_time = incoming_time
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                pass
+        # Send Sms or greeting for later call
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
-
