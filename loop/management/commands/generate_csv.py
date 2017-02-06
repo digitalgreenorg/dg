@@ -36,7 +36,7 @@ class Command(BaseCommand):
 
         parser.add_argument('-td',
             dest='to_date',
-            default=(datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
+            default=(datetime.now() - timedelta(days=6)).strftime('%Y%m%d'))
 
 
     
@@ -58,7 +58,7 @@ class Command(BaseCommand):
         if(options.get('from_date')):
             from_date=str(options.get('from_date'))
         else:
-            from_date=to_date[0:6]+(datetime.now() - timedelta(days=0)).strftime('%Y%m%d')[-2:]
+            from_date=to_date[0:6]+(datetime.now() - timedelta(days=5)).strftime('%Y%m%d')[-2:]
 
         if num_days < 0: 
             raise CommandError('-nd flag should be > 0')
