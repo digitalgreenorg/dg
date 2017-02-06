@@ -822,7 +822,7 @@ def helpline_call_response(request):
         outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
         if status == 'completed':
             recording_url = str(request.POST.getlist('RecordingUrl')[0])
-            resolved_time = str(request.POST.getlist('EndTime')[0])            
+            resolved_time = str(request.POST.getlist('DateUpdated')[0])            
             if outgoing_obj:
                 incoming_obj = outgoing_obj.incoming_call
                 expert_obj = outgoing_obj.from_number
@@ -834,7 +834,7 @@ def helpline_call_response(request):
                     incoming_obj = call_detail[0]
                     expert_obj = call_detail[1]
                     update_incoming_obj(incoming_obj,1,recording_url,expert_obj,resolved_time)
-        elif status == 'busy':
+        elif status == 'failed':
             if outgoing_obj:
                 farmer_number = outgoing_obj.to_number
                 #send sms for later call
@@ -843,11 +843,15 @@ def helpline_call_response(request):
                 if call_detail != '':
                     farmer_number = call_detail[2]
                     #send sms for later call
-        elif status == 'no-answer':  
+        elif status == 'no-answer' or status == 'busy':  
             call_status = get_status(outgoing_call_id)
             if call_status['response_code'] == 200:
-                # if expert pick call and farmer not
+                # if expert pick call and (not farmer or farmer busy)
                 if call_status['from_status'] == 'completed':
+                    if outgoing_obj:
+                        farmer_number = outgoing_obj.to_number
+                    else:
+                        farmer_number = call_status['to']                    
                     #send sms for later call
                     return HttpResponse(status=200)
             make_call = 0
