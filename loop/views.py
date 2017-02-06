@@ -737,49 +737,53 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
 
 def helpline_incoming(request):
     if request.method == 'GET':
-        print "Incoming Call receive"
         call_id = str(request.GET.getlist('CallSid')[0])
         farmer_number = str(request.GET.getlist('From')[0])
         dg_number = str(request.GET.getlist('To')[0])
         incoming_time = str(request.GET.getlist('StartTime')[0])
         save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
         incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
+        # If No pending call with this number
         if len(incoming_call_obj) == 0:
-            print "No Pending Call"
             incoming_call_obj = HelplineIncoming(call_id=call_id, from_number=farmer_number, to_number=dg_number, incoming_time=incoming_time, last_incoming_time=incoming_time)
             try:
                 incoming_call_obj.save()
             except Exception as e:
-                print "Exception in saving New Call ->> %s"%(str(e),)
+                # Write Exception to Log file
                 return HttpResponse(status=500)
             expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            # Initiate Call if Expert is available
             if len(expert_obj) > 0:
                 make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
+            # Send Greeting if No Expert is available
             else:
                 # sms or greeting
                 pass
             return HttpResponse(status=200)
+        # If pending call exist for this number
         else:
+            # Update last incoming time for this pending call
             incoming_call_obj = incoming_call_obj[0]
             incoming_call_obj.last_incoming_time = incoming_time
             try:
                 incoming_call_obj.save()
             except Exception as e:
-                print "Exception in saving Old Call ->> %s"%(str(e),)
+                # Write Exception to Log file
                 pass
             latest_outgoing_of_incoming = HelplineOutgoing.objects.filter(incoming_call=incoming_call_obj).order_by('-id').values_list('call_id', flat=True)[:1]
             if len(latest_outgoing_of_incoming) != 0:
                 call_status = get_status(latest_outgoing_of_incoming[0])
             else: 
                 call_status = ''
+            # Check If Pending call is already in-progress
             if call_status != '' and call_status['response_code'] == 200 and (call_status['status'] in ('ringing', 'in-progress')):
-                    print "Call Already in in-progress"
                     return HttpResponse(status=200)
             expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            # Initiate Call if Expert is available
             if len(expert_obj) > 0:
                 make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
+            # Send Greeting if No Expert is available
             else:
-                print "Incoming No expert available"
                 # sms or greeting
                 pass
             return HttpResponse(status=200)
@@ -820,6 +824,7 @@ def helpline_call_response(request):
         outgoing_call_id = str(request.POST.getlist('CallSid')[0])
         outgoing_obj = HelplineOutgoing.objects.filter(call_id=outgoing_call_id).select_related('incoming_call','from_number').order_by('-id')
         outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
+        # If call Successfully completed then mark call as resolved
         if status == 'completed':
             recording_url = str(request.POST.getlist('RecordingUrl')[0])
             resolved_time = str(request.POST.getlist('DateUpdated')[0])            
