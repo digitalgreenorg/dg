@@ -48,6 +48,7 @@ class State(LoopModel):
     country = models.ForeignKey(Country)
     is_visible = models.BooleanField(default=True)
     state_name_en = models.CharField(max_length=100, null=True)
+    helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
 
     def __unicode__(self):
         return self.state_name
@@ -138,6 +139,7 @@ class LoopUser(LoopModel):
     village = models.ForeignKey(Village, default=None, null=True)
     name_en = models.CharField(max_length=100, null=True)
     preferred_language = models.ForeignKey(Language, null=True)
+    days_count = models.IntegerField(default=3)
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):

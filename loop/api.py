@@ -807,6 +807,26 @@ class DayTransportationResource(BaseResource):
         except NotFound:
             return http.Http404()
 
+class GaddidarCommissionResource(BaseResource):
+    mandi = fields.ForeignKey(MandiResource,'mandi')
+    gaddidar = fields.ForeignKey(GaddidarResource,'gaddidar')
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = GaddidarCommission.objects.all()
+        authorization = MandiAuthorization('mandi_id__in')
+        authentication = ApiKeyAuthentication()
+        resource_name = 'gaddidarcommission'
+        always_return_data = True
+        excludes = ('time_created','time_modified')
+        include_resource_uri = False
+
+    dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
+    dehydrate_gaddidar = partial(foreign_key_to_id,field_name="gaddidar",sub_field_names=['id'])
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class CombinedTransactionResource(BaseResource):
     crop = fields.ForeignKey(CropResource, 'crop')
