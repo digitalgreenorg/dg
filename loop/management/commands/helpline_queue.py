@@ -1,11 +1,15 @@
 import time
+import datetime
+from datetime import timedelta
 
 from django.core.management.base import BaseCommand
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID
 
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing
-from loop.views import get_status, make_helpline_call
+from loop.views import get_status, make_helpline_call, write_log
+
+HELPLINE_LOG_FILE = 'loop/utils/ivr_helpline/helpline_log.log'
 
 class Command(BaseCommand):
 
@@ -38,7 +42,15 @@ class Command(BaseCommand):
             expert_obj = expert_obj[0]
         else:
             #Log in file that no expert available
-            pass
+            module = "helpline_queue"
+            write_log(HELPLINE_LOG_FILE,module,"No Expert Available")
+            return
+        old_time = datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=2)
+        try:
+            HelplineIncoming.objects.filter(call_status=0,last_incoming_time__lte=old_time).update(call_status=2)
+        except Exception as e:
+            module = "helpline_queue"
+            write_log(HELPLINE_LOG_FILE,module,str(e))
         pending_incoming_call_id = HelplineIncoming.objects.filter(call_status=0).order_by('id').values_list('id', flat=True)
         for ids in pending_incoming_call_id:
             incoming_call_obj = self.check_pending_or_not(ids)

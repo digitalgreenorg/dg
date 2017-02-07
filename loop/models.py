@@ -493,10 +493,10 @@ class HelplineIncoming(LoopModel):
     call_id = models.CharField(max_length=100)
     from_number = models.CharField(max_length=20, db_index=True) #User No.
     to_number = models.CharField(max_length=20)                  #DG Exotel No.
-    incoming_time = models.DateTimeField(db_index=True)
+    incoming_time = models.DateTimeField()
     last_incoming_time = models.DateTimeField()
     resolved_time = models.DateTimeField(null=True, blank=True)
-    call_status = models.IntegerField(choices=CALL_STATUS, default=0)
+    call_status = models.IntegerField(choices=CALL_STATUS, default=0, db_index=True)
     recording_url = models.CharField(max_length=200, null=True , blank=True)
     resolved_by = models.ForeignKey(HelplineExpert, null=True, blank=True)
 
@@ -513,7 +513,7 @@ class HelplineOutgoing(LoopModel):
     incoming_call = models.ForeignKey(HelplineIncoming)
     from_number = models.ForeignKey(HelplineExpert) #DG Expert No.
     to_number = models.CharField(max_length=20)     #User No.
-    outgoing_time = models.DateTimeField(db_index=True)
+    outgoing_time = models.DateTimeField()
 
     def __unicode__(self):
         return "%s (%s)" % (self.from_number, self.to_number)

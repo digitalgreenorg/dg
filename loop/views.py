@@ -671,8 +671,7 @@ def payments(request):
 
 
 def write_log(logfile,module,log):
-    now_utc_time = datetime.datetime.now(timezone('UTC'))
-    now_india_time = now_utc_time.astimezone(timezone('Asia/Kolkata'))
+    curr_india_time = datetime.datetime.now(timezone('Asia/Kolkata'))
     with open(logfile, 'ab') as csvfile:
         file_write = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         file_write.writerow([now_india_time,module,log])
