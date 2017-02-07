@@ -669,13 +669,11 @@ def payments(request):
 
     return HttpResponse(data)
 
-
 def write_log(logfile,module,log):
     curr_india_time = datetime.datetime.now(timezone('Asia/Kolkata'))
     with open(logfile, 'ab') as csvfile:
         file_write = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         file_write.writerow([now_india_time,module,log])
-
 
 def save_call_log(call_id,from_number,to_number,call_type,start_time):
     call_obj = HelplineCallLog(call_id=call_id,from_number=from_number,to_number=to_number,call_type=call_type,start_time=start_time)
@@ -686,7 +684,6 @@ def save_call_log(call_id,from_number,to_number,call_type,start_time):
         module = 'save_call_log'
         write_log(HELPLINE_LOG_FILE,module,str(e))
 
-
 def save_sms_log(sms_id,from_number,to_number,sms_body,sent_time):
     sms_obj = HelplineCallLog(sms_id=sms_id,from_number=from_number,to_number=to_number,sms_body=sms_body,sent_time=sent_time)
     try:
@@ -695,7 +692,6 @@ def save_sms_log(sms_id,from_number,to_number,sms_body,sent_time):
         # if error then log
         module = 'save_sms_log'
         write_log(HELPLINE_LOG_FILE,module,str(e))
-
 
 def get_status(call_id):
     call_status_url = "https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/%s?details=true"%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID,call_id)
@@ -719,6 +715,18 @@ def get_status(call_id):
         call_status['response_code'] = response.status_code
     return call_status
 
+def get_info_through_api(outgoing_call_id):
+    call_status = get_status(outgoing_call_id)
+    if call_status['response_code'] == 200:
+        # Search latest pending Incoming object
+        incoming_obj = HelplineIncoming.objects.filter(from_number=call_status['to'],call_status=0).order_by('-id')
+        expert_obj = HelplineExpert.objects.filter(phone_number=call_status['from'])
+        if len(incoming_obj) > 0 and len(expert_obj) > 0:
+            incoming_obj = incoming_obj[0]
+            expert_obj = expert_obj[0]
+            to_number = call_status['to']
+            return (incoming_obj,expert_obj,to_number)
+    return ''
 
 def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
     call_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
@@ -741,21 +749,15 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
             module = 'make_helpline_call'
             write_log(HELPLINE_LOG_FILE,module,str(e))
     elif response.status_code == 429:
-        # send sms or greeting
-        pass
+        # Enter in Log
+        module = 'make_helpline_call'
+        log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
+        write_log(HELPLINE_LOG_FILE,module,str(e))
     else:
-        # send sms or greeting
-        '''
-        <TwilioResponse>
-          <RestException>
-            <Status>404</Status>
-            <Message>No matching results</Message>
-          </RestException>
-        </TwilioResponse>
-        '''
-        pass
-    return response.status_code
-
+        # Enter in Log
+        module = 'make_helpline_call'
+        log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
+        write_log(HELPLINE_LOG_FILE,module,str(e))
 
 def send_helpline_sms(from_number,to_number,sms_body):
     sms_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Sms/send'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
@@ -769,17 +771,15 @@ def send_helpline_sms(from_number,to_number,sms_body):
         save_sms_log(sms_id,from_number,to_number,sms_body,sent_time)
     else:
         module = 'send_helpline_sms'
-        log = "Status: %s (Parameters: %s)"%(str(response.status_code),parameters)
+        log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
         write_log(HELPLINE_LOG_FILE,module,log)
  
-
 def send_greeting(to_number):
     greeting_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     greeting_app_url = 'http://my.exotel.in/exoml/start/%s'%(NO_EXPERT_GREETING_APP_ID,)
     parameters = {'From':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','Url':greeting_app_url}
     response = requests.post(greeting_request_url,data=parameters)
     
-
 def fetch_info_of_incoming_call(request):
     call_id = str(request.GET.getlist('CallSid')[0])
     farmer_number = str(request.GET.getlist('From')[0])
@@ -787,6 +787,17 @@ def fetch_info_of_incoming_call(request):
     incoming_time = str(request.GET.getlist('StartTime')[0])
     return (call_id,farmer_number,dg_number,incoming_time)
 
+def update_incoming_obj(incoming_obj,call_status,recording_url,expert_obj,resolved_time):
+    incoming_obj.call_status = call_status
+    incoming_obj.recording_url = recording_url
+    incoming_obj.resolved_by = expert_obj
+    incoming_obj.resolved_time = resolved_time
+    try:
+        incoming_obj.save()
+    except Exception as e:
+        # if error in updating incoming object then Log
+        module = 'update_incoming_obj'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
 
 def helpline_incoming(request):
     if request.method == 'GET':
@@ -840,34 +851,6 @@ def helpline_incoming(request):
             return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
-
-
-def update_incoming_obj(incoming_obj,call_status,recording_url,expert_obj,resolved_time):
-    incoming_obj.call_status = call_status
-    incoming_obj.recording_url = recording_url
-    incoming_obj.resolved_by = expert_obj
-    incoming_obj.resolved_time = resolved_time
-    try:
-        incoming_obj.save()
-    except Exception as e:
-        # if error in updating incoming object then Log
-        module = 'update_incoming_obj'
-        write_log(HELPLINE_LOG_FILE,module,str(e))
-
-
-def get_info_through_api(outgoing_call_id):
-    call_status = get_status(outgoing_call_id)
-    if call_status['response_code'] == 200:
-        # Search latest pending Incoming object
-        incoming_obj = HelplineIncoming.objects.filter(from_number=call_status['to'],call_status=0).order_by('-id')
-        expert_obj = HelplineExpert.objects.filter(phone_number=call_status['from'])
-        if len(incoming_obj) > 0 and len(expert_obj) > 0:
-            incoming_obj = incoming_obj[0]
-            expert_obj = expert_obj[0]
-            to_number = call_status['to']
-            return (incoming_obj,expert_obj,to_number)
-    return ''
-
 
 @csrf_exempt
 def helpline_call_response(request):
@@ -952,7 +935,6 @@ def helpline_call_response(request):
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
-
 
 def helpline_offline(request):
     if request.method == 'GET':
