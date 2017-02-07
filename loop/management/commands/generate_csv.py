@@ -39,7 +39,7 @@ class Command(BaseCommand):
 
         parser.add_argument('-td',
             dest='to_date',
-            default=(datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
+            default=(datetime.now() - timedelta(days=6)).strftime('%Y%m%d'))
 
 
     
@@ -64,7 +64,7 @@ class Command(BaseCommand):
         if(options.get('from_date')):
             from_date=str(options.get('from_date'))
         else:
-            from_date=to_date[0:6]+(datetime.now() - timedelta(days=0)).strftime('%Y%m%d')[-2:]
+            from_date=to_date[0:6]+(datetime.now() - timedelta(days=5)).strftime('%Y%m%d')[-2:]
 
         if num_days < 0: 
             raise CommandError('-nd flag should be > 0')
@@ -264,14 +264,7 @@ class Command(BaseCommand):
         final_json_to_send_second['cell_format'] = {'bold':0, 'font_size': 10, 'border' : 1,
                                                     'text_wrap': True}
 
-        # import pdb;pdb.set_trace()
 
-        html_content_upper = """\
-            Hi,
-            The attached two spreadsheets contain aggregator-wise list of farmers with incorrect mobile numbers. The first sheet has list of all farmers with incorrect mobile number and second sheet has farmers with incorrect mobile numbers who transacted in the given 15 days period.
-            Break-up of aggregator-wise #farmers with incorrect mobile numbers is as follows:"""
-
-        table_data = ''
         items = []
         if len(data_list_for_email_body_current_duration.keys()) > 1:
             for aggregator_name in AGGREGATOR_LIST:
@@ -292,22 +285,22 @@ class Command(BaseCommand):
         
         #post request to library for excel generation
         try:
-            r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
+            r = requests.post('http://sandbox.digitalgreen.org/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
             files = []
             excel_file = open(excel_workbook_name + '.xlsx', 'w')
             excel_file.write(r.content)
             excel_file.close()
             files.append(excel_file)
-            r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send_second))
+            r = requests.post('http://sandbox.digitalgreen.org/loop/get_payment_sheet/', data=json.dumps(final_json_to_send_second))
             excel_file = open(excel_workbook_name_second + '.xlsx', 'w')
             excel_file.write(r.content)
             excel_file.close()
             files.append(excel_file)
-
-
             #send email to concerned people with excel file attached    
+
             common_send_email('Farmers List with Incorrect Mobile Numbers',
-                              RECIPIENTS_TEMP, files, [],EMAIL_HOST_USER, html=final_html, text=final_html)
+                              RECIPIENTS, files, [],EMAIL_HOST_USER, html=final_html, text=final_html)
+
             os.remove(excel_workbook_name + '.xlsx')
             os.remove(excel_workbook_name_second + '.xlsx')
         except Exception as e:
