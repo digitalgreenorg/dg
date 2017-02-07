@@ -21,14 +21,17 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
-from loop.helpline_data import helpline_data
+from loop.utils.ivr_helpline.helpline_data import helpline_data
+import unicodecsv as csv
+import datetime
+from pytz import timezone
 import inspect
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID
 # Create your views here.
 HELPLINE_NUMBER = "09891256494"
 ROLE_AGGREGATOR = 2
-
+HELPLINE_LOG_FILE = 'loop/utils/ivr_helpline/helpline_log.log'
 
 @csrf_exempt
 def login(request):
@@ -667,13 +670,22 @@ def payments(request):
     return HttpResponse(data)
 
 
+def write_log(logfile,module,log):
+    now_utc_time = datetime.datetime.now(timezone('UTC'))
+    now_india_time = now_utc_time.astimezone(timezone('Asia/Kolkata'))
+    with open(logfile, 'ab') as csvfile:
+        file_write = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        file_write.writerow([now_india_time,module,log])
+
+
 def save_call_log(call_id,from_number,to_number,call_type,start_time):
     call_obj = HelplineCallLog(call_id=call_id,from_number=from_number,to_number=to_number,call_type=call_type,start_time=start_time)
     try:
         call_obj.save()
     except Exception as e:
         # if error then log
-        pass
+        module = 'save_call_log'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
 
 
 def save_sms_log(sms_id,from_number,to_number,sms_body,sent_time):
@@ -682,7 +694,8 @@ def save_sms_log(sms_id,from_number,to_number,sms_body,sent_time):
         sms_obj.save()
     except Exception as e:
         # if error then log
-        pass
+        module = 'save_sms_log'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
 
 
 def get_status(call_id):
@@ -725,8 +738,9 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
         try:
             outgoing_obj.save()    
         except Exception as e:
-            print "Error in saving Outgoing call -->  %s"%(str(e),)
-            pass
+            # Save Errors in Logs
+            module = 'make_helpline_call'
+            write_log(HELPLINE_LOG_FILE,module,str(e))
     elif response.status_code == 429:
         # send sms or greeting
         pass
@@ -755,9 +769,10 @@ def send_helpline_sms(from_number,to_number,sms_body):
         sent_time = str(sms_detail.find('DateCreated').text)
         save_sms_log(sms_id,from_number,to_number,sms_body,sent_time)
     else:
-        # Log in log file
-        pass
-
+        module = 'send_helpline_sms'
+        log = "Status: %s (Parameters: %s)"%(str(response.status_code),parameters)
+        write_log(HELPLINE_LOG_FILE,module,log)
+ 
 
 def send_greeting(to_number):
     greeting_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
@@ -786,6 +801,8 @@ def helpline_incoming(request):
                 incoming_call_obj.save()
             except Exception as e:
                 # Write Exception to Log file
+                module = 'helpline_incoming (New Call)'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
                 return HttpResponse(status=500)
             expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
             # Initiate Call if Expert is available
@@ -804,7 +821,8 @@ def helpline_incoming(request):
                 incoming_call_obj.save()
             except Exception as e:
                 # Write Exception to Log file
-                pass
+                module = 'helpline_incoming (Old Call)'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
             latest_outgoing_of_incoming = HelplineOutgoing.objects.filter(incoming_call=incoming_call_obj).order_by('-id').values_list('call_id', flat=True)[:1]
             if len(latest_outgoing_of_incoming) != 0:
                 call_status = get_status(latest_outgoing_of_incoming[0])
@@ -834,7 +852,8 @@ def update_incoming_obj(incoming_obj,call_status,recording_url,expert_obj,resolv
         incoming_obj.save()
     except Exception as e:
         # if error in updating incoming object then Log
-        pass
+        module = 'update_incoming_obj'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
 
 
 def get_info_through_api(outgoing_call_id):
@@ -927,8 +946,10 @@ def helpline_call_response(request):
                 else:
                     send_greeting(to_number)
         else:
-            #For other conditions
-            pass
+            #For other conditions write Logs
+            module = 'helpline_call_response'
+            log = 'Status: %s (outgoing_call_id: %s)'%(str(status),str(outgoing_call_id))
+            write_log(HELPLINE_LOG_FILE,module,log)
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
@@ -945,6 +966,8 @@ def helpline_offline(request):
                 incoming_call_obj.save()
             except Exception as e:
                 # Write Exception to Log file
+                module = 'helpline_offline'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
                 return HttpResponse(status=500)
         else:
             # Update last incoming time for this pending call
@@ -954,7 +977,8 @@ def helpline_offline(request):
                 incoming_call_obj.save()
             except Exception as e:
                 # Write Exception to Log file
-                pass
+                module = 'helpline_offline'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
         # Send Sms or greeting for later call
         send_greeting(farmer_number)
         return HttpResponse(status=200)

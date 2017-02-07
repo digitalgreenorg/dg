@@ -45,4 +45,4 @@ class Command(BaseCommand):
             if incoming_call_obj:
                 farmer_number = incoming_call_obj.from_number
                 make_helpline_call(incoming_call_obj,expert_obj,farmer_number)
-                time.sleep(300)
+                time.sleep(120)
