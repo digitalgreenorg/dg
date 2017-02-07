@@ -13,7 +13,10 @@ import xlsxwriter
 import time
 from extract_data_from_date import *
 from datetime import datetime, timedelta
+from django.template.loader import render_to_string, get_template
+
 import requests, copy, calendar
+from django.template.context import Context
 
 
 class Command(BaseCommand):
@@ -54,6 +57,9 @@ class Command(BaseCommand):
         final_json_to_send_second = {}
         excel_workbook_name = None
         excel_workbook_name_second = None
+        data_list_for_email_body_current_duration = {}
+        data_list_for_email_body_all_duration = {}
+        final_body_list = []
 
         if(options.get('from_date')):
             from_date=str(options.get('from_date'))
@@ -145,6 +151,7 @@ class Command(BaseCommand):
                                 }
                     
             header_json['all'] = header_dict_for_loop_email_mobile_numbers
+            data_list_for_email_body_current_duration['Total'] = len(data)
             #write data for every aggregator in their respective sheet
             for aggregator_name in AGGREGATOR_LIST:
                 #filter data to get rows for the current aggregator
@@ -161,6 +168,7 @@ class Command(BaseCommand):
                                     'sheet_name': aggregator_name, 'data': filtered_data_copy
                                 }
                 header_json[aggregator_name] = header_dict_for_loop_email_mobile_numbers
+                data_list_for_email_body_current_duration[aggregator_name] = len(filtered_data)
         else:
             #write data for a given aggregator from command line
             for sno in range(1,len(data) + 1):
@@ -176,6 +184,7 @@ class Command(BaseCommand):
                                 }
             
             header_json[generate_sheet_for] = header_dict_for_loop_email_mobile_numbers
+            data_list_for_email_body_current_duration[generate_sheet_for] = len(data)
 
         final_json_to_send['header'] = header_json
         final_json_to_send['data'] = data_json
@@ -214,6 +223,7 @@ class Command(BaseCommand):
                                 }
                     
             header_json2['all'] = header_dict_for_loop_email_mobile_numbers
+            data_list_for_email_body_all_duration['Total'] = len(data2)
             #write data for every aggregator in their respective sheet
             for aggregator_name in AGGREGATOR_LIST:
                 #filter data to get rows for the current aggregator
@@ -230,6 +240,7 @@ class Command(BaseCommand):
                                     'sheet_name': aggregator_name, 'data': filtered_data_copy
                                 }
                 header_json2[aggregator_name] = header_dict_for_loop_email_mobile_numbers
+                data_list_for_email_body_all_duration[aggregator_name] = len(filtered_data)
         else:
             #write data for a given aggregator from command line
             for sno in range(1,len(data2) + 1):
@@ -245,23 +256,49 @@ class Command(BaseCommand):
                                 }
             
             header_json2[generate_sheet_for] = header_dict_for_loop_email_mobile_numbers
+            data_list_for_email_body_current_duration[generate_sheet_for] = len(data2)
+
 
         final_json_to_send_second['header'] = header_json2
         final_json_to_send_second['data'] = data_json2
         final_json_to_send_second['cell_format'] = {'bold':0, 'font_size': 10, 'border' : 1,
                                                     'text_wrap': True}
 
-        
+        # import pdb;pdb.set_trace()
 
+        html_content_upper = """\
+            Hi,
+            The attached two spreadsheets contain aggregator-wise list of farmers with incorrect mobile numbers. The first sheet has list of all farmers with incorrect mobile number and second sheet has farmers with incorrect mobile numbers who transacted in the given 15 days period.
+            Break-up of aggregator-wise #farmers with incorrect mobile numbers is as follows:"""
+
+        table_data = ''
+        items = []
+        if len(data_list_for_email_body_current_duration.keys()) > 1:
+            for aggregator_name in AGGREGATOR_LIST:
+                items.append({'name':AGGREGATOR_LIST_EN[AGGREGATOR_LIST.index(aggregator_name)], 'total': data_list_for_email_body_all_duration.get(aggregator_name), 
+                                'current': data_list_for_email_body_current_duration.get(aggregator_name)})
+
+            items.append({'name':'Total', 'total': data_list_for_email_body_all_duration.get('Total'), 
+                                'current': data_list_for_email_body_current_duration.get('Total')})        
+            
+        else:
+            items.append({'name':AGGREGATOR_LIST_EN[AGGREGATOR_LIST.index(generate_sheet_for)], 'total': data_list_for_email_body_all_duration.get(generate_sheet_for), 
+                                'current': data_list_for_email_body_current_duration.get(generate_sheet_for)}) 
+
+        html_template = 'loop/loop_html_body.html'    
+        final_html_raw = get_template(html_template)
+        context = Context({'items': items})
+        final_html = final_html_raw.render(context)
+        
         #post request to library for excel generation
         try:
-            r = requests.post('http://localhost:5000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
+            r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
             files = []
             excel_file = open(excel_workbook_name + '.xlsx', 'w')
             excel_file.write(r.content)
             excel_file.close()
             files.append(excel_file)
-            r = requests.post('http://localhost:5000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send_second))
+            r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send_second))
             excel_file = open(excel_workbook_name_second + '.xlsx', 'w')
             excel_file.write(r.content)
             excel_file.close()
@@ -269,8 +306,8 @@ class Command(BaseCommand):
 
 
             #send email to concerned people with excel file attached    
-            common_send_email('Farmers List with Incorrect Mobile Numbers', 
-                              RECIPIENTS_TEMP, files, [],EMAIL_HOST_USER)
+            common_send_email('Farmers List with Incorrect Mobile Numbers',
+                              RECIPIENTS_TEMP, files, [],EMAIL_HOST_USER, html=final_html, text=final_html)
             os.remove(excel_workbook_name + '.xlsx')
             os.remove(excel_workbook_name_second + '.xlsx')
         except Exception as e:

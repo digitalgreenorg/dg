@@ -265,7 +265,7 @@ class Command(BaseCommand):
 
             #send email to concerned people with excel file attached    
             common_send_email('Transportation Details', 
-                              RECIPIENTS, files, [],EMAIL_HOST_USER)
+                              RECIPIENTS_TEMP, files, [],EMAIL_HOST_USER,"","")
             os.remove(excel_workbook_name + '.xlsx')
             # os.remove(excel_workbook_name_second + '.xlsx')
         except Exception as e:
