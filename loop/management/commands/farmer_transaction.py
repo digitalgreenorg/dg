@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
         parser.add_argument('-td',
             dest='to_date',
-            default=(datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
+            default=(datetime.now() - timedelta(days=6)).strftime('%Y%m%d'))
 
 
     
@@ -53,7 +53,7 @@ class Command(BaseCommand):
         if(options.get('from_date')):
             from_date=str(options.get('from_date'))
         else:
-            from_date=to_date[0:6]+(datetime.now() - timedelta(days=0)).strftime('%Y%m%d')[-2:]
+            from_date=to_date[0:6]+(datetime.now() - timedelta(days=5)).strftime('%Y%m%d')[-2:]
 
 
         if num_days < 0: 
@@ -72,8 +72,8 @@ class Command(BaseCommand):
         from_year = str(datetime.strptime(from_date, '%Y%m%d').year)
         to_year = str(datetime.strptime(to_date, '%Y%m%d').year)
 
-        AGGREGATOR_LIST = list(LoopUser.objects.exclude(name='Loop Test').values_list('name', flat=True))
-        AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(name_en='Loop Test').values_list('name_en', flat=True))
+        AGGREGATOR_LIST = list(LoopUser.objects.exclude(role=1).values_list('name', flat=True))
+        AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(role=1).values_list('name_en', flat=True))
 
         if type(generate_sheet_for) != str or type(from_date) != str or len(from_date) != 8 \
             or type(to_date) != str or len(to_date) != 8:
