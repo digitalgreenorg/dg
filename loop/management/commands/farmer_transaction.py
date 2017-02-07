@@ -159,7 +159,7 @@ class Command(BaseCommand):
 
         #post request to library for excel generation
         try:
-            r = requests.post('http://sandbox.digitalgreen.org/loop/get_payment_sheet/',
+            r = requests.post('http://www.digitalgreen.org/loop/get_payment_sheet/',
                               data=json.dumps(final_json_to_send,
                                               default=lambda x: str(x)))
             files = []
