@@ -3,7 +3,7 @@ import json
 import os
 import sys
 import MySQLdb
-from debug_toolbar.panels import timer
+import time
 from dg.settings import *
 from loop.models import *
 import csv
@@ -164,7 +164,7 @@ class Command(BaseCommand):
                                               default=lambda x: str(x)))
             excel_file = open(excel_workbook_name + '.xlsx', 'w')
             excel_file.write(r.content)
-            timer.sleep(20)
+            time.sleep(3)
             excel_file.close()
             #send email to concerned people with excel file attached
             common_send_email('Farmers Transaction Data',
