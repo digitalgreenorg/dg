@@ -685,7 +685,7 @@ def save_call_log(call_id,from_number,to_number,call_type,start_time):
         write_log(HELPLINE_LOG_FILE,module,str(e))
 
 def save_sms_log(sms_id,from_number,to_number,sms_body,sent_time):
-    sms_obj = HelplineCallLog(sms_id=sms_id,from_number=from_number,to_number=to_number,sms_body=sms_body,sent_time=sent_time)
+    sms_obj = HelplineSmsLog(sms_id=sms_id,from_number=from_number,to_number=to_number,sms_body=sms_body,sent_time=sent_time)
     try:
         sms_obj.save()
     except Exception as e:
