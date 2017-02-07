@@ -165,8 +165,8 @@ class Command(BaseCommand):
                                                                                     default=lambda x:str(x)))
             excel_file = open(excel_workbook_name + '.xlsx', 'w')
             excel_file.write(r.content)
-            excel_file.close()
-            #send email to concerned people with excel file attached    
+
+            #send email to concerned people with excel file attached
             common_send_email('Farmers Transaction Data', 
                              RECIPIENTS, excel_file, [],EMAIL_HOST_USER)
             os.remove(excel_workbook_name + '.xlsx')
