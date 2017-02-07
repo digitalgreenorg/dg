@@ -6,18 +6,18 @@
     Break-up of aggregator-wise #farmers with incorrect mobile numbers is as follows:</p><br/>
 
 <b>
-    <table>
+    <table style="border:1px solid black;">
     <thead>
-        <th>Aggregator Name</th>
-        <th>#Incorrect Numbers</th>
-        <th>#Incorrect Numbers_15 Days</th>
+        <th style="border:1px solid black;">Aggregator Name</th>
+        <th style="border:1px solid black;">#Incorrect Numbers</th>
+        <th style="border:1px solid black;">#Incorrect Numbers_15 Days</th>
     </thead>
     <tbody>
         {% for item in items %}
-	        <tr>
-	           <td>{{ item.name }}</td>
-	           <td>{{ item.total }}</td>
-	           <td>{{ item.current }}</td>
+	        <tr style="border:1px solid black;">
+	           <td style="border:1px solid black;">{{ item.name }}</td>
+	           <td style="border:1px solid black;">{{ item.total }}</td>
+	           <td style="border:1px solid black;">{{ item.current }}</td>
 	        </tr>
         {% endfor %}
     </tbody>
