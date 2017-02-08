@@ -154,16 +154,16 @@ class data_lib():
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
-        print "----------------------------------SELECT PART------------------------------"
-        print selectResult
-        print "----------------------------------FROM PART--------------------------------"
-        print fromResult
-        print "----------------------------------WHERE PART-------------------------------"
-        print whereResult
-        print "---------------------------------GROUP_BY PART----------------------------"
-        print groupbyResult
-        print "--------------------------------ORDER_BY PART-----------------------------"
-        print orderbyResult
+        # print "----------------------------------SELECT PART------------------------------"
+        # print selectResult
+        # print "----------------------------------FROM PART--------------------------------"
+        # print fromResult
+        # print "----------------------------------WHERE PART-------------------------------"
+        # print whereResult
+        # print "---------------------------------GROUP_BY PART----------------------------"
+        # print groupbyResult
+        # print "--------------------------------ORDER_BY PART-----------------------------"
+        # print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def getSelectComponent(self, partitionElements, valueElement):
