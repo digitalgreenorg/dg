@@ -736,7 +736,7 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number):
     parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
     response = requests.post(call_request_url,data=parameters)
     if response.status_code == 200:
-        response_tree = xml_parse.fromstring(response.text)
+        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
         call_detail = response_tree.findall('Call')[0]
         outgoing_call_id = str(call_detail.find('Sid').text)
         outgoing_call_time = str(call_detail.find('StartTime').text)
@@ -764,7 +764,7 @@ def send_helpline_sms(from_number,to_number,sms_body):
     parameters = {'From':from_number,'To':to_number,'Body':sms_body,'Priority':'high'}
     response = requests.post(sms_request_url,data=parameters)
     if response.status_code == 200:
-        response_tree = xml_parse.fromstring(response.text)
+        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
         sms_detail = response_tree.findall('SMSMessage')[0]
         sms_id = str(sms_detail.find('Sid').text)
         sent_time = str(sms_detail.find('DateCreated').text)
