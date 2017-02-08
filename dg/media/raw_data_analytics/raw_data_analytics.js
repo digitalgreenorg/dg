@@ -274,12 +274,6 @@ function validation_check() {
         error = 1;
         event.preventDefault();
     }
-    //console.log($('#videoId').next('div').children('ul').children('li').hasClass('search-choice'));
-    if($('#videoId').next('div').children('ul').children('li').hasClass('search-choice')&&group.checked){
-        alert("Output for this Input can not be processed");
-        error = 1;
-        event.preventDefault();
-    }
     if((video.checked) && (blocknum.checked) && (blocknumber_video.selectedIndex == 0)){
         alert("Please select number of villages for screening  or number of villages for adoption from dropdown!!!");
         error = 1;

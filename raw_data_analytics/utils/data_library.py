@@ -97,7 +97,7 @@ class data_lib():
 
     def order_data(self, partitionElements, dataframe):
         header = dataframe.columns.tolist()
-        arranged_columns = [None] * len(self.orderDictionary)
+        arranged_columns = [None] * (len(self.orderDictionary)+40)  # 40 added to handle index out of range
         bumper = 0
 
         for items in partitionElements:
@@ -154,16 +154,16 @@ class data_lib():
         whereResult = self.getWhereComponent(partitionDict, valueDictElement, self.Dict, args, lookup_matrix)
         groupbyResult = self.getGroupByComponent(partitionDict, valueDictElement)
         orderbyResult = self.getOrderByComponent(partitionDict, valueDictElement)
-        # print "----------------------------------SELECT PART------------------------------"
-        # print selectResult
-        # print "----------------------------------FROM PART--------------------------------"
-        # print fromResult
-        # print "----------------------------------WHERE PART-------------------------------"
-        # print whereResult
-        # print "---------------------------------GROUP_BY PART----------------------------"
-        # print groupbyResult
-        # print "--------------------------------ORDER_BY PART-----------------------------"
-        # print orderbyResult
+        print "----------------------------------SELECT PART------------------------------"
+        print selectResult
+        print "----------------------------------FROM PART--------------------------------"
+        print fromResult
+        print "----------------------------------WHERE PART-------------------------------"
+        print whereResult
+        print "---------------------------------GROUP_BY PART----------------------------"
+        print groupbyResult
+        print "--------------------------------ORDER_BY PART-----------------------------"
+        print orderbyResult
         return (selectResult, fromResult, whereResult, groupbyResult, orderbyResult)
 
     def getSelectComponent(self, partitionElements, valueElement):
@@ -312,17 +312,23 @@ class data_lib():
     def getOrderByComponent(self, partitionElements, valueElements):
 
         orderbyComponentList = ['1']
-        ordered_cols = [None] * len(self.orderDictionary)
+        print "dict ",self.orderDictionary
+        ordered_cols = [None] * (len(self.orderDictionary)+40) #40 added to handle index out of range
         bumper = 0
+        print partitionElements
         for items in partitionElements:
             if partitionElements[items] != False:
+                print "1",items," ",partitionElements[items]
+
                 for keys in self.selectDictionary[items]:
+                    print "bumper ",bumper," keys ",keys," priority ",self.orderDictionary[items]
                     if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
-                        # ordered_cols[len(ordered_cols) + 1] = None
+                        #ordered_cols[len(ordered_cols) + 1] = None
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
                         bumper += 1
                     else:
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
         ordered_cols = filter(lambda a: a != None, ordered_cols)
         orderbyComponentList += ordered_cols
+        print "orderbyComponentList",orderbyComponentList
         return ' , '.join(orderbyComponentList)
