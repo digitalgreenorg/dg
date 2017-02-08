@@ -779,6 +779,9 @@ def send_greeting(to_number):
     greeting_app_url = 'http://my.exotel.in/exoml/start/%s'%(NO_EXPERT_GREETING_APP_ID,)
     parameters = {'From':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','Url':greeting_app_url}
     response = requests.post(greeting_request_url,data=parameters)
+    module = 'send_greeting'
+    log = "Status Code: %s (Response text: %s)"%(str(response.status_code),str(response.text))
+    write_log(HELPLINE_LOG_FILE,module,log)
     
 def fetch_info_of_incoming_call(request):
     call_id = str(request.GET.getlist('CallSid')[0])
@@ -845,8 +848,10 @@ def helpline_incoming(request):
             # Initiate Call if Expert is available
             if len(expert_obj) > 0:
                 make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
-            # Send Greeting if No Expert is available
+            # Send Greeting and Sms if No Expert is available
             else:
+                sms_body = helpline_data['sms_body']
+                send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
                 send_greeting(farmer_number)
             return HttpResponse(status=200)
     else:
@@ -924,8 +929,10 @@ def helpline_call_response(request):
                 # Make a call if next expert found
                 if len(expert_numbers) > 0:
                     make_helpline_call(incoming_obj,expert_numbers[0],to_number)
-                # Send greeting if no expert is available
+                # Send greeting and Sms if no expert is available
                 else:
+                    sms_body = helpline_data['sms_body']
+                    send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
                     send_greeting(to_number)
         else:
             #For other conditions write Logs
