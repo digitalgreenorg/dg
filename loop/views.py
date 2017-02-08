@@ -840,7 +840,7 @@ def helpline_incoming(request):
                 call_status = ''
             # Check If Pending call is already in-progress
             if call_status != '' and call_status['response_code'] == 200 and (call_status['status'] in ('ringing', 'in-progress')):
-                    return HttpResponse(status=200)
+                return HttpResponse(status=200)
             expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
             # Initiate Call if Expert is available
             if len(expert_obj) > 0:
