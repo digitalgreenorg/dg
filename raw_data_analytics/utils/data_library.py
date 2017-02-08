@@ -310,18 +310,12 @@ class data_lib():
 
     # Function to make OrderBy component of the sql query
     def getOrderByComponent(self, partitionElements, valueElements):
-
         orderbyComponentList = ['1']
-        print "dict ",self.orderDictionary
         ordered_cols = [None] * (len(self.orderDictionary)+40) #40 added to handle index out of range
         bumper = 0
-        print partitionElements
         for items in partitionElements:
             if partitionElements[items] != False:
-                print "1",items," ",partitionElements[items]
-
                 for keys in self.selectDictionary[items]:
-                    print "bumper ",bumper," keys ",keys," priority ",self.orderDictionary[items]
                     if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
                         #ordered_cols[len(ordered_cols) + 1] = None
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
@@ -330,5 +324,4 @@ class data_lib():
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
         ordered_cols = filter(lambda a: a != None, ordered_cols)
         orderbyComponentList += ordered_cols
-        print "orderbyComponentList",orderbyComponentList
         return ' , '.join(orderbyComponentList)
