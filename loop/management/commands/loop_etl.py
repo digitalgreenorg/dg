@@ -41,10 +41,15 @@ class LoopStatistics():
             # df_ct = pd.read_sql(,con=mysql_cn)
             df_ct = pd.DataFrame(list(CombinedTransaction.objects.all().values('date','user_created__id','mandi__id','gaddidar__id').annotate(Sum('quantity'),Sum('amount'), Count('farmer',distinct=True))))
             df_ct.set_index(['user_created__id','mandi__id','date'],inplace=True)
-
-            # df_dt = pd.DataFrame(list())
-
             print df_ct.head()
+
+            df_dt = pd.DataFrame(list(DayTransportation.objects.all().values('date','user_created__id','mandi__id').annotate(Sum('transportation_cost'),Avg('farmer_share'))))
+            df_dt.set_index(['user_created__id','mandi__id','date'],inplace=True)
+
+            print df_dt.head()
+            result = pd.merge(df_ct,df_dt,left_index=True,right_index=True,how='inner')
+
+
         except Exception as e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit(1)
