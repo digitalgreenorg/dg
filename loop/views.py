@@ -960,8 +960,6 @@ def helpline_offline(request):
                 # Write Exception to Log file
                 module = 'helpline_offline'
                 write_log(HELPLINE_LOG_FILE,module,str(e))
-        # Send Sms or greeting for later call
-        send_greeting(farmer_number)
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
