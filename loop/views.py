@@ -932,7 +932,7 @@ def helpline_call_response(request):
                 # Send greeting and Sms if no expert is available
                 else:
                     sms_body = helpline_data['sms_body']
-                    send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+                    send_helpline_sms(EXOTEL_HELPLINE_NUMBER,to_number,sms_body)
                     send_greeting(to_number)
         else:
             #For other conditions write Logs
