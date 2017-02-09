@@ -12,6 +12,7 @@ import subprocess
 import pandas as pd
 import numpy as np
 from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
+import inspect
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -42,29 +43,28 @@ class LoopStatistics():
             df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name')))
             df_loopuser.rename(columns={"user__id":"user_created__id"},inplace=True)
 
-            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name','gaddidar__id','gaddidar__gaddidar_name','gaddidar__discount_criteria').annotate(Sum('quantity'),Sum('amount'), Count('farmer',distinct=True))))
-            # df_ct.set_index(['user_created__id','mandi__id','date'],inplace=True)
-            # print df_ct.head()
-            # print df_ct.shape
+            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name','gaddidar__id','gaddidar__gaddidar_name').annotate(Sum('quantity'),Sum('amount'), Count('farmer',distinct=True))))
+
+            df_ct = pd.merge(df_ct,df_loopuser,left_on='user_created__id',right_on='user_created__id',how='left')
 
             df_dt = pd.DataFrame(list(DayTransportation.objects.values('date','user_created__id','mandi__id').annotate(Sum('transportation_cost'),Avg('farmer_share'))))
-            # df_dt.set_index(['user_created__id','mandi__id','date'],inplace=True)
 
             ct_merge_dt = pd.merge(df_ct,df_dt,left_on=['user_created__id','mandi__id','date'],right_on=['user_created__id','mandi__id','date'],how='left')
 
-            df_gaddidar_outlier = pd.DataFrame(list(GaddidarShareOutliers.objects.values('date','aggregator','mandi__id','gaddidar__id').annotate(Sum('amount'))))
-            df_gaddidar_outlier.rename(columns={"aggregator":"id","amount__sum":"gaddidar_share"},inplace=True)
-
-            df_gaddidar_outlier = pd.merge(df_loopuser,df_gaddidar_outlier,left_on='id',right_on='id',how='inner')
-            df_gaddidar_outlier.drop(['id','name'],axis=1,inplace=True)
-            # print df_gaddidar_outlier.head()
-
-            result = pd.merge(ct_merge_dt,df_gaddidar_outlier,left_on=['user_created__id','mandi__id','date','gaddidar__id'],right_on=['user_created__id','mandi__id','date','gaddidar__id'],how='left')
-            result.fillna(value=0,axis=1,inplace=True)
-            print result.head()
-            print result.shape
+            # df_gaddidar_outlier = pd.DataFrame(list(GaddidarShareOutliers.objects.values('date','aggregator','mandi__id','gaddidar__id').annotate(Sum('amount'))))
+            # df_gaddidar_outlier.rename(columns={"aggregator":"id","amount__sum":"gaddidar_share"},inplace=True)
+            #
+            # df_gaddidar_outlier = pd.merge(df_loopuser,df_gaddidar_outlier,left_on='id',right_on='id',how='inner')
+            # df_gaddidar_outlier.drop(['id','name'],axis=1,inplace=True)
+            # # print df_gaddidar_outlier.head()
+            #
+            # ct_dt_gaddidar = pd.merge(ct_merge_dt,df_gaddidar_outlier,left_on=['user_created__id','mandi__id','date','gaddidar__id'],right_on=['user_created__id','mandi__id','date','gaddidar__id'],how='left')
+            # ct_dt_gaddidar.fillna(value=0,axis=1,inplace=True)
+            # print ct_dt_gaddidar.head()
+            # print ct_dt_gaddidar.shape
 
             # start_time = time.time()
+
             #CALCULATING GADDIDAR SHARE
             gc_queryset = GaddidarCommission.objects.all()
             gso_queryset = GaddidarShareOutliers.objects.all()
@@ -96,12 +96,14 @@ class LoopStatistics():
                     except GaddidarShareOutliers.DoesNotExist:
                         pass
                 gaddidar_share_result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__id': CT[
-                    'gaddidar'], 'mandi__id': CT['mandi'], 'gaddidar_share_amount': amount_sum, 'quantity__sum': CT['quantity__sum']})
+                    'gaddidar'], 'mandi__id': CT['mandi'], 'gaddidar_share_amount': amount_sum})
 
             gaddidar_share = pd.DataFrame(gaddidar_share_result)
             # end_time = time.time()
             # print "total_time = %d" %(end_time-start_time)
+            print "Gaddidar Share"
             print gaddidar_share.head()
+            print gaddidar_share.shape
 
             # CALCULATING AGGREGATOR INCENTIVE
             ai_queryset = AggregatorIncentive.objects.all()
@@ -127,7 +129,7 @@ class LoopStatistics():
                                 x = calculate_inc(CT[param_to_apply.notation_equivalent])
                             amount_sum += x
                         else:
-                            amount_sum += calculate_inc_default(CT['quantity__sum'])
+                            amount_sum += CT['quantity__sum']*0.25
                     except Exception:
                         pass
                 else:
@@ -139,14 +141,18 @@ class LoopStatistics():
                     except AggregatorShareOutliers.DoesNotExist:
                         pass
                 aggregator_incentive_result.append(
-                    {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': amount_sum, 'quantity__sum': CT['quantity__sum']})
+                    {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__id': CT['mandi'], 'aggregator_incentive': amount_sum})
 
-                aggregator_incentive = pd.DataFrame(aggregator_incentive_result)
-                print aggregator_incentive.head()
+            aggregator_incentive = pd.DataFrame(aggregator_incentive_result)
+            print "Aggregator Incentive"
+            print aggregator_incentive.head()
+            print aggregator_incentive.shape
 
+            merged_ct_dt_gaddidar = pd.merge(ct_merge_dt,gaddidar_share,left_on=['user_created__id','mandi__id','gaddidar__id','date'],right_on=['user_created__id','mandi__id','gaddidar__id','date'],how='left')
 
+            result = pd.merge(merged_ct_dt_gaddidar,aggregator_incentive,left_on=['user_created__id','mandi__id','date'],right_on=['user_created__id','mandi__id','date'],how='left')
 
-
+            print result.tail()
 
         except Exception as e:
             print "Error %d: %s" % (e.args[0], e.args[1])
