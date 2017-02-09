@@ -37,7 +37,7 @@ class LoopStatistics():
         print "Schema created successfully"
 
         try:
-            # mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
+            mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
 
             # df_ct = pd.read_sql(,con=mysql_cn)
             df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name')))
@@ -101,9 +101,9 @@ class LoopStatistics():
             gaddidar_share = pd.DataFrame(gaddidar_share_result)
             # end_time = time.time()
             # print "total_time = %d" %(end_time-start_time)
-            print "Gaddidar Share"
-            print gaddidar_share.head()
-            print gaddidar_share.shape
+            # print "Gaddidar Share"
+            # print gaddidar_share.head()
+            # print gaddidar_share.shape
 
             # CALCULATING AGGREGATOR INCENTIVE
             ai_queryset = AggregatorIncentive.objects.all()
@@ -144,19 +144,30 @@ class LoopStatistics():
                     {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__id': CT['mandi'], 'aggregator_incentive': amount_sum})
 
             aggregator_incentive = pd.DataFrame(aggregator_incentive_result)
-            print "Aggregator Incentive"
-            print aggregator_incentive.head()
-            print aggregator_incentive.shape
+            # print "Aggregator Incentive"
+            # print aggregator_incentive.head()
+            # print aggregator_incentive.shape
 
             merged_ct_dt_gaddidar = pd.merge(ct_merge_dt,gaddidar_share,left_on=['user_created__id','mandi__id','gaddidar__id','date'],right_on=['user_created__id','mandi__id','gaddidar__id','date'],how='left')
 
             result = pd.merge(merged_ct_dt_gaddidar,aggregator_incentive,left_on=['user_created__id','mandi__id','date'],right_on=['user_created__id','mandi__id','date'],how='left')
 
-            print result.tail()
+            # print result.tail()
+            # for index,row in result.iterrows():
+                # self.mysql_cn.execute("""INSERT INTO loop_aggregated_myisam """) 
+
+            number_of_days_to_average = [7,15,30,60]
+            for n in number_of_days_to_average:
+                self.compute_average(n,result)
 
         except Exception as e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             sys.exit(1)
+
+    def compute_average(self,days_to_avergae,dataframe):
+        print days_to_avergae
+        # print dataframe.tail()
+
 
 
 class Command(BaseCommand):
