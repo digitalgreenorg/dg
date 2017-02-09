@@ -832,8 +832,10 @@ def helpline_incoming(request):
             # Initiate Call if Expert is available
             if len(expert_obj) > 0:
                 make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
-            # Send Greeting if No Expert is available
+            # Send Greeting and Sms if No Expert is available
             else:
+                sms_body = helpline_data['sms_body']
+                send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
                 send_greeting(farmer_number)
             return HttpResponse(status=200)
         # If pending call exist for this number
