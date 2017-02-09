@@ -673,7 +673,7 @@ def write_log(logfile,module,log):
     curr_india_time = datetime.datetime.now(timezone('Asia/Kolkata'))
     with open(logfile, 'ab') as csvfile:
         file_write = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        file_write.writerow([now_india_time,module,log])
+        file_write.writerow([curr_india_time,module,log])
 
 def save_call_log(call_id,from_number,to_number,call_type,start_time):
     call_obj = HelplineCallLog(call_id=call_id,from_number=from_number,to_number=to_number,call_type=call_type,start_time=start_time)
