@@ -262,8 +262,8 @@ function() {
                     'placeholder': 'id_person',
                     'name_field': 'person_name',
                     'dependency': [{
-                        'source_form_element': 'village',
-                        'dep_attr': 'village'
+                        'source_form_element': 'group',
+                        'dep_attr': 'group'
                     }]
                 },
             },

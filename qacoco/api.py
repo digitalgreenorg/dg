@@ -330,6 +330,7 @@ class PersonGroupResource(BaseResource):
     
 class PersonResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
+    group = fields.ForeignKey(PersonGroupResource, 'group',null=True)
     class Meta:
                 max_limit = None
                 queryset = Person.objects.all()
@@ -337,7 +338,9 @@ class PersonResource(BaseResource):
                 authentication = Authentication()
                 authorization = BlockAuthorization('village__block_id__in')
     dehydrate_village = partial(foreign_key_to_id, field_name = 'village', sub_field_names=['id','village_name'])
+    dehydrate_group = partial(foreign_key_to_id, field_name = 'group', sub_field_names = ['id','group_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name ='village', resource_name = 'village')
+    hydrate_group = partial(dict_to_foreign_uri, field_name='group', resource_name = 'group')
     
 class NonNegotiableResource(BaseResource):
     video = fields.ForeignKey(VideoResource, 'video')
