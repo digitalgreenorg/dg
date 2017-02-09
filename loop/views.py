@@ -763,12 +763,12 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_u
         # Enter in Log
         module = 'make_helpline_call'
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
-        write_log(HELPLINE_LOG_FILE,module,str(e))
+        write_log(HELPLINE_LOG_FILE,module,log)
     else:
         # Enter in Log
         module = 'make_helpline_call'
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
-        write_log(HELPLINE_LOG_FILE,module,str(e))
+        write_log(HELPLINE_LOG_FILE,module,log)
 
 def send_helpline_sms(from_number,to_number,sms_body):
     sms_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Sms/send'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
