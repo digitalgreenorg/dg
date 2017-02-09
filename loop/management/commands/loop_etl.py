@@ -41,7 +41,6 @@ class LoopStatistics():
             # df_ct = pd.read_sql(,con=mysql_cn)
             df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name')))
             df_loopuser.rename(columns={"user__id":"user_created__id"},inplace=True)
-            print df_loopuser
 
             df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name','gaddidar__id','gaddidar__gaddidar_name','gaddidar__discount_criteria').annotate(Sum('quantity'),Sum('amount'), Count('farmer',distinct=True))))
             # df_ct.set_index(['user_created__id','mandi__id','date'],inplace=True)
@@ -58,14 +57,14 @@ class LoopStatistics():
 
             df_gaddidar_outlier = pd.merge(df_loopuser,df_gaddidar_outlier,left_on='id',right_on='id',how='inner')
             df_gaddidar_outlier.drop(['id','name'],axis=1,inplace=True)
-            print df_gaddidar_outlier.head()
+            # print df_gaddidar_outlier.head()
 
-            result = pd.merge(df_ct,df_gaddidar_outlier,left_on=['user_created__id','mandi__id','date','gaddidar__id'],right_on=['user_created__id','mandi__id','date','gaddidar__id'],how='left')
+            result = pd.merge(ct_merge_dt,df_gaddidar_outlier,left_on=['user_created__id','mandi__id','date','gaddidar__id'],right_on=['user_created__id','mandi__id','date','gaddidar__id'],how='left')
             result.fillna(value=0,axis=1,inplace=True)
             print result.head()
             print result.shape
 
-            
+
 
 
 
