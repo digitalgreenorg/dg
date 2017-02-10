@@ -45,19 +45,10 @@ class LoopStatistics():
 
             df_dt = pd.DataFrame(list(DayTransportation.objects.values('date','user_created__id','mandi__id').annotate(Sum('transportation_cost'),Avg('farmer_share'))))
 
-            ct_merge_dt = pd.merge(df_ct,df_dt,left_on=['user_created__id','mandi__id','date'],right_on=['user_created__id','mandi__id','date'],how='left')
+            ct_merge_dt = pd.merge(df_ct,df_dt,left_on=['date','user_created__id','mandi__id'],right_on=['date','user_created__id','mandi__id'],how='left')
 
-            # df_gaddidar_outlier = pd.DataFrame(list(GaddidarShareOutliers.objects.values('date','aggregator','mandi__id','gaddidar__id').annotate(Sum('amount'))))
-            # df_gaddidar_outlier.rename(columns={"aggregator":"id","amount__sum":"gaddidar_share"},inplace=True)
-            #
-            # df_gaddidar_outlier = pd.merge(df_loopuser,df_gaddidar_outlier,left_on='id',right_on='id',how='inner')
-            # df_gaddidar_outlier.drop(['id','name'],axis=1,inplace=True)
-            # # print df_gaddidar_outlier.head()
-            #
-            # ct_dt_gaddidar = pd.merge(ct_merge_dt,df_gaddidar_outlier,left_on=['user_created__id','mandi__id','date','gaddidar__id'],right_on=['user_created__id','mandi__id','date','gaddidar__id'],how='left')
-            # ct_dt_gaddidar.fillna(value=0,axis=1,inplace=True)
-            # print ct_dt_gaddidar.head()
-            # print ct_dt_gaddidar.shape
+            print ct_merge_dt.shape
+            print ct_merge_dt.tail()
 
             # start_time = time.time()
 
@@ -105,7 +96,7 @@ class LoopStatistics():
             ai_queryset = AggregatorIncentive.objects.all()
             aso_queryset = AggregatorShareOutliers.objects.all()
             combined_ct_queryset = CombinedTransaction.objects.values(
-                'date', 'user_created_id', 'mandi','mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
+                'date', 'user_created_id', 'mandi').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
                                                                                Count('farmer_id', distinct=True))
             aggregator_incentive_result = []
 
@@ -150,6 +141,7 @@ class LoopStatistics():
 
             print result.head()
             result.fillna(value=0,axis=1,inplace=True)
+            print result.tail()
 
             for index,row in result.iterrows():
                 self.mysql_cn.execute("""INSERT INTO loop_aggregated_myisam (date,aggregator_id,mandi_id,gaddidar_id,quantity,amount,transportation_cost,farmer_share,gaddidar_share,aggregator_incentive,aggregator_name,mandi_name,gaddidar_name) values(""" + '"'+row['date'].strftime('%Y-%m-%d %H:%M:%S')+'"' + "," + str(row['user_created__id']) + ","
