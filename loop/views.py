@@ -946,7 +946,7 @@ def helpline_call_response(request):
                     expert_numbers = []
                     pass
                 # Make a call if next expert found
-                incoming_call_id = str(incoming_call_obj.call_id)
+                incoming_call_id = str(incoming_obj.call_id)
                 if len(expert_numbers) > 0:
                     # if call initiate by queue module or in the chain of call initiate by queue module
                     if send_acknowledge(incoming_call_id):
