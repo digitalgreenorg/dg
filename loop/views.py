@@ -27,7 +27,7 @@ import datetime
 from pytz import timezone
 import inspect
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID, OFF_HOURS_GREETING_APP_ID
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 ROLE_AGGREGATOR = 2
@@ -789,13 +789,13 @@ def send_helpline_sms(from_number,to_number,sms_body):
         log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
         write_log(HELPLINE_LOG_FILE,module,log)
  
-def send_greeting(to_number):
+def send_greeting(to_number,greeting_app_id):
     greeting_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    greeting_app_url = 'http://my.exotel.in/exoml/start/%s'%(NO_EXPERT_GREETING_APP_ID,)
+    greeting_app_url = 'http://my.exotel.in/exoml/start/%s'%(greeting_app_id,)
     parameters = {'From':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','Url':greeting_app_url}
     response = requests.post(greeting_request_url,data=parameters)
     module = 'send_greeting'
-    log = "Status Code: %s (Response text: %s)"%(str(response.status_code),str(response.text))
+    log = "Greeting App Id: %s Status Code: %s (Response text: %s)"%(greeting_app_id,str(response.status_code),str(response.text))
     write_log(HELPLINE_LOG_FILE,module,log)
     
 def fetch_info_of_incoming_call(request):
@@ -840,7 +840,7 @@ def helpline_incoming(request):
             else:
                 sms_body = helpline_data['sms_body']
                 send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
-                send_greeting(farmer_number)
+                send_greeting(farmer_number,NO_EXPERT_GREETING_APP_ID)
             return HttpResponse(status=200)
         # If pending call exist for this number
         else:
@@ -869,7 +869,7 @@ def helpline_incoming(request):
             else:
                 sms_body = helpline_data['sms_body']
                 send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
-                send_greeting(farmer_number)
+                send_greeting(farmer_number,NO_EXPERT_GREETING_APP_ID)
             return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
@@ -963,7 +963,7 @@ def helpline_call_response(request):
                     if send_acknowledge(incoming_obj) == 0:
                         sms_body = helpline_data['sms_body']
                         send_helpline_sms(EXOTEL_HELPLINE_NUMBER,to_number,sms_body)
-                        send_greeting(to_number)
+                        send_greeting(to_number,NO_EXPERT_GREETING_APP_ID)
         else:
             #For other conditions write Logs
             module = 'helpline_call_response'
@@ -997,6 +997,7 @@ def helpline_offline(request):
                 # Write Exception to Log file
                 module = 'helpline_offline'
                 write_log(HELPLINE_LOG_FILE,module,str(e))
+        send_greeting(farmer_number,OFF_HOURS_GREETING_APP_ID)
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
