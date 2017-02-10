@@ -17,11 +17,6 @@ import inspect
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class LoopStatistics():
-    def __init__(self):
-        from django.db import connection
-        self.db_cursor = connection.cursor()
-        # self.db_root_user = mysql_root_username
-        # self.db_root_pass = mysql_root_password
 
     def recompute_myisam(self):
         database = DATABASES['default']['NAME']
@@ -37,13 +32,14 @@ class LoopStatistics():
         print "Schema created successfully"
 
         try:
-            mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
+            self.mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True).cursor()
 
             # df_ct = pd.read_sql(,con=mysql_cn)
-            df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name')))
-            df_loopuser.rename(columns={"user__id":"user_created__id"},inplace=True)
+            df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name_en')))
+            df_loopuser.rename(columns={"user__id":"user_created__id","name_en":"name"},inplace=True)
 
-            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name','gaddidar__id','gaddidar__gaddidar_name').annotate(Sum('quantity'),Sum('amount'), Count('farmer',distinct=True))))
+            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name_en','gaddidar__id','gaddidar__gaddidar_name_en').annotate(Sum('quantity'),Sum('amount'), Count('farmer',distinct=True))))
+            df_ct.rename(columns={"mandi__mandi_name_en":"mandi__mandi_name","gaddidar__gaddidar_name_en":"gaddidar__gaddidar_name"},inplace=True)
 
             df_ct = pd.merge(df_ct,df_loopuser,left_on='user_created__id',right_on='user_created__id',how='left')
 
@@ -152,36 +148,35 @@ class LoopStatistics():
 
             result = pd.merge(merged_ct_dt_gaddidar,aggregator_incentive,left_on=['user_created__id','mandi__id','date'],right_on=['user_created__id','mandi__id','date'],how='left')
 
-            # print result.tail()
-            # for index,row in result.iterrows():
-                # self.mysql_cn.execute("""INSERT INTO loop_aggregated_myisam """) 
+            print result.head()
+            result.fillna(value=0,axis=1,inplace=True)
 
-            number_of_days_to_average = [7,15,30,60]
-            for n in number_of_days_to_average:
-                self.compute_average(n,result)
+            for index,row in result.iterrows():
+                self.mysql_cn.execute("""INSERT INTO loop_aggregated_myisam (date,aggregator_id,mandi_id,gaddidar_id,quantity,amount,transportation_cost,farmer_share,gaddidar_share,aggregator_incentive,aggregator_name,mandi_name,gaddidar_name) values(""" + '"'+row['date'].strftime('%Y-%m-%d %H:%M:%S')+'"' + "," + str(row['user_created__id']) + ","
+                + str(row['mandi__id']) + ","
+                + str(row['gaddidar__id']) + ","
+                + str(row['quantity__sum']) + ","
+                + str(row['amount__sum']) + ","
+                + str(row['transportation_cost__sum']) + ","
+                + str(row['farmer_share__avg']) + ","
+                + str(row['gaddidar_share_amount']) + ","
+                + str(row['aggregator_incentive']) + ","
+                + '"'+row['name']+'"' + ","
+                + '"'+row['mandi__mandi_name']+'"' + ","
+                + '"'+row['gaddidar__gaddidar_name']+'"' + """)""")
+
+            print "Myisam insertion complete"
 
         except Exception as e:
-            print "Error %d: %s" % (e.args[0], e.args[1])
+            print "Error : %s" % (e)
             sys.exit(1)
-
-    def compute_average(self,days_to_avergae,dataframe):
-        print days_to_avergae
-        # print dataframe.tail()
-
-
 
 class Command(BaseCommand):
     help = '''This command updates stats displayed on Loop dashboard.
     arguments : mysql_root_username, mysql_root_password '''
 
-    # def add_arguments(self,parser):
-    #     parser.add_argument('username')
-    #     parser.add_argument('passsword')
-
     def handle(self,*args,**options):
         print("LOOP ETL LOG")
         print(datetime.date.today())
-        # mysql_root_username = options['username']
-        # mysql_root_password = options['passsword']
         loop_statistics = LoopStatistics()
         loop_statistics.recompute_myisam()
