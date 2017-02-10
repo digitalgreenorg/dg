@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID
 
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing
-from loop.views import HELPLINE_ACKNOWLEDGE_USER, get_status, make_helpline_call, write_log
+from loop.views import get_status, make_helpline_call, write_log
 
 HELPLINE_LOG_FILE = 'loop/utils/ivr_helpline/helpline_log.log'
 
@@ -53,11 +53,10 @@ class Command(BaseCommand):
             module = "helpline_queue"
             write_log(HELPLINE_LOG_FILE,module,str(e))
         pending_incoming_call_id = HelplineIncoming.objects.filter(call_status=0).order_by('id').values_list('id', flat=True)
-        HELPLINE_ACKNOWLEDGE_USER.clear()
         for ids in pending_incoming_call_id:
             incoming_call_obj = self.check_pending_or_not(ids)
             if incoming_call_obj:
                 farmer_number = incoming_call_obj.from_number
-                # Last parameter is 0 only when we do not want to acknowledge User if call is not successfull
-                make_helpline_call(incoming_call_obj,expert_obj,farmer_number,0)
+                # Last parameter more than 0 only when we do not want to acknowledge User if call is not successfull
+                make_helpline_call(incoming_call_obj,expert_obj,farmer_number,1)
                 time.sleep(120)

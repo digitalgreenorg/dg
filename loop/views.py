@@ -32,7 +32,6 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 HELPLINE_NUMBER = "01139595953"
 ROLE_AGGREGATOR = 2
 HELPLINE_LOG_FILE = 'loop/utils/ivr_helpline/helpline_log.log'
-HELPLINE_ACKNOWLEDGE_USER = dict()
 
 @csrf_exempt
 def login(request):
@@ -729,10 +728,21 @@ def get_info_through_api(outgoing_call_id):
             return (incoming_obj,expert_obj,to_number)
     return ''
 
-# acknowledge_user parameter is 0
-# only when we do not want to acknowledge User if call is not successfull
+def update_incoming_acknowledge_user(incoming_call_obj,acknowledge_user):
+    if acknowledge_user == 0:
+        incoming_call_obj.acknowledge_user = 0
+    else:    
+        incoming_call_obj.acknowledge_user += 1
+    try:
+        incoming_call_obj.save()
+    except Exception as e:
+        module = 'update_incoming_acknowledge_user'
+        write_log(HELPLINE_LOG_FILE,module,str(e))     
+
+# When we do not want to acknowledge User in case of call is not successfull
+# then acknowledge_user parameter is more than 1
 # (For cases like call generated from queue module)
-def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_user=1):
+def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_user=0):
     call_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     call_response_url = 'http://sandbox.digitalgreen.org/loop/helpline_call_response/'
     #call_response_url = 'http://www.digitalgreen.org/loop/helpline_call_response/'
@@ -740,13 +750,7 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_u
     parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
     response = requests.post(call_request_url,data=parameters)
     if response.status_code == 200:
-        # If call is from queue module
-        incoming_call_id = str(incoming_call_obj.call_id)
-        if acknowledge_user == 0:
-            HELPLINE_ACKNOWLEDGE_USER[incoming_call_id] = acknowledge_user
-        else:
-            if incoming_call_id in HELPLINE_ACKNOWLEDGE_USER:
-                del HELPLINE_ACKNOWLEDGE_USER[incoming_call_id]
+        update_incoming_acknowledge_user(incoming_call_obj,acknowledge_user)
         response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
         call_detail = response_tree.findall('Call')[0]
         outgoing_call_id = str(call_detail.find('Sid').text)
@@ -870,8 +874,8 @@ def helpline_incoming(request):
     else:
         return HttpResponse(status=403)
 
-def send_acknowledge(incoming_call_id):
-    if (incoming_call_id in HELPLINE_ACKNOWLEDGE_USER) and (HELPLINE_ACKNOWLEDGE_USER[incoming_call_id] == 0):
+def send_acknowledge(incoming_call_obj):
+    if incoming_call_obj.acknowledge_user == 0:
         return 0
     else:
         return 1
@@ -946,18 +950,17 @@ def helpline_call_response(request):
                     expert_numbers = []
                     pass
                 # Make a call if next expert found
-                incoming_call_id = str(incoming_obj.call_id)
                 if len(expert_numbers) > 0:
                     # if call initiate by queue module or in the chain of call initiate by queue module
-                    if send_acknowledge(incoming_call_id):
+                    if send_acknowledge(incoming_obj) == 0:
                         make_helpline_call(incoming_obj,expert_numbers[0],to_number)
                     else:
-                        make_helpline_call(incoming_obj,expert_numbers[0],to_number,0)
+                        make_helpline_call(incoming_obj,expert_numbers[0],to_number,1)
                 # Send greeting and Sms if no expert is available
                 else:
                     # if call not initiate by queue module or not in the chain of call initiate by queue module
                     # then send acknowledgement of future call to user
-                    if send_acknowledge(incoming_call_id):
+                    if send_acknowledge(incoming_obj) == 0:
                         sms_body = helpline_data['sms_body']
                         send_helpline_sms(EXOTEL_HELPLINE_NUMBER,to_number,sms_body)
                         send_greeting(to_number)

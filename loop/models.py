@@ -499,6 +499,7 @@ class HelplineIncoming(LoopModel):
     call_status = models.IntegerField(choices=CALL_STATUS, default=0, db_index=True)
     recording_url = models.CharField(max_length=200, null=True , blank=True)
     resolved_by = models.ForeignKey(HelplineExpert, null=True, blank=True)
+    acknowledge_user = models.IntegerField(default=0)
 
     def __unicode__(self):
         return "%s (%s)" % (self.from_number, self.incoming_time)
