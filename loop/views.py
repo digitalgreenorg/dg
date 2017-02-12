@@ -841,6 +841,7 @@ def helpline_incoming(request):
             else:
                 sms_body = helpline_data['sms_body']
                 send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+                # Send greeting to user for notify about no expert available at this time.
                 connect_to_app(farmer_number,NO_EXPERT_GREETING_APP_ID)
             return HttpResponse(status=200)
         # If pending call exist for this number
@@ -870,6 +871,7 @@ def helpline_incoming(request):
             else:
                 sms_body = helpline_data['sms_body']
                 send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+                # Send greeting to user for notify about no expert available at this time.
                 connect_to_app(farmer_number,NO_EXPERT_GREETING_APP_ID)
             return HttpResponse(status=200)
     else:
@@ -964,6 +966,7 @@ def helpline_call_response(request):
                     if send_acknowledge(incoming_obj) == 0:
                         sms_body = helpline_data['sms_body']
                         send_helpline_sms(EXOTEL_HELPLINE_NUMBER,to_number,sms_body)
+                        # Send greeting to user for notify about no expert available at this time.
                         connect_to_app(to_number,NO_EXPERT_GREETING_APP_ID)
         else:
             #For other conditions write Logs
@@ -998,6 +1001,7 @@ def helpline_offline(request):
                 # Write Exception to Log file
                 module = 'helpline_offline'
                 write_log(HELPLINE_LOG_FILE,module,str(e))
+        # Notify User about off hours and record voicemail.
         connect_to_app(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID)
         return HttpResponse(status=200)
     else:
