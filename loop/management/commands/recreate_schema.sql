@@ -17,3 +17,7 @@ CREATE TABLE `loop_aggregated_myisam`(
   `gaddidar_name` varchar(50) NOT NULL,
   PRIMARY KEY(`id`)
 )ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 ;
+
+CREATE INDEX loop_aggregated_myisam_date ON loop_aggregated_myisam(date);
+CREATE INDEX loop_aggregated_myisam_date_aggregator_mandi ON loop_aggregated_myisam(date,aggregator_id,mandi_id);
+CREATE INDEX loop_aggregated_myisam_date_aggregator_mandi_gaddidar ON loop_aggregated_myisam(date,aggregator_id,mandi_id,gaddidar_id);
