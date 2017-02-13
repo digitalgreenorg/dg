@@ -19,6 +19,13 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
 import inspect
+from dg.settings import DATABASES
+import MySQLdb
+import datetime, time
+import pandas as pd
+import numpy as np
+from django.template import Context
+
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 ROLE_AGGREGATOR = 2
@@ -127,103 +134,38 @@ def filter_data(request):
     return HttpResponse(data)
 
 
-def village_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    transactions = CombinedTransaction.objects.filter(**filter_args).values(
-        'farmer__village__village_name').distinct().annotate(Count('farmer', distinct=True), Sum('amount'),
-                                                             Sum('quantity'), Count(
-            'date', distinct=True),
-                                                             total_farmers=Count('farmer'))
-    data = json.dumps(list(transactions))
-    return HttpResponse(data)
+def get_data_from_myisam():
+    database = DATABASES['default']['NAME']
+    username = DATABASES['default']['USER']
+    password = DATABASES['default']['PASSWORD']
+    mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
 
-
-def aggregator_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    transactions = list(
-        CombinedTransaction.objects.filter(**filter_args).values('user_created__id').distinct().annotate(
-            Count('farmer', distinct=True), Sum('amount'), Sum(
-                'quantity'), Count('date', distinct=True),
-            total_farmers=Count('farmer')))
-    for i in transactions:
-        user = LoopUser.objects.get(user_id=i['user_created__id'])
-        i['user_name'] = user.name
-    data = json.dumps(transactions)
-    return HttpResponse(data)
-
-
-def crop_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    # crop wise data here
-    crops = CombinedTransaction.objects.filter(
-        **filter_args).values_list('crop__crop_name', flat=True).distinct()
-
-    transactions = CombinedTransaction.objects.filter(**filter_args).values(
-        'crop__crop_name', 'date').distinct().annotate(Sum('amount'), Sum('quantity'))
-    # crop and aggregator wise data
-    crops_aggregators = CombinedTransaction.objects.filter(**filter_args).values(
-        'crop__crop_name', 'user_created__id').distinct().annotate(amount=Sum('amount'), quantity=Sum('quantity'))
-    crops_aggregators_transactions = CombinedTransaction.objects.filter(**filter_args).values(
-        'crop__crop_name', 'user_created__id', 'date').distinct().annotate(amount=Sum('amount'),
-                                                                           quantity=Sum('quantity'))
-    for crop_aggregator in crops_aggregators:
-        user = LoopUser.objects.get(
-            user_id=crop_aggregator['user_created__id'])
-        crop_aggregator['user_name'] = user.name
-    dates = CombinedTransaction.objects.filter(**filter_args).values_list(
-        'date', flat=True).distinct().order_by('date').annotate(Count('farmer', distinct=True))
-    dates_farmer_count = CombinedTransaction.objects.filter(**filter_args).values(
-        'date').distinct().order_by('date').annotate(Count('farmer', distinct=True))
-    chart_dict = {'dates': list(dates), 'crops': list(crops), 'transactions': list(transactions), 'farmer_count': list(
-        dates_farmer_count), 'crops_aggregators': list(crops_aggregators),
-                  'crops_aggregators_transactions': list(crops_aggregators_transactions)}
-
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
-
-    return HttpResponse(data)
-
+    df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam",con=mysql_cn)
+    aggregations = {
+    'quantity':{
+    'quantity__sum':'sum'
+    },
+    'amount':{
+    'amount__sum':'sum'
+    },
+    'gaddidar_share':{
+    'gaddidar_share__sum':'sum'
+    },
+    'aggregator_incentive':{
+    'aggregator_incentive__sum':'mean'
+    },
+    'transportation_cost':{
+    'transportation_cost__sum':'mean'
+    },
+    'farmer_share':{
+    'farmer_share__sum':'mean'
+    }
+    }
+    df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
+    df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
+    print df_result_aggregate.head()
+    return df_result_aggregate
+    # print df_result.head()
 
 def total_static_data(request):
     total_volume = CombinedTransaction.objects.all(
@@ -404,18 +346,23 @@ def crop_language_data(request):
 
 def recent_graphs_data(request):
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
-        '-date').annotate(Sum('quantity'), Sum('amount'))
+        '-date').annotate(Sum('quantity'), Sum('amount'))[:100]
     transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
-        '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
+        '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))[:10]
     dates = CombinedTransaction.objects.values_list(
         'date', flat=True).distinct().order_by('-date')
 
-    gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)
-    aggregator_incentive_cost = calculate_aggregator_incentive()
+    gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)[:10]
+    aggregator_incentive_cost = calculate_aggregator_incentive()[:10]
+
+    aggregated_result = get_data_from_myisam()
+    aggregated_result = aggregated_result.to_json(date_format="iso",orient="records")
+    # print aggregated_result
 
     chart_dict = {'stats': list(stats), 'transportation_cost': list(
-        transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution, "aggregator_incentive_cost" : aggregator_incentive_cost}
+        transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution, "aggregator_incentive_cost" : aggregator_incentive_cost,"aggregated_result":str(aggregated_result)}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+    # c = Context({'data':data,'aggregated_result':aggregated_result})
     return HttpResponse(data)
 
 

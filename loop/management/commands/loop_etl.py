@@ -168,6 +168,8 @@ class LoopStatistics():
             # print end_date
             # x= pd.date_range(end_date,start_date,freq='-7D')
             # print x
+            # from loop.views import get_data_from_myisam
+            # get_data_from_myisam()
 
         except Exception as e:
             print "Error : %s" % (e)
