@@ -32,25 +32,29 @@ class LoopStatistics():
         print "Schema created successfully"
 
         try:
+            start_time = time.time()
             self.mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True).cursor()
 
             # df_ct = pd.read_sql(,con=mysql_cn)
             df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name_en')))
             df_loopuser.rename(columns={"user__id":"user_created__id","name_en":"name"},inplace=True)
 
-            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name_en','gaddidar__id','gaddidar__gaddidar_name_en').annotate(Sum('quantity'),Sum('amount'), Count('farmer',distinct=True))))
+            print "Loop User Shape",df_loopuser.shape
+
+            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name_en','gaddidar__id','gaddidar__gaddidar_name_en').annotate(Sum('quantity'),Sum('amount'))))
             df_ct.rename(columns={"mandi__mandi_name_en":"mandi__mandi_name","gaddidar__gaddidar_name_en":"gaddidar__gaddidar_name"},inplace=True)
+
+            print "Combined Transaction Shape",df_ct.shape
 
             df_ct = pd.merge(df_ct,df_loopuser,left_on='user_created__id',right_on='user_created__id',how='left')
 
             df_dt = pd.DataFrame(list(DayTransportation.objects.values('date','user_created__id','mandi__id').annotate(Sum('transportation_cost'),Avg('farmer_share'))))
 
+            print "Day Transportation Shape",df_dt.shape
+
             ct_merge_dt = pd.merge(df_ct,df_dt,left_on=['date','user_created__id','mandi__id'],right_on=['date','user_created__id','mandi__id'],how='left')
 
-            print ct_merge_dt.shape
-            print ct_merge_dt.tail()
-
-            # start_time = time.time()
+            print "Combined Transaction merged with Day Transportation ",ct_merge_dt.shape
 
             #CALCULATING GADDIDAR SHARE
             gc_queryset = GaddidarCommission.objects.all()
@@ -86,11 +90,8 @@ class LoopStatistics():
                     'gaddidar'], 'mandi__id': CT['mandi'], 'gaddidar_share_amount': amount_sum})
 
             gaddidar_share = pd.DataFrame(gaddidar_share_result)
-            # end_time = time.time()
-            # print "total_time = %d" %(end_time-start_time)
-            # print "Gaddidar Share"
-            # print gaddidar_share.head()
-            # print gaddidar_share.shape
+
+            print "GADDIDAR SHARE",gaddidar_share.shape
 
             # CALCULATING AGGREGATOR INCENTIVE
             ai_queryset = AggregatorIncentive.objects.all()
@@ -131,17 +132,17 @@ class LoopStatistics():
                     {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__id': CT['mandi'], 'aggregator_incentive': amount_sum})
 
             aggregator_incentive = pd.DataFrame(aggregator_incentive_result)
-            # print "Aggregator Incentive"
-            # print aggregator_incentive.head()
-            # print aggregator_incentive.shape
+
+            print "Aggregator Incentive",aggregator_incentive.shape
 
             merged_ct_dt_gaddidar = pd.merge(ct_merge_dt,gaddidar_share,left_on=['user_created__id','mandi__id','gaddidar__id','date'],right_on=['user_created__id','mandi__id','gaddidar__id','date'],how='left')
 
+            print "After merging Gaddidar Share", merged_ct_dt_gaddidar.shape
+
             result = pd.merge(merged_ct_dt_gaddidar,aggregator_incentive,left_on=['user_created__id','mandi__id','date'],right_on=['user_created__id','mandi__id','date'],how='left')
 
-            print result.head()
+            print "After adding aggregator incentive", result.shape
             result.fillna(value=0,axis=1,inplace=True)
-            print result.tail()
 
             for index,row in result.iterrows():
                 self.mysql_cn.execute("""INSERT INTO loop_aggregated_myisam (date,aggregator_id,mandi_id,gaddidar_id,quantity,amount,transportation_cost,farmer_share,gaddidar_share,aggregator_incentive,aggregator_name,mandi_name,gaddidar_name) values(""" + '"'+row['date'].strftime('%Y-%m-%d %H:%M:%S')+'"' + "," + str(row['user_created__id']) + ","
@@ -158,6 +159,8 @@ class LoopStatistics():
                 + '"'+row['gaddidar__gaddidar_name']+'"' + """)""")
 
             print "Myisam insertion complete"
+            end_time = time.time()
+            print "Total time taken (secs) : %f" % (end_time-start_time)
 
         except Exception as e:
             print "Error : %s" % (e)
