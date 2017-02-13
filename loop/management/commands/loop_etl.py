@@ -41,14 +41,14 @@ class LoopStatistics():
 
             print "Loop User Shape",df_loopuser.shape
 
-            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name_en','gaddidar__id','gaddidar__gaddidar_name_en').annotate(Sum('quantity'),Sum('amount'))))
+            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name_en','gaddidar__id','gaddidar__gaddidar_name_en').order_by('-date').annotate(Sum('quantity'),Sum('amount'))))
             df_ct.rename(columns={"mandi__mandi_name_en":"mandi__mandi_name","gaddidar__gaddidar_name_en":"gaddidar__gaddidar_name"},inplace=True)
 
             print "Combined Transaction Shape",df_ct.shape
 
             df_ct = pd.merge(df_ct,df_loopuser,left_on='user_created__id',right_on='user_created__id',how='left')
 
-            df_dt = pd.DataFrame(list(DayTransportation.objects.values('date','user_created__id','mandi__id').annotate(Sum('transportation_cost'),Avg('farmer_share'))))
+            df_dt = pd.DataFrame(list(DayTransportation.objects.values('date','user_created__id','mandi__id').order_by('-date').annotate(Sum('transportation_cost'),Avg('farmer_share'))))
 
             print "Day Transportation Shape",df_dt.shape
 
@@ -161,6 +161,13 @@ class LoopStatistics():
             print "Myisam insertion complete"
             end_time = time.time()
             print "Total time taken (secs) : %f" % (end_time-start_time)
+
+            # start_date = result['date'].min()
+            # print start_date
+            # end_date = result['date'].max()
+            # print end_date
+            # x= pd.date_range(end_date,start_date,freq='-7D')
+            # print x
 
         except Exception as e:
             print "Error : %s" % (e)

@@ -125,7 +125,7 @@ function hide_nav(tab) {
     if (tab == HOME && selected_page == PAYMENTS_PAGE && ($('#ToolTables_table2_1').length || $('#ToolTables_table3_1').length) && (!$('#ToolTables_table2_1').hasClass('disable-button') || !$('#ToolTables_table3_1').hasClass('disable-button')))
         var answer = confirm('You have Unsaved Changes. Do you want to stay on this page?');
     if (answer) {
-        tab = PAYMENTS_PAGE
+        tab = PAYMENTS_PAGE;
     }
     if (tab == HOME) {
         $('#login_modal').closeModal();
