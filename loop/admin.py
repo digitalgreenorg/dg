@@ -157,7 +157,7 @@ class HelplineExpertAdmin(admin.ModelAdmin):
     search_fields = ['name', 'phone_number', 'email_id', 'expert_status']
 
 class HelplineIncomingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'from_number', 'to_number', 'call_status', 'incoming_time', 'last_incoming_time', 'resolved_time', 'recording_url', 'resolved_by')
+    list_display = ('id', 'from_number', 'to_number', 'call_status', 'incoming_time', 'last_incoming_time', 'resolved_time', 'recording_url', 'resolved_by', 'acknowledge_user')
     list_filter = ('call_status', 'resolved_by')
     search_fields = ['call_id', 'from_number', 'to_number', 'call_status', 'resolved_by']
 
