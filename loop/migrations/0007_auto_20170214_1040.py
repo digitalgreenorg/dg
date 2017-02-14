@@ -62,6 +62,7 @@ class Migration(migrations.Migration):
                 ('resolved_time', models.DateTimeField(null=True, blank=True)),
                 ('call_status', models.IntegerField(default=0, db_index=True, choices=[(0, b'Pending'), (1, b'Resolved'), (2, b'Declined')])),
                 ('recording_url', models.CharField(max_length=200, null=True, blank=True)),
+                ('acknowledge_user', models.IntegerField(default=0)),
                 ('resolved_by', models.ForeignKey(blank=True, to='loop.HelplineExpert', null=True)),
                 ('user_created', models.ForeignKey(related_name='loop_helplineincoming_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
                 ('user_modified', models.ForeignKey(related_name='loop_helplineincoming_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
