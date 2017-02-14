@@ -745,8 +745,7 @@ def update_incoming_acknowledge_user(incoming_call_obj,acknowledge_user):
 # (For cases like call generated from queue module)
 def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_user=0):
     call_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    call_response_url = 'http://sandbox.digitalgreen.org/loop/helpline_call_response/'
-    #call_response_url = 'http://www.digitalgreen.org/loop/helpline_call_response/'
+    call_response_url = 'http://www.digitalgreen.org/loop/helpline_call_response/'
     from_number = from_number_obj.phone_number
     parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
     response = requests.post(call_request_url,data=parameters)
