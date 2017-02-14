@@ -4,6 +4,7 @@ from datetime import timedelta
 from pytz import timezone
 
 from django.core.management.base import BaseCommand
+from django.utils.timezone import now
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID
 
@@ -47,6 +48,7 @@ class Command(BaseCommand):
             write_log(HELPLINE_LOG_FILE,module,"No Expert Available")
             return
         old_time = datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=2)
+        old_time = old_time.replace(tzinfo=None)
         try:
             HelplineIncoming.objects.filter(call_status=0,last_incoming_time__lte=old_time).update(call_status=2)
         except Exception as e:
