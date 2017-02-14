@@ -162,9 +162,26 @@ def get_data_from_myisam():
     }
     df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
     df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
-    print df_result_aggregate.head()
+    start_date = df_result_aggregate['date'].min()
+    end_date = df_result_aggregate['date'].max()
+    x = pd.DataFrame(pd.date_range(end_date,start_date,freq='-7D'),columns={'start_date'})
+    x['end_date'] = x['start_date'].shift(-1)
+
+    # df_result_aggregate['date'] = pd.to_datetime(df_result_aggregate['date'])
+    # for index,row in x.iterrows():
+    #     end_date = row['end_date']
+    #     start_date = row['start_date']
+    #     # print type(datetime.date(end_date.year,end_date.month,end_date.day))
+    #     # print type(df_result_aggregate['date'])
+    #     print type(df_result_aggregate['date'].dt.date)
+    #     # print df_result_aggregate['date'], datetime.date(end_date.year,end_date.month,end_date.day)
+    #     x['quantity__sum'] = df_result_aggregate.where((df_result_aggregate['date'].dt.date>datetime.date(end_date.year,end_date.month,end_date.day)) & (df_result_aggregate['date'].dt.date<=datetime.date(start_date.year,start_date.month,start_date.day)))['quantity'].sum()
+    #
+    # print x
+    # for index in range(len(x)):
+    #     print index,x[index]
+
     return df_result_aggregate
-    # print df_result.head()
 
 def total_static_data(request):
     total_volume = CombinedTransaction.objects.all(
@@ -351,8 +368,10 @@ def recent_graphs_data(request):
     dates = CombinedTransaction.objects.values_list(
         'date', flat=True).distinct().order_by('-date')
 
-    gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)[:10]
-    aggregator_incentive_cost = calculate_aggregator_incentive()[:10]
+    # gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)[:10]
+    gaddidar_contribution = []
+    # aggregator_incentive_cost = calculate_aggregator_incentive()[:10]
+    aggregator_incentive_cost = []
 
     aggregated_result = get_data_from_myisam()
     aggregated_result = aggregated_result.to_dict(orient="index")
