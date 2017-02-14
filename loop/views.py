@@ -699,7 +699,7 @@ def get_status(call_id):
     response = requests.get(call_status_url)
     call_status = dict()
     if response.status_code == 200:
-        response_tree = xml_parse.fromstring(response.text)
+        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
         call_detail = response_tree.findall('Call')[0]
         call_status['response_code'] = 200
         call_status['status'] = str(call_detail.find('Status').text)
