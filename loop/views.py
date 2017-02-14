@@ -24,7 +24,6 @@ import MySQLdb
 import datetime, time
 import pandas as pd
 import numpy as np
-from django.template import Context
 
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
@@ -356,15 +355,14 @@ def recent_graphs_data(request):
     aggregator_incentive_cost = calculate_aggregator_incentive()[:10]
 
     aggregated_result = get_data_from_myisam()
-    aggregated_result = aggregated_result.to_json(date_format="iso",orient="records")
-    # print aggregated_result
+    aggregated_result = aggregated_result.to_dict(orient="index")
+    # cummulative_vol_farmer = pd.DataFrame(list(CombinedTransaction.objects.values('date').order_by('date').annotate(Sum('quantity'),Count('farmer_id',distinct=True))))
+    # print cummulative_vol_farmer.head()
 
     chart_dict = {'stats': list(stats), 'transportation_cost': list(
-        transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution, "aggregator_incentive_cost" : aggregator_incentive_cost,"aggregated_result":str(aggregated_result)}
+        transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution, "aggregator_incentive_cost" : aggregator_incentive_cost,"aggregated_result":aggregated_result}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
-    # c = Context({'data':data,'aggregated_result':aggregated_result})
     return HttpResponse(data)
-
 
 def data_for_drilldown_graphs(request):
     start_date = request.GET['start_date']
