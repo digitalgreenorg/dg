@@ -176,14 +176,21 @@ def get_data_from_myisam(get_total):
             end_date = row['end_date']
             start_date = row['start_date']
             data_by_grouped_days.loc[index,'quantity__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['quantity'])
+
             data_by_grouped_days.loc[index,'amount__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['amount'])
+
             data_by_grouped_days.loc[index,'farmer_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['farmer_share'])
+
             data_by_grouped_days.loc[index,'gaddidar_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['gaddidar_share'])
+
             data_by_grouped_days.loc[index,'transportation_cost__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['transportation_cost'])
+
             data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_incentive'])
-            # data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
+
+            data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
 
         # print data_by_grouped_days
+        data_by_grouped_days.fillna(value=0,inplace=True,axis=1)
         data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
         dictionary = {"15" : list(data_by_grouped_days.values())}
     else:
@@ -363,11 +370,11 @@ def crop_language_data(request):
 
 def recent_graphs_data(request):
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
-        '-date').annotate(Sum('quantity'), Sum('amount'))[:100]
+        '-date').annotate(Sum('quantity'), Sum('amount'))[:1]
     transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
-        '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))[:10]
+        '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))[:1]
     dates = CombinedTransaction.objects.values_list(
-        'date', flat=True).distinct().order_by('-date')
+        'date', flat=True).distinct().order_by('-date')[:1]
 
     # gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)[:10]
     gaddidar_contribution = []
