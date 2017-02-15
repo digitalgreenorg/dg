@@ -32,7 +32,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 ROLE_AGGREGATOR = 2
-HELPLINE_LOG_FILE = 'loop/utils/ivr_helpline/helpline_log.log'
+HELPLINE_LOG_FILE = '/home/ubuntu/code/dg_coco_test/dg/dg/media/social_website/uploads/helpline_log.log'
 
 @csrf_exempt
 def login(request):
