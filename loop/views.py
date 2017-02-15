@@ -182,7 +182,7 @@ def get_data_from_myisam():
 
     print data_by_grouped_days
     data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
-    dictionary = {"15" : data_by_grouped_days}
+    dictionary = {"15" : list(data_by_grouped_days.values())}
     return dictionary
 
 def total_static_data(request):

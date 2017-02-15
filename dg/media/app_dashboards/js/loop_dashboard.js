@@ -435,13 +435,35 @@ function recent_graphs_data(language) {
         gaddidar_contribution_recent_graph = json_data['gaddidar_contribution'];
         aggregator_incentive_cost = json_data['aggregator_incentive_cost'];
         cummulative_farmer_and_volume();
-        plot_cards_data();
+        plot_cards_data(json_data['aggregated_result']);
         initialLoadComplete = true;
     });
 }
 
 //To plot and show data for recents graphs on home page
-function plot_cards_data() {
+function plot_cards_data(aggregated_result) {
+    var days_by_15 = aggregated_result['15'];
+    var len_15 = days_by_15.length;
+    var c_vol = [];
+    var c_amt = [];
+    var c_cpk = [], c_sustainability = [];
+    for(var i=0; i<len_15; i++){
+      var vol = parseFloat(days_by_15[i][QUANTITY__SUM]);
+      var cost = parseFloat(days_by_15[i]['transportation_cost__sum']) + parseFloat(days_by_15[i]['aggregator_incentive__sum']);
+      var recovered = parseFloat(days_by_15[i]['farmer_share__sum']) + parseFloat(days_by_15[i]['gaddidar_share__sum']);
+      c_vol.push(vol);
+      c_amt.push(days_by_15[i][AMOUNT__SUM]);
+      c_cpk.push(parseFloat(cost)/parseFloat(vol));
+      c_sustainability.push((parseFloat(recovered)/parseFloat(cost))*100);
+    }
+
+    //TODO: to be removed
+    c_vol[c_vol.length -1] = 0;
+    c_amt[c_amt.length -1] =0;
+    c_cpk[c_cpk.length -1] = 0;
+    c_sustainability[c_sustainability.length - 1] = 0;
+    console.log(c_vol);
+
     var avg = get_average(); // Retunts [avg_vol, active_farmers, avg_amt, active_clusters,avg_gaddidar_share]
     var avg_vol = avg[0];
     var avg_gaddidar_contribution = avg[4];
@@ -450,25 +472,25 @@ function plot_cards_data() {
     document.getElementById('recent_cluster_card').innerHTML = '&nbsp;&nbsp;&nbsp;' + active_clusters[0];
     $("#recent_cluster_sparkline").sparkline(active_clusters.reverse(), sparkline_option);
 
-    document.getElementById('recent_volume_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + (avg_vol[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).concat(KG);
-    $('#recent_volume_sparkline').sparkline(avg_vol.reverse(), sparkline_option);
+    document.getElementById('recent_volume_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + (c_vol[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).concat(KG);
+    $('#recent_volume_sparkline').sparkline(c_vol.reverse(), sparkline_option);
 
     var active_farmers = avg[1];
     document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + active_farmers[0];
     $('#recent_active_farmers_sparkline').sparkline(active_farmers.reverse(), sparkline_option);
 
     var avg_amt = avg[2];
-    document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(avg_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-    $('#recent_revenue_sparkline').sparkline(avg_amt.reverse(), sparkline_option);
+    document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(c_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    $('#recent_revenue_sparkline').sparkline(c_amt.reverse(), sparkline_option);
 
-    var data = get_cpk(avg_vol.reverse(), avg_gaddidar_contribution, avg_aggregator_cost);
-    var cpk = data[0];
-    document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(parseFloat(cpk[0]).toFixed(2));
-    $('#cpk_sparkline').sparkline(cpk.reverse(), sparkline_option);
+    // var data = get_cpk(avg_vol.reverse(), avg_gaddidar_contribution, avg_aggregator_cost);
+    // var cpk = data[0];
+    document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(parseFloat(c_cpk[0]).toFixed(2));
+    $('#cpk_sparkline').sparkline(c_cpk.reverse(), sparkline_option);
 
-    var sustainability = data[1];
-    document.getElementById('recent_sustainability_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + parseFloat(sustainability[0]).toFixed(2) + "%";
-    $('#recent_sustainability_sparkline').sparkline(sustainability.reverse(), sparkline_option);
+    // var sustainability = data[1];
+    document.getElementById('recent_sustainability_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + parseFloat(c_sustainability[0]).toFixed(2) + "%";
+    $('#recent_sustainability_sparkline').sparkline(c_sustainability.reverse(), sparkline_option);
 }
 
 
