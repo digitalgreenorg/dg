@@ -3,6 +3,7 @@ import xlsxwriter
 import requests
 from django.http import JsonResponse
 from io import BytesIO
+from threading import Thread
 import xml.etree.ElementTree as xml_parse
 
 from django.contrib.auth.models import User
@@ -23,6 +24,7 @@ from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
 from loop.utils.ivr_helpline.helpline_data import helpline_data
 import unicodecsv as csv
+import time
 import datetime
 from pytz import timezone
 import inspect
@@ -32,7 +34,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
-    update_incoming_obj, send_acknowledge
+    update_incoming_obj, send_acknowledge, send_voicemail
 
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
@@ -852,8 +854,8 @@ def helpline_offline(request):
                 # Write Exception to Log file
                 module = 'helpline_offline'
                 write_log(HELPLINE_LOG_FILE,module,str(e))
-        # Notify User about off hours and record voicemail.
-        connect_to_app(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID)
+        # Create thread for Notify User about off hours and record voicemail.
+        Thread(target=send_voicemail,args=[farmer_number,OFF_HOURS_VOICEMAIL_APP_ID]).start()
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
