@@ -390,6 +390,8 @@ class GaddidarCommission(LoopModel):
 
     class Meta:
         unique_together = ("start_date", "gaddidar", "mandi")
+post_save.connect(save_log, sender=GaddidarCommission)
+pre_delete.connect(delete_log, sender=GaddidarCommission)
 
 class GaddidarShareOutliers(LoopModel):
     mandi = models.ForeignKey(Mandi)
