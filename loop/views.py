@@ -165,23 +165,25 @@ def get_data_from_myisam():
 
     start_date = df_result_aggregate['date'].min()
     end_date = df_result_aggregate['date'].max()
-    frequency = '-'+'7'+'D'
-    x = pd.DataFrame(pd.date_range(end_date,start_date,freq=frequency),columns={'start_date'})
-    x['end_date'] = x['start_date'].shift(-1)
+    frequency = '-'+'15'+'D'
+    data_by_grouped_days = pd.DataFrame(pd.date_range(end_date,start_date,freq=frequency),columns={'start_date'})
+    data_by_grouped_days['end_date'] = data_by_grouped_days['start_date'].shift(-1)
 
     df_result_aggregate['date'] = df_result_aggregate['date'].astype('datetime64[ns]')
-    for index,row in x.iterrows():
+    for index,row in data_by_grouped_days.iterrows():
         end_date = row['end_date']
         start_date = row['start_date']
-        x.loc[index,'quantity__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['quantity'])
-        x.loc[index,'amount__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['amount'])
-        x.loc[index,'farmer_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['farmer_share'])
-        x.loc[index,'gaddidar_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['gaddidar_share'])
-        x.loc[index,'transportation_cost__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['transportation_cost'])
-        x.loc[index,'aggregator_incentive__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_incentive'])
-    print x
+        data_by_grouped_days.loc[index,'quantity__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['quantity'])
+        data_by_grouped_days.loc[index,'amount__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['amount'])
+        data_by_grouped_days.loc[index,'farmer_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['farmer_share'])
+        data_by_grouped_days.loc[index,'gaddidar_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['gaddidar_share'])
+        data_by_grouped_days.loc[index,'transportation_cost__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['transportation_cost'])
+        data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_incentive'])
 
-    return df_result_aggregate
+    print data_by_grouped_days
+    data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
+    dictionary = {"15" : data_by_grouped_days}
+    return dictionary
 
 def total_static_data(request):
     total_volume = CombinedTransaction.objects.all(
@@ -374,7 +376,7 @@ def recent_graphs_data(request):
     aggregator_incentive_cost = []
 
     aggregated_result = get_data_from_myisam()
-    aggregated_result = aggregated_result.to_dict(orient="index")
+    # aggregated_result = aggregated_result.to_dict(orient="index")
     # cummulative_vol_farmer = pd.DataFrame(list(CombinedTransaction.objects.values('date').order_by('date').annotate(Sum('quantity'),Count('farmer_id',distinct=True))))
     # print cummulative_vol_farmer.head()
 
