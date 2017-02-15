@@ -6,12 +6,12 @@ from pytz import timezone
 from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT
 
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing
-from loop.views import get_status, make_helpline_call, write_log
+from loop.helpline_view import get_status, make_helpline_call, write_log
 
-HELPLINE_LOG_FILE = 'loop/utils/ivr_helpline/helpline_log.log'
+HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 
 class Command(BaseCommand):
 

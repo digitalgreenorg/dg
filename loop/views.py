@@ -29,6 +29,11 @@ import inspect
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID, OFF_HOURS_GREETING_APP_ID, \
     OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT
+
+from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
+    update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
+    update_incoming_obj, send_acknowledge
+
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 ROLE_AGGREGATOR = 2
@@ -670,153 +675,6 @@ def payments(request):
 
     return HttpResponse(data)
 
-def write_log(logfile,module,log):
-    curr_india_time = datetime.datetime.now(timezone('Asia/Kolkata'))
-    with open(logfile, 'ab') as csvfile:
-        file_write = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        file_write.writerow([curr_india_time,module,log])
-
-def save_call_log(call_id,from_number,to_number,call_type,start_time):
-    call_obj = HelplineCallLog(call_id=call_id,from_number=from_number,to_number=to_number,call_type=call_type,start_time=start_time)
-    try:
-        call_obj.save()
-    except Exception as e:
-        # if error then log
-        module = 'save_call_log'
-        write_log(HELPLINE_LOG_FILE,module,str(e))
-
-def save_sms_log(sms_id,from_number,to_number,sms_body,sent_time):
-    sms_obj = HelplineSmsLog(sms_id=sms_id,from_number=from_number,to_number=to_number,sms_body=sms_body,sent_time=sent_time)
-    try:
-        sms_obj.save()
-    except Exception as e:
-        # if error then log
-        module = 'save_sms_log'
-        write_log(HELPLINE_LOG_FILE,module,str(e))
-
-def get_status(call_id):
-    call_status_url = "https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/%s?details=true"%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID,call_id)
-    response = requests.get(call_status_url)
-    call_status = dict()
-    if response.status_code == 200:
-        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
-        call_detail = response_tree.findall('Call')[0]
-        call_status['response_code'] = 200
-        call_status['status'] = str(call_detail.find('Status').text)
-        call_status['to'] = str(call_detail.find('To').text)
-        call_status['from'] = str(call_detail.find('From').text)
-        call_status['start_time'] = str(call_detail.find('StartTime').text)
-        call_status['end_time'] = str(call_detail.find('EndTime').text)
-        extra_detail = call_detail.findall('Details')[0]
-        call_status['from_status'] = str(extra_detail.find('Leg1Status').text)
-        call_status['to_status'] = str(extra_detail.find('Leg2Status').text)
-    elif response.status_code == 429:
-        call_status['response_code'] = 429
-    else:
-        call_status['response_code'] = response.status_code
-    return call_status
-
-def get_info_through_api(outgoing_call_id):
-    call_status = get_status(outgoing_call_id)
-    if call_status['response_code'] == 200:
-        # Search latest pending Incoming object
-        incoming_obj = HelplineIncoming.objects.filter(from_number=call_status['to'],call_status=0).order_by('-id')
-        expert_obj = HelplineExpert.objects.filter(phone_number=call_status['from'])
-        if len(incoming_obj) > 0 and len(expert_obj) > 0:
-            incoming_obj = incoming_obj[0]
-            expert_obj = expert_obj[0]
-            to_number = call_status['to']
-            return (incoming_obj,expert_obj,to_number)
-    return ''
-
-def update_incoming_acknowledge_user(incoming_call_obj,acknowledge_user):
-    if acknowledge_user == 0:
-        incoming_call_obj.acknowledge_user = 0
-    else:    
-        incoming_call_obj.acknowledge_user += 1
-    try:
-        incoming_call_obj.save()
-    except Exception as e:
-        module = 'update_incoming_acknowledge_user'
-        write_log(HELPLINE_LOG_FILE,module,str(e))     
-
-# When we do not want to acknowledge User in case of call is not successfull
-# then acknowledge_user parameter is more than 1
-# (For cases like call generated from queue module)
-def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_user=0):
-    call_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    call_response_url = 'http://www.digitalgreen.org/loop/helpline_call_response/'
-    from_number = from_number_obj.phone_number
-    parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
-    response = requests.post(call_request_url,data=parameters)
-    if response.status_code == 200:
-        update_incoming_acknowledge_user(incoming_call_obj,acknowledge_user)
-        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
-        call_detail = response_tree.findall('Call')[0]
-        outgoing_call_id = str(call_detail.find('Sid').text)
-        outgoing_call_time = str(call_detail.find('StartTime').text)
-        save_call_log(outgoing_call_id,from_number,to_number,1,outgoing_call_time)
-        outgoing_obj = HelplineOutgoing(call_id=outgoing_call_id,incoming_call=incoming_call_obj,outgoing_time=outgoing_call_time,from_number=from_number_obj,to_number=to_number)
-        try:
-            outgoing_obj.save()    
-        except Exception as e:
-            # Save Errors in Logs
-            module = 'make_helpline_call'
-            write_log(HELPLINE_LOG_FILE,module,str(e))
-    elif response.status_code == 429:
-        # Enter in Log
-        module = 'make_helpline_call'
-        log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
-        write_log(HELPLINE_LOG_FILE,module,log)
-    else:
-        # Enter in Log
-        module = 'make_helpline_call'
-        log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
-        write_log(HELPLINE_LOG_FILE,module,log)
-
-def send_helpline_sms(from_number,to_number,sms_body):
-    sms_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Sms/send'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    parameters = {'From':from_number,'To':to_number,'Body':sms_body,'Priority':'high'}
-    response = requests.post(sms_request_url,data=parameters)
-    if response.status_code == 200:
-        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
-        sms_detail = response_tree.findall('SMSMessage')[0]
-        sms_id = str(sms_detail.find('Sid').text)
-        sent_time = str(sms_detail.find('DateCreated').text)
-        save_sms_log(sms_id,from_number,to_number,sms_body,sent_time)
-    else:
-        module = 'send_helpline_sms'
-        log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
-        write_log(HELPLINE_LOG_FILE,module,log)
- 
-def connect_to_app(to_number,app_id):
-    app_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    app_url = 'http://my.exotel.in/exoml/start/%s'%(app_id,)
-    parameters = {'From':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','Url':app_url}
-    response = requests.post(app_request_url,data=parameters)
-    module = 'connect_to_app'
-    log = "App Id: %s Status Code: %s (Response text: %s)"%(app_id,str(response.status_code),str(response.text))
-    write_log(HELPLINE_LOG_FILE,module,log)
-    
-def fetch_info_of_incoming_call(request):
-    call_id = str(request.GET.getlist('CallSid')[0])
-    farmer_number = str(request.GET.getlist('From')[0])
-    dg_number = str(request.GET.getlist('To')[0])
-    incoming_time = str(request.GET.getlist('StartTime')[0])
-    return (call_id,farmer_number,dg_number,incoming_time)
-
-def update_incoming_obj(incoming_obj,call_status,recording_url,expert_obj,resolved_time):
-    incoming_obj.call_status = call_status
-    incoming_obj.recording_url = recording_url
-    incoming_obj.resolved_by = expert_obj
-    incoming_obj.resolved_time = resolved_time
-    try:
-        incoming_obj.save()
-    except Exception as e:
-        # if error in updating incoming object then Log
-        module = 'update_incoming_obj'
-        write_log(HELPLINE_LOG_FILE,module,str(e))
-
 def helpline_incoming(request):
     if request.method == 'GET':
         call_id,farmer_number,dg_number,incoming_time = fetch_info_of_incoming_call(request)
@@ -875,12 +733,6 @@ def helpline_incoming(request):
             return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
-
-def send_acknowledge(incoming_call_obj):
-    if incoming_call_obj.acknowledge_user == 0:
-        return 0
-    else:
-        return 1
 
 @csrf_exempt
 def helpline_call_response(request):
