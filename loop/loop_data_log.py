@@ -300,9 +300,8 @@ def send_updated_log(request):
 
             gaddidar_commission_rows = Log.objects.filter(
                 timestamp__gt=timestamp,entry_table__in=['GaddidarCommission'])
-            print "YOYO",timestamp
+            
             for gcrow in gaddidar_commission_rows:
-                print gcrow.id
                 list_rows.append(Log.objects.filter(id=gcrow.id))
 
             list_rows.append(Log.objects.filter(
