@@ -165,23 +165,21 @@ def get_data_from_myisam():
 
     start_date = df_result_aggregate['date'].min()
     end_date = df_result_aggregate['date'].max()
-    x = pd.DataFrame(pd.date_range(end_date,start_date,freq='-7D'),columns={'start_date'})
+    frequency = '-'+'7'+'D'
+    x = pd.DataFrame(pd.date_range(end_date,start_date,freq=frequency),columns={'start_date'})
     x['end_date'] = x['start_date'].shift(-1)
 
-    # df_result_aggregate['date'] = pd.to_datetime(df_result_aggregate['date'])
+    df_result_aggregate['date'] = df_result_aggregate['date'].astype('datetime64[ns]')
     for index,row in x.iterrows():
         end_date = row['end_date']
         start_date = row['start_date']
-        e_date = datetime.date(end_date.year,end_date.month,end_date.day)
-        s_date = datetime.date(start_date.year,start_date.month,start_date.day)
-        # print type(datetime.date(end_date.year,end_date.month,end_date.day))
-        # print type(df_result_aggregate['date'])
-        # print type(df_result_aggregate['date'].dt.date)
-        # print df_result_aggregate['date'], datetime.date(end_date.year,end_date.month,end_date.day)
-        x['quantity__sum'] = df_result_aggregate.where((df_result_aggregate['date']>e_date.strftime('%Y-%m-%d')) & (df_result_aggregate['date']<=s_date.strftime('%Y-%m-%d')))['quantity'].sum()
+        x.loc[index,'quantity__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['quantity'])
+        x.loc[index,'amount__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['amount'])
+        x.loc[index,'farmer_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['farmer_share'])
+        x.loc[index,'gaddidar_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['gaddidar_share'])
+        x.loc[index,'transportation_cost__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['transportation_cost'])
+        x.loc[index,'aggregator_incentive__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_incentive'])
     print x
-    # for index in range(len(x)):
-    #     print index,x[index]
 
     return df_result_aggregate
 
