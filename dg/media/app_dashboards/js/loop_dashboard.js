@@ -452,8 +452,9 @@ function plot_cards_data(aggregated_result) {
     var len_15 = days_by_15.length;
     var c_vol = [];
     var c_amt = [];
-    var c_cpk = [], c_sustainability = [];
+    var c_cpk = [], c_sustainability = [], c_active_clusters = [];
     for(var i=0; i<len_15; i++){
+      var active_cluster = days_by_15[i]['active_cluster'];
       var vol = parseFloat(days_by_15[i][QUANTITY__SUM]);
       var amt = parseFloat(days_by_15[i][AMOUNT__SUM]);
       var cost = parseFloat(days_by_15[i]['transportation_cost__sum']) + parseFloat(days_by_15[i]['aggregator_incentive__sum']);
@@ -464,30 +465,24 @@ function plot_cards_data(aggregated_result) {
       c_amt.push(amt.toFixed(2));
       c_cpk.push(cpk.toFixed(2));
       c_sustainability.push(spk.toFixed(2));
+      c_active_clusters.push(active_cluster);
     }
-
-    //TODO: to be removed
-    c_vol[c_vol.length -1] = 0;
-    c_amt[c_amt.length -1] =0;
-    c_cpk[c_cpk.length -1] = 0;
-    c_sustainability[c_sustainability.length - 1] = 0;
-
-    var avg = get_average(); // Retunts [avg_vol, active_farmers, avg_amt, active_clusters,avg_gaddidar_share]
-    var avg_vol = avg[0];
-    var avg_gaddidar_contribution = avg[4];
-    var active_clusters = avg[3];
-    var avg_aggregator_cost = avg[5];
-    document.getElementById('recent_cluster_card').innerHTML = '&nbsp;&nbsp;&nbsp;' + active_clusters[0];
-    $("#recent_cluster_sparkline").sparkline(active_clusters.reverse(), sparkline_option);
+    // var avg = get_average(); // Retunts [avg_vol, active_farmers, avg_amt, active_clusters,avg_gaddidar_share]
+    // var avg_vol = avg[0];
+    // var avg_gaddidar_contribution = avg[4];
+    // var active_clusters = avg[3];
+    // var avg_aggregator_cost = avg[5];
+    document.getElementById('recent_cluster_card').innerHTML = '&nbsp;&nbsp;&nbsp;' + c_active_clusters[0];
+    $("#recent_cluster_sparkline").sparkline(c_active_clusters.reverse(), sparkline_option);
 
     document.getElementById('recent_volume_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + (c_vol[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).concat(KG);
     $('#recent_volume_sparkline').sparkline(c_vol.reverse(), sparkline_option);
 
-    var active_farmers = avg[1];
-    document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + active_farmers[0];
-    $('#recent_active_farmers_sparkline').sparkline(active_farmers.reverse(), sparkline_option);
+    // var active_farmers = avg[1];
+    // document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + active_farmers[0];
+    // $('#recent_active_farmers_sparkline').sparkline(active_farmers.reverse(), sparkline_option);
 
-    var avg_amt = avg[2];
+    // var avg_amt = avg[2];
     document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(c_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     $('#recent_revenue_sparkline').sparkline(c_amt.reverse(), sparkline_option);
 
@@ -741,7 +736,7 @@ function cummulative_farmer_and_volume() {
     var first_date = new Date(dates[dates.length - 1]);
     while (first_date <= new Date(dates[0])) {
         all_dates.push(first_date.getTime());
-        first_date.setDate(first_date.getDate() + 1)
+        first_date.setDate(first_date.getDate() + 1);
     }
 
     var cumm_volume = new Array(all_dates.length).fill(0.0);

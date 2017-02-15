@@ -132,44 +132,13 @@ def filter_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
-
-def get_data_from_myisam(get_total):
-    database = DATABASES['default']['NAME']
-    username = DATABASES['default']['USER']
-    password = DATABASES['default']['PASSWORD']
-    mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
-
-    df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam",con=mysql_cn)
-    aggregations = {
-    'quantity':{
-    'quantity__sum':'sum'
-    },
-    'amount':{
-    'amount__sum':'sum'
-    },
-    'gaddidar_share':{
-    'gaddidar_share__sum':'sum'
-    },
-    'aggregator_incentive':{
-    'aggregator_incentive__sum':'mean'
-    },
-    'transportation_cost':{
-    'transportation_cost__sum':'mean'
-    },
-    'farmer_share':{
-    'farmer_share__sum':'mean'
-    }
-    }
-    df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
-    df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
-    print df_result_aggregate.head()
-
-    if get_total == 0:
+def get_grouped_data(df_result_aggregate,day):
         start_date = df_result_aggregate['date'].min()
         end_date = df_result_aggregate['date'].max()
-        frequency = '-'+'15'+'D'
+        frequency = '-' + day + 'D'
         data_by_grouped_days = pd.DataFrame(pd.date_range(end_date,start_date,freq=frequency),columns={'start_date'})
         data_by_grouped_days['end_date'] = data_by_grouped_days['start_date'].shift(-1)
+        data_by_grouped_days.fillna(value=0,inplace=True,axis=1)
 
         df_result_aggregate['date'] = df_result_aggregate['date'].astype('datetime64[ns]')
         for index,row in data_by_grouped_days.iterrows():
@@ -189,14 +158,49 @@ def get_data_from_myisam(get_total):
 
             data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
 
-        # print data_by_grouped_days
-        data_by_grouped_days.fillna(value=0,inplace=True,axis=1)
         data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
-        dictionary = {"15" : list(data_by_grouped_days.values())}
+        return data_by_grouped_days
+
+
+def get_data_from_myisam(get_total):
+    database = DATABASES['default']['NAME']
+    username = DATABASES['default']['USER']
+    password = DATABASES['default']['PASSWORD']
+    mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
+
+    df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam",con=mysql_cn)
+    aggregations = {
+        'quantity':{
+            'quantity__sum':'sum'
+        },
+        'amount':{
+            'amount__sum':'sum'
+        },
+        'gaddidar_share':{
+            'gaddidar_share__sum':'sum'
+        },
+        'aggregator_incentive':{
+            'aggregator_incentive__sum':'mean'
+        },
+        'transportation_cost':{
+            'transportation_cost__sum':'mean'
+        },
+        'farmer_share':{
+            'farmer_share__sum':'mean'
+        }
+    }
+    df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
+    df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
+
+    if get_total == 0:
+        dictionary = {}
+        days = ['7','15','30','60']
+        for day in days:
+            data_by_grouped_days = get_grouped_data(df_result_aggregate,day)
+            dictionary[day] = list(data_by_grouped_days.values())
     else:
         df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
         df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
-        # print df
         dictionary = df.to_dict(orient="index")
     return dictionary
 
@@ -370,24 +374,20 @@ def crop_language_data(request):
 
 def recent_graphs_data(request):
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
-        '-date').annotate(Sum('quantity'), Sum('amount'))[:1]
-    transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
-        '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))[:1]
-    dates = CombinedTransaction.objects.values_list(
-        'date', flat=True).distinct().order_by('-date')[:1]
+        '-date').annotate(Sum('quantity'))[:1]
+    # transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
+        # '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))[:1]
+    dates = CombinedTransaction.objects.values_list('date', flat=True).distinct().order_by('-date')[:1]
 
     # gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)[:10]
-    gaddidar_contribution = []
     # aggregator_incentive_cost = calculate_aggregator_incentive()[:10]
-    aggregator_incentive_cost = []
 
     aggregated_result = get_data_from_myisam(0)
     # aggregated_result = aggregated_result.to_dict(orient="index")
     # cummulative_vol_farmer = pd.DataFrame(list(CombinedTransaction.objects.values('date').order_by('date').annotate(Sum('quantity'),Count('farmer_id',distinct=True))))
     # print cummulative_vol_farmer.head()
 
-    chart_dict = {'stats': list(stats), 'transportation_cost': list(
-        transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution, "aggregator_incentive_cost" : aggregator_incentive_cost,"aggregated_result":aggregated_result}
+    chart_dict = {'stats': list(stats), 'dates': list(dates),'aggregated_result':aggregated_result}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
