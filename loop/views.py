@@ -32,7 +32,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 ROLE_AGGREGATOR = 2
-HELPLINE_LOG_FILE = '%sloop/helpline_log.log'%(MEDIA_ROOT,)
+HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 
 @csrf_exempt
 def login(request):
