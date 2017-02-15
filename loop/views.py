@@ -374,10 +374,10 @@ def crop_language_data(request):
 
 def recent_graphs_data(request):
     stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
-        '-date').annotate(Sum('quantity'))[:1]
+        '-date').annotate(Sum('quantity'))
     # transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
         # '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))[:1]
-    dates = CombinedTransaction.objects.values_list('date', flat=True).distinct().order_by('-date')[:1]
+    dates = CombinedTransaction.objects.values_list('date', flat=True).distinct().order_by('-date')
 
     # gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)[:10]
     # aggregator_incentive_cost = calculate_aggregator_incentive()[:10]
