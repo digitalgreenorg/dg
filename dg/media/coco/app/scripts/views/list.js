@@ -119,7 +119,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             console.log("in render_data...change in collection...rendering list view");
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
-            });
+            });            
             aoColumns = this.get_row_header();
             this.$('#list_table')
                 .DataTable({
