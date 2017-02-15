@@ -28,11 +28,11 @@ from pytz import timezone
 import inspect
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID, OFF_HOURS_GREETING_APP_ID, \
-    OFF_HOURS_VOICEMAIL_APP_ID
+    OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 ROLE_AGGREGATOR = 2
-HELPLINE_LOG_FILE = '/home/ubuntu/code/dg_coco_test/dg/dg/media/social_website/uploads/helpline_log.log'
+HELPLINE_LOG_FILE = '%sloop/helpline_log.log'%(MEDIA_ROOT,)
 
 @csrf_exempt
 def login(request):
