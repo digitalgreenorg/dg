@@ -455,12 +455,15 @@ function plot_cards_data(aggregated_result) {
     var c_cpk = [], c_sustainability = [];
     for(var i=0; i<len_15; i++){
       var vol = parseFloat(days_by_15[i][QUANTITY__SUM]);
+      var amt = parseFloat(days_by_15[i][AMOUNT__SUM]);
       var cost = parseFloat(days_by_15[i]['transportation_cost__sum']) + parseFloat(days_by_15[i]['aggregator_incentive__sum']);
       var recovered = parseFloat(days_by_15[i]['farmer_share__sum']) + parseFloat(days_by_15[i]['gaddidar_share__sum']);
-      c_vol.push(vol);
-      c_amt.push(days_by_15[i][AMOUNT__SUM]);
-      c_cpk.push(parseFloat(cost)/parseFloat(vol));
-      c_sustainability.push((parseFloat(recovered)/parseFloat(cost))*100);
+      var cpk = parseFloat(cost)/parseFloat(vol);
+      var spk = (parseFloat(recovered)/parseFloat(cost))*100;
+      c_vol.push(vol.toFixed(2));
+      c_amt.push(amt.toFixed(2));
+      c_cpk.push(cpk.toFixed(2));
+      c_sustainability.push(spk.toFixed(2));
     }
 
     //TODO: to be removed
@@ -468,7 +471,6 @@ function plot_cards_data(aggregated_result) {
     c_amt[c_amt.length -1] =0;
     c_cpk[c_cpk.length -1] = 0;
     c_sustainability[c_sustainability.length - 1] = 0;
-    console.log(c_vol);
 
     var avg = get_average(); // Retunts [avg_vol, active_farmers, avg_amt, active_clusters,avg_gaddidar_share]
     var avg_vol = avg[0];

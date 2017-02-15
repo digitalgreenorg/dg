@@ -133,7 +133,7 @@ def filter_data(request):
     return HttpResponse(data)
 
 
-def get_data_from_myisam(param):
+def get_data_from_myisam(get_total):
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -162,8 +162,9 @@ def get_data_from_myisam(param):
     }
     df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
     df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
+    print df_result_aggregate.head()
 
-    if param == 0:
+    if get_total == 0:
         start_date = df_result_aggregate['date'].min()
         end_date = df_result_aggregate['date'].max()
         frequency = '-'+'15'+'D'
@@ -180,6 +181,7 @@ def get_data_from_myisam(param):
             data_by_grouped_days.loc[index,'gaddidar_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['gaddidar_share'])
             data_by_grouped_days.loc[index,'transportation_cost__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['transportation_cost'])
             data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_incentive'])
+            # data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
 
         # print data_by_grouped_days
         data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
@@ -187,7 +189,7 @@ def get_data_from_myisam(param):
     else:
         df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
         df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
-        print df
+        # print df
         dictionary = df.to_dict(orient="index")
     return dictionary
 
