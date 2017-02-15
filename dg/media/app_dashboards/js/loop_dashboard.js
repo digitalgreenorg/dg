@@ -396,25 +396,31 @@ function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
         hideLoader();
         var json_data = JSON.parse(data);
-        var total_volume = json_data['total_volume'][QUANTITY__SUM];
-        var total_amount = json_data['total_volume'][AMOUNT__SUM];
+        // var total_volume = json_data['total_volume'][QUANTITY__SUM];
+        // var total_amount = json_data['total_volume'][AMOUNT__SUM];
+        // var total_farmers_reached = json_data['total_farmers_reached'];
+        // var total_transportation_cost = 0;
+        // var total_farmer_share = 0;
+
+        var total_volume = json_data['aggregated_result']['quantity'][0];
+        var total_amount = json_data['aggregated_result']['amount'][0];
         var total_farmers_reached = json_data['total_farmers_reached'];
-        // var total_repeat_farmers = json_data['total_repeat_farmers'];
-        var total_transportation_cost = 0;
-        var total_farmer_share = 0;
+        var total_transportation_cost = json_data['aggregated_result']['transportation_cost'][0];
+        var total_farmer_share = json_data['aggregated_result']['farmer_share'][0];
+        var total_gaddidar_contribution = json_data['aggregated_result']['gaddidar_share'][0];
+        var total_aggregator_cost = json_data['aggregated_result']['aggregator_incentive'][0];
 
-        for (var i = 0; i < json_data['total_transportation_cost'].length; i++) {
-            total_transportation_cost += json_data['total_transportation_cost'][i]['transportation_cost__sum'];
-            total_farmer_share += json_data['total_transportation_cost'][i]['farmer_share__sum'];
-        }
+        // for (var i = 0; i < json_data['total_transportation_cost'].length; i++) {
+        //     total_transportation_cost += json_data['total_transportation_cost'][i]['transportation_cost__sum'];
+        //     total_farmer_share += json_data['total_transportation_cost'][i]['farmer_share__sum'];
+        // }
 
-        var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
-        //TODO - DONE : remove this computation from here and use data in json
-        var total_aggregator_cost = json_data['total_aggregator_incentive'];
-        var sustainability = (total_farmer_share + total_gaddidar_contribution) / (total_transportation_cost + total_aggregator_cost) * 100;
+        // var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
+        // var total_aggregator_cost = json_data['total_aggregator_incentive'];
+        var sustainability = (parseFloat(total_farmer_share) + parseFloat(total_gaddidar_contribution)) / (parseFloat(total_transportation_cost) + parseFloat(total_aggregator_cost)) * 100;
 
         var clusters = json_data['total_cluster_reached'];
-        var total_cpk = (total_transportation_cost + total_aggregator_cost) / total_volume;
+        var total_cpk = (parseFloat(total_transportation_cost) + parseFloat(total_aggregator_cost)) / parseFloat(total_volume);
 
         plot_solid_guage($('#cluster_bullet'), 0, clusters, 25);
         plot_solid_guage($('#total_farmers_bullet'), 0, total_farmers_reached, 2000);
