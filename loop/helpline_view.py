@@ -10,6 +10,9 @@ from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, \
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT
 
+from loop.utils.ivr_helpline.helpline_data import CALL_STATUS_URL, CALL_REQUEST_URL, \
+    CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL
+
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 
 def write_log(log_file,module,log):
@@ -38,7 +41,7 @@ def save_sms_log(sms_id,from_number,to_number,sms_body,sent_time):
         write_log(HELPLINE_LOG_FILE,module,str(e))
 
 def get_status(call_id):
-    call_status_url = "https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/%s?details=true"%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID,call_id)
+    call_status_url = CALL_STATUS_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID,call_id)
     response = requests.get(call_status_url)
     call_status = dict()
     # Status code 200 if API call is successful, 429 if Too many request 
@@ -86,8 +89,8 @@ def update_incoming_acknowledge_user(incoming_call_obj,acknowledge_user):
 # then acknowledge_user parameter is more than 1
 # (For cases like call generated from queue module)
 def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_user=0):
-    call_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    call_response_url = 'http://www.digitalgreen.org/loop/helpline_call_response/'
+    call_request_url = CALL_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    call_response_url = CALL_RESPONSE_URL
     from_number = from_number_obj.phone_number
     parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
     response = requests.post(call_request_url,data=parameters)
@@ -111,7 +114,7 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_u
         write_log(HELPLINE_LOG_FILE,module,log)
 
 def send_helpline_sms(from_number,to_number,sms_body):
-    sms_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Sms/send'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     parameters = {'From':from_number,'To':to_number,'Body':sms_body,'Priority':'high'}
     response = requests.post(sms_request_url,data=parameters)
     if response.status_code == 200:
@@ -126,8 +129,8 @@ def send_helpline_sms(from_number,to_number,sms_body):
         write_log(HELPLINE_LOG_FILE,module,log)
  
 def connect_to_app(to_number,app_id):
-    app_request_url = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    app_url = 'http://my.exotel.in/exoml/start/%s'%(app_id,)
+    app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    app_url = APP_URL%(app_id,)
     parameters = {'From':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','Url':app_url}
     response = requests.post(app_request_url,data=parameters)
     module = 'connect_to_app'
