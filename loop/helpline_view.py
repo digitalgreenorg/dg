@@ -40,6 +40,7 @@ def get_status(call_id):
     call_status_url = "https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/%s?details=true"%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID,call_id)
     response = requests.get(call_status_url)
     call_status = dict()
+    # Status code 200 if API call is successful, 429 if Too many request 
     if response.status_code == 200:
         response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
         call_detail = response_tree.findall('Call')[0]
@@ -52,8 +53,6 @@ def get_status(call_id):
         extra_detail = call_detail.findall('Details')[0]
         call_status['from_status'] = str(extra_detail.find('Leg1Status').text)
         call_status['to_status'] = str(extra_detail.find('Leg2Status').text)
-    elif response.status_code == 429:
-        call_status['response_code'] = 429
     else:
         call_status['response_code'] = response.status_code
     return call_status
