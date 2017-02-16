@@ -15,6 +15,7 @@ CREATE TABLE `loop_aggregated_myisam`(
   `aggregator_name` varchar(50) NOT NULL,
   `mandi_name` varchar(50) NOT NULL,
   `gaddidar_name` varchar(50) NOT NULL,
+  `cum_distinct_farmer` int unsigned NOT NULL,
   PRIMARY KEY(`id`)
 )ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 ;
 

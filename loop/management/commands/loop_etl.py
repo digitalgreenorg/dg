@@ -33,7 +33,8 @@ class LoopStatistics():
 
         try:
             start_time = time.time()
-            self.mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True).cursor()
+            self.mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
+            # .cursor()
 
             # df_ct = pd.read_sql(,con=mysql_cn)
             df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name_en')))
@@ -41,7 +42,7 @@ class LoopStatistics():
 
             print "Loop User Shape",df_loopuser.shape
 
-            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name_en','gaddidar__id','gaddidar__gaddidar_name_en').order_by('-date').annotate(Sum('quantity'),Sum('amount'))))
+            df_ct = pd.DataFrame(list(CombinedTransaction.objects.values('date','user_created__id','mandi__id','mandi__mandi_name_en','gaddidar__id','gaddidar__gaddidar_name_en').order_by('date').annotate(Sum('quantity'),Sum('amount'))))
             df_ct.rename(columns={"mandi__mandi_name_en":"mandi__mandi_name","gaddidar__gaddidar_name_en":"gaddidar__gaddidar_name"},inplace=True)
 
             print "Combined Transaction Shape",df_ct.shape
@@ -144,8 +145,18 @@ class LoopStatistics():
             print "After adding aggregator incentive", result.shape
             result.fillna(value=0,axis=1,inplace=True)
 
+            df_farmer_count = pd.read_sql("SELECT T.date, count(T.farmer_id) as distinct_farmer_count FROM ( SELECT farmer_id, min(date) as date FROM loop_combinedtransaction GROUP BY farmer_id) as T GROUP BY T.date",con=self.mysql_cn)
+
+            df_farmer_count['cummulative_distinct_farmer'] = df_farmer_count['distinct_farmer_count'].cumsum()
+            df_farmer_count.drop(['distinct_farmer_count'],axis=1,inplace=True)
+
+            result = pd.merge(result,df_farmer_count,left_on='date',right_on='date',how='left')
+            result['cummulative_distinct_farmer'].fillna(method='ffill',inplace=True)
+
+            print "After adding cummulative distinct farmer ", result.shape
+
             for index,row in result.iterrows():
-                self.mysql_cn.execute("""INSERT INTO loop_aggregated_myisam (date,aggregator_id,mandi_id,gaddidar_id,quantity,amount,transportation_cost,farmer_share,gaddidar_share,aggregator_incentive,aggregator_name,mandi_name,gaddidar_name) values(""" + '"'+row['date'].strftime('%Y-%m-%d %H:%M:%S')+'"' + "," + str(row['user_created__id']) + ","
+                self.mysql_cn.cursor().execute("""INSERT INTO loop_aggregated_myisam (date,aggregator_id,mandi_id,gaddidar_id,quantity,amount,transportation_cost,farmer_share,gaddidar_share,aggregator_incentive,aggregator_name,mandi_name,gaddidar_name,cum_distinct_farmer) values(""" + '"'+row['date'].strftime('%Y-%m-%d %H:%M:%S')+'"' + "," + str(row['user_created__id']) + ","
                 + str(row['mandi__id']) + ","
                 + str(row['gaddidar__id']) + ","
                 + str(row['quantity__sum']) + ","
@@ -156,7 +167,8 @@ class LoopStatistics():
                 + str(row['aggregator_incentive']) + ","
                 + '"'+row['name']+'"' + ","
                 + '"'+row['mandi__mandi_name']+'"' + ","
-                + '"'+row['gaddidar__gaddidar_name']+'"' + """)""")
+                + '"'+row['gaddidar__gaddidar_name']+'",'
+                + str(row['cummulative_distinct_farmer']) + """)""")
 
             print "Myisam insertion complete"
             end_time = time.time()
