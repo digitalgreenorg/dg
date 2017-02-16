@@ -154,18 +154,6 @@ def get_grouped_data(df_result_aggregate,day):
             data_by_grouped_days.loc[index,'gaddidar_share__sum'] = data['gaddidar_share']
             data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = data['aggregator_incentive']
 
-            # data_by_grouped_days.loc[index,'quantity__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['quantity'])
-            #
-            # data_by_grouped_days.loc[index,'amount__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['amount'])
-            #
-            # data_by_grouped_days.loc[index,'farmer_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['farmer_share'])
-            #
-            # data_by_grouped_days.loc[index,'gaddidar_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['gaddidar_share'])
-            #
-            # data_by_grouped_days.loc[index,'transportation_cost__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['transportation_cost'])
-            #
-            # data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_incentive'])
-
             data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
 
         data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
@@ -199,26 +187,42 @@ def get_data_from_myisam(get_total):
             'farmer_share__sum':'mean'
         }
     }
+
+    aggregate_cumm_vol_farmer = {
+        'quantity':{
+            'quantity__sum':'sum'
+        },
+        'cum_distinct_farmer':{
+            'cum_vol_farmer':'mean'
+        }
+    }
+
     df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
     df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
 
+    cumm_vol_farmer = {}
     if get_total == 0:
         dictionary = {}
         days = ['7','15','30','60']
         for day in days:
             data_by_grouped_days = get_grouped_data(df_result_aggregate,day)
             dictionary[day] = list(data_by_grouped_days.values())
+
+        df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
+        df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
+        df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum()
+        cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient="index")
     else:
         df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
         df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
         dictionary = df.to_dict(orient="index")
-    return dictionary
+    return dictionary, cumm_vol_farmer
 
 def total_static_data(request):
     total_farmers_reached = CombinedTransaction.objects.values('farmer').distinct().count()
     total_cluster_reached = LoopUser.objects.filter(role=ROLE_AGGREGATOR).count()
 
-    aggregated_result = get_data_from_myisam(1)
+    aggregated_result,cum_vol_farmer = get_data_from_myisam(1)
 
     chart_dict = {'total_farmers_reached': total_farmers_reached,
                   'total_cluster_reached': total_cluster_reached,
@@ -392,12 +396,12 @@ def recent_graphs_data(request):
     # gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)[:10]
     # aggregator_incentive_cost = calculate_aggregator_incentive()[:10]
 
-    aggregated_result = get_data_from_myisam(0)
+    aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0)
     # aggregated_result = aggregated_result.to_dict(orient="index")
     # cummulative_vol_farmer = pd.DataFrame(list(CombinedTransaction.objects.values('date').order_by('date').annotate(Sum('quantity'),Count('farmer_id',distinct=True))))
     # print cummulative_vol_farmer.head()
 
-    chart_dict = {'stats': list(stats), 'dates': list(dates),'aggregated_result':aggregated_result}
+    chart_dict = {'stats': list(stats), 'dates': list(dates),'aggregated_result':aggregated_result, 'cummulative_vol_farmer':cummulative_vol_farmer}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 

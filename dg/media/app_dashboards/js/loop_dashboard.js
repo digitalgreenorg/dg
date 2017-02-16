@@ -442,7 +442,7 @@ function recent_graphs_data(language) {
         // aggregator_incentive_cost = json_data['aggregator_incentive_cost'];
         aggregated_result = json_data['aggregated_result'];
         plot_cards_data();
-        cummulative_farmer_and_volume();
+        cummulative_farmer_and_volume(json_data['cummulative_vol_farmer']);
         initialLoadComplete = true;
     });
 }
@@ -732,15 +732,22 @@ function get_cpk(avg_vol, avg_gaddidar_contribution, avg_aggregator_cost) {
 
 
 //To show cummulative farmer and volume graph present on Home page
-function cummulative_farmer_and_volume() {
+function cummulative_farmer_and_volume(cum_vol_farmer) {
     var all_dates = [];
-    var farmer_ids = [];
-
-    var first_date = new Date(dates[dates.length - 1]);
-    while (first_date <= new Date(dates[0])) {
-        all_dates.push(first_date.getTime());
-        first_date.setDate(first_date.getDate() + 1);
+    // var farmer_ids = [];
+    var vol_farmer_length = Object.keys(cum_vol_farmer).length;
+    var f_date = new Date(cum_vol_farmer[0]['date']);
+    var l_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']);
+    while (f_date <= l_date) {
+        all_dates.push(f_date.getTime());
+        f_date.setDate(f_date.getDate() + 1);
     }
+
+    // var first_date = new Date(dates[dates.length - 1]);
+    // while (first_date <= new Date(dates[0])) {
+    //     all_dates.push(first_date.getTime());
+    //     first_date.setDate(first_date.getDate() + 1);
+    // }
 
     var cumm_volume = new Array(all_dates.length).fill(0.0);
     var cumm_farmers = new Array(all_dates.length).fill(0.0);
@@ -778,6 +785,9 @@ function cummulative_farmer_and_volume() {
         temp_volume['data'].push([all_dates[i], cumm_volume[i]]);
         temp_farmers['data'].push([all_dates[i], cumm_farmers[i]]);
     }
+
+    // for (var i = 0; i < vol_farmer_length - 1;i++){
+    // }
 
     var series = [];
     series.push(temp_volume);
