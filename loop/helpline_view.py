@@ -18,6 +18,7 @@ def write_log(log_file,module,log):
         file_write = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         file_write.writerow([curr_india_time,module,log])
 
+# Call Type is 0 for Incoming Call and 1 for Outgoing Call
 def save_call_log(call_id,from_number,to_number,call_type,start_time):
     call_obj = HelplineCallLog(call_id=call_id,from_number=from_number,to_number=to_number,call_type=call_type,start_time=start_time)
     try:
@@ -90,6 +91,7 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_u
     from_number = from_number_obj.phone_number
     parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
     response = requests.post(call_request_url,data=parameters)
+    module = 'make_helpline_call'
     if response.status_code == 200:
         update_incoming_acknowledge_user(incoming_call_obj,acknowledge_user)
         response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
@@ -102,16 +104,9 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_u
             outgoing_obj.save()    
         except Exception as e:
             # Save Errors in Logs
-            module = 'make_helpline_call'
             write_log(HELPLINE_LOG_FILE,module,str(e))
-    elif response.status_code == 429:
-        # Enter in Log
-        module = 'make_helpline_call'
-        log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
-        write_log(HELPLINE_LOG_FILE,module,log)
     else:
         # Enter in Log
-        module = 'make_helpline_call'
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(HELPLINE_LOG_FILE,module,log)
 
