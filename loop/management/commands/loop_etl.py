@@ -23,7 +23,7 @@ class LoopStatistics():
         username = DATABASES['default']['USER']
         password = DATABASES['default']['PASSWORD']
         print 'Database : ', database
-        print datetime.datetime.now()
+        print datetime.datetime.utcnow()
 
         create_schema = subprocess.call("mysql -u%s -p%s %s < %s" % (username, password, database, os.path.join(DIR_PATH,'recreate_schema.sql')), shell=True)
 
@@ -36,7 +36,6 @@ class LoopStatistics():
             self.mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
             # .cursor()
 
-            # df_ct = pd.read_sql(,con=mysql_cn)
             df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name_en')))
             df_loopuser.rename(columns={"user__id":"user_created__id","name_en":"name"},inplace=True)
 
@@ -173,15 +172,6 @@ class LoopStatistics():
             print "Myisam insertion complete"
             end_time = time.time()
             print "Total time taken (secs) : %f" % (end_time-start_time)
-
-            # start_date = result['date'].min()
-            # print start_date
-            # end_date = result['date'].max()
-            # print end_date
-            # x= pd.date_range(end_date,start_date,freq='-7D')
-            # print x
-            # from loop.views import get_data_from_myisam
-            # get_data_from_myisam()
 
         except Exception as e:
             print "Error : %s" % (e)
