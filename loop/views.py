@@ -1,7 +1,10 @@
 import json
 import xlsxwriter
+import requests
 from django.http import JsonResponse
 from io import BytesIO
+from threading import Thread
+import xml.etree.ElementTree as xml_parse
 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -14,15 +17,29 @@ from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
-    AggregatorShareOutliers, IncentiveParameter, IncentiveModel
+    AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
+    HelplineCallLog, HelplineSmsLog
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
+from loop.utils.ivr_helpline.helpline_data import helpline_data
+import unicodecsv as csv
+import time
+import datetime
+from pytz import timezone
 import inspect
+
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID, OFF_HOURS_GREETING_APP_ID, \
+    OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT
+
+from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
+    update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
+    update_incoming_obj, send_acknowledge, send_voicemail
+
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 ROLE_AGGREGATOR = 2
-
+HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 
 @csrf_exempt
 def login(request):
@@ -659,3 +676,186 @@ def payments(request):
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)
+
+def helpline_incoming(request):
+    if request.method == 'GET':
+        call_id,farmer_number,dg_number,incoming_time = fetch_info_of_incoming_call(request)
+        save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
+        incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
+        # If No pending call with this number
+        if len(incoming_call_obj) == 0:
+            incoming_call_obj = HelplineIncoming(call_id=call_id, from_number=farmer_number, to_number=dg_number, incoming_time=incoming_time, last_incoming_time=incoming_time)
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                module = 'helpline_incoming (New Call)'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
+                return HttpResponse(status=500)
+            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            # Initiate Call if Expert is available
+            if len(expert_obj) > 0:
+                make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
+            # Send Greeting and Sms if No Expert is available
+            else:
+                sms_body = helpline_data['sms_body']
+                send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+                # Send greeting to user for notify about no expert available at this time.
+                connect_to_app(farmer_number,NO_EXPERT_GREETING_APP_ID)
+            return HttpResponse(status=200)
+        # If pending call exist for this number
+        else:
+            # Update last incoming time for this pending call
+            incoming_call_obj = incoming_call_obj[0]
+            incoming_call_obj.last_incoming_time = incoming_time
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                module = 'helpline_incoming (Old Call)'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
+            latest_outgoing_of_incoming = HelplineOutgoing.objects.filter(incoming_call=incoming_call_obj).order_by('-id').values_list('call_id', flat=True)[:1]
+            if len(latest_outgoing_of_incoming) != 0:
+                call_status = get_status(latest_outgoing_of_incoming[0])
+            else: 
+                call_status = ''
+            # Check If Pending call is already in-progress
+            if call_status != '' and call_status['response_code'] == 200 and (call_status['status'] in ('ringing', 'in-progress')):
+                return HttpResponse(status=200)
+            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            # Initiate Call if Expert is available
+            if len(expert_obj) > 0:
+                make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
+            # Send Greeting and Sms if No Expert is available
+            else:
+                sms_body = helpline_data['sms_body']
+                send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+                # Send greeting to user for notify about no expert available at this time.
+                connect_to_app(farmer_number,NO_EXPERT_GREETING_APP_ID)
+            return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
+
+@csrf_exempt
+def helpline_call_response(request):
+    if request.method == 'POST':
+        status = str(request.POST.getlist('Status')[0])
+        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        outgoing_obj = HelplineOutgoing.objects.filter(call_id=outgoing_call_id).select_related('incoming_call','from_number').order_by('-id')
+        outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
+        # If call Successfully completed then mark call as resolved
+        if status == 'completed':
+            recording_url = str(request.POST.getlist('RecordingUrl')[0])
+            resolved_time = str(request.POST.getlist('DateUpdated')[0])            
+            if outgoing_obj:
+                incoming_obj = outgoing_obj.incoming_call
+                expert_obj = outgoing_obj.from_number
+                update_incoming_obj(incoming_obj,1,recording_url,expert_obj,resolved_time)
+            else:
+                # if outgoing object not found then get detail by call Exotel API
+                call_detail = get_info_through_api(outgoing_call_id)
+                if call_detail != '':
+                    incoming_obj = call_detail[0]
+                    expert_obj = call_detail[1]
+                    update_incoming_obj(incoming_obj,1,recording_url,expert_obj,resolved_time)
+        elif status == 'failed':
+            if outgoing_obj:
+                farmer_number = outgoing_obj.to_number
+                #send sms to Notify User about Later Call
+                sms_body = helpline_data['sms_body']
+                send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+            else:
+                call_detail = get_info_through_api(outgoing_call_id)
+                if call_detail != '':
+                    farmer_number = call_detail[2]
+                    #send sms to Notify User about Later Call
+                    sms_body = helpline_data['sms_body']
+                    send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+        elif status == 'no-answer' or status == 'busy':  
+            call_status = get_status(outgoing_call_id)
+            if call_status['response_code'] == 200:
+                # if expert pick call and (not farmer or farmer busy)
+                if call_status['from_status'] == 'completed':
+                    if outgoing_obj:
+                        farmer_number = outgoing_obj.to_number
+                    else:
+                        farmer_number = call_status['to']                    
+                    #send sms to Notify User about Later Call
+                    sms_body = helpline_data['sms_body']
+                    send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+                    return HttpResponse(status=200)
+            make_call = 0
+            if outgoing_obj:
+                incoming_obj = outgoing_obj.incoming_call
+                expert_obj = outgoing_obj.from_number
+                to_number = outgoing_obj.to_number
+                make_call = 1
+            else:
+                call_detail = get_info_through_api(outgoing_call_id)
+                if call_detail != '':
+                    incoming_obj = call_detail[0]
+                    expert_obj = call_detail[1]
+                    to_number = call_detail[2]
+                    make_call = 1
+            if make_call == 1:
+                # Find next expert
+                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1))
+                try:
+                    expert_numbers = expert_numbers[expert_numbers.index(expert_obj)+1:]
+                except Exception as e:
+                    expert_numbers = []
+                    pass
+                # Make a call if next expert found
+                if len(expert_numbers) > 0:
+                    # if call initiate by queue module or in the chain of call initiate by queue module
+                    if send_acknowledge(incoming_obj) == 0:
+                        make_helpline_call(incoming_obj,expert_numbers[0],to_number)
+                    else:
+                        make_helpline_call(incoming_obj,expert_numbers[0],to_number,1)
+                # Send greeting and Sms if no expert is available
+                else:
+                    # if call not initiate by queue module or not in the chain of call initiate by queue module
+                    # then send acknowledgement of future call to user
+                    if send_acknowledge(incoming_obj) == 0:
+                        sms_body = helpline_data['sms_body']
+                        send_helpline_sms(EXOTEL_HELPLINE_NUMBER,to_number,sms_body)
+                        # Send greeting to user for notify about no expert available at this time.
+                        connect_to_app(to_number,NO_EXPERT_GREETING_APP_ID)
+        else:
+            #For other conditions write Logs
+            module = 'helpline_call_response'
+            log = 'Status: %s (outgoing_call_id: %s)'%(str(status),str(outgoing_call_id))
+            write_log(HELPLINE_LOG_FILE,module,log)
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
+
+def helpline_offline(request):
+    if request.method == 'GET':
+        call_id,farmer_number,dg_number,incoming_time = fetch_info_of_incoming_call(request)
+        save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
+        incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
+        if len(incoming_call_obj) == 0:
+            incoming_call_obj = HelplineIncoming(call_id=call_id, from_number=farmer_number, to_number=dg_number, incoming_time=incoming_time, last_incoming_time=incoming_time)
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                module = 'helpline_offline'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
+                return HttpResponse(status=500)
+        else:
+            # Update last incoming time for this pending call
+            incoming_call_obj = incoming_call_obj[0]
+            incoming_call_obj.last_incoming_time = incoming_time
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                module = 'helpline_offline'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
+        # Create thread for Notify User about off hours and record voicemail.
+        Thread(target=send_voicemail,args=[farmer_number,OFF_HOURS_VOICEMAIL_APP_ID]).start()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
