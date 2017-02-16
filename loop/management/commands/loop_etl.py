@@ -91,7 +91,7 @@ class LoopStatistics():
 
             gaddidar_share = pd.DataFrame(gaddidar_share_result)
 
-            print "GADDIDAR SHARE",gaddidar_share.shape
+            print "Gaddidar Share",gaddidar_share.shape
 
             # CALCULATING AGGREGATOR INCENTIVE
             ai_queryset = AggregatorIncentive.objects.all()

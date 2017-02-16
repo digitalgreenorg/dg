@@ -441,8 +441,8 @@ function recent_graphs_data(language) {
         // gaddidar_contribution_recent_graph = json_data['gaddidar_contribution'];
         // aggregator_incentive_cost = json_data['aggregator_incentive_cost'];
         aggregated_result = json_data['aggregated_result'];
-        cummulative_farmer_and_volume();
         plot_cards_data();
+        cummulative_farmer_and_volume();
         initialLoadComplete = true;
     });
 }

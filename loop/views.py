@@ -144,17 +144,27 @@ def get_grouped_data(df_result_aggregate,day):
         for index,row in data_by_grouped_days.iterrows():
             end_date = row['end_date']
             start_date = row['start_date']
-            data_by_grouped_days.loc[index,'quantity__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['quantity'])
 
-            data_by_grouped_days.loc[index,'amount__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['amount'])
+            data =  pd.Series(pd.DataFrame(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))).sum(numeric_only=True))
 
-            data_by_grouped_days.loc[index,'farmer_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['farmer_share'])
+            data_by_grouped_days.loc[index,'amount__sum'] = data['amount']
+            data_by_grouped_days.loc[index,'quantity__sum'] = data['quantity']
+            data_by_grouped_days.loc[index,'farmer_share__sum'] = data['farmer_share']
+            data_by_grouped_days.loc[index,'transportation_cost__sum'] = data['transportation_cost']
+            data_by_grouped_days.loc[index,'gaddidar_share__sum'] = data['gaddidar_share']
+            data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = data['aggregator_incentive']
 
-            data_by_grouped_days.loc[index,'gaddidar_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['gaddidar_share'])
-
-            data_by_grouped_days.loc[index,'transportation_cost__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['transportation_cost'])
-
-            data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_incentive'])
+            # data_by_grouped_days.loc[index,'quantity__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['quantity'])
+            #
+            # data_by_grouped_days.loc[index,'amount__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['amount'])
+            #
+            # data_by_grouped_days.loc[index,'farmer_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['farmer_share'])
+            #
+            # data_by_grouped_days.loc[index,'gaddidar_share__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['gaddidar_share'])
+            #
+            # data_by_grouped_days.loc[index,'transportation_cost__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['transportation_cost'])
+            #
+            # data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = np.sum(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_incentive'])
 
             data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
 
