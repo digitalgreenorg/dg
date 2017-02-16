@@ -12,9 +12,9 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_R
 
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 
-def write_log(logfile,module,log):
+def write_log(log_file,module,log):
     curr_india_time = datetime.datetime.now(timezone('Asia/Kolkata'))
-    with open(logfile, 'ab') as csvfile:
+    with open(log_file, 'ab') as csvfile:
         file_write = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         file_write.writerow([curr_india_time,module,log])
 
