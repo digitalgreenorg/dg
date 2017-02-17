@@ -11,6 +11,20 @@ from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing
 
 class Command(BaseCommand):
 
+    def send_mail(self,call_count,off_hours_call_count,pending_call_count,resolved_call_count,declined_call_count):
+        subject = "JSLPS data entry status"
+        from_email = dg.settings.EMAIL_HOST_USER
+        to_email = ['vikas@digitalgreen.org']
+        body = '''Dear Team,\n\nThis is the status of yesterday calls:\n\n
+                Total Incoming Calls: %s\nTotal Receiving Calls During Off Hours:%s\n
+                Total Resolved Calls: %s\n
+                Total Pending Calls: %s\nTotal Declined Calls: %s\n
+                Please contact system@digitalgreen.org for any clarification.\n\n
+                Thank you.\n
+                '''%(call_count,off_hours_call_count,resolved_call_count,pending_call_count,declined_call_count)
+        msg = EmailMultiAlternatives(subject, body, from_email, to_email)
+        msg.send()
+
     def handle(self, *args, **options):
         today_date = datetime.datetime.now().date()
         yesterday_date = today_date-timedelta(days=1)
