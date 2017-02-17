@@ -132,7 +132,7 @@ def filter_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
-def get_grouped_data(df_result_aggregate,day):
+def get_grouped_data(df_result_aggregate,day,df_farmers):
         start_date = df_result_aggregate['date'].min()
         end_date = df_result_aggregate['date'].max()
         frequency = '-' + day + 'D'
@@ -155,6 +155,7 @@ def get_grouped_data(df_result_aggregate,day):
             data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = data['aggregator_incentive']
 
             data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
+            data_by_grouped_days.loc[index,'distinct_farmer_count'] = df_farmers.where((df_farmers['date'] > end_date) & (df_farmers['date']<=start_date))['farmer_id'].nunique()
 
         data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
         return data_by_grouped_days
@@ -202,10 +203,14 @@ def get_data_from_myisam(get_total):
 
     cumm_vol_farmer = {}
     if get_total == 0:
+        df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
+        df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
+        print df_farmers.head()
+        print df_farmers.shape
         dictionary = {}
         days = ['7','15','30','60']
         for day in days:
-            data_by_grouped_days = get_grouped_data(df_result_aggregate,day)
+            data_by_grouped_days = get_grouped_data(df_result_aggregate,day,df_farmers)
             dictionary[day] = list(data_by_grouped_days.values())
 
         df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()

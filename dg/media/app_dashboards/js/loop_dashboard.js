@@ -455,20 +455,22 @@ function plot_cards_data() {
     var c_amt = [];
     var c_cpk = [],
         c_sustainability = [],
-        c_active_clusters = [];
+        c_active_clusters = [], c_active_farmers = [];
     for (var i = 0; i < len_group; i++) {
         var active_cluster = days_by_group[i]['active_cluster'];
+        var farmer_count = days_by_group[i]['distinct_farmer_count'];
         var vol = parseFloat(days_by_group[i][QUANTITY__SUM]);
         var amt = parseFloat(days_by_group[i][AMOUNT__SUM]);
         var cost = parseFloat(days_by_group[i]['transportation_cost__sum']) + parseFloat(days_by_group[i]['aggregator_incentive__sum']);
         var recovered = parseFloat(days_by_group[i]['farmer_share__sum']) + parseFloat(days_by_group[i]['gaddidar_share__sum']);
         var cpk = parseFloat(cost) / parseFloat(vol);
         var spk = (parseFloat(recovered) / parseFloat(cost)) * 100;
-        c_vol.push(vol.toFixed(2));
-        c_amt.push(amt.toFixed(2));
+        c_vol.push(vol);
+        c_amt.push(amt);
         c_cpk.push(cpk.toFixed(2));
         c_sustainability.push(spk.toFixed(2));
         c_active_clusters.push(active_cluster);
+        c_active_farmers.push(farmer_count)
     }
     // var avg = get_average(); // Retunts [avg_vol, active_farmers, avg_amt, active_clusters,avg_gaddidar_share]
     // var avg_vol = avg[0];
@@ -482,8 +484,8 @@ function plot_cards_data() {
     $('#recent_volume_sparkline').sparkline(c_vol.reverse(), sparkline_option);
 
     // var active_farmers = avg[1];
-    // document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + active_farmers[0];
-    // $('#recent_active_farmers_sparkline').sparkline(active_farmers.reverse(), sparkline_option);
+    document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + c_active_farmers[0];
+    $('#recent_active_farmers_sparkline').sparkline(c_active_farmers.reverse(), sparkline_option);
 
     // var avg_amt = avg[2];
     document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(c_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
