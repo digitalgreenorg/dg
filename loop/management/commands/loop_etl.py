@@ -177,6 +177,20 @@ class LoopStatistics():
             end_time = time.time()
             print "Total time taken (secs) : %f" % (end_time-start_time)
 
+            ct_outer_merge_dt = pd.merge(df_ct,df_dt,left_on=['date','user_created__id','mandi__id'],right_on=['date','user_created__id','mandi__id'],how='outer')
+
+            if ct_outer_merge_dt.shape == ct_merge_dt.shape:
+                print "successfully Completed"
+            else:
+                print "Issue: Some aggregator has DT but no CT corresponding to date(s).", ct_outer_merge_dt.shape
+
+            # # Create a Pandas Excel writer using XlsxWriter as the engine.
+            # writer = pd.ExcelWriter('loop_etl.xlsx', engine='xlsxwriter')
+            # # Convert the dataframe to an XlsxWriter Excel object.
+            # result.to_excel(writer, sheet_name='MyISAM Table')
+            # # Close the Pandas Excel writer and output the Excel file.
+            # writer.save()
+
         except Exception as e:
             print "Error : %s" % (e)
             sys.exit(1)
