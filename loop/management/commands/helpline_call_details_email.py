@@ -42,7 +42,7 @@ class Command(BaseCommand):
                 yesterday_resolved_call_count = call_count['count']
             elif call_count['call_status'] == 2:
                 yesterday_declined_call_count = call_count['count']
-            else
+            else:
                 pass
         self.send_mail(yesterday_incoming_call_count,
             yesterday_off_hours_incoming_call_count,
