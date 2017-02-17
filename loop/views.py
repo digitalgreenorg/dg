@@ -239,13 +239,6 @@ def total_static_data(request):
     return HttpResponse(data)
 
 
-# def aggregator_incentive_for_total_static_data():
-#     aggregator_incentive_list = calculate_aggregator_incentive()
-#     total_aggregator_incentive = 0
-#     for entry in aggregator_incentive_list:
-#         total_aggregator_incentive += entry['amount']
-#     return round(total_aggregator_incentive,2)
-
 def calculate_inc_default(V):
     return 0.25*V
 
@@ -321,14 +314,6 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     return result
 
 
-# def gaddidar_contribution_for_totat_static_data():
-#     gaddidar_share_list = calculate_gaddidar_share(None, None, None, None)
-#     total_share = 0
-#     for entry in gaddidar_share_list:
-#         total_share += entry['amount']
-#     return round(total_share,2)
-
-
 def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
     parameters_dictionary = {'mandi__in': mandi_list}
     parameters_dictionary_for_outliers = {'aggregator__user__in': aggregator_list, 'mandi__in': mandi_list}
@@ -395,19 +380,7 @@ def crop_language_data(request):
 
 
 def recent_graphs_data(request):
-    # stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
-        # '-date').annotate(Sum('quantity'))
-    # transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
-        # '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))[:1]
-    # dates = CombinedTransaction.objects.values_list('date', flat=True).distinct().order_by('-date')
-
-    # gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)[:10]
-    # aggregator_incentive_cost = calculate_aggregator_incentive()[:10]
-
     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0)
-    # aggregated_result = aggregated_result.to_dict(orient="index")
-    # cummulative_vol_farmer = pd.DataFrame(list(CombinedTransaction.objects.values('date').order_by('date').annotate(Sum('quantity'),Count('farmer_id',distinct=True))))
-    # print cummulative_vol_farmer.head()
 
     chart_dict = {'aggregated_result':aggregated_result, 'cummulative_vol_farmer':cummulative_vol_farmer}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
@@ -640,12 +613,6 @@ def payments(request):
 
     aggregator_incentive = calculate_aggregator_incentive(start_date,end_date)
 
-    # aggregator_outlier = AggregatorShareOutliers.objects.annotate(user_created__id=F('aggregator__user_id'),
-    #                                                               mandi__name=F('mandi__mandi_name_en')).values("date",
-    #                                                                                                             "mandi__name",
-    #                                                                                                             "amount",
-    #                                                                                                             "comment",
-    #                                                                                                             "user_created__id")
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
                       outlier_transport_data), 'gaddidar_data': gaddidar_data, 'aggregator_data': list(aggregator_data),
