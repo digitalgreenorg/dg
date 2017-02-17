@@ -7,7 +7,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.utils.timezone import now
 
 import dg.settings
-from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing
+from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, HelplineCallLog
 
 class Command(BaseCommand):
 
