@@ -237,12 +237,12 @@ def total_static_data(request):
     return HttpResponse(data)
 
 
-def aggregator_incentive_for_total_static_data():
-    aggregator_incentive_list = calculate_aggregator_incentive()
-    total_aggregator_incentive = 0
-    for entry in aggregator_incentive_list:
-        total_aggregator_incentive += entry['amount']
-    return round(total_aggregator_incentive,2)
+# def aggregator_incentive_for_total_static_data():
+#     aggregator_incentive_list = calculate_aggregator_incentive()
+#     total_aggregator_incentive = 0
+#     for entry in aggregator_incentive_list:
+#         total_aggregator_incentive += entry['amount']
+#     return round(total_aggregator_incentive,2)
 
 def calculate_inc_default(V):
     return 0.25*V
@@ -319,12 +319,12 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     return result
 
 
-def gaddidar_contribution_for_totat_static_data():
-    gaddidar_share_list = calculate_gaddidar_share(None, None, None, None)
-    total_share = 0
-    for entry in gaddidar_share_list:
-        total_share += entry['amount']
-    return round(total_share,2)
+# def gaddidar_contribution_for_totat_static_data():
+#     gaddidar_share_list = calculate_gaddidar_share(None, None, None, None)
+#     total_share = 0
+#     for entry in gaddidar_share_list:
+#         total_share += entry['amount']
+#     return round(total_share,2)
 
 
 def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):

@@ -144,8 +144,10 @@ class LoopStatistics():
             print "After adding aggregator incentive", result.shape
             result.fillna(value=0,axis=1,inplace=True)
 
+            # Getting new farmers who did any transaction on a particular date
             df_farmer_count = pd.read_sql("SELECT T.date, count(T.farmer_id) as distinct_farmer_count FROM ( SELECT farmer_id, min(date) as date FROM loop_combinedtransaction GROUP BY farmer_id) as T GROUP BY T.date",con=self.mysql_cn)
 
+            # Cummulating sum of farmers that were unique and did any transaction till a particular date
             df_farmer_count['cummulative_distinct_farmer'] = df_farmer_count['distinct_farmer_count'].cumsum()
             df_farmer_count.drop(['distinct_farmer_count'],axis=1,inplace=True)
 
