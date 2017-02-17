@@ -211,6 +211,7 @@ def get_data_from_myisam(get_total):
         df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
         df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
         df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum()
+        df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
         cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient="index")
     else:
         df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
@@ -387,11 +388,11 @@ def crop_language_data(request):
 
 
 def recent_graphs_data(request):
-    stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
-        '-date').annotate(Sum('quantity'))
+    # stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
+        # '-date').annotate(Sum('quantity'))
     # transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
         # '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))[:1]
-    dates = CombinedTransaction.objects.values_list('date', flat=True).distinct().order_by('-date')
+    # dates = CombinedTransaction.objects.values_list('date', flat=True).distinct().order_by('-date')
 
     # gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)[:10]
     # aggregator_incentive_cost = calculate_aggregator_incentive()[:10]
@@ -401,7 +402,7 @@ def recent_graphs_data(request):
     # cummulative_vol_farmer = pd.DataFrame(list(CombinedTransaction.objects.values('date').order_by('date').annotate(Sum('quantity'),Count('farmer_id',distinct=True))))
     # print cummulative_vol_farmer.head()
 
-    chart_dict = {'stats': list(stats), 'dates': list(dates),'aggregated_result':aggregated_result, 'cummulative_vol_farmer':cummulative_vol_farmer}
+    chart_dict = {'aggregated_result':aggregated_result, 'cummulative_vol_farmer':cummulative_vol_farmer}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 

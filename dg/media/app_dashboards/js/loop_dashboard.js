@@ -734,7 +734,6 @@ function get_cpk(avg_vol, avg_gaddidar_contribution, avg_aggregator_cost) {
 //To show cummulative farmer and volume graph present on Home page
 function cummulative_farmer_and_volume(cum_vol_farmer) {
     var all_dates = [];
-    // var farmer_ids = [];
     var vol_farmer_length = Object.keys(cum_vol_farmer).length;
     var f_date = new Date(cum_vol_farmer[0]['date']);
     var l_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']);
@@ -743,51 +742,39 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
         f_date.setDate(f_date.getDate() + 1);
     }
 
-    // var first_date = new Date(dates[dates.length - 1]);
-    // while (first_date <= new Date(dates[0])) {
-    //     all_dates.push(first_date.getTime());
-    //     first_date.setDate(first_date.getDate() + 1);
-    // }
+    var total_days = all_dates.length;
 
-    var cumm_volume = new Array(all_dates.length).fill(0.0);
-    var cumm_farmers = new Array(all_dates.length).fill(0.0);
+    var cumm_volume = new Array(total_days).fill(0.0);
+    var cumm_farmers = new Array(total_days).fill(0.0);
     var temp_volume = {};
     temp_volume['name'] = "volume";
     temp_volume['data'] = [];
     temp_volume['type'] = 'spline';
     temp_volume['pointInterval'] = 24 * 3600 * 1000;
-    temp_volume['pointStart'] = all_dates[all_dates.length - 1]; // Pointing to the starting date
+    temp_volume['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
     temp_volume['showInLegend'] = true;
     var temp_farmers = {};
     temp_farmers['name'] = "farmers";
     temp_farmers['data'] = [];
     temp_farmers['type'] = 'spline';
     temp_farmers['pointInterval'] = 24 * 3600 * 1000;
-    temp_farmers['pointStart'] = all_dates[all_dates.length - 1]; // Pointing to the starting date
+    temp_farmers['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
     temp_farmers['showInLegend'] = true;
 
-    var stats_length = stats.length;
-    for (var i = stats_length - 1; i >= 0; i--) {
-        var index = all_dates.indexOf(new Date(stats[i]['date']).getTime());
-        if (farmer_ids.indexOf(stats[i]['farmer__id']) == -1) {
-            farmer_ids.push(stats[i]['farmer__id']);
-            cumm_farmers[index] += 1;
-        }
-        cumm_volume[index] += stats[i][QUANTITY__SUM];
+    for (var i = 0; i < vol_farmer_length; i++){
+        var index = all_dates.indexOf(new Date(cum_vol_farmer[i]['date']).getTime());
+        cumm_farmers[index] = cum_vol_farmer[i]['cum_distinct_farmer'];
+        cumm_volume[index] = cum_vol_farmer[i]['cum_vol'];
     }
 
-    temp_volume['data'].push([all_dates[0], cumm_volume[0]]);
-    temp_farmers['data'].push([all_dates[0], cumm_farmers[0]]);
-
-    for (var i = 1; i < cumm_volume.length; i++) {
-        cumm_volume[i] += cumm_volume[i - 1];
-        cumm_farmers[i] += cumm_farmers[i - 1];
-        temp_volume['data'].push([all_dates[i], cumm_volume[i]]);
-        temp_farmers['data'].push([all_dates[i], cumm_farmers[i]]);
+    for (var i=0;i<total_days;i++){
+      if(cumm_farmers[i]==0){
+        cumm_farmers[i]=cumm_farmers[i-1];
+        cumm_volume[i]=cumm_volume[i-1];
+      }
+      temp_volume['data'].push([all_dates[i], cumm_volume[i]]);
+      temp_farmers['data'].push([all_dates[i], cumm_farmers[i]]);
     }
-
-    // for (var i = 0; i < vol_farmer_length - 1;i++){
-    // }
 
     var series = [];
     series.push(temp_volume);
