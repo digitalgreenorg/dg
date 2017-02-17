@@ -321,7 +321,6 @@ var timeSeriesDetailOptions = {
             text: null
         },
         maxZoom: 0.1
-
     }, {
         title: {
             text: null
@@ -455,7 +454,8 @@ function plot_cards_data() {
     var c_amt = [];
     var c_cpk = [],
         c_sustainability = [],
-        c_active_clusters = [], c_active_farmers = [];
+        c_active_clusters = [],
+        c_active_farmers = [];
     for (var i = 0; i < len_group; i++) {
         var active_cluster = days_by_group[i]['active_cluster'];
         var farmer_count = days_by_group[i]['distinct_farmer_count'];
@@ -737,11 +737,11 @@ function plot_cards_data() {
 function cummulative_farmer_and_volume(cum_vol_farmer) {
     var all_dates = [];
     var vol_farmer_length = Object.keys(cum_vol_farmer).length;
-    var f_date = new Date(cum_vol_farmer[0]['date']);
-    var l_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']);
-    while (f_date <= l_date) {
-        all_dates.push(f_date.getTime());
-        f_date.setDate(f_date.getDate() + 1);
+    var first_date = new Date(cum_vol_farmer[0]['date']);
+    var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']);
+    while (first_date <= last_date) {
+        all_dates.push(first_date.getTime());
+        first_date.setDate(first_date.getDate() + 1);
     }
 
     var total_days = all_dates.length;
@@ -749,33 +749,33 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
     var cumm_volume = new Array(total_days).fill(0.0);
     var cumm_farmers = new Array(total_days).fill(0.0);
     var temp_volume = {};
-    temp_volume['name'] = "volume";
+    temp_volume['name'] = "Volume";
     temp_volume['data'] = [];
     temp_volume['type'] = 'spline';
     temp_volume['pointInterval'] = 24 * 3600 * 1000;
     temp_volume['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
     temp_volume['showInLegend'] = true;
     var temp_farmers = {};
-    temp_farmers['name'] = "farmers";
+    temp_farmers['name'] = "Farmers";
     temp_farmers['data'] = [];
     temp_farmers['type'] = 'spline';
     temp_farmers['pointInterval'] = 24 * 3600 * 1000;
     temp_farmers['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
     temp_farmers['showInLegend'] = true;
 
-    for (var i = 0; i < vol_farmer_length; i++){
+    for (var i = 0; i < vol_farmer_length; i++) {
         var index = all_dates.indexOf(new Date(cum_vol_farmer[i]['date']).getTime());
         cumm_farmers[index] = cum_vol_farmer[i]['cum_distinct_farmer'];
         cumm_volume[index] = cum_vol_farmer[i]['cum_vol'];
     }
 
-    for (var i=0;i<total_days;i++){
-      if(cumm_farmers[i]==0){
-        cumm_farmers[i]=cumm_farmers[i-1];
-        cumm_volume[i]=cumm_volume[i-1];
-      }
-      temp_volume['data'].push([all_dates[i], cumm_volume[i]]);
-      temp_farmers['data'].push([all_dates[i], cumm_farmers[i]]);
+    for (var i = 0; i < total_days; i++) {
+        if (cumm_farmers[i] == 0) {
+            cumm_farmers[i] = cumm_farmers[i - 1];
+            cumm_volume[i] = cumm_volume[i - 1];
+        }
+        temp_volume['data'].push([all_dates[i], cumm_volume[i]]);
+        temp_farmers['data'].push([all_dates[i], cumm_farmers[i]]);
     }
 
     var series = [];
@@ -2240,7 +2240,7 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
     var axis;
 
     $.each(masterChart.series, function() {
-        if (this.name == "volume") {
+        if (this.name == "Volume") {
             axis = 0;
         } else {
             axis = 1;
@@ -2276,24 +2276,23 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
         yAxis: [{
             title: {
                 text: "Volume"
-            },
-            maxZoom: 0.1
+            }
         }, {
             title: {
                 text: "Farmers"
             },
             opposite: true
         }],
-        tooltip: {
-            formatter: function() {
-                var vol = this.points[0];
-                var farmer = this.points[1];
-                return '<b>' + vol.series.name + '</b> : ' +
-                    Highcharts.numberFormat(vol.y, 0) + '<br/>' + '<b>' + farmer.series.name + '</b> : ' +
-                    Highcharts.numberFormat(farmer.y, 0);
-            },
-            shared: true
-        },
+        // tooltip: {
+        //     formatter: function() {
+        //         var vol = this.points[0];
+        //         var farmer = this.points[1];
+        //         return '<b>' + vol.series.name + '</b> : ' +
+        //             Highcharts.numberFormat(vol.y, 0) + '<br/>' + '<b>' + farmer.series.name + '</b> : ' +
+        //             Highcharts.numberFormat(farmer.y, 0);
+        //     },
+        //     shared: true
+        // },
         legend: {
             align: 'right',
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
