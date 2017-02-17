@@ -49,14 +49,14 @@ class State(LoopModel):
     is_visible = models.BooleanField(default=True)
     state_name_en = models.CharField(max_length=100, null=True)
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
-
     def __unicode__(self):
         return self.state_name
 
     class Meta:
         unique_together = ("state_name",)
 
-
+post_save.connect(save_log,sender=State)
+pre_delete.connect(delete_log,sender=State)
 class District(LoopModel):
     id = models.AutoField(primary_key=True)
     district_name = models.CharField(max_length=50)
@@ -151,6 +151,8 @@ class LoopUser(LoopModel):
     def get_mandis(self):
         return self.assigned_mandis.all()
 
+# post_save.connect(save_log,sender=LoopUser)
+# post_save.connect(delete_log,sender=LoopUser)
 
 class LoopUserAssignedMandi(LoopModel):
     id = models.AutoField(primary_key=True)

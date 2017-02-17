@@ -104,6 +104,10 @@ def save_log(sender, **kwargs):
         village_id = None
         user = instance.user_created
         loop_user=None
+    elif sender == "State":
+        village_id=None
+        user = instance.user_created
+        loop_user = None
     else:           # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -190,6 +194,10 @@ def delete_log(sender, **kwargs):
         loop_user = instance.loop_user
         sender = "Village"
         model_id = instance.village.id
+    elif sender == "State":
+        village_id = None
+        user = instance.user_created
+        loop_user = None
     else:               # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -226,6 +234,7 @@ def get_latest_timestamp():
 @csrf_exempt
 def send_updated_log(request):
     if request.method == 'POST':
+        print request.POST['ApiKey']
         apikey = request.POST['ApiKey']
         timestamp = request.POST['timestamp']
         if timestamp:
@@ -300,8 +309,8 @@ def send_updated_log(request):
 
             gaddidar_commission_rows = Log.objects.filter(
                 timestamp__gt=timestamp,entry_table__in=['GaddidarCommission'])
-            
             for gcrow in gaddidar_commission_rows:
+                print gcrow.id
                 list_rows.append(Log.objects.filter(id=gcrow.id))
 
             list_rows.append(Log.objects.filter(
