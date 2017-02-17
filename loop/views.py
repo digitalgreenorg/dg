@@ -133,32 +133,33 @@ def filter_data(request):
     return HttpResponse(data)
 
 def get_grouped_data(df_result_aggregate,day,df_farmers):
-        start_date = df_result_aggregate['date'].min()
-        end_date = df_result_aggregate['date'].max()
-        frequency = '-' + day + 'D'
-        data_by_grouped_days = pd.DataFrame(pd.date_range(end_date,start_date,freq=frequency),columns={'start_date'})
-        data_by_grouped_days['end_date'] = data_by_grouped_days['start_date'].shift(-1)
-        data_by_grouped_days.fillna(value=0,inplace=True,axis=1)
+    start_date = df_result_aggregate['date'].min()
+    end_date = df_result_aggregate['date'].max()
+    frequency = '-' + day + 'D'
+    data_by_grouped_days = pd.DataFrame(pd.date_range(end_date,start_date,freq=frequency),columns={'start_date'})
+    data_by_grouped_days['end_date'] = data_by_grouped_days['start_date'].shift(-1)
+    data_by_grouped_days.fillna(value=0,inplace=True,axis=1)
 
-        df_result_aggregate['date'] = df_result_aggregate['date'].astype('datetime64[ns]')
-        for index,row in data_by_grouped_days.iterrows():
-            end_date = row['end_date']
-            start_date = row['start_date']
+    df_result_aggregate['date'] = df_result_aggregate['date'].astype('datetime64[ns]')
+    for index,row in data_by_grouped_days.iterrows():
+        end_date = row['end_date']
+        start_date = row['start_date']
 
-            data =  pd.Series(pd.DataFrame(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))).sum(numeric_only=True))
+        data =  pd.Series(pd.DataFrame(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))).sum(numeric_only=True))
 
-            data_by_grouped_days.loc[index,'amount__sum'] = data['amount']
-            data_by_grouped_days.loc[index,'quantity__sum'] = data['quantity']
-            data_by_grouped_days.loc[index,'farmer_share__sum'] = data['farmer_share']
-            data_by_grouped_days.loc[index,'transportation_cost__sum'] = data['transportation_cost']
-            data_by_grouped_days.loc[index,'gaddidar_share__sum'] = data['gaddidar_share']
-            data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = data['aggregator_incentive']
+        data_by_grouped_days.loc[index,'amount__sum'] = data['amount']
+        data_by_grouped_days.loc[index,'quantity__sum'] = data['quantity']
+        data_by_grouped_days.loc[index,'farmer_share__sum'] = data['farmer_share']
+        data_by_grouped_days.loc[index,'transportation_cost__sum'] = data['transportation_cost']
+        data_by_grouped_days.loc[index,'gaddidar_share__sum'] = data['gaddidar_share']
+        data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = data['aggregator_incentive']
 
-            data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
-            data_by_grouped_days.loc[index,'distinct_farmer_count'] = df_farmers.where((df_farmers['date'] > end_date) & (df_farmers['date']<=start_date))['farmer_id'].nunique()
+        data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
 
-        data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
-        return data_by_grouped_days
+        data_by_grouped_days.loc[index,'distinct_farmer_count'] = df_farmers.where((df_farmers['date'] > end_date) & (df_farmers['date']<=start_date))['farmer_id'].nunique()
+
+    data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
+    return data_by_grouped_days
 
 
 def get_data_from_myisam(get_total):
@@ -198,6 +199,7 @@ def get_data_from_myisam(get_total):
         }
     }
 
+    # MyISAM table contains CT, DT, Gaddidar, AggregatorIncentive.
     df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
     df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
 
@@ -205,14 +207,14 @@ def get_data_from_myisam(get_total):
     if get_total == 0:
         df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
         df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
-        print df_farmers.head()
-        print df_farmers.shape
+
         dictionary = {}
         days = ['7','15','30','60']
         for day in days:
             data_by_grouped_days = get_grouped_data(df_result_aggregate,day,df_farmers)
             dictionary[day] = list(data_by_grouped_days.values())
 
+        # Calcualting cummulative volume and farmer count
         df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
         df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
         df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum()

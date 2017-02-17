@@ -154,6 +154,8 @@ class LoopStatistics():
             result = pd.merge(result,df_farmer_count,left_on='date',right_on='date',how='left')
             result['cummulative_distinct_farmer'].fillna(method='ffill',inplace=True)
 
+            # Final result DataFrame contains same value for transportation_cost, farmer share, aggregator_incentive where date,aggregator_id,mandi are same but gaddidar_id is different.
+            # Also cummulative_distinct_farmer is same where date is same but aggregator_id,gaddidar_id,mandi_id are different
             print "After adding cummulative distinct farmer ", result.shape
 
             for index,row in result.iterrows():
