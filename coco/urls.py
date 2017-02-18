@@ -26,6 +26,7 @@ from views import login
 from views import logout
 from views import record_full_download_time
 from views import reset_database_check
+from views import upload_data
 
 v1_api = Api(api_name='v2')
 v1_api.register(DistrictResource())
@@ -54,4 +55,5 @@ urlpatterns = patterns('',
     url(r'^faq/$', TemplateView.as_view(template_name='faq.html'), name="faq"),
     (r'^record_full_download_time/', record_full_download_time),
     (r'^reset_database_check/', reset_database_check),
+    (r'^upload/data/', upload_data),
 )

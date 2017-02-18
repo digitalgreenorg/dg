@@ -8,6 +8,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         events: {
             "click #sync": "sync",
             "click #inc_download": "inc_download",
+            "click #export": "export",
         },
         item_template: _.template($("#dashboard_item_template")
             .html()),
@@ -235,6 +236,47 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             });
             return dfd;
         },
+
+        
+        export: function() {
+            var that = this;
+        //     var village = Offline.fetch_collection("village")
+        //                                 .done(function(collection) {
+        //                                     // id-json dictionary of inline models - later used to extend the modified inlines
+        //                                     var village_collection = JSON.stringify(collection.toJSON())
+        //                                     // render the inlines into the form
+        //                                 })
+        //                                 .fail(function() {
+        //                                     console.log("ERROR: EDIT: Inline collection could not be fetched!");
+        //                                     var village_collection = {}
+        //                                 });
+
+        // console.log(village_collection);
+
+            var trans = db.transaction(storeName, IDBTransaction.READ_ONLY);
+            var store = trans.objectStore(storeName);
+            var items = [];
+         
+            trans.oncomplete = function(evt) {  
+                callback(items);
+            };
+         
+            var cursorRequest = store.openCursor();
+         
+            cursorRequest.onerror = function(error) {
+                console.log(error);
+            };
+         
+            cursorRequest.onsuccess = function(evt) {                    
+                var cursor = evt.target.result;
+                if (cursor) {
+                    items.push(cursor.value);
+                    cursor.continue();
+                }
+            };
+        },
+
+
 
         //method to initiate upload
         upload: function() {
