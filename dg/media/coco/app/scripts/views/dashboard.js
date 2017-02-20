@@ -8,6 +8,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         events: {
             "click #sync": "sync",
             "click #inc_download": "inc_download",
+            "click #export": "export",
         },
         item_template: _.template($("#dashboard_item_template")
             .html()),
@@ -58,11 +59,11 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     enable_months = configs[member].dashboard_display.enable_months;
                 }
                 if(typeof enable_months != 'undefined'){
-                	var d = new Date();
+                  var d = new Date();
                     n = d.getMonth() + 1;
                     res = $.inArray(n, enable_months);
                     if(res === -1){
-                    	add = false;
+                      add = false;
                     }
                 }
                 if (listing || add) {
@@ -116,7 +117,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 $('#sync').attr('disabled', true);
             }
         },
-        
+         
         //enable add, list links
         db_downloaded: function() {
             $('.list_items')
@@ -236,7 +237,119 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             return dfd;
         },
 
+        exportCheck: function(entity){
+            var dfd_Village = $.Deferred();
+            var dfd_Mediator = $.Deferred();
+            var dfd_Group = $.Deferred();
+            var dfd_Screening = $.Deferred();
+            var dfd_Adoption = $.Deferred();
+            var dfd_Video = $.Deferred(); 
+            var dfd_Person = $.Deferred();
+            var i=0;
+            var res=[];
+            
+
+               Offline.fetch_collection(entity[i++])
+                                        .done(function(collection) {
+                                           data=collection;
+                                            dfd_Village.resolve(data.toJSON());
+
+                                        })
+                                        .fail(function() {
+                                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                                            dfd_Village.resolve();
+                                        });
+                                            
+                Offline.fetch_collection(entity[i++])
+                                        .done(function(collection) {
+                                           data=collection.toJSON();
+                                            dfd_Mediator.resolve(data);
+
+                                        })
+                                        .fail(function() {
+                                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                                            dfd_Mediator.resolve();
+                                        });             
+
+                Offline.fetch_collection(entity[i++])
+                                        .done(function(collection) {
+                                           data=collection.toJSON();
+                                            dfd_Screening.resolve(data);
+                                            console.log(JSON.stringify(data));
+
+                                        })
+                                        .fail(function() {
+                                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                                            dfd_Screening.resolve();
+                                        });                           
+                Offline.fetch_collection(entity[i++])
+                                        .done(function(collection) {
+                                           data=collection.toJSON();
+                                            dfd_Adoption.resolve(data);
+
+                                        })
+                                        .fail(function() {
+                                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                                            dfd_Adoption.resolve();
+                                        });
+                Offline.fetch_collection(entity[i++])
+                                        .done(function(collection) {
+                                           data=collection.toJSON();
+                                            dfd_Person.resolve(data);
+
+                                        })
+                                        .fail(function() {
+                                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                                            dfd_Person.resolve();
+                                        });
+                Offline.fetch_collection(entity[i++])
+                                        .done(function(collection) {
+                                           data=collection.toJSON();
+                                            dfd_Video.resolve(data);
+
+                                        })
+                                        .fail(function() {
+                                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                                            dfd_Video.resolve();
+                                        });
+                Offline.fetch_collection(entity[i++])
+                                        .done(function(collection) {
+                                           data=collection.toJSON();
+                                            dfd_Group.resolve(data);
+
+                                        })
+                                        .fail(function() {
+                                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                                            dfd_Group.resolve();
+                                        });
+            res.push(dfd_Village);
+            res.push(dfd_Mediator);
+            res.push(dfd_Screening);
+            res.push(dfd_Adoption);
+            res.push(dfd_Person);
+            res.push(dfd_Video);
+            res.push(dfd_Group);
+            return Promise.all(res);
+            
+        },
+        export: function() {
+            var that = this;
+            listing = ["village","mediator","screening","adoption","person","video","group"];
+            var a = that.exportCheck(listing).then(function(result){
+
+                var opts = [{sheetid:'village',header:true},{sheetid:'mediator',header:false},{sheetid:'screening',header:false}
+                ,{sheetid:'adoption',header:false},{sheetid:'person',header:false},{sheetid:'video',header:false},{sheetid:'group',header:false}];
+                var res = alasql('SELECT INTO XLSX("Tester.xlsx",?) FROM ?',
+                     [opts,[result[0], result[1], result[3]]]);
+            });
+            
+        },
         //method to initiate upload
+        setCollections: function(collection,data){
+            collection = data;
+            console.log("setCollections"+collection);
+        },
+
         upload: function() {
             var dfd = $.Deferred();
             if (!this.upload_v) {
