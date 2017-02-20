@@ -260,9 +260,9 @@ def send_updated_log(request):
             GaddidarCommission = get_model('loop','GaddidarCommission')
             Transporter = get_model('loop', 'Transporter')
             TransportationVehicle = get_model('loop', 'TransportationVehicle')
-
+            State = get_model('loop','State')
             list_rows = []
-
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle']))
             village_list_queryset = Log.objects.filter(

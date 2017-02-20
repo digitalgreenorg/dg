@@ -49,6 +49,7 @@ class State(LoopModel):
     is_visible = models.BooleanField(default=True)
     state_name_en = models.CharField(max_length=100, null=True)
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
+    crop_add = models.BooleanField(default=False)
     def __unicode__(self):
         return self.state_name
 
