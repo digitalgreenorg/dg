@@ -21,16 +21,9 @@ class Command(BaseCommand):
         subject = "Loop IVR Helpline Call Status"
         from_email = dg.settings.EMAIL_HOST_USER
         to_email = ['vikas@digitalgreen.org']
-        body = 'Dear Team,\n\nThis is the status of calls:\n\n \
-                Total Pending Calls:%s\n \
-                Total Declined Calls: %s\n \
-                Total Declined Calls on %s: %s\n \
-                Total Receiving Calls During Off Hours on %s:%s\n\n \
-                Please contact system@digitalgreen.org for any clarification.\n\n \
-                Thank you.\n \
-                '%(total_pending_call_count,total_declined_call_count,
-                    yesterday_date,yesterday_declined_call_count,
-                    yesterday_date,yesterday_off_hours_incoming_call_count)
+        body = 'Dear Team,\n\nThis is the status of calls:\n\n Total Pending Calls:%s\n Total Declined Calls: %s\n Total Declined Calls on %s: %s\n Total Receiving Calls During Off Hours on %s:%s\n\n Please contact system@digitalgreen.org for any clarification.\n\n Thank you.\n '%(total_pending_call_count,total_declined_call_count,
+                                                                                                                                                                                                                                                                                    yesterday_date,yesterday_declined_call_count,
+                                                                                                                                                                                                                                                                                    yesterday_date,yesterday_off_hours_incoming_call_count)
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         msg.send()
 
