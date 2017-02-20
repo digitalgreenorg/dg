@@ -27,15 +27,22 @@ class Command(BaseCommand):
         msg.send()
 
     def handle(self, *args, **options):
-        today_date = datetime.datetime.now().date()
-        yesterday_date = today_date-timedelta(days=1)
-        yesterday_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date,start_time__lt=today_date).count()
-        yesterday_call_count = HelplineIncoming.objects.filter(last_incoming_time__gte=yesterday_date,last_incoming_time__lt=today_date).values('call_status').annotate(count=Count('call_status'))
-        yesterday_resolved_call_count = yesterday_pending_call_count = yesterday_declined_call_count = 0
+        #today_date = datetime.datetime.now().date()
+        #yesterday_date = today_date-timedelta(days=1)
+        #yesterday_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date,start_time__lt=today_date).count()
+        #yesterday_call_count = HelplineIncoming.objects.filter(last_incoming_time__gte=yesterday_date,last_incoming_time__lt=today_date).values('call_status').annotate(count=Count('call_status'))
+        #yesterday_resolved_call_count = yesterday_pending_call_count = yesterday_declined_call_count = 0
         # Change dates from Yesterday 6:00 PM to Today 9:00 AM (Non-Operational Hours of Helpline) 
-        today_date = datetime.datetime.now().replace(hour=7,minute=0,second=0)
+        today_date = datetime.datetime.now().replace(hour=9,minute=0,second=0)
         yesterday_date = (today_date-timedelta(days=1)).replace(hour=18,minute=0,second=0)
-        yesterday_off_hours_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date,start_time__lt=today_date).count()
+
+        total_pending_call_count = HelplineIncoming.objects.filter(call_status=0).count()
+        total_declined_call_count = HelplineIncoming.objects.filter(call_status=2).count()
+        yesterday_off_hours_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date,start_time__lte=today_date).count()
+
+        #yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2).count()
+        
+        '''
         for call_count in yesterday_call_count:
             if call_count['call_status'] == 0:
                 yesterday_pending_call_count = call_count['count']
@@ -45,6 +52,7 @@ class Command(BaseCommand):
                 yesterday_declined_call_count = call_count['count']
             else:
                 pass
+        '''
         self.send_mail(yesterday_incoming_call_count,
             yesterday_off_hours_incoming_call_count,
             yesterday_pending_call_count,yesterday_resolved_call_count,
