@@ -183,13 +183,7 @@ class LoopStatistics():
                 print "successfully Completed"
             else:
                 print "Issue: Some aggregator has DT but no CT corresponding to date(s).", ct_outer_merge_dt.shape
-
-            # # Create a Pandas Excel writer using XlsxWriter as the engine.
-            # writer = pd.ExcelWriter('loop_etl.xlsx', engine='xlsxwriter')
-            # # Convert the dataframe to an XlsxWriter Excel object.
-            # result.to_excel(writer, sheet_name='MyISAM Table')
-            # # Close the Pandas Excel writer and output the Excel file.
-            # writer.save()
+            print "=================================="
 
         except Exception as e:
             print "Error : %s" % (e)
@@ -200,6 +194,7 @@ class Command(BaseCommand):
     arguments : mysql_root_username, mysql_root_password '''
 
     def handle(self,*args,**options):
+        print("Log")
         print("LOOP ETL LOG")
         print(datetime.date.today())
         loop_statistics = LoopStatistics()
