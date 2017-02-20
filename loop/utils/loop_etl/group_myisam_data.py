@@ -31,7 +31,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
 
         data_by_grouped_days.loc[index,'distinct_farmer_count'] = df_farmers.where((df_farmers['date'] > end_date) & (df_farmers['date']<=start_date))['farmer_id'].nunique()
 
-    data_by_grouped_days = data_by_grouped_days.to_dict(orient="index")
+    data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
 
@@ -92,9 +92,9 @@ def get_data_from_myisam(get_total):
         df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
         df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum()
         df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
-        cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient="index")
+        cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
     else:
         df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
         df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
-        dictionary = df.to_dict(orient="index")
+        dictionary = df.to_dict(orient='index')
     return dictionary, cumm_vol_farmer

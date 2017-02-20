@@ -8,7 +8,6 @@ from loop.models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Far
 import subprocess
 import MySQLdb
 import datetime, time
-import subprocess
 import pandas as pd
 import numpy as np
 from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
