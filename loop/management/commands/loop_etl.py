@@ -182,7 +182,7 @@ class LoopStatistics():
                 print "successfully Completed"
             else:
                 print "Issue: Some aggregator has DT but no CT corresponding to date(s).", ct_outer_merge_dt.shape
-            print ct_outer_merge_dt[ct_outer_merge_dt.isnull().any(axis=1)]
+            # print ct_outer_merge_dt[ct_outer_merge_dt.isnull().any(axis=1)]
             print "=================================="
 
 
