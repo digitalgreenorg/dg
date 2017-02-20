@@ -12,6 +12,28 @@ from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, Help
 
 class Command(BaseCommand):
 
+    def send_mail(self,total_pending_call_count,
+            total_declined_call_count,
+            yesterday_declined_call_count,
+            yesterday_off_hours_incoming_call_count):
+        today_date = datetime.datetime.now().date()
+        yesterday_date = today_date-timedelta(days=1)
+        subject = "Loop IVR Helpline Call Status"
+        from_email = dg.settings.EMAIL_HOST_USER
+        to_email = ['vikas@digitalgreen.org']
+        body = 'Dear Team,\n\nThis is the status of calls:\n\n \
+                Total Pending Calls:%s\n \
+                Total Declined Calls: %s\n \
+                Total Declined Calls on %s: %s\n \
+                Total Receiving Calls During Off Hours on %s:%s\n\n \
+                Please contact system@digitalgreen.org for any clarification.\n\n \
+                Thank you.\n \
+                '%(total_pending_call_count,total_declined_call_count,
+                    yesterday_date,yesterday_declined_call_count,
+                    yesterday_date,yesterday_off_hours_incoming_call_count)
+        msg = EmailMultiAlternatives(subject, body, from_email, to_email)
+        msg.send()
+
     def handle(self, *args, **options):
         today_date = datetime.datetime.now().date()
         yesterday_date = today_date-timedelta(days=1)
@@ -22,4 +44,7 @@ class Command(BaseCommand):
         total_pending_call_count = HelplineIncoming.objects.filter(call_status=0).count()
         total_declined_call_count = HelplineIncoming.objects.filter(call_status=2).count()
         yesterday_off_hours_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date,start_time__lte=today_date).count()
-
+        self.send_mail(total_pending_call_count,
+            total_declined_call_count,
+            yesterday_declined_call_count,
+            yesterday_off_hours_incoming_call_count)
