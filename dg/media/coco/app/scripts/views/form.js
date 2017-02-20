@@ -315,6 +315,18 @@ define([
                         that.model_json = model.toJSON();
                         // normalise json to put into form
                         that.normalize_json(that.model_json);
+                        // fields to hide
+                        if (that.entity_config.show_health_provider_present != that.model_json.parentcategory){
+                            
+                            that.$el.find("#"+that.entity_config.parent_element_label_to_hide).addClass('hidden');
+                            that.$el.find("#id_"+that.entity_config.parent_element_to_hide).addClass('hidden');
+                        }
+                        // text to select
+                        if (that.entity_config.text_to_select_display_hack){
+                            var adopt_practice_val = that.model_json.adopt_practice;
+                            that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ adopt_practice_val +"]").attr('selected', 'selected')
+                            $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
+                        }
                         // put into form
                         that.fill_form();
                     })
@@ -536,23 +548,51 @@ define([
             if (this.$el.find('#id_' + parent_element).val() == "2" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
                 // hide the headers
                 this.$el.find('th#id_member_adopt, th#id_recall_nonnegotiable, td#id_recall_nonnegotiable, td#id_member_adopt').addClass('hidden');
-                this.$el.find("td#id_adopt_practice, div#id_recall_nonnegotiable").addClass("hidden");
+                this.$el.find("div#id_adopt_practice, div#id_recall_nonnegotiable").addClass("hidden");
+                this.$el.find("#label_health_provider_present, #id_health_provider_present").addClass('hidden');
             }
             if (this.$el.find('#id_' + parent_element).val() == "1" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
                 this.$el.find("th#id_member_adopt, th#id_recall_nonnegotiable").removeClass("hidden");
+                this.$el.find("#label_health_provider_present, #id_health_provider_present").removeClass('hidden');
             }
 
 
         },
 
+        // check if element value inside array is empty
+        checkArrayElementisnotEmpty: function(arr, that){
+           for(var i=0; i < arr.length; i++){
+               if(that.$el.find(arr[i]).val() === "")   
+                  return false;
+           }
+           return true;
+        },
+
         // render dependent foreign elements - executes when a source element changes
         render_dep_for_elements: function(ev) {
             var source = $(ev.target).attr("name"); //source changed
+            var arr = this.entity_config.combination_display_field_with_value
             console.log("FILLING DEP ENTITIES OF -" + source);
             // Iterate over its dependents
             _.each(this.source_dependents_map[source], function(dep_el) {
                 var filtered_models = this.filter_dep_for_element(dep_el);
                 this.render_foreign_element(dep_el, filtered_models);
+                var arr = this.entity_config.combination_display_field_with_value
+                var combination_field_to_display = this.entity_config.combination_display_field
+                if (!jQuery.isEmptyObject(arr) && this.checkArrayElementisnotEmpty(arr, this)){
+                    this.$el.find(combination_field_to_display).prop("disabled", false);
+                    this.$el.find(combination_field_to_display).trigger("chosen:updated");
+                }
+                if (!jQuery.isEmptyObject(arr) && !this.checkArrayElementisnotEmpty(arr, this)){
+                   this.$el.find(combination_field_to_display).prop("disabled", true);
+                   this.$el.find(combination_field_to_display).trigger("chosen:updated");
+                }
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length == 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).addClass('hidden');
+                }
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length != 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).removeClass('hidden');
+                }
                 this.action_after_render_foreign_element(this.entity_config.fetch_element_that_manipulate, dep_el)
             }, this);
 
@@ -758,6 +798,7 @@ define([
                     if (f_entity_desc.id_field)
                         id_field = f_entity_desc.id_field;
                     var collection = this.get_collection_of_element(element);
+                    var cat = [];
                     $.each(this.model_json[element], function(index, f_json) {
                         model = collection.get(f_json[id_field]);
                         if (!model)
@@ -768,7 +809,13 @@ define([
                             t_json[field] = f_json[field];
                         });
                         $f_el.append(expanded_template(t_json));
-
+                        if (t_json.category && t_json.category.length >= 1){
+                            _.each(t_json.category, function(iterable, idx){    
+                                if (iterable.id != 'undefined'){
+                                    $f_el.find(".category_row7_" + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');    
+                                }
+                            })
+                        }
                     });
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
@@ -1016,6 +1063,7 @@ define([
             var desc = this.foreign_entities[entity][element]
             var fetch_element = this.entity_config.fetch_element
             var fetch_element_key = this.entity_config.fetch_key_element
+            var child_element = this.entity_config.fetch_child_element
             console.log("FORM:expande desc -" + JSON.stringify(desc));
             var placeholder = desc.expanded.placeholder;
             var all_inlines = $('#' + placeholder + ' tr');
@@ -1043,12 +1091,32 @@ define([
     						inl_obj[attr_name] = this.checked;
     				}
                 });
+                // checking category from inline and then converting inlines request ids to actual objects
+                if (inl_obj.category && inl_obj.category.length >= 0){
+                    var category = []
+                    _.each(inl_obj.category, function(idx, iter){ 
+                        Offline.fetch_object(child_element, fetch_element_key, parseInt(idx))
+                            .done(function(model_var) {
+                                category.push({'id': model_var.attributes.id, 'category': model_var.attributes.direct_beneficiaries_category})
+                                inl_obj.category = category;
+                            })
+                            .fail(function() {
+                                // edit object could not be fetched from offline db
+                                //TODO: error handling
+                                console.log("ERROR: EDIT: Edit model could not be fetched!");
+                                alert("ERROR: EDIT:");
+                            });
+                    })
+                
+                    
+                }
                 raw_json[element].push(inl_obj);
                 if (fetch_element != null){
+                   // saving in fetch_element offline table
+                   var category = []
                    Offline.fetch_object(fetch_element, fetch_element_key, parseInt(inl_obj.person_id))
                     .done(function(model) {
-                        model.save({'age': inl_obj.age, 'pma_direct_beneficiariescategory': inl_obj.category, 'gender': inl_obj.gender});
-
+                        model.save({'age': inl_obj.age, 'category': inl_obj.category, 'gender': inl_obj.gender});
                     })
                     .fail(function() {
                         // edit object could not be fetched from offline db

@@ -101,6 +101,12 @@ ATTENDED_PERSON_CATEGORY = (
     (5, 'Woman of reproductive age (15-49 years)'),
 )
 
+ADOPT_PRACTICE_CATEGORY = (
+    ("1",'Yes'),
+    ("2",'No'),
+    ("3",'Not Applicable'),
+)
+
 
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)

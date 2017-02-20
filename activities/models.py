@@ -1,16 +1,27 @@
-import json, datetime
+# python imports
+import json
+import datetime
 import calendar
+# django imports
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MaxValueValidator
-
+# app imports
 from coco.data_log import delete_log, save_log
 from coco.base_models import CocoModel
+from coco.base_models import ADOPTION_VERIFICATION
+from coco.base_models import SCREENING_OBSERVATION
+from coco.base_models import SCREENING_GRADE
+from coco.base_models import VERIFIED_BY
+from coco.base_models import ATTENDED_PERSON_CATEGORY
+from coco.base_models import ADOPT_PRACTICE_CATEGORY
 from geographies.models import Village
 from programs.models import Partner
-from people.models import Animator, Person, PersonGroup
-from videos.models import Video, ParentCategory
-from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE, VERIFIED_BY, ATTENDED_PERSON_CATEGORY
+from people.models import Animator
+from people.models import Person
+from people.models import PersonGroup
+from videos.models import Video
+from videos.models import ParentCategory
 
 
 class DirectBeneficiaries(models.Model):
@@ -118,6 +129,7 @@ class PersonMeetingAttendance(CocoModel):
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
     direct_beneficiaries_category = models.CharField(max_length=80, null=True, blank=True)
+    category = models.CharField(max_length=80, null=True)
     
     def __unicode__(self):
         return  u'%s' % (self.id)
@@ -135,12 +147,12 @@ class PersonAdoptPractice(CocoModel):
     non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
     verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
     parentcategory = models.ForeignKey(ParentCategory, null=True, blank=True)
-    adopt_practice = models.BooleanField(default=False)
-    krp_one = models.BooleanField(db_index=True,default=False)
-    krp_two = models.BooleanField(db_index=True,default=False)
-    krp_three = models.BooleanField(db_index=True,default=False)
-    krp_four = models.BooleanField(db_index=True,default=False)
-    krp_five = models.BooleanField(db_index=True,default=False)
+    adopt_practice = models.CharField(max_length=1, choices=ADOPT_PRACTICE_CATEGORY, null=True)
+    krp_one = models.BooleanField(verbose_name="1", db_index=True,default=False)
+    krp_two = models.BooleanField(verbose_name="2", db_index=True,default=False)
+    krp_three = models.BooleanField(verbose_name="3", db_index=True,default=False)
+    krp_four = models.BooleanField(verbose_name="4", db_index=True,default=False)
+    krp_five = models.BooleanField(verbose_name="5", db_index=True,default=False)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)
