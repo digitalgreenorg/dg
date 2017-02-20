@@ -395,11 +395,6 @@ function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
         hideLoader();
         var json_data = JSON.parse(data);
-        // var total_volume = json_data['total_volume'][QUANTITY__SUM];
-        // var total_amount = json_data['total_volume'][AMOUNT__SUM];
-        // var total_farmers_reached = json_data['total_farmers_reached'];
-        // var total_transportation_cost = 0;
-        // var total_farmer_share = 0;
 
         var total_volume = json_data['aggregated_result']['quantity'][0];
         var total_amount = json_data['aggregated_result']['amount'][0];
@@ -409,20 +404,13 @@ function total_static_data() {
         var total_gaddidar_contribution = json_data['aggregated_result']['gaddidar_share'][0];
         var total_aggregator_cost = json_data['aggregated_result']['aggregator_incentive'][0];
 
-        // for (var i = 0; i < json_data['total_transportation_cost'].length; i++) {
-        //     total_transportation_cost += json_data['total_transportation_cost'][i]['transportation_cost__sum'];
-        //     total_farmer_share += json_data['total_transportation_cost'][i]['farmer_share__sum'];
-        // }
-
-        // var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
-        // var total_aggregator_cost = json_data['total_aggregator_incentive'];
         var sustainability = (parseFloat(total_farmer_share) + parseFloat(total_gaddidar_contribution)) / (parseFloat(total_transportation_cost) + parseFloat(total_aggregator_cost)) * 100;
 
         var clusters = json_data['total_cluster_reached'];
         var total_cpk = (parseFloat(total_transportation_cost) + parseFloat(total_aggregator_cost)) / parseFloat(total_volume);
 
-        plot_solid_guage($('#cluster_bullet'), 0, clusters, 25);
-        plot_solid_guage($('#total_farmers_bullet'), 0, total_farmers_reached, 2000);
+        plot_solid_guage($('#cluster_bullet'), 0, clusters, 50);
+        plot_solid_guage($('#total_farmers_bullet'), 0, total_farmers_reached, 5000);
         plot_solid_guage($('#total_volume_bullet'), 0, parseInt(total_volume), 5000000);
         plot_solid_guage($('#revenue_bullet'), 0, parseInt(total_amount), 50000000);
         plot_solid_guage($('#total_expenditure_bullet'), -1, parseFloat(0 - total_cpk.toFixed(2)), 0);
@@ -434,11 +422,6 @@ function total_static_data() {
 function recent_graphs_data(language) {
     $.get("/loop/recent_graphs_data/", {}).done(function(data) {
         var json_data = JSON.parse(data);
-        dates = json_data['dates'];
-        stats = json_data['stats'];
-        // transportation = json_data['transportation_cost'];
-        // gaddidar_contribution_recent_graph = json_data['gaddidar_contribution'];
-        // aggregator_incentive_cost = json_data['aggregator_incentive_cost'];
         aggregated_result = json_data['aggregated_result'];
         plot_cards_data();
         cummulative_farmer_and_volume(json_data['cummulative_vol_farmer']);
@@ -472,266 +455,24 @@ function plot_cards_data() {
         c_active_clusters.push(active_cluster);
         c_active_farmers.push(farmer_count)
     }
-    // var avg = get_average(); // Retunts [avg_vol, active_farmers, avg_amt, active_clusters,avg_gaddidar_share]
-    // var avg_vol = avg[0];
-    // var avg_gaddidar_contribution = avg[4];
-    // var active_clusters = avg[3];
-    // var avg_aggregator_cost = avg[5];
     document.getElementById('recent_cluster_card').innerHTML = '&nbsp;&nbsp;&nbsp;' + c_active_clusters[0];
     $("#recent_cluster_sparkline").sparkline(c_active_clusters.reverse(), sparkline_option);
 
     document.getElementById('recent_volume_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + (c_vol[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).concat(KG);
     $('#recent_volume_sparkline').sparkline(c_vol.reverse(), sparkline_option);
 
-    // var active_farmers = avg[1];
     document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + c_active_farmers[0];
     $('#recent_active_farmers_sparkline').sparkline(c_active_farmers.reverse(), sparkline_option);
 
-    // var avg_amt = avg[2];
     document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(c_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     $('#recent_revenue_sparkline').sparkline(c_amt.reverse(), sparkline_option);
 
-    // var data = get_cpk(avg_vol.reverse(), avg_gaddidar_contribution, avg_aggregator_cost);
-    // var cpk = data[0];
     document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(parseFloat(c_cpk[0]).toFixed(2));
     $('#cpk_sparkline').sparkline(c_cpk.reverse(), sparkline_option);
 
-    // var sustainability = data[1];
     document.getElementById('recent_sustainability_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + parseFloat(c_sustainability[0]).toFixed(2) + "%";
     $('#recent_sustainability_sparkline').sparkline(c_sustainability.reverse(), sparkline_option);
 }
-
-
-// //Helper function to calculate average for 7,15,30,60 days for above function
-// function get_average() {
-//     var today = new Date();
-//     today.setDate(today.getDate() - days_to_average);
-//
-//     var avg_vol = [];
-//     var avg_amt = [];
-//     var avg_aggregator_cost = [];
-//
-//     var active_farmers = [];
-//     var active_farmers_id = [];
-//     var active_clusters = [];
-//     var active_clusters_id = [];
-//     var avg_gaddidar_share = [];
-//
-//     var j = 0,
-//         k = 0,
-//         temp_vol = 0,
-//         temp_amt = 0,
-//         temp_gaddidar_share = 0,
-//         temp_aggregator_cost = 0;
-//
-//     var gaddidar_share = [];
-//     var aggregator_cost = [];
-//     var dates_of_transaction = dates.length;
-//     for (var i = 0; i < dates_of_transaction; i++) {
-//         gaddidar_share.push(0);
-//         aggregator_cost.push(0);
-//     }
-//
-//     // CALCUALTING GADDIDAR CONTRIBUTION FOR NUMBER OF DAYS
-//     var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
-//     for (var i = 0; i < gaddidar_contribution_length; i++) {
-//         var index = dates.indexOf(gaddidar_contribution_recent_graph[i]['date']);
-//         if (index != -1) {
-//             gaddidar_share[index] += gaddidar_contribution_recent_graph[i]['amount'];
-//         }
-//     }
-//
-//     while (today >= new Date(dates[k])) {
-//         avg_gaddidar_share.push(0);
-//         today.setDate(today.getDate() - days_to_average);
-//     }
-//
-//     var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
-//     while (k < gaddidar_contribution_length && today < new Date(dates[k])) {
-//         temp_gaddidar_share += gaddidar_share[k];
-//         k++;
-//         if (k < gaddidar_contribution_length && today >= new Date(dates[k])) {
-//             avg_gaddidar_share.push(temp_gaddidar_share.toFixed(0));
-//             temp_gaddidar_share = 0;
-//             today.setDate(today.getDate() - days_to_average);
-//
-//             //If no data is present for a period of days_to_average
-//             while (today >= new Date(dates[k])) {
-//                 avg_gaddidar_share.push(0);
-//                 today.setDate(today.getDate() - days_to_average);
-//             }
-//         }
-//     }
-//     avg_gaddidar_share.push(temp_gaddidar_share);
-//
-//     // CALCUALTING AGGREGATOR INCENTIVE COST FOR NUMBER OF DAYS
-//     k = 0;
-//     today = new Date();
-//     today.setDate(today.getDate() - days_to_average);
-//
-//     var aggregator_incentive_cost_length = aggregator_incentive_cost.length;
-//     for (var i = 0; i < aggregator_incentive_cost_length; i++) {
-//         var index = dates.indexOf(aggregator_incentive_cost[i]['date']);
-//         if (index != -1) {
-//             aggregator_cost[index] += aggregator_incentive_cost[i]['amount'];
-//         }
-//     }
-//
-//     while (today >= new Date(dates[k])) {
-//         avg_aggregator_cost.push(0);
-//         today.setDate(today.getDate() - days_to_average);
-//     }
-//
-//     var aggregator_incentive_cost_length = aggregator_incentive_cost.length;
-//     while (k < aggregator_incentive_cost_length && today < new Date(dates[k])) {
-//         temp_aggregator_cost += aggregator_cost[k];
-//         k++;
-//         if (k < aggregator_incentive_cost_length && today >= new Date(dates[k])) {
-//             avg_aggregator_cost.push(temp_aggregator_cost.toFixed(0));
-//             temp_aggregator_cost = 0;
-//             today.setDate(today.getDate() - days_to_average);
-//
-//             //If no data is present for a period of days_to_average
-//             while (today >= new Date(dates[k])) {
-//                 avg_aggregator_cost.push(0);
-//                 today.setDate(today.getDate() - days_to_average);
-//             }
-//         }
-//     }
-//     avg_aggregator_cost.push(temp_aggregator_cost);
-//
-//     // CALCUALTING VOLUME,AMOUNT,#FARMERS,#CLUSTERS FOR NUMBER OF DAYS
-//     today = new Date();
-//     today.setDate(today.getDate() - days_to_average);
-//
-//     //If no data is present for a period of days_to_average initially
-//     while (today >= new Date(stats[j]['date'])) {
-//         avg_vol.push(0);
-//         avg_amt.push(0);
-//         active_farmers.push(0);
-//         active_clusters.push(0);
-//         today.setDate(today.getDate() - days_to_average);
-//     }
-//
-//     var stats_length = stats.length;
-//     while (j < stats_length && today < new Date(stats[j]['date'])) {
-//         temp_vol += stats[j][QUANTITY__SUM];
-//         temp_amt += stats[j][AMOUNT__SUM];
-//
-//         var farmer_id = stats[j]['farmer__id'];
-//         if (active_farmers_id.indexOf(farmer_id) == -1) {
-//             active_farmers_id.push(farmer_id);
-//         }
-//         var cluster_id = stats[j][USER_CREATED__ID];
-//         if (active_clusters_id.indexOf(cluster_id) == -1) {
-//             active_clusters_id.push(cluster_id);
-//         }
-//         j++;
-//         if (j < stats_length && today >= new Date(stats[j]['date'])) {
-//             avg_vol.push(temp_vol.toFixed(0));
-//             avg_amt.push(temp_amt.toFixed(0));
-//             temp_vol = 0;
-//             temp_amt = 0;
-//
-//             active_farmers.push(active_farmers_id.length);
-//             active_farmers_id = [];
-//
-//             active_clusters.push(active_clusters_id.length);
-//             active_clusters_id = [];
-//
-//             today.setDate(today.getDate() - days_to_average);
-//
-//             //If no data is present for a period of days_to_average
-//             while (today >= new Date(stats[j]['date'])) {
-//                 avg_vol.push(0);
-//                 avg_amt.push(0);
-//                 active_farmers.push(0);
-//                 active_clusters.push(0);
-//                 today.setDate(today.getDate() - days_to_average);
-//             }
-//         }
-//     }
-//
-//     avg_vol.push(temp_vol);
-//     avg_amt.push(temp_amt);
-//     active_farmers.push(active_farmers_id.length);
-//     active_clusters.push(active_clusters_id.length);
-//     return [avg_vol, active_farmers, avg_amt, active_clusters, avg_gaddidar_share, avg_aggregator_cost];
-// }
-//
-//
-// //Helper function to calculate average cpk for 7,15,30,60 days for above function
-// function get_cpk(avg_vol, avg_gaddidar_contribution, avg_aggregator_cost) {
-//     var today = new Date();
-//     today.setDate(today.getDate() - days_to_average);
-//     var cpk = [];
-//     var sustainability_per_kg = [];
-//
-//     var j = 0, // To loop through transportation details
-//         transportation_cost = 0,
-//         k = 0, // keeping note of position in avg_vol
-//         f_share = 0;
-//
-//     //If no data is present for a period of days_to_average initially
-//     while (today >= new Date(transportation[j]['date'])) {
-//         cpk.push(0);
-//         sustainability_per_kg.push(0);
-//         today.setDate(today.getDate() - days_to_average);
-//         k++;
-//     }
-//     while (j < transportation.length && today < new Date(transportation[j]['date'])) {
-//         transportation_cost += parseFloat(transportation[j]['transportation_cost__sum']); // - transportation[j]['farmer_share__sum'];
-//         f_share += parseFloat(transportation[j]['farmer_share__sum']);
-//         j++;
-//         if (j < transportation.length && today >= new Date(transportation[j]['date'])) {
-//             if (avg_vol[k] == 0) {
-//                 cpk.push(0);
-//                 sustainability_per_kg.push(0);
-//             } else {
-//                 var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
-//                 //TODO : DONE use aggregator incentive from json data for recent graph
-//                 var cost = parseFloat(transportation_cost) + parseFloat(avg_aggregator_cost[k]);
-//                 var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
-//                 var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
-//                 cpk.push(cpk_value.toFixed(2));
-//                 sustainability_per_kg.push(spk_value.toFixed(2));
-//             }
-//
-//             k++;
-//             today.setDate(today.getDate() - days_to_average);
-//             transportation_cost = 0;
-//             f_share = 0;
-//             //If no data is present for a period of days_to_average
-//             while (today >= new Date(transportation[j]['date'])) {
-//                 cpk.push(0);
-//                 sustainability_per_kg.push(0);
-//                 today.setDate(today.getDate() - days_to_average);
-//                 k++;
-//             }
-//         }
-//     }
-//
-//     if (avg_vol[k] == 0) {
-//         cpk.push(0);
-//         sustainability_per_kg.push(0);
-//     } else {
-//         var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
-//         //TODO : use A I from json data for recent graph
-//         var cost = parseFloat(transportation_cost) + parseFloat(avg_aggregator_cost[k]);
-//         var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
-//         var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
-//         cpk.push(cpk_value.toFixed(2));
-//         sustainability_per_kg.push(spk_value.toFixed(2));
-//     }
-//
-//     //Adding 0 cost for previous data making length of both arrays same
-//     for (var i = cpk.length; i < avg_vol.length; i++) {
-//         cpk.push(0);
-//         sustainability_per_kg.push(0);
-//     }
-//     return [cpk, sustainability_per_kg];
-// }
-
 
 //To show cummulative farmer and volume graph present on Home page
 function cummulative_farmer_and_volume(cum_vol_farmer) {
