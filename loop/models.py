@@ -152,8 +152,8 @@ class LoopUser(LoopModel):
     def get_mandis(self):
         return self.assigned_mandis.all()
 
-# post_save.connect(save_log,sender=LoopUser)
-# post_save.connect(delete_log,sender=LoopUser)
+post_save.connect(save_log,sender=LoopUser)
+pre_delete.connect(delete_log,sender=LoopUser)
 
 class LoopUserAssignedMandi(LoopModel):
     id = models.AutoField(primary_key=True)

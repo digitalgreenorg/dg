@@ -108,6 +108,10 @@ def save_log(sender, **kwargs):
         village_id=None
         user = instance.user_created
         loop_user = None
+    elif sender == "LoopUser":
+        village_id=None
+        user = instance.user_created
+        loop_user = None
     else:           # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -198,6 +202,10 @@ def delete_log(sender, **kwargs):
         village_id = None
         user = instance.user_created
         loop_user = None
+    elif sender == "LoopUser":
+        village_id = None
+        user = instance.user_created
+        loop_user = None
     else:               # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -234,7 +242,6 @@ def get_latest_timestamp():
 @csrf_exempt
 def send_updated_log(request):
     if request.method == 'POST':
-        print request.POST['ApiKey']
         apikey = request.POST['ApiKey']
         timestamp = request.POST['timestamp']
         if timestamp:
@@ -262,6 +269,8 @@ def send_updated_log(request):
             TransportationVehicle = get_model('loop', 'TransportationVehicle')
             State = get_model('loop','State')
             list_rows = []
+            print requesting_loop_user.id
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle']))
@@ -310,7 +319,6 @@ def send_updated_log(request):
             gaddidar_commission_rows = Log.objects.filter(
                 timestamp__gt=timestamp,entry_table__in=['GaddidarCommission'])
             for gcrow in gaddidar_commission_rows:
-                print gcrow.id
                 list_rows.append(Log.objects.filter(id=gcrow.id))
 
             list_rows.append(Log.objects.filter(
