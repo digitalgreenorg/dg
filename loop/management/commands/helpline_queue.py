@@ -54,7 +54,14 @@ class Command(BaseCommand):
         except Exception as e:
             module = "helpline_queue"
             write_log(HELPLINE_LOG_FILE,module,str(e))
-        pending_incoming_call_id = HelplineIncoming.objects.filter(call_status=0).order_by('id').values_list('id', flat=True)
+        pending_incoming_call_id = list()
+        pending_incoming_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
+        for pending_call in pending_incoming_call:
+            incoming_hour = pending_call['incoming_time'].hour
+            last_incoming_hour = pending_call['last_incoming_time'].hour
+            if check(incoming_hour,last_incoming_hour) == True:
+                pending_incoming_call_id.append(pending_call['id'])
+        #pending_incoming_call_id = HelplineIncoming.objects.filter(call_status=0).order_by('id').values_list('id', flat=True)
         for ids in pending_incoming_call_id:
             incoming_call_obj = self.check_pending_or_not(ids)
             if incoming_call_obj:
