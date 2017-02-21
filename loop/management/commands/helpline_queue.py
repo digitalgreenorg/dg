@@ -59,7 +59,7 @@ class Command(BaseCommand):
         for pending_call in pending_incoming_call:
             incoming_hour = pending_call['incoming_time'].hour
             last_incoming_hour = pending_call['last_incoming_time'].hour
-            if check(incoming_hour,last_incoming_hour) == True:
+            if (incoming_hour in range(9,18)) and (last_incoming_hour in range(9,18)):
                 pending_incoming_call_id.append(pending_call['id'])
         #pending_incoming_call_id = HelplineIncoming.objects.filter(call_status=0).order_by('id').values_list('id', flat=True)
         for ids in pending_incoming_call_id:
