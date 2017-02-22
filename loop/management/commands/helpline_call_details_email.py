@@ -36,7 +36,7 @@ class Command(BaseCommand):
                     'You are requested to login to Exotel platform daily in the morning to plan your day accordingly.\n\n',
                     'Thank you.\n'
                     ]
-        body = ''.join(email_body)                                                                                                                                                                                                                                                                                    yesterday_date,yesterday_off_hours_incoming_call_count)
+        body = ''.join(email_body)
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         msg.send()
 
