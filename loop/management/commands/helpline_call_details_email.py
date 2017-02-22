@@ -24,20 +24,25 @@ class Command(BaseCommand):
         subject = "Loop IVR Helpline Call Status"
         from_email = dg.settings.EMAIL_HOST_USER
         to_email = ['vikas@digitalgreen.org']
-        email_body = ['Dear Team,\n\nThis is the status of calls received on LOOP IVR Helpline number:\n\n'
-                    'Total Pending Calls Till Now: %s\n'%(total_pending_call_count,),
-                    'Total Received Calls on %s: %s\n'%(yesterday_date,yesterday_received_call_count),
-                    'Total Attended Calls on %s: %s\n'%(yesterday_date,yesterday_resolved_call_count),
-                    'Total Declined Calls Till now: %s\n'%(total_declined_call_count,),
-                    'Total Declined Calls on %s: %s\n'%(yesterday_date,yesterday_declined_call_count),
-                    'Total Received Calls During Off Hours i.e. 6:00 PM, %s to 9:00 AM, %s: %s\n\n'%(yesterday_date,today_date,yesterday_off_hours_incoming_call_count),
-                    'Please contact system@digitalgreen.org for any clarification.\n\n',
+        email_body = ['<html><body>',
+                    'Dear Team,<br/>This is the status of calls received on LOOP IVR Helpline number:<br/><br/>',
+                    '<table>',
+                    '<td><tr>Total Pending Calls Till Now:<tr></tr> %s</tr>'%(total_pending_call_count,),
+                    '<td><tr>Total Received Calls on %s:<tr></tr> %s</tr>'%(yesterday_date,yesterday_received_call_count),
+                    '<td><tr>Total Attended Calls on %s:<tr></tr> %s</tr>'%(yesterday_date,yesterday_resolved_call_count),
+                    '<td><tr>Total Declined Calls Till now:<tr></tr> %s</tr>'%(total_declined_call_count,),
+                    '<td><tr>Total Declined Calls on %s:<tr></tr> %s</tr>'%(yesterday_date,yesterday_declined_call_count),
+                    '<td><tr>Total Received Calls During Off Hours i.e. 6:00 PM, %s to 9:00 AM, %s:<tr></tr> %s</tr>'%(yesterday_date,today_date,yesterday_off_hours_incoming_call_count),
+                    '</table>',
+                    '<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>',
                     'Disclaimer: Please note that it\'s a automated system generated mail intended to provide notification for approximate number of OFF hours calls. ',
-                    'You are requested to login to Exotel platform daily in the morning to plan your day accordingly.\n\n',
-                    'Thank you.\n'
+                    'You are requested to login to Exotel platform daily in the morning to plan your day accordingly.<br/><br/>',
+                    'Thank you.<br/>',
+                    '</body></html>'
                     ]
         body = ''.join(email_body)
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
+        msg.content_subtype = "html"
         msg.send()
 
     def handle(self, *args, **options):
