@@ -373,6 +373,7 @@ class TrainingResource(ModelResource):
     assessment = fields.ForeignKey(
         'training.api.AssessmentResource', 'assessment')
     trainer = fields.ToManyField('training.api.TrainerResource', 'trainer')
+    facilitator = fields.ForeignKey('training.api.TrainerResource', 'facilitator', null=True)
     participants = fields.ToManyField(
         'training.api.MediatorResource', 'participants')
     district = fields.ForeignKey(
@@ -383,7 +384,7 @@ class TrainingResource(ModelResource):
 
     class Meta:
         resource_name = 'training'
-        queryset = Training.objects.all()
+        queryset = Training.objects.filter(date__in=['2016-12-02', '2016-12-09'])
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
         always_return_data = True
@@ -392,6 +393,7 @@ class TrainingResource(ModelResource):
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
     hydrate_trainer = partial(dict_to_foreign_uri_m2m,
                               field_name='trainer', resource_name='trainer')
+    hydrate_facilitator = partial(dict_to_foreign_uri, field_name='facilitator', resource_name='trainer')
     hydrate_participants = partial(
         dict_to_foreign_uri_m2m, field_name='participants', resource_name='mediator')
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
@@ -403,14 +405,15 @@ class TrainingResource(ModelResource):
         foreign_key_to_id, field_name='assessment', sub_field_names=['id', 'name'])
     dehydrate_partner = partial(
         foreign_key_to_id, field_name='partner', sub_field_names=['id', 'partner_name'])
-    dehydrate_district = partial(
-        foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
+    # dehydrate_district = partial(
+    #     foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
+    dehydrate_facilitator = partial(foreign_key_to_id, field_name='facilitator', sub_field_names=['id', 'name'])
 
     def dehydrate_trainer(self, bundle):
-        return [{'id': trainer.id, 'name': trainer.name} for trainer in bundle.obj.trainer.all()]
+        return [{'online_id': trainer.id, 'name': trainer.name} for trainer in bundle.obj.trainer.all()]
 
     def dehydrate_participants(self, bundle):
-        return [{'id': mediator.id, 'name': mediator.name} for mediator in bundle.obj.participants.all()]
+        return [{'online_id': mediator.id, 'name': mediator.name} for mediator in bundle.obj.participants.all()]
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -480,7 +483,7 @@ class ScoreResource(ModelResource):
 
     class Meta:
         max_limit = None
-        queryset = Score.objects.all()
+        queryset = Score.objects.filter(training__date__in=['2016-12-02', '2016-12-09'])
         resource_name = 'score'
         authentication = ApiKeyAuthentication()
         authorization = Authorization()
@@ -492,11 +495,11 @@ class ScoreResource(ModelResource):
     hydrate_question = partial(dict_to_foreign_uri, field_name='question')
 
     dehydrate_participant = partial(
-        foreign_key_to_id, field_name='participant', sub_field_names=['id', 'name'])
+        foreign_key_to_id, field_name='participant', sub_field_names=['id'])
     dehydrate_training = partial(
         foreign_key_to_id, field_name='training', sub_field_names=['id'])
     dehydrate_question = partial(
-        foreign_key_to_id, field_name='question', sub_field_names=['id', 'text'])
+        foreign_key_to_id, field_name='question', sub_field_names=['id'])
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
