@@ -18,15 +18,25 @@ class Command(BaseCommand):
             yesterday_off_hours_incoming_call_count,
             yesterday_received_call_count,
             yesterday_resolved_call_count):
-    
+
         today_date = datetime.datetime.now().date()
         yesterday_date = today_date-timedelta(days=1)
         subject = "Loop IVR Helpline Call Status"
         from_email = dg.settings.EMAIL_HOST_USER
         to_email = ['vikas@digitalgreen.org']
-        body = 'Dear Team,\n\nThis is the status of calls:\n\nTotal Pending Calls:%s\nTotal Declined Calls: %s\nTotal Declined Calls on %s: %s\nTotal Receiving Calls During Off Hours on %s:%s\n\nPlease contact system@digitalgreen.org for any clarification.\n\nThank you.\n'%(total_pending_call_count,total_declined_call_count,
-                                                                                                                                                                                                                                                                                    yesterday_date,yesterday_declined_call_count,
-                                                                                                                                                                                                                                                                                    yesterday_date,yesterday_off_hours_incoming_call_count)
+        email_body = ['Dear Team,\n\nThis is the status of calls received on LOOP IVR Helpline number:\n\n'
+                    'Total Pending Calls Till Now: %s\n'%(total_pending_call_count,),
+                    'Total Received Calls on %s: %s\n'%(yesterday_date,yesterday_received_call_count),
+                    'Total Attended Calls on %s: %s\n'%(yesterday_date,yesterday_resolved_call_count),
+                    'Total Declined Calls Till now: %s\n'%(total_declined_call_count,),
+                    'Total Declined Calls on %s: %s\n'%(yesterday_date,yesterday_declined_call_count),
+                    'Total Received Calls During Off Hours i.e. 6:00 PM, %s to 9:00 AM, %s: %s\n\n'%(yesterday_date,today_date,yesterday_off_hours_incoming_call_count),
+                    'Please contact system@digitalgreen.org for any clarification.\n\n',
+                    'Disclaimer: Please note that it\'s a automated system generated mail intended to provide notification for approximate number of OFF hours calls. ',
+                    'You are requested to login to Exotel platform daily in the morning to plan your day accordingly.\n\n',
+                    'Thank you.\n'
+                    ]
+        body = ''.join(email_body)                                                                                                                                                                                                                                                                                    yesterday_date,yesterday_off_hours_incoming_call_count)
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         msg.send()
 
