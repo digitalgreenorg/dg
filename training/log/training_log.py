@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.forms.models import model_to_dict
@@ -9,14 +7,6 @@ from tastypie.models import ApiKey
 from django.apps import apps
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-
-def get_latest_timestamp():
-    LogData = apps.get_model('training', 'LogData')
-    try:
-        timestamp = LogData.objects.latest('id')
-    except Exception as e:
-        timestamp = None
-    return timestamp
 
 def get_log_object(log_obj):
     if log_obj.entry_table == 'Partner':
@@ -73,7 +63,7 @@ def send_updated_log(request):
             Animator = apps.get_model('people','Animator')
 
             # rows = []
-            rows = LogData.objects.filter(entry_table__in=['Partner','Trainer','Assessment','Question'])
+            rows = LogData.objects.filter(timestamp__gt=timestamp ,entry_table__in=['Partner','Trainer','Assessment','Question'])
 
             # if requesting_training_user:
                 # requesting_user_states = requesting_training_user.get_states()
