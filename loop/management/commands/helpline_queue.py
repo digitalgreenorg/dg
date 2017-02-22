@@ -60,7 +60,7 @@ class Command(BaseCommand):
         for pending_call in pending_incoming_call:
             incoming_hour = pending_call['incoming_time'].hour
             last_incoming_hour = pending_call['last_incoming_time'].hour
-            # Select calls which are incoming or last incoming between 9 to 6 PM
+            # Select calls which are incoming or last incoming between 9 AM to 6 PM
             if (incoming_hour in range(9,18)) and (last_incoming_hour in range(9,18)):
                 pending_incoming_call_id.append(pending_call['id'])
         #pending_incoming_call_id = HelplineIncoming.objects.filter(call_status=0).order_by('id').values_list('id', flat=True)
