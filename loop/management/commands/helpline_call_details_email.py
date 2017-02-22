@@ -37,8 +37,8 @@ class Command(BaseCommand):
                     '<table>',
                     '<tr><th>Parameters</th><th>Count</th></tr>',
                     '<tr><td>Total Pending Calls Till Now (Received during Operational Hours)</td><td> %s</td></tr>'%(total_pending_call_count,),
-                    '<tr><td>Total Received Calls on %s</td><td> %s</td></tr>'%(yesterday_date,yesterday_received_call_count),
-                    '<tr><td>Total Attended Calls on %s</td><td> %s</td></tr>'%(yesterday_date,yesterday_resolved_call_count),
+                    '<tr><td>Total Received Calls on %s from 9:00 AM to 6:00 PM</td><td> %s</td></tr>'%(yesterday_date,yesterday_received_call_count),
+                    '<tr><td>Total Attended Calls on %s from 9:00 AM to 6:00 PM</td><td> %s</td></tr>'%(yesterday_date,yesterday_resolved_call_count),
                     '<tr><td>Total Declined Calls Till now</td><td> %s</td></tr>'%(total_declined_call_count,),
                     '<tr><td>Total Declined Calls on %s</td><td> %s</td></tr>'%(yesterday_date,yesterday_declined_call_count),
                     '<tr><td>Total Received Calls During Off Hours i.e. 6:00 PM, %s to 9:00 AM, %s</td><td> %s</td></tr>'%(yesterday_date,today_date,yesterday_off_hours_incoming_call_count),
@@ -55,14 +55,16 @@ class Command(BaseCommand):
         msg.send()
 
     def handle(self, *args, **options):
-        today_date = datetime.datetime.now().date()
+        today_date = datetime.datetime.now()
         yesterday_date = today_date-timedelta(days=1)
+        yesterday_date_morning = yesterday_date.replace(hour=9,minute=0,second=0)
+        yesterday_date_evening = yesterday_date.replace(hour=18,minute=0,second=0)
         working_hours = range(9,18)
         total_pending_call_count = 0
         total_declined_call_count = HelplineIncoming.objects.filter(call_status=2).count()
-        yesterday_received_call_count = HelplineIncoming.objects.filter(incoming_time__gte=yesterday_date,incoming_time__lt=today_date).count()
-        yesterday_resolved_call_count = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=yesterday_date,incoming_time__lt=today_date).count()
-        yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date,time_modified__lt=today_date).count()
+        yesterday_received_call_count = HelplineIncoming.objects.filter(incoming_time__gte=yesterday_date_morning,incoming_time__lt=yesterday_date_evening).count()
+        yesterday_resolved_call_count = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=yesterday_date_morning,incoming_time__lt=yesterday_date_evening).count()
+        yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date_morning,time_modified__lt=yesterday_date_evening).count()
         # Change dates from Yesterday 6:00 PM to Today 9:00 AM (Non-Operational Hours of Helpline) 
         today_date = datetime.datetime.now().replace(hour=9,minute=0,second=0)
         yesterday_date = (today_date-timedelta(days=1)).replace(hour=18,minute=0,second=0)
