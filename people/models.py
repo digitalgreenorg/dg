@@ -6,6 +6,7 @@ from coco.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES, TYPE_OF_ROL
 from farmerbook.managers import FarmerbookManager
 from geographies.models import *
 from programs.models import Partner
+from training.log.training_log import enter_to_log
 
 class Animator(CocoModel):
     id = models.AutoField(primary_key = True)
@@ -32,7 +33,9 @@ class Animator(CocoModel):
         return  u'%s (%s)' % (self.name, self.district)
 
 post_save.connect(save_log, sender=Animator)
+post_save.connect(enter_to_log, sender=Animator)
 pre_delete.connect(delete_log, sender=Animator)
+pre_delete.connect(enter_to_log, sender=Animator)
 
 
 class AnimatorAssignedVillage(CocoModel):
@@ -80,7 +83,7 @@ class Person(CocoModel):
 
     def __unicode__(self):
         display = "%s" % (self.person_name)
-        display += " (%s)" % self.father_name if self.father_name.strip()!="" else "" 
+        display += " (%s)" % self.father_name if self.father_name.strip()!="" else ""
         display += " (%s)" % self.group.group_name if self.group is not None else ""
         display += " (%s)" % self.village.village_name
         return  display
@@ -97,10 +100,10 @@ class JSLPS_AnimatorAssignedVillage(CocoModel):
     id = models.AutoField(primary_key=True)
     animator = models.ForeignKey(JSLPS_Animator)
     village = models.ForeignKey(JSLPS_Village)
-    
+
 class JSLPS_Persongroup(CocoModel):
     id = models.AutoField(primary_key=True)
-    group_code = models.CharField(max_length=100) 
+    group_code = models.CharField(max_length=100)
     group = models.ForeignKey(PersonGroup, null=True, blank=True)
 
 class JSLPS_Person(CocoModel):

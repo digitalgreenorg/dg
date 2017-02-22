@@ -5,7 +5,9 @@ from geographies.models import State, District
 from videos.models import Language
 from people.models import Animator
 from programs.models import Partner
-
+from datetime import datetime
+from django.db.models.signals import pre_delete, post_save
+from training.log.training_log import enter_to_log
 # Create your models here.
 
 class TrainingUser(models.Model):
@@ -29,8 +31,6 @@ class BaseModel(models.Model):
 	class Meta:
 		abstract = True
 
-
-
 class Trainer(models.Model):
 	id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)
@@ -41,12 +41,18 @@ class Trainer(models.Model):
 	def __unicode__(self):
 		return self.name
 
+post_save.connect(enter_to_log, sender=Trainer)
+pre_delete.connect(enter_to_log, sender=Trainer)
+
 class Assessment(models.Model):
 	id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)
 
 	def __unicode__(self):
 		return self.name
+
+post_save.connect(enter_to_log, sender=Assessment)
+pre_delete.connect(enter_to_log,sender=Assessment)
 
 class Question(models.Model):
 	id = models.AutoField(primary_key=True)
@@ -60,6 +66,9 @@ class Question(models.Model):
 	def __unicode__(self):
 		return self.text
 
+post_save.connect(enter_to_log, sender=Question)
+pre_delete.connect(enter_to_log,sender=Question)
+
 class Training(BaseModel):
 	id = models.AutoField(primary_key=True)
 	date = models.DateField()
@@ -70,8 +79,8 @@ class Training(BaseModel):
 	language = models.ForeignKey(Language, null=True, blank=True)
 	participants = models.ManyToManyField(Animator)
 	district = models.ForeignKey(District, null=True, blank=True)
-	trainingType = models.BooleanField(default=True)
-	kind_of_training = models.BooleanField(default=True)
+	trainingType = models.BooleanField(default=True) # with / without video
+	kind_of_training = models.BooleanField(default=True) # new / refresher training
 	participants_count = models.IntegerField(default=0)
 	partner = models.ForeignKey(Partner, null=True, blank=True)
 
@@ -88,6 +97,10 @@ class Score(models.Model):
 	class Meta:
 		unique_together=("training", "participant", "question")
 
-
-class Log(models.Model):
-	
+class LogData(models.Model):
+    id = models.AutoField(primary_key=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, null=True)
+    action = models.IntegerField()
+    entry_table = models.CharField(max_length=100)
+    model_id = models.IntegerField(null=True)

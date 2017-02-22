@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 
-from models import Trainer, TrainingUser, Assessment, Question
+from models import Trainer, TrainingUser, Assessment, Question, LogData
 
 class TrainingAdmin(AdminSite):
 	def has_permission(self, request):
@@ -12,3 +12,4 @@ training_admin.register(Trainer)
 training_admin.register(TrainingUser)
 training_admin.register(Assessment)
 training_admin.register(Question)
+training_admin.register(LogData)
