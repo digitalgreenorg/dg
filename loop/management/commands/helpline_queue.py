@@ -70,4 +70,4 @@ class Command(BaseCommand):
                 farmer_number = incoming_call_obj.from_number
                 # Last parameter more than 0 only when we do not want to acknowledge User if call is not successfull
                 make_helpline_call(incoming_call_obj,expert_obj,farmer_number,1)
-                time.sleep(120)
+                time.sleep(240)
