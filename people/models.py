@@ -29,6 +29,9 @@ class Animator(CocoModel):
     def get_partner(self):
         return self.partner.id
 
+    def get_district(self):
+        return self.district.id
+
     def __unicode__(self):
         return  u'%s (%s)' % (self.name, self.district)
 
