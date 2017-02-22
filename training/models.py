@@ -38,6 +38,9 @@ class Trainer(models.Model):
 	language = models.ForeignKey(Language, null=True, blank=True)
 	training_user = models.ForeignKey(TrainingUser, null=True, blank=True)
 
+    # def __training_user__(self):
+    #     return "%s"% (self.training_user.id)
+
 	def __unicode__(self):
 		return self.name
 
@@ -65,6 +68,9 @@ class Question(models.Model):
 
 	def __unicode__(self):
 		return self.text
+
+    # def __assessment__(self):
+    #     return "%s"% (self.assessment.name)
 
 post_save.connect(enter_to_log, sender=Question)
 pre_delete.connect(enter_to_log,sender=Question)
