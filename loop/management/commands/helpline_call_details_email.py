@@ -25,7 +25,7 @@ class Command(BaseCommand):
         from_email = dg.settings.EMAIL_HOST_USER
         to_email = ['vikas@digitalgreen.org']
         email_body = ['<html>',
-                    '<head><style>table, th, td {border: 1px solid black;text-align: center;}</style></head>',
+                    '<head><style>table, th, td {border: 1px solid black;}</style></head>',
                     '<body>',
                     'Dear Team,<br/><br/>This is the status of calls received on LOOP IVR Helpline number:<br/><br/>',
                     '<table>',
