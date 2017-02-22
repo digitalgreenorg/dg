@@ -29,7 +29,7 @@ class Command(BaseCommand):
                     '<body>',
                     'Dear Team,<br/><br/>This is the status of calls received on LOOP IVR Helpline number:<br/><br/>',
                     '<table>',
-                    '<tr><th>HEader bata do</th><th>Header bata do</th></tr>',
+                    '<tr><th>Parameter</th><th>Count</th></tr>',
                     '<tr><td>Total Pending Calls Till Now</td><td> %s</td></tr>'%(total_pending_call_count,),
                     '<tr><td>Total Received Calls on %s</td><td> %s</td></tr>'%(yesterday_date,yesterday_received_call_count),
                     '<tr><td>Total Attended Calls on %s</td><td> %s</td></tr>'%(yesterday_date,yesterday_resolved_call_count),
