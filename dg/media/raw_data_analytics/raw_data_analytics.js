@@ -274,7 +274,6 @@ function validation_check() {
         error = 1;
         event.preventDefault();
     }
-
     if((video.checked) && (blocknum.checked) && (blocknumber_video.selectedIndex == 0)){
         alert("Please select number of villages for screening  or number of villages for adoption from dropdown!!!");
         error = 1;

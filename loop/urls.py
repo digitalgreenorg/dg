@@ -45,4 +45,7 @@ urlpatterns = patterns('',
     url(r'^payments/',payments),
     url(r'^farmer_payment_update/',farmer_payments),
     url(r'^chaining/', include('smart_selects.urls')),
+    url(r'^helpline_incoming/',helpline_incoming),
+    url(r'^helpline_call_response/',helpline_call_response),
+    url(r'^helpline_offline/',helpline_offline),
     )
