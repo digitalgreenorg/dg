@@ -23,7 +23,13 @@ class Command(BaseCommand):
         yesterday_date = today_date-timedelta(days=1)
         subject = "Loop IVR Helpline Call Status"
         from_email = dg.settings.EMAIL_HOST_USER
-        to_email = ['vikas@digitalgreen.org']
+        to_email = ['bipin@digitalgreen.org', 
+                    'ashok@digitalgreen.org', 
+                    'aditya@digitalgreen.org', 
+                    'erica@digitalgreen.org',
+                    'divish@digitalgreen.org',
+                    'lokesh@digitalgreen.org',
+                    'vikas@digitalgreen.org']
         email_body = ['<html>',
                     '<head><style>table, th, td {border: 1px solid black;}</style></head>',
                     '<body>',
