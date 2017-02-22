@@ -11,7 +11,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 def get_log_object(log_obj):
     if log_obj.entry_table == 'Partner':
         app = 'programs'
-    elif log_obj.entry_table == 'People':
+    elif log_obj.entry_table == 'Animator':
         app = 'people'
     elif log_obj.entry_table == 'District':
         app = 'geographies'
@@ -50,26 +50,42 @@ def send_updated_log(request):
         apiKey = request.POST['ApiKey']
         request_timestamp = request.POST['timestamp']
         if request_timestamp:
-            # try:
-            #     apikey_object = ApiKey.objects.get(key=apikey)
-            #     user = apikey_object.user
-            #     TrainingUser = apps.get_model('training', 'TrainingUser')
-            #     requesting_training_user = TrainingUser.objects.get(user_id=user.id)
-            # except Exception, e:
-            #     return HttpResponse("-1", status=401)
+            try:
+                apikey_object = ApiKey.objects.get(key=apikey)
+                user = apikey_object.user
+                TrainingUser = apps.get_model('training', 'TrainingUser')
+                requesting_training_user = TrainingUser.objects.get(user_id=user.id)
+                requesting_training_user = TrainingUser.objects.get(id=15)
+            except Exception, e:
+                return HttpResponse("-1", status=401)
 
             LogData = apps.get_model('training','LogData')
             District = apps.get_model('geographies','District')
             Animator = apps.get_model('people','Animator')
 
             # rows = []
-            rows = LogData.objects.filter(timestamp__gt=timestamp ,entry_table__in=['Partner','Trainer','Assessment','Question'])
+            rows = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table__in=['Partner','Trainer','Assessment','Question'])
+            distrcit_animator_list = []
 
-            # if requesting_training_user:
-                # requesting_user_states = requesting_training_user.get_states()
+            if requesting_training_user:
+                requesting_user_states = requesting_training_user.get_states()
+                requesting_user_districts = []
+
+                filtered_districts = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='District')
+                for district in filtered_districts:
+                    if district.action != -1 and District.objects.get(id=district.model_id).state in requesting_user_states:
+                        distrcit_animator_list.append(district)
+                        requesting_user_districts.append(district.model_id)
+
+                filtered_animators = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='Animator')
+                for animator in filtered_animators:
+                    if animator.action != -1 and Animator.objects.get(id=animator.model_id).district.state in requesting_user_states:
+                        distrcit_animator_list.append(animator)
 
             log_list = []
             for row in rows:
+                log_list.append(get_log_object(row))
+            for row in distrcit_animator_list:
                 log_list.append(get_log_object(row))
 
             if rows:
