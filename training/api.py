@@ -209,6 +209,26 @@ class MediatorAuthorization(Authorization):
             raise NotFound("Not allowed to download Mediator")
 
 
+class TrainingAuthorization(Authorization):
+    def __init__(self, field):
+        self.training_field = field
+
+    def read_list(self, object_list, bundle):
+        trainings = Training.objects.filter(user_created_id=bundle.request.user.id).distinct()
+        kwargs = {}
+        kwargs[self.training_field] = trainings
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        kwargs = {}
+        kwargs[self.training_field] = Training.objects.filter(user_created_id=bundle.request.user.id).distinct()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound("Not allowed to download Trainings")
+
+
 class BaseResource(ModelResource):
 
     def full_hydrate(self, bundle):
@@ -384,9 +404,9 @@ class TrainingResource(ModelResource):
 
     class Meta:
         resource_name = 'training'
-        queryset = Training.objects.filter(date__in=['2016-12-02', '2016-12-09'])
+        queryset = Training.objects.all()
         authentication = ApiKeyAuthentication()
-        authorization = Authorization()
+        authorization = TrainingAuthorization('id__in')
         always_return_data = True
         include_resource_uri = False
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
@@ -398,7 +418,7 @@ class TrainingResource(ModelResource):
         dict_to_foreign_uri_m2m, field_name='participants', resource_name='mediator')
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
     hydrate_partner = partial(dict_to_foreign_uri, field_name='partner')
-    
+
     dehydrate_language = partial(
         foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
     dehydrate_assessment = partial(
@@ -483,10 +503,10 @@ class ScoreResource(ModelResource):
 
     class Meta:
         max_limit = None
-        queryset = Score.objects.filter(training__date__in=['2016-12-02', '2016-12-09'])
+        queryset = Score.objects.all()
         resource_name = 'score'
         authentication = ApiKeyAuthentication()
-        authorization = Authorization()
+        authorization = TrainingAuthorization('training_id__in')
         always_return_data = True
         include_resource_uri = False
     hydrate_participant = partial(
