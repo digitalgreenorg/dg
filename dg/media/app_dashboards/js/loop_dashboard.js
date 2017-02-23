@@ -125,7 +125,7 @@ function hide_nav(tab) {
     if (tab == HOME && selected_page == PAYMENTS_PAGE && ($('#ToolTables_table2_1').length || $('#ToolTables_table3_1').length) && (!$('#ToolTables_table2_1').hasClass('disable-button') || !$('#ToolTables_table3_1').hasClass('disable-button')))
         var answer = confirm('You have Unsaved Changes. Do you want to stay on this page?');
     if (answer) {
-        tab = PAYMENTS_PAGE
+        tab = PAYMENTS_PAGE;
     }
     if (tab == HOME) {
         $('#login_modal').closeModal();
@@ -321,7 +321,6 @@ var timeSeriesDetailOptions = {
             text: null
         },
         maxZoom: 0.1
-
     }, {
         title: {
             text: null
@@ -396,28 +395,22 @@ function total_static_data() {
     $.get("/loop/total_static_data/", {}).done(function(data) {
         hideLoader();
         var json_data = JSON.parse(data);
-        var total_volume = json_data['total_volume'][QUANTITY__SUM];
-        var total_amount = json_data['total_volume'][AMOUNT__SUM];
+
+        var total_volume = json_data['aggregated_result']['quantity'][0];
+        var total_amount = json_data['aggregated_result']['amount'][0];
         var total_farmers_reached = json_data['total_farmers_reached'];
-        // var total_repeat_farmers = json_data['total_repeat_farmers'];
-        var total_transportation_cost = 0;
-        var total_farmer_share = 0;
+        var total_transportation_cost = json_data['aggregated_result']['transportation_cost'][0];
+        var total_farmer_share = json_data['aggregated_result']['farmer_share'][0];
+        var total_gaddidar_contribution = json_data['aggregated_result']['gaddidar_share'][0];
+        var total_aggregator_cost = json_data['aggregated_result']['aggregator_incentive'][0];
 
-        for (var i = 0; i < json_data['total_transportation_cost'].length; i++) {
-            total_transportation_cost += json_data['total_transportation_cost'][i]['transportation_cost__sum'];
-            total_farmer_share += json_data['total_transportation_cost'][i]['farmer_share__sum'];
-        }
-
-        var total_gaddidar_contribution = json_data['total_gaddidar_contribution'];
-        //TODO - DONE : remove this computation from here and use data in json
-        var total_aggregator_cost = json_data['total_aggregator_incentive'];
-        var sustainability = (total_farmer_share + total_gaddidar_contribution) / (total_transportation_cost + total_aggregator_cost) * 100;
+        var sustainability = (parseFloat(total_farmer_share) + parseFloat(total_gaddidar_contribution)) / (parseFloat(total_transportation_cost) + parseFloat(total_aggregator_cost)) * 100;
 
         var clusters = json_data['total_cluster_reached'];
-        var total_cpk = (total_transportation_cost + total_aggregator_cost) / total_volume;
+        var total_cpk = (parseFloat(total_transportation_cost) + parseFloat(total_aggregator_cost)) / parseFloat(total_volume);
 
-        plot_solid_guage($('#cluster_bullet'), 0, clusters, 25);
-        plot_solid_guage($('#total_farmers_bullet'), 0, total_farmers_reached, 2000);
+        plot_solid_guage($('#cluster_bullet'), 0, clusters, 50);
+        plot_solid_guage($('#total_farmers_bullet'), 0, total_farmers_reached, 5000);
         plot_solid_guage($('#total_volume_bullet'), 0, parseInt(total_volume), 5000000);
         plot_solid_guage($('#revenue_bullet'), 0, parseInt(total_amount), 50000000);
         plot_solid_guage($('#total_expenditure_bullet'), -1, parseFloat(0 - total_cpk.toFixed(2)), 0);
@@ -429,324 +422,99 @@ function total_static_data() {
 function recent_graphs_data(language) {
     $.get("/loop/recent_graphs_data/", {}).done(function(data) {
         var json_data = JSON.parse(data);
-        dates = json_data['dates'];
-        stats = json_data['stats'];
-        transportation = json_data['transportation_cost'];
-        gaddidar_contribution_recent_graph = json_data['gaddidar_contribution'];
-        aggregator_incentive_cost = json_data['aggregator_incentive_cost'];
-        cummulative_farmer_and_volume();
+        aggregated_result = json_data['aggregated_result'];
         plot_cards_data();
+        cummulative_farmer_and_volume(json_data['cummulative_vol_farmer']);
         initialLoadComplete = true;
     });
 }
 
 //To plot and show data for recents graphs on home page
 function plot_cards_data() {
-    var avg = get_average(); // Retunts [avg_vol, active_farmers, avg_amt, active_clusters,avg_gaddidar_share]
-    var avg_vol = avg[0];
-    var avg_gaddidar_contribution = avg[4];
-    var active_clusters = avg[3];
-    var avg_aggregator_cost = avg[5];
-    document.getElementById('recent_cluster_card').innerHTML = '&nbsp;&nbsp;&nbsp;' + active_clusters[0];
-    $("#recent_cluster_sparkline").sparkline(active_clusters.reverse(), sparkline_option);
+    var days_by_group = aggregated_result[days_to_average];
+    var len_group = days_by_group.length;
+    var c_vol = [];
+    var c_amt = [];
+    var c_cpk = [],
+        c_sustainability = [],
+        c_active_clusters = [],
+        c_active_farmers = [];
+    for (var i = 0; i < len_group; i++) {
+        var active_cluster = days_by_group[i]['active_cluster'];
+        var farmer_count = days_by_group[i]['distinct_farmer_count'];
+        var vol = parseFloat(days_by_group[i][QUANTITY__SUM]);
+        var amt = parseFloat(days_by_group[i][AMOUNT__SUM]);
+        var cost = parseFloat(days_by_group[i]['transportation_cost__sum']) + parseFloat(days_by_group[i]['aggregator_incentive__sum']);
+        var recovered = parseFloat(days_by_group[i]['farmer_share__sum']) + parseFloat(days_by_group[i]['gaddidar_share__sum']);
+        var cpk = parseFloat(cost) / parseFloat(vol);
+        var spk = (parseFloat(recovered) / parseFloat(cost)) * 100;
+        c_vol.push(vol);
+        c_amt.push(amt);
+        c_cpk.push(cpk.toFixed(2));
+        c_sustainability.push(spk.toFixed(2));
+        c_active_clusters.push(active_cluster);
+        c_active_farmers.push(farmer_count)
+    }
+    document.getElementById('recent_cluster_card').innerHTML = '&nbsp;&nbsp;&nbsp;' + c_active_clusters[0];
+    $("#recent_cluster_sparkline").sparkline(c_active_clusters.reverse(), sparkline_option);
 
-    document.getElementById('recent_volume_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + (avg_vol[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).concat(KG);
-    $('#recent_volume_sparkline').sparkline(avg_vol.reverse(), sparkline_option);
+    document.getElementById('recent_volume_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + (c_vol[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).concat(KG);
+    $('#recent_volume_sparkline').sparkline(c_vol.reverse(), sparkline_option);
 
-    var active_farmers = avg[1];
-    document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + active_farmers[0];
-    $('#recent_active_farmers_sparkline').sparkline(active_farmers.reverse(), sparkline_option);
+    document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + c_active_farmers[0];
+    $('#recent_active_farmers_sparkline').sparkline(c_active_farmers.reverse(), sparkline_option);
 
-    var avg_amt = avg[2];
-    document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(avg_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-    $('#recent_revenue_sparkline').sparkline(avg_amt.reverse(), sparkline_option);
+    document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(c_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    $('#recent_revenue_sparkline').sparkline(c_amt.reverse(), sparkline_option);
 
-    var data = get_cpk(avg_vol.reverse(), avg_gaddidar_contribution, avg_aggregator_cost);
-    var cpk = data[0];
-    document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(parseFloat(cpk[0]).toFixed(2));
-    $('#cpk_sparkline').sparkline(cpk.reverse(), sparkline_option);
+    document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(parseFloat(c_cpk[0]).toFixed(2));
+    $('#cpk_sparkline').sparkline(c_cpk.reverse(), sparkline_option);
 
-    var sustainability = data[1];
-    document.getElementById('recent_sustainability_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + parseFloat(sustainability[0]).toFixed(2) + "%";
-    $('#recent_sustainability_sparkline').sparkline(sustainability.reverse(), sparkline_option);
+    document.getElementById('recent_sustainability_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + parseFloat(c_sustainability[0]).toFixed(2) + "%";
+    $('#recent_sustainability_sparkline').sparkline(c_sustainability.reverse(), sparkline_option);
 }
-
-
-//Helper function to calculate average for 7,15,30,60 days for above function
-function get_average() {
-    var today = new Date();
-    today.setDate(today.getDate() - days_to_average);
-
-    var avg_vol = [];
-    var avg_amt = [];
-    var avg_aggregator_cost = [];
-
-    var active_farmers = [];
-    var active_farmers_id = [];
-    var active_clusters = [];
-    var active_clusters_id = [];
-    var avg_gaddidar_share = [];
-
-    var j = 0,
-        k = 0,
-        temp_vol = 0,
-        temp_amt = 0,
-        temp_gaddidar_share = 0,
-        temp_aggregator_cost = 0;
-
-    var gaddidar_share = [];
-    var aggregator_cost = [];
-    var dates_of_transaction = dates.length;
-    for (var i = 0; i < dates_of_transaction; i++) {
-        gaddidar_share.push(0);
-        aggregator_cost.push(0);
-    }
-
-    // CALCUALTING GADDIDAR CONTRIBUTION FOR NUMBER OF DAYS
-    var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
-    for (var i = 0; i < gaddidar_contribution_length; i++) {
-        var index = dates.indexOf(gaddidar_contribution_recent_graph[i]['date']);
-        if (index != -1) {
-            gaddidar_share[index] += gaddidar_contribution_recent_graph[i]['amount'];
-        }
-    }
-
-    while (today >= new Date(dates[k])) {
-        avg_gaddidar_share.push(0);
-        today.setDate(today.getDate() - days_to_average);
-    }
-
-    var gaddidar_contribution_length = gaddidar_contribution_recent_graph.length;
-    while (k < gaddidar_contribution_length && today < new Date(dates[k])) {
-        temp_gaddidar_share += gaddidar_share[k];
-        k++;
-        if (k < gaddidar_contribution_length && today >= new Date(dates[k])) {
-            avg_gaddidar_share.push(temp_gaddidar_share.toFixed(0));
-            temp_gaddidar_share = 0;
-            today.setDate(today.getDate() - days_to_average);
-
-            //If no data is present for a period of days_to_average
-            while (today >= new Date(dates[k])) {
-                avg_gaddidar_share.push(0);
-                today.setDate(today.getDate() - days_to_average);
-            }
-        }
-    }
-    avg_gaddidar_share.push(temp_gaddidar_share);
-
-    // CALCUALTING AGGREGATOR INCENTIVE COST FOR NUMBER OF DAYS
-    k = 0;
-    today = new Date();
-    today.setDate(today.getDate() - days_to_average);
-
-    var aggregator_incentive_cost_length = aggregator_incentive_cost.length;
-    for (var i = 0; i < aggregator_incentive_cost_length; i++) {
-        var index = dates.indexOf(aggregator_incentive_cost[i]['date']);
-        if (index != -1) {
-            aggregator_cost[index] += aggregator_incentive_cost[i]['amount'];
-        }
-    }
-
-    while (today >= new Date(dates[k])) {
-        avg_aggregator_cost.push(0);
-        today.setDate(today.getDate() - days_to_average);
-    }
-
-    var aggregator_incentive_cost_length = aggregator_incentive_cost.length;
-    while (k < aggregator_incentive_cost_length && today < new Date(dates[k])) {
-        temp_aggregator_cost += aggregator_cost[k];
-        k++;
-        if (k < aggregator_incentive_cost_length && today >= new Date(dates[k])) {
-            avg_aggregator_cost.push(temp_aggregator_cost.toFixed(0));
-            temp_aggregator_cost = 0;
-            today.setDate(today.getDate() - days_to_average);
-
-            //If no data is present for a period of days_to_average
-            while (today >= new Date(dates[k])) {
-                avg_aggregator_cost.push(0);
-                today.setDate(today.getDate() - days_to_average);
-            }
-        }
-    }
-    avg_aggregator_cost.push(temp_aggregator_cost);
-
-    // CALCUALTING VOLUME,AMOUNT,#FARMERS,#CLUSTERS FOR NUMBER OF DAYS
-    today = new Date();
-    today.setDate(today.getDate() - days_to_average);
-
-    //If no data is present for a period of days_to_average initially
-    while (today >= new Date(stats[j]['date'])) {
-        avg_vol.push(0);
-        avg_amt.push(0);
-        active_farmers.push(0);
-        active_clusters.push(0);
-        today.setDate(today.getDate() - days_to_average);
-    }
-
-    var stats_length = stats.length;
-    while (j < stats_length && today < new Date(stats[j]['date'])) {
-        temp_vol += stats[j][QUANTITY__SUM];
-        temp_amt += stats[j][AMOUNT__SUM];
-
-        var farmer_id = stats[j]['farmer__id'];
-        if (active_farmers_id.indexOf(farmer_id) == -1) {
-            active_farmers_id.push(farmer_id);
-        }
-        var cluster_id = stats[j][USER_CREATED__ID];
-        if (active_clusters_id.indexOf(cluster_id) == -1) {
-            active_clusters_id.push(cluster_id);
-        }
-        j++;
-        if (j < stats_length && today >= new Date(stats[j]['date'])) {
-            avg_vol.push(temp_vol.toFixed(0));
-            avg_amt.push(temp_amt.toFixed(0));
-            temp_vol = 0;
-            temp_amt = 0;
-
-            active_farmers.push(active_farmers_id.length);
-            active_farmers_id = [];
-
-            active_clusters.push(active_clusters_id.length);
-            active_clusters_id = [];
-
-            today.setDate(today.getDate() - days_to_average);
-
-            //If no data is present for a period of days_to_average
-            while (today >= new Date(stats[j]['date'])) {
-                avg_vol.push(0);
-                avg_amt.push(0);
-                active_farmers.push(0);
-                active_clusters.push(0);
-                today.setDate(today.getDate() - days_to_average);
-            }
-        }
-    }
-
-    avg_vol.push(temp_vol);
-    avg_amt.push(temp_amt);
-    active_farmers.push(active_farmers_id.length);
-    active_clusters.push(active_clusters_id.length);
-    return [avg_vol, active_farmers, avg_amt, active_clusters, avg_gaddidar_share, avg_aggregator_cost];
-}
-
-
-//Helper function to calculate average cpk for 7,15,30,60 days for above function
-function get_cpk(avg_vol, avg_gaddidar_contribution, avg_aggregator_cost) {
-    var today = new Date();
-    today.setDate(today.getDate() - days_to_average);
-    var cpk = [];
-    var sustainability_per_kg = [];
-
-    var j = 0, // To loop through transportation details
-        transportation_cost = 0,
-        k = 0, // keeping note of position in avg_vol
-        f_share = 0;
-
-    //If no data is present for a period of days_to_average initially
-    while (today >= new Date(transportation[j]['date'])) {
-        cpk.push(0);
-        sustainability_per_kg.push(0);
-        today.setDate(today.getDate() - days_to_average);
-        k++;
-    }
-    while (j < transportation.length && today < new Date(transportation[j]['date'])) {
-        transportation_cost += parseFloat(transportation[j]['transportation_cost__sum']); // - transportation[j]['farmer_share__sum'];
-        f_share += parseFloat(transportation[j]['farmer_share__sum']);
-        j++;
-        if (j < transportation.length && today >= new Date(transportation[j]['date'])) {
-            if (avg_vol[k] == 0) {
-                cpk.push(0);
-                sustainability_per_kg.push(0);
-            } else {
-                var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
-                //TODO : DONE use aggregator incentive from json data for recent graph
-                var cost = parseFloat(transportation_cost) + parseFloat(avg_aggregator_cost[k]);
-                var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
-                var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
-                cpk.push(cpk_value.toFixed(2));
-                sustainability_per_kg.push(spk_value.toFixed(2));
-            }
-
-            k++;
-            today.setDate(today.getDate() - days_to_average);
-            transportation_cost = 0;
-            f_share = 0;
-            //If no data is present for a period of days_to_average
-            while (today >= new Date(transportation[j]['date'])) {
-                cpk.push(0);
-                sustainability_per_kg.push(0);
-                today.setDate(today.getDate() - days_to_average);
-                k++;
-            }
-        }
-    }
-
-    if (avg_vol[k] == 0) {
-        cpk.push(0);
-        sustainability_per_kg.push(0);
-    } else {
-        var recovered = parseFloat(f_share) + parseFloat(avg_gaddidar_contribution[k]);
-        //TODO : use A I from json data for recent graph
-        var cost = parseFloat(transportation_cost) + parseFloat(avg_aggregator_cost[k]);
-        var cpk_value = parseFloat(cost) / parseFloat(avg_vol[k]);
-        var spk_value = (parseFloat(recovered) / parseFloat(cost)) * 100;
-        cpk.push(cpk_value.toFixed(2));
-        sustainability_per_kg.push(spk_value.toFixed(2));
-    }
-
-    //Adding 0 cost for previous data making length of both arrays same
-    for (var i = cpk.length; i < avg_vol.length; i++) {
-        cpk.push(0);
-        sustainability_per_kg.push(0);
-    }
-    return [cpk, sustainability_per_kg];
-}
-
 
 //To show cummulative farmer and volume graph present on Home page
-function cummulative_farmer_and_volume() {
+function cummulative_farmer_and_volume(cum_vol_farmer) {
     var all_dates = [];
-    var farmer_ids = [];
-
-    var first_date = new Date(dates[dates.length - 1]);
-    while (first_date <= new Date(dates[0])) {
+    var vol_farmer_length = Object.keys(cum_vol_farmer).length;
+    var first_date = new Date(cum_vol_farmer[0]['date']);
+    var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']);
+    while (first_date <= last_date) {
         all_dates.push(first_date.getTime());
-        first_date.setDate(first_date.getDate() + 1)
+        first_date.setDate(first_date.getDate() + 1);
     }
 
-    var cumm_volume = new Array(all_dates.length).fill(0.0);
-    var cumm_farmers = new Array(all_dates.length).fill(0.0);
+    var total_days = all_dates.length;
+
+    var cumm_volume = new Array(total_days).fill(0.0);
+    var cumm_farmers = new Array(total_days).fill(0.0);
     var temp_volume = {};
-    temp_volume['name'] = "volume";
+    temp_volume['name'] = "Volume";
     temp_volume['data'] = [];
     temp_volume['type'] = 'spline';
     temp_volume['pointInterval'] = 24 * 3600 * 1000;
-    temp_volume['pointStart'] = all_dates[all_dates.length - 1]; // Pointing to the starting date
+    temp_volume['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
     temp_volume['showInLegend'] = true;
     var temp_farmers = {};
-    temp_farmers['name'] = "farmers";
+    temp_farmers['name'] = "Farmers";
     temp_farmers['data'] = [];
     temp_farmers['type'] = 'spline';
     temp_farmers['pointInterval'] = 24 * 3600 * 1000;
-    temp_farmers['pointStart'] = all_dates[all_dates.length - 1]; // Pointing to the starting date
+    temp_farmers['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
     temp_farmers['showInLegend'] = true;
 
-    var stats_length = stats.length;
-    for (var i = stats_length - 1; i >= 0; i--) {
-        var index = all_dates.indexOf(new Date(stats[i]['date']).getTime());
-        if (farmer_ids.indexOf(stats[i]['farmer__id']) == -1) {
-            farmer_ids.push(stats[i]['farmer__id']);
-            cumm_farmers[index] += 1;
-        }
-        cumm_volume[index] += stats[i][QUANTITY__SUM];
+    for (var i = 0; i < vol_farmer_length; i++) {
+        var index = all_dates.indexOf(new Date(cum_vol_farmer[i]['date']).getTime());
+        cumm_farmers[index] = cum_vol_farmer[i]['cum_distinct_farmer'];
+        cumm_volume[index] = cum_vol_farmer[i]['cum_vol'];
     }
 
-    temp_volume['data'].push([all_dates[0], cumm_volume[0]]);
-    temp_farmers['data'].push([all_dates[0], cumm_farmers[0]]);
-
-    for (var i = 1; i < cumm_volume.length; i++) {
-        cumm_volume[i] += cumm_volume[i - 1];
-        cumm_farmers[i] += cumm_farmers[i - 1];
+    for (var i = 0; i < total_days; i++) {
+        if (cumm_farmers[i] == 0) {
+            cumm_farmers[i] = cumm_farmers[i - 1];
+            cumm_volume[i] = cumm_volume[i - 1];
+        }
         temp_volume['data'].push([all_dates[i], cumm_volume[i]]);
         temp_farmers['data'].push([all_dates[i], cumm_farmers[i]]);
     }
@@ -808,34 +576,30 @@ function change_graph(parameter) {
 function change_payment(parameter) {
     if (parameter == 'summary_payments') {
         if (superEditMode == 1) {
-//            $("#gaddidar_payments").parent().addClass('disabled');
-//            $("#transportation_payments").parent().addClass('disabled');
+            //            $("#gaddidar_payments").parent().addClass('disabled');
+            //            $("#transportation_payments").parent().addClass('disabled');
             window.alert("Please submit currently edited table first");
-        }
-        else {
+        } else {
             $('#table2_wrapper').parent().removeAttr('style');
             $('#table3_wrapper').parent().css('display', 'none');
             $('#table4_wrapper').parent().css('display', 'none');
         }
     } else if (parameter == 'gaddidar_payments') {
         if (superEditMode == 1) {
-//            $("#summary_payments").parent().addClass('disabled');
-//            $("#transportation_payments").parent().addClass('disabled');
+            //            $("#summary_payments").parent().addClass('disabled');
+            //            $("#transportation_payments").parent().addClass('disabled');
             window.alert("Please submit currently edited table first");
-        }
-        else {
+        } else {
             $('#table2_wrapper').parent().css('display', 'none');
             $('#table3_wrapper').parent().removeAttr('style');
             $('#table4_wrapper').parent().css('display', 'none');
         }
-    }
-    else {
+    } else {
         if (superEditMode == 1) {
-//            $("#gaddidar_payments").parent().addClass('disabled');
-//            $("#summary_payments").parent().addClass('disabled');
+            //            $("#gaddidar_payments").parent().addClass('disabled');
+            //            $("#summary_payments").parent().addClass('disabled');
             window.alert("Please submit currently edited table first");
-        }
-        else {
+        } else {
             $('#table2_wrapper').parent().css('display', 'none');
             $('#table3_wrapper').parent().css('display', 'none');
             $('#table4_wrapper').parent().removeAttr('style');
@@ -917,17 +681,16 @@ function set_filterlistener() {
         crop_prices_graph(crop_id);
     });
 
-    $("#download-payment-sheet").click(function () {
+    $("#download-payment-sheet").click(function() {
         if (superEditMode == 1) {
             window.alert('Please finish editing first');
-        }
-        else {
+        } else {
 
             if ($('#aggregator_payments :selected').val() == '') {
                 alert("Please select an aggregator to download the payment sheet");
             } else {
                 xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
+                xhttp.onreadystatechange = function() {
                     var a;
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
                         a = document.createElement('a');
@@ -1004,7 +767,7 @@ function set_filterlistener() {
             $('#outliers_data').html("");
         }
         aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id, agg_id, aggregator_name_input);
-//      console.log(payments_data.aggregator_data);
+        //      console.log(payments_data.aggregator_data);
         $("#download_payment_sheets").show();
         $('#aggregator_payment_details').show();
         outliers_summary(aggregator_id);
@@ -2218,7 +1981,7 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
     var axis;
 
     $.each(masterChart.series, function() {
-        if (this.name == "volume") {
+        if (this.name == "Volume") {
             axis = 0;
         } else {
             axis = 1;
@@ -2254,24 +2017,13 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
         yAxis: [{
             title: {
                 text: "Volume"
-            },
-            maxZoom: 0.1
+            }
         }, {
             title: {
                 text: "Farmers"
             },
             opposite: true
         }],
-        tooltip: {
-            formatter: function() {
-                var vol = this.points[0];
-                var farmer = this.points[1];
-                return '<b>' + vol.series.name + '</b> : ' +
-                    Highcharts.numberFormat(vol.y, 0) + '<br/>' + '<b>' + farmer.series.name + '</b> : ' +
-                    Highcharts.numberFormat(farmer.y, 0);
-            },
-            shared: true
-        },
         legend: {
             align: 'right',
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
@@ -2709,8 +2461,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         divfield.show();
         errorfield[0].innerHTML = "* Value you have entered is invalid.";
     }
-    var aggregatorResetClick=false;
-    var farmerResetClick=false
+    var aggregatorResetClick = false;
+    var farmerResetClick = false
     $('#table2').on('click', 'tbody td', function(e) {
         $this = $(this);
         //console.log(aggregator_data_set[$this.context.parentNode.rowIndex-1][$this.context.cellIndex]);
@@ -2816,11 +2568,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         }
     });
     $('#farmer_close').on('click', function() {
-        farmerResetClick=false;
+        farmerResetClick = false;
         $('#farmer_modal').closeModal();
     });
     $('#farmer_reset_modal').on('click', function() {
-        farmerResetClick=true;
+        farmerResetClick = true;
 
         $('#farmer_share_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data());
         $('#farmer_commission_row').val(parseFloat($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2))
@@ -2840,7 +2592,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
             $('#farmer_share_row').focus();
             return false;
-        }else if(farmerResetClick && editedFarmer ==0){
+        } else if (farmerResetClick && editedFarmer == 0) {
             $this.parent()[0].childNodes[6].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data();
             $this.parent()[0].childNodes[10].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 12).data();
             delete rows_table2_farmer[$this.context.parentNode.rowIndex];
@@ -2848,8 +2600,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             $this.closest('tr').children('td:nth-child(11)')[0].className = '';
             $this.addClass('editcolumn');
             farmerResetClick = false;
-        }
-         else if (editedFarmer != 0) {
+        } else if (editedFarmer != 0) {
 
             $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
             $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val() + ' - ' + window.localStorage.name;
@@ -2899,15 +2650,15 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             $('#aggregagtor_share_row').val($this.parent()[0].childNodes[5].textContent);
             $('#aggregator_commission_row').focus();
             return false;
-        }else if (aggregatorResetClick && editedAggregator==0){
+        } else if (aggregatorResetClick && editedAggregator == 0) {
             $this.parent()[0].childNodes[4].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 4).data();
             $this.parent()[0].childNodes[9].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 11).data();
             delete rows_table2[$this.context.parentNode.rowIndex];
             $this.removeAttr('class');
             $this.closest('tr').children('td:nth-child(10)')[0].className = '';
             $this.addClass('editcolumn');
-            aggregatorResetClick=false;
-        }else if (editedAggregator != 0) {
+            aggregatorResetClick = false;
+        } else if (editedAggregator != 0) {
             $('#aggregator_modal').closeModal();
             $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
             $this.parent()[0].childNodes[9].innerHTML = $('#aggregator_comment_row').val() + ' - ' + window.localStorage.name;
@@ -3019,7 +2770,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 "fnClick": function(nButton, oConfig) {
                     $('#ToolTables_table2_1').removeClass('disable-button');
                     flag_edit_Table2 = true;
-                    superEditMode=1;
+                    superEditMode = 1;
                     $("#gaddidar_payments").parent().addClass('disabled');
                     $("#transportation_payments").parent().addClass('disabled');
                     var colCount = $('#table2').dataTable().fnSettings().aoColumns.length - 1;
@@ -3108,13 +2859,13 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                     }
 
                     if (aggregatorAjaxSuccess != -1 && farmerAjaxSuccess != -1) {
-                        if(!($('#ToolTables_table3_0').hasClass('disable-button'))){
+                        if (!($('#ToolTables_table3_0').hasClass('disable-button'))) {
                             $('#aggregator_payment_tab :input')[0].disabled = false;
                             $('#payments_from_date').parent().parent().removeClass('disable-button');
                             $('#payments_from_date').addClass('black-text');
                             $('#payments_to_date').addClass('black-text');
                         }
-                        superEditMode=0;
+                        superEditMode = 0;
                         $("#gaddidar_payments").parent().removeClass('disabled');
                         $("#transportation_payments").parent().removeClass('disabled');
                         $('#table2').find('td').removeClass("editcolumn");
@@ -3240,21 +2991,21 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     })
     $('#gaddidar_reset_modal').on('click', function() {
         gaddidarResetClicked = true;
-/*      $this.parent()[0].childNodes[4].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 4).data();
-        $this.parent()[0].childNodes[5].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data();
-        $this.parent()[0].childNodes[6].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 9).data();*/
+        /*      $this.parent()[0].childNodes[4].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 4).data();
+                $this.parent()[0].childNodes[5].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data();
+                $this.parent()[0].childNodes[6].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 9).data();*/
         $('#gaddidar_share_row').val($('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data());
         if ($('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 11).data() == 1)
             $('#gaddidar_commission_row').val(parseFloat($('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 4).data().split('%')[0]).toFixed(2));
         else
             $('#gaddidar_commission_row').val($('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 4).data());
         $('#gaddidar_comment_row').val($('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 9).data());
-/*      delete rows_table3[$this.context.parentNode.rowIndex];
-        $this.removeAttr('class');
-        $this.closest('tr').children('td:nth-child(5)')[0].className = 'editcolumn';
-        $this.closest('tr').children('td:nth-child(6)')[0].className = 'editcolumn';
-        $this.closest('tr').children('td:nth-child(7)')[0].className = '';
-        $this.addClass('editcolumn');*/
+        /*      delete rows_table3[$this.context.parentNode.rowIndex];
+                $this.removeAttr('class');
+                $this.closest('tr').children('td:nth-child(5)')[0].className = 'editcolumn';
+                $this.closest('tr').children('td:nth-child(6)')[0].className = 'editcolumn';
+                $this.closest('tr').children('td:nth-child(7)')[0].className = '';
+                $this.addClass('editcolumn');*/
     });
     $('#gaddidar_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#gaddidar_commission_row'))) {
@@ -3271,10 +3022,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             $('#gaddidar_share_row').focus();
             return false;
 
-        }else if(gaddidarResetClicked && editedGaddidar==0){
+        } else if (gaddidarResetClicked && editedGaddidar == 0) {
             $this.parent()[0].childNodes[4].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 4).data();
-        $this.parent()[0].childNodes[5].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data();
-        $this.parent()[0].childNodes[6].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 9).data();
+            $this.parent()[0].childNodes[5].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data();
+            $this.parent()[0].childNodes[6].innerHTML = $('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 9).data();
             delete rows_table3[$this.context.parentNode.rowIndex];
             $this.removeAttr('class');
             $this.closest('tr').children('td:nth-child(5)')[0].className = 'editcolumn';
@@ -3282,7 +3033,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             $this.closest('tr').children('td:nth-child(7)')[0].className = '';
             $this.addClass('editcolumn');
             gaddidarResetClicked = false;
-        }else if (editedGaddidar != 0) {
+        } else if (editedGaddidar != 0) {
             $('#gaddidar_modal').closeModal();
             if ($('#table3').DataTable().cell($this.context.parentNode.rowIndex - 1, 11).data() == 1)
                 $this.parent()[0].childNodes[4].innerHTML = $('#gaddidar_commission_row').val() + '%';
@@ -3385,7 +3136,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 "sButtonText": "Edit",
                 "fnClick": function(nButton, oConfig) {
                     $('#aggregator_payment_tab :input')[0].disabled = true;
-                    superEditMode=1;
+                    superEditMode = 1;
                     $("#summary_payments").parent().addClass('disabled');
                     $("#transportation_payments").parent().addClass('disabled');
                     $('#ToolTables_table3_1').removeClass('disable-button');
@@ -3431,10 +3182,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 alert("Success : Gaddidar Data");
                                 gaddidarAjaxSuccess = 1;
                                 for (var keys in rows_table3) {
-                                    if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0){
+                                    if (($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0) {
                                         gaddidar_data_set[keys - 1][4] = parseFloat(($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]) / 100;
-                                    }
-                                    else{
+                                    } else {
                                         gaddidar_data_set[keys - 1][4] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
                                     }
                                     gaddidar_data_set[keys - 1][5] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
@@ -3446,10 +3196,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 rows_table3 = [];
                                 get_payments_data();
                                 delay = 3000;
-                                setTimeout(function(){
+                                setTimeout(function() {
                                     $("#aggregator_payment_tab :input").val(aggregator_name_input);
                                     $("#aggregator_payments").val(aggregator).change();
-                                },delay);
+                                }, delay);
 
                             },
                             error: function() {
@@ -3462,7 +3212,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             timeout: 10000
                         });
                     if (gaddidarAjaxSuccess != -1) {
-                        if(!($('#ToolTables_table2_0').hasClass('disable-button'))){
+                        if (!($('#ToolTables_table2_0').hasClass('disable-button'))) {
                             $('#aggregator_payment_tab :input')[0].disabled = false;
                             $('#payments_from_date').parent().parent().removeClass('disable-button');
                             $('#payments_from_date').addClass('black-text');
@@ -3476,7 +3226,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                         $('#table3').find('td').removeClass("editedcelledge");
                         flag_edit_Table3 = false;
                         $('#ToolTables_table3_1').addClass('disable-button');
-                        superEditMode=0;
+                        superEditMode = 0;
                         $("#summary_payments").parent().removeClass('disabled');
                         $("#transportation_payments").parent().removeClass('disabled');
                     }
@@ -3755,7 +3505,7 @@ function get_payments_data() {
             $('#aggregator_payment_tab').show();
             payments_data = JSON.parse(data);
 
-//            console.log(payments_data)
+            //            console.log(payments_data)
 
             outliers_data = payments_data.outlier_data;
             outliers_transport_data = payments_data.outlier_transport_data;
