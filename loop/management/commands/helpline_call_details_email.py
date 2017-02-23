@@ -61,12 +61,17 @@ class Command(BaseCommand):
         yesterday_date_evening = yesterday_date.replace(hour=18,minute=0,second=0)
         working_hours = range(9,18)
         total_pending_call_count = 0
+        # Total Calls declined Till now from beginning.
         total_declined_call_count = HelplineIncoming.objects.filter(call_status=2).count()
+        # Total Calls received by unique callers in working hours of previous day (i.e. 9 AM to 6 PM).
         yesterday_received_call_count = HelplineIncoming.objects.filter(incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
+        # Total Calls received by unique callers and resolved within working hours of previous day (i.e. 9 AM to 6 PM).
         yesterday_resolved_call_count = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
+        # Total pending Calls that were not addressed for last two days,hence turned into declined previous day.
         yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date_morning,time_modified__lte=yesterday_date_evening).count()
-        # Change dates from Yesterday 6:00 PM to Today 9:00 AM (Non-Operational Hours of Helpline) 
+        # Change dates from Yesterday 6:00 PM to Today 9:00 AM (Non-Operational Hours of Helpline).
         today_date = datetime.datetime.now().replace(hour=9,minute=0,second=0)
+        # Total Calls received by unique callers in non-working hours i.e. 6 PM of previous day to 9 AM of today.
         yesterday_off_hours_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date_evening,start_time__lte=today_date).count()
         pending_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
         for call in pending_call:
