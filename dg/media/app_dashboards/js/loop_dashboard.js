@@ -3435,7 +3435,7 @@ function create_data_for_excel_download() {
             },
             {
                 'column_width': 16,
-                'formula': 'D * E',
+                'formula': null,
                 'label': 'Commission Agent Contribution [CAC] (in Rs) (Q*CAD)',
                 'total': true
             }
