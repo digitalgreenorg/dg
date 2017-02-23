@@ -62,13 +62,12 @@ class Command(BaseCommand):
         working_hours = range(9,18)
         total_pending_call_count = 0
         total_declined_call_count = HelplineIncoming.objects.filter(call_status=2).count()
-        yesterday_received_call_count = HelplineIncoming.objects.filter(incoming_time__gte=yesterday_date_morning,incoming_time__lt=yesterday_date_evening).count()
-        yesterday_resolved_call_count = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=yesterday_date_morning,incoming_time__lt=yesterday_date_evening).count()
-        yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date_morning,time_modified__lt=yesterday_date_evening).count()
+        yesterday_received_call_count = HelplineIncoming.objects.filter(incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
+        yesterday_resolved_call_count = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
+        yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date_morning,time_modified__lte=yesterday_date_evening).count()
         # Change dates from Yesterday 6:00 PM to Today 9:00 AM (Non-Operational Hours of Helpline) 
         today_date = datetime.datetime.now().replace(hour=9,minute=0,second=0)
-        yesterday_date = (today_date-timedelta(days=1)).replace(hour=18,minute=0,second=0)
-        yesterday_off_hours_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date,start_time__lte=today_date).count()
+        yesterday_off_hours_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date_evening,start_time__lte=today_date).count()
         pending_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
         for call in pending_call:
             incoming_hour = call['incoming_time'].hour
