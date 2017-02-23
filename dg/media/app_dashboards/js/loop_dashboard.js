@@ -2024,16 +2024,6 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
             },
             opposite: true
         }],
-        // tooltip: {
-        //     formatter: function() {
-        //         var vol = this.points[0];
-        //         var farmer = this.points[1];
-        //         return '<b>' + vol.series.name + '</b> : ' +
-        //             Highcharts.numberFormat(vol.y, 0) + '<br/>' + '<b>' + farmer.series.name + '</b> : ' +
-        //             Highcharts.numberFormat(farmer.y, 0);
-        //     },
-        //     shared: true
-        // },
         legend: {
             align: 'right',
             backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
