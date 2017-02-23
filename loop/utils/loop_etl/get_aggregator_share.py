@@ -2,6 +2,9 @@ from loop.models import AggregatorIncentive, AggregatorShareOutliers, CombinedTr
 from django.db.models import Count, Sum, Avg
 import inspect
 
+def calculate_inc_default(V):
+    return 0.25*V
+
 def compute_aggregator_share():
     ai_queryset = AggregatorIncentive.objects.all()
     aso_queryset = AggregatorShareOutliers.objects.all()
@@ -26,7 +29,7 @@ def compute_aggregator_share():
                         x = calculate_inc(CT[param_to_apply.notation_equivalent])
                     amount_sum += x
                 else:
-                    amount_sum += CT['quantity__sum']*0.25
+                    amount_sum += calculate_inc_default(CT['quantity__sum'])
             except Exception:
                 pass
         else:
