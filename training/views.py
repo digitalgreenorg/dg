@@ -16,6 +16,7 @@ from geographies.models import State
 from django.db import connection
 import datetime
 from datetime import date
+from training.log.training_log import get_latest_timestamp
 
 # Create your views here.
 @csrf_exempt
@@ -31,12 +32,13 @@ def login(request):
             except ApiKey.DoesNotExist:
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
-            return HttpResponse(api_key.key)
+            log_object = get_latest_timestamp()
+            return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(log_object.timestamp)}))
         else:
-            return HttpResponse("0")
+            return HttpResponse("0",status=401)
     else:
-        return HttpResponse("0")
-    return HttpResponse("0")
+        return HttpResponse("0",status=403)
+    return HttpResponse("0",status=404)
 
 def dashboard(request):
     return render(request, 'app_dashboards/training_dashboard.html')
@@ -60,7 +62,7 @@ def date_filter_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     assessment_ids = request.GET.getlist('assessment_ids[]')
-    trainer_ids = request.GET.getlist('trainer_ids[]') 
+    trainer_ids = request.GET.getlist('trainer_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     if(start_date !=""):
@@ -84,7 +86,7 @@ def trainer_wise_data(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     assessment_ids = request.GET.getlist('assessment_ids[]')
-    trainer_ids = request.GET.getlist('trainer_ids[]') 
+    trainer_ids = request.GET.getlist('trainer_ids[]')
     state_ids = request.GET.getlist('state_ids[]')
     filter_args = {}
     trainer_wise_avg_score = {}
@@ -115,7 +117,7 @@ def trainer_wise_data(request):
         json_obj = {}
         json_obj[trainer_score] = trainer_wise_avg_score[trainer_score]
         trainer_wise_avg_score_list.append(json_obj)
-        
+
     mediator_list = Score.objects.filter(**filter_args).values('training__trainer__name', 'participant').order_by('training__trainer__name').annotate(Sum('score'), Count('score'))
     data_dict = {'trainer_list': list(trainer_list_participant_training_count), 'mediator_list': list(mediator_list), 'trainer_wise_average_score_data' : trainer_wise_avg_score_list}
     data = json.dumps(data_dict)

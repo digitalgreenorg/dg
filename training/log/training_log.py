@@ -8,6 +8,14 @@ from django.apps import apps
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 
+def get_latest_timestamp():
+    LogData = apps.get_model('training','LogData')
+    try:
+        obj = LogData.objects.latest('id')
+    except Exception:
+        obj = None
+    return obj
+
 def get_log_object(log_obj):
     if log_obj.entry_table == 'Partner':
         app = 'programs'
