@@ -63,7 +63,7 @@ def send_updated_log(request):
                 user = apikey_object.user
                 TrainingUser = apps.get_model('training', 'TrainingUser')
                 requesting_training_user = TrainingUser.objects.get(user_id=user.id)
-                requesting_training_user = TrainingUser.objects.get(id=15)
+                # requesting_training_user = TrainingUser.objects.get(id=15)
             except Exception, e:
                 return HttpResponse("-1", status=401)
 
