@@ -32,6 +32,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
 
         data_by_grouped_days.loc[index,'distinct_farmer_count'] = df_farmers.where((df_farmers['date'] > end_date) & (df_farmers['date']<=start_date))['farmer_id'].nunique()
 
+    data_by_grouped_days = data_by_grouped_days.round()
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
