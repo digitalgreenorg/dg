@@ -1,7 +1,10 @@
 import json
 import xlsxwriter
+import requests
 from django.http import JsonResponse
 from io import BytesIO
+from threading import Thread
+import xml.etree.ElementTree as xml_parse
 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -14,15 +17,30 @@ from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
-    AggregatorShareOutliers, IncentiveParameter, IncentiveModel
+    AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
+    HelplineCallLog, HelplineSmsLog
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
+from loop.utils.ivr_helpline.helpline_data import helpline_data
+import unicodecsv as csv
+import time
+import datetime
+from pytz import timezone
 import inspect
-# Create your views here.
-HELPLINE_NUMBER = "09891256494"
-ROLE_AGGREGATOR = 2
 
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID, OFF_HOURS_GREETING_APP_ID, \
+    OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT
+
+from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
+    update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
+    update_incoming_obj, send_acknowledge, send_voicemail
+from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
+
+# Create your views here.
+HELPLINE_NUMBER = "01139595953"
+ROLE_AGGREGATOR = 2
+HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 
 @csrf_exempt
 def login(request):
@@ -127,132 +145,18 @@ def filter_data(request):
     return HttpResponse(data)
 
 
-def village_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    transactions = CombinedTransaction.objects.filter(**filter_args).values(
-        'farmer__village__village_name').distinct().annotate(Count('farmer', distinct=True), Sum('amount'),
-                                                             Sum('quantity'), Count(
-            'date', distinct=True),
-                                                             total_farmers=Count('farmer'))
-    data = json.dumps(list(transactions))
-    return HttpResponse(data)
-
-
-def aggregator_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    transactions = list(
-        CombinedTransaction.objects.filter(**filter_args).values('user_created__id').distinct().annotate(
-            Count('farmer', distinct=True), Sum('amount'), Sum(
-                'quantity'), Count('date', distinct=True),
-            total_farmers=Count('farmer')))
-    for i in transactions:
-        user = LoopUser.objects.get(user_id=i['user_created__id'])
-        i['user_name'] = user.name
-    data = json.dumps(transactions)
-    return HttpResponse(data)
-
-
-def crop_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    # crop wise data here
-    crops = CombinedTransaction.objects.filter(
-        **filter_args).values_list('crop__crop_name', flat=True).distinct()
-
-    transactions = CombinedTransaction.objects.filter(**filter_args).values(
-        'crop__crop_name', 'date').distinct().annotate(Sum('amount'), Sum('quantity'))
-    # crop and aggregator wise data
-    crops_aggregators = CombinedTransaction.objects.filter(**filter_args).values(
-        'crop__crop_name', 'user_created__id').distinct().annotate(amount=Sum('amount'), quantity=Sum('quantity'))
-    crops_aggregators_transactions = CombinedTransaction.objects.filter(**filter_args).values(
-        'crop__crop_name', 'user_created__id', 'date').distinct().annotate(amount=Sum('amount'),
-                                                                           quantity=Sum('quantity'))
-    for crop_aggregator in crops_aggregators:
-        user = LoopUser.objects.get(
-            user_id=crop_aggregator['user_created__id'])
-        crop_aggregator['user_name'] = user.name
-    dates = CombinedTransaction.objects.filter(**filter_args).values_list(
-        'date', flat=True).distinct().order_by('date').annotate(Count('farmer', distinct=True))
-    dates_farmer_count = CombinedTransaction.objects.filter(**filter_args).values(
-        'date').distinct().order_by('date').annotate(Count('farmer', distinct=True))
-    chart_dict = {'dates': list(dates), 'crops': list(crops), 'transactions': list(transactions), 'farmer_count': list(
-        dates_farmer_count), 'crops_aggregators': list(crops_aggregators),
-                  'crops_aggregators_transactions': list(crops_aggregators_transactions)}
-
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
-
-    return HttpResponse(data)
-
-
 def total_static_data(request):
-    total_volume = CombinedTransaction.objects.all(
-    ).aggregate(Sum('quantity',output_field=IntegerField()), Sum('amount',output_field=IntegerField()))
-    # total_repeat_farmers = CombinedTransaction.objects.values(
-    #     'farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1).count()
     total_farmers_reached = CombinedTransaction.objects.values('farmer').distinct().count()
     total_cluster_reached = LoopUser.objects.filter(role=ROLE_AGGREGATOR).count()
-    total_transportation_cost = DayTransportation.objects.values('date', 'user_created__id', 'mandi__id').annotate(
-        Sum('transportation_cost',output_field=IntegerField()), farmer_share__sum=Avg('farmer_share'))
 
-    gaddidar_share = gaddidar_contribution_for_totat_static_data()
+    aggregated_result,cum_vol_farmer = get_data_from_myisam(1)
 
-    aggregator_incentive = aggregator_incentive_for_total_static_data()
-
-    chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
-                  'total_transportation_cost': list(total_transportation_cost),
-                  'total_gaddidar_contribution': gaddidar_share, 'total_cluster_reached': total_cluster_reached,
-                  'total_aggregator_incentive': aggregator_incentive}
+    chart_dict = {'total_farmers_reached': total_farmers_reached,
+                  'total_cluster_reached': total_cluster_reached,
+                  'aggregated_result' : aggregated_result}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
-
-def aggregator_incentive_for_total_static_data():
-    aggregator_incentive_list = calculate_aggregator_incentive()
-    total_aggregator_incentive = 0
-    for entry in aggregator_incentive_list:
-        total_aggregator_incentive += entry['amount']
-    return round(total_aggregator_incentive,2)
 
 def calculate_inc_default(V):
     return 0.25*V
@@ -329,14 +233,6 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     return result
 
 
-def gaddidar_contribution_for_totat_static_data():
-    gaddidar_share_list = calculate_gaddidar_share(None, None, None, None)
-    total_share = 0
-    for entry in gaddidar_share_list:
-        total_share += entry['amount']
-    return round(total_share,2)
-
-
 def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
     parameters_dictionary = {'mandi__in': mandi_list}
     parameters_dictionary_for_outliers = {'aggregator__user__in': aggregator_list, 'mandi__in': mandi_list}
@@ -403,21 +299,11 @@ def crop_language_data(request):
 
 
 def recent_graphs_data(request):
-    stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
-        '-date').annotate(Sum('quantity'), Sum('amount'))
-    transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
-        '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
-    dates = CombinedTransaction.objects.values_list(
-        'date', flat=True).distinct().order_by('-date')
+    aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0)
 
-    gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)
-    aggregator_incentive_cost = calculate_aggregator_incentive()
-
-    chart_dict = {'stats': list(stats), 'transportation_cost': list(
-        transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution, "aggregator_incentive_cost" : aggregator_incentive_cost}
+    chart_dict = {'aggregated_result':aggregated_result, 'cummulative_vol_farmer':cummulative_vol_farmer}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
-
 
 def data_for_drilldown_graphs(request):
     start_date = request.GET['start_date']
@@ -646,12 +532,6 @@ def payments(request):
 
     aggregator_incentive = calculate_aggregator_incentive(start_date,end_date)
 
-    # aggregator_outlier = AggregatorShareOutliers.objects.annotate(user_created__id=F('aggregator__user_id'),
-    #                                                               mandi__name=F('mandi__mandi_name_en')).values("date",
-    #                                                                                                             "mandi__name",
-    #                                                                                                             "amount",
-    #                                                                                                             "comment",
-    #                                                                                                             "user_created__id")
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
                       outlier_transport_data), 'gaddidar_data': gaddidar_data, 'aggregator_data': list(aggregator_data),
@@ -659,3 +539,186 @@ def payments(request):
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)
+
+def helpline_incoming(request):
+    if request.method == 'GET':
+        call_id,farmer_number,dg_number,incoming_time = fetch_info_of_incoming_call(request)
+        save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
+        incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
+        # If No pending call with this number
+        if len(incoming_call_obj) == 0:
+            incoming_call_obj = HelplineIncoming(call_id=call_id, from_number=farmer_number, to_number=dg_number, incoming_time=incoming_time, last_incoming_time=incoming_time)
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                module = 'helpline_incoming (New Call)'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
+                return HttpResponse(status=500)
+            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            # Initiate Call if Expert is available
+            if len(expert_obj) > 0:
+                make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
+            # Send Greeting and Sms if No Expert is available
+            else:
+                sms_body = helpline_data['sms_body']
+                send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+                # Send greeting to user for notify about no expert available at this time.
+                connect_to_app(farmer_number,NO_EXPERT_GREETING_APP_ID)
+            return HttpResponse(status=200)
+        # If pending call exist for this number
+        else:
+            # Update last incoming time for this pending call
+            incoming_call_obj = incoming_call_obj[0]
+            incoming_call_obj.last_incoming_time = incoming_time
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                module = 'helpline_incoming (Old Call)'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
+            latest_outgoing_of_incoming = HelplineOutgoing.objects.filter(incoming_call=incoming_call_obj).order_by('-id').values_list('call_id', flat=True)[:1]
+            if len(latest_outgoing_of_incoming) != 0:
+                call_status = get_status(latest_outgoing_of_incoming[0])
+            else:
+                call_status = ''
+            # Check If Pending call is already in-progress
+            if call_status != '' and call_status['response_code'] == 200 and (call_status['status'] in ('ringing', 'in-progress')):
+                return HttpResponse(status=200)
+            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            # Initiate Call if Expert is available
+            if len(expert_obj) > 0:
+                make_helpline_call(incoming_call_obj,expert_obj[0],farmer_number)
+            # Send Greeting and Sms if No Expert is available
+            else:
+                sms_body = helpline_data['sms_body']
+                send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+                # Send greeting to user for notify about no expert available at this time.
+                connect_to_app(farmer_number,NO_EXPERT_GREETING_APP_ID)
+            return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
+
+@csrf_exempt
+def helpline_call_response(request):
+    if request.method == 'POST':
+        status = str(request.POST.getlist('Status')[0])
+        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        outgoing_obj = HelplineOutgoing.objects.filter(call_id=outgoing_call_id).select_related('incoming_call','from_number').order_by('-id')
+        outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
+        # If call Successfully completed then mark call as resolved
+        if status == 'completed':
+            recording_url = str(request.POST.getlist('RecordingUrl')[0])
+            resolved_time = str(request.POST.getlist('DateUpdated')[0])
+            if outgoing_obj:
+                incoming_obj = outgoing_obj.incoming_call
+                expert_obj = outgoing_obj.from_number
+                update_incoming_obj(incoming_obj,1,recording_url,expert_obj,resolved_time)
+            else:
+                # if outgoing object not found then get detail by call Exotel API
+                call_detail = get_info_through_api(outgoing_call_id)
+                if call_detail != '':
+                    incoming_obj = call_detail[0]
+                    expert_obj = call_detail[1]
+                    update_incoming_obj(incoming_obj,1,recording_url,expert_obj,resolved_time)
+        elif status == 'failed':
+            if outgoing_obj:
+                farmer_number = outgoing_obj.to_number
+                #send sms to Notify User about Later Call
+                sms_body = helpline_data['sms_body']
+                send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+            else:
+                call_detail = get_info_through_api(outgoing_call_id)
+                if call_detail != '':
+                    farmer_number = call_detail[2]
+                    #send sms to Notify User about Later Call
+                    sms_body = helpline_data['sms_body']
+                    send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+        elif status == 'no-answer' or status == 'busy':
+            call_status = get_status(outgoing_call_id)
+            if call_status['response_code'] == 200:
+                # if expert pick call and (not farmer or farmer busy)
+                if call_status['from_status'] == 'completed':
+                    if outgoing_obj:
+                        farmer_number = outgoing_obj.to_number
+                    else:
+                        farmer_number = call_status['to']
+                    #send sms to Notify User about Later Call
+                    sms_body = helpline_data['sms_body']
+                    send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
+                    return HttpResponse(status=200)
+            make_call = 0
+            if outgoing_obj:
+                incoming_obj = outgoing_obj.incoming_call
+                expert_obj = outgoing_obj.from_number
+                to_number = outgoing_obj.to_number
+                make_call = 1
+            else:
+                call_detail = get_info_through_api(outgoing_call_id)
+                if call_detail != '':
+                    incoming_obj = call_detail[0]
+                    expert_obj = call_detail[1]
+                    to_number = call_detail[2]
+                    make_call = 1
+            if make_call == 1:
+                # Find next expert
+                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1))
+                try:
+                    expert_numbers = expert_numbers[expert_numbers.index(expert_obj)+1:]
+                except Exception as e:
+                    expert_numbers = []
+                    pass
+                # Make a call if next expert found
+                if len(expert_numbers) > 0:
+                    # if call initiate by queue module or in the chain of call initiate by queue module
+                    if send_acknowledge(incoming_obj) == 0:
+                        make_helpline_call(incoming_obj,expert_numbers[0],to_number)
+                    else:
+                        make_helpline_call(incoming_obj,expert_numbers[0],to_number,1)
+                # Send greeting and Sms if no expert is available
+                else:
+                    # if call not initiate by queue module or not in the chain of call initiate by queue module
+                    # then send acknowledgement of future call to user
+                    if send_acknowledge(incoming_obj) == 0:
+                        sms_body = helpline_data['sms_body']
+                        send_helpline_sms(EXOTEL_HELPLINE_NUMBER,to_number,sms_body)
+                        # Send greeting to user for notify about no expert available at this time.
+                        connect_to_app(to_number,NO_EXPERT_GREETING_APP_ID)
+        else:
+            #For other conditions write Logs
+            module = 'helpline_call_response'
+            log = 'Status: %s (outgoing_call_id: %s)'%(str(status),str(outgoing_call_id))
+            write_log(HELPLINE_LOG_FILE,module,log)
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
+
+def helpline_offline(request):
+    if request.method == 'GET':
+        call_id,farmer_number,dg_number,incoming_time = fetch_info_of_incoming_call(request)
+        save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
+        incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
+        if len(incoming_call_obj) == 0:
+            incoming_call_obj = HelplineIncoming(call_id=call_id, from_number=farmer_number, to_number=dg_number, incoming_time=incoming_time, last_incoming_time=incoming_time)
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                module = 'helpline_offline'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
+                return HttpResponse(status=500)
+        else:
+            # Update last incoming time for this pending call
+            incoming_call_obj = incoming_call_obj[0]
+            incoming_call_obj.last_incoming_time = incoming_time
+            try:
+                incoming_call_obj.save()
+            except Exception as e:
+                # Write Exception to Log file
+                module = 'helpline_offline'
+                write_log(HELPLINE_LOG_FILE,module,str(e))
+        # Create thread for Notify User about off hours and record voicemail.
+        Thread(target=send_voicemail,args=[farmer_number,OFF_HOURS_VOICEMAIL_APP_ID]).start()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
