@@ -39,7 +39,7 @@ def login(request):
             return HttpResponse(json.dumps(
                 {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name,
                  'mode': loop_user[0].mode, 'helpline': HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number,
-                 'district': loop_user[0].village.block.district.id,'days_count': loop_user[0].days_count}))
+                 'district': loop_user[0].village.block.district.id,'days_count': loop_user[0].days_count,'helpline':loop_user[0].village.block.district.state.helpline_number,'crop_add':loop_user[0].village.block.district.state.crop_add}))
         else:
             return HttpResponse("0", status=401)
     else:
