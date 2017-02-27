@@ -74,27 +74,31 @@ def send_updated_log(request):
 
             # rows = []
             rows = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table__in=['Partner','Trainer','Assessment','Question', 'Language'])
-            distrcit_animator_list = []
+            district_animator_list = []
 
             if requesting_training_user:
                 requesting_user_states = requesting_training_user.get_states()
-                requesting_user_districts = []
+                # requesting_user_districts = []
 
                 filtered_districts = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='District')
                 for district in filtered_districts:
                     if district.action != -1 and District.objects.get(id=district.model_id).state in requesting_user_states:
-                        distrcit_animator_list.append(district)
-                        requesting_user_districts.append(district.model_id)
+                        district_animator_list.append(district)
+                        # requesting_user_districts.append(district.model_id)
+                    elif district.action == -1:
+                        district_animator_list.append(district)
 
                 filtered_animators = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='Animator')
                 for animator in filtered_animators:
                     if animator.action != -1 and Animator.objects.get(id=animator.model_id).district.state in requesting_user_states:
-                        distrcit_animator_list.append(animator)
+                        district_animator_list.append(animator)
+                    elif animator.action == -1:
+                        district_animator_list.append(animator)
 
             log_list = []
             for row in rows:
                 log_list.append(get_log_object(row))
-            for row in distrcit_animator_list:
+            for row in district_animator_list:
                 log_list.append(get_log_object(row))
 
             if rows:
