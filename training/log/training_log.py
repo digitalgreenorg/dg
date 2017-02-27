@@ -23,6 +23,8 @@ def get_log_object(log_obj):
         app = 'people'
     elif log_obj.entry_table == 'District':
         app = 'geographies'
+    elif log_obj.entry_table == 'Language':
+        app = 'videos'
     else:
         app = 'training'
     model = apps.get_model(app, log_obj.entry_table)
@@ -63,7 +65,6 @@ def send_updated_log(request):
                 user = apikey_object.user
                 TrainingUser = apps.get_model('training', 'TrainingUser')
                 requesting_training_user = TrainingUser.objects.get(user_id=user.id)
-                # requesting_training_user = TrainingUser.objects.get(id=15)
             except Exception, e:
                 return HttpResponse("-1", status=401)
 
@@ -72,7 +73,7 @@ def send_updated_log(request):
             Animator = apps.get_model('people','Animator')
 
             # rows = []
-            rows = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table__in=['Partner','Trainer','Assessment','Question'])
+            rows = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table__in=['Partner','Trainer','Assessment','Question', 'Language'])
             distrcit_animator_list = []
 
             if requesting_training_user:
