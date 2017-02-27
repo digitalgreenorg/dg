@@ -61,7 +61,7 @@ def send_updated_log(request):
         request_timestamp = request.POST['timestamp']
         if request_timestamp:
             try:
-                apikey_object = ApiKey.objects.get(key=apikey)
+                apikey_object = ApiKey.objects.get(key=apiKey)
                 user = apikey_object.user
                 TrainingUser = apps.get_model('training', 'TrainingUser')
                 requesting_training_user = TrainingUser.objects.get(user_id=user.id)
