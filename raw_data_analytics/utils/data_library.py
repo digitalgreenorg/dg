@@ -97,7 +97,7 @@ class data_lib():
 
     def order_data(self, partitionElements, dataframe):
         header = dataframe.columns.tolist()
-        arranged_columns = [None] * len(self.orderDictionary)
+        arranged_columns = [None] * (len(self.orderDictionary)+40)  # 40 added to handle index out of range
         bumper = 0
 
         for items in partitionElements:
@@ -310,15 +310,14 @@ class data_lib():
 
     # Function to make OrderBy component of the sql query
     def getOrderByComponent(self, partitionElements, valueElements):
-
         orderbyComponentList = ['1']
-        ordered_cols = [None] * len(self.orderDictionary)
+        ordered_cols = [None] * (len(self.orderDictionary)+40) #40 added to handle index out of range
         bumper = 0
         for items in partitionElements:
             if partitionElements[items] != False:
                 for keys in self.selectDictionary[items]:
                     if self.selectDictionary[items][keys] == True and self.selectDictionary[items].values().count(True) > 1:
-                        # ordered_cols[len(ordered_cols) + 1] = None
+                        #ordered_cols[len(ordered_cols) + 1] = None
                         ordered_cols[bumper + self.orderDictionary[items]] = '\'' + self.headerDictionary[items][keys] + '\''
                         bumper += 1
                     else:
