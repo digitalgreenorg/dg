@@ -416,7 +416,7 @@ class TrainingResource(BaseResource):
     hydrate_facilitator = partial(dict_to_foreign_uri, field_name='facilitator', resource_name='trainer')
     hydrate_participants = partial(
         dict_to_foreign_uri_m2m, field_name='participants', resource_name='mediator')
-    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+    # hydrate_district = partial(dict_to_foreign_uri, field_name='district')
     hydrate_partner = partial(dict_to_foreign_uri, field_name='partner')
 
     dehydrate_language = partial(
