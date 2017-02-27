@@ -105,7 +105,7 @@ class Score(models.Model):
 
 class LogData(models.Model):
     id = models.AutoField(primary_key=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.now)
     user = models.ForeignKey(User, null=True)
     action = models.IntegerField()
     entry_table = models.CharField(max_length=100)
