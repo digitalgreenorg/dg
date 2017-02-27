@@ -25,7 +25,12 @@ class Command(BaseCommand):
 		root = tree.getroot()
 		for c in root.findall('AdoptionData'):
 			pc = c.find('MemberCode').text
-			vc = c.find('Video').text
+			try:
+				vc = c.find('Video').text
+			except Exception as e:
+				wtr.writerow(['video data missing (Member code ->)', pc, e])
+				jslps.other_error_count += 1
+				continue
 			da = datetime.datetime.strptime(c.find('DOA').text, '%d/%m/%Y')
 			de = datetime.datetime.strptime(c.find('DOE').text, '%d/%m/%Y')
 
