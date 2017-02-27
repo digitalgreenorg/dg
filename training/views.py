@@ -33,6 +33,8 @@ def login(request):
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
             log_object = get_latest_timestamp()
+            if log_object==None:
+                log_object.timestamp=datetime.datetime.utcnow()
             return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(log_object.timestamp)}))
         else:
             return HttpResponse("0",status=401)
