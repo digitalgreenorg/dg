@@ -35,6 +35,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
     update_incoming_obj, send_acknowledge, send_voicemail
+from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
@@ -144,132 +145,18 @@ def filter_data(request):
     return HttpResponse(data)
 
 
-def village_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    transactions = CombinedTransaction.objects.filter(**filter_args).values(
-        'farmer__village__village_name').distinct().annotate(Count('farmer', distinct=True), Sum('amount'),
-                                                             Sum('quantity'), Count(
-            'date', distinct=True),
-                                                             total_farmers=Count('farmer'))
-    data = json.dumps(list(transactions))
-    return HttpResponse(data)
-
-
-def aggregator_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    transactions = list(
-        CombinedTransaction.objects.filter(**filter_args).values('user_created__id').distinct().annotate(
-            Count('farmer', distinct=True), Sum('amount'), Sum(
-                'quantity'), Count('date', distinct=True),
-            total_farmers=Count('farmer')))
-    for i in transactions:
-        user = LoopUser.objects.get(user_id=i['user_created__id'])
-        i['user_name'] = user.name
-    data = json.dumps(transactions)
-    return HttpResponse(data)
-
-
-def crop_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    village_ids = request.GET.getlist('village_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    filter_args = {}
-    if (start_date != ""):
-        filter_args["date__gte"] = start_date
-    if (end_date != ""):
-        filter_args["date__lte"] = end_date
-    filter_args["user_created__id__in"] = aggregator_ids
-    filter_args["farmer__village__id__in"] = village_ids
-    filter_args["crop__id__in"] = crop_ids
-    filter_args["mandi__id__in"] = mandi_ids
-    # crop wise data here
-    crops = CombinedTransaction.objects.filter(
-        **filter_args).values_list('crop__crop_name', flat=True).distinct()
-
-    transactions = CombinedTransaction.objects.filter(**filter_args).values(
-        'crop__crop_name', 'date').distinct().annotate(Sum('amount'), Sum('quantity'))
-    # crop and aggregator wise data
-    crops_aggregators = CombinedTransaction.objects.filter(**filter_args).values(
-        'crop__crop_name', 'user_created__id').distinct().annotate(amount=Sum('amount'), quantity=Sum('quantity'))
-    crops_aggregators_transactions = CombinedTransaction.objects.filter(**filter_args).values(
-        'crop__crop_name', 'user_created__id', 'date').distinct().annotate(amount=Sum('amount'),
-                                                                           quantity=Sum('quantity'))
-    for crop_aggregator in crops_aggregators:
-        user = LoopUser.objects.get(
-            user_id=crop_aggregator['user_created__id'])
-        crop_aggregator['user_name'] = user.name
-    dates = CombinedTransaction.objects.filter(**filter_args).values_list(
-        'date', flat=True).distinct().order_by('date').annotate(Count('farmer', distinct=True))
-    dates_farmer_count = CombinedTransaction.objects.filter(**filter_args).values(
-        'date').distinct().order_by('date').annotate(Count('farmer', distinct=True))
-    chart_dict = {'dates': list(dates), 'crops': list(crops), 'transactions': list(transactions), 'farmer_count': list(
-        dates_farmer_count), 'crops_aggregators': list(crops_aggregators),
-                  'crops_aggregators_transactions': list(crops_aggregators_transactions)}
-
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
-
-    return HttpResponse(data)
-
-
 def total_static_data(request):
-    total_volume = CombinedTransaction.objects.all(
-    ).aggregate(Sum('quantity',output_field=IntegerField()), Sum('amount',output_field=IntegerField()))
-    # total_repeat_farmers = CombinedTransaction.objects.values(
-    #     'farmer').annotate(farmer_count=Count('farmer')).exclude(farmer_count=1).count()
     total_farmers_reached = CombinedTransaction.objects.values('farmer').distinct().count()
     total_cluster_reached = LoopUser.objects.filter(role=ROLE_AGGREGATOR).count()
-    total_transportation_cost = DayTransportation.objects.values('date', 'user_created__id', 'mandi__id').annotate(
-        Sum('transportation_cost',output_field=IntegerField()), farmer_share__sum=Avg('farmer_share'))
 
-    gaddidar_share = gaddidar_contribution_for_totat_static_data()
+    aggregated_result,cum_vol_farmer = get_data_from_myisam(1)
 
-    aggregator_incentive = aggregator_incentive_for_total_static_data()
-
-    chart_dict = {'total_volume': total_volume, 'total_farmers_reached': total_farmers_reached,
-                  'total_transportation_cost': list(total_transportation_cost),
-                  'total_gaddidar_contribution': gaddidar_share, 'total_cluster_reached': total_cluster_reached,
-                  'total_aggregator_incentive': aggregator_incentive}
+    chart_dict = {'total_farmers_reached': total_farmers_reached,
+                  'total_cluster_reached': total_cluster_reached,
+                  'aggregated_result' : aggregated_result}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
-
-def aggregator_incentive_for_total_static_data():
-    aggregator_incentive_list = calculate_aggregator_incentive()
-    total_aggregator_incentive = 0
-    for entry in aggregator_incentive_list:
-        total_aggregator_incentive += entry['amount']
-    return round(total_aggregator_incentive,2)
 
 def calculate_inc_default(V):
     return 0.25*V
@@ -346,14 +233,6 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     return result
 
 
-def gaddidar_contribution_for_totat_static_data():
-    gaddidar_share_list = calculate_gaddidar_share(None, None, None, None)
-    total_share = 0
-    for entry in gaddidar_share_list:
-        total_share += entry['amount']
-    return round(total_share,2)
-
-
 def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
     parameters_dictionary = {'mandi__in': mandi_list}
     parameters_dictionary_for_outliers = {'aggregator__user__in': aggregator_list, 'mandi__in': mandi_list}
@@ -420,21 +299,11 @@ def crop_language_data(request):
 
 
 def recent_graphs_data(request):
-    stats = CombinedTransaction.objects.values('farmer__id', 'date', 'user_created__id').order_by(
-        '-date').annotate(Sum('quantity'), Sum('amount'))
-    transportation_cost = DayTransportation.objects.values('date', 'mandi__id', 'user_created__id').order_by(
-        '-date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
-    dates = CombinedTransaction.objects.values_list(
-        'date', flat=True).distinct().order_by('-date')
+    aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0)
 
-    gaddidar_contribution = calculate_gaddidar_share(None, None, None, None)
-    aggregator_incentive_cost = calculate_aggregator_incentive()
-
-    chart_dict = {'stats': list(stats), 'transportation_cost': list(
-        transportation_cost), 'dates': list(dates), "gaddidar_contribution": gaddidar_contribution, "aggregator_incentive_cost" : aggregator_incentive_cost}
+    chart_dict = {'aggregated_result':aggregated_result, 'cummulative_vol_farmer':cummulative_vol_farmer}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     return HttpResponse(data)
-
 
 def data_for_drilldown_graphs(request):
     start_date = request.GET['start_date']
@@ -663,12 +532,6 @@ def payments(request):
 
     aggregator_incentive = calculate_aggregator_incentive(start_date,end_date)
 
-    # aggregator_outlier = AggregatorShareOutliers.objects.annotate(user_created__id=F('aggregator__user_id'),
-    #                                                               mandi__name=F('mandi__mandi_name_en')).values("date",
-    #                                                                                                             "mandi__name",
-    #                                                                                                             "amount",
-    #                                                                                                             "comment",
-    #                                                                                                             "user_created__id")
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
                       outlier_transport_data), 'gaddidar_data': gaddidar_data, 'aggregator_data': list(aggregator_data),
@@ -717,7 +580,7 @@ def helpline_incoming(request):
             latest_outgoing_of_incoming = HelplineOutgoing.objects.filter(incoming_call=incoming_call_obj).order_by('-id').values_list('call_id', flat=True)[:1]
             if len(latest_outgoing_of_incoming) != 0:
                 call_status = get_status(latest_outgoing_of_incoming[0])
-            else: 
+            else:
                 call_status = ''
             # Check If Pending call is already in-progress
             if call_status != '' and call_status['response_code'] == 200 and (call_status['status'] in ('ringing', 'in-progress')):
@@ -746,7 +609,7 @@ def helpline_call_response(request):
         # If call Successfully completed then mark call as resolved
         if status == 'completed':
             recording_url = str(request.POST.getlist('RecordingUrl')[0])
-            resolved_time = str(request.POST.getlist('DateUpdated')[0])            
+            resolved_time = str(request.POST.getlist('DateUpdated')[0])
             if outgoing_obj:
                 incoming_obj = outgoing_obj.incoming_call
                 expert_obj = outgoing_obj.from_number
@@ -771,7 +634,7 @@ def helpline_call_response(request):
                     #send sms to Notify User about Later Call
                     sms_body = helpline_data['sms_body']
                     send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
-        elif status == 'no-answer' or status == 'busy':  
+        elif status == 'no-answer' or status == 'busy':
             call_status = get_status(outgoing_call_id)
             if call_status['response_code'] == 200:
                 # if expert pick call and (not farmer or farmer busy)
@@ -779,7 +642,7 @@ def helpline_call_response(request):
                     if outgoing_obj:
                         farmer_number = outgoing_obj.to_number
                     else:
-                        farmer_number = call_status['to']                    
+                        farmer_number = call_status['to']
                     #send sms to Notify User about Later Call
                     sms_body = helpline_data['sms_body']
                     send_helpline_sms(EXOTEL_HELPLINE_NUMBER,farmer_number,sms_body)
