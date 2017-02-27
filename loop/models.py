@@ -159,6 +159,7 @@ class LoopUser(LoopModel):
 
     def __user__(self):
         return "%s" % self.user.id
+
 post_save.connect(save_log,sender=LoopUser)
 pre_delete.connect(delete_log,sender=LoopUser)
 

@@ -4,10 +4,14 @@ from django.conf.urls import patterns, include, url
 
 from tastypie.api import Api
 
+<<<<<<< HEAD
 
 
 from api import FarmerResource, VillageResource, LoopUserResource, CropResource, MandiResource, CombinedTransactionResource, TransporterResource, VehicleResource,TransportationVehicleResource, DayTransportationResource,GaddidarResource,BlockResource,DistrictResource,StateResource,GaddidarShareOutliersResource,AggregatorShareOutliersResource,GaddidarCommissionResource
 
+=======
+from api import FarmerResource, VillageResource, LoopUserResource, CropResource, MandiResource, CombinedTransactionResource, TransporterResource, VehicleResource,TransportationVehicleResource, DayTransportationResource,GaddidarResource,BlockResource,DistrictResource,StateResource,GaddidarShareOutliersResource,AggregatorShareOutliersResource, GaddidarCommissionResource
+>>>>>>> 9fc1b2abf33274567541b9128e3d0b01b0bc15bb
 from loop.views import *
 
 from loop_data_log import send_updated_log
@@ -31,6 +35,7 @@ api.register(StateResource())
 api.register(GaddidarCommissionResource())
 api.register(GaddidarShareOutliersResource())
 api.register(AggregatorShareOutliersResource())
+
 
 
 urlpatterns = patterns('',

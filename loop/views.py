@@ -63,6 +63,7 @@ def login(request):
                  'mode': loop_user[0].mode, 'helpline': HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number,'user_name': username,
                  'district': loop_user[0].village.block.district.id,'days_count': loop_user[0].days_count,'helpline':loop_user[0].village.block.district.state.helpline_number,'crop_add':loop_user[0].village.block.district.state.crop_add}))
 
+
         else:
             return HttpResponse("0", status=401)
     else:
