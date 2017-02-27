@@ -388,7 +388,7 @@ class QuestionResource(ModelResource):
         return bundle
 
 
-class TrainingResource(ModelResource):
+class TrainingResource(BaseResource):
     language = fields.ForeignKey('training.api.LanguageResource', 'language')
     assessment = fields.ForeignKey(
         'training.api.AssessmentResource', 'assessment')
