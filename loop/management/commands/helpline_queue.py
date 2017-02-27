@@ -40,6 +40,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+        working_hours = range(9,18)
         if expert_obj:
             expert_obj = expert_obj[0]
         else:
@@ -61,9 +62,8 @@ class Command(BaseCommand):
             incoming_hour = pending_call['incoming_time'].hour
             last_incoming_hour = pending_call['last_incoming_time'].hour
             # Select calls which are incoming or last incoming between 9 AM to 6 PM
-            if (incoming_hour in range(9,18)) and (last_incoming_hour in range(9,18)):
+            if (incoming_hour in working_hours) and (last_incoming_hour in working_hours):
                 pending_incoming_call_id.append(pending_call['id'])
-        #pending_incoming_call_id = HelplineIncoming.objects.filter(call_status=0).order_by('id').values_list('id', flat=True)
         for ids in pending_incoming_call_id:
             incoming_call_obj = self.check_pending_or_not(ids)
             if incoming_call_obj:
