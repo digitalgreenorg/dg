@@ -32,10 +32,8 @@ def login(request):
             except ApiKey.DoesNotExist:
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
-            log_object = get_latest_timestamp()
-            if log_object==None:
-                log_object.timestamp=datetime.datetime.utcnow()
-            return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(log_object.timestamp)}))
+            timestamp = datetime.datetime.utcnow()
+            return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(timestamp)}))
         else:
             return HttpResponse("0",status=401)
     else:
