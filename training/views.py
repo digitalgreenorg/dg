@@ -48,10 +48,11 @@ def filter_data(request):
     states = State.objects.values('id','state_name')
     filter_args = {}
     filter_args['score__in'] = [0, 1]
-    participants = Score.objects.filter(**filter_args).values('participant__id').distinct()
-    num_trainings = Score.objects.filter(**filter_args).values('training_id').distinct().count()
-    num_participants = len(participants)
-    num_pass = Score.objects.filter(**filter_args).values('participant').annotate(Sum('score'), Count('score'))
+    score_queryset = Score.objects.filter(**filter_args)
+    participants = score_queryset.values('participant__id').distinct()
+    num_trainings = score_queryset.values('training_id').distinct().count()
+    num_pass = score_queryset.values('participant').annotate(Sum('score'), Count('score'))
+    num_participants = participants.count()
     data_dict = {'assessments': list(assessments), 'trainers': list(trainers), 'states': list(states), 'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
@@ -72,10 +73,11 @@ def date_filter_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args['score__in'] = [0, 1]
-    participants = Score.objects.filter(**filter_args).values_list('participant__id', flat=True).distinct()
-    num_trainings = Score.objects.filter(**filter_args).values('training_id').distinct().count()
-    num_participants = len(participants)
-    num_pass = Score.objects.filter(**filter_args).values('participant').annotate(Sum('score'), Count('score'))
+    score_queryset = Score.objects.filter(**filter_args)
+    participants = score_queryset.values_list('participant__id', flat=True).distinct()
+    num_trainings = score_queryset.values('training_id').distinct().count()
+    num_pass = score_queryset.values('participant').annotate(Sum('score'), Count('score'))
+    num_participants = participants.count()
 
     data_dict = {'num_trainings': num_trainings, 'num_participants': num_participants, 'num_pass': list(num_pass)}
     data = json.dumps(data_dict)
@@ -98,7 +100,7 @@ def trainer_wise_data(request):
     filter_args["training__trainer__id__in"] = trainer_ids
     filter_args["participant__district__state__id__in"] = state_ids
     filter_args["score__in"] = [1, 0]
-    score_obj = Score.objects.filter(**filter_args).all()
+    score_obj = Score.objects.filter(**filter_args)
     trainer_list_participant_training_count = score_obj.values('training__trainer__name').order_by('training__trainer__name').annotate(Count('participant', distinct=True) , Sum('score'), Count('score'), Count('training__id', distinct=True),all_participant_count=Count('participant', distinct=False))
     trainer_list_participant_count = score_obj.values('training__trainer__name', 'training_id').order_by('training__trainer__name').annotate(Count('participant', distinct=True ), Sum('score'))
 
