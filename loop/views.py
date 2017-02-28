@@ -36,10 +36,10 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
     update_incoming_obj, send_acknowledge, send_voicemail
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
+from constants.constants import *
 
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
-ROLE_AGGREGATOR = 2
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 
 @csrf_exempt
@@ -128,7 +128,7 @@ def farmer_payments(request):
 
 def filter_data(request):
     language = request.GET.get('language')
-    aggregators = LoopUser.objects.filter(role=ROLE_AGGREGATOR).values('user__id', 'name', 'name_en', 'id')
+    aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR).values('user__id', 'name', 'name_en', 'id')
     villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
     crops_lang = CropLanguage.objects.values('crop__id', 'crop_name')
@@ -147,7 +147,7 @@ def filter_data(request):
 
 def total_static_data(request):
     total_farmers_reached = CombinedTransaction.objects.values('farmer').distinct().count()
-    total_cluster_reached = LoopUser.objects.filter(role=ROLE_AGGREGATOR).count()
+    total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR).count()
 
     aggregated_result,cum_vol_farmer = get_data_from_myisam(1)
 
@@ -201,10 +201,15 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
 
     incentive_param_queryset = IncentiveParameter.objects.all()
 
+    daily_pay_aggregators = ai_queryset.filter(model_type=0).values('aggregator__user__id','start_date')
+    daily_pay_list = []
+    temp_list = []
+
     for CT in combined_ct_queryset:
         amount_sum = 0.0
         comment = ""
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
+        # if not a case of outlier, get latest start date and compute accordingly
         if CT['date'] not in [aso.date for aso in aso_queryset.filter(mandi=CT['mandi'], aggregator=user.id)]:
             try:
                 ai_list_set = ai_queryset.filter(start_date__lte=CT['date'], aggregator=user.id).order_by('-start_date')
