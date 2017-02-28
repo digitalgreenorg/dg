@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
-from django.db.models import Count, Sum, Max
+from django.db.models import Count, Sum
 from django.core.serializers.json import DjangoJSONEncoder
 
 from tastypie.models import ApiKey, create_api_key
@@ -15,7 +15,6 @@ from activities.models import Screening, PersonAdoptPractice, PersonMeetingAtten
 from geographies.models import State
 from django.db import connection
 import datetime
-from datetime import date
 
 # Create your views here.
 @csrf_exempt
