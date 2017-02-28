@@ -19,7 +19,7 @@ class Command(BaseCommand):
         print "Current Time: ",datetime.now()
         pap_query = Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True), 20000)
         print "No. of Pages: ",pap_query.num_pages
-#        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
+        #filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
         filename = 'activities/management/exceptions.csv'
         count = 0
         for page in range(1, pap_query.num_pages + 1):
@@ -79,6 +79,7 @@ class Command(BaseCommand):
                             screening = screening[0]
                             row.animator = screening.animator
                     except Exception as e:
+                        # Capture exceptions in csv file
                         count += 1
                         with open(filename, 'ab') as csvfile:
                             fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
