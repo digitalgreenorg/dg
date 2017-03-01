@@ -51,7 +51,7 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    if field_dict.get('online_id'):
+    if field_dict and field_dict.get('online_id'):
         bundle.data[field_name] = "/training/api/v1/%s/%s/" % (resource_name if resource_name else field_name,
                                                                str(field_dict.get('online_id')))
     else:
