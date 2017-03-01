@@ -101,7 +101,7 @@ def send_updated_log(request):
             for row in district_animator_list:
                 log_list.append(get_log_object(row))
 
-            if rows:
+            if log_list:
                 data = json.dumps(log_list, cls=DjangoJSONEncoder)
                 return HttpResponse(data, content_type="application/json")
-    return HttpResponse("0")
+    return HttpResponse(json.dumps({'message': 'No Data to send'}), status=200)
