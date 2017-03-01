@@ -10,7 +10,7 @@ from django.db.models import Count, Sum
 from django.core.serializers.json import DjangoJSONEncoder
 
 from tastypie.models import ApiKey, create_api_key
-from models import Training, Score, Trainer, Question, Assessment, TrainingUser
+from models import Training, Score, Trainer, Question, Assessment
 from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
 from geographies.models import State
 from django.db import connection
@@ -31,7 +31,8 @@ def login(request):
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
             timestamp = datetime.datetime.utcnow()
-            return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(timestamp),'UserId':user.id}))
+            trainer = Trainer.objects.filter(training_user__user__id = user.id).first()
+            return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(timestamp),'TrainerId':trainer.id}))
         else:
             return HttpResponse("0",status=401)
     else:
