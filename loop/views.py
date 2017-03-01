@@ -38,6 +38,8 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import *
 
+import pandas as pd
+
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
@@ -198,12 +200,9 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
         'date', 'user_created_id', 'mandi','mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
                                                                        Count('farmer_id', distinct=True))
     result = []
+    daily_pay_list = []
 
     incentive_param_queryset = IncentiveParameter.objects.all()
-
-    daily_pay_aggregators = ai_queryset.filter(model_type=0).values('aggregator__user__id','start_date')
-    daily_pay_list = []
-    temp_list = []
 
     for CT in combined_ct_queryset:
         amount_sum = 0.0
@@ -213,12 +212,17 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
         if CT['date'] not in [aso.date for aso in aso_queryset.filter(mandi=CT['mandi'], aggregator=user.id)]:
             try:
                 ai_list_set = ai_queryset.filter(start_date__lte=CT['date'], aggregator=user.id).order_by('-start_date')
-                if (ai_list_set.count() > 0):
+                if ai_list_set.count() > 0:
                     exec (ai_list_set[0].incentive_model.calculation_method)
                     paramter_list = inspect.getargspec(calculate_inc)[0]
-                    for param in paramter_list:
-                        param_to_apply = incentive_param_queryset.get(notation=param)
-                        x = calculate_inc(CT[param_to_apply.notation_equivalent])
+                    if len(paramter_list) > 0:
+                        for param in paramter_list:
+                            param_to_apply = incentive_param_queryset.get(notation=param)
+                            x = calculate_inc(CT[param_to_apply.notation_equivalent])
+                    else:
+                        amount_sum = calculate_inc()
+                        daily_pay_list.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': round(amount_sum,2), 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
+                        continue
                     amount_sum += x
                 else:
                     amount_sum += calculate_inc_default(CT['quantity__sum'])
@@ -235,6 +239,18 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                 pass
         result.append(
             {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': round(amount_sum,2), 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
+
+    daily_pay_df = pd.DataFrame(daily_pay_list)
+    daily_pay_mandi_count = daily_pay_df.groupby(['date','user_created__id']).agg({'mandi__id':'count'}).reset_index()
+    daily_pay_mandi_count.rename(columns={"mandi__id":"mandi__count"}, inplace=True)
+    daily_pay_df = pd.merge(daily_pay_df, daily_pay_mandi_count, on=['date','user_created__id'], how='left')
+    daily_pay_df['amount'] = daily_pay_df['amount'] / daily_pay_df['mandi__count']
+    daily_pay_df.drop(['mandi__count'], axis=1, inplace=True)
+
+    daily_pay = daily_pay_df.to_dict(orient='records')
+
+    print daily_pay
+    result.extend(daily_pay)
     return result
 
 
