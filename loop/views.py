@@ -218,12 +218,11 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                     if len(paramter_list) > 0:
                         for param in paramter_list:
                             param_to_apply = incentive_param_queryset.get(notation=param)
-                            x = calculate_inc(CT[param_to_apply.notation_equivalent])
-                    else:
+                            amount_sum += calculate_inc(CT[param_to_apply.notation_equivalent])
+                    elif ai_list_set[0].model_type == MODEL_TYPES_DAILY_PAY:
                         amount_sum = calculate_inc()
-                        daily_pay_list.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': round(amount_sum,2), 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
+                        daily_pay_list.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': amount_sum, 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
                         continue
-                    amount_sum += x
                 else:
                     amount_sum += calculate_inc_default(CT['quantity__sum'])
             except Exception:
@@ -246,10 +245,10 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     daily_pay_df = pd.merge(daily_pay_df, daily_pay_mandi_count, on=['date','user_created__id'], how='left')
     daily_pay_df['amount'] = daily_pay_df['amount'] / daily_pay_df['mandi__count']
     daily_pay_df.drop(['mandi__count'], axis=1, inplace=True)
+    daily_pay_df = daily_pay_df.round({'amount':2})
 
     daily_pay = daily_pay_df.to_dict(orient='records')
 
-    print daily_pay
     result.extend(daily_pay)
     return result
 
