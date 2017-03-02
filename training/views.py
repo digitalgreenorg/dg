@@ -15,6 +15,7 @@ from activities.models import Screening, PersonAdoptPractice, PersonMeetingAtten
 from geographies.models import State
 from django.db import connection
 import datetime
+from training.log.training_log import get_latest_timestamp
 
 # Create your views here.
 @csrf_exempt
@@ -30,7 +31,11 @@ def login(request):
             except ApiKey.DoesNotExist:
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
-            timestamp = datetime.datetime.utcnow()
+            log_obj = get_latest_timestamp()
+            if log_obj == None:
+                timestamp = datetime.datetime.utcnow()
+            else:
+                timestamp = log_obj.timestamp
             trainer = Trainer.objects.filter(training_user__user__id = user.id).first()
             return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(timestamp),'TrainerId':trainer.id}))
         else:
