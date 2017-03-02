@@ -36,7 +36,7 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
     update_incoming_obj, send_acknowledge, send_voicemail
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
-from constants.constants import *
+from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY
 
 import pandas as pd
 
