@@ -409,6 +409,8 @@ class TrainingResource(BaseResource):
         authorization = TrainingAuthorization('id__in')
         always_return_data = True
         include_resource_uri = False
+        excludes = ('time_created', 'time_modified')
+        
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
     hydrate_trainer = partial(dict_to_foreign_uri_m2m,
