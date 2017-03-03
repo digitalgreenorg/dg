@@ -55,7 +55,7 @@ class AnalyticsSync():
 
         # Fill Data
         try:
-            self.db_connection_clone = MySQLdb.connect(host='localhost',
+            self.db_connection_clone = MySQLdb.connect(host=DATABASES['default']['HOST'],
                                                  user=DATABASES['default']['USER'],
                                                  passwd=DATABASES['default']['PASSWORD'],
                                                  db=database,

@@ -10,7 +10,7 @@ from dg.settings import DATABASES
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
-		host = 'localhost'
+		host = DATABASES['default']['HOST']
 		user = DATABASES['default']['USER']
 		password = DATABASES['default']['PASSWORD']
 		database = DATABASES['default']['NAME']
@@ -104,6 +104,3 @@ system@digitalgreen.org"""
 				msg = EmailMultiAlternatives(subject, body, from_email, [to_email])
 				msg.attach_file(file)
 				msg.send()
-
-
-

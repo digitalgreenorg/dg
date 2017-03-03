@@ -33,7 +33,7 @@ class LoopStatistics():
 
         try:
             start_time = time.time()
-            self.mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
+            self.mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'],user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
             # .cursor()
 
             df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name_en')))

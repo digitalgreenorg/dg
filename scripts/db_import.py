@@ -33,7 +33,7 @@ else :
 	custom_db_name = 'dg_' + prev_day
 
 # Mysql Connection
-db = MySQLdb.connect("localhost", user_name, password)
+db = MySQLdb.connect(host=DATABASES['default']['HOST'], user_name, password)
 cursor = db.cursor()
 drop_database_sql = "DROP DATABASE IF EXISTS " + custom_db_name
 cursor.execute(drop_database_sql)
