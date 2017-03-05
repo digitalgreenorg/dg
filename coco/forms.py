@@ -17,4 +17,3 @@ class DataUploadForm(forms.Form):
         help_text='max 2MB',
         required=True
     )
-	which_table_is_getting_imported = forms.ChoiceField(label='Select Data', choices=DATA_TABLE_CHOICES, required=True)

@@ -14,6 +14,12 @@
   
   <script src="/media/coco/app/scripts/libs/jquery.min.js"></script>
   <script src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
+  <style type="text/css">
+    .errorlist{
+      color: red;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body  data-spy="scroll" data-target=".faq-sidebar">
     <div class="container">
@@ -32,7 +38,9 @@
             </nav>
             <div class="col-sm-8 col-sm-push-4">
               <div id="setup"></div><h3 class="topic">Data Upload Form</h3>
-
+                {% if form.errors %}
+                <p class="errorlist">Please correct the errors below</p>
+                {% endif %}
 				        <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
 				        	{% csrf_token %}
 								  <div class="control-group">

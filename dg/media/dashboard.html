@@ -17,8 +17,8 @@
 	<LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/datepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
-
-    
+    <script type="text/javascript" src="/media/coco/app/scripts/libs/alasql.min.js"></script>
+    <script type="text/javascript" src="/media/coco/app/scripts/libs/xlsx.core.min.js"></script>
     <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
@@ -200,34 +200,6 @@
 
 <script type="text/template" id="dashboard">
             <div id="coco_sidebar" class="coco_sidebar">
-                <!-- <table border = '0'>
-                    <tr>
-                        <td style="vertical-align:top;"><div>
-                            <img id= "online" src="/media/coco/app/images/online.png" title= "You are online"/>
-                            <img id= "offline" src="/media/coco/app/images/offline.png" title= "You are offline"/>
-                        </div></td>
-                        <td>
-                            <div id="coco_userinfo">
-                            <%if(typeof(username)!=undefined){%>
-                            Hi <%=username%>! <br><a id="logout" style="cursor:pointer">Log out</a>
-                            <%}%>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <div id="coco_brand">
-                    <a href="#">COCO</a>
-                </div>
-                <div id="coco_sync" class="row">
-                    <% var sync = configs['misc']['meta_'+language]['sync'];%>
-                    <button class="btn pull-left" id= "sync"><%= sync %>
-                    <span class="badge" id="upload_num"><%=upload_entries%></span>
-                    </button>
-                </div>
-                <p id="helptext">
-                Please download the database<br>
-                by clicking on the sync button
-                </p> -->
 
                 <nav class="navbar coco_main_nav" role="navigation" id="main-navbar" >
                     <div class="row">
