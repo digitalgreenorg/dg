@@ -17,7 +17,8 @@ require.config({
         'jquery_cookie': 'libs/jquery.cookie',
         'TableTools': 'libs/tabletools_media/js/dataTables.tableTools',
         'highcharts': 'libs/highcharts',
-        'configs': '../../../configs'
+        'configs': '../../../configs',
+        'highstocks': 'libs/highstocks'
     },
 
     //specifying dependencies of non-amd libraries

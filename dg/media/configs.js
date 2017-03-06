@@ -368,7 +368,7 @@ function() {
                 subcategory: "required",
                 videopractice: "required",
                 approval_date: {
-					dateOrder: {production_date : "production_date"},
+    dateOrder: {production_date : "production_date"},
                     validateDate: true
                 },
                 youtubeid: {
@@ -400,7 +400,7 @@ function() {
                 videopractice: "Videopractice is required",
                 approval_date: {
                     validateDate: "Enter Approval Date in the form of YYYY-MM-DD",
-					dateOrder: "Approval date should be later than production date"
+    dateOrder: "Approval date should be later than production date"
                 },
                 youtubeid: {
                     maxlength: "YoutubeID should contain at most 20 characters"
@@ -693,9 +693,9 @@ function() {
         'fields_to_hide': 'th#id_age, th#id_gender, th#id_category, input#age, input#gender, div#category_chosen',
         'headers_to_hide': ['th#id_age', 'th#id_gender', 'th#id_category'],
         'parent_id_for_inline': 'row7',
-        'xaxis' : 'Villages',
+        'xaxis' : ['Village','Mediator','Video','Group'],
         'yaxis' : 'Number of screenings',
-        'key' : 3,
+        'key' : [3,2,5,4],
         'graph_type' : 'column',
             
         download_chunk_size: 1000,
@@ -864,19 +864,19 @@ function() {
 
             },
             messages: {
-				date: {
-					required: 'Screening date is required',
-					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
-				},
-				start_time: {
-					required: 'Screening start time is required',
-					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
-				},
-				animator: "Mediator is required",
-				village:"Village is required",
-				videoes_screened:"Videos screened is required",
-				farmer_groups_targeted: "Groups attended is required"
-			},
+    date: {
+    required: 'Screening date is required',
+    validateDate: 'Enter screening date in the form of YYYY-MM-DD',
+    },
+    start_time: {
+    required: 'Screening start time is required',
+    validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
+    },
+    animator: "Mediator is required",
+    village:"Village is required",
+    videoes_screened:"Videos screened is required",
+    farmer_groups_targeted: "Groups attended is required"
+    },
 
             highlight: function(element, errorClass, validClass) {
                 $(element)
@@ -928,14 +928,14 @@ function() {
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         'text_to_select_display_hack': true,
         'text_to_select_display_hack_field_id': 'adopt_practice' ,
-        'xaxis' : 'Villages',
+        'xaxis' : ['Villages','Mediator','Video','Group'],
         'yaxis' : 'Number of adoptions',
-        'key' : 4,
+        'key' : [5,3,6,4],
         'graph_type' : 'column',
                 
         form_field_validation: {
             ignore: [],
-			rules: {
+    rules: {
                 person: {
                     required: true,
                     
@@ -948,23 +948,23 @@ function() {
                 },                
                 date_of_adoption: {
                     required: true,
-					validateDate: true,
+    validateDate: true,
                 }
             },
             messages: {
-				person: {
-					required: "person is required"
-				},
-				video: {
-					required: "video is required"
-				},
+    person: {
+    required: "person is required"
+    },
+    video: {
+    required: "video is required"
+    },
                 animator: {
                     required: "Mediator is required"
                 },
-				date_of_adoption: {
-					required: "Date of Adoption is required"
-				}
-			},
+    date_of_adoption: {
+    required: "Date of Adoption is required"
+    }
+    },
             highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')
@@ -1180,7 +1180,7 @@ function() {
                 'group': {
                     'placeholder': 'id_group',
                     'name_field': 'group_name',
-					'dependency': [{
+    'dependency': [{
                         'source_form_element': 'village',
                         'dep_attr': 'village'
                     }]
@@ -1220,34 +1220,34 @@ function() {
                 }
             },
             messages: {
-				person_name: {
-					required: 'Person name is required',
-					minlength: 'Person name  should contain at least 2 characters',
-					maxlength: 'Person Name should contain at most 100 characters',
-					allowedChar: 'Person name should contain only english and local language characters'
-				},
-				father_name: {
-					required: "Father's name is required",
-					minlength: "Father's name should contain at least 2 characters",
-					maxlength: "Father's name should contain at most 100 characters",
-					allowedChar: "Father's name should contain only english and local language characters"
-				},
-				age: {
-					digits: "Age should contain only digits",
-					min:"Age should not be less than 1 year",
-					max:"Age should not be more than 100 years"
-				},
-				gender:{
-					required: "Gender is required"
-				},
-				phone_number_person: {
-					digits: 'Phone number should contain digits only',
-					maxlength: "Phone number should not contain more than 10 digits"
-				},
-				village: {
-					required: "Village is required"
-				}
-			},
+    person_name: {
+    required: 'Person name is required',
+    minlength: 'Person name  should contain at least 2 characters',
+    maxlength: 'Person Name should contain at most 100 characters',
+    allowedChar: 'Person name should contain only english and local language characters'
+    },
+    father_name: {
+    required: "Father's name is required",
+    minlength: "Father's name should contain at least 2 characters",
+    maxlength: "Father's name should contain at most 100 characters",
+    allowedChar: "Father's name should contain only english and local language characters"
+    },
+    age: {
+    digits: "Age should contain only digits",
+    min:"Age should not be less than 1 year",
+    max:"Age should not be more than 100 years"
+    },
+    gender:{
+    required: "Gender is required"
+    },
+    phone_number_person: {
+    digits: 'Phone number should contain digits only',
+    maxlength: "Phone number should not contain more than 10 digits"
+    },
+    village: {
+    required: "Village is required"
+    }
+    },
 
             highlight: function(element, errorClass, validClass) {
                 $(element)
@@ -1271,10 +1271,14 @@ function() {
         }
 
     };
-
+    var overall_numbers ={
+        number :["Number of Village","Number of Mediator","Number of Video","Number of Group","Number of Person","Number of Screening","Number of Adoption"],
+        yaxis:["screening","adoption"],
+        xaxis:["month","week"]
+    };
     var misc = {
         download_chunk_size: 2000,
-        analytics_entities : ["village","video","screening","adoption"],
+        analytics_entities : ["screening","adoption"],
         languages: ['हिन्दी', 'English', 'Français'],
         ethiopia_partners: ['moa-dg ethiopia', 'ide', 'oa', 'saa'],
         meta_default: 'English',

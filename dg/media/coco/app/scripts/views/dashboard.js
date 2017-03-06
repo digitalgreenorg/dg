@@ -2,7 +2,7 @@
 define(['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download' ],
 
 function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView) {
-    
+
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
         events: {
@@ -59,11 +59,11 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     enable_months = configs[member].dashboard_display.enable_months;
                 }
                 if(typeof enable_months != 'undefined'){
-                  var d = new Date();
+                    var d = new Date();
                     n = d.getMonth() + 1;
                     res = $.inArray(n, enable_months);
                     if(res === -1){
-                      add = false;
+                        add = false;
                     }
                 }
                 if (listing || add) {
@@ -117,7 +117,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 $('#sync').attr('disabled', true);
             }
         },
-         
+        
         //enable add, list links
         db_downloaded: function() {
             $('.list_items')
@@ -254,10 +254,21 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             var dfd_language = $.Deferred();
             var dfd_nonnegotiable = $.Deferred();
             var dfd_district = $.Deferred();
+            var dfd_user = $.Deferred();
             var i=0;
             var res=[];
             
+               Offline.fetch_collection(entity[i++])
+                                        .done(function(collection) {
+                                           data=collection.toJSON();
+                                           window.user = data;
+                                            dfd_user.resolve();
 
+                                        })
+                                        .fail(function() {
+                                            console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                                            dfd_user.resolve();
+                                        });
                Offline.fetch_collection(entity[i++])
                                         .done(function(collection) {
                                            data=collection.toJSON();
@@ -436,7 +447,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                                             console.log("ERROR: EDIT: Inline collection could not be fetched!");
                                             dfd_district.resolve();
                                         });
-
+            res.push(dfd_user);
             res.push(dfd_Village);
             res.push(dfd_Mediator);
             res.push(dfd_Screening);
@@ -458,10 +469,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         },
         export: function() {
             var that = this;
-            listing = ["village","mediator","screening","adoption","person","video","group","directbeneficiaries","meta_data","subcategory","category",
+            listing = ["user","village","mediator","screening","adoption","person","video","group","directbeneficiaries","meta_data","subcategory","category",
                         "videopractice","parentcategory","nonnegotiable","language","district"];
             var a = that.exportCheck(listing).then(function(result){
-            var array = [window.village,window.mediator,window.screening,window.adoption,window.person,window.video,window.group,window.directbeneficiaries,window.meta_data,window.subcategory,window.category,
+            var array = [window.user,window.village,window.mediator,window.screening,window.adoption,window.person,window.video,window.group,window.directbeneficiaries,window.meta_data,window.subcategory,window.category,
             window.videopractice,window.parentcategory,window.nonnegotiable,window.language,window.district]
                for(j=0;j<array.length;j++){
                 
@@ -477,7 +488,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 }
                 }
                 
-                var opts = [{sheetid:'village',header:true},{sheetid:'mediator',header:false},{sheetid:'screening',header:false}
+                var opts = [{sheetid:'user',header:true},{sheetid:'village',header:true},{sheetid:'mediator',header:false},{sheetid:'screening',header:false}
                 ,{sheetid:'adoption',header:false},{sheetid:'person',header:false},{sheetid:'video',header:false},{sheetid:'group',header:false},{sheetid:'directbeneficiaries',header:false},
                 {sheetid:'meta_data',header:false},{sheetid:'subcategory',header:false},{sheetid:'category',header:false},{sheetid:'videopractice',header:false}
                 ,{sheetid:'parentcategory',header:false},{sheetid:'nonnegotiable',header:false},{sheetid:'language',header:false},{sheetid:'district',header:false}];
@@ -492,6 +503,9 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("setCollections"+collection);
         },
 
+
+
+        //method to initiate upload
         upload: function() {
             var dfd = $.Deferred();
             if (!this.upload_v) {
