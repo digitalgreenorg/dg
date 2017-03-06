@@ -50,9 +50,10 @@ define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_control
                 xaxis : configs[entity]['xaxis'][j],
                 j : j
                 });
-                this.setView("#content", analytics_view);
+              this.setView("#content", analytics_view);
             } 
         }
+        nestContainer =1;
         for(i=1; i<=configs.misc.analytics_entities.length; i++)
             {
             
@@ -63,10 +64,20 @@ define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_control
                     key : [1],
                     j:0
                 });
-                this.setView("#content", analytics_view);
+             this.setView("#content", analytics_view);
             
         }
-        
+        for(i=0;i<configs.misc.overall_numbers.length;i++){
+            var analytics_view = new AnalyticsView({
+                    tabId:3,
+                    entities :configs.misc.overall_numbers[i],
+                    container:'container'+(contaianerCount++),
+                    key :[0],
+                    j:0
+            });
+        this.setView("#content",analytics_view);
+            
+        }
         },
 
         render_home_view: function() {
@@ -92,4 +103,3 @@ define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_control
     });
     return new AppLayout;
 });
-

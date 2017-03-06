@@ -1271,14 +1271,10 @@ function() {
         }
 
     };
-    var overall_numbers ={
-        number :["Number of Village","Number of Mediator","Number of Video","Number of Group","Number of Person","Number of Screening","Number of Adoption"],
-        yaxis:["screening","adoption"],
-        xaxis:["month","week"]
-    };
     var misc = {
         download_chunk_size: 2000,
         analytics_entities : ["screening","adoption"],
+        overall_numbers : ["village","group","video","screening","mediator","adoption","person"],
         languages: ['हिन्दी', 'English', 'Français'],
         ethiopia_partners: ['moa-dg ethiopia', 'ide', 'oa', 'saa'],
         meta_default: 'English',
