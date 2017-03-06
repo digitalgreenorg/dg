@@ -53,6 +53,12 @@ def enter_to_log(sender,**kwargs):
     log = LogData(user=user, entry_table=sender, model_id=model_id, action=action)
     log.save()
 
+    if action == -1:
+        DeleteLog = apps.get_model('training','DeleteLog')
+        obj = model_to_dict(instance)
+        deletedObject = DeleteLog(entry_table=sender,table_object=obj)
+        deletedObject.save()
+
 
 @csrf_exempt
 def send_updated_log(request):

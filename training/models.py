@@ -110,3 +110,9 @@ class LogData(models.Model):
     action = models.IntegerField()
     entry_table = models.CharField(max_length=100)
     model_id = models.IntegerField(null=True)
+
+class DeleteLog(models.Model):
+    id = models.AutoField(primary_key=True)
+    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.now)
+    entry_table = models.CharField(max_length=100)
+    table_object = models.CharField(max_length=500)
