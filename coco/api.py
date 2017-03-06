@@ -396,7 +396,7 @@ class VideoResource(BaseResource):
         authorization = VideoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
-        excludes = ['duration', 'related_practice', 'time_created', 'time_modified', 'review_status', 'video_grade', 'reviewer']
+        excludes = ['duration', 'related_practice', 'time_created', 'time_modified', 'review_status', 'video_grade']
     
     def dehydrate_production_team(self, bundle):
         return [{'id': animator.id, 'name': animator.name} for animator in bundle.obj.production_team.all() ]

@@ -233,13 +233,13 @@ function() {
         'config_Français': 'Vidéos',
         'labels_हिन्दी': {video:"वीडियो", title: "शीर्षक", video_type: "वीडियो का प्रकार", production_date: "उत्पादन की तिथि", language: "भाषा", benefit: "लाभ",
                             village: "गाँव", production_team: "वीडियो उत्पादन टीम", category: "श्रेणी", subcategory: "उप श्रेणी", videopractice:"विडियो में दिखाई गई क्रिया",
-                            approval_date: "स्वीकृति तिथि", youtubeid: "यूट्यूब आईडी", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य"},
+                            youtubeid: "यूट्यूब आईडी", reviewed_by: "द्वारा अनुमोदित", reviewer: "संगठन", approval_date: "स्वीकृति तिथि", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य"},
         'labels_Français': {video:"Vidéos", title: "Titre", video_type: "Type de vidéo", production_date: "Date de production", language: "Langue", benefit: "Bénéfice",
                             village: "Villages", production_team: "Equipe de production", category: "Catégorie", subcategory: "Sous-catégorie", videopractice:"La pratique vidéo",
-                            approval_date: "Date de validation", youtubeid: "Identité Youtube", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable"},
+                            youtubeid: "Identité Youtube", reviewed_by: "Approuvé par", reviewer: "organisation", approval_date: "Date de validation", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable"},
         'labels_English': {video:"Video", title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village",
-                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", approval_date: "Approval Date", 
-                           youtubeid: "Youtube Id", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", physically_verifiable:"Physically Verifiable"},
+                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", youtubeid: "YouTube ID",
+                           reviewed_by: "Approved By", reviewer: "Organization", approval_date: "Approval Date", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", physically_verifiable:"Physically Verifiable"},
         'list_elements_हिन्दी': [{'header':'आईडी', 'element':'online_id'},{'header':'शीर्षक', 'element':'title'},{'header':'गाँव','element':'village.village_name'},{'header':'उत्पादन की तिथि','element':'production_date'}],
         'list_elements_Français': [{'header':'Identité', 'element':'online_id'},{'header':'Titre', 'element':'title'},{'header':'Villages','element':'village.village_name'},{'header':'Date de production','element':'production_date'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Production Date','element':'production_date'}],
@@ -338,6 +338,8 @@ function() {
                     required: true,
                     // validateDate: true
                 },
+                reviewer: "required",
+                reviewed_by: "required",
                 language: "required",
                 benefit: {
                     minlength: 2,
@@ -350,8 +352,8 @@ function() {
                 subcategory: "required",
                 videopractice: "required",
                 approval_date: {
-					dateOrder: {production_date : "production_date"}
-                    // validateDate: true
+					dateOrder: {production_date : "production_date"},
+                    validateDate: true
                 },
                 youtubeid: {
                     maxlength: 20
@@ -838,8 +840,8 @@ function() {
         'labels_Français': {adoption:"Adoptions", village: "Village", mediator: "Disséminateur", video: "Vidéo", groups_attended: "Groupes concernés", person: "Personne", del: "effacer", sr_no: "Serie de Numéro", date_of_adoption: "Date d'adoption", date_of_verification: "Date de vérification"},
         'labels_English': {adoption:"Adoption", village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video: "Video", date_of_adoption: "Date of Adoption", date_of_verification: "Date of Verification"},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'अपनाने की तारीख','element':'date_of_adoption'},{'header':'सदस्य कि आईडी','element':'person.online_id'},{'header':'सदस्य','element':'person.person_name'},{'header':'ग्राम संगठन का नाम','element':'group.group_name'},{'header':'गाँव','element':'village.village_name'},{'header':'वीडियो','element':'video.title'}],
-        'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':"Date d'adoption",'element':'date_of_adoption'},{'header':'Personne Identité','element':'person.online_id'},{'header':'Personne','element':'person.person_name'},{'header':'Groupe/groupement','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Vidéo','element':'video.title'}],
-        'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Adoption Date','element':'date_of_adoption'},{'header':'Person ID','element':'person.online_id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
+        'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':"Date de vérification",'element':'date_of_adoption'},{'header':'Personne Identité','element':'person.online_id'},{'header':'Personne','element':'person.person_name'},{'header':'Groupe/groupement','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Vidéo','element':'video.title'}],
+        'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Verification Date','element':'date_of_adoption'},{'header':'Person ID','element':'person.online_id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/coco/api/v2/adoption/',

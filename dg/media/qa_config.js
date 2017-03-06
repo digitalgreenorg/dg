@@ -47,12 +47,14 @@ function() {
                 continuity: "required",
                 interview: "required",
                 technical: "required",
-                style_guide: "required"
+                style_guide: "required",
+                date: "required"
             },
             messages: {
                 video: "Video name is required",
                 qareviewername: "Reviewer name is required",
                 approval: "Approval is required",
+                date: "Date is required",
                 storystructure: "Required",
                 framing: "Required",
                 camera_angles: "Required",
@@ -260,8 +262,8 @@ function() {
                     'placeholder': 'id_person',
                     'name_field': 'person_name',
                     'dependency': [{
-                        'source_form_element': 'village',
-                        'dep_attr': 'village'
+                        'source_form_element': 'group',
+                        'dep_attr': 'group'
                     }]
                 },
             },

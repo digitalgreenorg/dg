@@ -47,7 +47,7 @@ STATICFILES_DIRS = (
    # Put strings here, like "/home/html/static" or "C:/www/django/static".
    # Always use forward slashes, even on Windows.
    # Don't forget to use absolute paths, not relative paths.
-   os.path.join(PROJECT_PATH, 'media'),                 
+   os.path.join(PROJECT_PATH, 'media'),
 )
 
 STATICFILES_FINDERS = (
@@ -57,6 +57,7 @@ STATICFILES_FINDERS = (
 )
 
 LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL='/'
 LOGOUT_URL = '/'
 PERMISSION_DENIED_URL = '/denied/'
 
@@ -203,6 +204,7 @@ INSTALLED_APPS = (
     'loop',
     'qacoco',
     'mrppayment',
+    'smart_selects',
 )
 
 # Store these package names here as they may change in the future since
@@ -223,7 +225,6 @@ SESSION_COOKIE_HTTPONLY = False
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'social.backends.facebook.FacebookOAuth2',
-    'social.backends.google.GoogleOAuth',
     'social.backends.google.GoogleOAuth2',
 )
 
