@@ -7,8 +7,8 @@ from loop.models import CombinedTransaction
 
 def get_grouped_data(df_result_aggregate,day,df_farmers):
     start_date = df_result_aggregate['date'].min()
-    # end_date = df_result_aggregate['date'].max()
-    end_date = datetime.datetime.today()
+    end_date = df_result_aggregate['date'].max()
+    # end_date = datetime.datetime.today()
     frequency = '-' + day + 'D'
     data_by_grouped_days = pd.DataFrame(pd.date_range(end_date,start_date,freq=frequency),columns={'start_date'})
     data_by_grouped_days['end_date'] = data_by_grouped_days['start_date'].shift(-1)

@@ -201,6 +201,7 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                                                                        Count('farmer_id', distinct=True))
     result = []
     daily_pay_list = []
+    outliers_daily_pay = []
 
     incentive_param_queryset = IncentiveParameter.objects.all()
 
@@ -210,21 +211,21 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
 
         ai_list_set = ai_queryset.filter(start_date__lte=CT['date'], aggregator=user.id).order_by('-start_date')
-        if ai_list_set and ai_list_set[0].model_type == MODEL_TYPES_DAILY_PAY:
-            # SEPARATE OUT ALL DAILY PAY CASES
-            exec (ai_list_set[0].incentive_model.calculation_method)
-            amount_sum = calculate_inc()
-            daily_pay_list.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': amount_sum, 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment, 'aggregator_id':user.id})
-            continue
-        elif CT['date'] not in [aso.date for aso in aso_queryset.filter(mandi=CT['mandi'], aggregator=user.id)]:
+
+        if CT['date'] not in [aso.date for aso in aso_queryset.filter(mandi=CT['mandi'], aggregator=user.id)]:
             # IF NOT A CASE OF OUTLIER, GET LATEST START DATE AND COMPUTE ACCORDINGLY
             try:
                 if ai_list_set.count() > 0:
                     exec (ai_list_set[0].incentive_model.calculation_method)
                     paramter_list = inspect.getargspec(calculate_inc)[0]
-                    for param in paramter_list:
-                        param_to_apply = incentive_param_queryset.get(notation=param)
-                        amount_sum += calculate_inc(CT[param_to_apply.notation_equivalent])
+                    if len(paramter_list) > 0:
+                        for param in paramter_list:
+                            param_to_apply = incentive_param_queryset.get(notation=param)
+                            amount_sum += calculate_inc(CT[param_to_apply.notation_equivalent])
+                    elif ai_list_set[0].model_type == MODEL_TYPES_DAILY_PAY:
+                        amount_sum = calculate_inc()
+                        daily_pay_list.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': amount_sum, 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment, 'aggregator_id':user.id})
+                        continue
                 else:
                     amount_sum += calculate_inc_default(CT['quantity__sum'])
             except Exception:
@@ -235,8 +236,11 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                 aso_share_date_aggregator = aso_queryset.filter(
                     date=CT['date'], aggregator=user.id, mandi=CT['mandi']).values('amount', 'comment')
                 if aso_share_date_aggregator.count():
-                    amount_sum += aso_share_date_aggregator[0]['amount']
+                    amount_sum = aso_share_date_aggregator[0]['amount']
                     comment = aso_share_date_aggregator[0]['comment']
+                if ai_list_set and ai_list_set[0].model_type == MODEL_TYPES_DAILY_PAY:
+                    outliers_daily_pay.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__id': CT['mandi'], 'amount': amount_sum, 'comment' : comment})
+                    continue
             except AggregatorShareOutliers.DoesNotExist:
                 pass
         result.append(
@@ -248,15 +252,19 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     daily_pay_df = pd.merge(daily_pay_df, daily_pay_mandi_count, on=['date','user_created__id'], how='left')
     daily_pay_df['amount'] = daily_pay_df['amount'] / daily_pay_df['mandi__count']
 
-    for index, row in daily_pay_df.iterrows():
-        outlier = aso_queryset.filter(date=row['date'], aggregator=row['aggregator_id'], mandi=row['mandi__id']).values('amount','comment')
-        if outlier.count():
-            daily_pay_df.loc[index,'amount'] = outlier[0]['amount']
-            daily_pay_df.loc[index,'comment'] = outlier[0]['comment']
+    # for index, row in daily_pay_df.iterrows():
+    #     outlier = aso_queryset.filter(date=row['date'], aggregator=row['aggregator_id'], mandi=row['mandi__id']).values('amount','comment')
+    #     if outlier.count():
+    #         daily_pay_df.loc[index,'amount'] = outlier[0]['amount']
+    #         daily_pay_df.loc[index,'comment'] = outlier[0]['comment']
 
     daily_pay_df.drop(['mandi__count','aggregator_id'], axis=1, inplace=True)
-    daily_pay_df = daily_pay_df.round({'amount':2})
 
+    if len(outliers_daily_pay)>0:
+        outliers_daily_pay_df = pd.DataFrame(outliers_daily_pay)
+        daily_pay_df['amount'] = outliers_daily_pay_df[(daily_pay_df['date'] == outliers_daily_pay_df['date']) & (daily_pay_df['user_created__id'] == outliers_daily_pay_df['user_created__id']) & (daily_pay_df['mandi__id'] == outliers_daily_pay_df['mandi__id'])]['amount']
+
+    daily_pay_df = daily_pay_df.round({'amount':2})
     daily_pay = daily_pay_df.to_dict(orient='records')
 
     result.extend(daily_pay)
