@@ -263,6 +263,7 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     if len(outliers_daily_pay)>0:
         outliers_daily_pay_df = pd.DataFrame(outliers_daily_pay)
         daily_pay_df['amount'] = outliers_daily_pay_df[(daily_pay_df['date'] == outliers_daily_pay_df['date']) & (daily_pay_df['user_created__id'] == outliers_daily_pay_df['user_created__id']) & (daily_pay_df['mandi__id'] == outliers_daily_pay_df['mandi__id'])]['amount']
+        daily_pay_df['comment'] = outliers_daily_pay_df[(daily_pay_df['date'] == outliers_daily_pay_df['date']) & (daily_pay_df['user_created__id'] == outliers_daily_pay_df['user_created__id']) & (daily_pay_df['mandi__id'] == outliers_daily_pay_df['mandi__id'])]['comment']
 
     daily_pay_df = daily_pay_df.round({'amount':2})
     daily_pay = daily_pay_df.to_dict(orient='records')
