@@ -7,28 +7,35 @@ define([
     'models/user_model',
     'indexeddb-backbone',
     'layoutmanager',
-    'libs/highcharts',
-  	'offline_utils'],
-  	function($, underscore, backbone, idb, all_configs, User, indexeddb, layoutmanager,highcharts, Offline){
-  		
+    'libs/highstocks',
+    'offline_utils'
+    ],
+    function($, underscore, backbone, idb, all_configs, User, indexeddb, layoutmanager,highcharts, Offline){
+        
         var AnalyticsView = Backbone.Layout.extend({
 
         
         template: "#analytics_template",
         
         initialize: function(para){
+          this.ent = para.entities;
           this.entity_config = all_configs[para.entities];
           this.container = para.container;
-          this.xaxis = all_configs[para.entities]['xaxis'];
+          this.xaxis = para.xaxis;//all_configs[para.entities]['xaxis'];
+          this.k = para.j;
           this.yaxis = all_configs[para.entities]['yaxis'];
+          if(para.key==undefined)
           this.key = all_configs[para.entities]['key'];
+          else
+            this.key = para.key;
           this.graph_type = all_configs[para.entities]['graph_type'];
+          this.tabId = para.tabId;
           console.log("Initializing graph view");
           _.bindAll(this);
           this.render();
          },
 
-      	serialize: function () {
+        serialize: function () {
             return {
                 page_header: "Analytics",
             };
@@ -81,27 +88,52 @@ define([
                 }
                 return cell;
             });
+            
             return row;
         },
 
         render_data: function (entity_collection) {
-        	var self = this;
+
+            var self = this;
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
+
                 return [self.get_row(model)];
             });
-            console.log("*****************************");
+                console.log("*****************************");
             var dict = {};
+            
+            if(!this.key[this.k]==0){
             for(var i=0; i<array_table_values.length; i++)
             {
                 var count = 0;
-                var block = array_table_values[i][this.key];
-                for (var j=0; j<array_table_values.length; j++)
-                {
-                    if(block == array_table_values[j][this.key])
-                    {count++;}
-                }  
-                dict[block] = count;
-            }            
+                if(this.key[this.k]==1){
+                    var arr = array_table_values[i][this.key[this.k]].split('-');
+                    var year = arr[0];
+                    var month = arr[1];
+                    var date = arr[2];
+                    var block = Date.UTC(year,month,date);
+                    
+                }
+                else block = array_table_values[i][this.key[this.k]];
+                if(!dict.hasOwnProperty(block))
+                    dict[block] = 1;
+                else 
+                    dict[block]++;
+            }
+            }
+            var sorted = [];
+                for(var key in dict) {
+                    sorted[sorted.length] = key;
+                }
+                sorted.sort();
+
+            var tempDict = {};
+            for(var i = 0; i < sorted.length; i++) {
+            tempDict[sorted[i]] = dict[sorted[i]];
+            }
+            dict = tempDict
+
+            if(this.key[this.k]>1){
             var options = {
                 title: {
                     text: ''
@@ -110,11 +142,16 @@ define([
                     renderTo: this.container,
                     type: this.graph_type,
                 },
+
                 xAxis: {
                     categories: [],
                     title: {
                         text: this.xaxis,
-                    }
+                    },
+                },
+                navigator:{
+                    enabled:true,
+                    width:'20%'
                 },
                 yAxis: {
                     title: {
@@ -139,8 +176,98 @@ define([
             var chart = new Highcharts.Chart(options);            
             console.log("*****************************");
         }
-    });  
+        else if(this.key[this.k]==1){
+            var groupingUnits = [[
+                'week',                         // unit name
+                    [1]                             // allowed multiples
+                ],[
+                    'month',
+                [1, 2, 3, 4, 6]
+            ]];
+            var i=0,dataTime=[];
+            for (var key in dict) 
+            {
+                if (dict.hasOwnProperty(key)) 
+                {            
+
+                    dataTime.push([key*1,dict[key]]);
+                }
+            }
+            var options2 = {
+                title: {
+                    text: ''
+                },
+                chart: {
+                    renderTo: this.container,
+                    type: this.graph_type,
+                },
+                xAxis: {
+                    categories: [],
+                    title: {
+                        text: this.xaxis,
+                    },
+                },  
+                yAxis: {
+                    title: {
+                        text: this.yaxis,
+                    },
+                    opposite:false,
+                    allowDecimals: true
+                },
+                series: [{
+                data : dataTime,
+                tooltip: {
+                    valueDecimals: 2
+                },
+                dataGrouping: {
+                        approximation: "sum",
+                        enabled: true,
+                        forced: true,
+                        units: groupingUnits,
+                        
+                    }
+            }]
+            };
+            /*for (var key in dict) 
+            {
+                if (dict.hasOwnProperty(key)) 
+                {            
+                    //options2.xAxis.categories.push(key);
+                    options2.series[0].data.push(dict[key]);    
+                }
+            }*/
+            var chart = new Highcharts.stockChart(options2);            
+        }
+        else{
+            if(this.ent=='village')
+                window.village = array_table_values.length
+            if(this.ent=='group')
+                window.group = array_table_values.length
+            if(this.ent=='video')
+                window.video = array_table_values.length
+            if(this.ent=='screening')
+                window.screening = array_table_values.length
+            if(this.ent=='mediator')
+                window.mediator = array_table_values.length
+            if(this.ent=='adoption')
+                window.adoption = array_table_values.length
+            if(this.ent=='person')
+                window.person = array_table_values.length
+            if(window.village!=undefined&&window.group!=undefined&&window.video!=undefined&&window.screening!=undefined&&window.mediator!=undefined&&window.adoption!=undefined&&window.person!=undefined){
+
+            $(this.el).find('#container11').html('Number of Village'+' : '+window.village);
+            $(this.el).find('#container12').html('Number of Group'+' : '+window.group);
+            $(this.el).find('#container13').html('Number of Video'+' : '+window.video);
+            $(this.el).find('#container14').html('Number of Screening'+' : '+window.screening);
+            $(this.el).find('#container15').html('Number of Mediator'+' : '+window.mediator);
+            $(this.el).find('#container16').html('Number of Adoption'+' : '+window.adoption);
+            $(this.el).find('#container17').html('Number of Person'+' : '+window.person);
+            }
+        }
+       
+    }
+    
+    });
   // Our module now returns our view
   return AnalyticsView;
 });
-            
