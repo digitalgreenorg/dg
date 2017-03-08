@@ -2,13 +2,16 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django import forms
 from django.forms import ModelForm
 from django.forms.extras.widgets import *
+from django.conf import settings
 
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from coco.base_models import CocoModel
+from coco.models import CocoUser
 from geographies.models import Village, Block, District, State, Country
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
 from videos.models import Language, Practice, Video, NonNegotiable, Category, SubCategory
+from django.core.paginator import Paginator
 
 # function for saving formsets with user information
 def save_all(instances, user, id):
@@ -30,9 +33,9 @@ class CocoModelForm(ModelForm):
             instance.user_created_id = user
         if commit:
             instance.save()
-            self.save_m2m()  
+            self.save_m2m()
         return instance
-        
+
     class Meta:
         model = CocoModel
         exclude = ('user_modified',)
@@ -47,24 +50,34 @@ class UserModelVideoMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return "%s (%s) (%s)" % (obj.title, obj.village.block.district.district_name, obj.language.language_name)
 
+class DistrictNameChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self,obj):
+        return "%s (%s)" % (obj.district_name,obj.state.state_name)
+
 
 class CocoUserForm(forms.ModelForm):
+    district = DistrictNameChoiceField(queryset = District.objects.prefetch_related('state'), required = False)
     villages = UserModelVillageMultipleChoiceField(
-        widget=FilteredSelectMultiple(
-                                      verbose_name='villages',
-                                      is_stacked=False
+        widget = FilteredSelectMultiple(
+                                      verbose_name = 'villages',
+                                      is_stacked = False,
+                                      attrs={'rows':'10',}
                                      ),
-        queryset=Village.objects.all().prefetch_related('block', 'block__district')
+        queryset = Village.objects.prefetch_related('block', 'block__district')
         )
     videos = UserModelVideoMultipleChoiceField(
-        widget=FilteredSelectMultiple(
-                                      verbose_name='videos',
-                                      is_stacked=False
+        widget = FilteredSelectMultiple(
+                                      verbose_name = 'videos',
+                                      is_stacked = False
                                      ),
-        queryset=Video.objects.all().prefetch_related('language', 'village__block__district'),
-        required=False
+        queryset = Video.objects.prefetch_related('language', 'village__block__district'),
+        required = False
         )
-
+    class Meta:
+        model = CocoUser
+        fields = ['user', 'partner', 'district', 'villages', 'videos']
+    class Media:
+        js = ( settings.STATIC_URL + "js/filter_district_coco_user.js",)
 
 class LanguageForm(CocoModelForm):
     class Meta:
@@ -85,7 +98,7 @@ class CountryForm(CocoModelForm):
     class Meta:
         model = Country
         exclude = ()
-        
+
 class StateForm(CocoModelForm):
     class Meta:
         model = State
@@ -106,7 +119,7 @@ class PersonGroupForm(CocoModelForm):
     class Meta:
         model = PersonGroup
         exclude = ()
-      
+
 class PersonAdoptPracticeForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
@@ -115,7 +128,7 @@ class PersonAdoptPracticeForm(CocoModelForm):
 
 class PersonForm(CocoModelForm):
     class Meta:
-        model = Person    
+        model = Person
         exclude=('equipmentholder','relations','adopted_agricultural_practices',)
 
 class PartnerForm(CocoModelForm):
@@ -127,7 +140,7 @@ class AnimatorForm(CocoModelForm):
     class Meta:
         model = Animator
         exclude = ('assigned_villages',)
-        
+
 class AnimatorAssignedVillageForm(CocoModelForm):
     class Meta:
         model = AnimatorAssignedVillage
@@ -143,12 +156,12 @@ class VillageForm(CocoModelForm):
         model = Village
         exclude = ()
 
-class VideoForm(CocoModelForm):       
+class VideoForm(CocoModelForm):
     class Meta:
         model = Video
         exclude = ('related_practice','review_status','video_grade')
 
-class NonNegotiableForm(CocoModelForm):       
+class NonNegotiableForm(CocoModelForm):
     class Meta:
         model = NonNegotiable
         exclude = ()

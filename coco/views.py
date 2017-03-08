@@ -6,9 +6,14 @@ from django.shortcuts import render_to_response, render
 from coco.models import FullDownloadStats
 from models import CocoUser
 
+import json
+from geographies.models import Village, Block, District, State, Country
+
+
 def coco_v2(request):
-    return render(request,'dashboard.html')
-    
+    return render(request, 'dashboard.html')
+
+
 def login(request):
     partner_name = None
     if request.method == 'POST':
@@ -25,48 +30,53 @@ def login(request):
     else:
         return HttpResponse("0")
     return JsonResponse({'success': '1', 'partner_name': partner_name})
-    
+
 def logout(request):
-    auth.logout(request)    
+    auth.logout(request)
     return HttpResponse("1")
-   
+
+
 def record_full_download_time(request):
     if not(request.user and request.POST["start_time"] and request.POST["end_time"]):
         return HttpResponse("0")
-    stat = FullDownloadStats(user = request.user, start_time = request.POST["start_time"], end_time = request.POST["end_time"])
+    stat = FullDownloadStats(user=request.user, start_time=request.POST[
+                             "start_time"], end_time=request.POST["end_time"])
     stat.save()
     return HttpResponse("1")
-       
+
+
 def reset_database_check(request):
     if not request.user.is_authenticated():
         return HttpResponse("0")
-    cocouser = CocoUser.objects.get(user = request.user)
+    cocouser = CocoUser.objects.get(user=request.user)
     if not(cocouser and cocouser.time_modified):
         return HttpResponse("0")
     lastdownloadtime = request.GET["lastdownloadtimestamp"]
-    lastdownloadtimestamp = datetime.strptime(lastdownloadtime, '%Y-%m-%dT%H:%M:%S.%f')
+    lastdownloadtimestamp = datetime.strptime(
+        lastdownloadtime, '%Y-%m-%dT%H:%M:%S.%f')
     if lastdownloadtimestamp <= cocouser.time_modified:
         return HttpResponse("1")
     return HttpResponse("0")
-    
-               
+
+
 def html_decorator(func):
     """
     This decorator wraps the output in html.
     (From http://stackoverflow.com/a/14647943)
     """
- 
+
     def _decorated(*args, **kwargs):
         response = func(*args, **kwargs)
- 
+
         wrapped = ("<html><body>",
                    response.content,
                    "</body></html>")
- 
+
         return HttpResponse(wrapped)
- 
+
     return _decorated
- 
+
+
 @html_decorator
 def debug(request):
     """
@@ -74,13 +84,24 @@ def debug(request):
     """
     path = request.META.get("PATH_INFO")
     api_url = path.replace("debug/", "")
- 
+
     view = urlresolvers.resolve(api_url)
- 
+
     accept = request.META.get("HTTP_ACCEPT")
     accept += ",application/json"
     request.META["HTTP_ACCEPT"] = accept
- 
+
     res = view.func(request, **view.kwargs)
     return HttpResponse(res._container)
- 
+
+
+def filter_villages(request):
+    district_ids = request.GET['district_id']
+    filter_args = {}
+    filter_args["district_id__in"] = district_ids
+    blocks_long = Block.objects.filter(**filter_args).values_list('id',flat=True)
+    blocks_int = [int(item) for item in blocks_long]
+    villages = Village.objects.filter(block__id__in=blocks_int).values('id','village_name','block__block_name')
+    data_dict = {'villages': list(villages)}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)
