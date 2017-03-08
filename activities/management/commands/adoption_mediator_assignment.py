@@ -18,8 +18,8 @@ class Command(BaseCommand):
         print "Current Time: ",datetime.now()
         pap_query = Paginator(PersonAdoptPractice.objects.filter(animator_id__isnull=True), 20000)
         print "No. of Pages: ",pap_query.num_pages
-        filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
-        #filename = 'activities/management/commands/exceptions.csv'
+        #filename = 'C:/Users/Lokesh/Documents/dg_code/activities/management/exception.csv'
+        filename = 'activities/management/commands/animator_assign_exceptions.csv'
         count = 0
         for page in range(1, pap_query.num_pages + 1):
             adoption_list = pap_query.page(page).object_list
