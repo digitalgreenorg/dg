@@ -10,6 +10,8 @@ from django.db.models import Count
 import dg.settings
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, HelplineCallLog
 
+from loop.utils.ivr_helpline.helpline_data import helpline_data
+
 class Command(BaseCommand):
 
     def send_mail(self,total_pending_call_count,
@@ -55,12 +57,14 @@ class Command(BaseCommand):
         msg.send()
 
     def handle(self, *args, **options):
+        working_hours_start = helpline_data['working_hours_start']
+        working_hours_end = helpline_data['working_hours_end']
         # Change dates from Yesterday 6:00 PM to Today 9:00 AM (Non-Operational Hours of Helpline).
-        today_date = datetime.datetime.now().replace(hour=9,minute=0,second=0)
+        today_date = datetime.datetime.now().replace(hour=working_hours_start,minute=0,second=0)
         yesterday_date = today_date-timedelta(days=1)
-        yesterday_date_morning = yesterday_date.replace(hour=9,minute=0,second=0)
-        yesterday_date_evening = yesterday_date.replace(hour=18,minute=0,second=0)
-        working_hours = range(9,18)
+        yesterday_date_morning = yesterday_date.replace(hour=working_hours_start,minute=0,second=0)
+        yesterday_date_evening = yesterday_date.replace(hour=working_hours_end,minute=0,second=0)
+        working_hours = range(working_hours_start,working_hours_end)
         total_pending_call_count = 0
         # Total Calls declined Till now from beginning.
         total_declined_call_count = HelplineIncoming.objects.filter(call_status=2).count()
