@@ -269,7 +269,6 @@ def send_updated_log(request):
             TransportationVehicle = get_model('loop', 'TransportationVehicle')
             State = get_model('loop','State')
             list_rows = []
-            print requesting_loop_user.id
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
