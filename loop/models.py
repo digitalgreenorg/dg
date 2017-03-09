@@ -7,8 +7,8 @@ from loop_data_log import save_log, delete_log
 from smart_selects.db_fields import ChainedForeignKey
 from constants.constants import *
 
-RoleChoice = ((ROLE_CHOICE_ADMIN, "Admin"), (ROLE_CHOICE_AGGREGATOR, "Aggregator"), (ROLE_CHOICE_TESTING, "Testing"))
-ModelChoice = ((1, "Direct Sell"),  (2, "Aggregate"))
+ROLE_CHOICE = ((ROLE_CHOICE_ADMIN, "Admin"), (ROLE_CHOICE_AGGREGATOR, "Aggregator"), (ROLE_CHOICE_TESTING, "Testing"))
+MODEL_CHOICE = ((1, "Direct Sell"),  (2, "Aggregate"))
 DISCOUNT_CRITERIA = ((DISCOUNT_CRITERIA_VOLUME, "Volume"), (DISCOUNT_CRITERIA_AMOUNT, "Amount"))
 MODEL_TYPES = ((MODEL_TYPES_DIRECT, "Direct"), (MODEL_TYPES_TAX_BASED, "Tax Based"), (MODEL_TYPES_SLAB_BASED, "Slab Based"), (MODEL_TYPES_DAILY_PAY, "Daily Pay"))
 CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
@@ -135,12 +135,12 @@ class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, related_name="loop_user")
     name = models.CharField(max_length=100, default="default")
-    role = models.IntegerField(choices=RoleChoice)
+    role = models.IntegerField(choices=ROLE_CHOICE)
     assigned_villages = models.ManyToManyField(
         Village, related_name="assigned_villages", through='LoopUserAssignedVillage', blank=True)
     assigned_mandis = models.ManyToManyField(
         Mandi, related_name="assigned_mandis", through='LoopUserAssignedMandi', blank=True)
-    mode = models.IntegerField(choices=ModelChoice, default=1)
+    mode = models.IntegerField(choices=MODEL_CHOICE, default=1)
     phone_number = models.CharField(
         max_length=14, null=False, blank=False, default="0")
     village = models.ForeignKey(Village, default=None, null=True)
