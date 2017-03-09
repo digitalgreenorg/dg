@@ -15,6 +15,9 @@
     height: 57px;
     margin-bottom: 32px;
 }
+.nav_row {
+  margin-bottom: 0px !important;
+}
 /*nav.top-nav {
     height: 122px;
     box-shadow: none;
