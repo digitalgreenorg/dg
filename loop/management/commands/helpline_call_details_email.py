@@ -79,7 +79,6 @@ class Command(BaseCommand):
         yesterday_date = today_date-timedelta(days=1)
         yesterday_date_morning = yesterday_date.replace(hour=working_hours_start,minute=0,second=0)
         yesterday_date_evening = yesterday_date.replace(hour=working_hours_end,minute=0,second=0)
-        working_hours = range(working_hours_start,working_hours_end)
         total_pending_call_count = 0
         # Total Calls declined Till now from beginning.
         total_declined_call = HelplineIncoming.objects.filter(call_status=2).values('id','incoming_time','last_incoming_time')
