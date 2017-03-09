@@ -83,7 +83,7 @@ class Command(BaseCommand):
         total_pending_call_count = 0
         # Total Calls declined Till now from beginning.
         total_declined_call = HelplineIncoming.objects.filter(call_status=2).values('id','incoming_time','last_incoming_time')
-        total_declined_call_count = during_working_hour(total_declined_call)
+        total_declined_call_count = self.during_working_hour(total_declined_call)
         # Total Calls received by unique callers in working hours of previous day (i.e. 9 AM to 6 PM).
         yesterday_received_call_count = HelplineIncoming.objects.filter(incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
         # Total Calls received by unique callers and resolved within working hours of previous day (i.e. 9 AM to 6 PM).
@@ -94,9 +94,9 @@ class Command(BaseCommand):
         today_date = datetime.datetime.now().date()
         yesterday_date = today_date-timedelta(days=1)
         yesterday_declined_call = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date,time_modified__lte=today_date).values('id','incoming_time','last_incoming_time')
-        yesterday_declined_call_count = during_working_hour(yesterday_declined_call)
+        yesterday_declined_call_count = self.during_working_hour(yesterday_declined_call)
         pending_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
-        total_pending_call_count = during_working_hour(pending_call)
+        total_pending_call_count = self.during_working_hour(pending_call)
         for call in pending_call:
             incoming_hour = call['incoming_time'].hour
             last_incoming_hour = call['last_incoming_time'].hour
