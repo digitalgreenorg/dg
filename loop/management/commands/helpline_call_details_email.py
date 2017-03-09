@@ -79,7 +79,7 @@ class Command(BaseCommand):
         # Total pending Calls that were not addressed for last two days,hence turned into declined previous day.
         today_date = datetime.datetime.now().date()
         yesterday_date = today_date-timedelta(days=1)
-        yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date,time_modified__lt=today_date).count()
+        yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date,time_modified__lte=today_date).count()
         pending_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
         for call in pending_call:
             incoming_hour = call['incoming_time'].hour
