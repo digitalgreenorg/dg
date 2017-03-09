@@ -5,11 +5,12 @@ from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 from loop_data_log import save_log, delete_log
 from smart_selects.db_fields import ChainedForeignKey
+from constants.constants import *
 
-RoleChoice = ((1, "Admin"), (2, "Aggregator"), (3, "Testing"))
+RoleChoice = ((ROLE_CHOICE_ADMIN, "Admin"), (ROLE_CHOICE_AGGREGATOR, "Aggregator"), (ROLE_CHOICE_TESTING, "Testing"))
 ModelChoice = ((1, "Direct Sell"),  (2, "Aggregate"))
-DISCOUNT_CRITERIA = ((0, "Volume"), (1, "Amount"))
-MODEL_TYPES = ((0, "Direct"), (1, "Tax Based"), (2, "Slab Based"))
+DISCOUNT_CRITERIA = ((DISCOUNT_CRITERIA_VOLUME, "Volume"), (DISCOUNT_CRITERIA_AMOUNT, "Amount"))
+MODEL_TYPES = ((MODEL_TYPES_DIRECT, "Direct"), (MODEL_TYPES_TAX_BASED, "Tax Based"), (MODEL_TYPES_SLAB_BASED, "Slab Based"), (MODEL_TYPES_DAILY_PAY, "Daily Pay"))
 CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
 CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
@@ -443,7 +444,7 @@ class IncentiveModel(models.Model):
 class AggregatorIncentive(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
     start_date = models.DateField(auto_now=False)
-    model_type = models.IntegerField(choices=MODEL_TYPES, default=0)
+    model_type = models.IntegerField(choices=MODEL_TYPES)
     incentive_model = models.ForeignKey(IncentiveModel)
 
     class Meta:
