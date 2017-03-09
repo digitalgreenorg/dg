@@ -64,6 +64,7 @@ class State(LoopModel):
 
 post_save.connect(save_log,sender=State)
 pre_delete.connect(delete_log,sender=State)
+
 class District(LoopModel):
     id = models.AutoField(primary_key=True)
     district_name = models.CharField(max_length=50)
