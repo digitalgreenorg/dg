@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+import datetime
 from django.conf import settings
 
 
@@ -14,10 +15,19 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='DeleteLog',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('timestamp', models.DateTimeField(default=datetime.datetime.now)),
+                ('entry_table', models.CharField(max_length=100)),
+                ('table_object', models.CharField(max_length=500)),
+            ],
+        ),
+        migrations.CreateModel(
             name='LogData',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
-                ('timestamp', models.DateTimeField(auto_now_add=True)),
+                ('timestamp', models.DateTimeField(default=datetime.datetime.now)),
                 ('action', models.IntegerField()),
                 ('entry_table', models.CharField(max_length=100)),
                 ('model_id', models.IntegerField(null=True)),
