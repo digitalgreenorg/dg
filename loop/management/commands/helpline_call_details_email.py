@@ -97,12 +97,6 @@ class Command(BaseCommand):
         yesterday_declined_call_count = self.during_working_hour(yesterday_declined_call)
         pending_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
         total_pending_call_count = self.during_working_hour(pending_call)
-        for call in pending_call:
-            incoming_hour = call['incoming_time'].hour
-            last_incoming_hour = call['last_incoming_time'].hour
-            # Count Pending calls of working hours i.e. incoming time and last incoming time between 9 AM to 6 PM
-            if (incoming_hour in working_hours) and (last_incoming_hour in working_hours):
-                total_pending_call_count += 1
 
         self.send_mail(total_pending_call_count,
             total_declined_call_count,
