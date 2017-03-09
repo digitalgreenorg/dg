@@ -429,10 +429,11 @@ class IncentiveParameter(models.Model):
         unique_together = ("notation", "parameter_name", "notation_equivalent")
 
 class IncentiveModel(models.Model):
-    calculation_method = models.TextField(null=True, blank=True)
+    calculation_method = models.TextField()
+    description = models.CharField(max_length=100, null=True, blank=True)
 
     def __unicode__(self):
-        return "%s" % (self.calculation_method)
+        return "%s" % (self.description)
 
 class AggregatorIncentive(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
@@ -447,7 +448,7 @@ class AggregatorIncentive(LoopModel):
         return "%s" % (self.aggregator.name)
 
     def __incentive_model__(self):
-        return "%s" % (self.incentive_model.calculation_method)
+        return "%s" % (self.incentive_model.description)
 
 class AggregatorShareOutliers(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
@@ -546,3 +547,9 @@ class HelplineSmsLog(LoopModel):
 
     def __unicode__(self):
         return "%s (%s) (%s)" % (self.from_number, self.to_number, self.sent_time)
+
+class LogDeleted(models.Model):
+    id = models.AutoField(primary_key=True)
+    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.datetime.now)
+    entry_table = models.CharField(max_length=100)
+    table_object = models.CharField(max_length=500)

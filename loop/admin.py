@@ -141,7 +141,7 @@ class AggregatorIncentiveAdmin(admin.ModelAdmin):
     list_display = ('start_date','__unicode__','__incentive_model__' ,'model_type')
 
 class IncentiveModelAdmin(admin.ModelAdmin):
-    list_display = ['calculation_method']
+    list_display = ['calculation_method','description']
 
 class AggregatorShareOutlierAdmin(admin.ModelAdmin):
     list_display = ('date','__mandi__', '__aggregator__' , 'amount', 'comment')

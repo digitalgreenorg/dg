@@ -34,8 +34,8 @@ def save_log(sender, **kwargs):
     instance = kwargs["instance"]
     action = kwargs["created"]
     sender = sender.__name__  # get the name of the table which sent the request
-    model_dict = model_to_dict(instance)
-    previous_time_stamp = get_latest_timestamp()
+    # model_dict = model_to_dict(instance)
+    # previous_time_stamp = get_latest_timestamp()
     try:
         user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
             id=instance.user_created_id)
@@ -190,6 +190,11 @@ def delete_log(sender, **kwargs):
         log = Log(village=village_id, user=user, action=-1,
                   entry_table=sender, model_id=model_id, loop_user=loop_user)
         log.save()
+
+        LogDeleted = get_model('loop','LogDeleted')
+        obj = model_to_dict(instance)
+        deletedObject = LogDeleted(entry_table=sender,table_object=obj)
+        deletedObject.save()
     except Exception as ex:
         pass
 
