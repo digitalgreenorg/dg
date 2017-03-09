@@ -40,6 +40,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+        working_hours = range(9,18)
         if expert_obj:
             expert_obj = expert_obj[0]
         else:
@@ -54,11 +55,16 @@ class Command(BaseCommand):
         except Exception as e:
             module = "helpline_queue"
             write_log(HELPLINE_LOG_FILE,module,str(e))
-        pending_incoming_call_id = HelplineIncoming.objects.filter(call_status=0).order_by('id').values_list('id', flat=True)
-        for ids in pending_incoming_call_id:
-            incoming_call_obj = self.check_pending_or_not(ids)
-            if incoming_call_obj:
-                farmer_number = incoming_call_obj.from_number
-                # Last parameter more than 0 only when we do not want to acknowledge User if call is not successfull
-                make_helpline_call(incoming_call_obj,expert_obj,farmer_number,1)
-                time.sleep(120)
+        pending_incoming_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
+        # Select pending calls from working hours only.
+        for pending_call in pending_incoming_call:
+            incoming_hour = pending_call['incoming_time'].hour
+            last_incoming_hour = pending_call['last_incoming_time'].hour
+            # Select calls which are incoming or last incoming between 9 AM to 6 PM
+            if (incoming_hour in working_hours) and (last_incoming_hour in working_hours):
+                incoming_call_obj = self.check_pending_or_not(pending_call['id'])
+                if incoming_call_obj:
+                    farmer_number = incoming_call_obj.from_number
+                    # Last parameter more than 0 only when we do not want to acknowledge User if call is not successfull
+                    make_helpline_call(incoming_call_obj,expert_obj,farmer_number,1)
+                    time.sleep(240)
