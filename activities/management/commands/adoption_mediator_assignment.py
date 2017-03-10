@@ -72,7 +72,7 @@ class Command(BaseCommand):
                             except Exception as e:
                                 with open(filename, 'ab') as csvfile:
                                     fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-                                    fileWrite.writerow(['ID', row.id])
+                                    fileWrite.writerow(['ID (%s)'%(str(e),), row.id])
                                 count += 1
                         else:
                             screening = screening[0]
