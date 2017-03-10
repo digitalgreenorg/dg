@@ -51,7 +51,7 @@ class Command(BaseCommand):
         old_time = datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=2)
         old_time = old_time.replace(tzinfo=None)
         try:
-            HelplineIncoming.objects.filter(call_status=0,last_incoming_time__lte=old_time).update(call_status=2)
+            HelplineIncoming.objects.filter(call_status=0,last_incoming_time__lte=old_time).update(call_status=2,time_modified=datetime.datetime.now())
         except Exception as e:
             module = "helpline_queue"
             write_log(HELPLINE_LOG_FILE,module,str(e))
