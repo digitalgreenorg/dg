@@ -60,15 +60,16 @@ class Command(BaseCommand):
                                     row.animator = screening.animator
                                     continue                 
                                 if row.person.village_id in village_wise_animator:
-                                    animator_id = Screening.objects.filter(animator_id__in=list(village_wise_animator[row.person.village_id])).order_by('-date')[0].animator_id
-                                    #animator_id = next(iter(village_wise_animator[row.person.village_id]))
-                                    row.animator_id = animator_id 
-                                    continue                                      
-                                else:
-                                    print "This is the bad case man :D"
-                                    with open(filename, 'ab') as csvfile:
-                                        fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-                                        fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
+                                    animator_id = Screening.objects.filter(animator_id__in=list(village_wise_animator[row.person.village_id])).order_by('-date')
+                                    if len(animator_id) > 0:
+                                        animator_id = animator_id[0].animator_id
+                                        #animator_id = next(iter(village_wise_animator[row.person.village_id]))
+                                        row.animator_id = animator_id 
+                                        continue                
+                                print "If code is here, then this is the bad case man :D"
+                                with open(filename, 'ab') as csvfile:
+                                    fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+                                    fileWrite.writerow(['ID (No Screening,No Animator)', row.id])
                             except Exception as e:
                                 with open(filename, 'ab') as csvfile:
                                     fileWrite = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
