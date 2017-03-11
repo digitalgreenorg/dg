@@ -306,13 +306,16 @@ hr {
     color:rgba(0,0,0,0.3);
 }
 .modal {
-    width: 80% !important;
+    width: 80%;
     overflow-y: hidden !important;
 }
 .modal-close {
     position: absolute;
     cursor: pointer;
     top: 10px;
+}
+.login_modal {
+  width: 30% !important;
 }
 table.dataTable tr.odd td.sorting_1 {
     background-color: #f9f9f9;

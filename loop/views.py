@@ -36,10 +36,12 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
     update_incoming_obj, send_acknowledge, send_voicemail
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
+from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
+
+import pandas as pd
 
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
-ROLE_AGGREGATOR = 2
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 
 @csrf_exempt
@@ -128,7 +130,7 @@ def farmer_payments(request):
 
 def filter_data(request):
     language = request.GET.get('language')
-    aggregators = LoopUser.objects.filter(role=ROLE_AGGREGATOR).values('user__id', 'name', 'name_en', 'id')
+    aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR).values('user__id', 'name', 'name_en', 'id')
     villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
     crops_lang = CropLanguage.objects.values('crop__id', 'crop_name')
@@ -147,7 +149,7 @@ def filter_data(request):
 
 def total_static_data(request):
     total_farmers_reached = CombinedTransaction.objects.values('farmer').distinct().count()
-    total_cluster_reached = LoopUser.objects.filter(role=ROLE_AGGREGATOR).count()
+    total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR).count()
 
     aggregated_result,cum_vol_farmer = get_data_from_myisam(1)
 
@@ -198,6 +200,8 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
         'date', 'user_created_id', 'mandi','mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
                                                                        Count('farmer_id', distinct=True))
     result = []
+    daily_pay_list = []
+    outliers_daily_pay = []
 
     incentive_param_queryset = IncentiveParameter.objects.all()
 
@@ -205,31 +209,66 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
         amount_sum = 0.0
         comment = ""
         user = LoopUser.objects.get(user_id=CT['user_created_id'])
+
+        ai_list_set = ai_queryset.filter(start_date__lte=CT['date'], aggregator=user.id).order_by('-start_date')
+
         if CT['date'] not in [aso.date for aso in aso_queryset.filter(mandi=CT['mandi'], aggregator=user.id)]:
+            # IF NOT A CASE OF OUTLIER, GET LATEST START DATE AND COMPUTE ACCORDINGLY
             try:
-                ai_list_set = ai_queryset.filter(start_date__lte=CT['date'], aggregator=user.id).order_by('-start_date')
-                if (ai_list_set.count() > 0):
+                if ai_list_set.count() > 0:
                     exec (ai_list_set[0].incentive_model.calculation_method)
                     paramter_list = inspect.getargspec(calculate_inc)[0]
-                    for param in paramter_list:
-                        param_to_apply = incentive_param_queryset.get(notation=param)
-                        x = calculate_inc(CT[param_to_apply.notation_equivalent])
-                    amount_sum += x
+                    if len(paramter_list) > 0:
+                        for param in paramter_list:
+                            param_to_apply = incentive_param_queryset.get(notation=param)
+                            amount_sum += calculate_inc(CT[param_to_apply.notation_equivalent])
+                    elif ai_list_set[0].model_type == MODEL_TYPES_DAILY_PAY:
+                        amount_sum = calculate_inc()
+                        daily_pay_list.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': amount_sum, 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment, 'aggregator_id':user.id})
+                        continue
                 else:
                     amount_sum += calculate_inc_default(CT['quantity__sum'])
             except Exception:
                 pass
         else:
+            # HANDLE OUTLIERS FOR ALL MODELS EXCEPT DAILY PAY
             try:
                 aso_share_date_aggregator = aso_queryset.filter(
                     date=CT['date'], aggregator=user.id, mandi=CT['mandi']).values('amount', 'comment')
                 if aso_share_date_aggregator.count():
-                    amount_sum += aso_share_date_aggregator[0]['amount']
+                    amount_sum = aso_share_date_aggregator[0]['amount']
                     comment = aso_share_date_aggregator[0]['comment']
+                if ai_list_set and ai_list_set[0].model_type == MODEL_TYPES_DAILY_PAY:
+                    outliers_daily_pay.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__id': CT['mandi'], 'amount': amount_sum, 'comment' : comment})
+                    continue
             except AggregatorShareOutliers.DoesNotExist:
                 pass
         result.append(
             {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': round(amount_sum,2), 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
+
+    daily_pay_df = pd.DataFrame(daily_pay_list)
+    daily_pay_mandi_count = daily_pay_df.groupby(['date','user_created__id']).agg({'mandi__id':'count'}).reset_index()
+    daily_pay_mandi_count.rename(columns={"mandi__id":"mandi__count"}, inplace=True)
+    daily_pay_df = pd.merge(daily_pay_df, daily_pay_mandi_count, on=['date','user_created__id'], how='left')
+    daily_pay_df['amount'] = daily_pay_df['amount'] / daily_pay_df['mandi__count']
+
+    # for index, row in daily_pay_df.iterrows():
+    #     outlier = aso_queryset.filter(date=row['date'], aggregator=row['aggregator_id'], mandi=row['mandi__id']).values('amount','comment')
+    #     if outlier.count():
+    #         daily_pay_df.loc[index,'amount'] = outlier[0]['amount']
+    #         daily_pay_df.loc[index,'comment'] = outlier[0]['comment']
+
+    daily_pay_df.drop(['mandi__count','aggregator_id'], axis=1, inplace=True)
+
+    if len(outliers_daily_pay)>0:
+        outliers_daily_pay_df = pd.DataFrame(outliers_daily_pay)
+        daily_pay_df['amount'] = outliers_daily_pay_df[(daily_pay_df['date'] == outliers_daily_pay_df['date']) & (daily_pay_df['user_created__id'] == outliers_daily_pay_df['user_created__id']) & (daily_pay_df['mandi__id'] == outliers_daily_pay_df['mandi__id'])]['amount']
+        daily_pay_df['comment'] = outliers_daily_pay_df[(daily_pay_df['date'] == outliers_daily_pay_df['date']) & (daily_pay_df['user_created__id'] == outliers_daily_pay_df['user_created__id']) & (daily_pay_df['mandi__id'] == outliers_daily_pay_df['mandi__id'])]['comment']
+
+    daily_pay_df = daily_pay_df.round({'amount':2})
+    daily_pay = daily_pay_df.to_dict(orient='records')
+
+    result.extend(daily_pay)
     return result
 
 
@@ -271,7 +310,7 @@ def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
             try:
                 gc_list_set = gc_queryset.filter(start_date__lte=CT['date'], gaddidar=CT[
                     'gaddidar']).order_by('-start_date')
-                if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count() > 0:
+                if CT['gaddidar__discount_criteria'] == DISCOUNT_CRITERIA_VOLUME and gc_list_set.count() > 0:
                     amount_sum += CT['quantity__sum'] * \
                            gc_list_set[0].discount_percent
                 elif gc_list_set.count() > 0:
@@ -456,7 +495,7 @@ def calculate_gaddidar_share_payments(start_date, end_date):
             try:
                 gc_list_set = gc_queryset.filter(start_date__lte=CT['date'], gaddidar=CT[
                     'gaddidar']).order_by('-start_date')
-                if CT['gaddidar__discount_criteria'] == 0 and gc_list_set.count() > 0:
+                if CT['gaddidar__discount_criteria'] == DISCOUNT_CRITERIA_VOLUME and gc_list_set.count() > 0:
                     amount_sum += CT['quantity__sum'] * \
                            gc_list_set[0].discount_percent
                     gc_discount = amount_sum / CT['quantity__sum']
@@ -473,7 +512,7 @@ def calculate_gaddidar_share_payments(start_date, end_date):
                 if gso_gaddidar_date_aggregator.count():
                     amount_sum += gso_gaddidar_date_aggregator[0]['amount']
                     comment = gso_gaddidar_date_aggregator[0]['comment']
-                    if CT['gaddidar__discount_criteria'] == 0:
+                    if CT['gaddidar__discount_criteria'] == DISCOUNT_CRITERIA_VOLUME:
                         gc_discount = amount_sum / CT['quantity__sum']
                     else:
                         gc_discount = amount_sum / CT['amount__sum']
