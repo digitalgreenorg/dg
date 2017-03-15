@@ -16,31 +16,6 @@ import json
 from django.contrib.auth.models import User
 from models import *
 
-
-class FarmerNotSaved(Exception):
-    pass
-
-
-class CropNotSaved(Exception):
-    pass
-
-
-class TransactionNotSaved(Exception):
-    pass
-
-
-class TransporterNotSaved(Exception):
-    pass
-
-
-class TransportationVehicleNotSaved(Exception):
-    pass
-
-
-class DayTransportationNotSaved(Exception):
-    pass
-
-
 class AssignedMandiNotSaved(Exception):
     pass
 
@@ -48,7 +23,7 @@ class AssignedVillageNotSaved(Exception):
     pass
 
 def send_duplicate_message(obj_id):
-    response = {"error_message":{"id": obj_id, "error": "Duplicate"}}
+    response = {"error_message": {"id": obj_id, "error": "Duplicate"}}
     raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def foreign_key_to_id(bundle, field_name, sub_field_names):
