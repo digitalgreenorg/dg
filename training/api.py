@@ -18,6 +18,7 @@ from tastypie.resources import ModelResource
 from people.models import Animator, AnimatorAssignedVillage
 
 from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication
+import json
 
 
 def send_duplicate_message(obj_id):
