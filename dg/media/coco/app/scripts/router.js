@@ -18,7 +18,8 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             ":entity/list": "list",
             ":entity/add": "add",
             ":entity/edit/:id": "edit",
-            "login": "login"
+            "login": "login",
+            "analytics":"analytics"
         },
         home: function() {
             this.check_login_wrapper()
@@ -27,60 +28,63 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             });
         },
         list: function(entity_name) {
-        	//Check if entity present in url is valid or not and if list view of that entity is enable in case it is valid
-        	if(this.entity_valid(entity_name) && this.entity_list_enabled(entity_name)){
-        		this.check_login_wrapper()
+            //Check if entity present in url is valid or not and if list view of that entity is enable in case it is valid
+            if(this.entity_valid(entity_name) && this.entity_list_enabled(entity_name)){
+                this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_list_view(entity_name);
                 });
-        	}
-        	else{
-        		alert("You are not authorized to view this page. Please contact your administrator.");
-        	}
+            }
+            else{
+                alert("You are not authorized to view this page. Please contact your administrator.");
+            }
         },
         add: function(entity_name) {
-        	//Check if entity present in url is valid or not and if add view of that entity is enable in case it is valid
-        	if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
-        		this.check_login_wrapper()
+            //Check if entity present in url is valid or not and if add view of that entity is enable in case it is valid
+            if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
+                this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_add_edit_view(entity_name, null);
                 });
-        	}
-        	else{
-        		alert("You are not authorized to view this page. Please contact your administrator.");
-        	}
+            }
+            else{
+                alert("You are not authorized to view this page. Please contact your administrator.");
+            }
             
         },
         edit: function(entity_name, id) {
-        	//Check if entity present in url is valid or not and if edit view of that entity is enable in case it is valid
-        	if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
-        		this.check_login_wrapper()
+            //Check if entity present in url is valid or not and if edit view of that entity is enable in case it is valid
+            if(this.entity_valid(entity_name) && this.entity_add_enabled(entity_name)){
+                this.check_login_wrapper()
                 .done(function(){
                     AppLayout.render_add_edit_view(entity_name, parseInt(id));
                 });
-        	}
-        	else{
-        		alert("You are not authorized to view this page. Please contact your administrator.");
-        	}
+            }
+            else{
+                alert("You are not authorized to view this page. Please contact your administrator.");
+            }
         },
         login: function() {
             AppLayout.render_login();
         },
+        analytics:function(){
+            AppLayout.render_analytics();
+        },
         //Check if user entered wrong entity name in url.
         entity_valid: function(entity_name){
-        	if(typeof configs[entity_name] == 'undefined'){
-        		return false;
-        	}
-        	else{
-        		return true;
-        	}
+            if(typeof configs[entity_name] == 'undefined'){
+                return false;
+            }
+            else{
+                return true;
+            }
         },
         //Check if list view was allowed in configs so that user may not directly enter the url and access table
         entity_list_enabled: function(entity_name){
             var listing = true;
             if(configs[entity_name].dashboard_display)
             {
-            	listing = configs[entity_name].dashboard_display.listing;
+                listing = configs[entity_name].dashboard_display.listing;
             }
             return listing;
         },
@@ -94,12 +98,12 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
                 enable_months = configs[entity_name].dashboard_display.enable_months;
             }
             if(typeof enable_months != 'undefined'){
-            	var d = new Date();
+                var d = new Date();
                 n = d.getMonth();
                 n=n+1;
                 res=$.inArray(n, enable_months);
                 if(res === -1){
-                	add=false;
+                    add=false;
                 }
             }
             return add;
