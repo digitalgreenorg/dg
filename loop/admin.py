@@ -50,7 +50,7 @@ class LoopUserAssignedVillages(admin.StackedInline):
 
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
-    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','is_visible')
+    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'village__village_name']
 

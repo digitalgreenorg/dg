@@ -100,6 +100,18 @@ def save_log(sender, **kwargs):
         user = instance.user_created
         loop_user = instance.loop_user
         sender = "Village"
+    elif sender == "GaddidarCommission":
+        village_id = None
+        user = instance.user_created
+        loop_user=None
+    elif sender == "State":
+        village_id=None
+        user = instance.user_created
+        loop_user = None
+    elif sender == "LoopUser":
+        village_id=None
+        user = instance.user_created
+        loop_user = None
     else:           # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -170,6 +182,10 @@ def delete_log(sender, **kwargs):
         user = None
         # Loop user not required
         loop_user = None
+    elif sender == "GaddidarCommission":
+        village_id=None
+        user = instance.user_created
+        loop_user = None
     elif sender == "LoopUserAssignedMandi":
         village_id = None
         user = None
@@ -182,6 +198,14 @@ def delete_log(sender, **kwargs):
         loop_user = instance.loop_user
         sender = "Village"
         model_id = instance.village.id
+    elif sender == "State":
+        village_id = None
+        user = instance.user_created
+        loop_user = None
+    elif sender == "LoopUser":
+        village_id = None
+        user = instance.user_created
+        loop_user = None
     else:               # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -245,11 +269,13 @@ def send_updated_log(request):
             Farmer = get_model('loop', 'Farmer')
             Mandi = get_model('loop', 'Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')
+            GaddidarCommission = get_model('loop','GaddidarCommission')
             Transporter = get_model('loop', 'Transporter')
             TransportationVehicle = get_model('loop', 'TransportationVehicle')
-
+            State = get_model('loop','State')
             list_rows = []
-
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle']))
             village_list_queryset = Log.objects.filter(
@@ -293,6 +319,11 @@ def send_updated_log(request):
             for grow in gaddidar_rows:
                 if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
                     list_rows.append(Log.objects.filter(id=grow.id))
+
+            gaddidar_commission_rows = Log.objects.filter(
+                timestamp__gt=timestamp,entry_table__in=['GaddidarCommission'])
+            for gcrow in gaddidar_commission_rows:
+                list_rows.append(Log.objects.filter(id=gcrow.id))
 
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['CombinedTransaction']))
