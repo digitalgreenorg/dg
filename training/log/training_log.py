@@ -84,21 +84,25 @@ def send_updated_log(request):
 
             if requesting_training_user:
                 requesting_user_states = requesting_training_user.get_states()
-                # requesting_user_districts = []
 
                 filtered_districts = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='District')
                 for district in filtered_districts:
-                    if district.action != -1 and District.objects.get(id=district.model_id).state in requesting_user_states:
-                        district_animator_list.append(district)
-                        # requesting_user_districts.append(district.model_id)
-                    elif district.action == -1:
+                    try:
+                        if district.action != -1 and District.objects.get(id=district.model_id).state in requesting_user_states:
+                            district_animator_list.append(district)
+                        elif district.action == -1:
+                            district_animator_list.append(district)
+                    except Exception: #Incase object edited and then deleted
                         district_animator_list.append(district)
 
                 filtered_animators = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='Animator')
                 for animator in filtered_animators:
-                    if animator.action != -1 and Animator.objects.get(id=animator.model_id).district.state in requesting_user_states:
-                        district_animator_list.append(animator)
-                    elif animator.action == -1:
+                    try:
+                        if animator.action != -1 and Animator.objects.get(id=animator.model_id).district.state in requesting_user_states:
+                            district_animator_list.append(animator)
+                        elif animator.action == -1:
+                            district_animator_list.append(animator)
+                    except Exception: #Incase object edited and then deleted
                         district_animator_list.append(animator)
 
             log_list = []
