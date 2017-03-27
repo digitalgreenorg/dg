@@ -62,9 +62,10 @@ def login(request):
             return HttpResponse(json.dumps(
                 {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name,
                  'user_id': loop_user[0].user_id,
-                 'mode': loop_user[0].mode, 'helpline': HELPLINE_NUMBER, 'phone_number': loop_user[0].phone_number,
-                 'user_name': username,
-                 'district': loop_user[0].village.block.district.id}))
+                 'mode': loop_user[0].mode, 'phone_number': loop_user[0].phone_number,'user_name': username,
+                 'district': loop_user[0].village.block.district.id,'days_count': loop_user[0].days_count,'helpline':loop_user[0].village.block.district.state.helpline_number,'crop_add':loop_user[0].village.block.district.state.crop_add}))
+
+
         else:
             return HttpResponse("0", status=401)
     else:
@@ -242,24 +243,27 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
         result.append(
             {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': round(amount_sum,2), 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
 
-    daily_pay_df = pd.DataFrame(daily_pay_list)
-    daily_pay_mandi_count = daily_pay_df.groupby(['date','user_created__id']).agg({'mandi__id':'count'}).reset_index()
-    daily_pay_mandi_count.rename(columns={"mandi__id":"mandi__count"}, inplace=True)
-    daily_pay_df = pd.merge(daily_pay_df, daily_pay_mandi_count, on=['date','user_created__id'], how='left')
-    daily_pay_df['amount'] = daily_pay_df['amount'] / daily_pay_df['mandi__count']
+    try:
+        daily_pay_df = pd.DataFrame(daily_pay_list)
+        daily_pay_mandi_count = daily_pay_df.groupby(['date','user_created__id']).agg({'mandi__id':'count'}).reset_index()
+        daily_pay_mandi_count.rename(columns={"mandi__id":"mandi__count"}, inplace=True)
+        daily_pay_df = pd.merge(daily_pay_df, daily_pay_mandi_count, on=['date','user_created__id'], how='left')
+        daily_pay_df['amount'] = daily_pay_df['amount'] / daily_pay_df['mandi__count']
 
-    for index, row in daily_pay_df.iterrows():
-        outlier = aso_queryset.filter(date=row['date'], aggregator=row['aggregator_id'], mandi=row['mandi__id']).values('amount','comment')
-        if outlier.count():
-            daily_pay_df.loc[index,'amount'] = outlier[0]['amount']
-            daily_pay_df.loc[index,'comment'] = outlier[0]['comment']
+        for index, row in daily_pay_df.iterrows():
+            outlier = aso_queryset.filter(date=row['date'], aggregator=row['aggregator_id'], mandi=row['mandi__id']).values('amount','comment')
+            if outlier.count():
+                daily_pay_df.loc[index,'amount'] = outlier[0]['amount']
+                daily_pay_df.loc[index,'comment'] = outlier[0]['comment']
 
-    daily_pay_df.drop(['mandi__count','aggregator_id'], axis=1, inplace=True)
-    daily_pay_df = daily_pay_df.round({'amount':2})
+        daily_pay_df.drop(['mandi__count','aggregator_id'], axis=1, inplace=True)
+        daily_pay_df = daily_pay_df.round({'amount':2})
 
-    daily_pay = daily_pay_df.to_dict(orient='records')
+        daily_pay = daily_pay_df.to_dict(orient='records')
 
-    result.extend(daily_pay)
+        result.extend(daily_pay)
+    except Exception:
+        pass
     return result
 
 
