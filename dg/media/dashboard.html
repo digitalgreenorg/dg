@@ -18,7 +18,8 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
-    
+    <script type="text/javascript" src="/media/coco/app/scripts/libs/alasql.min.js"></script>
+    <script type="text/javascript" src="/media/coco/app/scripts/libs/xlsx.core.min.js"></script>
     <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
       require.config({
@@ -242,6 +243,9 @@
                             <button type="button" class="coco_sync btn btn-default" id="sync">
                                 <%=configs['misc']['meta_'+language]['sync'] %>
                                 <span class="badge" id="upload_num"><%=upload_entries%></span>
+                            </button>
+                            <button type="button" class="coco_export btn btn-default" id="export">
+                                <%=configs['misc']['meta_'+language]['export'] %>
                             </button>
                         </div>
                     </div>
