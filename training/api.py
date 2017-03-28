@@ -18,19 +18,12 @@ from tastypie.resources import ModelResource
 from people.models import Animator, AnimatorAssignedVillage
 
 from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication
+import json
 
 
-class MediatorNotSaved(Exception):
-    pass
-
-
-class ScoreNotSaved(Exception):
-    pass
-
-
-class TrainingNotSaved(Exception):
-    pass
-
+def send_duplicate_message(obj_id):
+    response = {"error_message": {"id": obj_id, "error": "Duplicate"}}
+    raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
@@ -336,8 +329,7 @@ class MediatorResource(ModelResource):
                 u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
                 u.save()
         else:
-            raise MediatorNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -346,8 +338,7 @@ class MediatorResource(ModelResource):
         except Exception, e:
             attempt = Animator.objects.filter(partner_id=bundle.data['partner']['online_id'], gender=bundle.data[
                                               'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'], phone_no = bundle.data['phone_no'])
-            raise MediatorNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
 
@@ -445,11 +436,6 @@ class TrainingResource(BaseResource):
             bundle.data['online_id'] = online_id
         return bundle
 
-    # def put_detail(self, bundle, **kwargs):
-    #     print "Entered put detail"
-    #     bundle = super(TrainingResource, self).put_detail(bundle, **kwargs)
-    #     print "Worked"
-
     def obj_create(self, bundle, **kwargs):
         trainer_list = []
         trainer_list.append(bundle.data['trainer'][0]['online_id'])
@@ -474,8 +460,7 @@ class TrainingResource(BaseResource):
             trainer_list.append(bundle.data['trainer'][0]['online_id'])
             attempt = Training.objects.filter(
                 date=bundle.data['date'], trainer__in=trainer_list)
-            raise TrainingNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate in Update"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
 
@@ -550,8 +535,7 @@ class ScoreResource(ModelResource):
         except Exception, e:
             attempt = Score.objects.filter(training_id=bundle.data['training']['online_id'], participant_id=bundle.data['participant']['online_id'],
                                            question_id=bundle.data['question']['online_id'])
-            raise ScoreNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
 
