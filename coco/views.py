@@ -35,7 +35,7 @@ def login(request):
             coco_user_obj = CocoUser.objects.filter(user_id=request.user.id)
             if len(coco_user_obj):
                 partner_name = coco_user_obj[0].partner.partner_name.lower()
-                type_of_cocouser = coco_user_obj[0].type_of_cocouser
+                # type_of_cocouser = coco_user_obj[0].type_of_cocouser
         else:
             return HttpResponse("0")
     else:
