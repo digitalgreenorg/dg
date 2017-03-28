@@ -301,29 +301,26 @@ def send_updated_log(request):
             for entry in transporter_trans_vehicle_rows:
                 if entry.entry_table == "Transporter" and entry.loop_user == None:
                     if Transporter.objects.get(id=entry.model_id).block.id == requesting_loop_user.village.block.id:
-                        list_rows.append(Log.objects.filter(id=entry.id))
+                        list_rows.append(entry)
                 elif entry.entry_table == "TransportationVehicle" and entry.loop_user == None:
                     if TransportationVehicle.objects.get(
                             id=entry.model_id).transporter.block.id == requesting_loop_user.village.block.id:
-                        list_rows.append(Log.objects.filter(id=entry.id))
+                        list_rows.append(entry)
 
             mandi_list_queryset = Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Mandi'])
             list_rows.append(mandi_list_queryset)
-            # for mrow in mandi_rows:
-            #     if Mandi.objects.get(id=mrow.model_id) in mandis:
-            #         rows = rows | Log.objects.filter(id=mrow.id)
 
             gaddidar_rows = Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
             for grow in gaddidar_rows:
                 if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
-                    list_rows.append(Log.objects.filter(id=grow.id))
+                    list_rows.append(grow)
 
             gaddidar_commission_rows = Log.objects.filter(
                 timestamp__gt=timestamp,entry_table__in=['GaddidarCommission'])
             for gcrow in gaddidar_commission_rows:
-                list_rows.append(Log.objects.filter(id=gcrow.id))
+                list_rows.append(gcrow)
 
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['CombinedTransaction']))
