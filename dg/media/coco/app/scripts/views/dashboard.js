@@ -244,8 +244,8 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             var jsonData = JSON.stringify(filedata);
             var textToSaveAsBlob = new Blob([jsonData], {type:"text/plain"});
             var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
-            var fileNameToSaveAs = "abc.txt";
- 
+            var dt = new Date($.now());
+            var fileNameToSaveAs = dt+"export-data.txt";
             var downloadLink = document.createElement("a");
             downloadLink.download = fileNameToSaveAs;
             downloadLink.innerHTML = "Download File";
@@ -259,19 +259,15 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             var that = this;
             var listing=[]
             listItem = configs.misc.data_transfer_schema
-            alert(listItem)
             var filedata = {};
             Offline.fetch_collection(listItem)
                 .done(function(collection) {
                    data=JSON.stringify(collection.toJSON());
                    filedata[listItem]=data;
-                    // console.log(filedata[listItem])
-                    // counter++;
-                    // if(counter>=16)
-                    that.saveToFile(filedata);
+                   that.saveToFile(filedata);
                 })
                 .fail(function() {
-                    console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                    console.log("Not able to fetch data");
                     filedata[listItem]=JSON.stringify([]);
                     that.saveToFile(filedata);
                 });                        

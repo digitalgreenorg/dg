@@ -14,6 +14,11 @@
   
   <script src="/media/coco/app/scripts/libs/jquery.min.js"></script>
   <script src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
+  <style type="text/css">
+    .errorlist{
+      color: red;
+    }
+  </style>
 </head>
 <body  data-spy="scroll" data-target=".faq-sidebar">
     <div class="container">
@@ -21,34 +26,19 @@
           <h1 class="coco-brand" style="text-align:center;"><a href="/coco">COCO</a></h1>
         </div>
         <div class="row">
-            <nav class="navbar navbar-default faq-sidebar col-sm-3" data-spy="affix">
-              <div class="row">
-                <div class="collapse navbar-collapse" id="nav-for-toggle">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li><a href="#setup">Data Upload</a></li>
-                    </ul>
-                </div>
-              </div>
-            </nav>
             <div class="col-sm-8 col-sm-push-4">
               <div id="setup"></div><h3 class="topic">Data Upload Form</h3>
 
 				        <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
 				        	{% csrf_token %}
 								  <div class="control-group">
-								    <label class="control-label" for="csvfile">DataFile</label>
-								    <p>{% if form.csvfile.errors %}{{ form.csvfile.errors }}{% endif %}</p>
+								    <label class="control-label" for="datafile">DataFile</label>
+								    {% if form.datafile.errors %}<p class="errorlist">{{ form.datafile.errors }}</p>{% endif %}
 								    <div class="controls">
-								      {{ form.csvfile }}
+								      {{ form.datafile }}
 								    </div>
 								  </div>
 								  <br>
-								  <div class="control-group">
-								    <label class="control-label" for="which_table_is_getting_imported">{{ form.which_table_is_getting_imported.label }}</label>
-								    <div class="controls">
-								      {{ form.which_table_is_getting_imported }}
-								    </div>
-								  </div>
 								  <br>
 								  <div class="control-group">
 								    <div class="controls">
