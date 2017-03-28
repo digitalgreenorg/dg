@@ -8,7 +8,7 @@ import datetime
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('loop', '0007_auto_20170214_1040'),
+        ('loop', '0008_auto_20170309_1259'),
     ]
 
     operations = [
@@ -25,11 +25,6 @@ class Migration(migrations.Migration):
             model_name='incentivemodel',
             name='description',
             field=models.CharField(max_length=100, null=True, blank=True),
-        ),
-        migrations.AlterField(
-            model_name='aggregatorincentive',
-            name='model_type',
-            field=models.IntegerField(choices=[(0, b'Direct'), (1, b'Tax Based'), (2, b'Slab Based'), (3, b'Daily Pay')]),
         ),
         migrations.AlterField(
             model_name='incentivemodel',
