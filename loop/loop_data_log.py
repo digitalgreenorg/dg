@@ -32,195 +32,185 @@ class DatetimeEncoder(json.JSONEncoder):
 def save_log(sender, **kwargs):
     LoopUser = get_model('loop', 'LoopUser')
     instance = kwargs["instance"]
-    action = kwargs["created"]
     sender = sender.__name__  # get the name of the table which sent the request
-    # model_dict = model_to_dict(instance)
-    # previous_time_stamp = get_latest_timestamp()
     try:
-        user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
-            id=instance.user_created_id)
+        action = kwargs["created"]
+    except Exception:
+        action = -1
+    try:
+        # user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
+            # id=instance.user_created_id)
+        user = instance.user_created
     except Exception, ex:
         user = None
 
     model_id = instance.id
+    loop_user = None
+    village_id = None
+
     if sender == "Village":
         village_id = instance.id
-        user = None
-        loop_user = None
-    elif sender == "Crop":
-        village_id = None
-        user = None
-        loop_user = None
+        # user = None
+    # elif sender == "Crop":
+    #     user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
-        user = instance.user_created
+        # user = instance.user_created
         loop_user = LoopUser.objects.get(user=instance.user_created)
     elif sender == "Transporter":
-        village_id = None
-        user = instance.user_created
+        # user = instance.user_created
         if instance.user_created is not None:
             loop_user = LoopUser.objects.get(user=instance.user_created)
         else:
             loop_user = None
-
-    elif sender == "Vehicle":
-        village_id = None
-        user = None
-        loop_user = None
+    # elif sender == "Vehicle":
+    #     user = None
     elif sender == "TransportationVehicle":
-        village_id = None
-        user = instance.user_created
+        # user = instance.user_created
         if instance.user_created is not None:
             loop_user = LoopUser.objects.get(user=instance.user_created)
         else:
             loop_user = None
     elif sender == "DayTransportation":
-        village_id = None
-        user = instance.user_created
+        # user = instance.user_created
         loop_user = LoopUser.objects.get(user=instance.user_created)
-    elif sender == "Gaddidar":
-        village_id = None
-        user = None
-        # Loop user not required
-        loop_user = None
-    elif sender == "Mandi":
-        village_id = None
-        user = instance.user_created
-        # loop user not required
-        loop_user = None
+    # elif sender == "Gaddidar":
+    #     user = None
+    # elif sender == "Mandi":
+    #     user = instance.user_created
     elif sender == "LoopUserAssignedMandi":
-        model_id = instance.mandi.id
-        village_id = None
-        user = instance.user_created
-        loop_user = instance.loop_user
         sender = "Mandi"
+        model_id = instance.mandi.id
+        # user = instance.user_created
+        loop_user = instance.loop_user
     elif sender == "LoopUserAssignedVillage":
+        sender = "Village"
         model_id = instance.village.id
         village_id = instance.village.id
-        user = instance.user_created
+        # user = instance.user_created
         loop_user = instance.loop_user
         sender = "Village"
-    elif sender == "GaddidarCommission":
-        village_id = None
-        user = instance.user_created
-        loop_user=None
-    elif sender == "State":
-        village_id=None
-        user = instance.user_created
-        loop_user = None
-    elif sender == "LoopUser":
-        village_id=None
-        user = instance.user_created
-        loop_user = None
-    else:           # farmer add
+    # elif sender == "GaddidarCommission":
+    #     village_id = None
+    #     user = instance.user_created
+    #     loop_user = None
+    # elif sender == "State":
+    #     village_id=None
+    #     user = instance.user_created
+    #     loop_user = None
+    # elif sender == "LoopUser":
+    #     village_id = None
+    #     user = instance.user_created
+    #     loop_user = None
+    elif sender == "Farmer":           # farmer add
         village_id = instance.village.id
-        loop_user = None
+
     Log = get_model('loop', 'Log')
     log = Log(village=village_id, user=user, action=action, entry_table=sender,
               model_id=model_id, loop_user=loop_user)
     log.save()
-    # Raise an exception if timestamp of latest entry is less than the
-    # previously saved data timestamp
-    # if previous_time_stamp:
-    #     if previous_time_stamp.timestamp >= log.timestamp:
-    #         raise TimestampException(
-    #             {"previous": previous_time_stamp.timestamp,"current":log.timestamp,'timestamp error': 'Latest entry data time created is less than previous data timecreated'})
 
-
-def delete_log(sender, **kwargs):
-    LoopUser = get_model('loop', 'LoopUser')
-    instance = kwargs["instance"]
-    sender = sender.__name__  # get the name of the table which sent the request
-    try:
-        user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
-            id=instance.user_created_id)
-    except Exception, ex:
-        user = None
-
-    model_id = instance.id
-    if sender == "Village":
-        village_id = instance.id
-        user = None
-        loop_user = None
-    elif sender == "Crop":
-        village_id = None
-        user = None
-        loop_user = None
-    elif sender == "CombinedTransaction":
-        village_id = instance.farmer.village.id
-        user = instance.user_created
-        loop_user = LoopUser.objects.get(user=instance.user_created)
-    elif sender == "Transporter":
-        village_id = None
-        user = instance.user_created
-        if instance.user_created is not None:
-            loop_user = LoopUser.objects.get(user=instance.user_created)
-        else:
-            loop_user = None
-    elif sender == "Vehicle":
-        village_id = None
-        user = None
-        loop_user = None
-    elif sender == "TransportationVehicle":
-        village_id = None
-        user = instance.user_created
-        if instance.user_created is not None:
-            loop_user = LoopUser.objects.get(user=instance.user_created)
-        else:
-            loop_user = None
-    elif sender == "DayTransportation":
-        village_id = None
-        user = instance.user_created
-        loop_user = LoopUser.objects.get(user=instance.user_created)
-    elif sender == "Gaddidar":
-        village_id = None
-        user = None
-        # Loop user not required
-        loop_user = None
-    elif sender == "Mandi":
-        village_id = None
-        user = None
-        # Loop user not required
-        loop_user = None
-    elif sender == "GaddidarCommission":
-        village_id=None
-        user = instance.user_created
-        loop_user = None
-    elif sender == "LoopUserAssignedMandi":
-        village_id = None
-        user = None
-        loop_user = instance.loop_user
-        sender = "Mandi"
-        model_id = instance.mandi.id
-    elif sender == "LoopUserAssignedVillage":
-        village_id = instance.village.id
-        user = instance.user_created
-        loop_user = instance.loop_user
-        sender = "Village"
-        model_id = instance.village.id
-    elif sender == "State":
-        village_id = None
-        user = instance.user_created
-        loop_user = None
-    elif sender == "LoopUser":
-        village_id = None
-        user = instance.user_created
-        loop_user = None
-    else:               # farmer add
-        village_id = instance.village.id
-        loop_user = None
-    Log = get_model('loop', 'Log')
-    try:
-        log = Log(village=village_id, user=user, action=-1,
-                  entry_table=sender, model_id=model_id, loop_user=loop_user)
-        log.save()
-
+    if action == -1:
         LogDeleted = get_model('loop','LogDeleted')
         obj = model_to_dict(instance)
         deletedObject = LogDeleted(entry_table=sender,table_object=obj)
         deletedObject.save()
-    except Exception as ex:
-        pass
+
+
+# def delete_log(sender, **kwargs):
+#     LoopUser = get_model('loop', 'LoopUser')
+#     instance = kwargs["instance"]
+#     sender = sender.__name__  # get the name of the table which sent the request
+#     try:
+#         user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
+#             id=instance.user_created_id)
+#     except Exception, ex:
+#         user = None
+#
+#     model_id = instance.id
+#     if sender == "Village":
+#         village_id = instance.id
+#         user = None
+#         loop_user = None
+#     elif sender == "Crop":
+#         village_id = None
+#         user = None
+#         loop_user = None
+#     elif sender == "CombinedTransaction":
+#         village_id = instance.farmer.village.id
+#         user = instance.user_created
+#         loop_user = LoopUser.objects.get(user=instance.user_created)
+#     elif sender == "Transporter":
+#         village_id = None
+#         user = instance.user_created
+#         if instance.user_created is not None:
+#             loop_user = LoopUser.objects.get(user=instance.user_created)
+#         else:
+#             loop_user = None
+#     elif sender == "Vehicle":
+#         village_id = None
+#         user = None
+#         loop_user = None
+#     elif sender == "TransportationVehicle":
+#         village_id = None
+#         user = instance.user_created
+#         if instance.user_created is not None:
+#             loop_user = LoopUser.objects.get(user=instance.user_created)
+#         else:
+#             loop_user = None
+#     elif sender == "DayTransportation":
+#         village_id = None
+#         user = instance.user_created
+#         loop_user = LoopUser.objects.get(user=instance.user_created)
+#     elif sender == "Gaddidar":
+#         village_id = None
+#         user = None
+#         # Loop user not required
+#         loop_user = None
+#     elif sender == "Mandi":
+#         village_id = None
+#         user = None
+#         # Loop user not required
+#         loop_user = None
+#     elif sender == "GaddidarCommission":
+#         village_id=None
+#         user = instance.user_created
+#         loop_user = None
+#     elif sender == "LoopUserAssignedMandi":
+#         village_id = None
+#         user = None
+#         loop_user = instance.loop_user
+#         sender = "Mandi"
+#         model_id = instance.mandi.id
+#     elif sender == "LoopUserAssignedVillage":
+#         village_id = instance.village.id
+#         user = instance.user_created
+#         loop_user = instance.loop_user
+#         sender = "Village"
+#         model_id = instance.village.id
+#     elif sender == "State":
+#         village_id = None
+#         user = instance.user_created
+#         loop_user = None
+#     elif sender == "LoopUser":
+#         village_id = None
+#         user = instance.user_created
+#         loop_user = None
+#     else:               # farmer add
+#         village_id = instance.village.id
+#         loop_user = None
+#     Log = get_model('loop', 'Log')
+#     try:
+#         log = Log(village=village_id, user=user, action=-1,
+#                   entry_table=sender, model_id=model_id, loop_user=loop_user)
+#         log.save()
+#
+#         LogDeleted = get_model('loop','LogDeleted')
+#         obj = model_to_dict(instance)
+#         deletedObject = LogDeleted(entry_table=sender,table_object=obj)
+#         deletedObject.save()
+#     except Exception as ex:
+#         pass
 
 
 def get_log_object(log_object):
@@ -327,41 +317,6 @@ def send_updated_log(request):
 
             list_rows.append(
                 Log.objects.filter(timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['DayTransportation']))
-
-            # rows = Log.objects.filter(
-            #     timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle'])
-            # rows = rows | Log.objects.filter(
-            #     timestamp__gt=timestamp, village__in=villages, entry_table__in=['Farmer', 'Village'])
-            # rows = rows | Log.objects.filter(
-            #     timestamp__gt=timestamp, user=user, entry_table__in=['CombinedTransaction'])
-            #
-            # rows = rows | Log.objects.filter(timestamp__gt=timestamp, loop_user__village__block_id = requesting_loop_user.village.block.id , entry_table__in=[
-            #                                  'Transporter', 'TransportationVehicle'])
-            #
-            # transporter_trans_vehicle_rows = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=[
-            #                                  'Transporter', 'TransportationVehicle'])
-            #
-            # for entry in transporter_trans_vehicle_rows:
-            #     if entry.entry_table == "Transporter" and entry.loop_user == None:
-            #         if Transporter.objects.get(id=entry.model_id).block.id == requesting_loop_user.village.block.id:
-            #             rows = rows | Log.objects.filter(id=entry.id)
-            #     elif entry.entry_table == "TransportationVehicle" and entry.loop_user == None:
-            #         if TransportationVehicle.objects.get(id=entry.model_id).transporter.block.id == requesting_loop_user.village.block.id:
-            #             rows = rows | Log.objects.filter(id=entry.id)
-            #
-            #
-            # rows = rows | Log.objects.filter(               timestamp__gt=timestamp, user=user, entry_table__in=['DayTransportation'])
-            #
-            # rows = rows | Log.objects.filter(timestamp__gt=timestamp,loop_user__user=user, entry_table__in=['Mandi'])
-            # # for mrow in mandi_rows:
-            # #     if Mandi.objects.get(id=mrow.model_id) in mandis:
-            # #         rows = rows | Log.objects.filter(id=mrow.id)
-            #
-            #
-            # gaddidar_rows = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
-            # for grow in gaddidar_rows:
-            #     if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
-            #         rows = rows | Log.objects.filter(id=grow.id)
 
             village_farmer_list = []
             for village in village_list_queryset:

@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
-from loop_data_log import save_log, delete_log
+from loop_data_log import save_log#, delete_log
 from smart_selects.db_fields import ChainedForeignKey
 from constants.constants import *
 
@@ -63,7 +63,7 @@ class State(LoopModel):
         unique_together = ("state_name",)
 
 post_save.connect(save_log,sender=State)
-pre_delete.connect(delete_log,sender=State)
+pre_delete.connect(save_log,sender=State)
 
 class District(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -110,7 +110,7 @@ class Village(LoopModel):
 
 
 post_save.connect(save_log, sender=Village)
-pre_delete.connect(delete_log, sender=Village)
+pre_delete.connect(save_log, sender=Village)
 
 
 class Mandi(LoopModel):
@@ -129,7 +129,7 @@ class Mandi(LoopModel):
         unique_together = ("mandi_name", "district",)
 
 post_save.connect(save_log, sender=Mandi)
-pre_delete.connect(delete_log, sender=Mandi)
+pre_delete.connect(save_log, sender=Mandi)
 
 
 class LoopUser(LoopModel):
@@ -163,7 +163,7 @@ class LoopUser(LoopModel):
         return "%s" % self.user.id
 
 post_save.connect(save_log,sender=LoopUser)
-pre_delete.connect(delete_log,sender=LoopUser)
+pre_delete.connect(save_log,sender=LoopUser)
 
 class LoopUserAssignedMandi(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -172,7 +172,7 @@ class LoopUserAssignedMandi(LoopModel):
     is_visible = models.BooleanField(default=True)
 
 post_save.connect(save_log, sender=LoopUserAssignedMandi)
-pre_delete.connect(delete_log, sender=LoopUserAssignedMandi)
+pre_delete.connect(save_log, sender=LoopUserAssignedMandi)
 
 
 class LoopUserAssignedVillage(LoopModel):
@@ -182,7 +182,7 @@ class LoopUserAssignedVillage(LoopModel):
     is_visible = models.BooleanField(default=True)
 
 post_save.connect(save_log, sender=LoopUserAssignedVillage)
-pre_delete.connect(delete_log, sender=LoopUserAssignedVillage)
+pre_delete.connect(save_log, sender=LoopUserAssignedVillage)
 
 
 class Gaddidar(LoopModel):
@@ -202,7 +202,7 @@ class Gaddidar(LoopModel):
         unique_together = ("gaddidar_phone", "gaddidar_name")
 
 post_save.connect(save_log, sender=Gaddidar)
-pre_delete.connect(delete_log, sender=Gaddidar)
+pre_delete.connect(save_log, sender=Gaddidar)
 
 
 class Farmer(LoopModel):
@@ -225,7 +225,7 @@ class Farmer(LoopModel):
         unique_together = ("phone", "name")
 
 post_save.connect(save_log, sender=Farmer)
-pre_delete.connect(delete_log, sender=Farmer)
+pre_delete.connect(save_log, sender=Farmer)
 
 
 class Crop(LoopModel):
@@ -243,7 +243,7 @@ class Crop(LoopModel):
         unique_together = ("crop_name",)
 
 post_save.connect(save_log, sender=Crop)
-pre_delete.connect(delete_log, sender=Crop)
+pre_delete.connect(save_log, sender=Crop)
 
 #############Crop name in multiple languages###############
 
@@ -275,7 +275,7 @@ class Transporter(LoopModel):
         unique_together = ("transporter_name", "transporter_phone",)
 
 post_save.connect(save_log, sender=Transporter)
-pre_delete.connect(delete_log, sender=Transporter)
+pre_delete.connect(save_log, sender=Transporter)
 
 
 class Vehicle(LoopModel):
@@ -291,7 +291,7 @@ class Vehicle(LoopModel):
         unique_together = ("vehicle_name",)
 
 post_save.connect(save_log, sender=Vehicle)
-pre_delete.connect(delete_log, sender=Vehicle)
+pre_delete.connect(save_log, sender=Vehicle)
 
 
 class TransportationVehicle(LoopModel):
@@ -314,7 +314,7 @@ class TransportationVehicle(LoopModel):
         unique_together = ("transporter", "vehicle", "vehicle_number",)
 
 post_save.connect(save_log, sender=TransportationVehicle)
-pre_delete.connect(delete_log, sender=TransportationVehicle)
+pre_delete.connect(save_log, sender=TransportationVehicle)
 
 
 class DayTransportation(LoopModel):
@@ -349,7 +349,7 @@ class DayTransportation(LoopModel):
         unique_together = ("date", "user_created", "timestamp")
 
 post_save.connect(save_log, sender=DayTransportation)
-pre_delete.connect(delete_log, sender=DayTransportation)
+pre_delete.connect(save_log, sender=DayTransportation)
 
 
 class CombinedTransaction(LoopModel):
@@ -392,7 +392,7 @@ class CombinedTransaction(LoopModel):
 
 
 post_save.connect(save_log, sender=CombinedTransaction)
-pre_delete.connect(delete_log, sender=CombinedTransaction)
+pre_delete.connect(save_log, sender=CombinedTransaction)
 
 class GaddidarCommission(LoopModel):
     mandi = models.ForeignKey(Mandi)
@@ -407,7 +407,7 @@ class GaddidarCommission(LoopModel):
     class Meta:
         unique_together = ("start_date", "gaddidar", "mandi")
 post_save.connect(save_log, sender=GaddidarCommission)
-pre_delete.connect(delete_log, sender=GaddidarCommission)
+pre_delete.connect(save_log, sender=GaddidarCommission)
 
 class GaddidarShareOutliers(LoopModel):
     mandi = ChainedForeignKey(Mandi, chained_field="aggregator", chained_model_field="assigned_mandis")
