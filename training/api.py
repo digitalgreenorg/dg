@@ -22,7 +22,7 @@ import json
 
 
 def send_duplicate_message(obj_id):
-    response = {"error_message": {"id": obj_id, "error": "Duplicate"}}
+    response = {"error_message": {"online_id": obj_id, "error": "Duplicate"}}
     raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
@@ -401,7 +401,7 @@ class TrainingResource(BaseResource):
         always_return_data = True
         include_resource_uri = False
         excludes = ('time_created', 'time_modified')
-        
+
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
     hydrate_trainer = partial(dict_to_foreign_uri_m2m,
