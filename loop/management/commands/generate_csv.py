@@ -191,6 +191,7 @@ class Command(BaseCommand):
         final_json_to_send['cell_format'] = {'bold':0, 'font_size': 10, 'border' : 1,
                                                     'text_wrap': True}
 
+#------------------------------------------------------one code ends and repetitive code begins here--------------------
 
         if generate_sheet_for == 'all' or generate_sheet_for == None:
             query = query_for_incorrect_phone_no_all_aggregator % (default_from_date, to_date, default_from_date, to_date)

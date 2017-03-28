@@ -1,148 +1,21 @@
- # -*- coding: utf-8 -*-
+__author__ = 'Lokesh'
 
-#Code snippet ad imports for email attachment with encodings. To be used in another file for attachmnet in emails 
+import MySQLdb
+from dg.settings import *
 
-from django.template.context import Context
-from django.template.loader import get_template
-from django.core.mail.message import EmailMultiAlternatives
-import mimetypes
-from email import encoders
-from email.header import Header
-from email.mime.base import MIMEBase
-from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE
+mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+                                           passwd=DATABASES['default']['PASSWORD'],
+                                           db=DATABASES['default']['NAME'],
+                                            charset = 'utf8',
+                                             use_unicode = True)
 
-class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
-    def _create_attachment(self, filename, content, mimetype=None):
-        """
-        Converts the filename, content, mimetype triple into a MIME attachment
-        object. Use self.encoding when handling text attachments.
-        """
-        if mimetype is None:
-            mimetype, _ = mimetypes.guess_type(filename)
-            if mimetype is None:
-                mimetype = DEFAULT_ATTACHMENT_MIME_TYPE
-        basetype, subtype = mimetype.split('/', 1)
-        if basetype == 'text':
-            encoding = self.encoding or settings.DEFAULT_CHARSET
-            attachment = SafeMIMEText(smart_str(content,
-                settings.DEFAULT_CHARSET), subtype, encoding)
-        else:
-            # Encode non-text attachments with base64.
-            attachment = MIMEBase(basetype, subtype)
-            attachment.set_payload(content)
-            encoders.encode_base64(attachment)
-        if filename:
-            try:
-                filename = filename.encode('ascii')
-            except UnicodeEncodeError:
-                filename = Header(filename, 'utf-8').encode()
-            attachment.add_header('Content-Disposition', 'attachment',
-                                   filename=filename)
-        return attachment
+def onrun_query(query):
+    cursor = mysql_cn.cursor()
+    cursor.execute(query)
+    result = cursor.fetchall()
+    return result
 
-
-
-
-
-#Extra variables required in other files
-DEFAULT_COLUMN_WIDTH = 9
-
-header_dict_for_loop_email_mobile_numbers = {
-     'workbook_name_all': 'Incorrect mobile numbers of all aggregators',
-     'workbook_name_specific': 'Incorrect mobile numbers of a specific aggregator',
-     'column_properties': [{'column_width': 5,
-                            'label': 'क्रम संख्या',
-                           },
-                           {'column_width': 13,
-
-                            'label': 'जमाकर्ता का नाम',
-                           },
-                           {'column_width': 12,
-                            'label': 'गांव का नाम',
-                           },
-                           {'column_width': 8,
-                            'label': 'किसान ID',
-                           },
-                           {'column_width': 15,
-                            'label': 'किसान का नाम',
-                           },
-                           {'column_width': 8,
-                            'label': 'सब्जी कितने दिन दी?',
-                           },
-                           {'column_width': 10,
-                            'label': 'मोबाइल नं',
-                           },
-                           {'column_width': 10,
-                            'label': 'कितने किसान में नंबर डला है?',
-                           }],
-     }
-
-
-header_dict_for_farmer_transaction = [{'column_width': 3.64,
-                                          'label': 'क्रम',
-                                          },
-                                         {'column_width': 9.82,
-                                          
-                                          'label': 'तारीख',
-                                          },
-                                         {'column_width': 11.55,
-                                          'label': 'मंडी का नाम',
-                                          },
-                                         {'column_width': 15,
-                                          'label': 'किसान का नाम',
-                                          },
-                                         {'column_width': 9.09,
-                                          'label': 'कुल वजन (कि.)',
-                                          },
-                                          {'column_width': 7,
-                                          'label': 'राशि (रु)',
-                                          },
-                                         {'column_width': 7.45,
-                                          'label': 'किसान का भाग (रु)',
-                                          },
-                                         {'column_width': 8.36,
-                                          'label': 'कुल राशि (रु)',
-                                          },
-                                          {'column_width': 5.91,
-                                          'label': '✓/ X',
-                                          },
-                                          {'column_width': 16.55,
-                                          'label': 'टिप्पडी',
-                                          }]
-
-
-
-header_dict_for_transport_details = [{'column_width': 3.64,
-                                          'label': 'क्रम संख्या',
-                                          },
-                                         {'column_width': 13 ,
-                                          'label': 'जमाकर्ता का नाम',
-                                          },
-                                         {'column_width': 12,
-                                          'label': 'तारीख',
-                                          },
-                                         {'column_width': 8,
-                                          'label': 'मंडी का नाम',
-                                          },
-                                         {'column_width': 15,
-                                          'label': 'गाड़ी मालिक',
-                                          },
-                                          {'column_width': 8,
-                                          'label': 'गाड़ी नं',
-                                          },
-                                         {'column_width': 10,
-                                          'label': 'गाड़ी का किराया (रु)',
-                                          },
-                                         {'column_width': 10,
-                                          'label': '✓/ X',
-                                          },
-                                          {
-                                          'column_width': 20,
-                                          'label': 'टिप्पडी'
-                                          }]
-
-
-query_for_incorrect_phone_no_all_aggregator = '''SELECT 
+query_for_incorrect_phone_no_all_aggregator = '''SELECT
                               Aggregator,
                               Village,
                               Farmer_ID,
@@ -151,7 +24,7 @@ query_for_incorrect_phone_no_all_aggregator = '''SELECT
                               Mobile_Number,
                               t3.Mobile_Frequency
                           FROM
-                              (SELECT 
+                              (SELECT
                                   user_created_id,
                                       farmer_id f_id,
                                       COUNT(DISTINCT (date)) Farmer_Frequency
@@ -162,7 +35,7 @@ query_for_incorrect_phone_no_all_aggregator = '''SELECT
                               GROUP BY user_created_id , farmer_id
                               HAVING Farmer_Frequency > 0) t1
                                   JOIN
-                              (SELECT 
+                              (SELECT
                                   ll.name Aggregator,
                                       ll.id Loop_user_id,
                                       ll.user_id user_id,
@@ -179,7 +52,7 @@ query_for_incorrect_phone_no_all_aggregator = '''SELECT
                                   ll.role = 2) t2 ON t1.f_id = t2.Farmer_ID
                                   AND t1.user_created_id = t2.user_id
                                   JOIN
-                              (SELECT 
+                              (SELECT
                                       ll.user_id Loop_user,
                                       lf.phone Phone_no,
                                       COUNT(lf.phone) Mobile_Frequency
@@ -190,7 +63,7 @@ query_for_incorrect_phone_no_all_aggregator = '''SELECT
                               JOIN loop_village lv ON lf.village_id = lv.id
                               WHERE
                                   llv.loop_user_id <> 22
-                                      AND lf.id IN (SELECT 
+                                      AND lf.id IN (SELECT
                                           farmer_id
                                       FROM
                                           loop_combinedtransaction ct
@@ -207,7 +80,7 @@ query_for_incorrect_phone_no_all_aggregator = '''SELECT
 
 
 
-query_for_incorrect_phone_no_single_aggregator = '''SELECT 
+query_for_incorrect_phone_no_single_aggregator = '''SELECT
                                 Aggregator,
                                 Village,
                                 Farmer_ID,
@@ -216,18 +89,18 @@ query_for_incorrect_phone_no_single_aggregator = '''SELECT
                                 Mobile_Number,
                                 t3.Mobile_Frequency
                             FROM
-                                (SELECT 
+                                (SELECT
                                     user_created_id,
                                         farmer_id f_id,
                                         COUNT(DISTINCT (date)) Farmer_Frequency
                                 FROM
                                     loop_combinedtransaction lct
                                 WHERE
-                                    lct.date BETWEEN %s AND %s
+                                    lct.date BETWEEN \'%s\' AND \'%s\'
                                 GROUP BY user_created_id , farmer_id
                                 HAVING Farmer_Frequency > 0) t1
                                     JOIN
-                                (SELECT 
+                                (SELECT
                                     ll.name Aggregator,
                                         ll.id Loop_user_id,
                                         ll.user_id user_id,
@@ -244,7 +117,7 @@ query_for_incorrect_phone_no_single_aggregator = '''SELECT
                                     ll.role = 2 %s) t2 ON t1.f_id = t2.Farmer_ID
                                     AND t1.user_created_id = t2.user_id
                                     JOIN
-                                (SELECT 
+                                (SELECT
                                         ll.user_id Loop_user,
                                         lf.phone Phone_no,
                                         COUNT(lf.phone) Mobile_Frequency
@@ -255,13 +128,13 @@ query_for_incorrect_phone_no_single_aggregator = '''SELECT
                                 JOIN loop_village lv ON lf.village_id = lv.id
                                 WHERE
                                     llv.loop_user_id <> 22
-                                        AND lf.id IN (SELECT 
+                                        AND lf.id IN (SELECT
                                             farmer_id
                                         FROM
                                             loop_combinedtransaction ct
                                         WHERE
                                         user_created_id=ll.user_id and
-                                            date BETWEEN %s AND %s )
+                                            date BETWEEN \'%s\' AND \'%s\' )
                                 GROUP BY ll.user_id , lf.phone ) t3 ON t2.Mobile_Number = t3.Phone_no
                                     AND t3.Loop_user = t2.user_id
                             HAVING (t3.Mobile_Frequency > 1)
@@ -273,7 +146,7 @@ query_for_incorrect_phone_no_single_aggregator = '''SELECT
 
 
 query_for_farmer_transaction_all_aggregator = '''
-                                  SELECT 
+                                  SELECT
                               t1.Agg,
                               t1.date,
                               t1.Mandi,
@@ -283,7 +156,7 @@ query_for_farmer_transaction_all_aggregator = '''
                               ts / tv * Total_Quantity fs,
                               Total_Amount - (ts / tv * Total_Quantity) Net_Amount
                           FROM
-                              (SELECT 
+                              (SELECT
                                   lct.user_created_id Agg,
                                       date,
                                       lm.mandi_name Mandi,
@@ -296,14 +169,14 @@ query_for_farmer_transaction_all_aggregator = '''
                               JOIN loop_mandi lm ON lct.mandi_id = lm.id
                               GROUP BY Agg , date , Mandi , lct.farmer_id) t1
                                   JOIN
-                              (SELECT 
+                              (SELECT
                                   t2.user_ User_id,
                                       t2.date Date_,
                                       t2.mandi Mandi_,
                                       t2.Total_Volume tv,
                                       t3.Share_ ts
                               FROM
-                                  (SELECT 
+                                  (SELECT
                                   lct.user_created_id user_,
                                       date,
                                       lm.mandi_name mandi,
@@ -312,7 +185,7 @@ query_for_farmer_transaction_all_aggregator = '''
                                   loop_combinedtransaction lct
                               JOIN loop_mandi lm ON lm.id = lct.mandi_id
                               GROUP BY user_ , date , lct.mandi_id) t2
-                              JOIN (SELECT 
+                              JOIN (SELECT
                                   dt.user_created_id,
                                       date,
                                       lm.mandi_name mandi_,
@@ -331,7 +204,7 @@ query_for_farmer_transaction_all_aggregator = '''
 
 
 query_for_farmer_transaction_single_aggregator = '''
-                                  SELECT 
+                                  SELECT
                                 t1.Agg,
                                 t1.date,
                                 t1.Mandi,
@@ -341,7 +214,7 @@ query_for_farmer_transaction_single_aggregator = '''
                                 ts / tv * Total_Quantity fs,
                                 Total_Amount - (ts / tv * Total_Quantity) Net_Amount
                             FROM
-                                (SELECT 
+                                (SELECT
                                     lct.user_created_id Agg,
                                         date,
                                         lm.mandi_name Mandi,
@@ -354,14 +227,14 @@ query_for_farmer_transaction_single_aggregator = '''
                                 JOIN loop_mandi lm ON lct.mandi_id = lm.id
                                 GROUP BY Agg , date , Mandi , lct.farmer_id) t1
                                     JOIN
-                                (SELECT 
+                                (SELECT
                                     t2.user_ User_id,
                                         t2.date Date_,
                                         t2.mandi Mandi_,
                                         t2.Total_Volume tv,
                                         t3.Share_ ts
                                 FROM
-                                    (SELECT 
+                                    (SELECT
                                     lct.user_created_id user_,
                                         date,
                                         lm.mandi_name mandi,
@@ -370,7 +243,7 @@ query_for_farmer_transaction_single_aggregator = '''
                                     loop_combinedtransaction lct
                                 JOIN loop_mandi lm ON lm.id = lct.mandi_id
                                 GROUP BY user_ , date , lct.mandi_id) t2
-                                JOIN (SELECT 
+                                JOIN (SELECT
                                     dt.user_created_id,
                                         date,
                                         lm.mandi_name mandi_,
@@ -389,7 +262,7 @@ query_for_farmer_transaction_single_aggregator = '''
 
 
 query_for_transport_details_all_aggregator = '''
-                          SELECT 
+                          SELECT
                               ll.name Agg_Id,
                               ct.date Date_,
                               lm.mandi_name Mandi,
@@ -411,7 +284,7 @@ query_for_transport_details_all_aggregator = '''
                                   JOIN
                               loop_vehicle lv ON lv.id = tv.vehicle_id
                                   JOIN
-                              loop_loopuser ll ON ll.user_id = ct.user_created_id 
+                              loop_loopuser ll ON ll.user_id = ct.user_created_id
                           WHERE
                               ct.date BETWEEN %s AND %s AND ll.role = '2'
                           GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
@@ -419,7 +292,7 @@ query_for_transport_details_all_aggregator = '''
 
 
 query_for_transport_details_single_aggregator = '''
-                          SELECT 
+                          SELECT
                               ll.name Agg_Id,
                               ct.date Date_,
                               lm.mandi_name Mandi,
@@ -447,10 +320,25 @@ query_for_transport_details_single_aggregator = '''
                           GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
                           '''
 
+daily_a_m_query = 'SELECT ct.user_created_id, ct.mandi_id, ct.date, u.name_en, m.mandi_name_en, SUM(ct.quantity) AS ' \
+                  'Q, dayt.TC,' + '"okay"' +  ',dayt.TC / SUM(ct.quantity) FROM loop_combinedtransaction ct LEFT JOIN ' \
+                  'loop_loopuser u ON u.user_id = ct.user_created_id LEFT JOIN loop_mandi m ON m.id = ct.mandi_id ' \
+                  'LEFT JOIN (SELECT dt.date D, dt.user_created_id A, dt.mandi_id M, SUM(dt.transportation_cost) TC, ' \
+                  'SUM(dt.farmer_share) / COUNT(dt.id) FS FROM loop_daytransportation dt GROUP BY dt.date , ' \
+                  'dt.user_created_id , dt.mandi_id) dayt ' \
+                  'ON dayt.D = ct.date AND ct.mandi_id = dayt.M AND dayt.A = ct.user_created_id WHERE u.role = 2 GROUP BY ct.date , ' \
+                  'ct.user_created_id , ct.mandi_id ORDER BY ct.user_created_id , ct.mandi_id , dayt.TC / SUM(ct.quantity)'
 
+daily_a_m_farmerShare_query = 'SELECT ct.user_created_id, ct.mandi_id, ct.date, u.name_en, m.mandi_name_en, SUM(ct.quantity) AS ' \
+                  'Q, dayt.TC, dayt.FS,  dayt.FS / SUM(ct.quantity), dayt.FS / dayt.TC FROM loop_combinedtransaction ct LEFT JOIN ' \
+                  'loop_loopuser u ON u.user_id = ct.user_created_id LEFT JOIN loop_mandi m ON m.id = ct.mandi_id ' \
+                  'LEFT JOIN (SELECT dt.date D, dt.user_created_id A, dt.mandi_id M, SUM(dt.transportation_cost) TC, ' \
+                  'SUM(dt.farmer_share) / COUNT(dt.id) FS FROM loop_daytransportation dt GROUP BY dt.date , ' \
+                  'dt.user_created_id , dt.mandi_id) dayt ' \
+                  'ON dayt.D = ct.date AND ct.mandi_id = dayt.M AND dayt.A = ct.user_created_id WHERE u.role = 2 GROUP BY ct.date , ' \
+                  'ct.user_created_id , ct.mandi_id ORDER BY ct.user_created_id , ct.mandi_id , ct.date'
 
-RECIPIENTS = ['amandeep@digitalgreen.org', 'lokesh@digitalgreen.org', 'divish@digitalgreen.org']
-
-RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
-
-
+a_m_count_query = 'SELECT ct.user_created_id A, ct.mandi_id M, u.name_en, m.mandi_name_en, count(DISTINCT ct.date) ' \
+                  'FROM loop_combinedtransaction ct LEFT JOIN loop_loopuser u ON u.user_id = ct.user_created_id ' \
+                  'LEFT JOIN loop_mandi m ON m.id = ct.mandi_id WHERE u.role = 2 GROUP BY ct.user_created_id , ct.mandi_id ' \
+                  'ORDER BY ct.user_created_id, ct.mandi_id'
