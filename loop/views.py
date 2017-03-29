@@ -397,10 +397,10 @@ def data_for_line_graph(request):
     crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'date').annotate(Min('price'), Max('price'), Sum('quantity'), Sum('amount'))
 
-    aggregator_incentive_cost = calculate_aggregator_incentive(start_date, end_date, mandi_ids, aggregator_ids)
+    # aggregator_incentive_cost = calculate_aggregator_incentive(start_date, end_date, mandi_ids, aggregator_ids)
 
     chart_dict = {'transport_data': list(transport_data), 'crop_prices': list(
-        crop_prices), 'dates': list(dates), 'aggregator_data': list(aggregator_data), 'aggregator_incentive_cost' : aggregator_incentive_cost}
+        crop_prices), 'dates': list(dates), 'aggregator_data': list(aggregator_data)}
 
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
