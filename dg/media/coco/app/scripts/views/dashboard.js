@@ -239,6 +239,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         destroyClickedElement: function(event){
             document.body.removeChild(event.target);
         },
+
         saveToFile: function(filedata){
             var that =this;
             var jsonData = JSON.stringify(filedata);
@@ -255,8 +256,11 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             document.body.appendChild(downloadLink);
             downloadLink.click();
         },
+
         export: function() {
             var that = this;
+            that.upload_v = new UploadView();
+            var dfd = $.Deferred();
             var listing=[]
             listItem = configs.misc.data_transfer_schema
             var filedata = {};
@@ -269,6 +273,16 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                            userdata=JSON.stringify(collection.toJSON());
                            filedata['user']=userdata;
                            that.saveToFile(filedata);
+                           // empty the uploadqueue
+                           // listItem.clear([])
+                           console.log(upload_collection)
+                           // upload_collection.shift();
+                            _.times(upload_collection.length, function(i){
+                                console.log(i);
+                                var current_model = upload_collection.shift()
+                                current_model.destroy();
+                            });
+                            
                         })
                         .fail(function() {
                             console.log("Not able to fetch user data");

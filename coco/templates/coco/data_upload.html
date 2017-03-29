@@ -17,6 +17,7 @@
   <style type="text/css">
     .errorlist{
       color: red;
+      border: 1px solid red;
     }
   </style>
 </head>
@@ -25,30 +26,31 @@
         <div class="row global-header">
           <h1 class="coco-brand" style="text-align:center;"><a href="/coco">COCO</a></h1>
         </div>
+        <fieldset>
+        <legend></legend>
         <div class="row">
-            <div class="col-sm-8 col-sm-push-4">
+            <div class="col-sm-8">
               <div id="setup"></div><h3 class="topic">Data Upload Form</h3>
 
 				        <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
 				        	{% csrf_token %}
 								  <div class="control-group">
-								    <label class="control-label" for="datafile">DataFile</label>
-								    {% if form.datafile.errors %}<p class="errorlist">{{ form.datafile.errors }}</p>{% endif %}
-								    <div class="controls">
+                    {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
+								    <label class="control-label col-sm-2" for="datafile">DataFile</label>
+								    <div {% if form.datafile.errors %} class="col-sm-8" {% else %}class="errorlist col-sm-8"{% endif %} style="margin-top: 7px;">
 								      {{ form.datafile }}
 								    </div>
 								  </div>
 								  <br>
 								  <br>
-								  <div class="control-group">
-								    <div class="controls">
-								      <button type="submit" class="btn">Sign in</button>
-								    </div>
-								  </div>
+								  
+								      <button type="submit" class="btn btn-success">Sign in</button>
+								    
 								</form>
         			</div>
 
-    </div>
+        </div>
+        </fieldset>
 
 </body>
 </html>
