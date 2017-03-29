@@ -2,7 +2,6 @@ import json
 
 import datetime
 from django.contrib.auth.models import User
-from django.core import serializers
 from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
@@ -50,59 +49,32 @@ def save_log(sender, **kwargs):
 
     if sender == "Village":
         village_id = instance.id
-        # user = None
-    # elif sender == "Crop":
-    #     user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
-        # user = instance.user_created
         loop_user = LoopUser.objects.get(user=instance.user_created)
     elif sender == "Transporter":
-        # user = instance.user_created
         if instance.user_created is not None:
             loop_user = LoopUser.objects.get(user=instance.user_created)
         else:
             loop_user = None
-    # elif sender == "Vehicle":
-    #     user = None
     elif sender == "TransportationVehicle":
-        # user = instance.user_created
         if instance.user_created is not None:
             loop_user = LoopUser.objects.get(user=instance.user_created)
         else:
             loop_user = None
     elif sender == "DayTransportation":
-        # user = instance.user_created
         loop_user = LoopUser.objects.get(user=instance.user_created)
-    # elif sender == "Gaddidar":
-    #     user = None
-    # elif sender == "Mandi":
-    #     user = instance.user_created
     elif sender == "LoopUserAssignedMandi":
         sender = "Mandi"
         model_id = instance.mandi.id
-        # user = instance.user_created
         loop_user = instance.loop_user
     elif sender == "LoopUserAssignedVillage":
         sender = "Village"
         model_id = instance.village.id
         village_id = instance.village.id
-        # user = instance.user_created
         loop_user = instance.loop_user
         sender = "Village"
-    # elif sender == "GaddidarCommission":
-    #     village_id = None
-    #     user = instance.user_created
-    #     loop_user = None
-    # elif sender == "State":
-    #     village_id=None
-    #     user = instance.user_created
-    #     loop_user = None
-    # elif sender == "LoopUser":
-    #     village_id = None
-    #     user = instance.user_created
-    #     loop_user = None
-    elif sender == "Farmer":           # farmer add
+    elif sender == "Farmer":
         village_id = instance.village.id
 
     Log = get_model('loop', 'Log')
@@ -115,102 +87,6 @@ def save_log(sender, **kwargs):
         obj = model_to_dict(instance)
         deletedObject = LogDeleted(entry_table=sender,table_object=obj)
         deletedObject.save()
-
-
-# def delete_log(sender, **kwargs):
-#     LoopUser = get_model('loop', 'LoopUser')
-#     instance = kwargs["instance"]
-#     sender = sender.__name__  # get the name of the table which sent the request
-#     try:
-#         user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
-#             id=instance.user_created_id)
-#     except Exception, ex:
-#         user = None
-#
-#     model_id = instance.id
-#     if sender == "Village":
-#         village_id = instance.id
-#         user = None
-#         loop_user = None
-#     elif sender == "Crop":
-#         village_id = None
-#         user = None
-#         loop_user = None
-#     elif sender == "CombinedTransaction":
-#         village_id = instance.farmer.village.id
-#         user = instance.user_created
-#         loop_user = LoopUser.objects.get(user=instance.user_created)
-#     elif sender == "Transporter":
-#         village_id = None
-#         user = instance.user_created
-#         if instance.user_created is not None:
-#             loop_user = LoopUser.objects.get(user=instance.user_created)
-#         else:
-#             loop_user = None
-#     elif sender == "Vehicle":
-#         village_id = None
-#         user = None
-#         loop_user = None
-#     elif sender == "TransportationVehicle":
-#         village_id = None
-#         user = instance.user_created
-#         if instance.user_created is not None:
-#             loop_user = LoopUser.objects.get(user=instance.user_created)
-#         else:
-#             loop_user = None
-#     elif sender == "DayTransportation":
-#         village_id = None
-#         user = instance.user_created
-#         loop_user = LoopUser.objects.get(user=instance.user_created)
-#     elif sender == "Gaddidar":
-#         village_id = None
-#         user = None
-#         # Loop user not required
-#         loop_user = None
-#     elif sender == "Mandi":
-#         village_id = None
-#         user = None
-#         # Loop user not required
-#         loop_user = None
-#     elif sender == "GaddidarCommission":
-#         village_id=None
-#         user = instance.user_created
-#         loop_user = None
-#     elif sender == "LoopUserAssignedMandi":
-#         village_id = None
-#         user = None
-#         loop_user = instance.loop_user
-#         sender = "Mandi"
-#         model_id = instance.mandi.id
-#     elif sender == "LoopUserAssignedVillage":
-#         village_id = instance.village.id
-#         user = instance.user_created
-#         loop_user = instance.loop_user
-#         sender = "Village"
-#         model_id = instance.village.id
-#     elif sender == "State":
-#         village_id = None
-#         user = instance.user_created
-#         loop_user = None
-#     elif sender == "LoopUser":
-#         village_id = None
-#         user = instance.user_created
-#         loop_user = None
-#     else:               # farmer add
-#         village_id = instance.village.id
-#         loop_user = None
-#     Log = get_model('loop', 'Log')
-#     try:
-#         log = Log(village=village_id, user=user, action=-1,
-#                   entry_table=sender, model_id=model_id, loop_user=loop_user)
-#         log.save()
-#
-#         LogDeleted = get_model('loop','LogDeleted')
-#         obj = model_to_dict(instance)
-#         deletedObject = LogDeleted(entry_table=sender,table_object=obj)
-#         deletedObject.save()
-#     except Exception as ex:
-#         pass
 
 
 def get_log_object(log_object):
