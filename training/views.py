@@ -39,7 +39,7 @@ def login(request):
     return HttpResponse("0")
 
 def dashboard(request):
-    return render(request, 'app_dashboards/training_dashboard.html')
+    return render(request, 'src/index.html')
 
 def filter_data(request):
     assessments = Assessment.objects.values('id', 'name')

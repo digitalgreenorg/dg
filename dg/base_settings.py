@@ -102,6 +102,7 @@ TEMPLATES = [
             os.path.join(PROJECT_PATH, 'media/coco/app'),
             os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
             os.path.join(PROJECT_PATH, 'media/'),
+            os.path.join(PROJECT_PATH, 'media/analytics/'),
             os.path.join(PROJECT_PATH, 'templates/data_upload'),
         ],
         'APP_DIRS': True,
