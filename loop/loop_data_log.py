@@ -290,11 +290,15 @@ def send_updated_log(request):
 
             for entry in transporter_trans_vehicle_rows:
                 if entry.entry_table == "Transporter" and entry.loop_user == None:
-                    if Transporter.objects.get(id=entry.model_id).block.id == requesting_loop_user.village.block.id:
+                    if entry.action != -1 and Transporter.objects.get(id=entry.model_id).block.id == requesting_loop_user.village.block.id:
+                        list_rows.append(entry)
+                    elif entry.action == -1:
                         list_rows.append(entry)
                 elif entry.entry_table == "TransportationVehicle" and entry.loop_user == None:
-                    if TransportationVehicle.objects.get(
+                    if entry.action != -1 and TransportationVehicle.objects.get(
                             id=entry.model_id).transporter.block.id == requesting_loop_user.village.block.id:
+                        list_rows.append(entry)
+                    elif entry.action == -1:
                         list_rows.append(entry)
 
             mandi_list_queryset = Log.objects.filter(
@@ -304,7 +308,9 @@ def send_updated_log(request):
             gaddidar_rows = Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
             for grow in gaddidar_rows:
-                if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
+                if grow.action !=-1 and Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
+                    list_rows.append(grow)
+                elif grow.action == -1:
                     list_rows.append(grow)
 
             gaddidar_commission_rows = Log.objects.filter(
@@ -345,8 +351,11 @@ def send_updated_log(request):
 
             for row in list_rows:
                 if row:
-                    for i in row:
-                        data_list.append(get_log_object(i))
+                    try:
+                        for i in row:
+                            data_list.append(get_log_object(i))
+                    except TypeError, te:
+                        data_list.append(get_log_object(row))
             if list_rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
                 return HttpResponse(data, content_type="application/json")
