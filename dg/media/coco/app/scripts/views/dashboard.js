@@ -264,7 +264,18 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 .done(function(collection) {
                    data=JSON.stringify(collection.toJSON());
                    filedata[listItem]=data;
-                   that.saveToFile(filedata);
+                   Offline.fetch_collection("user")
+                        .done(function(collection) {
+                           userdata=JSON.stringify(collection.toJSON());
+                           filedata['user']=userdata;
+                           that.saveToFile(filedata);
+                        })
+                        .fail(function() {
+                            console.log("Not able to fetch user data");
+                            filedata[listItem]=JSON.stringify([]);
+                            that.saveToFile(filedata);
+                        }); 
+                   
                 })
                 .fail(function() {
                     console.log("Not able to fetch data");
