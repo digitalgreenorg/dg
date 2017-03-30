@@ -104,16 +104,16 @@ def send_updated_log(request):
                     except Exception: #Incase object edited and then deleted
                         district_animator_list.append(animator)
 
-                user_modified = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table="TrainingUser")
-                if user_modified:
-                    new_assigned_districts = District.objects.filter(state__id__in=requesting_user_states)
-                    for n_a_d in new_assigned_districts:
-                        obj = LogData(action=1,entry_table="District",model_id=n_a_d.id)
-                        district_animator_list.append(obj)
-                    new_mediators = Animator.objects.filter(district__state__id__in=requesting_user_states)
-                    for n_m in new_mediators:
-                        obj = LogData(action=1,entry_table="Animator",model_id=n_m.id)
-                        district_animator_list.append(obj)
+                # user_modified = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table="TrainingUser")
+                # if user_modified:
+                #     new_assigned_districts = District.objects.filter(state__id__in=requesting_user_states)
+                #     for n_a_d in new_assigned_districts:
+                #         obj = LogData(action=1,entry_table="District",model_id=n_a_d.id)
+                #         district_animator_list.append(obj)
+                #     new_mediators = Animator.objects.filter(district__state__id__in=requesting_user_states)
+                #     for n_m in new_mediators:
+                #         obj = LogData(action=1,entry_table="Animator",model_id=n_m.id)
+                #         district_animator_list.append(obj)
 
             log_list = []
             for row in rows:
