@@ -268,7 +268,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 .done(function(collection) {
                    data=JSON.stringify(collection.toJSON());
                    filedata[listItem]=data;
-                   Offline.fetch_collection("user")
+                   Offline.fetch_collection(configs.misc.data_transfer_credentials_schema)
                         .done(function(collection) {
                            userdata=JSON.stringify(collection.toJSON());
                            filedata['user']=userdata;

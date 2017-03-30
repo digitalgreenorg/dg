@@ -1141,6 +1141,7 @@ function() {
     var misc = {
         download_chunk_size: 2000,
         data_transfer_schema: "uploadqueue",
+        data_transfer_credentials_schema: "user",
         languages: ['हिन्दी', 'English', 'Français'],
         ethiopia_partners: ['moa-dg ethiopia', 'ide', 'oa', 'saa'],
         meta_default: 'English',
