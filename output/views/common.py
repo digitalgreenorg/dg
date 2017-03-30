@@ -184,10 +184,10 @@ def get_partner_list(geog, id, partners):
     if(sql):
         part_list = run_query(sql)
         filtered_partners = [x['partner_id'] for x in part_list]
-        coco_partners = Partner.objects.values_list('id', 'partner_name').order_by('partner_name')
+        coco_partners = Partner.objects.values_list('id', 'partner_name', 'full_partner_name').order_by('partner_name')
         partner_list = []
-        for id, partner_name in coco_partners:
-            partner_dict = {'partner_id': id, 'PARTNER_NAME': partner_name}
+        for id, partner_name, full_partner_name in coco_partners:
+            partner_dict = {'partner_id': id, 'PARTNER_NAME': partner_name, 'FULL_PARTNER_NAME': full_partner_name}
             if partners:
                 if str(id) not in partners:
                     partner_dict['unmarked'] = 1
