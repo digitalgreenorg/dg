@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='partner',
             name='full_partner_name',
-            field=models.CharField(default=b'', max_length=200),
+            field=models.CharField(default=b'', max_length=200, blank=True),
         ),
     ]
