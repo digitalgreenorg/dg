@@ -21,6 +21,9 @@ class TrainingUser(models.Model):
     def get_states(self):
     	return self.states.all()
 
+post_save.connect(enter_to_log, sender=TrainingUser)
+pre_delete.connect(enter_to_log, sender=TrainingUser)
+
 
 class BaseModel(models.Model):
 	user_created = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_created", editable=False, null=True, blank=True)
