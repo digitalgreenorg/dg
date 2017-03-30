@@ -16,7 +16,7 @@
 {% endblock %} {% block navbar %}
 <div class="navbar-fixed">
    <nav class="top-nav" id="analytics_page_nav_bar">
-      <div class="nav-wrapper grey darken-3">
+      <div class="nav-wrapper grey darken-3 row nav_row">
          <a class="brand-logo center white-text">LOOP</a>
          <a data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
          <div class="left col s5">
@@ -27,7 +27,7 @@
                <li id="payments_tab"><a class="white-text" onclick="hide_nav('payments')">Payments</a></li>
             </ul>
          </div>
-         <div id="language" class="col s2" class="initialized" style="float:right;">
+         <div id="language" class="col s2 initialized" style="float:right;">
             <select id='languageID' onchange='change_language(this.value)'>
                <option value='Regional'>Regional</option>
                <option value='English' selected>English</option>
@@ -40,7 +40,7 @@
             <li><a onclick="hide_nav('payments')">Payments</a></li>
          </ul>
       </div>
-      <div class="nav-wrapper  grey lighten-2 hide" id="filters_nav">
+      <div class="nav-wrapper grey lighten-2 hide" id="filters_nav">
          <a data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
          <ul class="hide-on-med-and-down">
             <ul class="left">
@@ -496,13 +496,7 @@
                <table id="table2" class="stripe">
                   <tfoot>
                      <tr>
-                        <th align="left">Total:</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th colspan="3" align="left">Total:</th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -542,7 +536,7 @@
       </div>
    </div>
 </div>
-<div id="login_modal" class="modal">
+<div id="login_modal" class="modal login_modal">
    <div class="modal-content">
       <h4 class="row center">User Login</h4>
       <div class="row">
