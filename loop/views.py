@@ -1,10 +1,6 @@
 import json
-import xlsxwriter
-import requests
 from django.http import JsonResponse
-from io import BytesIO
 from threading import Thread
-import xml.etree.ElementTree as xml_parse
 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -12,7 +8,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
-from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
+from django.db.models import Count, Min, Sum, Avg, Max, F
 
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
@@ -20,7 +16,7 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
     HelplineCallLog, HelplineSmsLog
 
-from loop_data_log import get_latest_timestamp
+from loop.utils.send_log.loop_data_log import get_latest_timestamp
 from loop.payment_template import *
 from loop.utils.ivr_helpline.helpline_data import helpline_data
 import unicodecsv as csv

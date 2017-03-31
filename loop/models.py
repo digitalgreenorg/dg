@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
-from loop_data_log import save_log#, delete_log
+from loop.utils.send_log.loop_data_log import save_log#, delete_log
 from smart_selects.db_fields import ChainedForeignKey
 from constants.constants import *
 
