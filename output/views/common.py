@@ -10,7 +10,7 @@ from output.database.utility import run_query, run_query_raw, run_query_dict, \
 from copy import deepcopy
 from activities.models import Screening
 from people.models import Person
-from programs.models import Partner
+from programs.models import Partner, Project
 from videos.models import Video
 import datetime
 import json
