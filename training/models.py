@@ -84,22 +84,22 @@ post_save.connect(enter_to_log, sender=Question)
 pre_delete.connect(enter_to_log,sender=Question)
 
 class Training(BaseModel):
-	id = models.AutoField(primary_key=True)
-	date = models.DateField()
-	place = models.CharField(max_length=200)
-	assessment = models.ForeignKey(Assessment, null=True, blank=True)
-	trainer = models.ManyToManyField(Trainer, blank=True)
-	facilitator = models.ForeignKey(Trainer, blank=True, null=True, related_name="facilitator")
-	language = models.ForeignKey(Language, null=True, blank=True)
-	participants = models.ManyToManyField(Animator)
-	district = models.ForeignKey(District, null=True, blank=True)
-	trainingType = models.BooleanField(default=True) # with / without video
-	kind_of_training = models.BooleanField(default=True) # new / refresher training
-	participants_count = models.IntegerField(default=0)
-	partner = models.ForeignKey(Partner, null=True, blank=True)
+    id = models.AutoField(primary_key=True)
+    date = models.DateField()
+    place = models.CharField(max_length=200)
+    assessment = models.ForeignKey(Assessment, null=True, blank=True)
+    trainer = models.ManyToManyField(Trainer, blank=True)
+    facilitator = models.ForeignKey(Trainer, blank=True, null=True, related_name="facilitator")
+    language = models.ForeignKey(Language, null=True, blank=True)
+    participants = models.ManyToManyField(Animator)
+    district = models.ForeignKey(District, null=True, blank=True)
+    trainingType = models.BooleanField(default=True) # with / without video
+    kind_of_training = models.BooleanField(default=True) # new / refresher training
+    participants_count = models.IntegerField(default=0)
+    partner = models.ForeignKey(Partner, null=True, blank=True)
 
-	# class Meta:
- #    	unique_together=("date","trainer")
+    def trainer_list(self):
+        return " , ".join([t.name for t in self.trainer.all()])
 
 class Score(models.Model):
 	id = models.AutoField(primary_key=True)

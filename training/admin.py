@@ -47,7 +47,7 @@ class DeleteLogAdmin(admin.ModelAdmin):
 
 class TrainingListAdmin(admin.ModelAdmin):
 	actions = None
-	list_display = ('id','date','place','assessment','language','district','trainingType','kind_of_training','participants_count','partner')
+	list_display = ('id','date','place','trainer_list','assessment','language','district','trainingType','kind_of_training','participants_count','partner')
 	list_filter = ['assessment','language','partner']
 	date_hierarchy = 'date'
 
