@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from loop_data_log import save_log, delete_log
 from smart_selects.db_fields import ChainedForeignKey
 from constants.constants import *
+from libs.geocoder import Geocoder
 
 ROLE_CHOICE = ((ROLE_CHOICE_ADMIN, "Admin"), (ROLE_CHOICE_AGGREGATOR, "Aggregator"), (ROLE_CHOICE_TESTING, "Testing"))
 MODEL_CHOICE = ((1, "Direct Sell"),  (2, "Aggregate"))
@@ -46,6 +47,7 @@ class Country(LoopModel):
 
     class Meta:
         unique_together = ("country_name",)
+        verbose_name_plural = "Countries"
 
 
 class State(LoopModel):
@@ -55,7 +57,7 @@ class State(LoopModel):
     is_visible = models.BooleanField(default=True)
     state_name_en = models.CharField(max_length=100, null=True)
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
-    crop_add = models.BooleanField(default=False)
+    crop_add = models.BooleanField(default=False, verbose_name="Allow Crop Addition")
     def __unicode__(self):
         return self.state_name
 
@@ -96,8 +98,8 @@ class Block(LoopModel):
 class Village(LoopModel):
     id = models.AutoField(primary_key=True)
     village_name = models.CharField(max_length=50)
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
+    latitude = models.DecimalField(max_digits=9,decimal_places=6,null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9,decimal_places=6,null=True, blank=True)
     block = models.ForeignKey(Block)
     is_visible = models.BooleanField(default=True)
     village_name_en = models.CharField(max_length=100, null=True)
@@ -108,6 +110,15 @@ class Village(LoopModel):
     class Meta:
         unique_together = ("village_name", "block")
 
+    def clean(self):
+        geocoder = Geocoder()
+        address = u"%s,%s,%s,%s,%s" % (self.village_name_en,self.block.block_name_en,self.block.district.district_name_en,self.block.district.state.state_name_en,self.block.district.state.country.country_name)
+        if geocoder.convert(address):
+            try:
+                (self.latitude,self.longitude) = geocoder.getLatLng()
+            except:
+                pass
+
 
 post_save.connect(save_log, sender=Village)
 pre_delete.connect(delete_log, sender=Village)
@@ -116,8 +127,8 @@ pre_delete.connect(delete_log, sender=Village)
 class Mandi(LoopModel):
     id = models.AutoField(primary_key=True)
     mandi_name = models.CharField(max_length=90)
-    latitude = models.FloatField(null=True)
-    longitude = models.FloatField(null=True)
+    latitude = models.DecimalField(max_digits=9,decimal_places=6,null=True)
+    longitude = models.DecimalField(max_digits=9,decimal_places=6,null=True)
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
     mandi_name_en = models.CharField(max_length=100, null=True)
@@ -127,6 +138,15 @@ class Mandi(LoopModel):
 
     class Meta:
         unique_together = ("mandi_name", "district",)
+
+    def clean(self):
+        geocoder = Geocoder()
+        address = u"%s,%s,%s,%s" % (self.mandi_name_en,self.district.district_name_en,self.district.state.state_name_en,self.district.state.country.country_name)
+        if geocoder.convert(address):
+            try:
+                (self.latitude,self.longitude) = geocoder.getLatLng()
+            except:
+                pass
 
 post_save.connect(save_log, sender=Mandi)
 pre_delete.connect(delete_log, sender=Mandi)
@@ -347,6 +367,7 @@ class DayTransportation(LoopModel):
 
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
+        verbose_name_plural = "Day Transportation"
 
 post_save.connect(save_log, sender=DayTransportation)
 pre_delete.connect(delete_log, sender=DayTransportation)
@@ -389,6 +410,7 @@ class CombinedTransaction(LoopModel):
 
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
+        verbose_name_plural = "Combined Transaction"
 
 
 post_save.connect(save_log, sender=CombinedTransaction)
@@ -406,6 +428,8 @@ class GaddidarCommission(LoopModel):
 
     class Meta:
         unique_together = ("start_date", "gaddidar", "mandi")
+        verbose_name_plural = "Gaddidar Commission"
+
 post_save.connect(save_log, sender=GaddidarCommission)
 pre_delete.connect(delete_log, sender=GaddidarCommission)
 
@@ -427,6 +451,7 @@ class GaddidarShareOutliers(LoopModel):
 
     class Meta:
         unique_together = ("date", "gaddidar", "aggregator", "mandi")
+        verbose_name_plural = "Gaddidar Share Outliers"
 
 class IncentiveParameter(models.Model):
     notation = models.CharField(max_length=3)
@@ -450,6 +475,7 @@ class AggregatorIncentive(LoopModel):
 
     class Meta:
         unique_together = ("start_date", "aggregator", "model_type", "incentive_model")
+        verbose_name_plural = "Aggregator Incentive"
 
     def __unicode__(self):
         return "%s" % (self.aggregator.name)
@@ -473,6 +499,7 @@ class AggregatorShareOutliers(LoopModel):
 
     class Meta:
         unique_together = ("date","aggregator","mandi")
+        verbose_name_plural = "Aggregator Share Outliers"
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)
