@@ -3,7 +3,7 @@ from django.contrib.admin.sites import AdminSite
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from models import Trainer, TrainingUser, Assessment, Question, LogData
+from models import Trainer, TrainingUser, Assessment, Question, LogData, DeleteLog
 from geographies.models import State
 
 class TrainingUserForm(forms.ModelForm):
@@ -27,9 +27,24 @@ class QuestionAdmin(admin.ModelAdmin):
 class TrainerAdmin(admin.ModelAdmin):
 	list_display = ('id','name','email')
 
+class LogDataAdmin(admin.ModelAdmin):
+	actions = None
+	list_display = ('id','entry_table','model_id','action','user')
+	search_fields = ('entry_table','action','user')
+	list_filter = ('entry_table','action')
+	list_display_links = None
+
+class DeleteLogAdmin(admin.ModelAdmin):
+	actions = None
+	list_display = ('id','entry_table','table_object')
+	search_fields = ['entry_table']
+	list_filter = ['entry_table']
+	list_display_links = None
+
 training_admin = TrainingAdmin(name='training_admin')
 training_admin.register(Trainer, TrainerAdmin)
 training_admin.register(TrainingUser,TrainingUserAdmin)
 training_admin.register(Assessment)
 training_admin.register(Question, QuestionAdmin)
-training_admin.register(LogData)
+training_admin.register(LogData, LogDataAdmin)
+training_admin.register(DeleteLog, DeleteLogAdmin)
