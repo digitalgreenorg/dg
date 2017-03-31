@@ -55,6 +55,8 @@
 				console.log($(this).val());
 				$.get("/analytics/project_wise_partner",{projects:projects}).done(function(data){
 					console.log(data);
+					partner_list = JSON.parse(data); 
+					console.log(data);
 				});
 			}
 				
