@@ -175,8 +175,16 @@ class HelplineSmsLogAdmin(admin.ModelAdmin):
     search_fields = ['from_number', 'to_number', 'sent_time']
 
 class LogAdmin(admin.ModelAdmin):
+    actions = None
     list_display = ('id', 'timestamp', 'entry_table','model_id','action','village','loop_user','user')
     list_filter = ['entry_table', 'action']
+    list_display_link = None
+
+class LogDeletedAdmin(admin.ModelAdmin):
+    actions = None
+    list_display_link = None
+    list_display = ('id', 'entry_table','table_object')
+    list_filter = ['entry_table']
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
@@ -210,4 +218,4 @@ loop_admin.register(HelplineOutgoing,HelplineOutgoingAdmin)
 loop_admin.register(HelplineCallLog,HelplineCallLogAdmin)
 loop_admin.register(HelplineSmsLog,HelplineSmsLogAdmin)
 loop_admin.register(Log,LogAdmin)
-loop_admin.register(LogDeleted)
+loop_admin.register(LogDeleted, LogDeletedAdmin)
