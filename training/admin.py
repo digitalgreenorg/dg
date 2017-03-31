@@ -3,7 +3,7 @@ from django.contrib.admin.sites import AdminSite
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from models import Trainer, TrainingUser, Assessment, Question, LogData, DeleteLog
+from models import Trainer, TrainingUser, Assessment, Question, LogData, DeleteLog, Training
 from geographies.models import State
 
 class TrainingUserForm(forms.ModelForm):
@@ -18,6 +18,10 @@ class TrainingAdmin(AdminSite):
 
 class TrainingUserAdmin(admin.ModelAdmin):
 	form = TrainingUserForm
+	list_display = ('id', 'user', 'assigned_states')
+
+	def assigned_states(self,obj):
+		return " , ".join([s.state_name for s in obj.states.all()])
 
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('id', 'text', 'section','serial','tag')
@@ -41,6 +45,12 @@ class DeleteLogAdmin(admin.ModelAdmin):
 	list_filter = ['entry_table']
 	list_display_links = None
 
+class TrainingListAdmin(admin.ModelAdmin):
+	actions = None
+	list_display = ('id','date','place','assessment','language','district','trainingType','kind_of_training','participants_count','partner')
+	list_filter = ['assessment','language','partner']
+	date_hierarchy = 'date'
+
 training_admin = TrainingAdmin(name='training_admin')
 training_admin.register(Trainer, TrainerAdmin)
 training_admin.register(TrainingUser,TrainingUserAdmin)
@@ -48,3 +58,4 @@ training_admin.register(Assessment)
 training_admin.register(Question, QuestionAdmin)
 training_admin.register(LogData, LogDataAdmin)
 training_admin.register(DeleteLog, DeleteLogAdmin)
+training_admin.register(Training, TrainingListAdmin)
