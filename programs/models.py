@@ -11,3 +11,15 @@ class Partner(CocoModel):
     
     def __unicode__(self):
         return self.partner_name
+
+
+class Project(CocoModel):
+    id = models.AutoField(primary_key=True)
+    project_name = models.CharField(max_length=100, unique=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    associate_partner = models.ManyToManyField(Partner, blank=True)
+    
+    def __unicode__(self):
+        return self.project_name
+
