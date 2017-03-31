@@ -14,6 +14,7 @@ class TrainingUser(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, related_name="training_user")
     states = models.ManyToManyField(State)
+    # states = models.ManyToManyField(State, related_name="training_user_assigned_states",through="TrainingUserAssignedState", blank=True)
 
     def __unicode__(self):
     	return self.user.username
@@ -21,9 +22,13 @@ class TrainingUser(models.Model):
     def get_states(self):
     	return self.states.all()
 
-post_save.connect(enter_to_log, sender=TrainingUser)
-pre_delete.connect(enter_to_log, sender=TrainingUser)
+# post_save.connect(enter_to_log, sender=TrainingUser)
+# pre_delete.connect(enter_to_log, sender=TrainingUser)
 
+# class TrainingUserAssignedState(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     traininguser = models.ForeignKey(TrainingUser)
+#     state = models.ForeignKey(State)
 
 class BaseModel(models.Model):
 	user_created = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_created", editable=False, null=True, blank=True)
