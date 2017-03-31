@@ -76,6 +76,7 @@ def get_search_box(request):
     from_date, to_date, partner = utility.get_dates_partners(request);
     search_box_params = {}
     search_box_params['partners'] = get_partner_list(geog,id, partner);
+    search_box_params['projects'] = get_project_list()
     
     if(from_date == (datetime.datetime.utcnow() - datetime.timedelta(365)).strftime('%Y-%m-%d') and to_date == (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')):
         search_box_params['is_date_selected'] = 0
@@ -174,6 +175,11 @@ def get_geog_id(request):
         return request.GET['geog'].upper(),int(request.GET['id'])
     else:
         return None, None
+
+#Return a dictionary of list of PROJECT_NAME,ID AND THEIR ASSOCIATE PARTNER'S ID
+def get_project_list():
+    coco_projects = Project.objects.values('id', 'project_name').order_by('project_name')
+    return coco_projects
 
 
 #Returns a dictionary of list of PARTNER_NAME, id

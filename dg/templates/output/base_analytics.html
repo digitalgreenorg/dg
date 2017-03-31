@@ -252,7 +252,35 @@
 							</div>
 				</div>							
 			</div>
-				
+
+
+			<div id='project' class='customdiv'>
+				<div id='projecttitle' class='customtitle'>										
+					<table id='projecttitletable' class='customtitletable' cellspacing='0' cellpadding='0'>						
+						<tr>
+							<td class='customtitlename'> Projects </td>
+							<td class='customtitleimg'>  </td>
+						</tr>
+					</table>
+				</div>
+				<div id='arrowimg'>  </div>
+				<div id='projectbody' class='custombody'>
+					<table id='projectbodytable' class='custombodytable'>
+					{% for project in search_box_params.projects %}
+						<tr>
+							<td id='projectbodytd2' class='customprojectbodytd'> 
+								<div id='projectname' class='projectdiv' title='{{project.project_name}}' style="font-weight:bolder; font-size: 100%; color:black;">{{project.project_name}}</div> 
+								<div class='projectcheckbox'> 
+									<input type="checkbox" name="projects" value="{{project.id}}"/>
+								</div> 
+							</td>														
+						</tr>
+					{% endfor %}				
+					</table>				
+				</div>
+			</div>
+
+							
 			{% if search_box_params.partners %}
 			<div id='partner' class='customdiv'>
 				<div id='partnertitle' class='customtitle'>										
