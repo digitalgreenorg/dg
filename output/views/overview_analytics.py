@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponse
 import datetime
 
 from geographies.models import Block, Country, District, State, Village
+from programs.models import Partner, Project
 from output.database.SQL  import overview_analytics_sql, shared_sql, targets_sql, video_analytics_sql, screening_analytics_sql
 from output import views
 from output.views.common import get_geog_id
@@ -136,4 +137,8 @@ def get_parent_geog_id(geog, id):
     else:
         return None, None
     return vls    
-    
+
+def project_wise_partner(request):
+    to_date = request.GET['projects']
+    partner_list = Project.objects.filter(id__in=to_date).values_list('associate_partner',flat=True)
+    return partner_list
