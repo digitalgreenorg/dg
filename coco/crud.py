@@ -1,3 +1,4 @@
+from django.db.models import get_model
 from videos.models import Video
 from videos.models import NonNegotiable
 from people.models import Animator
@@ -6,6 +7,17 @@ from people.models import PersonGroup
 from people.models import Person
 from activities.models import Screening
 from activities.models import PersonAdoptPractice
+
+
+def crud_of_model(model, app, data_dict, create, update): 
+    model = get_model(app, model)
+    if create and not update:
+        obj, created = model.objects.get_or_create(**data_dict)
+    elif update and not create:
+        obj = model.objects.filter(id=data_dict.get('_id'))
+        del data_dict['_id']
+        obj.update(**data_dict)
+        obj = obj.latest('id')
 
 
 def crud_of_video(data_dict, production_team, create, update):
@@ -20,51 +32,6 @@ def crud_of_video(data_dict, production_team, create, update):
         video.production_team.add(*production_team)
     return
 
-
-def save_data_in_animator(data_dict, assigned_villages):
-    animator_obj, created = Animator.objects.get_or_create(**data_dict)
-    for item in assigned_villages:
-        obj = AnimatorAssignedVillage.objects.get_or_create(village_id=item, animator_id=animator_obj.id)
-
-    return 
-
-def crud_of_group(data_dict, create, update):
-    if create and not update:
-        persongroup_obj, created = PersonGroup.objects.get_or_create(**data_dict)
-    elif update and not create:
-        persongroup_obj = PersonGroup.objects.filter(id=data_dict.get('_id'))
-        del data_dict['_id']
-        persongroup_obj.update(**data_dict)
-        persongroup_obj = mediator_obj.latest('id')
-    return
-    
-
-def crud_of_nonnegotiable(data_dict, create, update):
-    if create and not update:
-        nonnegotiable, created = NonNegotiable.objects.get_or_create(**data_dict)
-    elif update and not create:
-        nonnegotiable = NonNegotiable.objects.filter(id=data_dict.get('_id'))
-        del data_dict['_id']
-        nonnegotiable.update(**data_dict)
-        nonnegotiable = nonnegotiable.latest('id')
-    return
-
-
-def crud_of_person(data_dict, create, update):
-    if create and not update:
-        person, created = Person.objects.get_or_create(**data_dict)
-    elif update and not create:
-        person = Person.objects.filter(id=data_dict.get('_id'))
-        del data_dict['_id']
-        person.update(**data_dict)
-        person = person.latest('id')
-    return
-    
-
-
-def save_data_in_adoption(data_dict, videoes_screened, farmer_groups_targeted, farmers_attendance):
-    pap_obj, created = PersonAdoptPractice.objects.get_or_create(**data_dict)
-    return
 
 
 def crud_of_mediator(data_dict, assigned_villages, create, update):
@@ -83,17 +50,6 @@ def crud_of_mediator(data_dict, assigned_villages, create, update):
                                                               user_created_id=data_dict.get('user_created_id'),
                                                               user_modified_id=data_dict.get('user_modified_id')
                                                               )
-    return
-
-
-def crud_of_adoption(data_dict, create, update, user_id, partner_id):
-    if create and not update:
-        pap_obj, created = PersonAdoptPractice.objects.get_or_create(**data_dict)
-    elif update and not create:
-        pap_obj = PersonAdoptPractice.objects.filter(id=data_dict.get('_id'))
-        del data_dict['_id']
-        pap_obj.update(**data_dict)
-        pap_obj = pap_obj.latest('id')
     return
 
 

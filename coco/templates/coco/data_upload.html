@@ -37,7 +37,7 @@
 								  <div class="control-group">
                     {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
 								    <label class="control-label col-sm-2" for="datafile">DataFile</label>
-								    <div {% if form.datafile.errors %} class="col-sm-8" {% else %}class="errorlist col-sm-8"{% endif %} style="margin-top: 7px;">
+								    <div {% if form.datafile.errors %} class="col-sm-8 errorlist" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
 								      {{ form.datafile }}
 								    </div>
 								  </div>

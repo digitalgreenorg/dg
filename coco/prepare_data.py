@@ -36,12 +36,12 @@ def format_data_or_saving_in_adoption(request, data_dict, user_id, partner_id):
         create = False
         update = True
         _data_dict['_id'] = online_id
-        crud_of_adoption(_data_dict, create, update)
+        crud_of_model("PersonAdoptPractice", "activities", _data_dict, create, update)
     # for updating existing entries
     if not data_dict.get('online_id') and data_dict.get('id'):
         create = True
         update = False
-        crud_of_adoption(_data_dict, create, update)
+        crud_of_model("PersonAdoptPractice", "activities", _data_dict, create, update)
     return 
 
 
@@ -143,12 +143,12 @@ def format_data_or_saving_in_person(request, data_dict, user_id, partner_id):
         create = False
         update = True
         _data_dict['_id'] = online_id
-        crud_of_person(_data_dict, create, update)
+        crud_of_model("Person", "people", _data_dict, create, update)
     # for updating existing entries
     if not data_dict.get('online_id') and data_dict.get('id'):
         create = True
         update = False
-        crud_of_person(_data_dict, create, update)
+        crud_of_model("Person", "people", _data_dict, create, update)
     return
 
 def format_data_or_saving_in_group(request, data_dict, user_id, partner_id):
@@ -166,12 +166,12 @@ def format_data_or_saving_in_group(request, data_dict, user_id, partner_id):
         create = False
         update = True
         _data_dict['_id'] = online_id
-        crud_of_group(_data_dict, create, update)
+        crud_of_model('PersonGroup', 'people', _data_dict, create, update)
     # for updating existing entries
     if not data_dict.get('online_id') and data_dict.get('id'):
         create = True
         update = False
-        crud_of_group(_data_dict, create, update)
+        crud_of_model('PersonGroup', 'people', _data_dict, create, update)
     return 
 
 def format_data_or_saving_in_mediator(request, data_dict, user_id, partner_id):
@@ -222,12 +222,12 @@ def format_data_or_saving_in_nonnegotiable(request, data_dict, user_id, partner_
         create = False
         update = True
         _data_dict['_id'] = online_id
-        crud_of_nonnegotiable(_data_dict, create, update)
+        crud_of_model("NonNegotiable", "video", _data_dict, create, update)
     # for updating existing entries
     if not data_dict.get('online_id') and data_dict.get('id'):
         create = True
         update = False
-        crud_of_nonnegotiable(_data_dict, create, update)
+        crud_of_model("NonNegotiable", "video", _data_dict, create, update)
 
 
 def format_data_or_saving_in_video(request, data_dict, user_id, partner_id):

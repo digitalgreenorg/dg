@@ -274,11 +274,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                            filedata['user']=userdata;
                            that.saveToFile(filedata);
                            // empty the uploadqueue
-                           // listItem.clear([])
-                           console.log(upload_collection)
-                           // upload_collection.shift();
                             _.times(upload_collection.length, function(i){
-                                console.log(i);
                                 var current_model = upload_collection.shift()
                                 current_model.destroy();
                             });
