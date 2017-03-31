@@ -42,26 +42,32 @@
 			}
 
 			if($("#projectbodytable input:checkbox:checked").length>0){
-				$("#partnerbodytable input:checkbox:checked").each(function() {
-				    $(this).prop('checked', false);
-				});
 				projects = []
 				$("#projectbodytable input:checkbox:checked").each(function(){
 					projects.push($(this).val());
 				});
-				$.get("/analytics/project_wise_partner",{projects:projects}).done(function(data){
-					partner_list = JSON.parse(data); 
-					console.log(data);
-				$("#partnerbodytable input:checkbox").each(function() {
-					if($(this).val()!='-1' && $.inArray($(this).val(),partner_list)!=-1)
-						$(this).prop('checked', true);	
-					else
-				    	$(this).prop('checked', false);
-				});
-				});
+				$.ajax({
+			    	url : "/analytics/project_wise_partner",
+			    	type : "get",
+			    	data : {projects:projects},
+			    	async: false,
+			    	success : function(data){
+						partner_list = JSON.parse(data); 
+						console.log(partner_list);
+						$("#partnerbodytable input:checkbox").each(function() {
+							if($(this).val()!='-1' && $.inArray(parseInt($(this).val()),partner_list)!=-1)
+								$(this).prop('checked', true);	
+							else
+					    		$(this).prop('checked', false);
+						});
+					},
+				    error: function() {
+				       console.log("Something is wrong");
+			    	}
+			 	});
 			}
 				
-			if($("input:checkbox:not(:checked)").length > 0) {
+			if($("#partnerbodytable input:checkbox:not(:checked)").length > 0) {
 				$("#partnerbodytable input:checked").each(function() {
 				    if($(this).val()!='-1')
 				    {
