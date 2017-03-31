@@ -43,16 +43,12 @@
 
 			if($("#projectbodytable input:checkbox:checked").length>0){
 				$("#partnerbodytable input:checked").each(function() {
-				    if($(this).val()!='-1')
-				    {
-				        $(this).prop('checked', false);
-				    }
+				    $(this).prop('checked', false);
 				});
 				projects = []
 				$("#projectbodytable input:checkbox:checked").each(function(){
 					projects.push($(this).val());
 				});
-				console.log($(this).val());
 				$.get("/analytics/project_wise_partner",{projects:projects}).done(function(data){
 					console.log(data);
 					partner_list = JSON.parse(data); 
