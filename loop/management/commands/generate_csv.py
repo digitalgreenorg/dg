@@ -7,6 +7,7 @@ from dg.settings import *
 from loop.models import *
 import csv
 from loop.config import *
+from loop.payment_template import prepare_value_data_generic, excel_processing, get_combined_data_and_sheets_formats
 from loop.sendmail import *
 from django.core.management.base import BaseCommand, CommandError
 import xlsxwriter
@@ -286,17 +287,56 @@ class Command(BaseCommand):
         
         #post request to library for excel generation
         try:
-            r = requests.post('http://www.digitalgreen.org/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
+            # r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
+            # print r
+            formatted_post_data = prepare_value_data_generic(final_json_to_send)
+
+            # this will get combined web data and various formats
+            data_dict = get_combined_data_and_sheets_formats(formatted_post_data)
+            # accessing basic variables
+            workbook = data_dict.get('workbook')
+            print "1"
+            name_of_sheets = data_dict.get('name_of_sheets')
+            print "2"
+            heading_of_sheets = data_dict.get('heading_of_sheets')
+            print "3"
+            heading_format = data_dict.get('heading_format')
+            print "4"
+            header_format = data_dict.get('header_format')
+            print "5"
+            row_format = data_dict.get('row_format')
+            print "6"
+            total_cell_format = data_dict.get('total_cell_format')
+            print "7"
+            excel_output = data_dict.get('excel_output')
+            print "8"
+            combined_data = data_dict.get('combined_data')
+            print "9"
+            combined_header = data_dict.get('combined_header')
+            print "10"
+            sheet_header = data_dict.get('sheet_header')
+            print "11"
+            sheet_footer = data_dict.get('sheet_footer')
+            # now the sheet processes
+            print "12"
+            workbook = excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format,
+                    row_format, total_cell_format, header_format, combined_data, combined_header, sheet_header, sheet_footer)
+            print "13"
+            # final closing the working
+            workbook.close()
+            print "14"
+
             files = []
-            excel_file = open(excel_workbook_name + '.xlsx', 'w')
-            excel_file.write(r.content)
-            excel_file.close()
-            files.append(excel_file)
-            r = requests.post('http://www.digitalgreen.org/loop/get_payment_sheet/', data=json.dumps(final_json_to_send_second))
-            excel_file = open(excel_workbook_name_second + '.xlsx', 'w')
-            excel_file.write(r.content)
-            excel_file.close()
-            files.append(excel_file)
+            # excel_file = open(excel_workbook_name + '.xlsx', 'w')
+            # excel_file.write(r.content)
+            # excel_file.close()
+            files.append(workbook)
+            print "15"
+            # r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send_second))
+            # excel_file = open(excel_workbook_name_second + '.xlsx', 'w')
+            # excel_file.write(r.content)
+            # excel_file.close()
+            # files.append(excel_file)
             #send email to concerned people with excel file attached    
 
             common_send_email('Farmers List with Incorrect Mobile Numbers',

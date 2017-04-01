@@ -83,7 +83,8 @@ def dashboard(request):
 
 @csrf_exempt
 def download_data_workbook(request):
-    print request
+    print "hrllo"
+    # print request
     if request.method == 'POST':
         # this will prepare the data
         formatted_post_data = format_web_request(request)

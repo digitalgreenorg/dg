@@ -33,6 +33,13 @@ def find_last_cycle(assigned_date):
 
 def set_from_to_date(from_date, to_date, no_of_days):
     current_date = date.today()
+    current_date = str(current_date)
+
+    print from_date
+    print current_date
+    print to_date
+    print no_of_days
+
     if to_date and to_date > current_date:
         print 'To date is greater than today'
     elif from_date and from_date > current_date:
