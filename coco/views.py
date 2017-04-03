@@ -5,12 +5,14 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response, render
 from coco.models import FullDownloadStats
 from models import CocoUser
+from forms import DataUploadForm
 
 def coco_v2(request):
     return render(request,'dashboard.html')
     
 def login(request):
     partner_name = None
+    type_of_cocouser = None
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -20,11 +22,12 @@ def login(request):
             coco_user_obj = CocoUser.objects.filter(user_id=request.user.id)
             if len(coco_user_obj):
                 partner_name = coco_user_obj[0].partner.partner_name.lower()
+                type_of_cocouser = coco_user_obj[0].type_of_cocouser
         else:
             return HttpResponse("0")
     else:
         return HttpResponse("0")
-    return JsonResponse({'success': '1', 'partner_name': partner_name})
+    return JsonResponse({'success': '1', 'partner_name': partner_name, 'type_of_cocouser': type_of_cocouser})
     
 def logout(request):
     auth.logout(request)    
@@ -83,4 +86,17 @@ def debug(request):
  
     res = view.func(request, **view.kwargs)
     return HttpResponse(res._container)
+
+
+def upload_data(request):
+    if request.method == 'POST':
+        form_data = DataUploadForm(request.POST, request.FILES)
+        if form_data.is_valid():
+            cd = form_data.cleaned_data
+            return HttpResponseRedirect(".")
+    else:
+        form_data = DataUploadForm()
+    context = {'form': form_data}
+    template = "coco/data_upload.html"
+    return render(request, template, context)
  
