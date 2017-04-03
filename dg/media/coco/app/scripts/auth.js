@@ -95,7 +95,7 @@ define([
               // online login successful, try offline backend login
               if (resp.success == "1"){
 
-                OfflineAuthBackend.login(username, password, language, resp.partner_name)
+                OfflineAuthBackend.login(username, password, language, resp.partner_name, resp.type_of_cocouser)
                   .done(function() {
                       // login successful
                       console.log("Login Successful");

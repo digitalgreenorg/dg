@@ -1,14 +1,15 @@
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.admin import Group, GroupAdmin, User, UserAdmin
 
-from dashboard.admin import AnimatorAdmin, AnimatorAssignedVillageAdmin, BlockAdmin, CocoUserAdmin, DistrictAdmin, PersonAdmin, PersonAdoptPracticeAdmin, PersonGroupAdmin, PracticesAdmin, PracticeSectorAdmin, PracticeSubjectAdmin, PracticeSubSectorAdmin, PracticeSubtopicAdmin, PracticeTopicAdmin, ScreeningAdmin, StateAdmin, VideoAdmin, VillageAdmin, SubCategoryAdmin, VideoPracticeAdmin
-
+from dashboard.admin import AnimatorAdmin, AnimatorAssignedVillageAdmin, BlockAdmin, CocoUserAdmin, DistrictAdmin, PersonAdmin, PersonAdoptPracticeAdmin, PersonGroupAdmin, PracticesAdmin, PracticeSectorAdmin, PracticeSubjectAdmin, PracticeSubSectorAdmin, PracticeSubtopicAdmin, PracticeTopicAdmin, ScreeningAdmin, StateAdmin, VideoAdmin, VillageAdmin, SubCategoryAdmin, VideoPracticeAdmin, ParentCategoryAdmin
+from activities.models import DirectBeneficiaries
+from dashboard.admin import DirectBeneficiariesAdmin
 from activities.models import PersonAdoptPractice, Screening
 from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
-from videos.models import Language, Practice, PracticeSector, PracticeSubject, PracticeSubSector, PracticeSubtopic, PracticeTopic, Video, Category, SubCategory, VideoPractice
+from videos.models import Language, Practice, PracticeSector, PracticeSubject, PracticeSubSector, PracticeSubtopic, PracticeTopic, Video, Category, SubCategory, VideoPractice, ParentCategory
 
 
 class CocoAdmin(AdminSite):
@@ -38,6 +39,7 @@ coco_admin.register(SubCategory, SubCategoryAdmin)
 coco_admin.register(VideoPractice, VideoPracticeAdmin)
 coco_admin.register(Practice, PracticesAdmin)
 coco_admin.register(Screening, ScreeningAdmin)
+coco_admin.register(ParentCategory, ParentCategoryAdmin)
 coco_admin.register(PersonAdoptPractice, PersonAdoptPracticeAdmin)
 coco_admin.register(PracticeSector, PracticeSectorAdmin)
 coco_admin.register(PracticeSubSector, PracticeSubSectorAdmin)
@@ -45,3 +47,4 @@ coco_admin.register(PracticeTopic, PracticeTopicAdmin)
 coco_admin.register(PracticeSubtopic, PracticeSubtopicAdmin)
 coco_admin.register(PracticeSubject, PracticeSubjectAdmin)
 coco_admin.register(CocoUser, CocoUserAdmin)
+coco_admin.register(DirectBeneficiaries, DirectBeneficiariesAdmin)
