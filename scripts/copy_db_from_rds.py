@@ -5,7 +5,7 @@ from boto.exception import S3ResponseError
 
 sys.path.append(os.path.abspath(os.path.realpath('..')))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dg.settings'
-from dg.settings import ACCESS_KEY, SECRET_KEY
+from dg.settings import ACCESS_KEY, SECRET_KEY, DATABASES
 
 user_name = DATABASES['default']['USER']
 password = DATABASES['default']['PASSWORD']
@@ -18,8 +18,8 @@ con = S3Connection(ACCESS_KEY, SECRET_KEY)
 # preparing backup for external DB
 production = 'production.sql'
 external = 'external_db.sql'
-sql_query_prod = 'mysqldump -u' + user_name ' -p' + password + ' -h' +  hostname + ' -P'+ str(port) + ' --databases digitalgreen digitalgreen_clone > ' +  production
-sql_query_ext = 'mysqldump -u' + user_name ' -p' + password + ' -h' +  hostname + ' -P'+ str(port) + '--databases nrlm game sps > ' +  external
+sql_query_prod = 'mysqldump -u' + user_name ' -p' + password + ' --databases digitalgreen digitalgreen_clone > ' +  production
+sql_query_ext = 'mysqldump -u' + user_name ' -p' + password + ' --databases nrlm game sps > ' +  external
 os.system(sql_query_prod)
 os.system(sql_query_ext)
 os.system('gzip ' + production)
@@ -29,8 +29,8 @@ try :
 	bucket = con.get_bucket(bucket_name)
 
 	# delete all key
-	for obj in bucket.get_all_keys():
-		bucket.delete_key(obj.key)
+	#for obj in bucket.get_all_keys():
+	#	bucket.delete_key(obj.key)
 
 	# filepath
 	upload_file_prod = production + '.gz'
@@ -52,7 +52,8 @@ try :
 	for obj in bucket.get_all_keys():
 		print(obj.key)
 	
-except S3ResponseError:
+except S3ResponseError as e:
+	print str(e)
 	print 'its okay, let\'s create one'
 	bucket = con.create_bucket(bucket_name)
 	print bucket
