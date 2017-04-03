@@ -2,7 +2,7 @@
 import django
 import os, sys, glob, gzip, datetime, MySQLdb
 from datetime import date
-# from download_externaldb import *
+from download_externaldb import *
 
 sys.path.append(os.path.abspath(os.path.realpath('..')))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'dg.settings'
