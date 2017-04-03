@@ -41,7 +41,9 @@ def get_data_from_myisam(get_total):
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
-    mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'],user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
+    host = DATABASES['default']['HOST']
+    port = DATABASES['default']['PORT']
+    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
     df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam",con=mysql_cn)
     aggregations = {
