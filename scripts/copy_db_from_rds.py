@@ -18,8 +18,8 @@ con = S3Connection(ACCESS_KEY, SECRET_KEY)
 # preparing backup for external DB
 production = 'production.sql'
 external = 'external_db.sql'
-sql_query_prod = 'mysqldump -u' + user_name ' -p' + password + ' --databases digitalgreen digitalgreen_clone > ' +  production
-sql_query_ext = 'mysqldump -u' + user_name ' -p' + password + ' --databases nrlm game sps > ' +  external
+sql_query_prod = 'mysqldump -u' + user_name + ' -p' + password + ' --databases digitalgreen digitalgreen_clone > ' +  production
+sql_query_ext = 'mysqldump -u' + user_name + ' -p' + password + ' --databases nrlm game sps > ' +  external
 os.system(sql_query_prod)
 os.system(sql_query_ext)
 os.system('gzip ' + production)
