@@ -132,15 +132,15 @@
          });
         }
 
-		$("#projectbodytable input:checkbox").change(function(){
+        function project_wise_partner(){
 			projects = []
 			$("#projectbodytable input:checkbox:checked").each(function(){
 				projects.push($(this).val());
 			});
 			$.ajax({
-		    	url : "/analytics/project_wise_partner",
-		    	type : "get",
-		    	data : {projects:projects},
+			    url : "/analytics/project_wise_partner",
+			    type : "get",
+			    data : {projects:projects},
 			    async: false,
 			   	success : function(data){
 					partner_list = JSON.parse(data); 
@@ -155,8 +155,8 @@
 			    error: function() {
 				        console.log("Something is wrong");
 			    	}
-			 });
-		});
+			});
+		}
 			
     </script>
 {% endblock jsfile %}
@@ -323,7 +323,7 @@
 							<td id='projectbodytd2' class='customprojectbodytd'> 
 								<div id='projectname' class='projectdiv' title='{{project.project_name}}' style="font-weight:bolder; font-size: 100%; color:black;">{{project.project_name}}</div> 
 								<div class='projectcheckbox'> 
-									<input type="checkbox" name="projects" value="{{project.id}}"/>
+									<input type="checkbox" name="projects" onChange="project_wise_partner()" value="{{project.id}}"/>
 								</div> 
 							</td>														
 						</tr>
