@@ -22,10 +22,12 @@ class LoopStatistics():
         database = DATABASES['default']['NAME']
         username = DATABASES['default']['USER']
         password = DATABASES['default']['PASSWORD']
+        host = DATABASES['default']['HOST']
+        port = DATABASES['default']['PORT']
         print 'Database : ', database
         print datetime.datetime.utcnow()
 
-        create_schema = subprocess.call("mysql -u%s -p%s %s < %s" % (username, password, database, os.path.join(DIR_PATH,'recreate_schema.sql')), shell=True)
+        create_schema = subprocess.call("mysql -u%s -p%s -h%s -P%s %s < %s" % (username, password, host, port, database, os.path.join(DIR_PATH,'recreate_schema.sql')), shell=True)
 
         if create_schema !=0:
             raise Exception("Could not create schema for loop etl")
@@ -33,7 +35,7 @@ class LoopStatistics():
 
         try:
             start_time = time.time()
-            self.mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
+            self.mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
             # .cursor()
 
             df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name_en')))
