@@ -49,6 +49,10 @@
 				    }
 				});
 			}
+
+			$("#projectbodytable input:checkbox:checked").each(function(){
+				url.push("projects="+$(this).val())
+			});
 			
 			var geog = null, id = '1';
 			$("#selectbody select").each(function() {
@@ -297,7 +301,7 @@
 							<td id='projectbodytd2' class='customprojectbodytd'> 
 								<div id='projectname' class='projectdiv' title='{{project.project_name}}' style="font-weight:bolder; font-size: 100%; color:black;">{{project.project_name}}</div> 
 								<div class='projectcheckbox'> 
-									<input type="checkbox" name="projects" onChange="project_wise_partner()" value="{{project.id}}"/>
+									<input type="checkbox" name="projects" {% if not project.unmarked %}checked="checked"{% endif %} onChange="project_wise_partner()" value="{{project.id}}"/>
 								</div> 
 							</td>														
 						</tr>
