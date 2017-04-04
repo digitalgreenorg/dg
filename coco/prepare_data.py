@@ -32,6 +32,7 @@ def format_data_or_saving_in_adoption(request, data_dict, user_id, partner_id):
                  'non_negotiable_check': non_negotiable_check,
                  'verified_by': verified_by}
 
+    _data_dict = dict((k, v) for k, v in _data_dict.iteritems() if v)
     if data_dict.get('online_id') is not None:
         create = False
         update = True
@@ -87,6 +88,7 @@ def format_data_or_saving_in_screening(request, data_dict, user_id, partner_id):
     videoes_screened = videoes_screened if checkm2mvalidation(videoes_screened) else False
     farmer_groups_targeted = checkm2mvalidation(farmer_groups_targeted)
     farmers_attendance = checkm2mvalidation(farmers_attendance)
+    _data_dict = dict((k, v) for k, v in _data_dict.iteritems() if v)
     # for new entries
     if data_dict.get('online_id') is not None:
         create = False
@@ -138,6 +140,7 @@ def format_data_or_saving_in_person(request, data_dict, user_id, partner_id):
                  'image_exists': image_exists,
                  'is_modelfarmer': is_modelfarmer
                  }
+    _data_dict = dict((k, v) for k, v in _data_dict.iteritems() if v)
     # for new entries
     if data_dict.get('online_id') is not None:
         create = False
@@ -161,6 +164,7 @@ def format_data_or_saving_in_group(request, data_dict, user_id, partner_id):
                  'partner_id': partner_id,
                  'user_created_id': user_id,
                  'user_modified_id': user_id}
+    _data_dict = dict((k, v) for k, v in _data_dict.iteritems() if v)
     # for new entries
     if data_dict.get('online_id') is not None:
         create = False
@@ -188,6 +192,7 @@ def format_data_or_saving_in_mediator(request, data_dict, user_id, partner_id):
                  'partner_id': partner_id, 'user_created_id': user_id,
                  'user_modified_id': user_id, 'total_adoptions': total_adoptions if total_adoptions else 0,
                  'district_id': district.get('id') if district else district}
+    _data_dict = dict((k, v) for k, v in _data_dict.iteritems() if v)
     # for new entries
     if data_dict.get('online_id') is not None:
         create = False
@@ -217,17 +222,18 @@ def format_data_or_saving_in_nonnegotiable(request, data_dict, user_id, partner_
                  'user_created_id': user_created_id,
                  'user_modified_id': user_modified_id,
                  }
+    _data_dict = dict((k, v) for k, v in _data_dict.iteritems() if v)
     # for new entries
     if data_dict.get('online_id') is not None:
         create = False
         update = True
         _data_dict['_id'] = online_id
-        crud_of_model("NonNegotiable", "video", _data_dict, create, update)
+        crud_of_model("NonNegotiable", "videos", _data_dict, create, update)
     # for updating existing entries
     if not data_dict.get('online_id') and data_dict.get('id'):
         create = True
         update = False
-        crud_of_model("NonNegotiable", "video", _data_dict, create, update)
+        crud_of_model("NonNegotiable", "videos", _data_dict, create, update)
 
 
 def format_data_or_saving_in_video(request, data_dict, user_id, partner_id):
@@ -273,6 +279,7 @@ def format_data_or_saving_in_video(request, data_dict, user_id, partner_id):
                  'user_modified_id': user_id,
                  'partner_id': partner_id
                  }
+    _data_dict = dict((k, v) for k, v in _data_dict.iteritems() if v)
     # for new entries
     if data_dict.get('online_id') is not None:
         create = False

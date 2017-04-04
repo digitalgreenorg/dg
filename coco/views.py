@@ -138,7 +138,7 @@ def format_data(request, data_from_uploadqueue, user_data):
         if item.get('entity_name') == "adoption":
             # formatting for screening
             format_data_or_saving_in_adoption(request, item.get('data'), user_id, partner_id)
-        add_message(request, 25, "Data has been uploaded Successfully")
+    add_message(request, 25, "Data has been uploaded Successfully")
     return redirect(".")
 
 
