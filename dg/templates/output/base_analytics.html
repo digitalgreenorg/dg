@@ -41,7 +41,7 @@
 				url.push('to_date='+cur_to_date);
 			}
 
-			if($("#projectbodytable input:checkbox:checked").length>0){
+			/*if($("#projectbodytable input:checkbox:checked").length>0){
 				projects = []
 				$("#projectbodytable input:checkbox:checked").each(function(){
 					projects.push($(this).val());
@@ -65,7 +65,7 @@
 				       console.log("Something is wrong");
 			    	}
 			 	});
-			}
+			}*/
 				
 			if($("#partnerbodytable input:checkbox:not(:checked)").length > 0) {
 				$("#partnerbodytable input:checked").each(function() {
@@ -130,8 +130,34 @@
 				   $("#"+src+"Id").html(html).removeAttr('disabled');                   
               }
          });
-        }    	
-    
+        }
+
+		$("#projectbodytable input:checkbox").change(function(){
+			projects = []
+			$("#projectbodytable input:checkbox:checked").each(function(){
+				projects.push($(this).val());
+			});
+			$.ajax({
+		    	url : "/analytics/project_wise_partner",
+		    	type : "get",
+		    	data : {projects:projects},
+			    async: false,
+			   	success : function(data){
+					partner_list = JSON.parse(data); 
+					console.log(partner_list);
+					$("#partnerbodytable input:checkbox").each(function() {
+						if($(this).val()!='-1' && $.inArray(parseInt($(this).val()),partner_list)!=-1)
+							$(this).prop('checked', true);	
+						else
+				    		$(this).prop('checked', false);
+					});
+				},
+			    error: function() {
+				        console.log("Something is wrong");
+			    	}
+			 });
+		});
+			
     </script>
 {% endblock jsfile %}
 
