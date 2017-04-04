@@ -11,6 +11,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response, render, redirect
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages import add_message
 # app imports
 from forms import DataUploadForm
 from models import CocoUser
@@ -137,7 +138,8 @@ def format_data(request, data_from_uploadqueue, user_data):
         if item.get('entity_name') == "adoption":
             # formatting for screening
             format_data_or_saving_in_adoption(request, item.get('data'), user_id, partner_id)
-    return
+        add_message(request, 25, "Data has been uploaded Successfully")
+    return redirect(".")
 
 
 @login_required
@@ -152,6 +154,8 @@ def upload_data(request):
             user_data = json.loads(data.get('user'))
             format_data(request, data_from_uploadqueue, user_data)
             return redirect(".")
+        else:
+            add_message(request, 25, "Please correct the errors below.")
     else:
         form_data = DataUploadForm()
     context = {'form': form_data}

@@ -697,6 +697,14 @@
         <fieldset class="form-horizontal">
                 <legend><%= adoption %></legend>
                 <div class="form-group">
+                    <label class="control-label col-sm-2"><%= village %></label>
+                    <div class="col-sm-4"> 
+                        <select name="village" id="id_village" class="chosen-select form-control">
+                            <option value="">---------- </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label col-sm-2"><%= person%></label>
                     <div class="col-sm-4"> 
                         <select name="person" id="id_person" class="chosen-select form-control">

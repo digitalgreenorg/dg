@@ -82,14 +82,14 @@ class Command(BaseCommand):
             raise CommandError('Aggregator not present in database')
 
 
-        #map to get aggregator name from id in result set        
+        #map to get aggregator name from id in result set
         obj = LoopUser.objects.exclude(role=1).values_list('name', 'user_id')
         for item in obj:
             id_map[item[0]] = item[1]
 
         query = None
         generate_sheet_for_all_flag = True
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+        mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'], user=DATABASES['default']['USER'],
                                    passwd=DATABASES['default']['PASSWORD'],
                                    db=DATABASES['default']['NAME'],
                                    charset='utf8',
@@ -167,16 +167,10 @@ class Command(BaseCommand):
             excel_file.write(r.content)
             excel_file.close()
             files.append(excel_file)
-            #send email to concerned people with excel file attached    
-            common_send_email('Farmers Transaction Data', 
+            #send email to concerned people with excel file attached
+            common_send_email('Farmers Transaction Data',
                              RECIPIENTS, files, [],EMAIL_HOST_USER,"","")
-            
+
             os.remove(excel_workbook_name + '.xlsx')
         except Exception as e:
             raise CommandError(e)
-        
-
-
-
-
-

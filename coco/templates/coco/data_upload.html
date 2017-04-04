@@ -22,10 +22,24 @@
   </style>
 </head>
 <body  data-spy="scroll" data-target=".faq-sidebar">
+    
     <div class="container">
         <div class="row global-header">
           <h1 class="coco-brand" style="text-align:center;"><a href="/coco">COCO</a></h1>
         </div>
+        {% if form.errors %}
+          {% for message in messages %}
+          <div class="alert alert-danger" role="alert">
+              {{ message }}
+          </div>
+          {% endfor %}
+        {% else %}
+            {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
         <fieldset>
         <legend></legend>
         <div class="row">
@@ -37,14 +51,14 @@
 								  <div class="control-group">
                     {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
 								    <label class="control-label col-sm-2" for="datafile">DataFile</label>
-								    <div {% if form.datafile.errors %} class="col-sm-8 errorlist" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
+								    <div {% if form.datafile.errors %} class="col-sm-8" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
 								      {{ form.datafile }}
 								    </div>
 								  </div>
 								  <br>
 								  <br>
 								  
-								      <button type="submit" class="btn btn-success">Sign in</button>
+								  <button type="submit" class="btn btn-success">Sign in</button>
 								    
 								</form>
         			</div>

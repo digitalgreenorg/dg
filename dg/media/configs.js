@@ -987,6 +987,14 @@ function() {
         },
         edit: {
             'foreign_entities': {
+
+                'village': {
+                    'village': {
+                        'placeholder': 'id_village',
+                        'name_field': 'village_name'
+                    },
+                },
+                
                 'person': {
                     'person': {
                         'placeholder': 'id_person',
