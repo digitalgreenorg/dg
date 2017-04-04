@@ -39,7 +39,7 @@ class Command(BaseCommand):
             default=(datetime.now() - timedelta(days=6)).strftime('%Y%m%d'))
 
 
-    
+
     #generate the excel for the given command line arguments
     def handle(self, *args, **options):
         generate_sheet_for = str(options.get('aggregator'))
@@ -60,7 +60,7 @@ class Command(BaseCommand):
         else:
             from_date=to_date[0:6]+(datetime.now() - timedelta(days=5)).strftime('%Y%m%d')[-2:]
 
-        if num_days < 0: 
+        if num_days < 0:
             raise CommandError('-nd flag should be > 0')
         elif num_days != 0:
             temp_date = datetime.strptime(to_date, '%Y%m%d')
@@ -80,7 +80,7 @@ class Command(BaseCommand):
         default_from_day = default_start_date.get('day')
         default_from_month = default_start_date.get('month')
         default_from_year = default_start_date.get('year')
-        
+
 
         AGGREGATOR_LIST = list(LoopUser.objects.exclude(role=1).values_list('name', flat=True))
         AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(role=1).values_list('name_en', flat=True))
@@ -91,18 +91,18 @@ class Command(BaseCommand):
         elif from_date > to_date:
                 raise CommandError('Invalid date range given')
         elif generate_sheet_for != 'all' and generate_sheet_for not in AGGREGATOR_LIST_EN:
-                raise CommandError('Aggregator not present in database')            
+                raise CommandError('Aggregator not present in database')
 
         query = None
-        generate_sheet_for_all_flag = True 
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+        generate_sheet_for_all_flag = True
+        mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'], user=DATABASES['default']['USER'],
                                            passwd=DATABASES['default']['PASSWORD'],
                                            db=DATABASES['default']['NAME'],
                                             charset = 'utf8',
                                              use_unicode = True)
-        
+
         cur = mysql_cn.cursor()
-        
+
         #determine the aggregator(s) for whom the sheet is generated
         if generate_sheet_for == 'all' or generate_sheet_for == None:
             query = query_for_transport_details_all_aggregator % (from_date, to_date)
@@ -115,7 +115,7 @@ class Command(BaseCommand):
             excel_workbook_name = 'Transport Details_' + generate_sheet_for + '_ ' + from_day + '-' + \
                         from_month + '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
 
-    
+
         cur.execute(query)
         result = cur.fetchall()
         data = [list(row) for row in result]
@@ -131,7 +131,7 @@ class Command(BaseCommand):
             data_json['all'] = {'sheet_heading': sheet_heading,
                                     'sheet_name': 'सारे किसान', 'data': data
                                 }
-                    
+
             header_json['all'] = header_dict_for_transport_details
             #write data for every aggregator in their respective sheet
             for aggregator_name in AGGREGATOR_LIST:
@@ -140,9 +140,9 @@ class Command(BaseCommand):
                 filtered_data_copy = copy.deepcopy(filtered_data)
                 for sno in range(1,len(filtered_data_copy) + 1):
                     filtered_data_copy[sno - 1].insert(0, str(sno))
-                    
+
                 sheet_heading = aggregator_name.encode('utf-8') + '_गाड़ी के किराये की जानकारी_' + from_day + '-' + from_month + \
-                                                '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year 
+                                                '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
                 data_json[aggregator_name] = {'sheet_heading': sheet_heading,
                                     'sheet_name': aggregator_name, 'data': filtered_data_copy
                                 }
@@ -154,11 +154,11 @@ class Command(BaseCommand):
 
             sheet_heading = generate_sheet_for.encode('utf-8') +'_गाड़ी के किराये की जानकारी_' + \
                                 from_day + '-' + from_month + '-' + from_year + ' to ' + to_day + '-' +  \
-                                to_month + '-' + to_year 
+                                to_month + '-' + to_year
             data_json[generate_sheet_for] = {'sheet_heading': sheet_heading ,
                                     'sheet_name': generate_sheet_for, 'data': data
                                 }
-            
+
             header_json[generate_sheet_for] = header_dict_for_transport_details
 
         final_json_to_send['header'] = header_json
@@ -178,16 +178,10 @@ class Command(BaseCommand):
             excel_file.close()
             files.append(excel_file)
 
-            #send email to concerned people with excel file attached    
-            common_send_email('Transportation Details', 
+            #send email to concerned people with excel file attached
+            common_send_email('Transportation Details',
                               RECIPIENTS, files, [],EMAIL_HOST_USER,"","")
             os.remove(excel_workbook_name + '.xlsx')
             # os.remove(excel_workbook_name_second + '.xlsx')
         except Exception as e:
             raise CommandError(e)
-        
-
-
-
-
-
