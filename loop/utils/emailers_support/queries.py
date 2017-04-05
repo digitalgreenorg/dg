@@ -16,12 +16,13 @@ def onrun_query(query):
     return result
 
 query_for_incorrect_phone_no_all_aggregator = '''SELECT
+                              @s:=@s + 1 serial_number,
                               Aggregator,
                               Village,
                               Farmer_ID,
                               Farmer,
                               t1.Farmer_Frequency,
-                              Mobile_Number,
+                              if(Mobile_Number >= 9999999999 , 'Not Available' , Mobile_Number) as Mobile_Number,
                               t3.Mobile_Frequency
                           FROM
                               (SELECT
@@ -71,7 +72,8 @@ query_for_incorrect_phone_no_all_aggregator = '''SELECT
                                       user_created_id=ll.user_id and
                                           date BETWEEN %s AND %s )
                               GROUP BY ll.user_id , lf.phone ) t3 ON t2.Mobile_Number = t3.Phone_no
-                                  AND t3.Loop_user = t2.user_id
+                                  AND t3.Loop_user = t2.user_id,
+                                  (SELECT @s:= 0) AS s
                           HAVING (t3.Mobile_Frequency > 1)
                               OR (t3.Mobile_Frequency = 1
                               AND (Mobile_Number <= 7000000000
