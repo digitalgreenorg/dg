@@ -115,7 +115,7 @@
 			$("#projectbodytable input:checkbox:checked").each(function(){
 				projects.push($(this).val());
 			});
-			project_wise_partner = {{search_box_params.project_wise_partner}}
+			project_wise_partner = JSON.parse("{{search_box_params.project_wise_partner}}".replace(/&quot;/g,'"'))
 			/*
 			$.ajax({
 			    url : "/analytics/project_wise_partner",
