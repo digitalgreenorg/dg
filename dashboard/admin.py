@@ -239,4 +239,4 @@ class QACocoUserAdmin(admin.ModelAdmin):
 class ProjectAdmin(admin.ModelAdmin):
     filter_horizontal = ('associate_partner',)
     list_display = ('id','project_name')
-    search_fields = ['project_name', 'associate_partner']
+    search_fields = ['project_name']
