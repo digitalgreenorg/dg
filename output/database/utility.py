@@ -108,7 +108,7 @@ def get_dates_partners(request):
 #Function to get project from Request object
 def get_projects(request):
     if(not request):
-        return None
+        return []
     project_id = []
     if 'projects' in request.GET:
         project_id = request.GET.getlist('projects')

@@ -77,7 +77,7 @@ def get_search_box(request):
     project = utility.get_projects(request)
     search_box_params = {}
     search_box_params['partners'] = get_partner_list(geog,id, partner);
-    search_box_params['projects'] = get_project_list(project)
+    search_box_params['projects'],search_box_params['project_wise_partner'] = get_project_list(project)
     
     if(from_date == (datetime.datetime.utcnow() - datetime.timedelta(365)).strftime('%Y-%m-%d') and to_date == (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')):
         search_box_params['is_date_selected'] = 0
@@ -179,12 +179,15 @@ def get_geog_id(request):
 
 #Return a dictionary of list of PROJECT_NAME,ID AND THEIR ASSOCIATE PARTNER'S ID
 def get_project_list(projects):
-    coco_projects = Project.objects.values('id', 'project_name').order_by('project_name')
-    if projects:
-        for project in coco_projects:
-            if str(project['id']) not in projects:
-                project['unmarked'] = 1
-    return coco_projects
+    coco_projects = Project.objects.values('id', 'project_name', 'associate_partner').order_by('project_name')
+    project_wise_partner = dict()
+    for project in coco_projects:
+        if str(project['id']) not in projects:
+            project['unmarked'] = 1
+        if str(project['id']) not in project_wise_partner:
+            project_wise_partner[str(project['id'])] = list()
+        project_wise_partner[str(project['id'])].append(str(project['associate_partner']))
+    return coco_projects,project_wise_partner
 
 #Returns a dictionary of list of PARTNER_NAME, id
 #If partners were selected i.e. argument 'partners' is not empty,
