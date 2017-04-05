@@ -138,8 +138,3 @@ def get_parent_geog_id(geog, id):
     else:
         return None, None
     return vls    
-
-def project_wise_partner(request):
-    projects = request.GET.getlist('projects[]')
-    partner_list = list(Project.objects.filter(id__in=projects).values_list('associate_partner',flat=True))
-    return HttpResponse(json.dumps(partner_list))
