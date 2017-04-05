@@ -111,39 +111,17 @@
         }
 
         function project_wise_partner(){
-			project_wise_partners = JSON.parse("{{search_box_params.project_wise_partner}}".replace(/&quot;/g,'"'))
-			console.log(project_wise_partners);
-			partner_list = []
+			project_wise_partners = JSON.parse("{{search_box_params.project_wise_partner}}".replace(/&quot;/g,'"'));
+			partner_list = [];
 			$("#projectbodytable input:checkbox:checked").each(function(){
 				partner_list = partner_list.concat(project_wise_partners[$(this).val()]);
-			});
-			console.log(partner_list);
+			});			
 			$("#partnerbodytable input:checkbox").each(function() {
 				if($(this).val()!='-1' && $.inArray($(this).val(),partner_list)!=-1)
 					$(this).prop('checked', true);	
 				else
 				    $(this).prop('checked', false);
 			});
-			/*
-			$.ajax({
-			    url : "/analytics/project_wise_partner",
-			    type : "get",
-			    data : {projects:projects},
-			    async: false,
-			   	success : function(data){
-					partner_list = JSON.parse(data); 
-					$("#partnerbodytable input:checkbox").each(function() {
-						if($(this).val()!='-1' && $.inArray(parseInt($(this).val()),partner_list)!=-1)
-							$(this).prop('checked', true);	
-						else
-				    		$(this).prop('checked', false);
-					});
-				},
-			    error: function() {
-				        console.log("Something is wrong");
-			    	}
-			});
-			*/
 		}
 			
     </script>
