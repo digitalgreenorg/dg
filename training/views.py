@@ -37,6 +37,11 @@ def login(request):
     else:
         return HttpResponse("0")
     return HttpResponse("0")
+def testmethod(request):
+    print '*******************call hua**********************'
+    data_dict = {'id' : 1, 'name' : 'sujit'}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)
 
 def dashboard(request):
     return render(request, 'src/index.html')

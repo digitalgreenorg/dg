@@ -4,17 +4,20 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+import { TopBarDataComponent } from './top-bar-data/top-bar-data.component';
+import { TopBarDataService } from './top-bar-data.service'
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TopBarDataComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [TopBarDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
