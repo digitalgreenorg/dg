@@ -1,7 +1,9 @@
 # coding=utf-8
+import copy
+
 __author__ = 'Lokesh'
 
-
+from loop.sendmail import common_send_email
 from loop.models import LoopUser
 from loop.utils.emailers_support import date_setter
 from django.core.management.base import BaseCommand
@@ -41,13 +43,12 @@ class Command(BaseCommand):
             workbook = create_workbook(header_dict_for_loop_email_mobile_numbers['workbook_name']%(MEDIA_ROOT, '' ,str(from_to_date[0]),str(from_to_date[1])))
         else:
             aggregator_to_check = aggregators.get(name_en=options.get('aggregator'))
-            print aggregator_to_check.id
             aggregator_to_check_id_string = 'and ll.id = ' + str(aggregator_to_check.id) + ''
             workbook = create_workbook(header_dict_for_loop_email_mobile_numbers['workbook_name']%(MEDIA_ROOT, str(aggregator_to_check.name) ,str(from_to_date[0]),str(from_to_date[1])))
 
         query_result_data = self.data_generator(from_to_date, aggregator_to_check_id_string)
         data_set_all = self.get_all_data(query_result_data)
-        worksheet_name = {'All':'Hello velle logo'}
+        worksheet_name = {'All':'Incorrect Mobile Numbers_' + str(from_to_date[0]) + "_" + str(from_to_date[1])}
 
         for aggregator in aggregators:
             structured_data_set = self.set_filtered_structured_data(data_set_all['All'], aggregator)
@@ -55,10 +56,11 @@ class Command(BaseCommand):
 
             table_properties = {'data': None, 'autofilter': False, 'banded_rows': False, 'style': 'Table Style Light 15', 'columns': header_dict_for_loop_email_mobile_numbers['column_properties']}
             table_position_to_start = {'row':2, 'col':0}
-
             worksheet_name[aggregator.name_en] = header_dict_for_loop_email_mobile_numbers['worksheet_name']%(str(aggregator.name_en),str(from_to_date[0]), str(from_to_date[1]))
-        create_xlsx(workbook, data_set_all, table_properties, table_position_to_start, worksheet_name)
 
+        create_xlsx(workbook, data_set_all, table_properties, table_position_to_start, worksheet_name)
+        file_to_send = header_dict_for_loop_email_mobile_numbers['workbook_name']%(MEDIA_ROOT, '',str(from_to_date[0]),str(from_to_date[1]))
+        common_send_email("Hello Logo", recipients= RECIPIENTS, files=[file_to_send], bcc=[], from_email='lokesh@digitalgreen.org', html="", text='hello')
 
     def data_generator(self, from_to_date, aggregator_to_check_id_string):
         query = query_for_incorrect_phone_no_single_aggregator % (str(from_to_date[0]), str(from_to_date[1]), aggregator_to_check_id_string, str(from_to_date[0]), str(from_to_date[1]))
@@ -69,30 +71,22 @@ class Command(BaseCommand):
     def get_all_data(self,data_from_query_result):
         data = {'All':[]}
         i=0
-        print data_from_query_result[:10]
-        for result in data_from_query_result[:20]:
-            print type(result)
+        for result in data_from_query_result:
             i=i+1
-            # if result[5] >= 9999999999:
-            #     result[5] = u'नंबर नहीं है'
             temp = list(result)
-            print temp
-            print type(temp)
-            print i
-            temp.insert( 2, "akad bakkad")
-            print temp
-            print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>."
-            print result
-            data['All'].append(list(result))
+            if int(temp[5]) >= 9999999999:
+                temp[5] = u'नंबर नहीं है'
+            temp.insert(0, i)
+            data['All'].append(temp)
         return data
 
     def set_filtered_structured_data(self, data_store, aggregator):
     #filter data to get rows for the current aggregator
         i=0
-        filtered_data = [row for row in data_store if row[0] == aggregator.name]
-        #filtered_data = copy.deepcopy(filtered_data)
-        i+=1
+        filtered_data = [row for row in data_store if row[1] == aggregator.name]
+        filtered_data = copy.deepcopy(filtered_data)
         for row in filtered_data:
-            row.insert(0,str(i))
+            i= i+1
+            row[0] = i
         return filtered_data
 

@@ -1,6 +1,6 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
-#Code snippet ad imports for email attachment with encodings. To be used in another file for attachmnet in emails
+# Code snippet ad imports for email attachment with encodings. To be used in another file for attachmnet in emails
 
 from django.template.context import Context
 from django.template.loader import get_template
@@ -12,6 +12,7 @@ from email.mime.base import MIMEBase
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT
 
 from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE
+
 
 class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
     def _create_attachment(self, filename, content, mimetype=None):
@@ -27,7 +28,7 @@ class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
         if basetype == 'text':
             encoding = self.encoding or settings.DEFAULT_CHARSET
             attachment = SafeMIMEText(smart_str(content,
-                settings.DEFAULT_CHARSET), subtype, encoding)
+                                                settings.DEFAULT_CHARSET), subtype, encoding)
         else:
             # Encode non-text attachments with base64.
             attachment = MIMEBase(basetype, subtype)
@@ -39,116 +40,124 @@ class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
             except UnicodeEncodeError:
                 filename = Header(filename, 'utf-8').encode()
             attachment.add_header('Content-Disposition', 'attachment',
-                                   filename=filename)
+                                  filename=filename)
         return attachment
-
-
-
 
 
 #Extra variables required in other files
 DEFAULT_COLUMN_WIDTH = 9
 
 header_dict_for_loop_email_mobile_numbers = {
-     'workbook_name': u'%s/loop/Incorrect Mobile Numbers_%s_%s to %s.xlsx',
-     'worksheet_name': u'%s_गलत मोबाइल नंबर की लिस्ट_%s to %s',
-     'column_properties' : [{'column_width': 5,
-                            'header': u'क्रम संख्या',
-                            'col_seq':'A:A',
-                           },
-                           {'column_width': 13,
-                            'header': u'जमाकर्ता का नाम',
-                            'col_seq':'B:B',
-                           },
-                           {'column_width': 12,
-                            'header': u'गांव का नाम',
-                            'col_seq':'C:C',
-                           },
-                           {'column_width': 8,
-                            'header': u'किसान ID',
-                            'col_seq':'D:D',
-                           },
-                           {'column_width': 15,
-                            'header': u'किसान का नाम',
-                            'col_seq':'E:E',
-                           },
-                           {'column_width': 8,
-                            'header': u'सब्जी कितने दिन दी?',
-                            'col_seq':'F:F',
-                           },
-                           {'column_width': 10,
-                            'header': u'मोबाइल नं',
-                            'col_seq':'G:G',
-                           },
-                           {'column_width': 10,
-                            'header': u'कितने किसान में नंबर डला है?',
-                            'col_seq':'H:H',
-                           }]
-     }
+    'workbook_name': u'%s/loop/Incorrect Mobile Numbers_%s_%s to %s.xlsx',
+    'worksheet_name': u'%s_गलत मोबाइल नंबर की लिस्ट_%s to %s',
+    'column_properties': [{'column_width': 5,
+                           'header': u'क्रम संख्या',
+                           'col_seq': 'A:A',
+                          },
+                          {'column_width': 13,
+                           'header': u'जमाकर्ता का नाम',
+                           'col_seq': 'B:B',
+                          },
+                          {'column_width': 12,
+                           'header': u'गांव का नाम',
+                           'col_seq': 'C:C',
+                          },
+                          {'column_width': 8,
+                           'header': u'किसान ID',
+                           'col_seq': 'D:D',
+                          },
+                          {'column_width': 15,
+                           'header': u'किसान का नाम',
+                           'col_seq': 'E:E',
+                          },
+                          {'column_width': 8,
+                           'header': u'सब्जी कितने दिन दी?',
+                           'col_seq': 'F:F',
+                          },
+                          {'column_width': 10,
+                           'header': u'मोबाइल नं',
+                           'col_seq': 'G:G',
+                          },
+                          {'column_width': 10,
+                           'header': u'कितने किसान में नंबर डला है?',
+                           'col_seq': 'H:H',
+                          }]
+}
 
+header_dict_for_farmer_transaction = {
+    'workbook_name': u'%s/loop/Incorrect Mobile Numbers_%s_%s to %s.xlsx',
+    'worksheet_name': u'%s_गलत मोबाइल नंबर की लिस्ट_%s to %s',
+    'column_properties': [{'column_width': 3.64,
+                           'label': 'क्रम',
+                           'col_seq': 'A:A',
 
-header_dict_for_farmer_transaction = [{'column_width': 3.64,
-                                          'label': 'क्रम',
-                                          },
-                                         {'column_width': 9.82,
-
-                                          'label': 'तारीख',
-                                          },
-                                         {'column_width': 11.55,
-                                          'label': 'मंडी का नाम',
-                                          },
-                                         {'column_width': 15,
-                                          'label': 'किसान का नाम',
-                                          },
-                                         {'column_width': 9.09,
-                                          'label': 'कुल वजन (कि.)',
-                                          },
-                                          {'column_width': 7,
-                                          'label': 'राशि (रु)',
-                                          },
-                                         {'column_width': 7.45,
-                                          'label': 'किसान का भाग (रु)',
-                                          },
-                                         {'column_width': 8.36,
-                                          'label': 'कुल राशि (रु)',
-                                          },
-                                          {'column_width': 5.91,
-                                          'label': '✓/ X',
-                                          },
-                                          {'column_width': 16.55,
-                                          'label': 'टिप्पडी',
-                                          }]
-
-
+                          },
+                          {'column_width': 9.82,
+                           'label': 'तारीख',
+                           'col_seq': 'B:B',
+                          },
+                          {'column_width': 11.55,
+                           'label': 'मंडी का नाम',
+                           'col_seq': 'C:C',
+                          },
+                          {'column_width': 15,
+                           'label': 'किसान का नाम',
+                           'col_seq': 'D:D',
+                          },
+                          {'column_width': 9.09,
+                           'label': 'कुल वजन (कि.)',
+                           'col_seq': 'E:E',
+                          },
+                          {'column_width': 7,
+                           'label': 'राशि (रु)',
+                           'col_seq': 'F:F',
+                          },
+                          {'column_width': 7.45,
+                           'label': 'किसान का भाग (रु)',
+                           'col_seq': 'G:G',
+                          },
+                          {'column_width': 8.36,
+                           'label': 'कुल राशि (रु)',
+                           'col_seq': 'H:H',
+                          },
+                          {'column_width': 5.91,
+                           'label': '✓/ X',
+                           'col_seq': 'I:I',
+                          },
+                          {'column_width': 16.55,
+                           'label': 'टिप्पडी',
+                           'col_seq': 'J:J',
+                          }]
+}
 
 header_dict_for_transport_details = [{'column_width': 3.64,
-                                          'label': 'क्रम संख्या',
-                                          },
-                                         {'column_width': 13 ,
-                                          'label': 'जमाकर्ता का नाम',
-                                          },
-                                         {'column_width': 12,
-                                          'label': 'तारीख',
-                                          },
-                                         {'column_width': 8,
-                                          'label': 'मंडी का नाम',
-                                          },
-                                         {'column_width': 15,
-                                          'label': 'गाड़ी मालिक',
-                                          },
-                                          {'column_width': 8,
-                                          'label': 'गाड़ी नं',
-                                          },
-                                         {'column_width': 10,
-                                          'label': 'गाड़ी का किराया (रु)',
-                                          },
-                                         {'column_width': 10,
-                                          'label': '✓/ X',
-                                          },
-                                          {
-                                          'column_width': 20,
-                                          'label': 'टिप्पडी'
-                                          }]
+                                      'label': 'क्रम संख्या',
+                                     },
+                                     {'column_width': 13,
+                                      'label': 'जमाकर्ता का नाम',
+                                     },
+                                     {'column_width': 12,
+                                      'label': 'तारीख',
+                                     },
+                                     {'column_width': 8,
+                                      'label': 'मंडी का नाम',
+                                     },
+                                     {'column_width': 15,
+                                      'label': 'गाड़ी मालिक',
+                                     },
+                                     {'column_width': 8,
+                                      'label': 'गाड़ी नं',
+                                     },
+                                     {'column_width': 10,
+                                      'label': 'गाड़ी का किराया (रु)',
+                                     },
+                                     {'column_width': 10,
+                                      'label': '✓/ X',
+                                     },
+                                     {
+                                         'column_width': 20,
+                                         'label': 'टिप्पडी'
+                                     }]
 
 
 # query_for_incorrect_phone_no_all_aggregator = '''SELECT
@@ -521,7 +530,7 @@ header_dict_for_transport_details = [{'column_width': 3.64,
 
 
 
-RECIPIENTS = ['lokesh@digitalgreen.org']
+RECIPIENTS = ['lokesh@digitalgreen.org', 'divish@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
 

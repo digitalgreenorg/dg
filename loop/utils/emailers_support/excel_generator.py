@@ -36,6 +36,8 @@ def create_xlsx(workbook, sheets_data, table_properties, table_position = defaul
     sheet_name = {}
     for keys in sheets_data.keys():
         rows_count = len(sheets_data[keys])
+        # print keys
+        # print sheets_data[keys][:5]
         if len(sheets_data[keys]) > 0:
             columns_count = len(sheets_data[keys][0]) - 1
             sheet_name[keys] = workbook.add_worksheet(keys)
@@ -45,7 +47,7 @@ def create_xlsx(workbook, sheets_data, table_properties, table_position = defaul
             sheet_name[keys].write('A1', file_caption[keys])
             for elements in table_properties['columns']:
                 sheet_name[keys].set_column(elements['col_seq'],elements['column_width'])
-
+#            print table_properties
             sheet_name[keys].add_table(row_position, col_position, rows_count, columns_count, table_properties)
 
         # for keys1 in column_width_and_format.keys():

@@ -1,6 +1,6 @@
 __author__ = 'Lokesh'
 
-from datetime import date
+from datetime import *
 from datetime import timedelta
 
 # Enters default value in from_date and to_date
@@ -12,6 +12,9 @@ time_period = []
 
 # Finds last cycle of 15 days (1-15 or 16-31) w.r.t. given date
 def find_last_cycle(assigned_date):
+    print "?????????????????"
+    print assigned_date
+    print "????????????????????"
     assigned_year = assigned_date.year
     assigned_month = assigned_date.month
     assigned_day = assigned_date.day
@@ -33,6 +36,10 @@ def find_last_cycle(assigned_date):
 
 def set_from_to_date(from_date, to_date, no_of_days):
     current_date = date.today()
+    print ">>>>>>>>>>>>"
+    print current_date
+    print "<<<<<<<<<<<<<<<<"
+
     current_date = str(current_date)
 
     print from_date
@@ -61,7 +68,7 @@ def set_from_to_date(from_date, to_date, no_of_days):
             print 'Too many parameters'
     else:
         if from_date is None and no_of_days is None:    # No parameters - find last cycle before today
-            time_period = find_last_cycle(current_date)
+            time_period = find_last_cycle(datetime.today().date())
         elif from_date and no_of_days is None:          # from_date - find last cycle from from_date
             print 'Please provide to date or no of days'
         elif from_date is None and no_of_days:          # no_of_days - find between today and today-no_of_days
