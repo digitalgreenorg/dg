@@ -2575,7 +2575,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         farmerResetClick = true;
 
         $('#farmer_share_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data());
-        $('#farmer_commission_row').val(parseFloat($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2))
+        $('#farmer_commission_row').val(parseFloat($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2));
         $('#farmer_comment_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 12).data());
 
     });
@@ -2889,7 +2889,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             column_set = [3, 4, 5, 6, 7, 8];
             for (var i = 0; i < column_set.length; i++) {
                 total = api.column(column_set[i]).data().reduce(function(a, b) {
-                    return a + b;
+                    return parseFloat(a) + parseFloat(b);
                 }, 0);
                 $(api.column(column_set[i]).footer()).html(finalFormat(total + ""));
             }
