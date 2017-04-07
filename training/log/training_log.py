@@ -77,9 +77,11 @@ def send_updated_log(request):
             LogData = apps.get_model('training','LogData')
             District = apps.get_model('geographies','District')
             Animator = apps.get_model('people','Animator')
+            Training = apps.get_model('training','Training')
+            Score = apps.get_model('training','Score')
 
             rows = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table__in=['Partner','Trainer','Assessment','Question', 'Language'])
-            district_animator_list = []
+            district_animator_training_list = []
 
             if requesting_training_user:
                 requesting_user_states = requesting_training_user.get_states()
@@ -88,37 +90,58 @@ def send_updated_log(request):
                 for district in filtered_districts:
                     try:
                         if district.action != -1 and District.objects.get(id=district.model_id).state in requesting_user_states:
-                            district_animator_list.append(district)
+                            district_animator_training_list.append(district)
                         elif district.action == -1:
-                            district_animator_list.append(district)
+                            district_animator_training_list.append(district)
                     except Exception: #Incase object edited and then deleted
-                        district_animator_list.append(district)
+                        district_animator_training_list.append(district)
 
                 filtered_animators = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='Animator')
                 for animator in filtered_animators:
                     try:
                         if animator.action != -1 and Animator.objects.get(id=animator.model_id).district.state in requesting_user_states:
-                            district_animator_list.append(animator)
+                            district_animator_training_list.append(animator)
                         elif animator.action == -1:
-                            district_animator_list.append(animator)
+                            district_animator_training_list.append(animator)
                     except Exception: #Incase object edited and then deleted
-                        district_animator_list.append(animator)
+                        district_animator_training_list.append(animator)
+
+                filtered_trainings = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='Training')
+                for training in filtered_trainings:
+                    try:
+                        if training.action != -1 and Training.objects.get(id=training.model_id).user_created_id == requesting_training_user.user_id:
+                            district_animator_training_list.append(training)
+                        elif training.action == -1:
+                            district_animator_training_list.append(training)
+                    except Exception: #Incase training edited and then deleted by admin
+                        district_animator_training_list.append(training)
+
+                filtered_scores = LogData.objects.filter(timestamp__gt=request_timestamp,entry_table='Score')
+                for score in filtered_scores:
+                    try:
+                        if score.action != -1 and Score.objects.get(id=score.model_id).training.user_created_id == requesting_training_user.user_id:
+                            district_animator_training_list.append(score)
+                        elif score.action == -1:
+                            district_animator_training_list.append(score)
+                    except Exception:
+                        district_animator_training_list.append(score)
+
 
                 # user_modified = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table="TrainingUser")
                 # if user_modified:
                 #     new_assigned_districts = District.objects.filter(state__id__in=requesting_user_states)
                 #     for n_a_d in new_assigned_districts:
                 #         obj = LogData(action=1,entry_table="District",model_id=n_a_d.id)
-                #         district_animator_list.append(obj)
+                #         district_animator_training_list.append(obj)
                 #     new_mediators = Animator.objects.filter(district__state__id__in=requesting_user_states)
                 #     for n_m in new_mediators:
                 #         obj = LogData(action=1,entry_table="Animator",model_id=n_m.id)
-                #         district_animator_list.append(obj)
+                #         district_animator_training_list.append(obj)
 
             log_list = []
             for row in rows:
                 log_list.append(get_log_object(row))
-            for row in district_animator_list:
+            for row in district_animator_training_list:
                 log_list.append(get_log_object(row))
 
             if log_list:

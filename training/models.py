@@ -101,6 +101,9 @@ class Training(BaseModel):
     def trainer_list(self):
         return " , ".join([t.name for t in self.trainer.all()])
 
+post_save.connect(enter_to_log, sender=Training)
+pre_delete.connect(enter_to_log,sender=Training)
+
 class Score(models.Model):
 	id = models.AutoField(primary_key=True)
 	training = models.ForeignKey(Training)
@@ -110,6 +113,9 @@ class Score(models.Model):
 
 	class Meta:
 		unique_together=("training", "participant", "question")
+
+post_save.connect(enter_to_log, sender=Score)
+pre_delete.connect(enter_to_log,sender=Score)
 
 class LogData(models.Model):
     id = models.AutoField(primary_key=True)
