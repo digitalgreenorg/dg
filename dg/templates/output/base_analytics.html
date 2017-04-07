@@ -37,8 +37,8 @@
 					{% endfor %}
 					simple_bucket = simple_bucket.filter(function(partner_id) { return highlight_bucket.indexOf(partner_id) < 0 })
 					project_wise_partners = JSON.parse("{{search_box_params.project_wise_partner}}".replace(/&quot;/g,'"'));
-					$.each(project_wise_partners,function(index,partner_list)){
-						common_partner = partner_list.filter(function(partner) { return highlight_bucket.indexOf(partner) >= 0 });
+					$.each(project_wise_partners,function(index,partner_list){
+						common_partner = partner_list.filter(function(partner) { return highlight_bucket.indexOf(parseInt(partner)) >= 0 });
 						if(common_partner.length > 0){
 							$("#projectbodytable input:checkbox[value="+index+"]").parent()
 							.prev().attr('style',  'font-weight:bolder; font-size:100%; color:black; background-color:#f3fdd5;');
