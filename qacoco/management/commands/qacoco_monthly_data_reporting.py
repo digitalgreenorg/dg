@@ -22,20 +22,20 @@ class Command(BaseCommand):
         msg.send()
 
     def run_query(self,query):
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, 
+        mysql_cn = MySQLdb.connect(host=dg.settings.DATABASES['default']['HOST'], port=dg.settings.DATABASES['default']['PORT'], 
             user=dg.settings.DATABASES['default']['USER'] ,
             passwd=dg.settings.DATABASES['default']['PASSWORD'],
             db=dg.settings.DATABASES['default']['NAME'],
             charset = 'utf8',
-            use_unicode = True) 
+            use_unicode = True)
         temp_df = psql.read_sql(query, con=mysql_cn)
         mysql_cn.close()
         return temp_df
 
-    def handle(self, *args, **options): 
+    def handle(self, *args, **options):
 
         file_save_path = "qacoco/files/"
-        video_quality_query = '''SELECT 
+        video_quality_query = '''SELECT
                 YEAR(qr.date) Year,
                 MONTHNAME(qr.date) Month,
                 qr.date Date,
@@ -72,7 +72,7 @@ class Command(BaseCommand):
             ORDER BY YEAR(qr.date) DESC , MONTH(qr.date) DESC
         '''
 
-        dissemination_quality_query = '''SELECT 
+        dissemination_quality_query = '''SELECT
             YEAR(qd.date) Year,
             MONTHNAME(qd.date) Month,
             gc.country_name Country,
@@ -129,7 +129,7 @@ class Command(BaseCommand):
         ORDER BY YEAR(qd.date) DESC , MONTH(qd.date) DESC
         '''
 
-        adoption_verification_query = '''SELECT 
+        adoption_verification_query = '''SELECT
             af.id 'af_id',
             YEAR(af.verification_date) Year,
             MONTHNAME(af.verification_date) Month,
@@ -172,7 +172,7 @@ class Command(BaseCommand):
         ORDER BY YEAR(af.verification_date) DESC , MONTH(af.verification_date) DESC
         '''
 
-        adoption_verification_nonnego_query = '''SELECT 
+        adoption_verification_nonnego_query = '''SELECT
             af.id 'af_id',
             GROUP_CONCAT(IF(ann.adopted = '1', 'Yes', 'No')) 'Non Negotiable Adopted'
         FROM
