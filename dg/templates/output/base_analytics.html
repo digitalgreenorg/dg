@@ -22,6 +22,37 @@
 				return node.innerHTML;
 				}
 			});
+
+			//highlight projects based on partner
+			{% if search_box_params.projects %}
+				{% if search_box_params.partners %}
+					highlight_bucket = []
+					simple_bucket = []
+					{% for partner in search_box_params.partners %}
+						{% if partner.highlight == 1 and not partner.unmarked %}
+							highlight_bucket.push({{partner.partner_id}})
+						{% elif partner.highlight == 1 %}
+							simple_bucket.push({{partner.partner_id}})
+						{% endif %}
+					{% endfor %}
+					simple_bucket = simple_bucket.filter(function(partner_id) { return highlight_bucket.indexOf(partner_id) < 0 })
+					project_wise_partners = JSON.parse("{{search_box_params.project_wise_partner}}".replace(/&quot;/g,'"'));
+					$.each(project_wise_partners,function(index,partner_list)){
+						common_partner = partner_list.filter(function(partner) { return highlight_bucket.indexOf(partner) >= 0 });
+						if(common_partner.length > 0){
+							$("#projectbodytable input:checkbox[value="+index+"]").parent()
+							.prev().attr('style',  'font-weight:bolder; font-size:100%; color:black; background-color:#f3fdd5;');
+						}
+						else{
+							common_partner = partner_list.filter(function(partner) { return simple_bucket.indexOf(partner) >= 0 });
+							if(common_partner.length > 0){
+								$("#projectbodytable input:checkbox[value="+index+"]").parent()
+								.prev().attr('style',  'font-weight:bolder; font-size:100%; color:black;');
+							}
+						}
+					});
+				{% endif %}
+			{% endif %}
 		}		
     			
 		function reset(){	        
@@ -288,7 +319,7 @@
 					{% for project in search_box_params.projects %}
 						<tr>
 							<td id='projectbodytd2' class='customprojectbodytd'> 
-								<div id='projectname' class='projectdiv' title='{{project.project_name}}' style="font-weight:bolder; font-size: 100%; color:black;">{{project.project_name}}</div> 
+								<div id='projectname' class='projectdiv' title='{{project.project_name}}'>{{project.project_name}}</div> 
 								<div class='projectcheckbox'> 
 									<input type="checkbox" name="projects" {% if not project.unmarked %}checked="checked"{% endif %} onChange="project_wise_partner()" value="{{project.id}}"/>
 								</div> 
