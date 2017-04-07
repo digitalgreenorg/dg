@@ -40,17 +40,17 @@ class BaseModel(models.Model):
 		abstract = True
 
 class Trainer(models.Model):
-	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
-	email = models.EmailField()
-	language = models.ForeignKey(Language, null=True, blank=True)
-	training_user = models.ForeignKey(TrainingUser, null=True, blank=True)
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    email = models.EmailField()
+    language = models.ForeignKey(Language, null=True, blank=True)
+    training_user = models.ForeignKey(TrainingUser, null=True, blank=True)
 
-    # def __training_user__(self):
-    #     return "%s"% (self.training_user.id)
+    def __training_user__(self):
+        return "%s" % (self.training_user.id)
 
-	def __unicode__(self):
-		return self.name
+    def __unicode__(self):
+        return self.name
 
 post_save.connect(enter_to_log, sender=Trainer)
 pre_delete.connect(enter_to_log, sender=Trainer)
@@ -66,19 +66,19 @@ post_save.connect(enter_to_log, sender=Assessment)
 pre_delete.connect(enter_to_log,sender=Assessment)
 
 class Question(models.Model):
-	id = models.AutoField(primary_key=True)
-	assessment = models.ForeignKey(Assessment, null=True, blank=True)
-	language = models.ForeignKey(Language, null=True, blank=True)
-	section = models.IntegerField()
-	serial = models.IntegerField()
-	text = models.CharField(max_length = 100)
-	tag = models.CharField(max_length=20, default="")
+    id = models.AutoField(primary_key=True)
+    assessment = models.ForeignKey(Assessment, null=True, blank=True)
+    language = models.ForeignKey(Language, null=True, blank=True)
+    section = models.IntegerField()
+    serial = models.IntegerField()
+    text = models.CharField(max_length = 100)
+    tag = models.CharField(max_length=20, default="")
 
-	def __unicode__(self):
-		return self.text
+    def __unicode__(self):
+        return self.text
 
-    # def __assessment__(self):
-    #     return "%s"% (self.assessment.name)
+    def __assessment__(self):
+        return "%s"% (self.assessment.name)
 
 post_save.connect(enter_to_log, sender=Question)
 pre_delete.connect(enter_to_log,sender=Question)
@@ -93,12 +93,12 @@ class Training(BaseModel):
     language = models.ForeignKey(Language, null=True, blank=True)
     participants = models.ManyToManyField(Animator)
     district = models.ForeignKey(District, null=True, blank=True)
-    trainingType = models.BooleanField(default=True) # with / without video
-    kind_of_training = models.BooleanField(default=True) # new / refresher training
+    trainingType = models.BooleanField(default=True,verbose_name="Without Video") # with / without video
+    kind_of_training = models.BooleanField(default=True, verbose_name="Refresher Training") # new / refresher training
     participants_count = models.IntegerField(default=0)
     partner = models.ForeignKey(Partner, null=True, blank=True)
 
-    def trainer_list(self):
+    def trainers(self):
         return " , ".join([t.name for t in self.trainer.all()])
 
 post_save.connect(enter_to_log, sender=Training)

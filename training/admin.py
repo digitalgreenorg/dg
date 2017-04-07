@@ -18,15 +18,15 @@ class TrainingAdmin(AdminSite):
 
 class TrainingUserAdmin(admin.ModelAdmin):
 	form = TrainingUserForm
-	list_display = ('id', 'user', 'assigned_states')
+	list_display = ('id', 'user','assigned_states')
 
 	def assigned_states(self,obj):
 		return " , ".join([s.state_name for s in obj.states.all()])
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text', 'section','serial','tag')
+    list_display = ('id', 'text', 'section','serial','tag','__assessment__')
     search_fields = ['assessment__name', 'section','serial']
-    list_filter = ['assessment__name','tag']
+    list_filter = ['assessment__name','section','serial']
 
 class TrainerAdmin(admin.ModelAdmin):
 	list_display = ('id','name','email')
@@ -47,7 +47,7 @@ class DeleteLogAdmin(admin.ModelAdmin):
 
 class TrainingListAdmin(admin.ModelAdmin):
 	actions = None
-	list_display = ('id','date','place','trainer_list','assessment','language','district','trainingType','kind_of_training','participants_count','partner')
+	list_display = ('id','date','place','trainers','assessment','language','district','trainingType','kind_of_training','participants_count','partner')
 	list_filter = ['assessment','language','partner']
 	date_hierarchy = 'date'
 
