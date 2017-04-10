@@ -16,6 +16,7 @@ from geographies.models import State
 from django.db import connection
 import datetime
 from datetime import date
+from output.database.utility import run_query_raw
 
 # Create your views here.
 @csrf_exempt
@@ -37,18 +38,21 @@ def login(request):
     else:
         return HttpResponse("0")
     return HttpResponse("0")
+    
 def testmethod(request):
     print '*******************call hua**********************'
-    data_dict = {'id' : 1, 'name' : 'sujit'}, {'id' : 2, 'name' : 'Chandru'}, {'id' : 3, 'name' : 'lodha'}
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
+    # data_dict = {'id' : 1, 'name' : 'sujit'}, {'id' : 2, 'name' : 'Chandru'}, {'id' : 3, 'name' : 'lodha'}
+    start_date = str(request.GET['start_date'])
+    end_date = str(request.GET['end_date'])
     sql_query = '''SELECT count(tt.id)
                         FROM training_training tt
-                    WHERE date between '20170101' and '20170331'
+                    WHERE date between (%s) and (%s);
                 '''
+    num_trainings = list(run_query_raw(sql_query, start_date, end_date))
+    # print type(num_trainings)
     
-    # print ('number of trainings -> %d' %(num_trainings))
-    data = json.dumps(data_dict)
+    data = json.dumps([{'num_trainings':num_trainings[0][0]},])
+    print data
     return HttpResponse(data)
 
 def dashboard(request):

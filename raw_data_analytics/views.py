@@ -32,14 +32,14 @@ def home(request):
 
     return render_to_response('raw_data_analytics/output.html', {'countries': countries},
                               context_instance=RequestContext(request))
-def onrun_query(query):
+def onrun_query(query, params):
     mysql_cn = MySQLdb.connect(host=dg.settings.DATABASES['default']['HOST'], port=dg.settings.DATABASES['default']['PORT'], user=dg.settings.DATABASES['default']['USER'],
                                    passwd=dg.settings.DATABASES['default']['PASSWORD'],
                                    db=dg.settings.DATABASES['default']['NAME'],
                                     charset = 'utf8',
                                      use_unicode = True)
     cursor = mysql_cn.cursor()
-    cursor.execute(query)
+    cursor.execute(query, params)
     result = cursor.fetchall()
     mysql_cn.close()
     return result
