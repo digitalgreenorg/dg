@@ -1,6 +1,6 @@
 import json
 import MySQLdb
-import dg.settings
+from dg.settings import DATABASES 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
@@ -223,3 +223,62 @@ def month_wise_data(request):
     data_dict = {'trainings':'Number of Trainings','month_training_list':month_data_list[:maximum]}
     data = json.dumps(data_dict)
     return HttpResponse(data)
+
+def sample_data(request):
+    sample_dict = [{
+        "key": "Cumulative Return",
+        "values": [
+          {
+            "label" : "A",
+            "value" : -29.765957771107
+          },
+          {
+            "label" : "B",
+            "value" : 0
+          },
+          {
+            "label" : "C",
+            "value" : 32.807804682612
+          },
+          {
+            "label" : "D",
+            "value" : 196.45946739256
+          },
+          {
+            "label" : "E",
+            "value" : 0.19434030906893
+          },
+          {
+            "label" : "F",
+            "value" : -98.079782601442
+          },
+          {
+            "label" : "G",
+            "value" : -13.925743130903
+          },
+          {
+            "label" : "H",
+            "value" : -5.1387322875705
+          }
+        ]
+      }]
+    db_connection = MySQLdb.connect(host='localhost',
+                                     user=DATABASES['default']['USER'],
+                                     passwd=DATABASES['default']['PASSWORD'],
+                                     db=DATABASES['default']['NAME'],
+                                     charset='utf8',
+                                     use_unicode=True).cursor()
+    db_connection.execute('''select st.state_name 'state', count(t.id) 'no_trainings'
+                            from training_training t
+                            join geographies_district d on d.id = t.district_id
+                            join geographies_state st on st.id = d.state_id
+                            group by st.id;''')
+    result = db_connection.fetchall()
+    print "########################"
+    #print result
+
+    for row in result:
+        print row
+
+
+    return HttpResponse(json.dumps(sample_dict))  

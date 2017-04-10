@@ -80,6 +80,8 @@ MIDDLEWARE_CLASSES = (
     # "mezzanine.core.middleware.SSLRedirectMiddleware",
     'mezzanine.pages.middleware.PageMiddleware',
     'mezzanine.core.middleware.FetchFromCacheMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 ROOT_URLCONF = 'dg.urls'
@@ -124,36 +126,6 @@ TEMPLATES = [
         },
     },
 ]
-# TEMPLATE_DIRS = (
-#     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-#     # Always use forward slashes, even on Windows.
-#     # Don't forget to use absolute paths, not relative paths.
-#     os.path.join(PROJECT_PATH, 'templates/social_website'),
-#     os.path.join(PROJECT_PATH, 'templates/videokheti'),
-#     os.path.join(PROJECT_PATH, 'templates'),
-#     os.path.join(PROJECT_PATH, 'templates/output'),
-#     os.path.join(PROJECT_PATH, 'templates/static_site'),
-#     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
-#     os.path.join(PROJECT_PATH, 'media/coco/app'),
-#     os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
-# 	os.path.join(PROJECT_PATH, 'media/'),
-#     os.path.join(PROJECT_PATH, 'templates/data_upload'),
-# )
-
-# TEMPLATE_CONTEXT_PROCESSORS = (
-#     "django.contrib.auth.context_processors.auth",
-#     "django.contrib.messages.context_processors.messages",
-#     "django.core.context_processors.debug",
-#     "django.core.context_processors.i18n",
-#     "django.core.context_processors.static",
-#     "django.core.context_processors.media",
-#     "django.core.context_processors.request",
-#     "django.core.context_processors.tz",
-#     'social.apps.django_app.context_processors.backends',
-#     'social.apps.django_app.context_processors.login_redirect',
-#     "mezzanine.conf.context_processors.settings",
-#     "mezzanine.pages.context_processors.page",
-# )
 
 INSTALLED_APPS = (
     'django.contrib.admin',
