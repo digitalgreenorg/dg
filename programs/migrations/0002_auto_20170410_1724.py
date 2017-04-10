@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
                 ('time_modified', models.DateTimeField(auto_now=True, null=True)),
                 ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('project_name', models.CharField(unique=True, max_length=100)),
+                ('project_description', models.CharField(unique=True, max_length=200)),
                 ('start_date', models.DateField(null=True, blank=True)),
                 ('end_date', models.DateField(null=True, blank=True)),
             ],

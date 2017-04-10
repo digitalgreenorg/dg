@@ -321,7 +321,7 @@
 					{% for project in search_box_params.projects %}
 						<tr>
 							<td id='projectbodytd2' class='customprojectbodytd'> 
-								<div id='projectname' class='projectdiv' title='{{project.project_name}}'>{{project.project_name}}</div> 
+								<div id='projectname' class='projectdiv' title='{{project.project_description}}'>{{project.project_name}}</div> 
 								<div class='projectcheckbox'> 
 									<input type="checkbox" name="projects" {% if not project.unmarked %}checked="checked"{% endif %} onChange="project_wise_partner()" value="{{project.id}}"/>
 								</div> 
