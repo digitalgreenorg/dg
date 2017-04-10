@@ -4,16 +4,102 @@ import MySQLdb
 from dg.settings import *
 
 mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
-                                           passwd=DATABASES['default']['PASSWORD'],
-                                           db=DATABASES['default']['NAME'],
-                                            charset = 'utf8',
-                                             use_unicode = True)
+                           passwd=DATABASES['default']['PASSWORD'],
+                           db=DATABASES['default']['NAME'],
+                           charset='utf8',
+                           use_unicode=True)
+
 
 def onrun_query(query):
     cursor = mysql_cn.cursor()
     cursor.execute(query)
     result = cursor.fetchall()
     return result
+
+
+daily_a_m_query = '''SELECT
+                    ct.user_created_id,
+                    ct.mandi_id,
+                    ct.date,
+                    u.name_en,
+                    m.mandi_name_en,
+                    SUM(ct.quantity) AS Q,
+                    dayt.TC,
+                    'okay',
+                    dayt.TC / SUM(ct.quantity)
+                FROM
+                    loop_combinedtransaction ct
+                        LEFT JOIN
+                    loop_loopuser u ON u.user_id = ct.user_created_id
+                        LEFT JOIN
+                    loop_mandi m ON m.id = ct.mandi_id
+                        LEFT JOIN
+                    (SELECT
+                        dt.date D,
+                            dt.user_created_id A,
+                            dt.mandi_id M,
+                            SUM(dt.transportation_cost) TC,
+                            SUM(dt.farmer_share) / COUNT(dt.id) FS
+                    FROM
+                        loop_daytransportation dt
+                    GROUP BY dt.date , dt.user_created_id , dt.mandi_id) dayt ON dayt.D = ct.date
+                        AND ct.mandi_id = dayt.M
+                        AND dayt.A = ct.user_created_id
+                WHERE
+                    u.role = 2
+                GROUP BY ct.date , ct.user_created_id , ct.mandi_id
+                ORDER BY ct.user_created_id , ct.mandi_id , dayt.TC / SUM(ct.quantity)'''
+
+daily_a_m_farmerShare_query = '''SELECT
+                            ct.user_created_id,
+                            ct.mandi_id,
+                            ct.date,
+                            u.name_en,
+                            m.mandi_name_en,
+                            SUM(ct.quantity) AS Q,
+                            dayt.TC,
+                            dayt.FS,
+                            dayt.FS / SUM(ct.quantity),
+                            dayt.FS / dayt.TC
+                        FROM
+                            loop_combinedtransaction ct
+                                LEFT JOIN
+                            loop_loopuser u ON u.user_id = ct.user_created_id
+                                LEFT JOIN
+                            loop_mandi m ON m.id = ct.mandi_id
+                                LEFT JOIN
+                            (SELECT
+                                dt.date D,
+                                    dt.user_created_id A,
+                                    dt.mandi_id M,
+                                    SUM(dt.transportation_cost) TC,
+                                    SUM(dt.farmer_share) / COUNT(dt.id) FS
+                            FROM
+                                loop_daytransportation dt
+                            GROUP BY dt.date , dt.user_created_id , dt.mandi_id) dayt ON dayt.D = ct.date
+                                AND ct.mandi_id = dayt.M
+                                AND dayt.A = ct.user_created_id
+                        WHERE
+                            u.role = 2
+                        GROUP BY ct.date , ct.user_created_id , ct.mandi_id
+                        ORDER BY ct.user_created_id , ct.mandi_id , ct.date'''
+
+a_m_count_query = '''SELECT
+                    ct.user_created_id A,
+                    ct.mandi_id M,
+                    u.name_en,
+                    m.mandi_name_en,
+                    COUNT(DISTINCT ct.date)
+                FROM
+                    loop_combinedtransaction ct
+                        LEFT JOIN
+                    loop_loopuser u ON u.user_id = ct.user_created_id
+                        LEFT JOIN
+                    loop_mandi m ON m.id = ct.mandi_id
+                WHERE
+                    u.role = 2
+                GROUP BY ct.user_created_id , ct.mandi_id
+                ORDER BY ct.user_created_id , ct.mandi_id'''
 
 query_for_incorrect_phone_no_all_aggregator = '''SELECT
                               @s:=@s + 1 serial_number,
@@ -80,8 +166,6 @@ query_for_incorrect_phone_no_all_aggregator = '''SELECT
                               OR Mobile_Number >= 9999999999))
                           ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
 
-
-
 query_for_incorrect_phone_no_single_aggregator = '''SELECT
                                 Aggregator,
                                 Village,
@@ -145,8 +229,6 @@ query_for_incorrect_phone_no_single_aggregator = '''SELECT
                                 OR Mobile_Number >= 9999999999))
                             ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
 
-
-
 query_for_farmer_transaction_all_aggregator = '''
                                   SELECT
                               t1.Agg,
@@ -203,7 +285,6 @@ query_for_farmer_transaction_all_aggregator = '''
                           WHERE
                               t1.date BETWEEN %s AND %s
                         '''
-
 
 query_for_farmer_transaction_single_aggregator = '''
                                   SELECT
@@ -262,7 +343,6 @@ query_for_farmer_transaction_single_aggregator = '''
                                 t1.date BETWEEN %s AND %s
                                     AND t1.Agg = %s'''
 
-
 query_for_transport_details_all_aggregator = '''
                           SELECT
                               ll.name Agg_Id,
@@ -292,7 +372,6 @@ query_for_transport_details_all_aggregator = '''
                           GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
                           '''
 
-
 query_for_transport_details_single_aggregator = '''
                           SELECT
                               ll.name Agg_Id,
@@ -321,26 +400,3 @@ query_for_transport_details_single_aggregator = '''
                               ct.date BETWEEN %s AND %s AND ll.name = \'%s\' and ll.role = '2'
                           GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
                           '''
-
-daily_a_m_query = 'SELECT ct.user_created_id, ct.mandi_id, ct.date, u.name_en, m.mandi_name_en, SUM(ct.quantity) AS ' \
-                  'Q, dayt.TC,' + '"okay"' +  ',dayt.TC / SUM(ct.quantity) FROM loop_combinedtransaction ct LEFT JOIN ' \
-                  'loop_loopuser u ON u.user_id = ct.user_created_id LEFT JOIN loop_mandi m ON m.id = ct.mandi_id ' \
-                  'LEFT JOIN (SELECT dt.date D, dt.user_created_id A, dt.mandi_id M, SUM(dt.transportation_cost) TC, ' \
-                  'SUM(dt.farmer_share) / COUNT(dt.id) FS FROM loop_daytransportation dt GROUP BY dt.date , ' \
-                  'dt.user_created_id , dt.mandi_id) dayt ' \
-                  'ON dayt.D = ct.date AND ct.mandi_id = dayt.M AND dayt.A = ct.user_created_id WHERE u.role = 2 GROUP BY ct.date , ' \
-                  'ct.user_created_id , ct.mandi_id ORDER BY ct.user_created_id , ct.mandi_id , dayt.TC / SUM(ct.quantity)'
-
-daily_a_m_farmerShare_query = 'SELECT ct.user_created_id, ct.mandi_id, ct.date, u.name_en, m.mandi_name_en, SUM(ct.quantity) AS ' \
-                  'Q, dayt.TC, dayt.FS,  dayt.FS / SUM(ct.quantity), dayt.FS / dayt.TC FROM loop_combinedtransaction ct LEFT JOIN ' \
-                  'loop_loopuser u ON u.user_id = ct.user_created_id LEFT JOIN loop_mandi m ON m.id = ct.mandi_id ' \
-                  'LEFT JOIN (SELECT dt.date D, dt.user_created_id A, dt.mandi_id M, SUM(dt.transportation_cost) TC, ' \
-                  'SUM(dt.farmer_share) / COUNT(dt.id) FS FROM loop_daytransportation dt GROUP BY dt.date , ' \
-                  'dt.user_created_id , dt.mandi_id) dayt ' \
-                  'ON dayt.D = ct.date AND ct.mandi_id = dayt.M AND dayt.A = ct.user_created_id WHERE u.role = 2 GROUP BY ct.date , ' \
-                  'ct.user_created_id , ct.mandi_id ORDER BY ct.user_created_id , ct.mandi_id , ct.date'
-
-a_m_count_query = 'SELECT ct.user_created_id A, ct.mandi_id M, u.name_en, m.mandi_name_en, count(DISTINCT ct.date) ' \
-                  'FROM loop_combinedtransaction ct LEFT JOIN loop_loopuser u ON u.user_id = ct.user_created_id ' \
-                  'LEFT JOIN loop_mandi m ON m.id = ct.mandi_id WHERE u.role = 2 GROUP BY ct.user_created_id , ct.mandi_id ' \
-                  'ORDER BY ct.user_created_id, ct.mandi_id'

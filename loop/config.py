@@ -84,51 +84,85 @@ header_dict_for_loop_email_mobile_numbers = {
                           }]
 }
 
-header_dict_for_farmer_transaction = {
-    'workbook_name': u'%s/loop/Incorrect Mobile Numbers_%s_%s to %s.xlsx',
-    'worksheet_name': u'%s_गलत मोबाइल नंबर की लिस्ट_%s to %s',
-    'column_properties': [{'column_width': 3.64,
-                           'label': 'क्रम',
-                           'col_seq': 'A:A',
-
+header_dict_for_farmer_outlier = {
+    'workbook_name': u'%s/loop/Farmer Share Outliers_%s_%s to %s.xlsx',
+    'worksheet_name': u'%s_फार्मर शेर आउटलाइयर्स की लिस्ट_%s to %s',
+    'column_properties': [{'column_width': 2.34,
+                            'header': 'Date',
+                           # 'format': all_format_created['date_format'],
+                           'col_seq': 'A:A'
                           },
-                          {'column_width': 9.82,
-                           'label': 'तारीख',
-                           'col_seq': 'B:B',
+                          {'column_width': 3.4,
+                           'header': 'Aggregator',
+                           'col_seq': 'B:B'
                           },
-                          {'column_width': 11.55,
-                           'label': 'मंडी का नाम',
-                           'col_seq': 'C:C',
+                          {'column_width': 5.6,
+                              'header': 'Market',
+                              'col_seq': 'C:C'
                           },
-                          {'column_width': 15,
-                           'label': 'किसान का नाम',
-                           'col_seq': 'D:D',
+                          {'column_width': 9.0,
+                              'header': 'Quantity',
+                              'col_seq': 'D:D'
                           },
-                          {'column_width': 9.09,
-                           'label': 'कुल वजन (कि.)',
-                           'col_seq': 'E:E',
+                          {'column_width': 3.4,
+                              'header': 'TCost',
+                              'col_seq': 'E:E'
                           },
-                          {'column_width': 7,
-                           'label': 'राशि (रु)',
-                           'col_seq': 'F:F',
+                          {'column_width': 4.5,
+                              'header': 'Farmer Share',
+                              'col_seq': 'F:F'
                           },
-                          {'column_width': 7.45,
-                           'label': 'किसान का भाग (रु)',
-                           'col_seq': 'G:G',
+                          {'column_width': 1.2,
+                              'header': 'FSPK',
+                              'col_seq': 'G:G'
                           },
-                          {'column_width': 8.36,
-                           'label': 'कुल राशि (रु)',
-                           'col_seq': 'H:H',
-                          },
-                          {'column_width': 5.91,
-                           'label': '✓/ X',
-                           'col_seq': 'I:I',
-                          },
-                          {'column_width': 16.55,
-                           'label': 'टिप्पडी',
-                           'col_seq': 'J:J',
-                          }]
+                          {'column_width': 12.3,
+                              'header': 'FSPTC',
+                              'col_seq': 'H:H'
+                          }
+    ]
 }
+#         [{'column_width': 3.64,
+#                            'label': 'क्रम',
+#                            'col_seq': 'A:A',
+#                           },
+#                           {'column_width': 9.82,
+#                            'label': 'तारीख',
+#                            'col_seq': 'B:B',
+#                           },
+#                           {'column_width': 11.55,
+#                            'label': 'मंडी का नाम',
+#                            'col_seq': 'C:C',
+#                           },
+#                           {'column_width': 15,
+#                            'label': 'किसान का नाम',
+#                            'col_seq': 'D:D',
+#                           },
+#                           {'column_width': 9.09,
+#                            'label': 'कुल वजन (कि.)',
+#                            'col_seq': 'E:E',
+#                           },
+#                           {'column_width': 7,
+#                            'label': 'राशि (रु)',
+#                            'col_seq': 'F:F',
+#                           },
+#                           {'column_width': 7.45,
+#                            'label': 'किसान का भाग (रु)',
+#                            'col_seq': 'G:G',
+#                           },
+#                           {'column_width': 8.36,
+#                            'label': 'कुल राशि (रु)',
+#                            'col_seq': 'H:H',
+#                           },
+#                           {'column_width': 5.91,
+#                            'label': '✓/ X',
+#                            'col_seq': 'I:I',
+#                           },
+#                           {'column_width': 16.55,
+#                            'label': 'टिप्पडी',
+#                            'col_seq': 'J:J',
+#                           }]
+# }
 
 header_dict_for_transport_details = [{'column_width': 3.64,
                                       'label': 'क्रम संख्या',
@@ -530,7 +564,7 @@ header_dict_for_transport_details = [{'column_width': 3.64,
 
 
 
-RECIPIENTS = ['lokesh@digitalgreen.org', 'divish@digitalgreen.org']
+RECIPIENTS = ['lokesh@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
 
