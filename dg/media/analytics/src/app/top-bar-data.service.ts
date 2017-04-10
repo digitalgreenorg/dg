@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Headers, Http} from '@angular/http';
+import {Headers, Http, URLSearchParams, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import { MyData } from './my-data';
@@ -9,12 +9,18 @@ import { DATA } from './our-data'
 export class TopBarDataService {
   // private headers = new Headers({'Content-Type':'application/json'});
   private webUrl = 'http://localhost:8000/training/testmethod/'
-  constructor(private http: Http) { }
 
+   
+  constructor(private http: Http) { }
   getData():Promise<MyData []> {
     // return Promise.resolve(DATA);
     // return this.http.get(this.webUrl); doesn't call web api
-    return this.http.get(this.webUrl)
+    let params : URLSearchParams = new URLSearchParams();
+    params.set('start_date', '2017-01-01');
+    params.set('end_date', '2017-03-31');
+    let requestOptions : RequestOptions = new RequestOptions();
+    requestOptions.search = params;
+    return this.http.get(this.webUrl, requestOptions)
             .toPromise()
             .then(response => response.json() as MyData[])
             .catch(this.handleError);

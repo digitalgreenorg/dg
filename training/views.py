@@ -40,6 +40,14 @@ def login(request):
 def testmethod(request):
     print '*******************call hua**********************'
     data_dict = {'id' : 1, 'name' : 'sujit'}, {'id' : 2, 'name' : 'Chandru'}, {'id' : 3, 'name' : 'lodha'}
+    start_date = request.GET['start_date']
+    end_date = request.GET['end_date']
+    sql_query = '''SELECT count(tt.id)
+                        FROM training_training tt
+                    WHERE date between '20170101' and '20170331'
+                '''
+    
+    # print ('number of trainings -> %d' %(num_trainings))
     data = json.dumps(data_dict)
     return HttpResponse(data)
 

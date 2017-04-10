@@ -6,7 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { TopBarDataComponent } from './top-bar-data/top-bar-data.component';
 import { TopBarDataService } from './top-bar-data.service';
-import { AccordionModule } from '../../node_modules/ng2-bootstrap';
+import { AccordionModule } from '../../node_modules/ngx-bootstrap';
 
 @NgModule({
   declarations: [
