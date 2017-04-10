@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TopBarDataService } from '../top-bar-data.service';
-import { MyData} from '../my-data'
+import { MyData} from '../my-data';
 
 @Component({
   selector: 'app-top-bar-data',
