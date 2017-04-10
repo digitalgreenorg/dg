@@ -122,6 +122,48 @@ header_dict_for_farmer_outlier = {
                           }
     ]
 }
+
+
+header_dict_for_transport_outlier = {
+    'workbook_name': u'%s/loop/Transport Share Outliers_%s_%s to %s.xlsx',
+    'worksheet_name': u'%s_गाड़ी किराया आउटलाइयर्स की लिस्ट_%s to %s',
+    'column_properties': [{'column_width': 10.55,
+                            'header': 'Date',
+                           # 'format': all_format_created['date_format'],
+                           'col_seq': 'A:A'
+                          },
+                          {'column_width': 9.36,
+                           'header': 'Aggregator',
+                           'col_seq': 'B:B'
+                          },
+                          {'column_width': 5.6,
+                              'header': 'Market',
+                              'col_seq': 'C:C'
+                          },
+                          {'column_width': 9.0,
+                              'header': 'Quantity',
+                              'col_seq': 'D:D'
+                          },
+                          {'column_width': 3.4,
+                              'header': 'TCost',
+                              'col_seq': 'E:E'
+                          },
+                          {'column_width': 4.5,
+                              'header': 'Type',
+                              'col_seq': 'F:F'
+                          },
+                          {'column_width': 1.2,
+                              'header': 'TCPK',
+                              'col_seq': 'G:G'
+                          },
+                          {'column_width': 12.3,
+                              'header': 'FShare',
+                              'col_seq': 'H:H'
+                          }
+    ]
+}
+
+
 #         [{'column_width': 3.64,
 #                            'label': 'क्रम',
 #                            'col_seq': 'A:A',

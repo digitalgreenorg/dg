@@ -17,7 +17,7 @@ def onrun_query(query):
     return result
 
 
-daily_a_m_query = '''SELECT
+daily_a_m_transport_share_query = '''SELECT
                     ct.user_created_id,
                     ct.mandi_id,
                     ct.date,
