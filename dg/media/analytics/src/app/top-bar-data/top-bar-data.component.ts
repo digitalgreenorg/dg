@@ -9,20 +9,31 @@ import { MyData} from '../my-data'
 })
 export class TopBarDataComponent implements OnInit {
 
-  public myData : MyData[];
-  public title;
+  private myData : MyData[];
+  title;
+  val;
+  
   constructor(
     private topbardataService : TopBarDataService
-  ) { }
+  ) {
+  }
 
   getData() : void {
-    this.topbardataService.getData().then(DATA => this.myData = DATA);
-    console.log("##########################################");
+    this.topbardataService.getData()
+                          .then(val => this.myData = val);
+    // .then(val => {this.myData = [
+    //         {id : 1, name : 'Sujit'},
+    //         {id : 2, name : 'Chandru'}
+    //     ]; console.log(this.myData)});
+  }
+
+  showData() : void{
     console.log(this.myData);
   }
 
   ngOnInit() {
     this.getData();
+    this.showData();
   }
 
 }

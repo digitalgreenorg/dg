@@ -39,7 +39,7 @@ def login(request):
     return HttpResponse("0")
 def testmethod(request):
     print '*******************call hua**********************'
-    data_dict = {'id' : 1, 'name' : 'sujit'}
+    data_dict = {'id' : 1, 'name' : 'sujit'}, {'id' : 2, 'name' : 'Chandru'}, {'id' : 3, 'name' : 'lodha'}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 

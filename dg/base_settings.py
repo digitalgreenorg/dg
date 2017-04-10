@@ -62,6 +62,8 @@ LOGOUT_URL = '/'
 PERMISSION_DENIED_URL = '/denied/'
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'mezzanine.core.middleware.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -166,6 +168,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.admindocs',
     #'django.contrib.comments',
+    # 'corsheaders',
     'programs',
     'geographies',
     'people',

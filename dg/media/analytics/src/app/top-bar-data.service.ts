@@ -13,9 +13,10 @@ export class TopBarDataService {
 
   getData():Promise<MyData []> {
     // return Promise.resolve(DATA);
+    // return this.http.get(this.webUrl); doesn't call web api
     return this.http.get(this.webUrl)
             .toPromise()
-            .then(response => response.json().data as MyData[])
+            .then(response => response.json() as MyData[])
             .catch(this.handleError);
   }
 
@@ -25,3 +26,4 @@ export class TopBarDataService {
   }
 
 }
+// header("Access-Control-Allow-Origin: *");
