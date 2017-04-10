@@ -180,17 +180,23 @@ def get_geog_id(request):
 #Return a dictionary of list of PROJECT_NAME,ID AND THEIR ASSOCIATE PARTNER'S ID and 
 #second dictionary of project wise partners
 def get_project_list(projects):
-    coco_projects = Project.objects.values('id', 'associate_partner')
+    coco_projects_detail = Project.objects.values('id', 'project_name', 'associate_partner')
     project_wise_partner = dict()
-    for project in coco_projects:
+    coco_projects = list()
+    project_included = dict()
+    for project in coco_projects_detail:
+        # Make dict of partner wise projects
         if str(project['id']) not in project_wise_partner:
             project_wise_partner[str(project['id'])] = list()
         project_wise_partner[str(project['id'])].append(str(project['associate_partner']))
-    coco_projects = Project.objects.values('id', 'project_name').order_by('project_name')
-    if projects:
-        for project in coco_projects:
-            if str(project['id']) not in projects:
-                project['unmarked'] = 1    
+        # Make list of all projects
+        if project['id'] not in project_included:
+            project_included[project['id']] = 1
+            project_dict = {'id':project['id'],'project_name':project['project_name']}
+            if projects:
+                if str(project['id']) not in projects:
+                    project_dict['unmarked'] = 1    
+            coco_projects.append(project_dict)  
     return coco_projects,json.dumps(project_wise_partner)
 
 #Returns a dictionary of list of PARTNER_NAME, id
