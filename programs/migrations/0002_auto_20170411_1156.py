@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
                 ('time_modified', models.DateTimeField(auto_now=True, null=True)),
                 ('id', models.AutoField(serialize=False, primary_key=True)),
-                ('project_name', models.CharField(unique=True, max_length=100)),
+                ('project_name', models.CharField(help_text=b'Short Name of Project. It will be display on Analytics', unique=True, max_length=100)),
                 ('project_description', models.CharField(max_length=200, blank=True)),
                 ('start_date', models.DateField(null=True, blank=True)),
                 ('end_date', models.DateField(null=True, blank=True)),
@@ -32,6 +32,11 @@ class Migration(migrations.Migration):
             model_name='partner',
             name='full_partner_name',
             field=models.CharField(default=b'', max_length=200, blank=True),
+        ),
+        migrations.AlterField(
+            model_name='partner',
+            name='partner_name',
+            field=models.CharField(help_text=b'Short Name of Partner. It will be display on Analytics', max_length=100),
         ),
         migrations.AddField(
             model_name='project',
