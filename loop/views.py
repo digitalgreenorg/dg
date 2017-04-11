@@ -122,7 +122,7 @@ def farmer_payments(request):
                 user = User.objects.get(id = bundle["user_created_id"])
                 attempt = DayTransportation.objects.filter(date=bundle["date"], user_created=user, mandi=mandi)
                 attempt.update(farmer_share = bundle["amount"])
-                attempt.update(comment = bundle["comment"])
+                attempt.update(farmer_share_comment = bundle["comment"])
                 attempt.update(user_modified_id = bundle["user_modified_id"])
                 # attempt.time_modified = get_latest_timestamp().timestamp
             except:
@@ -560,7 +560,7 @@ def payments(request):
         transportation_vehicle__vehicle__vehicle_name=F('transportation_vehicle__vehicle__vehicle_name_en')).values(
         'date', 'user_created__id', 'transportation_vehicle__vehicle__vehicle_name',
         "transportation_vehicle__transporter__transporter_name", 'transportation_vehicle__vehicle_number',
-        'mandi__mandi_name', 'farmer_share', 'id', 'comment').order_by('date').annotate(Sum('transportation_cost'))
+        'mandi__mandi_name', 'farmer_share', 'id', 'farmer_share_comment','transportation_cost_comment','mandi__id','transportation_vehicle__id', 'timestamp').order_by('date').annotate(Sum('transportation_cost'))
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
 
