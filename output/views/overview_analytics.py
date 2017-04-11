@@ -136,4 +136,3 @@ def get_parent_geog_id(geog, id):
     else:
         return None, None
     return vls    
-    
