@@ -19,7 +19,7 @@ class Project(CocoModel):
     project_description = models.CharField(max_length=200, blank=True)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-    associate_partner = models.ManyToManyField(Partner, blank=True)
+    associate_partner = models.ManyToManyField(Partner)
     
     def __unicode__(self):
         return self.project_name

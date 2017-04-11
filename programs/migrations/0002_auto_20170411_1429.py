@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='associate_partner',
-            field=models.ManyToManyField(to='programs.Partner', blank=True),
+            field=models.ManyToManyField(to='programs.Partner'),
         ),
         migrations.AddField(
             model_name='project',
