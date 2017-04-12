@@ -1,5 +1,6 @@
 import json
 import MySQLdb
+import re
 from dg.settings import DATABASES 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -225,43 +226,6 @@ def month_wise_data(request):
     return HttpResponse(data)
 
 def sample_data(request):
-    sample_dict = [{
-        "key": "Cumulative Return",
-        "values": [
-          {
-            "label" : "A",
-            "value" : -29.765957771107
-          },
-          {
-            "label" : "B",
-            "value" : 0
-          },
-          {
-            "label" : "C",
-            "value" : 32.807804682612
-          },
-          {
-            "label" : "D",
-            "value" : 196.45946739256
-          },
-          {
-            "label" : "E",
-            "value" : 0.19434030906893
-          },
-          {
-            "label" : "F",
-            "value" : -98.079782601442
-          },
-          {
-            "label" : "G",
-            "value" : -13.925743130903
-          },
-          {
-            "label" : "H",
-            "value" : -5.1387322875705
-          }
-        ]
-      }]
     db_connection = MySQLdb.connect(host='localhost',
                                      user=DATABASES['default']['USER'],
                                      passwd=DATABASES['default']['PASSWORD'],
@@ -272,13 +236,32 @@ def sample_data(request):
                             from training_training t
                             join geographies_district d on d.id = t.district_id
                             join geographies_state st on st.id = d.state_id
-                            group by st.id;''')
+                            group by st.id''')
     result = db_connection.fetchall()
-    print "########################"
-    #print result
-
+    data_list = []    
+    data_dict = {'key':"State wise number of trainings","values":[]}
     for row in result:
-        print row
+        temp_dict = {}
+        temp_dict['label'] = row[0]
+        temp_dict['value'] = row[1]
+        data_dict['values'].append(temp_dict)
+    print data_dict      
+    data_list.append(data_dict)
 
+    db_connection.execute('''select d.district_name 'district', count(t.id) 'no_trainings'
+                            from training_training t
+                            join geographies_district d on d.id = t.district_id
+                            group by d.id''')
+    result_two = db_connection.fetchall()
+    data_dict = {'key':"State wise number of trainings","values":[]}
+    for row in result_two:
+        temp_dict = {}
+        temp_dict['label'] = re.sub(r'\[.+?\]\s*', '',row[0])
+        temp_dict['value'] = row[1]
+        data_dict['values'].append(temp_dict)
+    print data_dict      
+    data_list.append(data_dict)
 
-    return HttpResponse(json.dumps(sample_dict))  
+    print "#########################"
+    print len(data_list)
+    return HttpResponse(json.dumps(data_list))  

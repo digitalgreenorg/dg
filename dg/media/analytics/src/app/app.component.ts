@@ -14,13 +14,19 @@ declare let d3:any;
 export class AppComponent implements OnInit {
   title = 'Graphs';
   options;
-  data: Data[]
+  data: Data[];
+  
   constructor(private graphService: GraphsService) { }
-  getData(): void {
-    this.graphService.getDatas().then(datas => this.data = datas)
-  }
+  
   ngOnInit(): void{
-        this.options = {
+      this.graphService.getDatas().then(datas => {
+          for(let temp_data in datas){
+              this.plot_graph([datas[temp_data]], temp_data);             
+          }
+      })
+  }
+  plot_graph(data,element_no){
+    this.options = {
           chart: {
             type: 'discreteBarChart',
             height: 450,
@@ -34,18 +40,18 @@ export class AppComponent implements OnInit {
             y: (d) => {return d.value;},
             showValues: true,
             valueFormat: function(d){
-              return d3.format(',.4f')(d);
+              return d3.format(',.0f')(d);
             },
             duration: 500,
             xAxis: {
-              axisLabel: 'X Axis'
+              axisLabel: 'States'
             },
             yAxis: {
-              axisLabel: 'Y Axis',
+              axisLabel: 'No of trainings',
               axisLabelDistance: -10
             }
         }
-      } 
-      this.getData();
+      };
+      this.data = data;   
   }
 }
