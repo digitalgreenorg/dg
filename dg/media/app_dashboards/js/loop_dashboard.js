@@ -2410,6 +2410,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             }
         }
     }
+    //TODO: to be removed. Added fot temporary purposes.
+    var data_set_length = aggregator_data_set.length;
+    aggregator_data_set.push([sno.toString(), "", "Mobile Recharge ", "", 150, "", "", "", 150, "", "", "", ""]);
+
     var gaddidar_data_set_clone = [];
     for (var i = 0; i < gaddidar_data_set.length; i++) {
         gaddidar_data_set_clone.push(gaddidar_data_set[i].slice());
@@ -2887,6 +2891,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             column_set = [3, 4, 5, 6, 7, 8];
             for (var i = 0; i < column_set.length; i++) {
                 total = api.column(column_set[i]).data().reduce(function(a, b) {
+                    if (a === "") {
+                        a = 0;
+                    }
+                    if (b === "") {
+                        b = 0;
+                    }
                     return parseFloat(a) + parseFloat(b);
                 }, 0);
                 $(api.column(column_set[i]).footer()).html(finalFormat(total + ""));
