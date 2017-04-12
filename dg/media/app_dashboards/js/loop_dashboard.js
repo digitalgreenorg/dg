@@ -2367,12 +2367,13 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             farmer_share[date_index][mandi_index].farmer_share_amount = transport_payment[i]['farmer_share'];
             farmer_share[date_index][mandi_index].farmer_share_comment = transport_payment[i]['comment'];
 
-            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2))]);
+            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'],
+            transport_payment[i]['transportation_vehicle__transporter__transporter_phone'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2))]);
         }
     }
-    transporter_data_set = transporter_data_set.sort(function(first, second) {
-        return new Date(first[0]) - new Date(second[0]);
-    });
+    // transporter_data_set = transporter_data_set.sort(function(first, second) {
+    //     return new Date(first[0]) - new Date(second[0]);
+    // });
 
     var total_volume = 0;
     var total_payment = 0;
@@ -3303,7 +3304,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             title: "Market"
         }, {
             title: "Transporter"
-        }, {
+        },{
+            title: "Phone Number"
+        },{
             title: "Vehicle Type"
         }, {
             title: "Vehicle Number"
@@ -3324,8 +3327,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 data;
 
             // Total over all pages
-            total5 = api
-                .column(5)
+            var totalCost = api
+                .column(6)
                 .data()
                 .reduce(function(a, b) {
                     return a + b;
@@ -3334,8 +3337,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
 
             // Update footer
-            $(api.column(5).footer()).html(
-                finalFormat(total5 + "")
+            $(api.column(6).footer()).html(
+                finalFormat(totalCost + "")
             );
         }
     });
@@ -3456,6 +3459,12 @@ function create_data_for_excel_download() {
                 'column_width': 18.3,
                 'formula': null,
                 'label': 'Transporter',
+                'total': false
+            },
+            {
+                'column_width': 13,
+                'formula': null,
+                'label': 'Phone Number',
                 'total': false
             },
             {
