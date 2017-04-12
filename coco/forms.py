@@ -14,12 +14,6 @@ class DataUploadForm(forms.Form):
                                required=True,
                                validators=[validate_file_extension])
 
-	def clean_data_file(self):
-		cd = self.cleaned_data
-		if cd.get('datafile').name != "export-data.json":
-			raise forms.ValidationError("Please upload correct File")
-		return self.cleaned_data.get('datafile')
-
 	
 
 

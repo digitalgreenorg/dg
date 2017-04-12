@@ -250,8 +250,9 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             var jsonData = JSON.stringify(filedata);
             var textToSaveAsBlob = new Blob([jsonData], {type:"application/json"});
             var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+            var user_id = User.get('user_id')
             var dt = new Date($.now());
-            var fileNameToSaveAs = "export-data.json";
+            var fileNameToSaveAs = user_id + "-" +dt.getDate() + "-" + dt.getMonth() + "-" + dt.getFullYear() + "-"+ "export-data.json";
             var downloadLink = document.createElement("a");
             downloadLink.download = fileNameToSaveAs;
             downloadLink.innerHTML = "Download File";
