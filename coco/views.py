@@ -149,10 +149,14 @@ def upload_data(request):
         if form_data.is_valid():
             cd = form_data.cleaned_data
             handle = request.FILES.get('datafile').read()
-            data = json.loads(handle)
-            data_from_uploadqueue = json.loads(data.get('uploadqueue'))
-            user_data = json.loads(data.get('user'))
-            format_data(request, data_from_uploadqueue, user_data)
+            try:
+                data = json.loads(handle)
+                data_from_uploadqueue = json.loads(data.get('uploadqueue'))
+                user_data = json.loads(data.get('user'))
+                format_data(request, data_from_uploadqueue, user_data)
+            except:
+                add_message(request, 25, "Data has been tampered")
+                pass
             return redirect(".")
         else:
             add_message(request, 25, "Please correct the errors below.")

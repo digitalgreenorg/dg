@@ -18,6 +18,7 @@ def crud_of_model(model, app, data_dict, create, update):
         del data_dict['_id']
         obj.update(**data_dict)
         obj = obj.latest('id')
+    return
 
 
 def crud_of_video(data_dict, production_team, create, update):

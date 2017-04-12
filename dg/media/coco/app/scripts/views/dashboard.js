@@ -243,10 +243,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         saveToFile: function(filedata){
             var that =this;
             var jsonData = JSON.stringify(filedata);
-            var textToSaveAsBlob = new Blob([jsonData], {type:"text/plain"});
+            var textToSaveAsBlob = new Blob([jsonData], {type:"application/json"});
             var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
             var dt = new Date($.now());
-            var fileNameToSaveAs = dt+"export-data.txt";
+            var fileNameToSaveAs = "export-data.json";
             var downloadLink = document.createElement("a");
             downloadLink.download = fileNameToSaveAs;
             downloadLink.innerHTML = "Download File";
@@ -257,7 +257,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             downloadLink.click();
         },
 
-        export: function() {
+        export: function(dfd) {
             var that = this;
             that.upload_v = new UploadView();
             var dfd = $.Deferred();
@@ -276,7 +276,19 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                            // empty the uploadqueue
                             _.times(upload_collection.length, function(i){
                                 var current_model = upload_collection.shift()
-                                current_model.destroy();
+                                // delete the object from offline db if its add case
+                                Offline.delete_object(null, current_model.attributes.entity_name, current_model.attributes.data.id)
+                                    .done(function(off_model) {
+                                        console.log(off_model)
+                                        off_model.destroy()
+                                        current_model.destroy();
+                                        dfd.resolve();
+
+                                    })
+                                    .fail(function(off_model, error) {
+                                        console.log(error);
+                                    });
+                                
                             });
                             
                         })

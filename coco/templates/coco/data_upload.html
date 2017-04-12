@@ -1,70 +1,42 @@
-<!DOCTYPE HTML>
-<!-- manifest="/media/coco/coco-offline.appcache" -->
-<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+{% include "includes/header.html" %}
+<script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
+<style type="text/css">
+  .errorlist{
+    color: red;
+  }
+</style>
 
-  <title>DataUpload COCO</title>
-  <link rel="stylesheet" href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css">
-  <link rel="stylesheet"  href="/media/coco/app/styles/css/coco.css">
-  
-  <link rel="stylesheet"  href="/media/coco/app/styles/css/faq.css">
-  <meta name="robots" content="NONE,NOARCHIVE">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <script src="/media/coco/app/scripts/libs/jquery.min.js"></script>
-  <script src="/media/coco/app/scripts/libs/bootstrap/js/bootstrap.min.js"></script>
-  <style type="text/css">
-    .errorlist{
-      color: red;
-      border: 1px solid red;
-    }
-  </style>
-</head>
-<body  data-spy="scroll" data-target=".faq-sidebar">
-    
-    <div class="container">
-        <div class="row global-header">
-          <h1 class="coco-brand" style="text-align:center;"><a href="/coco">COCO</a></h1>
-        </div>
-        {% if form.errors %}
-          {% for message in messages %}
-          <div class="alert alert-danger" role="alert">
+<section id="upload-data" class="about-bg">
+
+  <div class="wrapper">
+    <div class="inner-wrapper">
+      <h2 class="hdg-a hdg-source-lt layout-vr-md">COCO - Upload Data</h2>
+        {% for message in messages %}
+          <div class="alert alert-success" role="alert">
               {{ message }}
           </div>
-          {% endfor %}
-        {% else %}
-            {% for message in messages %}
-            <div class="alert alert-success" role="alert">
-                {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
-        <fieldset>
-        <legend></legend>
-        <div class="row">
-            <div class="col-sm-8">
-              <div id="setup"></div><h3 class="topic">Data Upload Form</h3>
+        {% endfor %}
+      <div class="row">
+        <div class="col-sm-12">
+            <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="control-group">
+                {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
+                <label class="control-label col-sm-2" for="datafile">DataFile</label>
+                <div {% if form.datafile.errors %} class="col-sm-8" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
+                  {{ form.datafile }}
+                </div>
+              </div>
+              <br>
+              <br>
+              <button type="submit" id="upload" class="btn btn-success">Submit</button>
 
-				        <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-				        	{% csrf_token %}
-								  <div class="control-group">
-                    {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
-								    <label class="control-label col-sm-2" for="datafile">DataFile</label>
-								    <div {% if form.datafile.errors %} class="col-sm-8" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
-								      {{ form.datafile }}
-								    </div>
-								  </div>
-								  <br>
-								  <br>
-								  
-								  <button type="submit" class="btn btn-success">Submit</button>
-								    
-								</form>
-        			</div>
-
+            </form>
         </div>
-        </fieldset>
+        <br>
+      </div>
+    </div> <!-- End .inner-wrapper -->
+  </div> <!-- End .wrapper -->
+</section>
 
-</body>
-</html>
+{% include "includes/footer.html" %}
