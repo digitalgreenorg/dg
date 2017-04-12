@@ -1,7 +1,7 @@
 //This view contains the links to add and list pages of entities, the sync button, logout link, online-offline indicator
-define(['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download' ],
+define(['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download', 'views/app_header' ],
 
-function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView) {
+function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView, HeaderView) {
     
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -112,9 +112,14 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             });
             if(User.isOnline()){
                 $('#sync').removeAttr("disabled");
+                $('#export').attr('disabled', true);
             }
             else{
                 $('#sync').attr('disabled', true);
+                if (upload_collection.length >= 1){
+                    $('#export').removeAttr("disabled");    
+                }
+                
             }
         },
          
@@ -259,6 +264,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
 
         export: function(dfd) {
             var that = this;
+            var header_view = new HeaderView();
             that.upload_v = new UploadView();
             var dfd = $.Deferred();
             var listing=[]
@@ -282,6 +288,9 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                                         console.log(off_model)
                                         off_model.destroy()
                                         current_model.destroy();
+                                        // $('#export').attr('disabled', true);
+                                        
+                                        header_view.user_offline();
                                         dfd.resolve();
 
                                     })
