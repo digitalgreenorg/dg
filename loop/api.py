@@ -132,7 +132,8 @@ class BlockAuthorization(Authorization):
         kwargs[self.block_field] = LoopUser.objects.get(
             user_id=bundle.request.user.id).village.block
         obj = object_list.filter(**kwargs).distinct()
-        if obj:
+        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
+        if obj or userObject.role == 1:
             return True
         else:
             raise NotFound("Not allowed to download Block")
