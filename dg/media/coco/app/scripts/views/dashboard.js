@@ -262,13 +262,13 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             that.upload_v = new UploadView();
             var dfd = $.Deferred();
             var listing=[]
-            listItem = configs.misc.data_transfer_schema
+            listItem = "uploadqueue"
             var filedata = {};
             Offline.fetch_collection(listItem)
                 .done(function(collection) {
                    data=JSON.stringify(collection.toJSON());
                    filedata[listItem]=data;
-                   Offline.fetch_collection(configs.misc.data_transfer_credentials_schema)
+                   Offline.fetch_collection("user")
                         .done(function(collection) {
                            userdata=JSON.stringify(collection.toJSON());
                            filedata['user']=userdata;

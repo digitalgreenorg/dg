@@ -619,7 +619,7 @@ function() {
         'labels_Français': {screening:"Projections", date: "Date de projection", start_time: "Heure de début", village: "Village", mediator: "Disséminateur",
             videos_screened: "Vidéo projectée", groups_attended: "Groupe concerné", person: "Personne", questions_asked: "Questions posées",
             del: "effacer", sr_no: "Serie de Numéro", person_attended: "Personne"},
-        'labels_English': {screening:"Screening",date: "Date", start_time: "Start Time", village: "Village", Mediator: "mediator",
+        'labels_English': {screening:"Screening",date: "Date", start_time: "Start Time", village: "Village", mediator: "Mediator",
             videos_screened: "Videos Screened", groups_attended: "Groups Attended", person: "Person", questions_asked: "Questions Asked",
             del: "Delete", sr_no: "Sr. No.", person_attended: "Person"},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'विडियो दिखने की तिथि','element':'date'},{'header':'मध्यस्थ','element':'animator.name'},{'header':'गाँव','element':'village.village_name'},{'header':'ग्राम संगठन जिन्होने भाग लिया','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'वीडियो जो दिखाया गया','subelement':'title','element':'videoes_screened'}],
