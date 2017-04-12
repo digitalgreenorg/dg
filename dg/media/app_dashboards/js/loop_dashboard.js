@@ -3444,7 +3444,7 @@ function create_data_for_excel_download() {
             }
         ],
         'transporter': [{
-                'column_width': 9.4,
+                'column_width': 8.4,
                 'formula': null,
                 'label': 'Date',
                 'total': false
@@ -3456,25 +3456,25 @@ function create_data_for_excel_download() {
                 'total': false
             },
             {
-                'column_width': 18.3,
+                'column_width': 17.3,
                 'formula': null,
                 'label': 'Transporter',
                 'total': false
             },
             {
-                'column_width': 13,
+                'column_width': 11,
                 'formula': null,
                 'label': 'Phone Number',
                 'total': false
             },
             {
-                'column_width': 11,
+                'column_width': 9.4,
                 'formula': null,
-                'label': 'Vehicle Type',
+                'label': 'Vehicle',
                 'total': false
             },
             {
-                'column_width': 13,
+                'column_width': 11,
                 'formula': null,
                 'label': 'Vehicle Number',
                 'total': false
