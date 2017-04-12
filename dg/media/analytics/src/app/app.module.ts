@@ -6,6 +6,8 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AnalyticsTableComponent } from './analytics-table/analytics-table.component';
 import { GetDataFromServerService } from './get-data-from-server/get-data-from-server.service';
+import { Ng2TableModule } from 'ng2-table/ng2-table';
+import { PaginationModule } from 'ng2-bootstrap/pagination';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,9 @@ import { GetDataFromServerService } from './get-data-from-server/get-data-from-s
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    Ng2TableModule,
+    PaginationModule,
   ],
   providers: [GetDataFromServerService],
   bootstrap: [AppComponent]
