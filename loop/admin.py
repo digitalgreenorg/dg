@@ -50,7 +50,7 @@ class LoopUserAssignedVillages(admin.StackedInline):
 
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
-    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','is_visible')
+    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'village__village_name']
 
@@ -151,6 +151,29 @@ class AggregatorShareOutlierAdmin(admin.ModelAdmin):
 class IncentiveParameterAdmin(admin.ModelAdmin):
     list_display = ('notation','parameter_name', 'notation_equivalent')
 
+class HelplineExpertAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'phone_number', 'email_id', 'expert_status')
+    list_filter = ('expert_status',)
+    search_fields = ['name', 'phone_number', 'email_id', 'expert_status']
+
+class HelplineIncomingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'from_number', 'to_number', 'call_status', 'incoming_time', 'last_incoming_time', 'resolved_time', 'recording_url', 'resolved_by', 'acknowledge_user')
+    list_filter = ('call_status', 'resolved_by')
+    search_fields = ['call_id', 'from_number', 'to_number', 'call_status', 'resolved_by']
+
+class HelplineOutgoingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'call_id', 'from_number', 'to_number', 'outgoing_time', 'incoming_call')
+    search_fields = ['call_id', 'from_number', 'to_number', 'outgoing_time']
+
+class HelplineCallLogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'call_id', 'from_number', 'to_number', 'start_time', 'call_type')
+    list_filter = ('call_type',)
+    search_fields = ['call_id', 'from_number', 'to_number', 'start_time', 'call_type']
+
+class HelplineSmsLogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'sms_id', 'from_number', 'to_number', 'sent_time')
+    search_fields = ['from_number', 'to_number', 'sent_time']
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -177,3 +200,8 @@ loop_admin.register(AggregatorIncentive,AggregatorIncentiveAdmin)
 loop_admin.register(IncentiveModel,IncentiveModelAdmin)
 loop_admin.register(IncentiveParameter,IncentiveParameterAdmin)
 loop_admin.register(AggregatorShareOutliers,AggregatorShareOutlierAdmin)
+loop_admin.register(HelplineExpert,HelplineExpertAdmin)
+loop_admin.register(HelplineIncoming,HelplineIncomingAdmin)
+loop_admin.register(HelplineOutgoing,HelplineOutgoingAdmin)
+loop_admin.register(HelplineCallLog,HelplineCallLogAdmin)
+loop_admin.register(HelplineSmsLog,HelplineSmsLogAdmin)

@@ -4,7 +4,8 @@ from django.conf.urls import patterns, include, url
 
 from tastypie.api import Api
 
-from api import FarmerResource, VillageResource, LoopUserResource, CropResource, MandiResource, CombinedTransactionResource, TransporterResource, VehicleResource,TransportationVehicleResource, DayTransportationResource,GaddidarResource,BlockResource,DistrictResource,StateResource,GaddidarShareOutliersResource,AggregatorShareOutliersResource
+from api import FarmerResource, VillageResource, LoopUserResource, CropResource, MandiResource, CombinedTransactionResource, TransporterResource, VehicleResource,TransportationVehicleResource, DayTransportationResource,GaddidarResource,BlockResource,DistrictResource,StateResource,GaddidarShareOutliersResource,AggregatorShareOutliersResource,GaddidarCommissionResource
+
 from loop.views import *
 
 from loop_data_log import send_updated_log
@@ -24,8 +25,12 @@ api.register(GaddidarResource())
 api.register(BlockResource())
 api.register(DistrictResource())
 api.register(StateResource())
+
+api.register(GaddidarCommissionResource())
 api.register(GaddidarShareOutliersResource())
 api.register(AggregatorShareOutliersResource())
+
+
 
 urlpatterns = patterns('',
     url(r'^$', home, name='loop'),
@@ -34,9 +39,6 @@ urlpatterns = patterns('',
     url(r'^get_log/', send_updated_log),
     url(r'^dashboard/', dashboard),
     url(r'^get_payment_sheet/', download_data_workbook, name="download-data-workbook"),
-    url(r'^village_wise_data/', village_wise_data),
-    url(r'^aggregator_wise_data/', aggregator_wise_data),
-    url(r'^crop_wise_data/', crop_wise_data),
     url(r'^filter_data/', filter_data),
     url(r'^total_static_data/',total_static_data),
     url(r'^recent_graphs_data/',recent_graphs_data),
@@ -45,4 +47,7 @@ urlpatterns = patterns('',
     url(r'^payments/',payments),
     url(r'^farmer_payment_update/',farmer_payments),
     url(r'^chaining/', include('smart_selects.urls')),
+    url(r'^helpline_incoming/',helpline_incoming),
+    url(r'^helpline_call_response/',helpline_call_response),
+    url(r'^helpline_offline/',helpline_offline),
     )
