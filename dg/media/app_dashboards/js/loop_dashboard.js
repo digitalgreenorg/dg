@@ -3352,7 +3352,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 function create_data_for_excel_download() {
     header_dict = {
         'aggregator': [{
-                'column_width': 3,
+                'column_width': 2.45,
                 'formula': null,
                 'label': 'S No',
                 'total': false
@@ -3364,19 +3364,19 @@ function create_data_for_excel_download() {
                 'total': false
             },
             {
-                'column_width': 10,
+                'column_width': 9.64,
                 'formula': null,
                 'label': 'Market',
                 'total': false
             },
             {
-                'column_width': 8,
+                'column_width': 7.64,
                 'formula': null,
                 'label': 'Quantity [Q] (in Kg)',
                 'total': true
             },
             {
-                'column_width': 12,
+                'column_width': 10.64,
                 'formula': null,
                 'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
                 'total': true
@@ -3388,31 +3388,31 @@ function create_data_for_excel_download() {
                 'total': true
             },
             {
-                'column_width': 10,
+                'column_width': 10.18,
                 'formula': null,
                 'label': "Farmers' Contribution [FC] (in Rs)",
                 'total': true
             },
             {
-                'column_width': 10,
+                'column_width': 10.18,
                 'formula': null,
                 'label': 'Commission Agent Contribution [CAC] (in Rs)',
                 'total': true
             },
             {
-                'column_width': 10.7,
+                'column_width': 8.73,
                 'formula': 'E + F - G - H',
                 'label': 'Total Payment (in Rs) (AP + TC - FC - CAC)',
                 'total': true
             },
             {
-                'column_width' : 10,
+                'column_width' : 8,
                 'formula' : null,
                 'label' : 'Aggregator Comment',
                 'total' : false
             },
             {
-                'column_width' : 10,
+                'column_width' : 8,
                 'formula' : null,
                 'label' : 'Farmer Comment',
                 'total' : false
