@@ -106,25 +106,25 @@ def send_updated_log(request):
                     except Exception: #Incase object edited and then deleted
                         district_animator_training_list.append(animator)
 
-                filtered_trainings = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='Training')
-                for training in filtered_trainings:
-                    try:
-                        if training.action != -1 and Training.objects.get(id=training.model_id).user_created_id == requesting_training_user.user_id:
-                            district_animator_training_list.append(training)
-                        elif training.action == -1:
-                            district_animator_training_list.append(training)
-                    except Exception: #Incase training edited and then deleted by admin
-                        district_animator_training_list.append(training)
-
-                filtered_scores = LogData.objects.filter(timestamp__gt=request_timestamp,entry_table='Score')
-                for score in filtered_scores:
-                    try:
-                        if score.action != -1 and Score.objects.get(id=score.model_id).training.user_created_id == requesting_training_user.user_id:
-                            district_animator_training_list.append(score)
-                        elif score.action == -1:
-                            district_animator_training_list.append(score)
-                    except Exception:
-                        district_animator_training_list.append(score)
+                # filtered_trainings = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='Training')
+                # for training in filtered_trainings:
+                #     try:
+                #         if training.action != -1 and Training.objects.get(id=training.model_id).user_created_id == requesting_training_user.user_id:
+                #             district_animator_training_list.append(training)
+                #         elif training.action == -1:
+                #             district_animator_training_list.append(training)
+                #     except Exception: #Incase training edited and then deleted by admin
+                #         district_animator_training_list.append(training)
+                #
+                # filtered_scores = LogData.objects.filter(timestamp__gt=request_timestamp,entry_table='Score')
+                # for score in filtered_scores:
+                #     try:
+                #         if score.action != -1 and Score.objects.get(id=score.model_id).training.user_created_id == requesting_training_user.user_id:
+                #             district_animator_training_list.append(score)
+                #         elif score.action == -1:
+                #             district_animator_training_list.append(score)
+                #     except Exception:
+                #         district_animator_training_list.append(score)
 
 
                 # user_modified = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table="TrainingUser")
