@@ -710,10 +710,13 @@ function set_filterlistener() {
 
                 for (var i = 0; i < aggregator_data_set_copy.length; i++) {
                     aggregator_data_set_copy[i] = aggregator_data_set_copy[i].slice(0, 9);
+                    aggregator_data_set_copy[i].push(aggregator_data_set[i][11])
+                    aggregator_data_set_copy[i].push(aggregator_data_set[i][12])
                 }
 
                 for (var i = 0; i < gaddidar_data_set_copy.length; i++) {
                     gaddidar_data_set_copy[i] = gaddidar_data_set_copy[i].slice(0, 6);
+                    gaddidar_data_set_copy[i].push(gaddidar_data_set[i][9]);
                 }
 
                 var data_json = {
@@ -3401,6 +3404,18 @@ function create_data_for_excel_download() {
                 'formula': 'E + F - G - H',
                 'label': 'Total Payment (in Rs) (AP + TC - FC - CAC)',
                 'total': true
+            },
+            {
+                'column_width' : 10,
+                'formula' : null,
+                'label' : 'Aggregator Comment',
+                'total' : false
+            },
+            {
+                'column_width' : 10,
+                'formula' : null,
+                'label' : 'Farmer Comment',
+                'total' : false
             }
         ],
         'gaddidar': [{
@@ -3438,6 +3453,12 @@ function create_data_for_excel_download() {
                 'formula': null,
                 'label': 'Commission Agent Contribution [CAC] (in Rs) (Q*CAD)',
                 'total': true
+            },
+            {
+                'column_width' : 10,
+                'formula' : null,
+                'label' : 'Comment',
+                'total' : false
             }
         ],
         'transporter': [{
