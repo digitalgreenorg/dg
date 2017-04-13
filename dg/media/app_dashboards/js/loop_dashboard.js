@@ -717,7 +717,6 @@ function set_filterlistener() {
 
                 aggregator_data_set_copy = aggregator_data_set.slice();
                 gaddidar_data_set_copy = gaddidar_data_set.slice();
-                console.log(aggregator_data_set_copy);
                 for (var i = 0; i < aggregator_data_set_copy.length; i++) {
                     aggregator_data_set_copy[i] = aggregator_data_set_copy[i].slice(0, 9);
                 }
@@ -3364,6 +3363,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     $('#table4').DataTable({
         destroy: true,
         data: transporter_data_set,
+        "order": [[1,"asc"]],
         columns: [{
             title: "Id",
             visible: false
@@ -3436,7 +3436,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                     $('#table4').find('td').removeClass("editedcell");
                     $('#table4').find('td').removeClass("editedcelledge");
                     editedDataTransportation = processTransportationRow(rows_table4,editedDataTransportation);
-                    console.log(editedDataTransportation);
+                    //console.log(editedDataTransportation);
                     //editedDataGaddidar = processGaddidarRow(rows_table3, editedDataGaddidar);
                     var sData = this.fnGetTableData(oConfig);
                     var transportationObjects = {
@@ -3457,18 +3457,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             success: function() {
                                 alert("Success : Transportation Data");
                                 transportationAjaxSuccess = 1;
-                                /*for (var keys in rows_table4) {
-                                    if (($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).indexOf('%') >= 0) {
-                                        gaddidar_data_set[keys - 1][4] = parseFloat(($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML).split('%')[0]) / 100;
-                                    } else {
-                                        gaddidar_data_set[keys - 1][4] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
-                                    }
-                                    gaddidar_data_set[keys - 1][5] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
-                                    gaddidar_data_set[keys - 1][6] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
-                                    gaddidar_data_set_clone[keys - 1][4] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
-                                    gaddidar_data_set_clone[keys - 1][5] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
-                                    gaddidar_data_set_clone[keys - 1][6] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
-                                }*/
+                                for (var keys in rows_table4) {
+                                    transporter_data_set[keys - 1][6] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
+                                    transporter_data_set[keys - 1][7] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+                                }
                                 rows_table4 = [];
                                 get_payments_data();
                                 delay = 3000;
@@ -3485,7 +3477,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             },
                             timeout: 10000
                         });
-                        console.log(rows_table4)
+                        //console.log(rows_table4)
                         }
                    if (transportationAjaxSuccess != -1) {
                         if (!($('#ToolTables_table4_0').hasClass('disable-button'))) {
