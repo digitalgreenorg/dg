@@ -1,5 +1,4 @@
 # coding=utf-8
-import copy
 import math
 
 from loop.sendmail import common_send_email
@@ -65,9 +64,6 @@ class Command(BaseCommand):
         #         print aggregator_wise_FShare_outliers
 
 
-
-
-
         for aggregator in aggregators:
             table_position_to_start = {'row': 2, 'col': 0}
             worksheet_name[aggregator.name_en] = header_dict_for_transport_outlier['worksheet_name'] % (
@@ -83,9 +79,6 @@ class Command(BaseCommand):
         common_send_email("Hello Logo", recipients=RECIPIENTS, files=[file_to_send], bcc=[],
                           from_email='lokesh@digitalgreen.org', html="", text='hello')
 
-
-    # create_format = Functions.create_format
-
     # Parameters provided at command prompt
     # By default, daily_a_m_filtered must take entire time period because it will be used in impact code
 
@@ -96,7 +89,6 @@ class Command(BaseCommand):
 
 
     def data_Manipulator(self, daily_a_m_transportShare, time_period):
-
         # Position of relevant columns
         dam_aggregator_id_col = 0
         dam_mandi_id_col = 1
@@ -255,5 +247,3 @@ class Command(BaseCommand):
                 # Finds all quartile values for each aggregator-market combination and updates in a_m_count
                 # a_m_count_query_result is a list and not a dictionary because the order of traversal is important as list is sorted
                 # TODO: 1.5 and 0.75 to be provided by user
-
-                # print aggregator_wise_TCost_correct

@@ -43,7 +43,7 @@ class Command(BaseCommand):
             default=(datetime.now() - timedelta(days=6)).strftime('%Y%m%d'))
 
 
-    
+
     #generate the excel for the given command line arguments
     def handle(self, *args, **options):
         generate_sheet_for = str(options.get('aggregator'))
@@ -67,7 +67,7 @@ class Command(BaseCommand):
         else:
             from_date=to_date[0:6]+(datetime.now() - timedelta(days=5)).strftime('%Y%m%d')[-2:]
 
-        if num_days < 0: 
+        if num_days < 0:
             raise CommandError('-nd flag should be > 0')
         elif num_days != 0:
             temp_date = datetime.strptime(to_date, '%Y%m%d')
@@ -97,7 +97,7 @@ class Command(BaseCommand):
         default_from_day = default_start_date.get('day')
         default_from_month = default_start_date.get('month')
         default_from_year = default_start_date.get('year')
-        
+
 
         AGGREGATOR_LIST = list(LoopUser.objects.exclude(role=1).values_list('name', flat=True))
         AGGREGATOR_LIST_EN = list(LoopUser.objects.exclude(role=1).values_list('name_en', flat=True))
@@ -108,18 +108,18 @@ class Command(BaseCommand):
         elif from_date > to_date:
                 raise CommandError('Invalid date range given')
         elif generate_sheet_for != 'all' and generate_sheet_for not in AGGREGATOR_LIST_EN:
-                raise CommandError('Aggregator not present in database')            
+                raise CommandError('Aggregator not present in database')
 
         query = None
-        generate_sheet_for_all_flag = True 
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+        generate_sheet_for_all_flag = True
+        mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'], user=DATABASES['default']['USER'],
                                            passwd=DATABASES['default']['PASSWORD'],
                                            db=DATABASES['default']['NAME'],
                                             charset = 'utf8',
                                              use_unicode = True)
-        
+
         cur = mysql_cn.cursor()
-        
+
         #determine the aggregator(s) for whom the sheet is generated
         if generate_sheet_for == 'all' or generate_sheet_for == None:
             query = query_for_incorrect_phone_no_all_aggregator % (from_date, to_date, from_date, to_date)
@@ -132,7 +132,7 @@ class Command(BaseCommand):
             excel_workbook_name = 'Incorrect_Mobile_Numbers_' + generate_sheet_for + '_ ' + from_day + '-' + \
                         from_month + '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
 
-    
+
         cur.execute(query)
         result = cur.fetchall()
         data = [list(row) for row in result]
@@ -150,7 +150,7 @@ class Command(BaseCommand):
             data_json['all'] = {'sheet_heading': sheet_heading,
                                     'sheet_name': 'सारे किसान', 'data': data
                                 }
-                    
+
             header_json['all'] = header_dict_for_loop_email_mobile_numbers
             data_list_for_email_body_current_duration['Total'] = len(data)
             #write data for every aggregator in their respective sheet
@@ -162,9 +162,9 @@ class Command(BaseCommand):
                     filtered_data_copy[sno - 1].insert(0, str(sno))
                     if int(filtered_data_copy[sno - 1][6]) >= 9999999999:
                         filtered_data_copy[sno - 1][6] = 'नंबर नहीं है'
-                    
+
                 sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + from_day + '-' + from_month + \
-                                                '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year 
+                                                '-' + from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
                 data_json[aggregator_name] = {'sheet_heading': sheet_heading,
                                     'sheet_name': aggregator_name, 'data': filtered_data_copy
                                 }
@@ -179,11 +179,11 @@ class Command(BaseCommand):
 
             sheet_heading = generate_sheet_for.encode('utf-8') +'_गलत मोबाइल नंबर की लिस्ट_' + \
                                 from_day + '-' + from_month + '-' + from_year + ' to ' + to_day + '-' +  \
-                                to_month + '-' + to_year 
+                                to_month + '-' + to_year
             data_json[generate_sheet_for] = {'sheet_heading': sheet_heading ,
                                     'sheet_name': generate_sheet_for, 'data': data
                                 }
-            
+
             header_json[generate_sheet_for] = header_dict_for_loop_email_mobile_numbers
             data_list_for_email_body_current_duration[generate_sheet_for] = len(data)
 
@@ -205,7 +205,7 @@ class Command(BaseCommand):
             excel_workbook_name_second = 'Incorrect_Mobile_Numbers_' + generate_sheet_for + '_ ' + default_from_day + '-' + \
                         default_from_month + '-' + default_from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
 
-        cur2 = mysql_cn.cursor()                
+        cur2 = mysql_cn.cursor()
         cur2.execute(query)
         result = cur2.fetchall()
         data2 = [list(row) for row in result]
@@ -223,7 +223,7 @@ class Command(BaseCommand):
             data_json2['all'] = {'sheet_heading': sheet_heading,
                                     'sheet_name': 'सारे किसान', 'data': data2
                                 }
-                    
+
             header_json2['all'] = header_dict_for_loop_email_mobile_numbers
             data_list_for_email_body_all_duration['Total'] = len(data2)
             #write data for every aggregator in their respective sheet
@@ -235,9 +235,9 @@ class Command(BaseCommand):
                     filtered_data_copy[sno - 1].insert(0, str(sno))
                     if int(filtered_data_copy[sno - 1][6]) >= 9999999999:
                         filtered_data_copy[sno - 1][6] = 'नंबर नहीं है'
-                    
+
                 sheet_heading = aggregator_name.encode('utf-8') + '_गलत मोबाइल नंबर की लिस्ट_' + default_from_day + '-' + default_from_month + \
-                                                '-' + default_from_year + ' to ' + to_day + '-' + to_month + '-' + to_year 
+                                                '-' + default_from_year + ' to ' + to_day + '-' + to_month + '-' + to_year
                 data_json2[aggregator_name] = {'sheet_heading': sheet_heading,
                                     'sheet_name': aggregator_name, 'data': filtered_data_copy
                                 }
@@ -252,11 +252,11 @@ class Command(BaseCommand):
 
             sheet_heading = generate_sheet_for.encode('utf-8') +'_गलत मोबाइल नंबर की लिस्ट_' + \
                                 default_from_day + '-' + default_from_month + '-' + default_from_year + ' to ' + to_day + '-' +  \
-                                to_month + '-' + to_year 
+                                to_month + '-' + to_year
             data_json2[generate_sheet_for] = {'sheet_heading': sheet_heading ,
                                     'sheet_name': generate_sheet_for, 'data': data2
                                 }
-            
+
             header_json2[generate_sheet_for] = header_dict_for_loop_email_mobile_numbers
             data_list_for_email_body_current_duration[generate_sheet_for] = len(data2)
 
@@ -270,21 +270,21 @@ class Command(BaseCommand):
         items = []
         if len(data_list_for_email_body_current_duration.keys()) > 1:
             for aggregator_name in AGGREGATOR_LIST:
-                items.append({'name':AGGREGATOR_LIST_EN[AGGREGATOR_LIST.index(aggregator_name)], 'total': data_list_for_email_body_all_duration.get(aggregator_name), 
+                items.append({'name':AGGREGATOR_LIST_EN[AGGREGATOR_LIST.index(aggregator_name)], 'total': data_list_for_email_body_all_duration.get(aggregator_name),
                                 'current': data_list_for_email_body_current_duration.get(aggregator_name)})
 
-            items.append({'name':'Total', 'total': data_list_for_email_body_all_duration.get('Total'), 
-                                'current': data_list_for_email_body_current_duration.get('Total')})        
-            
-        else:
-            items.append({'name':AGGREGATOR_LIST_EN[AGGREGATOR_LIST.index(generate_sheet_for)], 'total': data_list_for_email_body_all_duration.get(generate_sheet_for), 
-                                'current': data_list_for_email_body_current_duration.get(generate_sheet_for)}) 
+            items.append({'name':'Total', 'total': data_list_for_email_body_all_duration.get('Total'),
+                                'current': data_list_for_email_body_current_duration.get('Total')})
 
-        html_template = 'loop/loop_html_body.html'    
+        else:
+            items.append({'name':AGGREGATOR_LIST_EN[AGGREGATOR_LIST.index(generate_sheet_for)], 'total': data_list_for_email_body_all_duration.get(generate_sheet_for),
+                                'current': data_list_for_email_body_current_duration.get(generate_sheet_for)})
+
+        html_template = 'loop/loop_html_body.html'
         final_html_raw = get_template(html_template)
         context = Context({'items': items})
         final_html = final_html_raw.render(context)
-        
+
         #post request to library for excel generation
         try:
             # r = requests.post('http://localhost:8000/loop/get_payment_sheet/', data=json.dumps(final_json_to_send))
@@ -338,7 +338,6 @@ class Command(BaseCommand):
             # excel_file.close()
             # files.append(excel_file)
             #send email to concerned people with excel file attached    
-
             common_send_email('Farmers List with Incorrect Mobile Numbers',
                               RECIPIENTS, files, [],EMAIL_HOST_USER, html=final_html, text=final_html)
 
@@ -346,9 +345,3 @@ class Command(BaseCommand):
             os.remove(excel_workbook_name_second + '.xlsx')
         except Exception as e:
             raise CommandError('There is some problem, please contact the administrator')
-        
-
-
-
-
-
