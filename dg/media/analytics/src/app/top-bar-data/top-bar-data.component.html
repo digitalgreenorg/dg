@@ -2,8 +2,8 @@
   top-bar-data works!
   {{title}}
 
-  <li *ngFor = "let d of myData">
-    No. of Trainings : {{d.num_trainings}}
+  <li *ngFor='let key of myData | keys'>
+   {{key.key}} -> {{key.value}}
   </li>
 </p>
 <accordion>

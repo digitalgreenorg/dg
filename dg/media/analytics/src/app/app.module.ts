@@ -7,11 +7,13 @@ import { AppComponent } from './app.component';
 import { TopBarDataComponent } from './top-bar-data/top-bar-data.component';
 import { TopBarDataService } from './top-bar-data.service';
 import { AccordionModule } from '../../node_modules/ngx-bootstrap';
+import { KeysPipe } from './keys.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TopBarDataComponent
+    TopBarDataComponent,
+    KeysPipe,
   ],
   imports: [
     BrowserModule,

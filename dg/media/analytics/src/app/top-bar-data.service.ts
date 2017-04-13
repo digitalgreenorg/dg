@@ -13,8 +13,7 @@ export class TopBarDataService {
    
   constructor(private http: Http) { }
   getData():Promise<MyData []> {
-    // return Promise.resolve(DATA);
-    // return this.http.get(this.webUrl); doesn't call web api
+    
     let params : URLSearchParams = new URLSearchParams();
     params.set('start_date', '2017-01-01');
     params.set('end_date', '2017-03-31');

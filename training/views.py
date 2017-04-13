@@ -16,7 +16,9 @@ from geographies.models import State
 from django.db import connection
 import datetime
 from datetime import date
-from output.database.utility import run_query_raw
+from output.database.utility import run_query_raw, get_init_sql_ds, join_sql_ds
+from multiprocessing import Pool
+from multiprocessing.dummy import Pool as ThreadPool
 
 # Create your views here.
 @csrf_exempt
@@ -38,21 +40,58 @@ def login(request):
     else:
         return HttpResponse("0")
     return HttpResponse("0")
+
+def run_query(query_string, *query_args):
+    if(not query_string):
+        return ()
+    cursor = connection.cursor()
+    cursor.execute(query_string, query_args)
+    return cursor.fetchall()
+
+
+def get_sql_result(query_dict):
+    res = list(run_query(query_dict['query_string']))[0][0]
+    data_dict = {}
+    data_dict[query_dict['query_tag']] = res
+    return (query_dict['query_tag'], res)
     
 def testmethod(request):
-    print '*******************call hua**********************'
-    # data_dict = {'id' : 1, 'name' : 'sujit'}, {'id' : 2, 'name' : 'Chandru'}, {'id' : 3, 'name' : 'lodha'}
+    
     start_date = str(request.GET['start_date'])
     end_date = str(request.GET['end_date'])
-    sql_query = '''SELECT count(tt.id)
-                        FROM training_training tt
-                    WHERE date between (%s) and (%s);
-                '''
-    num_trainings = list(run_query_raw(sql_query, start_date, end_date))
-    # print type(num_trainings)
+
+    sql_query_list = []
+    args_list = []
+
+    # No. of Trainings
+    args_dict = {}
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('count(distinct ttps.animator_id)')
+    sql_ds['from'].append('training_score ts')
+    sql_ds['join'].append(['training_training_participants ttps', 'ts.training_id = ttps.training_id'])
+    sql_q = join_sql_ds(sql_ds)
+    args_dict['query_tag'] = 'num_mediators'
+    args_dict['query_string'] = sql_q
+    args_list.append(args_dict)
     
-    data = json.dumps([{'num_trainings':num_trainings[0][0]},])
-    print data
+    # Mediators Trained
+    args_dict = {}
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('count(*)')
+    sql_ds['from'].append('training_training')
+    sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
+    sql_q = join_sql_ds(sql_ds)
+    args_dict['query_tag'] = 'num_trainings'
+    args_dict['query_string'] = sql_q
+    args_list.append(args_dict)
+
+    # 
+    pool = ThreadPool(4)
+    results = dict(pool.map(get_sql_result, args_list))
+    pool.close()
+    pool.join()
+
+    data = json.dumps(results)
     return HttpResponse(data)
 
 def dashboard(request):
