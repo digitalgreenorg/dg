@@ -94,7 +94,7 @@ class Training(BaseModel):
     participants = models.ManyToManyField(Animator)
     district = models.ForeignKey(District, null=True, blank=True)
     trainingType = models.BooleanField(default=True,verbose_name="Without Video") # with / without video
-    kind_of_training = models.BooleanField(default=True, verbose_name="Refresher Training") # new / refresher training
+    kind_of_training = models.BooleanField(default=True, verbose_name="New Training") # new / refresher training
     participants_count = models.IntegerField(default=0)
     partner = models.ForeignKey(Partner, null=True, blank=True)
 
