@@ -2376,7 +2376,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             farmer_share[date_index][mandi_index].farmer_share_amount = transport_payment[i]['farmer_share'];
             farmer_share[date_index][mandi_index].farmer_share_comment = transport_payment[i]['farmer_share_comment'];
 
-            transporter_data_set.push([transport_payment[i]['id'],transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2)),transport_payment[i]['transportation_cost_comment'],transport_payment[i]['mandi__id'],transport_payment[i]['transportation_vehicle__id'],transport_payment[i]['timestamp']]);
+            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2)),transport_payment[i]['transportation_cost_comment'],transport_payment[i]['mandi__id'],transport_payment[i]['transportation_vehicle__id'],transport_payment[i]['timestamp']]);
         }
     }
     transporter_data_set = transporter_data_set.sort(function(first, second) {
@@ -3305,8 +3305,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     });
     $('#transportation_reset_modal').on('click', function() {
         transportationResetClick = true;
-        $('#transportation_cost_row').val($('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data());
-        $('#transportation_comment_row').val($('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 7).data());
+        $('#transportation_cost_row').val($('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data());
+        $('#transportation_comment_row').val($('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data());
     });
     $('#transportation_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#transportation_cost_row'))) {
@@ -3315,8 +3315,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             $('#aggregator_commission_row').focus();
             return false;
         } else if (transportationResetClick && editedTransportation == 0) {
-            $this.parent()[0].childNodes[5].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data();
-            $this.closest('tr').children('td:nth-child(7)')[0].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 7).data();
+            $this.parent()[0].childNodes[5].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data();
+            $this.closest('tr').children('td:nth-child(7)')[0].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data();
             delete rows_table4[$this.context.parentNode.rowIndex];
             $this.removeAttr('class');
             $this.closest('tr').children('td:nth-child(7)')[0].className = '';
@@ -3343,15 +3343,15 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             var aggregator_idDict = {};
             var mandi_idDict ={};
             var transportationvehicle_idDict = {};
-            row_data['id'] = $('#table4').DataTable().cell(keys - 1, 0).data();
+            //row_data['id'] = $('#table4').DataTable().cell(keys - 1, 0).data();
             aggregator_idDict['online_id'] = agg_id;
             row_data['aggregator'] = aggregator_idDict;
-            mandi_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 8).data();
+            mandi_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 7).data();
             row_data['mandi'] = mandi_idDict;
-            transportationvehicle_idDict["online_id"] = $('#table4').DataTable().cell(keys - 1, 9).data();
+            transportationvehicle_idDict["online_id"] = $('#table4').DataTable().cell(keys - 1, 8).data();
             row_data['transportation_vehicle'] = transportationvehicle_idDict;
-            row_data['date'] = $('#table4').DataTable().cell(keys - 1, 1).data();
-            row_data['timestamp'] = $('#table4').DataTable().cell(keys - 1, 10).data();
+            row_data['date'] = $('#table4').DataTable().cell(keys - 1, 0).data();
+            row_data['timestamp'] = $('#table4').DataTable().cell(keys - 1, 9).data();
             row_data['transportation_cost'] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
             row_data['transportation_cost_comment'] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
             editedData.push(row_data);
@@ -3363,11 +3363,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     $('#table4').DataTable({
         destroy: true,
         data: transporter_data_set,
-        "order": [[1,"asc"]],
         columns: [{
-            title: "Id",
-            visible: false
-        }, {
             title: "Date"
         }, {
             title: "Market"
@@ -3458,8 +3454,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 alert("Success : Transportation Data");
                                 transportationAjaxSuccess = 1;
                                 for (var keys in rows_table4) {
-                                    transporter_data_set[keys - 1][6] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
-                                    transporter_data_set[keys - 1][7] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+                                    console.log(keys)
+                                    transporter_data_set[keys - 1][5] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
+                                    transporter_data_set[keys - 1][6] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
                                 }
                                 rows_table4 = [];
                                 get_payments_data();
@@ -3705,7 +3702,7 @@ function get_payments_data() {
             $('#aggregator_payment_tab').show();
             payments_data = JSON.parse(data);
 
-            //            console.log(payments_data)
+            //           console.log(payments_data)
 
             outliers_data = payments_data.outlier_data;
             outliers_transport_data = payments_data.outlier_transport_data;
