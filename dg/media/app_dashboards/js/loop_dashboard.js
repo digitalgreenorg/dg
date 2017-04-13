@@ -3454,7 +3454,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 alert("Success : Transportation Data");
                                 transportationAjaxSuccess = 1;
                                 for (var keys in rows_table4) {
-                                    console.log(keys)
                                     transporter_data_set[keys - 1][5] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
                                     transporter_data_set[keys - 1][6] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
                                 }
@@ -3708,6 +3707,7 @@ function get_payments_data() {
             outliers_transport_data = payments_data.outlier_transport_data;
             outlier_daily_data = payments_data.outlier_daily_data;
             payments_gaddidar_contribution = payments_data.gaddidar_data;
+            transportation_data = payments_data.transportation_data;
             if (language == ENGLISH_LANGUAGE) {
                 fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name_en', 'Aggregator', 'id');
             } else {
