@@ -257,7 +257,7 @@ class TrainerResource(ModelResource):
         authorization = Authorization()
         include_resource_uri = False
     dehydrate_language = partial(
-        foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
+        foreign_key_to_id, field_name='language', sub_field_names=['id'])
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
 
     def dehydrate(self, bundle):
@@ -296,12 +296,14 @@ class MediatorResource(ModelResource):
         resource_name = 'mediator'
         authorization = MediatorAuthorization()
         always_return_data = True
-        excludes = ('time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified','role','total_adoptions')
         include_resource_uri = False
+
     dehydrate_partner = partial(
-        foreign_key_to_id, field_name='partner', sub_field_names=['id', 'partner_name'])
+        foreign_key_to_id, field_name='partner', sub_field_names=['id'])
     dehydrate_district = partial(
-        foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
+        foreign_key_to_id, field_name='district', sub_field_names=['id'])
+
     hydrate_assigned_villages = partial(
         dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name='village')
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
@@ -312,7 +314,7 @@ class MediatorResource(ModelResource):
         return bundle
 
     def dehydrate_assigned_villages(self, bundle):
-        return [{'id': vil.id, 'online_id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all())]
+        return [{'online_id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all())]
 
     def dehydrate_mediator_label(self, bundle):
         # for sending out label incase of dropdowns
@@ -368,10 +370,10 @@ class QuestionResource(ModelResource):
         authorization = Authorization()
         include_resource_uri = False
     dehydrate_assessment = partial(
-        foreign_key_to_id, field_name='assessment', sub_field_names=['id', 'name'])
+        foreign_key_to_id, field_name='assessment', sub_field_names=['id'])
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
     dehydrate_language = partial(
-        foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
+        foreign_key_to_id, field_name='language', sub_field_names=['id'])
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
 
     def dehydrate(self, bundle):
@@ -413,20 +415,20 @@ class TrainingResource(BaseResource):
     hydrate_partner = partial(dict_to_foreign_uri, field_name='partner')
 
     dehydrate_language = partial(
-        foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
+        foreign_key_to_id, field_name='language', sub_field_names=['id'])
     dehydrate_assessment = partial(
-        foreign_key_to_id, field_name='assessment', sub_field_names=['id', 'name'])
+        foreign_key_to_id, field_name='assessment', sub_field_names=['id'])
     dehydrate_partner = partial(
-        foreign_key_to_id, field_name='partner', sub_field_names=['id', 'partner_name'])
+        foreign_key_to_id, field_name='partner', sub_field_names=['id'])
     # dehydrate_district = partial(
     #     foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
-    dehydrate_facilitator = partial(foreign_key_to_id, field_name='facilitator', sub_field_names=['id', 'name'])
+    dehydrate_facilitator = partial(foreign_key_to_id, field_name='facilitator', sub_field_names=['id'])
 
     def dehydrate_trainer(self, bundle):
-        return [{'online_id': trainer.id, 'name': trainer.name} for trainer in bundle.obj.trainer.all()]
+        return [{'online_id': trainer.id} for trainer in bundle.obj.trainer.all()]
 
     def dehydrate_participants(self, bundle):
-        return [{'online_id': mediator.id, 'name': mediator.name} for mediator in bundle.obj.participants.all()]
+        return [{'online_id': mediator.id} for mediator in bundle.obj.participants.all()]
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
