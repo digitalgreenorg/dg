@@ -38,7 +38,7 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
             dict[sub_field] = None
     else:
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
-        dict["online_id"] = dict["id"]
+        dict["online_id"] = dict.pop("id")
     return dict
 
 
