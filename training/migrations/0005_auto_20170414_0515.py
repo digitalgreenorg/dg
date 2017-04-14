@@ -22,6 +22,9 @@ class Migration(migrations.Migration):
                 ('entry_table', models.CharField(max_length=100)),
                 ('table_object', models.CharField(max_length=500)),
             ],
+            options={
+                'verbose_name_plural': 'Deleted Logs',
+            },
         ),
         migrations.CreateModel(
             name='LogData',
@@ -33,6 +36,9 @@ class Migration(migrations.Migration):
                 ('model_id', models.IntegerField(null=True)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
             ],
+            options={
+                'verbose_name_plural': 'Logs',
+            },
         ),
         migrations.AddField(
             model_name='question',
@@ -52,7 +58,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='training',
             name='kind_of_training',
-            field=models.BooleanField(default=True),
+            field=models.BooleanField(default=True, verbose_name=b'New Training'),
         ),
         migrations.AddField(
             model_name='training',
@@ -78,5 +84,10 @@ class Migration(migrations.Migration):
             model_name='training',
             name='user_modified',
             field=models.ForeignKey(related_name='training_training_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        migrations.AlterField(
+            model_name='training',
+            name='trainingType',
+            field=models.BooleanField(default=True, verbose_name=b'Without Video'),
         ),
     ]
