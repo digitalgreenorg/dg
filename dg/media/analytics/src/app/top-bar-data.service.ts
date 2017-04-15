@@ -15,8 +15,8 @@ export class TopBarDataService {
   getData():Promise<MyData []> {
     
     let params : URLSearchParams = new URLSearchParams();
-    params.set('start_date', '2017-01-01');
-    params.set('end_date', '2017-03-31');
+    params.set('start_date', '2015-01-01');
+    params.set('end_date', '2017-04-15');
     let requestOptions : RequestOptions = new RequestOptions();
     requestOptions.search = params;
     return this.http.get(this.webUrl, requestOptions)

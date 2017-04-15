@@ -1,27 +1,14 @@
 <p>
   top-bar-data works!
   {{title}}
-
-  <li *ngFor='let key of myData | keys'>
-   {{key.key}} -> {{key.value}}
-  </li>
 </p>
-<accordion>
-  <accordion-group heading="Static Header, initially expanded">
-    This content is straight in the template.
-  </accordion-group>
-  <accordion-group #group>
-    <div accordion-heading>
-      I can have markup, too!
-      <i class="pull-right float-xs-right glyphicon"
-         [ngClass]="{'glyphicon-chevron-down': group?.isOpen, 'glyphicon-chevron-right': !group?.isOpen}"></i>
+  <br>
+  <li class="list-inline-item" *ngFor='let key of myData | keys'>
+    <div class="card" style="width: 20rem; background-color: #009688">
+      <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+      <div class="card-block">
+        <h4 class="card-title text-white">{{key.key}}</h4>
+        <h6 class="card-text text-white small"><em><strong>{{key.value}}</strong></em></h6>
+      </div>
     </div>
-    This is just some content to illustrate fancy headings.
-  </accordion-group>
-  <accordion-group heading="Content 1">
-    <p>Content 1</p>
-  </accordion-group>
-  <accordion-group heading="Content 2">
-    <p>Content 2</p>
-  </accordion-group>
-</accordion>
+  </li>
