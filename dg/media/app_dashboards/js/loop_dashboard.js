@@ -3517,7 +3517,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
             // Total over all pages
             var totalCost = api
-                .column(7)
+                .column(6)
                 .data()
                 .reduce(function(a, b) {
                     return a + b;
