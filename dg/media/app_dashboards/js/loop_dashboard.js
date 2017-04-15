@@ -3265,17 +3265,17 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         $('#transportation_date_row').val($this.parent()[0].childNodes[0].innerHTML);
         $('#transportation_mandi_row').val($this.parent()[0].childNodes[1].innerHTML);
         $('#transportation_transporter_row').val($this.parent()[0].childNodes[2].innerHTML);
-        $('#transportation_vehicle_row').val($this.parent()[0].childNodes[3].innerHTML);
-        $('#transportation_number_row').val($this.parent()[0].childNodes[4].innerHTML);
-        $('#transportation_cost_row').val(parseFloat($this.parent()[0].childNodes[5].textContent).toFixed(2));
-        $('#transportation_comment_row').val($this.parent()[0].childNodes[6].textContent);
+        $('#transportation_vehicle_row').val($this.parent()[0].childNodes[4].innerHTML);
+        $('#transportation_number_row').val($this.parent()[0].childNodes[5].innerHTML);
+        $('#transportation_cost_row').val(parseFloat($this.parent()[0].childNodes[6].textContent).toFixed(2));
+        $('#transportation_comment_row').val($this.parent()[0].childNodes[7].textContent);
         $('#transportation_error_div').hide();
     };
     
 
     $('#table4').on('click', 'tbody td', function(e) {
         $this = $(this);
-        if (flag_edit_Table4 == true && ($this.context.cellIndex === 5)) {
+        if (flag_edit_Table4 == true && ($this.context.cellIndex === 6)) {
             initializeTransportModal();
             $('#transportation_modal').openModal();
             $('#transportation_cost_row').focus();
@@ -3289,7 +3289,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         if (!inputValidation($('#transportation_cost_row'))) {
             actionOnInvalidValidation($('#transportation_share_row'), $('#transportation_error_div'), $('#transportation_error_message'));
         }
-        else if ($('#transportation_cost_row').val().trim() != '' && $('#transportation_cost_row').val().trim() != $this.parent()[0].childNodes[5].innerHTML){
+        else if ($('#transportation_cost_row').val().trim() != '' && $('#transportation_cost_row').val().trim() != $this.parent()[0].childNodes[6].innerHTML){
             editedTransportation=1;
         }
     });
@@ -3316,30 +3316,30 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     });
     $('#transportation_reset_modal').on('click', function() {
         transportationResetClick = true;
-        $('#transportation_cost_row').val($('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data());
-        $('#transportation_comment_row').val($('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data());
+        $('#transportation_cost_row').val($('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data());
+        $('#transportation_comment_row').val($('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 7).data());
     });
     $('#transportation_submit_modal').on('click', function(ev) {
         if (!inputValidation($('#transportation_cost_row'))) {
             ev.preventDefault();
-            $('#transportation_cost_row').val($this.parent()[0].childNodes[5].textContent);
+            $('#transportation_cost_row').val($this.parent()[0].childNodes[6].textContent);
             $('#aggregator_commission_row').focus();
             return false;
         } else if (transportationResetClick && editedTransportation == 0) {
-            $this.parent()[0].childNodes[5].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data();
-            $this.closest('tr').children('td:nth-child(7)')[0].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data();
+            $this.parent()[0].childNodes[6].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data();
+            $this.closest('tr').children('td:nth-child(8)')[0].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 7).data();
             delete rows_table4[$this.context.parentNode.rowIndex];
             $this.removeAttr('class');
-            $this.closest('tr').children('td:nth-child(7)')[0].className = '';
+            $this.closest('tr').children('td:nth-child(8)')[0].className = '';
             $this.addClass('editcolumn');
             transportationResetClick = false;
         } else if (editedTransportation != 0) {
             $('#transportation_modal').closeModal();
-            $this.parent()[0].childNodes[5].innerHTML = $('#transportation_cost_row').val();
-            $this.parent()[0].childNodes[6].innerHTML = $('#transportation_comment_row').val() + ' - ' + window.localStorage.name;
+            $this.parent()[0].childNodes[6].innerHTML = $('#transportation_cost_row').val();
+            $this.parent()[0].childNodes[7].innerHTML = $('#transportation_comment_row').val() + ' - ' + window.localStorage.name;
                 $this.removeAttr('class');
                 $this.addClass('editedcell');
-                $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
+                $this.closest('tr').children('td:nth-child(8)')[0].className = 'editedcell';
             var row_id = $this.context.parentNode.rowIndex;
             rows_table4[row_id] = true;
             editedTransportation = 0;
@@ -3357,14 +3357,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             //row_data['id'] = $('#table4').DataTable().cell(keys - 1, 0).data();
             aggregator_idDict['online_id'] = agg_id;
             row_data['aggregator'] = aggregator_idDict;
-            mandi_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 7).data();
+            mandi_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 8).data();
             row_data['mandi'] = mandi_idDict;
-            transportationvehicle_idDict["online_id"] = $('#table4').DataTable().cell(keys - 1, 8).data();
+            transportationvehicle_idDict["online_id"] = $('#table4').DataTable().cell(keys - 1, 9).data();
             row_data['transportation_vehicle'] = transportationvehicle_idDict;
             row_data['date'] = $('#table4').DataTable().cell(keys - 1, 0).data();
             row_data['timestamp'] = $('#table4').DataTable().cell(keys - 1, 9).data();
-            row_data['transportation_cost'] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
-            row_data['transportation_cost_comment'] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+            row_data['transportation_cost'] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+            row_data['transportation_cost_comment'] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[7].innerHTML;
             editedData.push(row_data);
         }
         return editedData;
@@ -3467,8 +3467,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 alert("Success : Transportation Data");
                                 transportationAjaxSuccess = 1;
                                 for (var keys in rows_table4) {
-                                    transporter_data_set[keys - 1][5] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
-                                    transporter_data_set[keys - 1][6] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
+                                    transporter_data_set[keys - 1][6] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
+                                    transporter_data_set[keys - 1][7] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[7].innerHTML;
                                 }
                                 rows_table4 = [];
                                 get_payments_data();
@@ -3516,7 +3516,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
             // Total over all pages
             var totalCost = api
-                .column(6)
+                .column(7)
                 .data()
                 .reduce(function(a, b) {
                     return a + b;
@@ -3525,7 +3525,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
 
             // Update footer
-            $(api.column(6).footer()).html(
+            $(api.column(7).footer()).html(
                 finalFormat(totalCost + "")
             );
         }
