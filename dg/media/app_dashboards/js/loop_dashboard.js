@@ -3328,10 +3328,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             return false;
         } else if (transportationResetClick && editedTransportation == 0) {
             $this.parent()[0].childNodes[6].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data();
-            $this.closest('tr').children('td:nth-child(8)')[0].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 7).data();
+            $this.closest('tr').children('td:nth-child(7)')[0].innerHTML = $('#table4').DataTable().cell($this.context.parentNode.rowIndex - 1, 7).data();
             delete rows_table4[$this.context.parentNode.rowIndex];
             $this.removeAttr('class');
-            $this.closest('tr').children('td:nth-child(8)')[0].className = '';
+            $this.closest('tr').children('td:nth-child(7)')[0].className = '';
             $this.addClass('editcolumn');
             transportationResetClick = false;
         } else if (editedTransportation != 0) {
@@ -3340,7 +3340,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             $this.parent()[0].childNodes[7].innerHTML = $('#transportation_comment_row').val() + ' - ' + window.localStorage.name;
                 $this.removeAttr('class');
                 $this.addClass('editedcell');
-                $this.closest('tr').children('td:nth-child(8)')[0].className = 'editedcell';
+                $this.closest('tr').children('td:nth-child(7)')[0].className = 'editedcell';
             var row_id = $this.context.parentNode.rowIndex;
             rows_table4[row_id] = true;
             editedTransportation = 0;
