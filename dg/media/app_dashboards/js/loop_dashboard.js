@@ -719,10 +719,13 @@ function set_filterlistener() {
                 gaddidar_data_set_copy = gaddidar_data_set.slice();
                 for (var i = 0; i < aggregator_data_set_copy.length; i++) {
                     aggregator_data_set_copy[i] = aggregator_data_set_copy[i].slice(0, 9);
+                    aggregator_data_set_copy[i].push(aggregator_data_set[i][11])
+                    aggregator_data_set_copy[i].push(aggregator_data_set[i][12])
                 }
 
                 for (var i = 0; i < gaddidar_data_set_copy.length; i++) {
                     gaddidar_data_set_copy[i] = gaddidar_data_set_copy[i].slice(0, 6);
+                    gaddidar_data_set_copy[i].push(gaddidar_data_set[i][9]);
                 }
 
                 var data_json = {
@@ -2376,13 +2379,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             farmer_share[date_index][mandi_index].farmer_share_amount = transport_payment[i]['farmer_share'];
             farmer_share[date_index][mandi_index].farmer_share_comment = transport_payment[i]['farmer_share_comment'];
 
-            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2)),transport_payment[i]['transportation_cost_comment'],transport_payment[i]['mandi__id'],transport_payment[i]['transportation_vehicle__id'],transport_payment[i]['timestamp']]);
+            transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'],
+                transport_payment[i]['transportation_vehicle__transporter__transporter_phone'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2))
+            ]);
         }
     }
-    transporter_data_set = transporter_data_set.sort(function(first, second) {
-        return new Date(first[0]) - new Date(second[0]);
-    });
-
     var total_volume = 0;
     var total_payment = 0;
     for (var i = 0; i < dates.length; i++) {
@@ -2421,6 +2422,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             }
         }
     }
+    //TODO: to be removed. Added fot temporary purposes.
+    var data_set_length = aggregator_data_set.length;
+    aggregator_data_set.push([sno.toString(), "", "Mobile Recharge ", "", 150, "", "", "", 150, "", "", "", ""]);
+
     var gaddidar_data_set_clone = [];
     for (var i = 0; i < gaddidar_data_set.length; i++) {
         gaddidar_data_set_clone.push(gaddidar_data_set[i].slice());
@@ -2898,6 +2903,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             column_set = [3, 4, 5, 6, 7, 8];
             for (var i = 0; i < column_set.length; i++) {
                 total = api.column(column_set[i]).data().reduce(function(a, b) {
+                    if (a === "") {
+                        a = 0;
+                    }
+                    if (b === "") {
+                        b = 0;
+                    }
                     return parseFloat(a) + parseFloat(b);
                 }, 0);
                 $(api.column(column_set[i]).footer()).html(finalFormat(total + ""));
@@ -3370,6 +3381,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         }, {
             title: "Transporter"
         }, {
+            title: "Phone Number"
+        }, {
             title: "Vehicle Type"
         }, {
             title: "Vehicle Number"
@@ -3502,8 +3515,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 data;
 
             // Total over all pages
-            total5 = api
-                .column(5)
+            var totalCost = api
+                .column(6)
                 .data()
                 .reduce(function(a, b) {
                     return a + b;
@@ -3512,8 +3525,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
 
             // Update footer
-            $(api.column(5).footer()).html(
-                finalFormat(total5 + "")
+            $(api.column(6).footer()).html(
+                finalFormat(totalCost + "")
             );
         }
     });
@@ -3527,7 +3540,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 function create_data_for_excel_download() {
     header_dict = {
         'aggregator': [{
-                'column_width': 3,
+                'column_width': 2.45,
                 'formula': null,
                 'label': 'S No',
                 'total': false
@@ -3539,19 +3552,19 @@ function create_data_for_excel_download() {
                 'total': false
             },
             {
-                'column_width': 10,
+                'column_width': 9.64,
                 'formula': null,
                 'label': 'Market',
                 'total': false
             },
             {
-                'column_width': 8,
+                'column_width': 7.64,
                 'formula': null,
                 'label': 'Quantity [Q] (in Kg)',
                 'total': true
             },
             {
-                'column_width': 12,
+                'column_width': 10.64,
                 'formula': null,
                 'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
                 'total': true
@@ -3563,34 +3576,34 @@ function create_data_for_excel_download() {
                 'total': true
             },
             {
-                'column_width': 10,
+                'column_width': 10.18,
                 'formula': null,
                 'label': "Farmers' Contribution [FC] (in Rs)",
                 'total': true
             },
             {
-                'column_width': 10,
+                'column_width': 10.18,
                 'formula': null,
                 'label': 'Commission Agent Contribution [CAC] (in Rs)',
                 'total': true
             },
             {
-                'column_width': 10.7,
+                'column_width': 8.73,
                 'formula': 'E + F - G - H',
                 'label': 'Total Payment (in Rs) (AP + TC - FC - CAC)',
                 'total': true
             },
             {
-                'column_width': 10,
+                'column_width' : 8,
                 'formula' : null,
                 'label' : 'Aggregator Comment',
-                'total': false
+                'total' : false
             },
             {
-                'column_width': 10,
+                'column_width' : 8,
                 'formula' : null,
                 'label' : 'Farmer Comment',
-                'total': false
+                'total' : false
             }
         ],
         'gaddidar': [{
@@ -3630,14 +3643,14 @@ function create_data_for_excel_download() {
                 'total': true
             },
             {
-                'column_width': 10,
+                'column_width' : 10,
                 'formula' : null,
                 'label' : 'Comment',
-                'total': false
+                'total' : false
             }
         ],
         'transporter': [{
-                'column_width': 9.4,
+                'column_width': 8.4,
                 'formula': null,
                 'label': 'Date',
                 'total': false
@@ -3649,7 +3662,7 @@ function create_data_for_excel_download() {
                 'total': false
             },
             {
-                'column_width': 18.3,
+                'column_width': 17.3,
                 'formula': null,
                 'label': 'Transporter',
                 'total': false
@@ -3657,11 +3670,17 @@ function create_data_for_excel_download() {
             {
                 'column_width': 11,
                 'formula': null,
-                'label': 'Vehicle Type',
+                'label': 'Phone Number',
                 'total': false
             },
             {
-                'column_width': 13,
+                'column_width': 9.4,
+                'formula': null,
+                'label': 'Vehicle',
+                'total': false
+            },
+            {
+                'column_width': 11,
                 'formula': null,
                 'label': 'Vehicle Number',
                 'total': false
@@ -3700,8 +3719,6 @@ function get_payments_data() {
         }).done(function(data) {
             $('#aggregator_payment_tab').show();
             payments_data = JSON.parse(data);
-
-            //           console.log(payments_data)
 
             outliers_data = payments_data.outlier_data;
             outliers_transport_data = payments_data.outlier_transport_data;

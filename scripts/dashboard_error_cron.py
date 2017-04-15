@@ -15,13 +15,15 @@
 #
 # 3. Add a call to the new rule at the bottom of this script
 import site, sys
+import os
+import django
 sys.path.append('/home/ubuntu/code/dg_git')
 site.addsitedir('/home/ubuntu/.virtualenv/dg_production/lib/python2.7/site-packages/')
 
-from django.core.management import setup_environ
 import dg.settings
 
-setup_environ(dg.settings)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dg.settings")
+django.setup()
 from django.db import connection, IntegrityError
 from activities.models import *
 from coco.models import *
