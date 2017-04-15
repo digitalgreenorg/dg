@@ -3421,7 +3421,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                     $('#payments_from_date').removeClass('black-text');
                     $('#payments_to_date').removeClass('black-text');
                     flag_edit_Table4 = true;
-                    $('#table4').find('tr td:nth-child(6)').addClass('editcolumn');
+                    $('#table4').find('tr td:nth-child(7)').addClass('editcolumn');
                     //$('#table4').find('tr td:nth-child(7)').addClass('editcolumn');
                     var colCount = $('#table4').dataTable().fnSettings().aoColumns.length;
                     for (var column = 0; column < colCount; column++)
