@@ -3265,6 +3265,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         $('#transportation_date_row').val($this.parent()[0].childNodes[0].innerHTML);
         $('#transportation_mandi_row').val($this.parent()[0].childNodes[1].innerHTML);
         $('#transportation_transporter_row').val($this.parent()[0].childNodes[2].innerHTML);
+
         $('#transportation_vehicle_row').val($this.parent()[0].childNodes[4].innerHTML);
         $('#transportation_number_row').val($this.parent()[0].childNodes[5].innerHTML);
         $('#transportation_cost_row').val(parseFloat($this.parent()[0].childNodes[6].textContent).toFixed(2));
@@ -3357,9 +3358,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             //row_data['id'] = $('#table4').DataTable().cell(keys - 1, 0).data();
             aggregator_idDict['online_id'] = agg_id;
             row_data['aggregator'] = aggregator_idDict;
-            mandi_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 8).data();
+            mandi_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 7).data();
             row_data['mandi'] = mandi_idDict;
-            transportationvehicle_idDict["online_id"] = $('#table4').DataTable().cell(keys - 1, 9).data();
+            transportationvehicle_idDict["online_id"] = $('#table4').DataTable().cell(keys - 1, 8).data();
             row_data['transportation_vehicle'] = transportationvehicle_idDict;
             row_data['date'] = $('#table4').DataTable().cell(keys - 1, 0).data();
             row_data['timestamp'] = $('#table4').DataTable().cell(keys - 1, 9).data();
