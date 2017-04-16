@@ -12,16 +12,10 @@ time_period = []
 
 # Finds last cycle of 15 days (1-15 or 16-31) w.r.t. given date
 def find_last_cycle(assigned_date):
-    print "?????????????????"
-    print assigned_date
-    print "????????????????????"
     assigned_year = assigned_date.year
     assigned_month = assigned_date.month
     assigned_day = assigned_date.day
-
     last_date_of_last_month = assigned_date - timedelta(days=assigned_day)
-
-    # print last_day_of_last_month
 
     if assigned_day > 15:
         start_date = date(assigned_year, assigned_month, 1)
@@ -36,16 +30,7 @@ def find_last_cycle(assigned_date):
 
 def set_from_to_date(from_date, to_date, no_of_days):
     current_date = date.today()
-    print ">>>>>>>>>>>>"
-    print current_date
-    print "<<<<<<<<<<<<<<<<"
-
     current_date = str(current_date)
-
-    print from_date
-    print current_date
-    print to_date
-    print no_of_days
 
     if to_date and to_date > current_date:
         print 'To date is greater than today'
@@ -82,5 +67,4 @@ def set_from_to_date(from_date, to_date, no_of_days):
         else:
             print 'It is not possible to reach this else.'
 
-    print time_period
     return time_period

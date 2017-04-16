@@ -1,95 +1,11 @@
 # coding=utf-8
 import math
 
-from loop.sendmail import common_send_email
-from loop.models import LoopUser
-from loop.utils.emailers_support import date_setter
-from django.core.management.base import BaseCommand
 from loop.utils.emailers_support.queries import *
 from loop.utils.emailers_support.excel_generator import *
-from loop.config import *
 
 
-class Command(BaseCommand):
-    # parse arguments from command line
-    def add_arguments(self, parser):
-        #create mutually exclusive command line switches
-        group = parser.add_mutually_exclusive_group()
-        group.add_argument('-fd',
-                           dest='from_date',
-                           default=None)
-
-        group.add_argument('-nd',
-                           dest='num_days',
-                           default=None)
-
-        parser.add_argument('-a',
-                            dest='aggregator',
-                            default='all')
-
-        parser.add_argument('-td',
-                            dest='to_date',
-                            default=None)
-
-    #generate the excel for the given command line arguments
-    def handle(self, *args, **options):
-        from_to_date = date_setter.set_from_to_date(options.get('from_date'), options.get('to_date'),
-                                                    options.get('num_days'))
-        aggregators = LoopUser.objects.filter(role=2);
-        if options.get('aggregator') == 'all' or options.get('aggregator') == None:
-            aggregator_to_check_id_string = ''
-            #workbook_name = get_workbook_name()
-            workbook = create_workbook(header_dict_for_transport_outlier['workbook_name'] % (
-            MEDIA_ROOT, '', str(from_to_date[0]), str(from_to_date[1])))
-        else:
-            aggregator_to_check = aggregators.get(name_en=options.get('aggregator'))
-            aggregator_to_check_id_string = 'and ll.id = ' + str(aggregator_to_check.id) + ''
-            workbook = create_workbook(header_dict_for_transport_outlier['workbook_name'] % (
-            MEDIA_ROOT, str(aggregator_to_check.name), str(from_to_date[0]), str(from_to_date[1])))
-
-        query_result_data = self.data_generator(from_to_date, aggregator_to_check_id_string)
-        aggregator_wise_TShare_outliers = self.data_Manipulator(query_result_data, from_to_date)
-        worksheet_name = {'All': 'Transport cost Outliers_' + str(from_to_date[0]) + "_" + str(from_to_date[1])}
-
-
-        # Position of All is first as a co-incidence I think.
-        # Set correct column widths
-        # workbook = create_workbook('Farmer Share Outliers.xlsx')
-        all_format = ['date_format', 'wrap_text']
-        all_format_created = create_format(all_format, workbook)
-        header_dict_for_transport_outlier['column_properties'][0]['format'] = all_format_created['date_format']
-        for columns in header_dict_for_transport_outlier['column_properties']:
-            columns['header_format'] = all_format_created['wrap_text']
-        # column_properties = [{'header': 'Date', 'format': all_format_created['date_format']}, {'header': 'Aggregator'}, {'header': 'Market'}, {'header': 'Quantity'}, {'header': 'TCost'}, {'header': 'Farmer Share'}, {'header': 'FSPK'}, {'header': 'FSPTC'}]
-        table_properties = {'data': None, 'autofilter': False, 'banded_rows': False, 'style': 'Table Style Light 15',
-                            'columns': header_dict_for_transport_outlier['column_properties']}
-        # column_width = {'A:A': 10.55, 'B:B': 9.36}
-        #         print aggregator_wise_FShare_outliers
-
-
-        for aggregator in aggregators:
-            table_position_to_start = {'row': 2, 'col': 0}
-            worksheet_name[aggregator.name_en] = header_dict_for_transport_outlier['worksheet_name'] % (
-            str(aggregator.name_en), str(from_to_date[0]), str(from_to_date[1]))
-
-        table_position_to_start = {'row': 2, 'col': 0}
-        create_xlsx(workbook, aggregator_wise_TShare_outliers, table_properties, table_position_to_start,
-                    worksheet_name)
-
-        # create_xlsx(workbook, data_set_all, table_properties, table_position_to_start, worksheet_name)
-        file_to_send = header_dict_for_transport_outlier['workbook_name'] % (
-        MEDIA_ROOT, '', str(from_to_date[0]), str(from_to_date[1]))
-        common_send_email("Hello Logo", recipients=RECIPIENTS, files=[file_to_send], bcc=[],
-                          from_email='lokesh@digitalgreen.org', html="", text='hello')
-
-    # Parameters provided at command prompt
-    # By default, daily_a_m_filtered must take entire time period because it will be used in impact code
-
-    def data_generator(self, from_to_date, aggregator_to_check_id_string):
-        query = daily_a_m_transport_share_query
-        query_result = onrun_query(query)
-        return query_result
-
+class TransportCostOutlier():
 
     def data_Manipulator(self, daily_a_m_transportShare, time_period):
         # Position of relevant columns
@@ -221,7 +137,6 @@ class Command(BaseCommand):
         aggregator_wise_TCost_outliers['All'].extend(low_cpk)
         aggregator_wise_TCost_outliers['All'].extend(high_cpk)
         return aggregator_wise_TCost_outliers
-
 
     def get_percentile(self, dataset, column, start, length, percentile):
         if length == 0:

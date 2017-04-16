@@ -12,9 +12,6 @@ def create_workbook(workbook_name):
     workbook = xlsxwriter.Workbook(workbook_name)
     return workbook
 
-# def create_pandas_workbook(workbook_name):
-#     writer = pd.ExcelWriter(workbook_name,engine='xlsxwriter')
-#     return writer
 
 # Creates all formats in the workbook
 def create_format(list_of_format, workbook):
@@ -34,24 +31,27 @@ def create_format(list_of_format, workbook):
 default_table_position = {'row': 0, 'col': 0}
 def create_xlsx(workbook, sheets_data, table_properties, table_position = default_table_position, file_caption={}):
     sheet_name = {}
+
+    print table_properties['columns']
     for keys in sheets_data.keys():
-        rows_count = len(sheets_data[keys])
-        # print keys
-        # print sheets_data[keys][:5]
+        rows_count = len(sheets_data[keys])+2
         if len(sheets_data[keys]) > 0:
             columns_count = len(sheets_data[keys][0]) - 1
             sheet_name[keys] = workbook.add_worksheet(keys)
+            # wr_format = workbook.add_format()
+            # wr_format.set_text_wrap()
             row_position = table_position['row']
             col_position = table_position['col']
             table_properties['data'] = sheets_data[keys]
             sheet_name[keys].write('A1', file_caption[keys])
+            format = workbook.add_format({'text_wrap': True})
             for elements in table_properties['columns']:
                 sheet_name[keys].set_column(elements['col_seq'],elements['column_width'])
-#            print table_properties
-            sheet_name[keys].add_table(row_position, col_position, rows_count, columns_count, table_properties)
+#                sheet_name[keys].set_text_wrap()
 
-        # for keys1 in column_width_and_format.keys():
-        #     sheet_name[keys].set_column(keys1, column_width_and_format[keys1])
+            sheet_name[keys].add_table(row_position, col_position, rows_count, columns_count, table_properties)
+            for elements in table_properties['columns']:
+                sheet_name[keys].write(elements['col_seq'][0]+'3', elements['header'],format)
 
     workbook.close()
 

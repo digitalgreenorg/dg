@@ -166,7 +166,7 @@ query_for_incorrect_phone_no_all_aggregator = '''SELECT
                               OR Mobile_Number >= 9999999999))
                           ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
 
-query_for_incorrect_phone_no_single_aggregator = '''SELECT
+query_for_incorrect_phone_all_per_aggregator = '''SELECT
                                 Aggregator,
                                 Village,
                                 Farmer_ID,

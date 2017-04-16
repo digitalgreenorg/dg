@@ -47,6 +47,7 @@ class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
 #Extra variables required in other files
 DEFAULT_COLUMN_WIDTH = 9
 
+
 header_dict_for_loop_email_mobile_numbers = {
     'workbook_name': u'%s/loop/Incorrect Mobile Numbers_%s_%s to %s.xlsx',
     'worksheet_name': u'%s_गलत मोबाइल नंबर की लिस्ट_%s to %s',
@@ -55,7 +56,7 @@ header_dict_for_loop_email_mobile_numbers = {
                            'col_seq': 'A:A',
                           },
                           {'column_width': 14.36,
-                           'header': u'जमाकर्ता का नाम',
+                           'header': u'जमाकर्ता का\n नाम',
                            'col_seq': 'B:B',
                           },
                           {'column_width': 12,
@@ -71,7 +72,7 @@ header_dict_for_loop_email_mobile_numbers = {
                            'col_seq': 'E:E',
                           },
                           {'column_width': 8,
-                           'header': u'सब्जी कितने दिन दी?',
+                           'header': u'सब्जी कितने\n दिन दी?',
                            'col_seq': 'F:F',
                           },
                           {'column_width': 10,
@@ -79,7 +80,7 @@ header_dict_for_loop_email_mobile_numbers = {
                            'col_seq': 'G:G',
                           },
                           {'column_width': 11.27,
-                           'header': u'कितने किसान में नंबर डला है?',
+                           'header': u'कितने किसान\n में नंबर डला है?',
                            'col_seq': 'H:H',
                           }]
 }
@@ -91,6 +92,7 @@ header_dict_for_farmer_outlier = {
                             'header': 'Date',
                             'format': '',
                            'col_seq': 'A:A'
+
                           },
                           {'column_width': 3.4,
                            'header': 'Aggregator',
@@ -157,55 +159,50 @@ header_dict_for_transport_outlier = {
                               'header': 'TCPK',
                               'col_seq': 'G:G'
                           }
-                          # {'column_width': 12.3,
-                          #     'header': 'FShare',
-                          #     'col_seq': 'H:H'
-                          # }
     ]
 }
 
+header_dict_for_transport_details = [{'column_width': 3.64,
+                           'label': 'क्रम',
+                           'col_seq': 'A:A',
+                          },
+                          {'column_width': 9.82,
+                           'label': 'तारीख',
+                           'col_seq': 'B:B',
+                          },
+                          {'column_width': 11.55,
+                           'label': 'मंडी का नाम',
+                           'col_seq': 'C:C',
+                          },
+                          {'column_width': 15,
+                           'label': 'किसान का नाम',
+                           'col_seq': 'D:D',
+                          },
+                          {'column_width': 9.09,
+                           'label': 'कुल वजन (कि.)',
+                           'col_seq': 'E:E',
+                          },
+                          {'column_width': 7,
+                           'label': 'राशि (रु)',
+                           'col_seq': 'F:F',
+                          },
+                          {'column_width': 7.45,
+                           'label': 'किसान का भाग (रु)',
+                           'col_seq': 'G:G',
+                          },
+                          {'column_width': 8.36,
+                           'label': 'कुल राशि (रु)',
+                           'col_seq': 'H:H',
+                          },
+                          {'column_width': 5.91,
+                           'label': '✓/ X',
+                           'col_seq': 'I:I',
+                          },
+                          {'column_width': 16.55,
+                           'label': 'टिप्पडी',
+                           'col_seq': 'J:J',
+                          }]
 
-#         [{'column_width': 3.64,
-#                            'label': 'क्रम',
-#                            'col_seq': 'A:A',
-#                           },
-#                           {'column_width': 9.82,
-#                            'label': 'तारीख',
-#                            'col_seq': 'B:B',
-#                           },
-#                           {'column_width': 11.55,
-#                            'label': 'मंडी का नाम',
-#                            'col_seq': 'C:C',
-#                           },
-#                           {'column_width': 15,
-#                            'label': 'किसान का नाम',
-#                            'col_seq': 'D:D',
-#                           },
-#                           {'column_width': 9.09,
-#                            'label': 'कुल वजन (कि.)',
-#                            'col_seq': 'E:E',
-#                           },
-#                           {'column_width': 7,
-#                            'label': 'राशि (रु)',
-#                            'col_seq': 'F:F',
-#                           },
-#                           {'column_width': 7.45,
-#                            'label': 'किसान का भाग (रु)',
-#                            'col_seq': 'G:G',
-#                           },
-#                           {'column_width': 8.36,
-#                            'label': 'कुल राशि (रु)',
-#                            'col_seq': 'H:H',
-#                           },
-#                           {'column_width': 5.91,
-#                            'label': '✓/ X',
-#                            'col_seq': 'I:I',
-#                           },
-#                           {'column_width': 16.55,
-#                            'label': 'टिप्पडी',
-#                            'col_seq': 'J:J',
-#                           }]
-# }
 
 header_dict_for_transport_details = [{'column_width': 3.64,
                                       'label': 'क्रम संख्या',
@@ -236,199 +233,6 @@ header_dict_for_transport_details = [{'column_width': 3.64,
                                          'label': 'टिप्पडी'
                                      }]
 
-
-# query_for_incorrect_phone_no_all_aggregator = '''SELECT
-#                               Aggregator,
-#                               Village,
-#                               Farmer_ID,
-#                               Farmer,
-#                               t1.Farmer_Frequency,
-#                               Mobile_Number,
-#                               t3.Mobile_Frequency
-#                           FROM
-#                               (SELECT
-#                                   user_created_id,
-#                                       farmer_id f_id,
-#                                       COUNT(DISTINCT (date)) Farmer_Frequency
-#                               FROM
-#                                   loop_combinedtransaction lct
-#                               WHERE
-#                                   lct.date BETWEEN %s AND %s
-#                               GROUP BY user_created_id , farmer_id
-#                               HAVING Farmer_Frequency > 0) t1
-#                                   JOIN
-#                               (SELECT
-#                                   ll.name Aggregator,
-#                                       ll.id Loop_user_id,
-#                                       ll.user_id user_id,
-#                                       lv.village_name Village,
-#                                       lf.id Farmer_ID,
-#                                       lf.name Farmer,
-#                                       lf.phone Mobile_Number
-#                               FROM
-#                                   loop_loopuser ll
-#                               JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
-#                               JOIN loop_farmer lf ON lf.village_id = llv.village_id
-#                               JOIN loop_village lv ON lf.village_id = lv.id
-#                               WHERE
-#                                   ll.role = 2) t2 ON t1.f_id = t2.Farmer_ID
-#                                   AND t1.user_created_id = t2.user_id
-#                                   JOIN
-#                               (SELECT
-#                                       ll.user_id Loop_user,
-#                                       lf.phone Phone_no,
-#                                       COUNT(lf.phone) Mobile_Frequency
-#                               FROM
-#                                loop_loopuser ll join
-#                                   loop_loopuserassignedvillage llv on ll.id=llv.loop_user_id
-#                               JOIN loop_farmer lf ON lf.village_id = llv.village_id
-#                               JOIN loop_village lv ON lf.village_id = lv.id
-#                               WHERE
-#                                   llv.loop_user_id <> 22
-#                                       AND lf.id IN (SELECT
-#                                           farmer_id
-#                                       FROM
-#                                           loop_combinedtransaction ct
-#                                       WHERE
-#                                       user_created_id=ll.user_id and
-#                                           date BETWEEN %s AND %s )
-#                               GROUP BY ll.user_id , lf.phone ) t3 ON t2.Mobile_Number = t3.Phone_no
-#                                   AND t3.Loop_user = t2.user_id
-#                           HAVING (t3.Mobile_Frequency > 1)
-#                               OR (t3.Mobile_Frequency = 1
-#                               AND (Mobile_Number <= 7000000000
-#                               OR Mobile_Number >= 9999999999))
-#                           ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
-
-
-#
-# query_for_incorrect_phone_no_single_aggregator = '''SELECT
-#                                 Aggregator,
-#                                 Village,
-#                                 Farmer_ID,
-#                                 Farmer,
-#                                 t1.Farmer_Frequency,
-#                                 Mobile_Number,
-#                                 t3.Mobile_Frequency
-#                             FROM
-#                                 (SELECT
-#                                     user_created_id,
-#                                         farmer_id f_id,
-#                                         COUNT(DISTINCT (date)) Farmer_Frequency
-#                                 FROM
-#                                     loop_combinedtransaction lct
-#                                 WHERE
-#                                     lct.date BETWEEN %s AND %s
-#                                 GROUP BY user_created_id , farmer_id
-#                                 HAVING Farmer_Frequency > 0) t1
-#                                     JOIN
-#                                 (SELECT
-#                                     ll.name Aggregator,
-#                                         ll.id Loop_user_id,
-#                                         ll.user_id user_id,
-#                                         lv.village_name Village,
-#                                         lf.id Farmer_ID,
-#                                         lf.name Farmer,
-#                                         lf.phone Mobile_Number
-#                                 FROM
-#                                     loop_loopuser ll
-#                                 JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
-#                                 JOIN loop_farmer lf ON lf.village_id = llv.village_id
-#                                 JOIN loop_village lv ON lf.village_id = lv.id
-#                                 WHERE
-#                                     ll.role = 2 and ll.name_en= \'%s\') t2 ON t1.f_id = t2.Farmer_ID
-#                                     AND t1.user_created_id = t2.user_id
-#                                     JOIN
-#                                 (SELECT
-#                                         ll.user_id Loop_user,
-#                                         lf.phone Phone_no,
-#                                         COUNT(lf.phone) Mobile_Frequency
-#                                 FROM
-#                                  loop_loopuser ll join
-#                                     loop_loopuserassignedvillage llv on ll.id=llv.loop_user_id
-#                                 JOIN loop_farmer lf ON lf.village_id = llv.village_id
-#                                 JOIN loop_village lv ON lf.village_id = lv.id
-#                                 WHERE
-#                                     llv.loop_user_id <> 22
-#                                         AND lf.id IN (SELECT
-#                                             farmer_id
-#                                         FROM
-#                                             loop_combinedtransaction ct
-#                                         WHERE
-#                                         user_created_id=ll.user_id and
-#                                             date BETWEEN %s AND %s )
-#                                 GROUP BY ll.user_id , lf.phone ) t3 ON t2.Mobile_Number = t3.Phone_no
-#                                     AND t3.Loop_user = t2.user_id
-#                             HAVING (t3.Mobile_Frequency > 1)
-#                                 OR (t3.Mobile_Frequency = 1
-#                                 AND (Mobile_Number <= 7000000000
-#                                 OR Mobile_Number >= 9999999999))
-#                             ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
-#
-#
-# query_for_incorrect_phone_no_single_aggregator_new = '''SELECT
-#                                 Aggregator,
-#                                 Village,
-#                                 Farmer_ID,
-#                                 Farmer,
-#                                 t1.Farmer_Frequency,
-#                                 Mobile_Number,
-#                                 t3.Mobile_Frequency
-#                             FROM
-#                                 (SELECT
-#                                     user_created_id,
-#                                         farmer_id f_id,
-#                                         COUNT(DISTINCT (date)) Farmer_Frequency
-#                                 FROM
-#                                     loop_combinedtransaction lct
-#                                 WHERE
-#                                     lct.date BETWEEN %s AND %s
-#                                 GROUP BY user_created_id , farmer_id
-#                                 HAVING Farmer_Frequency > 0) t1
-#                                     JOIN
-#                                 (SELECT
-#                                     ll.name Aggregator,
-#                                         ll.id Loop_user_id,
-#                                         ll.user_id user_id,
-#                                         lv.village_name Village,
-#                                         lf.id Farmer_ID,
-#                                         lf.name Farmer,
-#                                         lf.phone Mobile_Number
-#                                 FROM
-#                                     loop_loopuser ll
-#                                 JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
-#                                 JOIN loop_farmer lf ON lf.village_id = llv.village_id
-#                                 JOIN loop_village lv ON lf.village_id = lv.id
-#                                 WHERE
-#                                     ll.role = 2) t2 ON t1.f_id = t2.Farmer_ID
-#                                     AND t1.user_created_id = t2.user_id
-#                                     JOIN
-#                                 (SELECT
-#                                         ll.user_id Loop_user,
-#                                         lf.phone Phone_no,
-#                                         COUNT(lf.phone) Mobile_Frequency
-#                                 FROM
-#                                  loop_loopuser ll join
-#                                     loop_loopuserassignedvillage llv on ll.id=llv.loop_user_id
-#                                 JOIN loop_farmer lf ON lf.village_id = llv.village_id
-#                                 JOIN loop_village lv ON lf.village_id = lv.id
-#                                 WHERE
-#                                     llv.loop_user_id <> 22
-#                                         AND lf.id IN (SELECT
-#                                             farmer_id
-#                                         FROM
-#                                             loop_combinedtransaction ct
-#                                         WHERE
-#                                         user_created_id=ll.user_id and
-#                                             date BETWEEN %s AND %s )
-#                                 GROUP BY ll.user_id , lf.phone ) t3 ON t2.Mobile_Number = t3.Phone_no
-#                                     AND t3.Loop_user = t2.user_id
-#                             HAVING (t3.Mobile_Frequency > 1)
-#                                 OR (t3.Mobile_Frequency = 1
-#                                 AND (Mobile_Number <= 7000000000
-#                                 OR Mobile_Number >= 9999999999))
-#                             ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
-#
 #
 # query_for_farmer_transaction_all_aggregator = '''
 #                                   SELECT
@@ -607,7 +411,7 @@ header_dict_for_transport_details = [{'column_width': 3.64,
 
 
 
-RECIPIENTS = ['lokesh@digitalgreen.org']
+RECIPIENTS = ['lokesh@digitalgreen.org', 'divish@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
 
