@@ -50,11 +50,11 @@ DEFAULT_COLUMN_WIDTH = 9
 header_dict_for_loop_email_mobile_numbers = {
     'workbook_name': u'%s/loop/Incorrect Mobile Numbers_%s_%s to %s.xlsx',
     'worksheet_name': u'%s_गलत मोबाइल नंबर की लिस्ट_%s to %s',
-    'column_properties': [{'column_width': 5,
-                           'header': u'क्रम संख्या',
+    'column_properties': [{'column_width': 3.36,
+                           'header': u'क्रम',
                            'col_seq': 'A:A',
                           },
-                          {'column_width': 13,
+                          {'column_width': 14.36,
                            'header': u'जमाकर्ता का नाम',
                            'col_seq': 'B:B',
                           },
@@ -62,7 +62,7 @@ header_dict_for_loop_email_mobile_numbers = {
                            'header': u'गांव का नाम',
                            'col_seq': 'C:C',
                           },
-                          {'column_width': 8,
+                          {'column_width': 6.36,
                            'header': u'किसान ID',
                            'col_seq': 'D:D',
                           },
@@ -78,7 +78,7 @@ header_dict_for_loop_email_mobile_numbers = {
                            'header': u'मोबाइल नं',
                            'col_seq': 'G:G',
                           },
-                          {'column_width': 10,
+                          {'column_width': 11.27,
                            'header': u'कितने किसान में नंबर डला है?',
                            'col_seq': 'H:H',
                           }]
@@ -89,7 +89,7 @@ header_dict_for_farmer_outlier = {
     'worksheet_name': u'%s_फार्मर शेर आउटलाइयर्स की लिस्ट_%s to %s',
     'column_properties': [{'column_width': 2.34,
                             'header': 'Date',
-                           # 'format': all_format_created['date_format'],
+                            'format': '',
                            'col_seq': 'A:A'
                           },
                           {'column_width': 3.4,
@@ -123,43 +123,44 @@ header_dict_for_farmer_outlier = {
     ]
 }
 
-
+# format_for_transport_outlier = ['date_format']
+# all_format_created = create_format(format_for_transport_outlier, workbook)
 header_dict_for_transport_outlier = {
     'workbook_name': u'%s/loop/Transport Share Outliers_%s_%s to %s.xlsx',
     'worksheet_name': u'%s_गाड़ी किराया आउटलाइयर्स की लिस्ट_%s to %s',
-    'column_properties': [{'column_width': 10.55,
+    'column_properties': [{'column_width': 10.64,
                             'header': 'Date',
                            # 'format': all_format_created['date_format'],
                            'col_seq': 'A:A'
                           },
-                          {'column_width': 9.36,
+                          {'column_width': 16,
                            'header': 'Aggregator',
                            'col_seq': 'B:B'
                           },
-                          {'column_width': 5.6,
+                          {'column_width': 14.55,
                               'header': 'Market',
                               'col_seq': 'C:C'
                           },
-                          {'column_width': 9.0,
+                          {'column_width': 7.55,
                               'header': 'Quantity',
                               'col_seq': 'D:D'
                           },
-                          {'column_width': 3.4,
-                              'header': 'TCost',
+                          {'column_width': 12.73,
+                              'header': 'Transport Cost',
                               'col_seq': 'E:E'
                           },
-                          {'column_width': 4.5,
+                          {'column_width': 7.45,
                               'header': 'Type',
                               'col_seq': 'F:F'
                           },
-                          {'column_width': 1.2,
+                          {'column_width': 11.2,
                               'header': 'TCPK',
                               'col_seq': 'G:G'
-                          },
-                          {'column_width': 12.3,
-                              'header': 'FShare',
-                              'col_seq': 'H:H'
                           }
+                          # {'column_width': 12.3,
+                          #     'header': 'FShare',
+                          #     'col_seq': 'H:H'
+                          # }
     ]
 }
 

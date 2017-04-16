@@ -1,5 +1,6 @@
 # coding=utf-8
 import copy
+import collections
 
 __author__ = 'Lokesh'
 
@@ -50,17 +51,26 @@ class Command(BaseCommand):
             MEDIA_ROOT, str(aggregator_to_check.name), str(from_to_date[0]), str(from_to_date[1])))
 
         query_result_data = self.data_generator(from_to_date, aggregator_to_check_id_string)
+        # Made data_set_all ordered to ensure that 'All' comes before others at the time of printing
+        data_set_all = collections.OrderedDict()
         data_set_all = self.get_all_data(query_result_data)
-        worksheet_name = {'All': 'Incorrect Mobile Numbers_' + str(from_to_date[0]) + "_" + str(from_to_date[1])}
+        worksheet_name = {'All': u'सारे ग़लत मोबाइल नंबर की लिस्ट_' + str(from_to_date[0]) + "_" + str(from_to_date[1])}
+
+        all_format = ['wrap_text']
+        all_format_created = create_format(all_format, workbook)
+        for columns in header_dict_for_loop_email_mobile_numbers['column_properties']:
+            columns['header_format'] = all_format_created['wrap_text']
+
+        table_properties = {'data': None, 'autofilter': False, 'banded_rows': False,
+                            'style': 'Table Style Light 15',
+                            'columns': header_dict_for_loop_email_mobile_numbers['column_properties']}
+        table_position_to_start = {'row': 2, 'col': 0}
 
         for aggregator in aggregators:
             structured_data_set = self.set_filtered_structured_data(data_set_all['All'], aggregator)
             data_set_all[aggregator.name_en] = structured_data_set
 
-            table_properties = {'data': None, 'autofilter': False, 'banded_rows': False,
-                                'style': 'Table Style Light 15',
-                                'columns': header_dict_for_loop_email_mobile_numbers['column_properties']}
-            table_position_to_start = {'row': 2, 'col': 0}
+
             worksheet_name[aggregator.name_en] = header_dict_for_loop_email_mobile_numbers['worksheet_name'] % (
             str(aggregator.name_en), str(from_to_date[0]), str(from_to_date[1]))
 

@@ -55,8 +55,11 @@ class Command(BaseCommand):
         # Position of All is first as a co-incidence I think.
         # Set correct column widths
         # workbook = create_workbook('Farmer Share Outliers.xlsx')
-        # all_format = ['date_format']
-        # all_format_created = create_format(all_format, workbook)
+        all_format = ['date_format', 'wrap_text']
+        all_format_created = create_format(all_format, workbook)
+        header_dict_for_transport_outlier['column_properties'][0]['format'] = all_format_created['date_format']
+        for columns in header_dict_for_transport_outlier['column_properties']:
+            columns['header_format'] = all_format_created['wrap_text']
         # column_properties = [{'header': 'Date', 'format': all_format_created['date_format']}, {'header': 'Aggregator'}, {'header': 'Market'}, {'header': 'Quantity'}, {'header': 'TCost'}, {'header': 'Farmer Share'}, {'header': 'FSPK'}, {'header': 'FSPTC'}]
         table_properties = {'data': None, 'autofilter': False, 'banded_rows': False, 'style': 'Table Style Light 15',
                             'columns': header_dict_for_transport_outlier['column_properties']}
@@ -166,7 +169,8 @@ class Command(BaseCommand):
         # TODO: It should check whether transport cost was changed later by admin or not. If yes, it's not an outlier to worry about.
         for line in daily_a_m_filtered:
             daily_a_m_line = list(line)  # converts tuple into a list because we want to add a parameter in each row
-            TCPK = daily_a_m_line[dam_TCPK_col]
+            TCPK = round(daily_a_m_line[dam_TCPK_col], 2)
+            daily_a_m_line[dam_TCPK_col] = TCPK
             aggregator_id = daily_a_m_line[dam_aggregator_id_col]
             mandi_id = daily_a_m_line[dam_mandi_id_col]
             aggregator_name = daily_a_m_line[dam_aggregator_name_col]

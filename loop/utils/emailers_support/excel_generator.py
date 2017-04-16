@@ -5,7 +5,7 @@ import pandas as pd
 
 
 # This dictionary should contain all formats that we want to use.
-format = {'date_format': {'num_format': 'd mmm yyyy'}}
+format = {'date_format': {'num_format': 'd mmm yyyy'}, 'wrap_text': {'text_wrap': 1}}
 
 # Creates a workbook
 def create_workbook(workbook_name):
