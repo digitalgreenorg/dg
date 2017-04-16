@@ -53,7 +53,8 @@ class Command(BaseCommand):
 
         common_send_email("Farmer Share and Transport Cost Outliers", recipients=RECIPIENTS, files=email_file_list, bcc=[],
                           from_email='lokesh@digitalgreen.org', html="", text='Please find the attached sheet for farmer share outliers and Transport Cost outliers')
-
+        for file_name_to_remove in email_file_list:
+            os.remove(str(file_name_to_remove))
 
     def file_creator_per_case(self, from_to_date, case=''):
 
