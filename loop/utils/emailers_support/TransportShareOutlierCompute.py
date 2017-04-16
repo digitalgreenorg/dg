@@ -5,7 +5,37 @@ from loop.utils.emailers_support.queries import *
 from loop.utils.emailers_support.excel_generator import *
 
 
-class TransportCostOutlier():
+class TransportCostOutlier(object):
+
+    def get_percentile(self, dataset, column, start, length, percentile):
+        if length == 0:
+            return None
+        percentile_position = (length - 1) * percentile
+        floor = math.floor(percentile_position)
+        ceiling = math.ceil(percentile_position)
+        if column == -1:
+            if floor == ceiling:
+                return dataset[int(start + percentile_position)]
+            elif dataset[int(start + floor)] and dataset[int(start + ceiling)]:
+                d0 = dataset[int(start + floor)] * (ceiling - percentile_position)
+                d1 = dataset[int(start + ceiling)] * (percentile_position - floor)
+                return d0 + d1
+            else:
+                return None
+        else:
+            if floor == ceiling:
+                return dataset[int(start + percentile_position)][int(column)]
+            elif dataset[int(start + floor)][int(column)] and dataset[int(start + ceiling)][int(column)]:
+                d0 = dataset[int(start + floor)][int(column)] * (ceiling - percentile_position)
+                d1 = dataset[int(start + ceiling)][int(column)] * (percentile_position - floor)
+                return d0 + d1
+            else:
+                return None
+
+                # Finds all quartile values for each aggregator-market combination and updates in a_m_count
+                # a_m_count_query_result is a list and not a dictionary because the order of traversal is important as list is sorted
+                # TODO: 1.5 and 0.75 to be provided by user
+
 
     def data_Manipulator(self, daily_a_m_transportShare, time_period):
         # Position of relevant columns
@@ -30,7 +60,7 @@ class TransportCostOutlier():
         daily_a_m_filtered = []
 
         # This dictionary will contain aggregator-wise outliers data
-        aggregator_wise_TCost_outliers = {}
+        aggregator_wise_TCost_outliers = {'All':[]}
         aggregator_wise_TCost_correct = {}
 
         # Purpose: Takes a list and returns the row for given percentile value
@@ -79,48 +109,60 @@ class TransportCostOutlier():
         to_date = time_period[1]
 
         for line in daily_a_m_transportShare:
-            if line[dam_date_col] >= from_date and line[dam_date_col] <= to_date:
-                daily_a_m_filtered.append(line)
+            if type(from_date) is str:
+                if str(line[dam_date_col]) >= from_date and str(line[dam_date_col]) <= to_date:
+                    daily_a_m_filtered.append(line)
+            else:
+                if line[dam_date_col] >= from_date and line[dam_date_col] <= to_date:
+                    daily_a_m_filtered.append(line)
 
         # TODO: It should check whether transport cost was changed later by admin or not. If yes, it's not an outlier to worry about.
         for line in daily_a_m_filtered:
             daily_a_m_line = list(line)  # converts tuple into a list because we want to add a parameter in each row
-            TCPK = round(daily_a_m_line[dam_TCPK_col], 2)
-            daily_a_m_line[dam_TCPK_col] = TCPK
             aggregator_id = daily_a_m_line[dam_aggregator_id_col]
             mandi_id = daily_a_m_line[dam_mandi_id_col]
             aggregator_name = daily_a_m_line[dam_aggregator_name_col]
             date = daily_a_m_line[dam_date_col]
+            TCPK = daily_a_m_line[dam_TCPK_col]
             if TCPK:  # Check: TCPK exists
+                TCPK = round(daily_a_m_line[dam_TCPK_col], 2)
+                daily_a_m_line[dam_TCPK_col] = TCPK
                 if TCPK > a_m_count[(aggregator_id, mandi_id)]['UF']:  # Check: TCPK > Upper Fence
                     daily_a_m_line[dam_type_col] = 'High CPK'
-                    if aggregator_name in aggregator_wise_TCost_outliers.keys():  # Check: Aggregator ID exists
-                        aggregator_wise_TCost_outliers[aggregator_name].append(
-                            daily_a_m_line[insert_row_from_this_col:])
-                    else:
-                        aggregator_wise_TCost_outliers[aggregator_name] = [daily_a_m_line[insert_row_from_this_col:]]
+            #        if 'All' in aggregator_wise_TCost_outliers.keys():  # Check: Aggregator ID exists
+                    aggregator_wise_TCost_outliers['All'].append(
+                        daily_a_m_line[insert_row_from_this_col:])
+
+                    # if aggregator_name in aggregator_wise_TCost_outliers.keys():  # Check: Aggregator ID exists
+                    #     aggregator_wise_TCost_outliers[aggregator_name].append(
+                    #         daily_a_m_line[insert_row_from_this_col:])
+                    # else:
+                    #     aggregator_wise_TCost_outliers[aggregator_name] = [daily_a_m_line[insert_row_from_this_col:]]
                     high_cpk.append(daily_a_m_line[insert_row_from_this_col:])
                 elif TCPK < a_m_count[(aggregator_id, mandi_id)]['LF']:  # Check: TCPK < Lower Fence
                     daily_a_m_line[dam_type_col] = 'Low CPK'
-                    if aggregator_name in aggregator_wise_TCost_outliers.keys():
-                        aggregator_wise_TCost_outliers[aggregator_name].append(
-                            daily_a_m_line[insert_row_from_this_col:])
-                    else:
-                        aggregator_wise_TCost_outliers[aggregator_name] = [daily_a_m_line[insert_row_from_this_col:]]
+                    aggregator_wise_TCost_outliers['All'].append(
+                        daily_a_m_line[insert_row_from_this_col:])
+
+                    # if aggregator_name in aggregator_wise_TCost_outliers.keys():
+                    #     aggregator_wise_TCost_outliers[aggregator_name].append(
+                    #         daily_a_m_line[insert_row_from_this_col:])
+                    # else:
+                    #     aggregator_wise_TCost_outliers[aggregator_name] = [daily_a_m_line[insert_row_from_this_col:]]
                     low_cpk.append(daily_a_m_line[insert_row_from_this_col:])
                 else:
-                    if aggregator_name in aggregator_wise_TCost_correct.keys():
-                        aggregator_wise_TCost_correct[(aggregator_id, mandi_id, date)].append(daily_a_m_line)
-                    else:
-                        aggregator_wise_TCost_correct[(aggregator_id, mandi_id, date)] = [daily_a_m_line]
-                    ok_cpk.append(daily_a_m_line[insert_row_from_this_col:])
+#                    if aggregator_name in aggregator_wise_TCost_correct.keys():
+#                     aggregator_wise_TCost_correct[(aggregator_id, mandi_id, date)].append(daily_a_m_line)
+#                    else:
+#                        aggregator_wise_TCost_correct[(aggregator_id, mandi_id, date)] = [daily_a_m_line]
+                     ok_cpk.append(daily_a_m_line[insert_row_from_this_col:])
 
             else:
                 daily_a_m_line[dam_type_col] = 'No CPK'
-                if aggregator_name in aggregator_wise_TCost_outliers.keys():
-                    aggregator_wise_TCost_outliers[aggregator_name].append(daily_a_m_line[insert_row_from_this_col:])
-                else:
-                    aggregator_wise_TCost_outliers[aggregator_name] = [daily_a_m_line[insert_row_from_this_col:]]
+#                if aggregator_name in aggregator_wise_TCost_outliers.keys():
+                aggregator_wise_TCost_outliers['All'].append(daily_a_m_line[insert_row_from_this_col:])
+                # else:
+                #     aggregator_wise_TCost_outliers[aggregator_name] = [daily_a_m_line[insert_row_from_this_col:]]
                 no_cpk.append(daily_a_m_line[insert_row_from_this_col:])
 
         print 'high_cpk'
@@ -133,36 +175,8 @@ class TransportCostOutlier():
         print len(ok_cpk)
 
         # Adds all No CPK, Low CPK, High CPK entries in this order. Sorting order within each of them is A-M
-        aggregator_wise_TCost_outliers['All'] = no_cpk
-        aggregator_wise_TCost_outliers['All'].extend(low_cpk)
-        aggregator_wise_TCost_outliers['All'].extend(high_cpk)
+        # aggregator_wise_TCost_outliers['All'] = no_cpk
+        # aggregator_wise_TCost_outliers['All'].extend(low_cpk)
+        # aggregator_wise_TCost_outliers['All'].extend(high_cpk)
         return aggregator_wise_TCost_outliers
 
-    def get_percentile(self, dataset, column, start, length, percentile):
-        if length == 0:
-            return None
-        percentile_position = (length - 1) * percentile
-        floor = math.floor(percentile_position)
-        ceiling = math.ceil(percentile_position)
-        if column == -1:
-            if floor == ceiling:
-                return dataset[int(start + percentile_position)]
-            elif dataset[int(start + floor)] and dataset[int(start + ceiling)]:
-                d0 = dataset[int(start + floor)] * (ceiling - percentile_position)
-                d1 = dataset[int(start + ceiling)] * (percentile_position - floor)
-                return d0 + d1
-            else:
-                return None
-        else:
-            if floor == ceiling:
-                return dataset[int(start + percentile_position)][int(column)]
-            elif dataset[int(start + floor)][int(column)] and dataset[int(start + ceiling)][int(column)]:
-                d0 = dataset[int(start + floor)][int(column)] * (ceiling - percentile_position)
-                d1 = dataset[int(start + ceiling)][int(column)] * (percentile_position - floor)
-                return d0 + d1
-            else:
-                return None
-
-                # Finds all quartile values for each aggregator-market combination and updates in a_m_count
-                # a_m_count_query_result is a list and not a dictionary because the order of traversal is important as list is sorted
-                # TODO: 1.5 and 0.75 to be provided by user

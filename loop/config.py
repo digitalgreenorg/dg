@@ -88,38 +88,37 @@ header_dict_for_loop_email_mobile_numbers = {
 header_dict_for_farmer_outlier = {
     'workbook_name': u'%s/loop/Farmer Share Outliers_%s_%s to %s.xlsx',
     'worksheet_name': u'%s_फार्मर शेर आउटलाइयर्स की लिस्ट_%s to %s',
-    'column_properties': [{'column_width': 2.34,
+    'column_properties': [{'column_width': 9.09,
                             'header': 'Date',
-                            'format': '',
-                           'col_seq': 'A:A'
-
+                           'col_seq': 'A:A',
+                           'data_type': 'Date'
                           },
-                          {'column_width': 3.4,
+                          {'column_width': 16.55,
                            'header': 'Aggregator',
                            'col_seq': 'B:B'
                           },
-                          {'column_width': 5.6,
+                          {'column_width': 14.64,
                               'header': 'Market',
                               'col_seq': 'C:C'
                           },
-                          {'column_width': 9.0,
+                          {'column_width': 7.55,
                               'header': 'Quantity',
                               'col_seq': 'D:D'
                           },
-                          {'column_width': 3.4,
-                              'header': 'TCost',
+                          {'column_width': 8.55,
+                              'header': 'Transport Cost',
                               'col_seq': 'E:E'
                           },
-                          {'column_width': 4.5,
+                          {'column_width': 6.09,
                               'header': 'Farmer Share',
                               'col_seq': 'F:F'
                           },
-                          {'column_width': 1.2,
-                              'header': 'FSPK',
+                          {'column_width': 6.0,
+                              'header': 'Farmer Share Per KG',
                               'col_seq': 'G:G'
                           },
-                          {'column_width': 12.3,
-                              'header': 'FSPTC',
+                          {'column_width': 12.0,
+                              'header': 'Farmer Share/Transport Cost',
                               'col_seq': 'H:H'
                           }
     ]
@@ -132,7 +131,7 @@ header_dict_for_transport_outlier = {
     'worksheet_name': u'%s_गाड़ी किराया आउटलाइयर्स की लिस्ट_%s to %s',
     'column_properties': [{'column_width': 10.64,
                             'header': 'Date',
-                           # 'format': all_format_created['date_format'],
+                           'data_type': 'Date',
                            'col_seq': 'A:A'
                           },
                           {'column_width': 16,
@@ -156,7 +155,7 @@ header_dict_for_transport_outlier = {
                               'col_seq': 'F:F'
                           },
                           {'column_width': 11.2,
-                              'header': 'TCPK',
+                              'header': 'Transport CPK',
                               'col_seq': 'G:G'
                           }
     ]

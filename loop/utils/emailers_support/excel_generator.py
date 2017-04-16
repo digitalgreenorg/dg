@@ -32,7 +32,6 @@ default_table_position = {'row': 0, 'col': 0}
 def create_xlsx(workbook, sheets_data, table_properties, table_position = default_table_position, file_caption={}):
     sheet_name = {}
 
-    print table_properties['columns']
     for keys in sheets_data.keys():
         rows_count = len(sheets_data[keys])+2
         if len(sheets_data[keys]) > 0:

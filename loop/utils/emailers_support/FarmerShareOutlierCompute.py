@@ -3,8 +3,8 @@ __author__ = 'Lokesh'
 from loop.utils.emailers_support.excel_generator import *
 from loop.utils.emailers_support.queries import *
 
-class FarmerShareOutlier():
 
+class FarmerShareOutlier(object):
     def data_Manipulator(self, daily_a_m_farmerShare, time_period):
         # List ordered by aggregator, market, date
         aggregator_id_col = 0
@@ -29,30 +29,34 @@ class FarmerShareOutlier():
         last_FSPTC = daily_a_m_farmerShare[0][FSPTC_col]
         no_of_rows = a_m_count[(aggregator_id, market_id)]['C']
 
-        aggregator_wise_FShare_outliers = {}
+        aggregator_wise_FShare_outliers = {'All': []}
         daily_a_m_farmerShare_filtered = []
 
         from_date = time_period[0]
         to_date = time_period[1]
 
         for line in daily_a_m_farmerShare:
-            if line[date_col] >= from_date and line[date_col] <= to_date:
-                daily_a_m_farmerShare_filtered.append(line)
+            if type(from_date) is str:
+                if str(line[date_col]) >= from_date and str(line[date_col]) <= to_date:
+                    daily_a_m_farmerShare_filtered.append(line)
+            else:
+                if line[date_col] >= from_date and line[date_col] <= to_date:
+                    daily_a_m_farmerShare_filtered.append(line)
 
         for line in daily_a_m_farmerShare_filtered:
             FSPK = line[FSPK_col]
             FSPTC = line[FSPTC_col]
             if count < no_of_rows + start_point:
                 if FSPK != last_FSPK and FSPTC != last_FSPTC:
-                    if aggregator_name in aggregator_wise_FShare_outliers.keys():  # Check: Aggregator ID exists
-#                        aggregator_wise_FShare_outliers[aggregator_name].append(line[2:])
-                        aggregator_wise_FShare_outliers['All'].append(line[2:])
-                    else:
-                        aggregator_wise_FShare_outliers[aggregator_name] = [line[2:]]
-                        if 'All' in aggregator_wise_FShare_outliers.keys():
-                            aggregator_wise_FShare_outliers['All'].append(line[2:])
-                        else:
-                            aggregator_wise_FShare_outliers['All'] = [line[2:]]
+                    # if aggregator_name in aggregator_wise_FShare_outliers.keys():  # Check: Aggregator ID exists
+                    #                        aggregator_wise_FShare_outliers[aggregator_name].append(line[2:])
+                    aggregator_wise_FShare_outliers['All'].append(line[2:])
+                    # else:
+                    #                       aggregator_wise_FShare_outliers[aggregator_name] = [line[2:]]
+                    #                       if 'All' in aggregator_wise_FShare_outliers.keys():
+                    #                            aggregator_wise_FShare_outliers['All'].append(line[2:])
+                    #                        else:
+                    #                            aggregator_wise_FShare_outliers['All'] = [line[2:]]
             else:
                 aggregator_id = line[aggregator_id_col]
                 aggregator_name = line[aggregator_name_col]
