@@ -3,7 +3,7 @@ __author__ = 'Lokesh'
 import MySQLdb
 from dg.settings import *
 
-mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'], user=DATABASES['default']['USER'],
                            passwd=DATABASES['default']['PASSWORD'],
                            db=DATABASES['default']['NAME'],
                            charset='utf8',
