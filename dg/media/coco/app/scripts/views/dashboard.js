@@ -1,8 +1,8 @@
 //This view contains the links to add and list pages of entities, the sync button, logout link, online-offline indicator
-define(['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download' ],
+define(['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download'],
 
 function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView) {
-
+    
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
         events: {
@@ -58,11 +58,11 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     enable_months = configs[member].dashboard_display.enable_months;
                 }
                 if(typeof enable_months != 'undefined'){
-                	var d = new Date();
+                  var d = new Date();
                     n = d.getMonth() + 1;
                     res = $.inArray(n, enable_months);
                     if(res === -1){
-                    	add = false;
+                      add = false;
                     }
                 }
                 if (listing || add) {
@@ -114,9 +114,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             }
             else{
                 $('#sync').attr('disabled', true);
+                
             }
         },
-        
+         
         //enable add, list links
         db_downloaded: function() {
             $('.list_items')
@@ -126,6 +127,17 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("Dashboard links enabled");
             $("#helptext")
                 .hide();
+            if(User.isOnline()){
+                $('#sync').removeAttr("disabled");
+                $('#export').attr('disabled', true);
+            }
+            else{
+                $('#sync').attr('disabled', true);
+                if (upload_collection.length >= 1){
+                    $('#export').removeAttr("disabled");    
+                }
+                
+            }
         },
 
         //disable add, list links
@@ -230,13 +242,12 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 notifs_view.add_alert({
                     notif_type: "error",
                     message: "Failed to download the database : " + error
-                });
+                    });
                 dfd.reject();
             });
             return dfd;
         },
 
-        //method to initiate upload
         upload: function() {
             var dfd = $.Deferred();
             if (!this.upload_v) {
