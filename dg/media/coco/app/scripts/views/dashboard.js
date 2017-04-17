@@ -1,7 +1,7 @@
 //This view contains the links to add and list pages of entities, the sync button, logout link, online-offline indicator
-define(['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download', 'views/app_header' ],
+define(['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download'],
 
-function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView, HeaderView) {
+function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView) {
     
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -111,13 +111,9 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             });
             if(User.isOnline()){
                 $('#sync').removeAttr("disabled");
-                $('#export').attr('disabled', true);
             }
             else{
                 $('#sync').attr('disabled', true);
-                if (upload_collection.length >= 1){
-                    $('#export').removeAttr("disabled");    
-                }
                 
             }
         },

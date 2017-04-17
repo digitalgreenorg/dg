@@ -69,13 +69,6 @@ function(jquery, pass, configs, layoutmanager, User, Auth, upload_collection) {
         user_offline: function() {
             $('#sync')
                 .attr('disabled', true);
-            if (upload_collection.length >= 1){
-                $('#export')
-                .removeAttr('disabled');
-            }else{
-                $('#export').prop('disabled', true)
-            }
-            
             $('#online')
                 .hide();
             $('#offline')
