@@ -5793,11 +5793,8 @@ define('views/form',[
 
                 //select the options selected in edit model
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
-                    console.log("ELEMENT", element);
-                    console.log("MODELJSON", this.model_json);
                     this.$('form [name=' + element + ']').val(this.model_json[element]).change();
                     this.$('form [name=' + element + ']').trigger("chosen:updated");
-                    
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
                 }
@@ -8418,7 +8415,6 @@ function(jquery, pass, configs, layoutmanager, User, Auth, upload_collection) {
             $('#sync')
                 .attr('disabled', true);
             if (upload_collection.length >= 1){
-                console.log("ljhgljhgsfhgklfsghsld")
                 $('#export')
                 .removeAttr('disabled');
             }else{
@@ -8463,7 +8459,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         events: {
             "click #sync": "sync",
             "click #inc_download": "inc_download",
-            "click #export": "export",
         },
         item_template: _.template($("#dashboard_item_template")
             .html()),
@@ -8587,6 +8582,17 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("Dashboard links enabled");
             $("#helptext")
                 .hide();
+            if(User.isOnline()){
+                $('#sync').removeAttr("disabled");
+                $('#export').attr('disabled', true);
+            }
+            else{
+                $('#sync').attr('disabled', true);
+                if (upload_collection.length >= 1){
+                    $('#export').removeAttr("disabled");    
+                }
+                
+            }
         },
 
         //disable add, list links
@@ -8695,86 +8701,6 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 dfd.reject();
             });
             return dfd;
-        },
-        destroyClickedElement: function(event){
-            document.body.removeChild(event.target);
-        },
-
-        saveToFile: function(filedata){
-            var that =this;
-            var jsonData = JSON.stringify(filedata);
-            var textToSaveAsBlob = new Blob([jsonData], {type:"application/json"});
-            var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
-            var user_id = User.get('user_id')
-            var dt = new Date($.now());
-            var fileNameToSaveAs = user_id + "-" +dt.getDate() + "-" + dt.getMonth() + "-" + dt.getFullYear() + "-"+ "export-data.json";
-            var downloadLink = document.createElement("a");
-            downloadLink.download = fileNameToSaveAs;
-            downloadLink.innerHTML = "Download File";
-            downloadLink.href = textToSaveAsURL;
-            downloadLink.onclick = that.destroyClickedElement;
-            downloadLink.style.display = "none";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-        },
-
-        export: function(dfd) {
-            var that = this;
-            var header_view = new HeaderView();
-            that.upload_v = new UploadView();
-            var dfd = $.Deferred();
-            var listing=[]
-            listItem = "uploadqueue"
-            var filedata = {};
-            Offline.fetch_collection(listItem)
-                .done(function(collection) {
-                   data=JSON.stringify(collection.toJSON());
-                   filedata[listItem]=data;
-                   Offline.fetch_collection("user")
-                        .done(function(collection) {
-                           userdata=JSON.stringify(collection.toJSON());
-                           filedata['user']=userdata;
-                           that.saveToFile(filedata);
-                           // empty the uploadqueue
-                            _.times(upload_collection.length, function(i){
-                                var current_model = upload_collection.shift()
-                                // delete the object from offline db if its add case
-                                Offline.delete_object(null, current_model.attributes.entity_name, current_model.attributes.data.id)
-                                    .done(function(off_model) {
-                                        console.log(off_model)
-                                        off_model.destroy()
-                                        current_model.destroy();
-                                        // $('#export').attr('disabled', true);
-                                        
-                                        header_view.user_offline();
-                                        dfd.resolve();
-
-                                    })
-                                    .fail(function(off_model, error) {
-                                        console.log(error);
-                                    });
-                                
-                            });
-                            
-                        })
-                        .fail(function() {
-                            console.log("Not able to fetch user data");
-                            filedata[listItem]=JSON.stringify([]);
-                            that.saveToFile(filedata);
-                        }); 
-                   
-                })
-                .fail(function() {
-                    console.log("Not able to fetch data");
-                    filedata[listItem]=JSON.stringify([]);
-                    that.saveToFile(filedata);
-                });                        
-            
-            },
-        
-        //method to initiate upload
-        setCollections: function(collection,data){
-            collection = data;
         },
 
         upload: function() {
@@ -12842,7 +12768,7 @@ define('views/status',[
     'views/notification',
     'models/user_model',
     'offline_utils',
-    'indexeddb-backbone'
+    'indexeddb-backbone',
 ], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, User, Offline) {
 
     var StatusView = Backbone.Layout.extend({
@@ -12851,7 +12777,8 @@ define('views/status',[
         upload_entries: null,
         events: {
             "click button#download": "download",
-            "click button#reset_database": "reset"
+            "click button#reset_database": "reset",
+            "click #export": "export",
         },
 
         initialize: function() {
@@ -12917,6 +12844,84 @@ define('views/status',[
 
         },
 
+
+        destroyClickedElement: function(event){
+            document.body.removeChild(event.target);
+        },
+
+        saveToFile: function(filedata){
+            var that =this;
+            var jsonData = JSON.stringify(filedata);
+            var textToSaveAsBlob = new Blob([jsonData], {type:"application/json"});
+            var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+            var user_id = User.get('user_id')
+            var dt = new Date($.now());
+            var fileNameToSaveAs = user_id + "-" +dt.getDate() + "-" + dt.getMonth() + "-" + dt.getFullYear() + "-"+ "export-data.json";
+            var downloadLink = document.createElement("a");
+            downloadLink.download = fileNameToSaveAs;
+            downloadLink.innerHTML = "Download File";
+            downloadLink.href = textToSaveAsURL;
+            downloadLink.onclick = that.destroyClickedElement;
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+        },
+
+        export: function(dfd) {
+            var that = this;
+            var dfd = $.Deferred();
+            var listing=[]
+            listItem = "uploadqueue"
+            var filedata = {};
+            Offline.fetch_collection(listItem)
+                .done(function(collection) {
+                   data=JSON.stringify(collection.toJSON());
+                   filedata[listItem]=data;
+                   Offline.fetch_collection("user")
+                        .done(function(collection) {
+                           userdata=JSON.stringify(collection.toJSON());
+                           filedata['user']=userdata;
+                           that.saveToFile(filedata);
+                           // empty the uploadqueue
+                            _.times(upload_collection.length, function(i){
+                                var current_model = upload_collection.shift()
+                                // delete the object from offline db if its add case
+                                Offline.delete_object(null, current_model.attributes.entity_name, current_model.attributes.data.id)
+                                    .done(function(off_model) {
+                                        console.log(off_model)
+                                        off_model.destroy()
+                                        current_model.destroy();
+                                        $('#export').attr('disabled', true);
+                                        dfd.resolve();
+
+                                    })
+                                    .fail(function(off_model, error) {
+                                        console.log(error);
+                                    });
+                                
+                            });
+                            
+                        })
+                        .fail(function() {
+                            console.log("Not able to fetch user data");
+                            filedata[listItem]=JSON.stringify([]);
+                            that.saveToFile(filedata);
+                        }); 
+                   
+                })
+                .fail(function() {
+                    console.log("Not able to fetch data");
+                    filedata[listItem]=JSON.stringify([]);
+                    that.saveToFile(filedata);
+                });                        
+            
+            },
+        
+        //method to initiate upload
+        setCollections: function(collection,data){
+            collection = data;
+        },
+
         //method to initiate full download
         download: function() {
             var dfd = new $.Deferred();
@@ -12946,6 +12951,20 @@ define('views/status',[
                     dfd.reject();
                 });
             return dfd;
+        },
+        
+        afterRender: function() { 
+            if(User.isOnline()){
+                $('#export').attr("disabled", true);
+            }
+            else{
+                if (upload_collection.length >= 1){
+                    $('#export').removeAttr("disabled");    
+                }else{
+                    $('#export').attr("disabled", true);
+                }
+                
+            }
         },
 
         // Resets the offline db

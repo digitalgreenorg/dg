@@ -17,7 +17,7 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/datepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
-    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
       require.config({
         paths: {
@@ -408,7 +408,7 @@
         </div>
     </div>
     <button id="reset_database" class="btn btn-small btn-primary mrg-top-20" title= "Delete your database and download fresh database from server"><%= configs['misc']['meta_'+language]['delete_download'] %></button>
-    <button style="margin-top: 20px;" type="button" class="coco_export btn btn-default" id="export">
+    <button style="margin-top: 20px;" disabled type="button" class="coco_export btn btn-default" id="export">
                                 <%=configs['misc']['meta_'+language]['export'] %>
                             </button>
 </script>

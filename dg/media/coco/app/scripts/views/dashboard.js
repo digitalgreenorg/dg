@@ -131,6 +131,17 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("Dashboard links enabled");
             $("#helptext")
                 .hide();
+            if(User.isOnline()){
+                $('#sync').removeAttr("disabled");
+                $('#export').attr('disabled', true);
+            }
+            else{
+                $('#sync').attr('disabled', true);
+                if (upload_collection.length >= 1){
+                    $('#export').removeAttr("disabled");    
+                }
+                
+            }
         },
 
         //disable add, list links

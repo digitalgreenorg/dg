@@ -13,8 +13,7 @@ define([
     'models/user_model',
     'offline_utils',
     'indexeddb-backbone',
-    'views/app_header'
-], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, User, Offline, HeaderView) {
+], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, User, Offline) {
 
     var StatusView = Backbone.Layout.extend({
         template: "#status",
@@ -196,6 +195,20 @@ define([
                     dfd.reject();
                 });
             return dfd;
+        },
+        
+        afterRender: function() { 
+            if(User.isOnline()){
+                $('#export').attr("disabled", true);
+            }
+            else{
+                if (upload_collection.length >= 1){
+                    $('#export').removeAttr("disabled");    
+                }else{
+                    $('#export').attr("disabled", true);
+                }
+                
+            }
         },
 
         // Resets the offline db
