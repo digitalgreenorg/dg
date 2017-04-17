@@ -70,7 +70,6 @@ function(jquery, pass, configs, layoutmanager, User, Auth, upload_collection) {
             $('#sync')
                 .attr('disabled', true);
             if (upload_collection.length >= 1){
-                console.log("ljhgljhgsfhgklfsghsld")
                 $('#export')
                 .removeAttr('disabled');
             }else{

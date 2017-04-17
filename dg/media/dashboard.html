@@ -241,9 +241,9 @@
                                 <%=configs['misc']['meta_'+language]['sync'] %>
                                 <span class="badge" id="upload_num"><%=upload_entries%></span>
                             </button>
-                            <button type="button" disabled class="coco_export btn btn-default" id="export">
+                            <!-- <button type="button" disabled class="coco_export btn btn-default" id="export">
                                 <%=configs['misc']['meta_'+language]['export'] %>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                     <p id="helptext">
@@ -408,6 +408,9 @@
         </div>
     </div>
     <button id="reset_database" class="btn btn-small btn-primary mrg-top-20" title= "Delete your database and download fresh database from server"><%= configs['misc']['meta_'+language]['delete_download'] %></button>
+    <button style="margin-top: 20px;" type="button" class="coco_export btn btn-default" id="export">
+                                <%=configs['misc']['meta_'+language]['export'] %>
+                            </button>
 </script>
 
 <script type="text/template" id="form_template">
