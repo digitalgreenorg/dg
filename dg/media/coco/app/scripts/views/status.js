@@ -12,7 +12,9 @@ define([
     'views/notification',
     'models/user_model',
     'offline_utils',
+    'models/user_model',
     'indexeddb-backbone'
+
 ], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, User, Offline) {
 
     var StatusView = Backbone.Layout.extend({
@@ -21,7 +23,8 @@ define([
         upload_entries: null,
         events: {
             "click button#download": "download",
-            "click button#reset_database": "reset"
+            "click button#reset_database": "reset",
+            "click button#upload_database": "upload"
         },
 
         initialize: function() {
@@ -131,6 +134,72 @@ define([
                 var val = confirm("Your database will be deleted and downloaded again. Are you sure you want to continue?")
                 if (val == true) {
                     Offline.reset_database();
+                }
+            }
+        },
+        
+     // Resets the offline db
+        upload: function() {
+            var link = $("#exportLink");
+            var that = this;
+            var entity_dfds = [];
+            if(this.upload_entries > 0){
+                var a = {user: user, 
+                        uploads: upload_collection.toJSON()
+                        }
+                for (var member in configs) {
+                    if (member == "misc")
+                        continue;
+                    
+                    var entity_dfd = Offline.fetch_collection(configs[member]["entity_name"])
+                                        .done(function(entity_collection){
+                                            a[entity_collection.__proto__.storeName] = entity_collection.toJSON();
+                                            
+                                        })
+                                        .fail(function () {
+                                            notifs_view.add_alert({
+                                                notif_type: "error",
+                                                message: "Error reading data for listing."
+                                            });
+                                        });
+                    entity_dfds.push(entity_dfd);
+                }
+                $.when.apply($, entity_dfds)
+                .done(function() {
+                    var serializedData = JSON.stringify(a);
+                    var data = new Blob([serializedData], { type: 'application/octet-stream' }); 
+                    var csvUrl = URL.createObjectURL(data);
+                    link.attr("href",csvUrl);
+                    that.fakeClick(link[0]);
+                })
+                .fail(function() {
+                    notifs_view.add_alert({
+                        notif_type: "error",
+                        message: "Error reading data for listing."
+                    });
+                });
+                //var a = [user, upload_collection.toJSON()]
+                
+                
+            }
+            else{
+                alert("no entries to be synced");
+            }
+        },
+        
+        fakeClick: function(anchorObj) {
+            if (anchorObj.click) {
+                anchorObj.click()
+            } else if(document.createEvent) {
+                if(event.target !== anchorObj) {
+                    var evt = document.createEvent("MouseEvents"); 
+                    evt.initMouseEvent("click", true, true, window, 
+                            0, 0, 0, 0, 0, false, false, false, false, 0, null); 
+                    var allowDefault = anchorObj.dispatchEvent(evt);
+                    // you can check allowDefault for false to see if
+                    // any handler called evt.preventDefault().
+                    // Firefox will *not* redirect to anchorObj.href
+                    // for you. However every other browser will.
                 }
             }
         }
