@@ -263,5 +263,5 @@ def sample_data(request):
     data_list.append(data_dict)
 
     print "#########################"
-    print len(data_list)
+    print type(json.dumps(data_list))
     return HttpResponse(json.dumps(data_list))  

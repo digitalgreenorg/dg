@@ -15,108 +15,33 @@ import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 })
 
 export class AppComponent{
-    bar : Bar = {
-        chart: {
-        type: 'bar'
-    },
-    title: {
-        text: 'Historic World Population by Region'
-    },
-    xAxis: {
-        categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Population (millions)',
-            align: 'high'
-        },
-        labels: {
-            overflow: 'justify'
-        }
-    },
-    tooltip: {
-        valueSuffix: ' millions'
-    },
-    plotOptions: {
-        bar: {
-            dataLabels: {
-                enabled: true
-            }
-        }
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'top',
-        floating: true,
-        borderWidth: 1,
-        //backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-        shadow: true
-    },
-    series: [{
-        data: [107, 31, 635, 203, 2]
-    }]}
 
-  /*title = 'Graphs';
+
+  title = 'Graphs';
   chart_one;
   chart_two;
 
   constructor() {
     this.chart_one = {
-        title : { text : 'simple chart' },
-            series: [{
+        series: [{
                 data: [29.9, 71.5, 106.4, 129.2],
             }]
     }
+    //console.log(this.chart_one);
     /*this.chart_two = {
         title : { text : 'simple chart' },
             series: [{
                 data: [29.9, 71.5, 106.4, 129.2],
             }]
-    }
-    this.chart_two =  {
-    chart: {
-        type: 'bar'
-    },
-    title: {
-        text: 'Historic World Population by Region'
-    },
-    xAxis: {
-        categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Population (millions)',
-            align: 'high'
-        },
-        labels: {
-            overflow: 'justify'
-        }
-    },
-    tooltip: {
-        valueSuffix: ' millions'
-    },
-    plotOptions: {
-        bar: {
-            dataLabels: {
-                enabled: true
-            }
-        }
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'top',
-        floating: true,
-        borderWidth: 1,
-        //backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-        shadow: true
-    },
-    series: [{
-        data: [107, 31, 635, 203, 2]
-    }]
-};
-  }*/
+    }*/
+    let json_data = '{"title" : "{ "text" : "simple chart" }","series": "[{data: [29.9, 71.5, 106.4, 129.2],}]"}';
+    //let json_data = '{"title" : "hi bye"}';
+    console.log(typeof(json_data));
+    let bar : Bar = Object.assign(new Bar, JSON.parse(json_data));
+
+    console.log(bar);
+    
+  }
+
+  
 }
