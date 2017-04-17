@@ -1,8 +1,5 @@
 <h1>
-  {{title}}
+  {{bar.title}} {{pie.title}}
 </h1>
-<ul *ngIf="data">
-  <li>{{data}}</li>
-</ul>
-<div><app-nvd3 [options]="options" [data]="data"></app-nvd3></div>
-<div><app-nvd3 [options]="options" [data]="data"></app-nvd3></div>
+<chart [options]="chart_one"></chart>
+<chart [options]="chart_two"></chart>

@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Data } from './data'
-import { GraphsService } from './graphs.service'
+import { Data } from './data';
+import { Bar } from './model';
+import { GraphsService } from './graphs.service';
+import { ChartModule } from 'angular2-highcharts';
+import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 
-declare let d3:any;
+//declare let d3:any;
 
 @Component({
   selector: 'app-root',
@@ -11,47 +14,109 @@ declare let d3:any;
   providers: [GraphsService]
 })
 
-export class AppComponent implements OnInit {
-  title = 'Graphs';
-  options;
-  data: Data[];
-  
-  constructor(private graphService: GraphsService) { }
-  
-  ngOnInit(): void{
-      this.graphService.getDatas().then(datas => {
-          for(let temp_data in datas){
-              this.plot_graph([datas[temp_data]], temp_data);             
-          }
-      })
-  }
-  plot_graph(data,element_no){
-    this.options = {
-          chart: {
-            type: 'discreteBarChart',
-            height: 450,
-            margin : {
-              top: 20,
-              right: 20,
-              bottom: 50,
-              left: 55
-            },
-            x: (d) => {return d.label;},
-            y: (d) => {return d.value;},
-            showValues: true,
-            valueFormat: function(d){
-              return d3.format(',.0f')(d);
-            },
-            duration: 500,
-            xAxis: {
-              axisLabel: 'States'
-            },
-            yAxis: {
-              axisLabel: 'No of trainings',
-              axisLabelDistance: -10
+export class AppComponent{
+    bar : Bar = {
+        chart: {
+        type: 'bar'
+    },
+    title: {
+        text: 'Historic World Population by Region'
+    },
+    xAxis: {
+        categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Population (millions)',
+            align: 'high'
+        },
+        labels: {
+            overflow: 'justify'
+        }
+    },
+    tooltip: {
+        valueSuffix: ' millions'
+    },
+    plotOptions: {
+        bar: {
+            dataLabels: {
+                enabled: true
             }
         }
-      };
-      this.data = data;   
-  }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'top',
+        floating: true,
+        borderWidth: 1,
+        //backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+        shadow: true
+    },
+    series: [{
+        data: [107, 31, 635, 203, 2]
+    }]}
+
+  /*title = 'Graphs';
+  chart_one;
+  chart_two;
+
+  constructor() {
+    this.chart_one = {
+        title : { text : 'simple chart' },
+            series: [{
+                data: [29.9, 71.5, 106.4, 129.2],
+            }]
+    }
+    /*this.chart_two = {
+        title : { text : 'simple chart' },
+            series: [{
+                data: [29.9, 71.5, 106.4, 129.2],
+            }]
+    }
+    this.chart_two =  {
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: 'Historic World Population by Region'
+    },
+    xAxis: {
+        categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Population (millions)',
+            align: 'high'
+        },
+        labels: {
+            overflow: 'justify'
+        }
+    },
+    tooltip: {
+        valueSuffix: ' millions'
+    },
+    plotOptions: {
+        bar: {
+            dataLabels: {
+                enabled: true
+            }
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'top',
+        floating: true,
+        borderWidth: 1,
+        //backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+        shadow: true
+    },
+    series: [{
+        data: [107, 31, 635, 203, 2]
+    }]
+};
+  }*/
 }
