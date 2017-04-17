@@ -106,6 +106,7 @@ def send_updated_log(request):
                     except Exception: #Incase object edited and then deleted
                         district_animator_training_list.append(animator)
 
+                # TO SEND TRAINING AND SCORE OBJECTS IN THE LOG REQUEST
                 # filtered_trainings = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table='Training')
                 # for training in filtered_trainings:
                 #     try:
@@ -127,6 +128,7 @@ def send_updated_log(request):
                 #         district_animator_training_list.append(score)
 
 
+                # TO SEND DISTRICTS AND ANIMATORS INCASE TRAINING USER IS ASSIGNED/UNASSIGNED SOME STATE
                 # user_modified = LogData.objects.filter(timestamp__gt=request_timestamp, entry_table="TrainingUser")
                 # if user_modified:
                 #     new_assigned_districts = District.objects.filter(state__id__in=requesting_user_states)
