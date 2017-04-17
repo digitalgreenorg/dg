@@ -9,7 +9,7 @@ import { DATA } from './our-data'
 export class TopBarDataService {
   // private headers = new Headers({'Content-Type':'application/json'});
   private webUrl = 'http://localhost:8000/training/testmethod/'
-
+  // private 
    
   constructor(private http: Http) { }
   getData():Promise<MyData []> {
@@ -29,6 +29,10 @@ export class TopBarDataService {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);
   }
+
+  // getGraphData():Promise<any>{
+  //   // return this.http.get()
+  // }
 
 }
 // header("Access-Control-Allow-Origin: *");

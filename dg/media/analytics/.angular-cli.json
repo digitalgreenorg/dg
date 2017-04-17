@@ -20,6 +20,7 @@
       "prefix": "app",
       "styles": [
         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
+        "../node_modules/nvd3/build/nv.d3.css",
         "styles.css"
       ],
       "scripts": [],

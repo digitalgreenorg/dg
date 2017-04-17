@@ -16,9 +16,8 @@ from geographies.models import State
 from django.db import connection
 import datetime
 from datetime import date
-from output.database.utility import run_query_raw, get_init_sql_ds, join_sql_ds
-from multiprocessing import Pool
-from multiprocessing.dummy import Pool as ThreadPool
+from training.management.database.utility import run_query_raw, get_init_sql_ds, join_sql_ds, get_sql_result, multiprocessing_dict
+from training.management.database.get_sql_queries import *
 
 # Create your views here.
 @csrf_exempt
@@ -41,93 +40,12 @@ def login(request):
         return HttpResponse("0")
     return HttpResponse("0")
 
-def run_query(query_string, *query_args):
-    if(not query_string):
-        return ()
-    cursor = connection.cursor()
-    cursor.execute(query_string, query_args)
-    return cursor.fetchall()
-
-
-def get_sql_result(query_dict):
-    res = list(run_query(query_dict['query_string']))[0][0]
-    data_dict = {}
-    data_dict[query_dict['query_tag']] = res
-    return (query_dict['query_tag'], res)
-    
 def testmethod(request):
-    
     start_date = str(request.GET['start_date'])
     end_date = str(request.GET['end_date'])
-    # start_date = '2017-03-01'
-    # end_date = '2017-03-31'
-    sql_query_list = []
-    args_list = []
 
-    # No. of Trainings
-    args_dict = {}
-    sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('count(distinct tt.id)')
-    sql_ds['from'].append('training_training tt')
-    sql_ds['join'].append(['training_score ts', 'ts.training_id = tt.id and ' + 'date between \'' + start_date + '\' and \'' + end_date + '\''])
-    # sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
-    sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'No. of Trainings'
-    args_dict['query_string'] = sql_q
-    args_list.append(args_dict)
-
-    # Mediators Trained
-    args_dict = {}
-    sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('count(distinct ts.participant_id)')
-    sql_ds['from'].append('training_score ts')
-    # sql_ds['join'].append(['training_training_participants ttps', 'ts.training_id = ttps.training_id'])
-    sql_ds['where'].append('ts.score in (0, 1)')
-    sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'No. of Mediators'
-    args_dict['query_string'] = sql_q
-    print sql_q
-    args_list.append(args_dict)
-
-    # Avg Score
-    args_dict = {}
-    sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('ts.participant_id, (sum(ts.score)) sum_score,count(ts.score) score_count')
-    sql_ds['from'].append('training_score ts')
-    sql_ds['where'].append('ts.score in (0, 1)')
-    sql_ds['group by'].append('ts.participant_id') #check group by training_id is required or not
-    sql_q = join_sql_ds(sql_ds)
-
-    sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('cast(round(avg(T.sum_score), 2) as char(10))')
-    sql_ds['from'].append('(' + sql_q + ') T')
-    sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'Avg Score'
-    args_dict['query_string'] = sql_q
-    args_list.append(args_dict)
-
-
-    # Pass_percentage
-    args_dict = {}
-    sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('ts.participant_id, (sum(ts.score)) sum_score,count(ts.score) score_count')
-    sql_ds['from'].append('training_score ts')
-    sql_ds['where'].append('ts.score in (0, 1)')
-    sql_ds['group by'].append('ts.participant_id') #check group by training_id is required or not
-    sql_q = join_sql_ds(sql_ds)
-
-    sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('cast(round((COUNT(CASE WHEN (T.sum_score / T.score_count) >= 0.7 then 1 ELSE NULL END) / count(*))*100, 2) as char(10))')
-    sql_ds['from'].append('(' + sql_q + ') T')
-    sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'Pass Percentage'
-    args_dict['query_string'] = sql_q
-    args_list.append(args_dict)
-    
-    pool = ThreadPool(4)
-    results = dict(pool.map(get_sql_result, args_list))
-    pool.close()
-    pool.join()
+    args_list = get_top_bar_sql(start_date=start_date,end_date=end_date)
+    results = multiprocessing_dict(method_name = get_sql_result, args_list = args_list)
     data = json.dumps(results)
     return HttpResponse(data)
 
