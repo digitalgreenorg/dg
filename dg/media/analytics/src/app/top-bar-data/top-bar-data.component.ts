@@ -20,7 +20,7 @@ export class TopBarDataComponent implements OnInit {
 
   getData() : void {
     this.topbardataService.getData()
-                          .then(val => this.myData = val);
+                          .subscribe(val => this.myData = val);
   }
 
   showData() : void{
