@@ -16,8 +16,8 @@ from geographies.models import State
 from django.db import connection
 import datetime
 from datetime import date
-from training.management.database.utility import run_query_raw, get_init_sql_ds, join_sql_ds, get_sql_result, multiprocessing_dict
-from training.management.database.get_sql_queries import *
+from training.management.databases.utility import multiprocessing_dict
+from training.management.databases.get_sql_queries import *
 
 # Create your views here.
 @csrf_exempt
