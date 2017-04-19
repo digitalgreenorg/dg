@@ -109,3 +109,19 @@ def multiprocessing_dict(**Kwargs):
     pool.close()
     pool.join()
     return results
+
+def get_sql_result_api(query_dict):
+    res = list(run_query_raw(query_dict['query_string']))[0][0]
+    data_dict = {}
+    # data_dict[query_dict['query_tag']] = res
+    data_dict[query_dict['component']] = {'tagName':query_dict['query_tag'], 'value':res}
+    return (data_dict)
+
+def multiprocessing_list(**Kwargs):
+    method_name = Kwargs['method_name']
+    args_list = Kwargs['args_list']
+    pool = ThreadPool(4)
+    results = pool.map(get_sql_result_api, args_list)
+    pool.close()
+    pool.join()
+    return results

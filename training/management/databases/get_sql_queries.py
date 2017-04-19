@@ -29,7 +29,6 @@ def get_top_bar_sql(**Kwargs):
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'No. of Mediators'
     args_dict['query_string'] = sql_q
-    print sql_q
     args_list.append(args_dict)
 
     # Avg Score
@@ -68,3 +67,41 @@ def get_top_bar_sql(**Kwargs):
     args_list.append(args_dict)
     
     return args_list
+
+
+def get_training_data_sql(**Kwargs):
+    start_date = Kwargs['start_date']
+    end_date = Kwargs['end_date']
+    sql_query_list = []
+    args_list = []
+
+    # No. of Trainings
+    args_dict = {}
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('count(distinct tt.id)')
+    sql_ds['from'].append('training_training tt')
+    sql_ds['join'].append(['training_score ts', 'ts.training_id = tt.id and ' + 'date between \'' + start_date + '\' and \'' + end_date + '\''])
+    # sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
+    sql_q = join_sql_ds(sql_ds)
+    args_dict['query_tag'] = 'No. of Trainings'
+    args_dict['component'] = 'overall'
+    args_dict['query_string'] = sql_q
+    args_list.append(args_dict)
+
+    # No. of Trainings
+    args_dict = {}
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('count(distinct tt.id)')
+    sql_ds['from'].append('training_training tt')
+    sql_ds['join'].append(['training_score ts', 'ts.training_id = tt.id and ' + 'date between \'' + start_date + '\' and \'' + end_date + '\''])
+    # sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
+    sql_q = join_sql_ds(sql_ds)
+    args_dict['query_tag'] = 'No. of Trainings'
+    args_dict['component'] = 'recent'
+    args_dict['query_string'] = sql_q
+    args_list.append(args_dict)
+
+
+    return args_list
+
+    

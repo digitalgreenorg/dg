@@ -6,6 +6,7 @@ import 'rxjs/add/operator/catch';
 import { MyData } from './my-data';
 import { DATA } from './our-data'
 import { Observable } from 'rxjs/Rx'
+import { Config } from './config/config'
 
 @Injectable()
 export class TopBarDataService {
@@ -23,6 +24,18 @@ export class TopBarDataService {
     requestOptions.search = params;
     return this.http.get(webUrl, requestOptions)
             .map(response => response.json() as MyData[])
+            .catch(this.handleError);
+  }
+  
+  getApiData(webUrl):Observable<Config> {
+
+    let params : URLSearchParams = new URLSearchParams();
+    params.set('start_date', '2015-01-01');
+    params.set('end_date', '2017-04-15');
+    let requestOptions : RequestOptions = new RequestOptions();
+    requestOptions.search = params;
+    return this.http.get(webUrl, requestOptions)
+            .map(response => response.json() as Config)
             .catch(this.handleError);
   }
 

@@ -16,7 +16,7 @@ from geographies.models import State
 from django.db import connection
 import datetime
 from datetime import date
-from training.management.databases.utility import multiprocessing_dict
+from training.management.databases.utility import multiprocessing_dict, multiprocessing_list
 from training.management.databases.get_sql_queries import *
 
 # Create your views here.
@@ -46,6 +46,18 @@ def testmethod(request):
 
     args_list = get_top_bar_sql(start_date=start_date,end_date=end_date)
     results = multiprocessing_dict(method_name = get_sql_result, args_list = args_list)
+    data = json.dumps(results)
+    return HttpResponse(data)
+
+def testApiMethod(request):
+    start_date = str(request.GET['start_date'])
+    end_date = str(request.GET['end_date'])
+
+    args_list = get_training_data_sql(start_date=start_date,end_date=end_date)
+    results = multiprocessing_list(method_name = "get_sql_result_api", args_list = args_list)
+    print results
+    # for v in results.keys():
+    #     print v
     data = json.dumps(results)
     return HttpResponse(data)
 

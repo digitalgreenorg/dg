@@ -21,3 +21,13 @@
       </div>
     </div>
   </li>
+  <p>
+    
+    <li *ngFor='let key of testConfig.data.overall'>
+      {{key.tagName}} -> {{key.value}}
+    </li>
+    <li *ngFor='let key of myApiData'>
+        {{key.length}}{{key[0].overall.tagName}} -> {{key[0].overall.value}} 
+      </li>
+    
+  </p>

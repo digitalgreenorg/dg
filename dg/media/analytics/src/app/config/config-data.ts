@@ -7,7 +7,7 @@ export const STAT: any = [
             apiUrl:'http://localhost:8000/training/testmethod'
         },
         recent : {
-            dataRange:60, // In days
+            dateRange:60, // In days
             filter:{
                 fromDate:'2017-01-01',
                 toDate:'2017-03-31',
@@ -16,17 +16,18 @@ export const STAT: any = [
         },
         graphs:{
             show:false
-        }
+        },
+        apiUrl:'http://localhost:8000/training/testmethod'
       },
       {
-        entity_name : 'No. of Trainings',
+        entity_name : 'No. of Mediators',
         overall : {
             filter:null,
             show:false,
             apiUrl:'http://localhost:8000/training/testmethod'
         },
         recent : {
-            dataRange:60, // In days
+            dateRange:60, // In days
             filter:{
                 fromDate:'2017-01-01',
                 toDate:'2017-03-31',
@@ -35,6 +36,27 @@ export const STAT: any = [
         },
         graphs:{
             show:false
-        }
+        },
+        apiUrl:'http://localhost:8000/training/testmethod'
+      },
+      {
+        entity_name : 'No. of Mediators',
+        overall : {
+            filter:null,
+            show:false,
+            apiUrl:'http://localhost:8000/training/testmethod'
+        },
+        recent : {
+            dateRange:60, // In days
+            filter:{
+                fromDate:'2017-01-01',
+                toDate:'2017-03-31',
+            },
+            show: true,
+        },
+        graphs:{
+            show:true
+        },
+        apiUrl:'http://localhost:8000/training/testApiMethod'
       },
     ]
