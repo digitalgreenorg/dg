@@ -34,9 +34,9 @@ export class AppComponent{
                 data: [29.9, 71.5, 106.4, 129.2],
             }]
     }*/
-    let json_data = '{"title" : "{ "text" : "simple chart" }","series": "[{data: [29.9, 71.5, 106.4, 129.2],}]"}';
+    let json_data = '{"title" : {text : simple chart},"series": [{data: [29.9, 71.5, 106.4, 129.2],}]}';
     //let json_data = '{"title" : "hi bye"}';
-    console.log(typeof(json_data));
+    //console.log(typeof(json_data));
     let bar : Bar = Object.assign(new Bar, JSON.parse(json_data));
 
     console.log(bar);
