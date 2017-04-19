@@ -12,3 +12,12 @@
       </div>
     </div>
   </li>
+  <li class="list-inline-item" *ngFor='let key of myData1 | keys'>
+    <div class="card" style="width: 20rem; background-color: #009688">
+      <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+      <div class="card-block">
+        <h4 class="card-title text-white">{{key.key}}</h4>
+        <h6 class="card-text text-white small"><em><strong>{{key.value}}</strong></em></h6>
+      </div>
+    </div>
+  </li>

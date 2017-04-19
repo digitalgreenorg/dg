@@ -10,18 +10,18 @@ import { Observable } from 'rxjs/Rx'
 @Injectable()
 export class TopBarDataService {
   // private headers = new Headers({'Content-Type':'application/json'});
-  private webUrl = 'http://localhost:8000/training/testmethod/'
+  // private webUrl = 'http://localhost:8000/training/testmethod/'
   // private 
    
   constructor(private http: Http) { }
-  getData():Observable<MyData []> {
+  getData(webUrl):Observable<MyData []> {
     
     let params : URLSearchParams = new URLSearchParams();
     params.set('start_date', '2015-01-01');
     params.set('end_date', '2017-04-15');
     let requestOptions : RequestOptions = new RequestOptions();
     requestOptions.search = params;
-    return this.http.get(this.webUrl, requestOptions)
+    return this.http.get(webUrl, requestOptions)
             .map(response => response.json() as MyData[])
             .catch(this.handleError);
   }
