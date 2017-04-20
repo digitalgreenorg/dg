@@ -3,9 +3,8 @@
   {{title}}
 </p>
   <br>
-  <li class="list-inline-item" *ngFor='let key of myData | keys'>
+  <!--<li class="list-inline-item" *ngFor='let key of myData | keys'>
     <div class="card" style="width: 20rem; background-color: #009688">
-      <!--<img class="card-img-top" src="..." alt="Card image cap">-->
       <div class="card-block">
         <h4 class="card-title text-white">{{key.key}}</h4>
         <h6 class="card-text text-white small"><em><strong>{{key.value}}</strong></em></h6>
@@ -14,20 +13,20 @@
   </li>
   <li class="list-inline-item" *ngFor='let key of myData1 | keys'>
     <div class="card" style="width: 20rem; background-color: #009688">
-      <!--<img class="card-img-top" src="..." alt="Card image cap">-->
       <div class="card-block">
         <h4 class="card-title text-white">{{key.key}}</h4>
         <h6 class="card-text text-white small"><em><strong>{{key.value}}</strong></em></h6>
       </div>
     </div>
-  </li>
+  </li>-->
+
   <p>
-    
-    <li *ngFor='let key of testConfig.data.overall'>
-      {{key.tagName}} -> {{key.value}}
+    <li  class="list-inline-item" *ngFor='let key of myApiData'>
+        <div class="card" style="width: 20rem; background-color: #009688">
+          <div class="card-block">
+            <h4 class="card-title text-white">{{key.data.overall.tagName}}</h4>
+            <h6 class="card-text text-white small"><em><strong>{{key.data.overall.value}}</strong></em></h6>
+          </div>
+      </div>
     </li>
-    <li *ngFor='let key of myApiData'>
-        {{key.length}}{{key[0].overall.tagName}} -> {{key[0].overall.value}} 
-      </li>
-    
   </p>

@@ -103,5 +103,36 @@ def get_training_data_sql(**Kwargs):
 
 
     return args_list
-
     
+    
+def get_mediators_data_sql(**Kwargs):
+    start_date = Kwargs['start_date']
+    end_date = Kwargs['end_date']
+    sql_query_list = []
+    args_list = []
+
+    args_dict = {}
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('count(distinct ts.participant_id)')
+    sql_ds['from'].append('training_score ts')
+    # sql_ds['join'].append(['training_training_participants ttps', 'ts.training_id = ttps.training_id'])
+    sql_ds['where'].append('ts.score in (0, 1)')
+    sql_q = join_sql_ds(sql_ds)
+    args_dict['query_tag'] = 'No. of Mediators'
+    args_dict['component'] = 'overall'
+    args_dict['query_string'] = sql_q
+    args_list.append(args_dict)
+
+    args_dict = {}
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('count(distinct ts.participant_id)')
+    sql_ds['from'].append('training_score ts')
+    # sql_ds['join'].append(['training_training_participants ttps', 'ts.training_id = ttps.training_id'])
+    sql_ds['where'].append('ts.score in (0, 1)')
+    sql_q = join_sql_ds(sql_ds)
+    args_dict['query_tag'] = 'No. of Mediators'
+    args_dict['component'] = 'recent'
+    args_dict['query_string'] = sql_q
+    args_list.append(args_dict)
+
+    return args_list

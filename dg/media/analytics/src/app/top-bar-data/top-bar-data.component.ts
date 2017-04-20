@@ -15,8 +15,10 @@ export class TopBarDataComponent implements OnInit {
   private myData : MyData[];
   private myData1 : MyData[];
   private myApiData:Config[] = new Array<Config>();
+  // private myApiData:Config = new Config();
   private testConfig: Config = new Config();
   private testApidata: Config = new Config();
+  
   title;
   val;
   private testOverall;
@@ -31,7 +33,7 @@ export class TopBarDataComponent implements OnInit {
   getOverAllData(webUrl) : void {
     // console.log(STAT[0].overall.apiUrl)
     this.topbardataService.getData(webUrl)
-                          .subscribe(val => this.myData = val);
+                          .subscribe(val => {this.myData = val;});
   }
   
   getRecentData(webUrl) : void {
@@ -43,29 +45,30 @@ export class TopBarDataComponent implements OnInit {
   // To get ApiResult in the class format
   getData(stat) : void {
     this.topbardataService.getApiData(stat.apiUrl)
-                          .subscribe(val => {this.testApidata = val;this.myApiData.push(val);console.log(this.myApiData);})
+                          .subscribe(val => {this.myApiData.push(val); console.log('data -> ', val)})
   }
   showData() : void {
     
-    this.testConfig.data = {
-      overall: [{
-      tagName:'sujit',
-      value:10
-      }],
-      recent:[{
-        tagName:'chandru',
-        value: 20
-      }]
-    };
-    this.testOverall = {
-      tagName:'aman',
-      value:30
-    }
-    this.testConfig.data.overall.push(this.testOverall);
+    // this.testConfig.data = {
+    //   overall: [{
+    //   tagName:'sujit',
+    //   value:10
+    //   }],
+    //   recent:[{
+    //     tagName:'chandru',
+    //     value: 20
+    //   }]
+    // };
+    // this.testOverall = {
+    //   tagName:'aman',
+    //   value:30
+    // }
+    // this.testConfig.data.overall.push(this.testOverall);
     // console.log(this.testConfig.data.overall[0].tagName);
   }
 
   ngOnInit() {
+
     for(let stat of STAT) {
       if(stat.overall.show) {
         this.getOverAllData(stat.overall.apiUrl);
@@ -78,9 +81,7 @@ export class TopBarDataComponent implements OnInit {
       if(stat.graphs.show) {
         this.getData(stat);
       }
-      
     }
-    
     this.showData();
   }
 

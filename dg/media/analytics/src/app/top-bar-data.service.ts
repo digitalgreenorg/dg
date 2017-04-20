@@ -35,7 +35,7 @@ export class TopBarDataService {
     let requestOptions : RequestOptions = new RequestOptions();
     requestOptions.search = params;
     return this.http.get(webUrl, requestOptions)
-            .map(response => response.json() as Config)
+            .map(response => response.json()as Config)
             .catch(this.handleError);
   }
 

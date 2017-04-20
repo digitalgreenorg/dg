@@ -49,17 +49,28 @@ def testmethod(request):
     data = json.dumps(results)
     return HttpResponse(data)
 
-def testApiMethod(request):
+def testTrainingApi(request):
     start_date = str(request.GET['start_date'])
     end_date = str(request.GET['end_date'])
 
     args_list = get_training_data_sql(start_date=start_date,end_date=end_date)
-    results = multiprocessing_list(method_name = "get_sql_result_api", args_list = args_list)
+    results = multiprocessing_list(args_list = args_list)
     print results
-    # for v in results.keys():
-    #     print v
-    data = json.dumps(results)
+    data = {'data':results}
+    data = json.dumps(data)
     return HttpResponse(data)
+
+def testMediatorsApi(request):
+    start_date = str(request.GET['start_date'])
+    end_date = str(request.GET['end_date'])
+
+    args_list = get_mediators_data_sql(start_date=start_date,end_date=end_date)
+    results = multiprocessing_list(args_list = args_list)
+    print results
+    data = {'data':results}
+    data = json.dumps(data)
+    return HttpResponse(data)
+
 
 def dashboard(request):
     # return render(request, 'src/index.html')
