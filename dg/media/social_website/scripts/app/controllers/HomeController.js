@@ -134,26 +134,6 @@ define(function(require) {
         },
         
         _initVideoPlayer: function() {
-
-            var videoId = 'JYkaf4ucaSc';
-
-            var params = { allowScriptAccess: "always" };
-            var atts = { id: "player", 
-            			 class: 'main-carousel-video-player'
-            		    };
-            
-            swfobject.embedSWF(
-                'https://www.youtube.com/v/' + videoId + '?enablejsapi=1&playerapiid=ytplayer&version=3',
-                'player',
-                '1024',
-                '424',
-                '8',
-                null,
-                null,
-                params,
-                atts
-            );
-
             window.onYouTubePlayerReady = this._onYouTubePlayerReady.bind(this);
             $("#video-img > div").not("#player").each(function(index, ele){$(ele).hide();});
             $("#player").show();
