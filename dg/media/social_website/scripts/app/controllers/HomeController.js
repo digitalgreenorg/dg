@@ -134,6 +134,8 @@ define(function(require) {
         },
         
         _initVideoPlayer: function() {
+            // This code loads the IFrame Player API code asynchronously and place the script tag before 
+            // all other script tags.
             var tag = document.createElement('script');
             tag.src = "https://www.youtube.com/iframe_api";
             var firstScriptTag = document.getElementsByTagName('script')[0];
