@@ -576,16 +576,25 @@ define([
             if (this.$el.find('#id_' + parent_element).val() == all_configs.misc.health_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
                 if (this.entity_config.inline_headers_for_hide_show_arr){
                     _.each(this.entity_config.inline_headers_for_hide_show_arr, function(element, index) {
+                        // applying for UPAVAN
+                        if (User.get('type_of_cocouser') == 4){
+                            
+                            if(element = "th#id_member_adopt"){
+                                $(element).html('Beneficiary practicing the behavior?')
+                                $(element).removeClass('hidden');
+                            }
+                            if(element = "th#id_recall_nonnegotiable"){
+                                $(element).html('Beneficiary recalled the knowledge recall point? ')
+                                $(element).removeClass('hidden');
+                            }
+                        }
                         $(element).removeClass('hidden');
                     })
                 }
                 if (this.entity_config.fields_to_hide_arr){
                     _.each(this.entity_config.fields_to_hide_arr, function(element, index) {
                         $(element).removeClass('hidden');
-                        // applying for UPAVAN
-                        if (User.get('type_of_cocouser') == 4){
-                            $(element).addClass('hidden');
-                        }
+                        
                     })
                 }
             }

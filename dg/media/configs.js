@@ -692,7 +692,7 @@ function() {
         'headers_to_hide': ['th#id_age', 'th#id_gender', 'th#id_category'],
         'parent_id_for_inline': 'row7',
         'remove_attribute_field': 'select#category_row7',
-        'fields_to_hide_arr': ["#label_health_provider_present", "#id_health_provider_present"],
+        'fields_to_hide_arr_for_hnn': ["#label_health_provider_present", "#id_health_provider_present"],
         download_chunk_size: 1000,
         'unique_together_fields': ['date', 'start_time', 'village.id', 'animator.id'],
         'text_to_select_display_hack': true,
