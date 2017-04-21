@@ -87,6 +87,14 @@ class ParentCategoryAdmin(admin.ModelAdmin):
 
     readonly_fields = list_display
 
+
+class DirectBeneficiariesAdmin(admin.ModelAdmin):
+
+    list_display = ['id', 'direct_beneficiaries_category']
+    search_fields = ['direct_beneficiaries_category']
+
+
+
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline,]
     fieldsets = [

@@ -238,10 +238,21 @@ define([
         render_labels: function(){
             $f_el = this.$("#form_template_render");
             $f_el.append(this.form_template(this.labels));
+            var cocousertype = User.get('type_of_cocouser')
             var partner_name = User.get('partner_name');
             var partner_check = jQuery.inArray(partner_name, all_configs.misc.ethiopia_partners)
             if (partner_check < 0){
                 $f_el.find("#is_modelfarmer").addClass('hidden');
+            }
+            //  for UPAVAN
+            if (cocousertype == 4){
+                _.each(all_configs.misc.upavan_user_fields, function(element, index) {
+                    $f_el.find(element).removeClass('hidden')
+                })
+            }else{
+                _.each(all_configs.misc.upavan_user_fields, function(element, index) {
+                    $f_el.find(element).addClass('hidden')
+                })
             }
 
         },
@@ -269,25 +280,16 @@ define([
             _.each(this.element_entity_map, function(entity, element) {
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
-                    
-                    if (this.entity_config.entity_name == "screening" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "2"| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
-                        // hide the headers
-                        this.$el.find('th#id_age').addClass('hidden');
-                        this.$el.find('th#id_gender').addClass('hidden');
-                        this.$el.find('th#id_category').addClass('hidden');
-                        this.$el.find('input#age_row7').addClass('hidden');
-                        this.$el.find('input#gender_row7').addClass('hidden');
-                        this.$el.find('div#category_row7_chosen').addClass('hidden');
-                        this.$el.find('select#category_row7').removeAttr('required');
-                    }else if(this.entity_config.entity_name == "screening" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "1"){
-                        this.$el.find('th#id_age').removeClass('hidden');
-                        this.$el.find('th#id_gender').removeClass('hidden');
-                        this.$el.find('th#id_category').removeClass('hidden');
-                        this.$el.find('input#age_row7').removeClass('hidden');
-                        this.$el.find('input#gender_row7').removeClass('hidden');
-                        this.$el.find('div#category_row7_chosen').removeClass('hidden');
-                    }else if (this.entity_config.entity_name == "adoption" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "2"){
-                        if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == "2"){
+                    //  for screening
+                    if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
+                        // hide the headers and fields
+                        this.$el.find(this.entity_config.fields_to_hide).addClass('hidden')
+                        this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                    }else if(this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.health_variable){
+                        this.$el.find(this.entity_config.fields_to_hide).removeClass('hidden')
+                    }else if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
+                        if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
+                            // for adoption
                             if (this.edit_case && this.foreign_elements_rendered[element]){
                                 $("#id_adopt_practice").addClass("hidden");
                                 $("#id_recall_nonnegotiable").addClass("hidden");
@@ -321,11 +323,21 @@ define([
                             that.$el.find("#"+that.entity_config.parent_element_label_to_hide).addClass('hidden');
                             that.$el.find("#id_"+that.entity_config.parent_element_to_hide).addClass('hidden');
                         }
-                        // text to select
+                        // text to select 
                         if (that.entity_config.text_to_select_display_hack){
-                            var adopt_practice_val = that.model_json.adopt_practice;
-                            that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ adopt_practice_val +"]").attr('selected', 'selected')
-                            $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
+                             // for multiple fields
+                            if (that.entity_config.text_to_select_display_hack_field_array){
+                                _.each(that.entity_config.text_to_select_display_hack_field_array, function(element, index) {
+                                    that.$el.find("#id_" + element + " option[value="+ that.model_json[element]+"]").attr('selected', 'selected')
+                                    $("#id_" + element).change().trigger("chosen:updated");
+                                })
+                            }
+                            // for single fields
+                            if(that.entity_config.text_to_select_display_hack_field_id){
+                                var text_to_select_display_var  = that.model_json[that.entity_config.text_to_select_display_hack_field_id]
+                                that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ text_to_select_display_var +"]").attr('selected', 'selected')
+                                $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
+                            }
                         }
                         // put into form
                         that.fill_form();
@@ -545,17 +557,38 @@ define([
         },
 
         action_after_render_foreign_element: function(parent_element, dep_element){
-            if (this.$el.find('#id_' + parent_element).val() == "2" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+            //  for aggriculture
+            if (this.$el.find('#id_' + parent_element).val() == all_configs.misc.agg_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
                 // hide the headers
-                this.$el.find('th#id_member_adopt, th#id_recall_nonnegotiable, td#id_recall_nonnegotiable, td#id_member_adopt').addClass('hidden');
-                this.$el.find("div#id_adopt_practice, div#id_recall_nonnegotiable").addClass("hidden");
-                this.$el.find("#label_health_provider_present, #id_health_provider_present").addClass('hidden');
+                if (this.entity_config.inline_headers_for_hide_show_arr){
+                    _.each(this.entity_config.inline_headers_for_hide_show_arr, function(element, index) {
+                        $(element).addClass('hidden');
+                    })
+                }
+                if (this.entity_config.fields_to_hide_arr){
+                    _.each(this.entity_config.fields_to_hide_arr, function(element, index) {
+                        $(element).addClass('hidden');
+                        
+                    })
+                }
             }
-            if (this.$el.find('#id_' + parent_element).val() == "1" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
-                this.$el.find("th#id_member_adopt, th#id_recall_nonnegotiable").removeClass("hidden");
-                this.$el.find("#label_health_provider_present, #id_health_provider_present").removeClass('hidden');
+            // for health and nutrition
+            if (this.$el.find('#id_' + parent_element).val() == all_configs.misc.health_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                if (this.entity_config.inline_headers_for_hide_show_arr){
+                    _.each(this.entity_config.inline_headers_for_hide_show_arr, function(element, index) {
+                        $(element).removeClass('hidden');
+                    })
+                }
+                if (this.entity_config.fields_to_hide_arr){
+                    _.each(this.entity_config.fields_to_hide_arr, function(element, index) {
+                        $(element).removeClass('hidden');
+                        // applying for UPAVAN
+                        if (User.get('type_of_cocouser') == 4){
+                            $(element).addClass('hidden');
+                        }
+                    })
+                }
             }
-
 
         },
 
@@ -774,7 +807,7 @@ define([
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
-                if (element == this.entity_config.fetch_element_that_manipulate && cocousertype != 3){
+                if (element == this.entity_config.fetch_element_that_manipulate && (cocousertype != 3 && cocousertype != 4)){
                    model_array = this.filter_array_with_specific_parameters(model_array, this.entity_config.fetch_key_element, cocousertype); 
                 }
                 
@@ -810,9 +843,11 @@ define([
                         });
                         $f_el.append(expanded_template(t_json));
                         if (t_json.category && t_json.category.length >= 1){
-                            _.each(t_json.category, function(iterable, idx){    
+                            _.each(t_json.category, function(iterable, idx){   
                                 if (iterable.id != 'undefined'){
-                                    $f_el.find(".category_row7_" + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');    
+                                    $f_el.find('.category_row7_'+index).append($('<option>', {value: iterable.id, text: iterable.category}))
+                                    $('.category_row7_'+index).trigger("chosen:updated");
+                                    $f_el.find('.category_row7_'+index +" " + "option[value="+ iterable.id+"]").attr('selected', 'selected')
                                 }
                             })
                         }
@@ -823,18 +858,25 @@ define([
                     $.each(model_array, function(index, f_model) {
                         var t_json = f_model.toJSON();
                         t_json["index"] = index;
+
                         $f_el.append(expanded_template(t_json));
+                        Offline.fetch_collection("directbeneficiaries")
+                            .done(function(collection) {
+                                $.each(collection.models, function (i, item) { 
+                                    $f_el.find('.category_row7_'+index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
+                                    $('.category_row7_'+index).trigger("chosen:updated");
+                                })
+                                
+                            })
+                            .fail(function() {
+                                console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                            });
                     });
                 }
                 this.initiate_form_widgets();
                 $('.inline_table').show();
                 if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == "2"){
-                    this.$el.find('th#id_age').addClass('hidden');
-                    this.$el.find('th#id_gender').addClass('hidden');
-                    this.$el.find('th#id_category').addClass('hidden');
-                    this.$el.find('input#age_row7').addClass('hidden');
-                    this.$el.find('input#gender_row7').addClass('hidden');
-                    this.$el.find('div#category_row7_chosen').addClass('hidden');
+                    this.$el.find(this.entity_config.fields_to_hide).addClass('hidden')
                     this.$el.find('select#category_row7').removeAttr('required');
                 }
 
@@ -913,13 +955,6 @@ define([
                     
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
-                        // if (this.entity_config.entity_name == "adoption"){
-                        //     if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == "2"){
-                        //         if (this.edit_case && this.foreign_elements_rendered[element]){
-                        //             $("#id_adopt_practice").hide()
-                        //         } 
-                        //     }   
-                        // }
                 }
             }
         },

@@ -85,6 +85,7 @@ TYPE_OF_COCOUSER = (
     (1, 'HNN'),
     (2, 'AGRICULTURE'),
     (3, 'BOTH'),
+    (4, 'UPAVAN'),
     )
 
 PARENT_CATEGORY = (
@@ -105,6 +106,21 @@ ADOPT_PRACTICE_CATEGORY = (
     ("1",'Yes'),
     ("2",'No'),
     ("3",'Not Applicable'),
+)
+
+FRONTLINE_WORKER_PRESENT = (
+    ("1",'ANM'),
+    ("2",'ASHA'),
+    ("3",'AWW'),
+)
+
+TYPE_OF_VENUE = (
+
+    ('1', 'AWC'),
+    ('2', 'school'),
+    ('3', 'open space'),
+    ('4', 'community hall'),
+    ('5', 'other'),
 )
 
 

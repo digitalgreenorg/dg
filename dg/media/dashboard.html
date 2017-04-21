@@ -570,6 +570,41 @@
             <fieldset class="form-horizontal">
                 <legend><%= screening %></legend>
 				
+                <div class="form-group" id="type_of_venue">
+                    <label class="control-label col-sm-2" id="label_id_type_of_venue"><%=type_of_venue%></label>
+                    <div class="col-sm-4">
+                        <select name="type_of_venue" id="id_type_of_venue" class="chosen-select form-control">
+                            <option value=''>-----------</option>
+                            <option value='1'>AWC</option>
+                            <option value='2'>school</option>
+                            <option value='3'>open space</option>
+                            <option value='4'>community hall</option>
+                            <option value='5'>other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="csp_name"> 
+                    <label class="control-label col-sm-2"><%= csp_name %></label>
+                    <div class="col-sm-4">
+                        <input class="form-control" id="id_csp_name" type="text" placeholder="CSP Name" name="csp_name">  
+                    </div>
+                </div>
+
+                <div class="form-group" id="frontline_worker_present">
+                    <label class="control-label col-sm-2" id="label_id_frontline_worker_present"><%=frontline_worker_present%></label>
+                    <div class="col-sm-4">
+                        <select name="frontline_worker_present" id="id_frontline_worker_present" class="chosen-select form-control">
+                            <option value=''>-----------</option>
+                            <option value='1'>ANM</option>
+                            <option value='2'>ASHA</option>
+                            <option value='3'>AWW</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%= date %></label>
                 	<div class="col-sm-4">
@@ -732,13 +767,6 @@
             <div class="form-group">
                 <div class="controls">
                     <select name="category<%=index%>" id="category_row7" class="chosen-select form-control category_row7_<%=index%>" multiple="multiple">
-                        <option value=''>-----------</option>
-                        <option value='1'>Woman of reproductive age (15-49 years)</option>
-                        <option value='2'>Adolescent girl (10-19 years)</option>
-                        <option value='3'>Mother of a child  2 to 5 years</option>
-                        <option value='4'>Mother of a child 6 months to 2 years</option>
-                        <option value='5'>Mother of a child up to 6 months</option>
-                        <option value='6'>Pregnant Women</option>
                     </select>
                     
                     

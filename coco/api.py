@@ -160,7 +160,7 @@ def get_user_videos(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
     user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
-    if coco_user.type_of_cocouser != 3:
+    if coco_user.type_of_cocouser not in [3, 4]:
         user_videos = coco_user.videos.filter(category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
         ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
         videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id, category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
@@ -175,6 +175,13 @@ def get_user_videos(user_id):
         ###Get videos screened to allow inter partner sharing of videos
         videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
     return set(list(videos) + list(videos_seen) + list(user_videos))
+
+
+def get_user_based_directbeneficiaries(user):
+    if user.coco_user.type_of_cocouser == 4:
+        return list(DirectBeneficiaries.objects.exclude(id__in=[1,2,3]).order_by('id').values_list('id', flat = True))
+    else:
+        return list(DirectBeneficiaries.objects.order_by('-id').values_list('id', flat = True))
 
 
 def get_user_non_negotiable(user_id):
@@ -262,6 +269,12 @@ class VideoAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download video")
+
+class DirectBeneficiariesAuthorization(Authorization):
+    def read_list(self, object_list, bundle): 
+
+        return object_list.filter(id__in= get_user_based_directbeneficiaries(bundle.request.user))
+
 
 class NonNegotiableAuthorization(Authorization):
     def read_list(self, object_list, bundle):        
@@ -761,6 +774,7 @@ class DirectBeneficiariesResource(BaseResource):
         queryset = DirectBeneficiaries.objects.all()
         resource_name = 'directbeneficiaries'
         authentication = SessionAuthentication()
+        authorization = DirectBeneficiariesAuthorization()
         always_return_data = True
 
     dehydrate_category = partial(foreign_key_to_id, field_name='category',sub_field_names=['id','category_name'])
