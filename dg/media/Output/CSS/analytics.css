@@ -63,6 +63,13 @@ select						{ margin-bottom:1px; padding:2px; width:93%; border-style:solid; siz
 .partnerdiv					{ float:left; padding:1px; width:85%; height:20px; font-size:90%; font-family:Calibri; font-weight:normal; color:#5b6e1d; }
 .partnercheckbox			{ float:left; padding:1px; width:12%; margin-right:0px;  }
 
+/* PROJECT BODY */
+#projectbody				{ float:none; margin-top:0px; margin-left:0px; width:100%; background-color:none; }
+#projectbodytable			{ float:none; margin-top:0px; padding-left:0px; width:96%; padding-bottom:5px; margin-top:5px; }
+.customprojectbodytd		{ float:none; width:100%; border-bottom-style:solid; border-bottom-color:Green; border-bottom-width:1px; margin-top:5px; }
+.projectdiv					{ float:left; padding:1px; width:85%; height:20px; font-size:90%; font-family:Calibri; font-weight:normal; color:#5b6e1d; }
+.projectcheckbox			{ float:left; padding:1px; width:12%; margin-right:0px;  }
+
 /* content header defined */
 #contentbody				{ float:right; margin-top:-42px; margin-left:0px; width:85%; background-color:none;  }					
 #contentheader				{ width:99%; height:32px; margin-top:0px; }
