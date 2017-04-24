@@ -21,6 +21,7 @@ from dashboard.admin import VillageAdmin
 from dashboard.admin import SubCategoryAdmin
 from dashboard.admin import VideoPracticeAdmin
 from dashboard.admin import ParentCategoryAdmin
+from dashboard.admin import ProjectAdmin
 from dashboard.admin import DirectBeneficiariesAdmin
 from activities.models import PersonAdoptPractice, Screening
 from coco.models import CocoUser

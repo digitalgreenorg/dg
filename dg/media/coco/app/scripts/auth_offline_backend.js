@@ -61,7 +61,7 @@ define([
   }
   
   //saves in offline that this username, password is logged in/out
-  var save_login_state = function(username, password, language, partner_name, partner_id, user_id, loggedin){
+  var save_login_state = function(username, password, language, partner_name, type_of_cocouser, partner_id, user_id, loggedin){
       var dfd = new $.Deferred();
       User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language, 'partner_name': partner_name, 'type_of_cocouser': type_of_cocouser, 'partner_id': partner_id, 'user_id': user_id},{
           success: function(){

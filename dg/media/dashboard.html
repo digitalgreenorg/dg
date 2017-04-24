@@ -590,10 +590,16 @@
                     </div>
                 </div>
 
-                <div class="form-group" id="csp_name"> 
-                    <label class="control-label col-sm-2"><%= csp_name %></label>
+                <div class="form-group" id="video_type"> 
+                    <label class="control-label col-sm-2"><%=video_type%></label>
                     <div class="col-sm-4">
-                        <input class="form-control" id="id_csp_name" type="text" placeholder="CSP Name" name="csp_name">  
+                        <select name="video_type" id="id_video_type" class="chosen-select form-control">
+                            <option value=''>-----------</option>
+                            <option value='1'>NSA video</option>
+                            <option value='2'>MIYCN video</option>
+                            <option value='3'>PLA video</option>
+                            <option value='4'>PLA meeting</option>
+                        </select>  
                     </div>
                 </div>
 
@@ -605,6 +611,7 @@
                             <option value='1'>ANM</option>
                             <option value='2'>ASHA</option>
                             <option value='3'>AWW</option>
+                            <option value='4'>Not Present</option>
                         </select>
                     </div>
                 </div>

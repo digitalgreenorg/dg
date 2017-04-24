@@ -24,6 +24,7 @@ from views import coco_v2
 from views import debug
 from views import login
 from views import logout
+from views import upload_data
 from views import record_full_download_time
 from views import reset_database_check
 

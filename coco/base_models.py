@@ -123,6 +123,14 @@ TYPE_OF_VENUE = (
     ('5', 'other'),
 )
 
+TYPE_OF_VIDEO = (
+
+    ('1', 'NSA video'),
+    ('2', 'MIYCN video'),
+    ('3', 'PLA video'),
+    ('4', 'PLA meeting'),
+)
+
 
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)

@@ -17,6 +17,7 @@ from coco.base_models import ATTENDED_PERSON_CATEGORY
 from coco.base_models import ADOPT_PRACTICE_CATEGORY
 from coco.base_models import FRONTLINE_WORKER_PRESENT
 from coco.base_models import TYPE_OF_VENUE
+from coco.base_models import TYPE_OF_VIDEO
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator
@@ -102,7 +103,7 @@ class Screening(CocoModel):
     observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
     health_provider_present = models.BooleanField(default=False)
     # UPAVAN fields
-    csp_name = models.CharField(max_length=200, blank=True)
+    video_type = models.CharField(max_length=20, choices=TYPE_OF_VIDEO, blank=True)
     frontline_worker_present = models.CharField(max_length=20, 
                                                 choices=FRONTLINE_WORKER_PRESENT,
                                                 blank=True, null=True)
