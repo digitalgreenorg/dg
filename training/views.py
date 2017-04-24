@@ -40,15 +40,6 @@ def login(request):
         return HttpResponse("0")
     return HttpResponse("0")
 
-def testmethod(request):
-    start_date = str(request.GET['start_date'])
-    end_date = str(request.GET['end_date'])
-
-    args_list = get_top_bar_sql(start_date=start_date,end_date=end_date)
-    results = multiprocessing_dict(method_name = get_sql_result, args_list = args_list)
-    data = json.dumps(results)
-    return HttpResponse(data)
-
 def testTrainingApi(request):
     start_date = str(request.GET['start_date'])
     end_date = str(request.GET['end_date'])

@@ -3,6 +3,8 @@ import { TopBarDataService } from '../top-bar-data.service';
 import { MyData} from '../my-data';
 import { STAT } from '../config/config-data'
 import { Config } from '../config/config';
+import { Data } from '../config/data'
+import { Overall } from '../config/overall'
 
 @Component({
   selector: 'app-top-bar-data',
@@ -18,7 +20,7 @@ export class TopBarDataComponent implements OnInit {
   // private myApiData:Config = new Config();
   private testConfig: Config = new Config();
   private testApidata: Config = new Config();
-  
+  private data: Data = new Data();
   title;
   val;
   private testOverall;
@@ -29,18 +31,6 @@ export class TopBarDataComponent implements OnInit {
     private topbardataService : TopBarDataService
   ) {
   }
-
-  getOverAllData(webUrl) : void {
-    // console.log(STAT[0].overall.apiUrl)
-    this.topbardataService.getData(webUrl)
-                          .subscribe(val => {this.myData = val;});
-  }
-  
-  getRecentData(webUrl) : void {
-    // console.log(STAT[0].overall.apiUrl)
-    this.topbardataService.getData(webUrl)
-                          .subscribe(val => this.myData1 = val);
-  }
   
   // To get ApiResult in the class format
   getData(stat) : void {
@@ -48,6 +38,11 @@ export class TopBarDataComponent implements OnInit {
                           .subscribe(val => {this.myApiData.push(val); console.log('data -> ', val)})
   }
   showData() : void {
+    
+    this.data.overall = new Overall();
+    this.data.overall.tagName = 'sujit'
+    this.data.overall.value = 123
+    console.log('sd -> ', this.data);
     
     // this.testConfig.data = {
     //   overall: [{
@@ -70,12 +65,6 @@ export class TopBarDataComponent implements OnInit {
   ngOnInit() {
 
     for(let stat of STAT) {
-      if(stat.overall.show) {
-        this.getOverAllData(stat.overall.apiUrl);
-      }
-      if(stat.recent.show) {
-        this.getRecentData(stat.overall.apiUrl);
-      }
 
       // api call
       if(stat.graphs.show) {

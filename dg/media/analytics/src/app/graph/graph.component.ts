@@ -17,8 +17,12 @@ export class GraphComponent implements OnInit {
       chart: {
         type: 'discreteBarChart',
         height: 450,
-        x: function (d) { return d.label; },
-        y: function (d) { return d.value; }
+        x: function (d) {
+             return d.label; 
+            },
+        y: function (d) {
+             return d.value; 
+            }
       }
     }
 
