@@ -3707,7 +3707,6 @@ function get_payments_data() {
             outliers_transport_data = payments_data.outlier_transport_data;
             outlier_daily_data = payments_data.outlier_daily_data;
             payments_gaddidar_contribution = payments_data.gaddidar_data;
-            transportation_data = payments_data.transportation_data;
             if (language == ENGLISH_LANGUAGE) {
                 fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name_en', 'Aggregator', 'id');
             } else {
