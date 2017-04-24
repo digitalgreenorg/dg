@@ -535,7 +535,7 @@ class ScreeningResource(BaseResource):
     class Meta:
         max_limit = None
         queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
-                                                      'personmeetingattendance_set__person', 'partner').filter(date__gte=datetime(2013,1,1))
+                                                      'personmeetingattendance_set__person', 'partner').filter(date__gte=datetime.now().date() - timedelta(days=365))
         resource_name = 'screening'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
@@ -686,7 +686,7 @@ class PersonAdoptVideoResource(BaseResource):
 
     class Meta:
         max_limit = None
-        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video','animator','person__group', 'person', 'partner').filter(date_of_adoption__gte=datetime(2013,1,1))
+        queryset = PersonAdoptPractice.objects.prefetch_related('person__village','video','animator','person__group', 'person', 'partner').filter(date_of_adoption__gte=datetime.now().date() - timedelta(days=365))
         resource_name = 'adoption'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('person__village__in')

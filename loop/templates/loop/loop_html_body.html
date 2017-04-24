@@ -1,0 +1,27 @@
+<html>
+<body>
+<p>Hi<br/><br/>
+    The attached two spreadsheets contain aggregator-wise list of farmers with incorrect mobile numbers. The first sheet has list of all farmers with incorrect mobile number and second sheet has farmers with incorrect mobile numbers who transacted in the given 15 days period.<br/><br/>
+    
+    Break-up of aggregator-wise #farmers with incorrect mobile numbers is as follows:</p><br/>
+
+<b>
+    <table style="border:1px solid black;">
+    <thead>
+        <th style="border:1px solid black;">Aggregator Name</th>
+        <th style="border:1px solid black;">#Incorrect Numbers</th>
+        <th style="border:1px solid black;">#Incorrect Numbers_15 Days</th>
+    </thead>
+    <tbody>
+        {% for item in items %}
+	        <tr style="border:1px solid black;">
+	           <td style="border:1px solid black;">{{ item.name }}</td>
+	           <td style="border:1px solid black;">{{ item.total }}</td>
+	           <td style="border:1px solid black;">{{ item.current }}</td>
+	        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</b>
+</body>
+</html>

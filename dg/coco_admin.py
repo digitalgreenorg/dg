@@ -27,6 +27,7 @@ from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from programs.models import Partner
+from programs.models import Project
 from videos.models import Language
 from videos.models import Practice
 from videos.models import PracticeSector
@@ -60,6 +61,7 @@ coco_admin.register(District, DistrictAdmin)
 coco_admin.register(Block, BlockAdmin)
 coco_admin.register(Village, VillageAdmin)
 coco_admin.register(Partner)
+coco_admin.register(Project, ProjectAdmin)
 coco_admin.register(Person, PersonAdmin)
 coco_admin.register(PersonGroup, PersonGroupAdmin)
 coco_admin.register(Animator, AnimatorAdmin)

@@ -557,7 +557,7 @@ function() {
                            age: "आयु", gender: "लिंग", phone_no: "फ़ोन नंबर", add_row:"खाली पंक्तियाँ जोड़े"},
         'labels_Français': {group: "Groupes", name: "Nom", village: "Village", person_name: "Nom de la personne", father_name: "Nom du père",
                            age: "Age", gender: "Genre", phone_no: "Numéro de téléphone", add_row:"ajouter des lignes vides"},
-        'labels_English': {group:"Group", name: "Name", village: "village", person_name: "Person Name", father_name: "Father Name", 
+        'labels_English': {group:"Group", name: "Name", village: "Village", person_name: "Person Name", father_name: "Father Name", 
                            age: "Age", gender: "Gender", phone_no: "Phone No", add_row:"Add Empty Rows"},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'नाम','element':'group_name'},{'header':'गाँव','element':'village.village_name'}],
         'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':'Nom','element':'group_name'},{'header':'Village','element':'village.village_name'}],
@@ -1099,14 +1099,12 @@ function() {
         },
         edit: {
             'foreign_entities': {
-                
                 'village': {
                     'village': {
                         'placeholder': 'id_village',
                         'name_field': 'village_name'
                     },
                 },
-
                 'person': {
                     'person': {
                         'placeholder': 'id_person',
@@ -1268,6 +1266,8 @@ function() {
 
     var misc = {
         download_chunk_size: 2000,
+        data_transfer_schema: "uploadqueue",
+        data_transfer_credentials_schema: "user",
         languages: ['हिन्दी', 'English', 'Français'],
         ethiopia_partners: ['moa-dg ethiopia', 'ide', 'oa', 'saa'],
         health_variable: '1',
@@ -1275,7 +1275,7 @@ function() {
         upavan_variable: '3',
         upavan_user_fields: ["#type_of_venue", "#csp_name", "#frontline_worker_present"],
         meta_default: 'English',
-        meta_English: {stop: "Stop",close:"close", sync: "Sync", save: "Save and Add Another", help:"Help", logout:"Logout", download:"Downloading...",upload:"Uploading...", inprogress:"In Progress", done:"Done", edit:"Edit", 
+        meta_English: {stop: "Stop",close:"close", sync: "Sync", export: 'Export Data', save: "Save and Add Another", help:"Help", logout:"Logout", download:"Downloading...",upload:"Uploading...", inprogress:"In Progress", done:"Done", edit:"Edit", 
                        delete_download:"Delete and Download Database", save_again:"Save Again", discard:"Discard", upload_total:"Data items to be uploaded", upload_done:"Data Uploaded", upload_pending:"Data pending to be uploaded",
                        error:"Error!!", upload_error:"Internet connectivity lost. Please try after sometime!", copy_clipboard:"Copy to clipboard", excel_download:"Download in excel", search: 'Search: ', enteries:"Enteries: ",total_enteries:"Total Enteries: ",
                        next:"Next", previous:"Previous", list_page_help:"For multiple column sorting, press and hold the shift key while sorting each column.",
@@ -1286,7 +1286,7 @@ function() {
                        line_9:"We value your feedback", line_10:"Do share your feedback by mailing us at <a href='mailto:system@digitalgreen.org'>system@digitalgreen.org</a>",
                        line_11:"Database last deleted and downloaded at", line_12:"Database last synced at",
                        line_13:"Entries to upload"},
-        meta_हिन्दी: {stop: "रोकें",close:"बंद करें", sync:"सिंक करें", save: "एक और जोड़े", help:"हेल्प", logout:"लोग आउट", download:"डाउनलोड हो रहा है...", upload:"अपलोड हो रहा है...",inprogress:"कार्य प्रगति में है", done:"कार्य समाप्त हो गया है", edit:"बदलें",
+        meta_हिन्दी: {stop: "रोकें",close:"बंद करें", sync:"सिंक करें", export: 'डाटा डाउनलोड करें', save: "एक और जोड़े", help:"हेल्प", logout:"लोग आउट", download:"डाउनलोड हो रहा है...", upload:"अपलोड हो रहा है...",inprogress:"कार्य प्रगति में है", done:"कार्य समाप्त हो गया है", edit:"बदलें",
                        delete_download:"पुराना डेटा हटाएँ और नया जोड़ें ", save_again:"फिर से जोड़े", discard:"हटाये", upload_total:"अपलोड के लिए कुल डेटा", upload_done:"डेटा अपलोड हो गया है", upload_pending:"डेटा अपलोड होना बाकी है",
                        error: "त्रुटि!!", upload_error:"अभी इंटरनेट की सुविधा नही है। कृपया कुछ देर बाद प्रयास करें!",copy_clipboard:"क्लिपबोर्ड पर कॉपी करें", excel_download:"एक्सेल में डाउनलोड करें", search: "खोजें: ", enteries:"डेटा: ", total_enteries:"कुल डेटा: ",
                        next:"अगला", previous:"पिछला", list_page_help:"एक से जादा श्रेणी के डेटा को क्रम मे लाने के लिए एक से अधिक श्रेणी चुनते समय शिफ्ट बटन दबाए रख़े",
@@ -1297,7 +1297,7 @@ function() {
                        line_9:"हम आपके सुझाव का मूल्य समझते हैं", line_10:"अपने सुझाव हमें <a href='mailto:system@digitalgreen.org'>system@digitalgreen.org</a> पर भेजें",
                        line_11:"पिछली बार डेटा हटाया और जोड़ा गया था", line_12:"पिछली बार डेटा सिंक हुआ था",
                        line_13:"अपलोड करने वाले प्रविष्टियों"},
-        meta_Français: {stop: "Arrêtez",close:"Fermer", sync:"Sync", save: "Enregistrer", help:"Aidez-moi", logout:"Se déconnecter", download:"Téléchargement en cours...", upload:"L'ajout...",inprogress:"En cours", done:"Terminé", edit:"modifier",
+        meta_Français: {stop: "Arrêtez",close:"Fermer", sync:"Sync", export: 'Télécharger des données', save: "Enregistrer", help:"Aidez-moi", logout:"Se déconnecter", download:"Téléchargement en cours...", upload:"L'ajout...",inprogress:"En cours", done:"Terminé", edit:"modifier",
                        delete_download:"Supprimer et télécharger la base de données", save_again:"Enregistrer à nouveau", discard:"Jeter", upload_total:"Les éléments de données à être téléchargées", upload_done:"Les données téléchargées", upload_pending:"Données en attente d' être téléchargées",
                        error: "Erreur!!", upload_error:"Connectivité Internet perdue. Essayez après un certain temps!",copy_clipboard:"Copier dans le presse-papier", excel_download:"Télécharger Excel", search: "Chercher: ", enteries:"Entrées: ", total_enteries:"Entrées totales: ",
                        next:"Prochain", previous:"Précédent", list_page_help:"Pour le tri de plusieurs colonnes, appuyez et maintenez la touche Maj enfoncée tout en triant chaque colonne",
