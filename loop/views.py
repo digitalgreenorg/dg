@@ -34,7 +34,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
-    update_incoming_obj, send_acknowledge, send_voicemail
+    update_incoming_obj, send_acknowledge, send_voicemail, connect_to_broadcast
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
@@ -756,3 +756,23 @@ def helpline_offline(request):
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
+
+def broadcast(request):
+    no = '9205812770'
+    connect_to_broadcast(no,'01139589707',BROADCAST_APP_ID)
+
+@csrf_exempt
+def broadcast_call_response(request):
+    print request
+    print "Request Received"
+    print request.POST
+    return HttpResponse(status=200)
+    '''
+    if request.method == 'POST':
+        status = str(request.POST.getlist('Status')[0])
+        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        outgoing_obj = HelplineOutgoing.objects.filter(call_id=outgoing_call_id).select_related('incoming_call','from_number').order_by('-id')
+        outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
+        # If call Successfully completed then mark call as resolved
+        if status == 'completed':
+    '''
