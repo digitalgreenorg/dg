@@ -14,7 +14,7 @@ MODEL_TYPES = ((MODEL_TYPES_DIRECT, "Direct"), (MODEL_TYPES_TAX_BASED, "Tax Base
 CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
 CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
-BROADCAST_STATUS = ((0, "Pending"), (1, "Done"))
+BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND"))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -570,12 +570,13 @@ class Broadcast(LoopModel):
 
 class BroadcastUser(LoopModel):
     id = models.AutoField(primary_key=True)
-    call_id = models.CharField(max_length=100)
+    call_id = models.CharField(max_length=100, blank=True, null=True)
     from_number = models.CharField(max_length=20)     #Exotel No.
     to_number = models.CharField(max_length=20)       #User No.
     broadcast = models.ForeignKey(Broadcast, blank=True, default=None)
+    farmer = models.ForeignKey(Farmer, blank=True, default=None)
     status = models.IntegerField(choices=BROADCAST_STATUS, default=0)
-    start_time = models.DateTimeField()
+    start_time = models.DateTimeField(blank=True, null=True)
     end_time = models.DateTimeField(blank=True, null=True)
 
     def __unicode__(self):

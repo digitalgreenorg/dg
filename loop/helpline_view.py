@@ -6,7 +6,7 @@ import xml.etree.ElementTree as xml_parse
 from pytz import timezone
 
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog
+    HelplineCallLog, HelplineSmsLog, Broadcast, BroadcastUser
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT
 
@@ -167,13 +167,37 @@ def send_voicemail(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID):
     time.sleep(2)
     connect_to_app(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID)
 
-def connect_to_broadcast(to_number,broadcast_number,app_id):
+def save_broadcast_info(call_id='',from_number,to_number,farmer_id,broadcast_obj,start_time,status):
+    call_obj = BroadcastUser(call_id=call_id,from_number=from_number,to_number=to_number,
+                farmer_id=farmer_id,broadcast=broadcast_obj,start_time=start_time,status=status)
+    try:
+        call_obj.save()
+    except Exception as e:
+        # if error then log
+        module = 'save_broadcast_info'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+
+def connect_to_broadcast(user_info,from_number,app_id,broadcast_obj):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     app_url = APP_URL%(app_id,)
     response_url = BROADCAST_RESPONSE_URL
+    farmer_id = user_info['id']
+    to_number = user_info['phone']
     # Here From parameter is actually user number to whom we want to connect.
-    parameters = {'From':to_number,'CallerId':broadcast_number,'CallType':'trans','Url':app_url,'StatusCallback':response_url}
+    parameters = {'From':to_number,'CallerId':from_number,'CallType':'trans','Url':app_url,'StatusCallback':response_url}
     response = requests.post(app_request_url,data=parameters)
     module = 'connect_to_broadcast'
+    if response.status_code == 200:
+        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
+        call_detail = response_tree.findall('Call')[0]
+        outgoing_call_id = str(call_detail.find('Sid').text)
+        outgoing_call_time = str(call_detail.find('StartTime').text)
+        # Last parameter status 0 for pending, 1 for complete and 2 for DND numbers.
+        save_broadcast_info(outgoing_call_id,from_number,to_number,farmer_id,broadcast_obj,start_time,0)
+    elif response.status_code == 403:
+        save_broadcast_info(from_number=from_number,to_number=to_number,farmer_id=farmer_id,broadcast_obj=broadcast_obj,start_time=start_time,2)
+        # Enter in Log
+        log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
+        write_log(HELPLINE_LOG_FILE,module,log)
     log = "App Id: %s Status Code: %s (Response text: %s)"%(app_id,str(response.status_code),str(response.text))
     write_log(HELPLINE_LOG_FILE,module,log)

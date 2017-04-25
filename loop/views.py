@@ -758,8 +758,10 @@ def helpline_offline(request):
         return HttpResponse(status=403)
 
 def broadcast(request):
-    no = '9205812770'
-    connect_to_broadcast(no,'01139589707',BROADCAST_APP_ID)
+    farmer_detail = [{'id':1,'phone_no':'9205812770'}]
+    for farmer in farmer_detail:   
+        connect_to_broadcast(farmer,'01139589707',BROADCAST_APP_ID,broadcast_obj)
+        time.sleep(1)
 
 @csrf_exempt
 def broadcast_call_response(request):
@@ -775,4 +777,4 @@ def broadcast_call_response(request):
         outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
         # If call Successfully completed then mark call as resolved
         if status == 'completed':
-    '''
+
