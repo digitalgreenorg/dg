@@ -744,7 +744,6 @@ class DayTransportationResource(BaseResource):
     hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def obj_create(self, bundle, request=None, **kwargs):
-        print bundle.data
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         user = LoopUser.objects.get(user__username=bundle.request.user)
         if "aggregator" in bundle.data.keys():
