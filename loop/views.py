@@ -243,24 +243,27 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
         result.append(
             {'date': CT['date'], 'user_created__id': CT['user_created_id'], 'mandi__name' : CT['mandi__mandi_name_en'], 'mandi__id': CT['mandi'], 'amount': round(amount_sum,2), 'quantity__sum': round(CT['quantity__sum'],2), 'comment' : comment})
 
-    daily_pay_df = pd.DataFrame(daily_pay_list)
-    daily_pay_mandi_count = daily_pay_df.groupby(['date','user_created__id']).agg({'mandi__id':'count'}).reset_index()
-    daily_pay_mandi_count.rename(columns={"mandi__id":"mandi__count"}, inplace=True)
-    daily_pay_df = pd.merge(daily_pay_df, daily_pay_mandi_count, on=['date','user_created__id'], how='left')
-    daily_pay_df['amount'] = daily_pay_df['amount'] / daily_pay_df['mandi__count']
+    try:
+        daily_pay_df = pd.DataFrame(daily_pay_list)
+        daily_pay_mandi_count = daily_pay_df.groupby(['date','user_created__id']).agg({'mandi__id':'count'}).reset_index()
+        daily_pay_mandi_count.rename(columns={"mandi__id":"mandi__count"}, inplace=True)
+        daily_pay_df = pd.merge(daily_pay_df, daily_pay_mandi_count, on=['date','user_created__id'], how='left')
+        daily_pay_df['amount'] = daily_pay_df['amount'] / daily_pay_df['mandi__count']
 
-    for index, row in daily_pay_df.iterrows():
-        outlier = aso_queryset.filter(date=row['date'], aggregator=row['aggregator_id'], mandi=row['mandi__id']).values('amount','comment')
-        if outlier.count():
-            daily_pay_df.loc[index,'amount'] = outlier[0]['amount']
-            daily_pay_df.loc[index,'comment'] = outlier[0]['comment']
+        for index, row in daily_pay_df.iterrows():
+            outlier = aso_queryset.filter(date=row['date'], aggregator=row['aggregator_id'], mandi=row['mandi__id']).values('amount','comment')
+            if outlier.count():
+                daily_pay_df.loc[index,'amount'] = outlier[0]['amount']
+                daily_pay_df.loc[index,'comment'] = outlier[0]['comment']
 
-    daily_pay_df.drop(['mandi__count','aggregator_id'], axis=1, inplace=True)
-    daily_pay_df = daily_pay_df.round({'amount':2})
+        daily_pay_df.drop(['mandi__count','aggregator_id'], axis=1, inplace=True)
+        daily_pay_df = daily_pay_df.round({'amount':2})
 
-    daily_pay = daily_pay_df.to_dict(orient='records')
+        daily_pay = daily_pay_df.to_dict(orient='records')
 
-    result.extend(daily_pay)
+        result.extend(daily_pay)
+    except Exception:
+        pass
     return result
 
 
@@ -556,7 +559,7 @@ def payments(request):
         mandi__mandi_name=F('mandi__mandi_name_en'),
         transportation_vehicle__vehicle__vehicle_name=F('transportation_vehicle__vehicle__vehicle_name_en')).values(
         'date', 'user_created__id', 'transportation_vehicle__vehicle__vehicle_name',
-        "transportation_vehicle__transporter__transporter_name", 'transportation_vehicle__vehicle_number',
+        "transportation_vehicle__transporter__transporter_name", 'transportation_vehicle__vehicle_number','transportation_vehicle__transporter__transporter_phone',
         'mandi__mandi_name', 'farmer_share', 'id', 'comment').order_by('date').annotate(Sum('transportation_cost'))
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)

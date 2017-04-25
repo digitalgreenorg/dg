@@ -8,6 +8,8 @@ from training.api import TrainerResource, LanguageResource, AssessmentResource, 
 
 from views import login, dashboard, filter_data, trainer_wise_data, question_wise_data, state_wise_data, date_filter_data, month_wise_data, sample_data
 
+from training.log.training_log import send_updated_log
+
 api = Api(api_name = "v1")
 api.register(TrainerResource())
 api.register(TrainingResource())
@@ -32,4 +34,5 @@ urlpatterns = patterns('',
     url(r'^state_wise_data', state_wise_data),
     url(r'^month_wise_data', month_wise_data),
     url(r'^sample_data', sample_data),
-    )
+    url(r'^get_log/', send_updated_log),
+)
