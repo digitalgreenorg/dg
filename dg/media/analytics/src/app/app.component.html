@@ -1,4 +1,5 @@
 <h1>
   
 </h1>
-<chart [options]="chart_one"></chart>
+<div *ngFor="let chart of bar_charts">
+<chart [options]="chart"></chart></div>
