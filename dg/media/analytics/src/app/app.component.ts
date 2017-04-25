@@ -17,7 +17,7 @@ export class AppComponent implements OnInit{
     title = 'Graphs';
     bar_charts = [];
     ngOnInit(): void{
-        let json_data = ['{"title" : {"text" : "simple chart"},"series": [{"data": [29.9, 71.5, 106.4, 129.2]}]}','{"title" : {"text" : "simple chart"},"series": [{"data": [29.9, 71.5, 106.4, 129.2]}]}'];
+        let json_data = ['{"title" : {"text" : "simple chart"},"xAxis":{"categories":["Africa","America","Asia","Europe","Oceania"]},"series": [{"data": [29.9, 71.5, 106.4, 129.2]}]}','{"title" : {"text" : "simple chart"},"xAxis":{"categories":["Africa","America","Asia","Europe","Oceania"]},"series": [{"data": [29.9, 71.5, 106.4, 129.2]}]}'];
         for(let json of json_data) {
             let bar_one : Bar = Object.assign(new Bar, JSON.parse(json));
             this.bar_charts.push(bar_one);

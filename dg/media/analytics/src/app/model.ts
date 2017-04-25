@@ -1,19 +1,6 @@
-/*module Environment {
-    export class Member {
-        private __name__ = "Member";
-        id: number;
-    }
-
-    export class ExampleClass {
-        private __name__ = "ExampleClass";
-
-        mainId: number;
-        firstMember: Member;
-        secondMember: Member;
-    }
-}*/
 export class Bar {
     title : {};
+    xAxis : {};
     series: number[];
 
     //title : string;
