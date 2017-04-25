@@ -30,7 +30,7 @@ from pytz import timezone
 import inspect
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID, OFF_HOURS_GREETING_APP_ID, \
-    OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT
+    OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT, BROADCAST_APP_ID
 
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \

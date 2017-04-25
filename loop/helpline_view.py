@@ -11,7 +11,7 @@ from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, \
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT
 
 from loop.utils.ivr_helpline.helpline_data import CALL_STATUS_URL, CALL_REQUEST_URL, \
-    CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL
+    CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL, BROADCAST_RESPONSE_URL
 
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 
@@ -166,3 +166,14 @@ def send_acknowledge(incoming_call_obj):
 def send_voicemail(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID):
     time.sleep(2)
     connect_to_app(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID)
+
+def connect_to_broadcast(to_number,broadcast_number,app_id):
+    app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    app_url = APP_URL%(app_id,)
+    response_url = BROADCAST_RESPONSE_URL
+    # Here From parameter is actually user number to whom we want to connect.
+    parameters = {'From':to_number,'CallerId':broadcast_number,'CallType':'trans','Url':app_url,'StatusCallback':response_url}
+    response = requests.post(app_request_url,data=parameters)
+    module = 'connect_to_broadcast'
+    log = "App Id: %s Status Code: %s (Response text: %s)"%(app_id,str(response.status_code),str(response.text))
+    write_log(HELPLINE_LOG_FILE,module,log)
