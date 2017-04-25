@@ -69,6 +69,29 @@ def testMediatorsApi(request):
     data = json.dumps(data)
     return HttpResponse(data)
 
+def testPassPercentApi(request):
+    start_date = str(request.GET['start_date'])
+    end_date = str(request.GET['end_date'])
+
+    args_list = get_pass_perc_data_sql(start_date=start_date,end_date=end_date)
+    results = multiprocessing_list(args_list = args_list)
+    print results
+    data = {'data':results}
+    data = json.dumps(data)
+    return HttpResponse(data)
+
+
+def testAvgScoreApi(request):
+    start_date = str(request.GET['start_date'])
+    end_date = str(request.GET['end_date'])
+
+    args_list = get_avg_score_data_sql(start_date=start_date,end_date=end_date)
+    results = multiprocessing_list(args_list = args_list)
+    print results
+    data = {'data':results}
+    data = json.dumps(data)
+    return HttpResponse(data)
+
 
 def dashboard(request):
     # return render(request, 'src/index.html')
