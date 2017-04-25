@@ -2380,7 +2380,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             farmer_share[date_index][mandi_index].farmer_share_comment = transport_payment[i]['farmer_share_comment'];
 
             transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'],
-                transport_payment[i]['transportation_vehicle__transporter__transporter_phone'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2))
+                transport_payment[i]['transportation_vehicle__transporter__transporter_phone'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2)),transport_payment[i]['transportation_cost_comment'],transport_payment[i]['mandi__id'],transport_payment[i]['transportation_vehicle__id'],transport_payment[i]['timestamp'],i
             ]);
         }
     }
@@ -3358,12 +3358,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             //row_data['id'] = $('#table4').DataTable().cell(keys - 1, 0).data();
             aggregator_idDict['online_id'] = agg_id;
             row_data['aggregator'] = aggregator_idDict;
-            mandi_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 7).data();
+            mandi_idDict['online_id'] = $('#table4').DataTable().cell(keys - 1, 8).data();
             row_data['mandi'] = mandi_idDict;
-            transportationvehicle_idDict["online_id"] = $('#table4').DataTable().cell(keys - 1, 8).data();
+            transportationvehicle_idDict["online_id"] = $('#table4').DataTable().cell(keys - 1, 9).data();
             row_data['transportation_vehicle'] = transportationvehicle_idDict;
             row_data['date'] = $('#table4').DataTable().cell(keys - 1, 0).data();
-            row_data['timestamp'] = $('#table4').DataTable().cell(keys - 1, 9).data();
+            row_data['timestamp'] = $('#table4').DataTable().cell(keys - 1, 10).data();
             row_data['transportation_cost'] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
             row_data['transportation_cost_comment'] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[7].innerHTML;
             editedData.push(row_data);
@@ -3400,6 +3400,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
             visible:false
         }, {
             title:"Timestamp",
+            visible:false
+        },{
+            title:"RowId",
             visible:false
         }],
         "dom": 'T<"clear">rtip',
@@ -3470,6 +3473,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 for (var keys in rows_table4) {
                                     transporter_data_set[keys - 1][6] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
                                     transporter_data_set[keys - 1][7] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[7].innerHTML;
+                                    //console.log(transporter_data_set[keys - 1][7]);
+                                    transport_payment[transporter_data_set[keys - 1][11]] = transporter_data_set[keys - 1];
                                 }
                                 rows_table4 = [];
                                 get_payments_data();
