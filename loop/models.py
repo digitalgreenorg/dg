@@ -14,7 +14,7 @@ MODEL_TYPES = ((MODEL_TYPES_DIRECT, "Direct"), (MODEL_TYPES_TAX_BASED, "Tax Base
 CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
 CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
-
+BROADCAST_STATUS = ((0, "Pending"), (1, "Done"))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -554,3 +554,29 @@ class HelplineSmsLog(LoopModel):
 
     def __unicode__(self):
         return "%s (%s) (%s)" % (self.from_number, self.to_number, self.sent_time)
+
+
+class Broadcast(LoopModel):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=50)
+    start_time = models.DateTimeField()
+    cluster = models.ForeignKey(LoopUser, blank=True, default=None)
+    audio_url = models.CharField(max_length=50)
+    start_time = models.DateTimeField(blank=True, null=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.title, self.start_time)
+
+
+class BroadcastUser(LoopModel):
+    id = models.AutoField(primary_key=True)
+    call_id = models.CharField(max_length=100)
+    from_number = models.CharField(max_length=20)     #Exotel No.
+    to_number = models.CharField(max_length=20)       #User No.
+    broadcast = models.ForeignKey(Broadcast, blank=True, default=None)
+    status = models.IntegerField(choices=BROADCAST_STATUS, default=0)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField(blank=True, null=True)
+
+    def __unicode__(self):
+        return "%s (%s) (%s)" % (self.to_number, self.broadcast)
