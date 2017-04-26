@@ -1,5 +1,5 @@
 from django import forms
-from loop.models import Broadcast, BroadcastUser, LoopUser
+from loop.models import Broadcast, LoopUser
 
 class BroadcastTestForm(forms.Form):
 	to_number = forms.CharField(max_length=20)

@@ -762,39 +762,6 @@ def helpline_offline(request):
         return HttpResponse(status=403)
 
 @login_required
-def broadcastt(request):
-    context = RequestContext(request)
-    template_data = dict()
-    '''
-    print context
-    print request.GET
-    print request.POST
-    print dir(request.FILES.getlist('audio_file')[0])
-    print str(request.FILES.getlist('audio_file')[0].size)
-    print request.FILES['audio_file']
-    '''
-    a = {'a':1}
-    if request.method == 'GET':
-        broadcast_test_form = BroadcastTestForm()
-        broadcast_form = BroadcastForm()
-        template_data['broadcast_test_form'] = broadcast_test_form
-        template_data['broadcast_form'] = broadcast_form
-        return render_to_response('loop/broadcast.html',template_data,context_instance=context)
-    else:
-        #handle_uploaded_file(request.FILES['audio_file'])
-        broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
-        template_data['broadcast_test_form'] = broadcast_test_form
-        #print "print request.POST"
-        #print broadcast_test_form.is_valid()
-        #print broadcast_test_form.cleaned_data
-        print request.POST
-        return render_to_response('loop/broadcast.html',template_data,context_instance=context)       
-    farmer_detail = [{'id':1,'phone':'9205812770'}]
-    for farmer in farmer_detail:   
-        connect_to_broadcast(farmer,'01139589707',BROADCAST_APP_ID,broadcast_obj)
-        time.sleep(1)
-
-@login_required
 def broadcast(request):
     context = RequestContext(request)
     template_data = dict()
@@ -826,7 +793,8 @@ def broadcast(request):
             HttpResponseBadRequest("<h2>Something is wrong, Please Try Again</h2>")
         audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
         s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
-        start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id)
+        start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID)
+        # return success status
     elif request.method != 'GET':
         HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")
     return render_to_response('loop/broadcast.html',template_data,context_instance=context)
