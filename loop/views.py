@@ -13,6 +13,8 @@ from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
 
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
@@ -23,6 +25,7 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
 from loop.utils.ivr_helpline.helpline_data import helpline_data
+from loop.forms import BroadcastForm, BroadcastTestForm
 import unicodecsv as csv
 import time
 import datetime
@@ -43,6 +46,7 @@ import pandas as pd
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
+BROADCAST_AUDIO_PATH = '%s/loop/broadcast/'%(MEDIA_ROOT,)
 
 @csrf_exempt
 def login(request):
@@ -757,11 +761,68 @@ def helpline_offline(request):
     else:
         return HttpResponse(status=403)
 
-def broadcast(request):
-    farmer_detail = [{'id':1,'phone_no':'9205812770'}]
+def handle_uploaded_file(f):
+    with open(BROADCAST_AUDIO_PATH+'testttt.wav', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+@login_required
+def broadcastt(request):
+    context = RequestContext(request)
+    template_data = dict()
+    '''
+    print context
+    print request.GET
+    print request.POST
+    print dir(request.FILES.getlist('audio_file')[0])
+    print str(request.FILES.getlist('audio_file')[0].size)
+    print request.FILES['audio_file']
+    '''
+    a = {'a':1}
+    if request.method == 'GET':
+        broadcast_test_form = BroadcastTestForm()
+        broadcast_form = BroadcastForm()
+        template_data['broadcast_test_form'] = broadcast_test_form
+        template_data['broadcast_form'] = broadcast_form
+        return render_to_response('loop/broadcast.html',template_data,context_instance=context)
+    else:
+        #handle_uploaded_file(request.FILES['audio_file'])
+        broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
+        template_data['broadcast_test_form'] = broadcast_test_form
+        #print "print request.POST"
+        #print broadcast_test_form.is_valid()
+        #print broadcast_test_form.cleaned_data
+        print request.POST
+        return render_to_response('loop/broadcast.html',template_data,context_instance=context)       
+    farmer_detail = [{'id':1,'phone':'9205812770'}]
     for farmer in farmer_detail:   
         connect_to_broadcast(farmer,'01139589707',BROADCAST_APP_ID,broadcast_obj)
         time.sleep(1)
+
+@login_required
+def broadcast(request):
+    context = RequestContext(request)
+    template_data = dict()
+    template_data['broadcast_test_form'] = BroadcastTestForm()
+    template_data['broadcast_form'] = BroadcastForm()
+    if request.method == 'POST':
+        if 'broadcast_test_submit' in request.POST:
+            broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
+            if broadcast_test_form.is_valid():
+                # Do your stuff here
+                pass
+            else:
+                template_data['broadcast_test_form'] = broadcast_test_form                
+        elif 'submit' in request.POST:
+            broadcast_form = BroadcastForm(request.POST, request.FILES)
+            if broadcast_form.is_valid():
+                # Do your stuff here
+                pass
+            else:
+                template_data['broadcast_form'] = broadcast_form                
+    elif request.method != 'GET':
+        HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")
+    return render_to_response('loop/broadcast.html',template_data,context_instance=context)
 
 @csrf_exempt
 def broadcast_call_response(request):
@@ -777,4 +838,4 @@ def broadcast_call_response(request):
         outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
         # If call Successfully completed then mark call as resolved
         if status == 'completed':
-
+    '''
