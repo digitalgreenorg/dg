@@ -6,12 +6,14 @@ import xml.etree.ElementTree as xml_parse
 from pytz import timezone
 
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog, Broadcast, BroadcastUser
+    HelplineCallLog, HelplineSmsLog, Broadcast, BroadcastAudience
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT, \
+    ACCESS_KEY, SECRET_KEY
 
 from loop.utils.ivr_helpline.helpline_data import CALL_STATUS_URL, CALL_REQUEST_URL, \
-    CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL, BROADCAST_RESPONSE_URL
+    CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL, BROADCAST_RESPONSE_URL, \
+    BROADCAST_S3_BUCKET_NAME, BROADCAST_S3_UPLOAD_PATH
 
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 BROADCAST_AUDIO_PATH = '%s/loop/broadcast/'%(MEDIA_ROOT,)
@@ -168,22 +170,22 @@ def send_voicemail(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID):
     time.sleep(2)
     connect_to_app(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID)
 
-def save_broadcast_info(call_id,from_number,to_number,farmer_id,broadcast_obj,start_time,status):
-    call_obj = BroadcastUser(call_id=call_id,from_number=from_number,to_number=to_number,
-                farmer_id=farmer_id,broadcast=broadcast_obj,start_time=start_time,status=status)
+def save_broadcast_info(call_id,to_number,broadcast_obj,farmer_id,start_time,status):
     try:
+        call_obj = BroadcastAudience(call_id=call_id,to_number=to_number,
+                farmer_id=farmer_id,broadcast=broadcast_obj,start_time=start_time,status=status)
         call_obj.save()
     except Exception as e:
         # if error then log
         module = 'save_broadcast_info'
         write_log(HELPLINE_LOG_FILE,module,str(e))
 
-def connect_to_broadcast(user_info,from_number,app_id,broadcast_obj):
+def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    app_url = APP_URL%(app_id,)
+    app_url = APP_URL%(broadcast_app_id,)
     response_url = BROADCAST_RESPONSE_URL
-    farmer_id = user_info['id']
-    to_number = user_info['phone']
+    farmer_id = farmer_info['id'] if farmer_info['id'] != '' else None
+    to_number = farmer_info['phone']
     # Here From parameter is actually user number to whom we want to connect.
     parameters = {'From':to_number,'CallerId':from_number,'CallType':'trans','Url':app_url,'StatusCallback':response_url}
     response = requests.post(app_request_url,data=parameters)
@@ -193,19 +195,60 @@ def connect_to_broadcast(user_info,from_number,app_id,broadcast_obj):
         call_detail = response_tree.findall('Call')[0]
         outgoing_call_id = str(call_detail.find('Sid').text)
         outgoing_call_time = str(call_detail.find('StartTime').text)
-        # Last parameter status 0 for pending, 1 for complete and 2 for DND numbers.
-        save_broadcast_info(outgoing_call_id,from_number,to_number,farmer_id,broadcast_obj,start_time,0)
+        # Last parameter status 0 for pending, 1 for complete and 2 for DND failed.
+        save_broadcast_info(outgoing_call_id,to_number,broadcast_obj,farmer_id,outgoing_call_time,0)
     elif response.status_code == 403:
-        save_broadcast_info(from_number=from_number,to_number=to_number,farmer_id=farmer_id,broadcast_obj=broadcast_obj,start_time=start_time)
+        call_start_time = datetime.datetime.now(timezone('Asia/Kolkata'))
+        save_broadcast_info('',to_number,broadcast_obj,farmer_id,call_start_time,2)
         # Enter in Log
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(HELPLINE_LOG_FILE,module,log)
-    log = "App Id: %s Status Code: %s (Response text: %s)"%(app_id,str(response.status_code),str(response.text))
-    write_log(HELPLINE_LOG_FILE,module,log)
 
-def save_broadcast_audio(audio_file):
-    audio_file_name = str(datetime.datetime.now(timezone('Asia/Kolkata')).strftime('%Y_%m_%d_%H_%M%S_%f'))
-    audio_file_path = ''.join([BROADCAST_AUDIO_PATH,'broadcast_',audio_file_name,'.wav'])
+def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,from_number,broadcast_app_id):
+    # Save Broadcast Information.
+    broadcast_start_time = datetime.datetime.now(timezone('Asia/Kolkata'))
+    try:
+        broadcast_obj = Broadcast(title=broadcast_title,cluster=cluster_id,
+                        audio_url=s3_audio_url,start_time=broadcast_start_time,
+                        from_number=from_number
+                        )
+        broadcast_obj.save()
+    except Exception as e:
+        module = 'start_broadcast'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+    # Start contacting farmers.
+    for farmer_info in farmer_contact_detail:
+        connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
+        time.sleep(1)
+
+def upload_on_s3(audio_file_path,audio_file_name,s3_bucket_name,s3_upload_path,access_permission):
+    # Create Connection with S3
+    conn = boto.connect_s3(
+            aws_access_key_id = ACCESS_KEY,
+            aws_secret_access_key = SECRET_KEY,
+            is_secure=True
+            )
+    # S3 Bucket where we want to upload file
+    bucket = conn.get_bucket(s3_bucket_name)
+    # path of file inside bucket with file name
+    s3_new_key = s3_upload_path%(audio_file_name,)
+    # Create new file inside bucket on defined path
+    key=bucket.new_key(s3_new_key)
+    # Upload content on S3
+    key.set_contents_from_file(audio_file_path)
+    # Provide access permission to file
+    key.set_canned_acl(access_permission)
+    print key.generate_url
+
+def save_broadcast_audio(file_name, audio_file):
+    file_name = ''.join(file_name.split())
+    audio_file_name = file_name + '_' + str(datetime.datetime.now(timezone('Asia/Kolkata')).strftime('%Y_%m_%d_%H_%M_%S_%f')) + '.wav'
+    audio_file_path = BROADCAST_AUDIO_PATH + audio_file_name
     with open(audio_file_path, 'wb+') as broadcast_audio:
         for chunk in audio_file.chunks():
             broadcast_audio.write(chunk)
+    upload_on_s3(audio_file_path,audio_file_name,
+                BROADCAST_S3_BUCKET_NAME,BROADCAST_S3_UPLOAD_PATH,
+                'public-read')
+    # delete local audio file
+    return audio_file_name

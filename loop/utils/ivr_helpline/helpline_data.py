@@ -11,3 +11,6 @@ SMS_REQUEST_URL = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Sms/send'
 APP_REQUEST_URL = 'https://%s:%s@twilix.exotel.in/v1/Accounts/%s/Calls/connect'
 APP_URL = 'http://my.exotel.in/exoml/start/%s'
 BROADCAST_RESPONSE_URL = 'http://dgtest.org:2345/loop/broadcast_call_response/'
+BROADCAST_S3_BUCKET_NAME = 'dg_ivrs'
+BROADCAST_S3_UPLOAD_PATH = 'broadcast/%s'
+BROADCAST_S3_AUDIO_URL = 'https://s3.amazonaws.com/%s/%s'%(BROADCAST_S3_BUCKET_NAME,BROADCAST_S3_UPLOAD_PATH)
