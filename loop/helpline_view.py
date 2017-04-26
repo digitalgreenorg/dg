@@ -14,6 +14,7 @@ from loop.utils.ivr_helpline.helpline_data import CALL_STATUS_URL, CALL_REQUEST_
     CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL, BROADCAST_RESPONSE_URL
 
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
+BROADCAST_AUDIO_PATH = '%s/loop/broadcast/'%(MEDIA_ROOT,)
 
 def write_log(log_file,module,log):
     curr_india_time = datetime.datetime.now(timezone('Asia/Kolkata'))
@@ -167,7 +168,7 @@ def send_voicemail(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID):
     time.sleep(2)
     connect_to_app(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID)
 
-def save_broadcast_info(call_id='',from_number,to_number,farmer_id,broadcast_obj,start_time,status):
+def save_broadcast_info(call_id,from_number,to_number,farmer_id,broadcast_obj,start_time,status):
     call_obj = BroadcastUser(call_id=call_id,from_number=from_number,to_number=to_number,
                 farmer_id=farmer_id,broadcast=broadcast_obj,start_time=start_time,status=status)
     try:
@@ -195,9 +196,16 @@ def connect_to_broadcast(user_info,from_number,app_id,broadcast_obj):
         # Last parameter status 0 for pending, 1 for complete and 2 for DND numbers.
         save_broadcast_info(outgoing_call_id,from_number,to_number,farmer_id,broadcast_obj,start_time,0)
     elif response.status_code == 403:
-        save_broadcast_info(from_number=from_number,to_number=to_number,farmer_id=farmer_id,broadcast_obj=broadcast_obj,start_time=start_time,2)
+        save_broadcast_info(from_number=from_number,to_number=to_number,farmer_id=farmer_id,broadcast_obj=broadcast_obj,start_time=start_time)
         # Enter in Log
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(HELPLINE_LOG_FILE,module,log)
     log = "App Id: %s Status Code: %s (Response text: %s)"%(app_id,str(response.status_code),str(response.text))
     write_log(HELPLINE_LOG_FILE,module,log)
+
+def save_broadcast_audio(audio_file):
+    audio_file_name = str(datetime.datetime.now(timezone('Asia/Kolkata')).strftime('%Y_%m_%d_%H_%M%S_%f'))
+    audio_file_path = ''.join([BROADCAST_AUDIO_PATH,'broadcast_',audio_file_name,'.wav'])
+    with open(audio_file_path, 'wb+') as broadcast_audio:
+        for chunk in audio_file.chunks():
+            broadcast_audio.write(chunk)
