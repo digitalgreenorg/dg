@@ -24,7 +24,7 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
-from loop.utils.ivr_helpline.helpline_data import helpline_data
+from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL
 from loop.forms import BroadcastForm, BroadcastTestForm
 import unicodecsv as csv
 import time
@@ -37,7 +37,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
-    update_incoming_obj, send_acknowledge, send_voicemail, connect_to_broadcast, save_broadcast_audio
+    update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
@@ -804,9 +804,11 @@ def broadcast(request):
         if 'broadcast_test_submit' in request.POST:
             broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
             if broadcast_test_form.is_valid():
-                to_number = broadcast_test_form.cleaned_data.get('to_number')
+                broadcast_title = 'test'
+                cluster_id = None
                 audio_file = broadcast_test_form.cleaned_data.get('audio_file')
-                s3_url = save_broadcast_audio(audio_file)
+                to_number = broadcast_test_form.cleaned_data.get('to_number')
+                farmer_contact_detail = [{'id':None,'phone':to_number}]
             else:
                 template_data['broadcast_test_form'] = broadcast_test_form                
         elif 'submit' in request.POST:
@@ -816,11 +818,15 @@ def broadcast(request):
                 broadcast_title = str(broadcast_form.cleaned_data.get('title'))
                 cluster_id = int(broadcast_form.cleaned_data.get('cluster'))
                 audio_file = broadcast_form.cleaned_data.get('audio_file')
-                s3_url = save_broadcast_audio(broadcast_title,audio_file)
                 village_list = LoopUserAssignedVillage.objects.filter(loop_user_id=cluster_id).values_list('village',flat=True)
-                farmer_contact_detail = Farmer.objects.filter(village_id__in=village_list).values('id', 'phone')
+                farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
             else:
-                template_data['broadcast_form'] = broadcast_form                
+                template_data['broadcast_form'] = broadcast_form  
+        else:
+            HttpResponseBadRequest("<h2>Something is wrong, Please Try Again</h2>")
+        audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
+        s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
+        start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id)
     elif request.method != 'GET':
         HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")
     return render_to_response('loop/broadcast.html',template_data,context_instance=context)
