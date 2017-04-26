@@ -6,7 +6,7 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 		error_file = open('/home/ubuntu/code/dg_git/activities/management/commands/errors.csv', 'wb')
 		wrtr = csv.writer(error_file, delimiter=',', quotechar='"')
-		csvfile = open('/home/ubuntu/code/dg_git/activities/management/commands/yavatmal.csv', 'rb')
+		csvfile = open('/home/ubuntu/code/dg_git/activities/management/commands/bangladesh_villages.csv', 'rb')
 		rows_file = csv.DictReader(csvfile)
 		i = 0
 		for row in rows_file:
