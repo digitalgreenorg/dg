@@ -20,7 +20,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
@@ -37,7 +37,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
-    update_incoming_obj, send_acknowledge, send_voicemail, connect_to_broadcast
+    update_incoming_obj, send_acknowledge, send_voicemail, connect_to_broadcast, save_broadcast_audio
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
@@ -761,11 +761,6 @@ def helpline_offline(request):
     else:
         return HttpResponse(status=403)
 
-def handle_uploaded_file(f):
-    with open(BROADCAST_AUDIO_PATH+'testttt.wav', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-
 @login_required
 def broadcastt(request):
     context = RequestContext(request)
@@ -809,15 +804,21 @@ def broadcast(request):
         if 'broadcast_test_submit' in request.POST:
             broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
             if broadcast_test_form.is_valid():
-                # Do your stuff here
-                pass
+                to_number = broadcast_test_form.cleaned_data.get('to_number')
+                audio_file = broadcast_test_form.cleaned_data.get('audio_file')
+                s3_url = save_broadcast_audio(audio_file)
             else:
                 template_data['broadcast_test_form'] = broadcast_test_form                
         elif 'submit' in request.POST:
             broadcast_form = BroadcastForm(request.POST, request.FILES)
             if broadcast_form.is_valid():
                 # Do your stuff here
-                pass
+                broadcast_title = str(broadcast_form.cleaned_data.get('title'))
+                cluster_id = int(broadcast_form.cleaned_data.get('cluster'))
+                audio_file = broadcast_form.cleaned_data.get('audio_file')
+                s3_url = save_broadcast_audio(broadcast_title,audio_file)
+                village_list = LoopUserAssignedVillage.objects.filter(loop_user_id=cluster_id).values_list('village',flat=True)
+                farmer_contact_detail = Farmer.objects.filter(village_id__in=village_list).values('id', 'phone')
             else:
                 template_data['broadcast_form'] = broadcast_form                
     elif request.method != 'GET':
