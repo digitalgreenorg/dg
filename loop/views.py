@@ -777,7 +777,8 @@ def broadcast(request):
                 to_number = broadcast_test_form.cleaned_data.get('to_number')
                 farmer_contact_detail = [{'id':None,'phone':to_number}]
             else:
-                template_data['broadcast_test_form'] = broadcast_test_form                
+                template_data['broadcast_test_form'] = broadcast_test_form
+                return render_to_response('loop/broadcast.html',template_data,context_instance=context)
         elif 'submit' in request.POST:
             broadcast_form = BroadcastForm(request.POST, request.FILES)
             if broadcast_form.is_valid():
@@ -788,7 +789,8 @@ def broadcast(request):
                 village_list = LoopUserAssignedVillage.objects.filter(loop_user_id=cluster_id).values_list('village',flat=True)
                 farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
             else:
-                template_data['broadcast_form'] = broadcast_form  
+                template_data['broadcast_form'] = broadcast_form
+                return render_to_response('loop/broadcast.html',template_data,context_instance=context)
         else:
             HttpResponseBadRequest("<h2>Something is wrong, Please Try Again</h2>")
         audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
