@@ -817,13 +817,16 @@ def broadcast_call_response(request):
                 # if call completed then set status done if user has 
                 # listened the broadcast.
                 broadcast_obj.status = 1
-                broadcast_obj.save()
             else:
                 # If call is not completed then set status pending 
                 # so if user call on halpline number then he will redirected to 
                 # broadcast message.
                 broadcast_obj.status = 0
-                broadcast_obj.save()
+            try:
+                broadcast_obj.save()        
+            except Exception as e:
+                module = 'broadcast_call_response'
+                write_log(HELPLINE_LOG_FILE,module,str(e))  
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
@@ -832,7 +835,7 @@ def broadcast_call_response(request):
 # when putting this on exotel app.
 def broadcast_audio_request(request):
     if request.method == 'GET':
-        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        outgoing_call_id = str(request.GET.getlist('CallSid')[0])
         broadcast_audio_url = list(BroadcastAudience.objects.filter(call_id=outgoing_call_id).values_list('broadcast__audio_url',flat=True).order_by('-id'))
         broadcast_audio_url = broadcast_audio_url[0] if len(broadcast_audio_url) > 0 else ''
         audio_url_response = HttpResponse(broadcast_audio_url, content_type='text/plain')
