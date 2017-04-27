@@ -30,3 +30,36 @@
       </div>
     </li>
   </p>
+
+
+<li class="list-inline-item" style="width:8%">
+
+  <form #myForm="ngForm" novalidate>
+      <my-date-picker name="start_date" [options]="myDatePickerOptions"
+                      [(ngModel)]="startModel" required></my-date-picker>
+  </form>
+</li>
+<li class="list-inline-item" style="width:8%">
+  <form #myForm="ngForm" novalidate>
+      <my-date-picker name="end_date" [options]="myDatePickerOptions"
+                      [(ngModel)]="endModel" required></my-date-picker>
+  </form>
+</li>
+<li class="list-inline-item">
+  <button type="button" class="btn btn-primary" (click)="getfilteredData()" [disabled]="disabled">
+    Get Data
+  </button>
+</li>
+
+<br>
+<br>
+ <p>
+    <li  class="list-inline-item" *ngFor='let key of myApiData'>
+        <div class="card" style="width: 20rem; background-color: #009688">
+          <div class="card-block">
+            <h4 class="card-title text-white">{{key.data.recent.tagName}}</h4>
+            <h6 class="card-text text-white small"><em><strong>{{key.data.recent.value}}</strong></em></h6>
+          </div>
+      </div>
+    </li>
+  </p>

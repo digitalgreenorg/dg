@@ -10,6 +10,9 @@ import { AccordionModule } from '../../node_modules/ngx-bootstrap';
 import { KeysPipe } from './keys.pipe';
 import { GraphComponent } from './graph/graph.component';
 import { NvD3Module } from '../../node_modules/angular2-nvd3';
+import { MyDatePickerModule } from 'mydatepicker';
+import { ButtonsModule } from 'ngx-bootstrap';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -24,8 +27,10 @@ import { NvD3Module } from '../../node_modules/angular2-nvd3';
     HttpModule,
     AccordionModule.forRoot(),
     NvD3Module,
+    MyDatePickerModule,
+    ButtonsModule.forRoot(),
   ],
-  providers: [TopBarDataService],
+  providers: [TopBarDataService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

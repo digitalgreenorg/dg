@@ -23,6 +23,7 @@
     "angular2-nvd3": "^1.0.7",
     "bootstrap": "^4.0.0-alpha.6",
     "core-js": "^2.4.1",
+    "mydatepicker": "^1.9.11",
     "ngx-bootstrap": "^1.6.5",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.5"

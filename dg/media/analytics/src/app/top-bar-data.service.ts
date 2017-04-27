@@ -27,14 +27,14 @@ export class TopBarDataService {
             .catch(this.handleError);
   }
   
-  getApiData(webUrl):Observable<Config> {
-
+  getApiData(args):Observable<Config> {
+    
     let params : URLSearchParams = new URLSearchParams();
-    params.set('start_date', '2015-01-01');
-    params.set('end_date', '2017-04-15');
+    params.set('start_date', args.params.start_date);
+    params.set('end_date', args.params.end_date);
     let requestOptions : RequestOptions = new RequestOptions();
     requestOptions.search = params;
-    return this.http.get(webUrl, requestOptions)
+    return this.http.get(args.webUrl, requestOptions)
             .map(response => response.json()as Config)
             .catch(this.handleError);
   }
