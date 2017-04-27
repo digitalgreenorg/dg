@@ -804,35 +804,32 @@ def broadcast(request):
 # BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"))
 @csrf_exempt
 def broadcast_call_response(request):
-    try:
-        if request.method == 'POST':
-            status = str(request.POST.getlist('Status')[0])
-            outgoing_call_id = str(request.POST.getlist('CallSid')[0])
-            broadcast_obj = BroadcastAudience.objects.filter(call_id=outgoing_call_id).order_by('-id')
-            broadcast_obj = broadcast_obj[0] if len(broadcast_obj) > 0 else ''
-            # if call found in our database, then update status accordingly
-            if broadcast_obj != '':
-                if status == 'completed':
-                    end_time = str(request.POST.getlist('DateUpdated')[0])
-                    broadcast_obj.end_time = resolved_time
-                    # if call completed then set status done if user has 
-                    # listened the broadcast.
-                    broadcast_obj.status = 1
-                else:
-                    # If call is not completed then set status pending 
-                    # so if user call on halpline number then he will redirected to 
-                    # broadcast message.
-                    broadcast_obj.status = 0
-                try:
-                    broadcast_obj.save()        
-                except Exception as e:
-                    module = 'broadcast_call_response'
-                    write_log(HELPLINE_LOG_FILE,module,str(e))  
-            return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=403)
-    except Exception as e:
-        print str(e)
+    if request.method == 'POST':
+        status = str(request.POST.getlist('Status')[0])
+        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        audience_obj = BroadcastAudience.objects.filter(call_id=outgoing_call_id).order_by('-id')
+        audience_obj = audience_obj[0] if len(audience_obj) > 0 else ''
+        # if call found in our database, then update status accordingly
+        if audience_obj != '':
+            if status == 'completed':
+                end_time = str(request.POST.getlist('DateUpdated')[0])
+                audience_obj.end_time = end_time
+                # if call completed then set status done if user has 
+                # listened the broadcast.
+                audience_obj.status = 1
+            else:
+                # If call is not completed then set status pending 
+                # so if user call on halpline number then he will redirected to 
+                # broadcast message.
+                audience_obj.status = 0
+            try:
+                audience_obj.save()        
+            except Exception as e:
+                module = 'broadcast_call_response'
+                write_log(HELPLINE_LOG_FILE,module,str(e))  
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
 
 # Make sure adding a forward slash (i.e. /) at the end of URL
 # when putting this on exotel app.
