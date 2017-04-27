@@ -822,7 +822,18 @@ def broadcast_call_response(request):
                 # broadcast message.
                 broadcast_obj.status = 0
                 broadcast_obj.save()
-        else:
-            return HttpResponse(status=200)
+        return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
+
+# Make sure adding a forward slash (i.e. /) at the end of URL
+# when putting this on exotel app.
+def broadcast_audio_request(request):
+    if request.method == 'GET':
+        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        broadcast_audio_url = list(BroadcastAudience.objects.filter(call_id=outgoing_call_id).values_list('broadcast__audio_url',flat=True).order_by('-id'))
+        broadcast_audio_url = broadcast_audio_url[0] if len(broadcast_audio_url) > 0 else ''
+        audio_url_response = HttpResponse(broadcast_audio_url, content_type='text/plain')
+        return audio_url_response
+    else
+        return HttpResponse(status=200)
