@@ -209,7 +209,7 @@ def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_i
     # Save Broadcast Information.
     broadcast_start_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
     try:
-        broadcast_obj = Broadcast(title=broadcast_title,cluster=cluster_id,
+        broadcast_obj = Broadcast(title=broadcast_title,cluster_id=cluster_id,
                         audio_url=s3_audio_url,start_time=broadcast_start_time,
                         from_number=from_number
                         )
