@@ -835,5 +835,5 @@ def broadcast_audio_request(request):
         broadcast_audio_url = broadcast_audio_url[0] if len(broadcast_audio_url) > 0 else ''
         audio_url_response = HttpResponse(broadcast_audio_url, content_type='text/plain')
         return audio_url_response
-    else
+    else:
         return HttpResponse(status=200)
