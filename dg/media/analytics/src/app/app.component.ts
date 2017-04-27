@@ -16,14 +16,11 @@ import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 
 export class AppComponent implements OnInit{
     title = 'Graphs';
-    bar_charts = [];
+    charts = [];
     ngOnInit(): void{
         for(let json of configs) {
-            //console.log(typeof(JSON.stringify(json)));
-            let bar_one : Bar = Object.assign(new Bar, JSON.parse(JSON.stringify(json)));
-            this.bar_charts.push(bar_one);
-            console.log(bar_one);
+            this.charts.push(json);
         }
-        console.log(configs.length);
+        console.log(this.charts);
     }
 }

@@ -7,6 +7,6 @@ export const configs = [
     {
         "title" : {"text" : "simple chart"},
         "xAxis":{"categories":["Africa","America","Asia","Europe","Oceania"]},
-        "series": [{"data": [19.9, 31.5, 86.4, 29.2]}]
+        "series": [{"data": [19.9, 31.5, 86.4, 29.2]}],
     },
 ]
