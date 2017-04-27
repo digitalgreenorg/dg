@@ -559,7 +559,7 @@ class HelplineSmsLog(LoopModel):
 class Broadcast(LoopModel):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=50)
-    cluster = models.ForeignKey(LoopUser, blank=True, default=None)
+    cluster = models.ForeignKey(LoopUser, blank=True, null=True)
     audio_url = models.CharField(max_length=50)
     from_number = models.CharField(max_length=20)     #Exotel No.
     start_time = models.DateTimeField()
@@ -573,8 +573,8 @@ class BroadcastAudience(LoopModel):
     id = models.AutoField(primary_key=True)
     call_id = models.CharField(max_length=100, blank=True, null=True)
     to_number = models.CharField(max_length=20, db_index=True)       #User No.
-    broadcast = models.ForeignKey(Broadcast, blank=True, default=None)
-    farmer = models.ForeignKey(Farmer, blank=True, default=None)
+    broadcast = models.ForeignKey(Broadcast, blank=True, null=True)
+    farmer = models.ForeignKey(Farmer, blank=True, null=True)
     status = models.IntegerField(choices=BROADCAST_STATUS, default=0, db_index=True)
     start_time = models.DateTimeField(blank=True, null=True)
     end_time = models.DateTimeField(blank=True, null=True)

@@ -199,7 +199,7 @@ def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
         # Last parameter status 0 for pending, 1 for complete and 2 for DND failed.
         save_broadcast_info(outgoing_call_id,to_number,broadcast_obj,farmer_id,outgoing_call_time,0)
     elif response.status_code == 403:
-        call_start_time = datetime.datetime.now(timezone('Asia/Kolkata'))
+        call_start_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
         save_broadcast_info('',to_number,broadcast_obj,farmer_id,call_start_time,2)
         # Enter in Log
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
@@ -207,7 +207,7 @@ def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
 
 def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,from_number,broadcast_app_id):
     # Save Broadcast Information.
-    broadcast_start_time = datetime.datetime.now(timezone('Asia/Kolkata'))
+    broadcast_start_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
     try:
         broadcast_obj = Broadcast(title=broadcast_title,cluster=cluster_id,
                         audio_url=s3_audio_url,start_time=broadcast_start_time,
@@ -217,6 +217,7 @@ def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_i
     except Exception as e:
         module = 'start_broadcast'
         write_log(HELPLINE_LOG_FILE,module,str(e))
+        return
     # Start contacting farmers.
     for farmer_info in farmer_contact_detail:
         connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
