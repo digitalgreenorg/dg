@@ -246,30 +246,11 @@ def sample_data(request):
                             join geographies_state st on st.id = d.state_id
                             group by st.id''')
     result = db_connection.fetchall()
-    data_list = []    
-    data_dict = {'key':"State wise number of trainings","values":[]}
+    final_data_list = []    
+    temp_dict = {'categories':[],'data':[]}
     for row in result:
-        temp_dict = {}
-        temp_dict['label'] = row[0]
-        temp_dict['value'] = row[1]
-        data_dict['values'].append(temp_dict)
-    print data_dict      
-    data_list.append(data_dict)
-
-    db_connection.execute('''select d.district_name 'district', count(t.id) 'no_trainings'
-                            from training_training t
-                            join geographies_district d on d.id = t.district_id
-                            group by d.id''')
-    result_two = db_connection.fetchall()
-    data_dict = {'key':"State wise number of trainings","values":[]}
-    for row in result_two:
-        temp_dict = {}
-        temp_dict['label'] = re.sub(r'\[.+?\]\s*', '',row[0])
-        temp_dict['value'] = row[1]
-        data_dict['values'].append(temp_dict)
-    print data_dict      
-    data_list.append(data_dict)
-
-    print "#########################"
-    print type(json.dumps(data_list))
-    return HttpResponse(json.dumps(data_list))  
+        temp_dict['categories'].append(row[0])
+        temp_dict['data'].append(row[1])
+        
+    final_data_list.append(temp_dict)
+    return HttpResponse(json.dumps(final_data_list))  
