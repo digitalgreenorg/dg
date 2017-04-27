@@ -560,7 +560,7 @@ class Broadcast(LoopModel):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=50)
     cluster = models.ForeignKey(LoopUser, blank=True, null=True)
-    audio_url = models.CharField(max_length=50)
+    audio_url = models.CharField(max_length=100)
     from_number = models.CharField(max_length=20)     #Exotel No.
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(blank=True, null=True)
