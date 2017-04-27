@@ -239,7 +239,6 @@ def upload_on_s3(audio_file_path,audio_file_name,s3_bucket_name,s3_upload_path,a
     key.set_contents_from_filename(audio_file_path)
     # Provide access permission to file
     key.set_canned_acl(access_permission)
-    print key.generate_url
 
 def save_broadcast_audio(file_name, audio_file):
     file_name = ''.join(file_name.split())
