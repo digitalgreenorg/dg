@@ -20,7 +20,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
@@ -799,18 +799,30 @@ def broadcast(request):
         HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")
     return render_to_response('loop/broadcast.html',template_data,context_instance=context)
 
+# BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"))
 @csrf_exempt
 def broadcast_call_response(request):
-    print request
-    print "Request Received"
-    print request.POST
-    return HttpResponse(status=200)
-    '''
     if request.method == 'POST':
         status = str(request.POST.getlist('Status')[0])
         outgoing_call_id = str(request.POST.getlist('CallSid')[0])
-        outgoing_obj = HelplineOutgoing.objects.filter(call_id=outgoing_call_id).select_related('incoming_call','from_number').order_by('-id')
-        outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
-        # If call Successfully completed then mark call as resolved
-        if status == 'completed':
-    '''
+        broadcast_obj = BroadcastAudience.objects.filter(call_id=outgoing_call_id).order_by('-id')
+        broadcast_obj = broadcast_obj[0] if len(broadcast_obj) > 0 else ''
+        # if call found in our database, then update status accordingly
+        if broadcast_obj != '':
+            if status == 'completed':
+                end_time = str(request.POST.getlist('DateUpdated')[0])
+                broadcast_obj.end_time = resolved_time
+                # if call completed then set status done if user has 
+                # listened the broadcast.
+                broadcast_obj.status = 1
+                broadcast_obj.save()
+            else:
+                # If call is not completed then set status pending 
+                # so if user call on halpline number then he will redirected to 
+                # broadcast message.
+                broadcast_obj.status = 0
+                broadcast_obj.save()
+        else:
+            return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
