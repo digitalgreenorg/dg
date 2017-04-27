@@ -580,4 +580,4 @@ class BroadcastAudience(LoopModel):
     end_time = models.DateTimeField(blank=True, null=True)
 
     def __unicode__(self):
-        return "%s (%s) (%s)" % (self.to_number, self.broadcast)
+        return "%s (%s)" % (self.to_number, self.broadcast)
