@@ -37,7 +37,8 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
-    update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio
+    update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio, \
+    redirect_to_broadcast
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
@@ -582,6 +583,16 @@ def helpline_incoming(request):
     if request.method == 'GET':
         call_id,farmer_number,dg_number,incoming_time = fetch_info_of_incoming_call(request)
         save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
+        # Check if Any broadcast is pending for this number
+        # If yes then redirect user to pending broadcast for this misscall.
+        # Behaviour of helpline will be normal if no pending broadcast.
+        farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
+        # Check if a pending (0) or DND-faild (2) broadcast exist.
+        if BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2]).exists():
+            # Create thread for redirect helpline flow to play broadcast.
+            Thread(target=redirect_to_broadcast,args=[farmer_number,dg_number]).start()
+            return HttpResponse(status=200)
+        # If no pending broadcast, then normal helpline flow.
         incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
         # If No pending call with this number
         if len(incoming_call_obj) == 0:

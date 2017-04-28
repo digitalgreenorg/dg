@@ -14,7 +14,7 @@ MODEL_TYPES = ((MODEL_TYPES_DIRECT, "Direct"), (MODEL_TYPES_TAX_BASED, "Tax Base
 CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
 CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
-BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"))
+BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(

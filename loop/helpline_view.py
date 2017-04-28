@@ -205,6 +205,21 @@ def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(HELPLINE_LOG_FILE,module,log)
 
+def redirect_to_broadcast(farmer_number,from_number):
+    farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
+    audience_obj = BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2]).select_related('broadcast')[0]
+    farmer_info = [{'id':audience_obj.farmer_id,'phone':audience_obj.to_number}]
+    broadcast_obj = audience_obj.broadcast
+    try:
+        # Change broadcast_obj status to decline (3). Now new BroadcastAudience entry will 
+        # be treated as broadcast call for check status.
+        audience_obj.status = 3
+        audience_obj.save()
+    except Exception as e:
+        module = 'redirect_to_broadcast'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+    connect_to_broadcast(farmer_info,broadcast_obj,from_number,BROADCAST_APP_ID)
+
 def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,from_number,broadcast_app_id):
     # Save Broadcast Information.
     broadcast_start_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
