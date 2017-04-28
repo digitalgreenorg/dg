@@ -208,7 +208,7 @@ def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
 def redirect_to_broadcast(farmer_number,from_number):
     farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
     audience_obj = BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2]).select_related('broadcast')[0]
-    farmer_info = [{'id':audience_obj.farmer_id,'phone':audience_obj.to_number}]
+    farmer_info = {'id':audience_obj.farmer_id,'phone':audience_obj.to_number}
     broadcast_obj = audience_obj.broadcast
     try:
         # Change broadcast_obj status to decline (3). Now new BroadcastAudience entry will 
