@@ -10,7 +10,7 @@ from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, \
     HelplineCallLog, HelplineSmsLog, Broadcast, BroadcastAudience
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT, \
-    ACCESS_KEY, SECRET_KEY
+    ACCESS_KEY, SECRET_KEY, BROADCAST_APP_ID
 
 from loop.utils.ivr_helpline.helpline_data import CALL_STATUS_URL, CALL_REQUEST_URL, \
     CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL, BROADCAST_RESPONSE_URL, \
