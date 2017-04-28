@@ -223,6 +223,14 @@ def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_i
         connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
         time.sleep(1)
 
+    broadcast_end_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+    try:
+        broadcast_obj.end_time = broadcast_end_time
+        broadcast_obj.save()
+    except Exception as e:
+        module = 'start_broadcast'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+
 def upload_on_s3(audio_file_path,audio_file_name,s3_bucket_name,s3_upload_path,access_permission):
     # Create Connection with S3
     conn = boto.connect_s3(
