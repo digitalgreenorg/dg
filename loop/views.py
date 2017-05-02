@@ -778,6 +778,8 @@ def broadcast(request):
     template_data = dict()
     template_data['broadcast_test_form'] = BroadcastTestForm()
     template_data['broadcast_form'] = BroadcastForm()
+    # This will check on template whether to show forms (0) or message(1).
+    template_data['acknowledge'] = 0
     if request.method == 'POST':
         if 'broadcast_test_submit' in request.POST:
             broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
@@ -806,13 +808,14 @@ def broadcast(request):
             HttpResponseBadRequest("<h2>Something is wrong, Please Try Again</h2>")
         audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
         s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
-        start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID)
-        # return success status
+        # Start thread for begin broadcast.
+        Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
+        template_data['acknowledge'] = 1
     elif request.method != 'GET':
         HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")
     return render_to_response('loop/broadcast.html',template_data,context_instance=context)
 
-# BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"))
+# BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
 @csrf_exempt
 def broadcast_call_response(request):
     if request.method == 'POST':
@@ -843,7 +846,7 @@ def broadcast_call_response(request):
         return HttpResponse(status=403)
 
 # Make sure adding a forward slash (i.e. /) at the end of URL
-# when putting this on exotel app.
+# when putting this URL on exotel app.
 def broadcast_audio_request(request):
     if request.method == 'GET':
         outgoing_call_id = str(request.GET.getlist('CallSid')[0])

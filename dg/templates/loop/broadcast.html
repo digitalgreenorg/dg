@@ -1,23 +1,29 @@
 <html>
 	<head>
-		<title>Broadcast</title>
+		<title>Broadcast Message</title>
 	</head>
 	<body>
-		<h1>Test Broadcast</h1>
-		<form id="broadcast_test_form" method="POST" action="." enctype="multipart/form-data" >
-			{% csrf_token %}
-			{{ broadcast_test_form.as_p }}
-			<input type="submit" name="broadcast_test_submit" value="Test Broadcast" />
-			<input type="reset" value="Reset">
-		</form>
-		
-		<h1>Broadcast</h1>
-		<form id="broadcast_form" method="POST" action="." enctype="multipart/form-data" >
-			{% csrf_token %}
-			{{ broadcast_form.as_p }}
-			<input type="submit" name="submit" value="Broadcast" />
-			<input type="reset" value="Reset">
-		</form>
-
+		{% if acknowledge == 0 %}
+			<div id="broadcast_test">
+				<h1>Test Broadcast on your number</h1>
+				<form id="broadcast_test_form" method="POST" action="." enctype="multipart/form-data" >
+					{% csrf_token %}
+					{{ broadcast_test_form.as_p }}
+					<input type="submit" name="broadcast_test_submit" value="Test Broadcast" />
+					<input type="reset" value="Reset">
+			</form>
+			</div>		
+			<div id="broadcast">
+				<h1>Broadcast Message</h1>
+				<form id="broadcast_form" method="POST" action="." enctype="multipart/form-data" >
+					{% csrf_token %}
+					{{ broadcast_form.as_p }}
+					<input type="submit" name="submit" value="Broadcast" />
+					<input type="reset" value="Reset">
+				</form>
+			</div>
+		{% else %}
+			<h2>Broadcast has been started successfully</h2>
+		{% endif %}
 	</body>
 </html>
