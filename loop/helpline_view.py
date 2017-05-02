@@ -1,3 +1,4 @@
+import os
 import time
 import datetime
 import requests
@@ -296,5 +297,6 @@ def save_broadcast_audio(file_name, audio_file):
     upload_on_s3(audio_file_path,audio_file_name,
                 BROADCAST_S3_BUCKET_NAME,BROADCAST_S3_UPLOAD_PATH,
                 'public-read')
-    # delete local audio file
+    # delete local uploaded audio file.
+    os.remove(audio_file_path)
     return audio_file_name
