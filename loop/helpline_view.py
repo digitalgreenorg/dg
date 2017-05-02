@@ -181,12 +181,25 @@ def save_broadcast_info(call_id,to_number,broadcast_obj,farmer_id,start_time,sta
         module = 'save_broadcast_info'
         write_log(HELPLINE_LOG_FILE,module,str(e))
 
+def decline_previous_broadcast(farmer_number):
+    farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
+    try:
+        BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2]).update(status=3)
+    except Exception as e:
+        module = "decline_previous_broadcast"
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+    return
+
 def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     app_url = APP_URL%(broadcast_app_id,)
     response_url = BROADCAST_RESPONSE_URL
     farmer_id = farmer_info['id'] if farmer_info['id'] != '' else None
     to_number = farmer_info['phone']
+    # Decline previous pending/DND-Failed broadcast entry for this number.
+    # This is for make consistancy so at max only one pending broadcast 
+    # message for any number and ensuring that only latest broadcast will continue.
+    decline_previous_broadcast(to_number)
     # Here From parameter is actually user number to whom we want to connect.
     parameters = {'From':to_number,'CallerId':from_number,'CallType':'trans','Url':app_url,'StatusCallback':response_url}
     response = requests.post(app_request_url,data=parameters)
