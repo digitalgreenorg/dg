@@ -190,12 +190,21 @@ def decline_previous_broadcast(farmer_number):
         write_log(HELPLINE_LOG_FILE,module,str(e))
     return
 
+def validate_phone_number(number):
+    if number == '' or len(number) < 10 or len(number) > 11 or \
+        number < '7000000000' or number > '9999999999' or \
+        not all(digit.isdigit() for digit in to_number):
+        return False
+    return True
+
 def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     app_url = APP_URL%(broadcast_app_id,)
     response_url = BROADCAST_RESPONSE_URL
     farmer_id = farmer_info['id'] if farmer_info['id'] != '' else None
     to_number = farmer_info['phone']
+    if not validate_phone_number(str(to_number)):
+        return
     # Decline previous pending/DND-Failed broadcast entry for this number.
     # This is for make consistancy so at max only one pending broadcast 
     # message for any number and ensuring that only latest broadcast will continue.
