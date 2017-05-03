@@ -4,7 +4,7 @@ from loop.models import Broadcast, LoopUser
 class BroadcastTestForm(forms.Form):
     to_number = forms.CharField(label='User Number', max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Enter a Phone Number'}))
     audio_file = forms.FileField(label='Select a WAV Audio file',
-                               help_text='Upload .wav, 8Khz Mono format audio file with bit depth must be 16 bit (Max. Size 5MB)'
+                               help_text='Upload .wav, 8Khz Mono format audio file with 16 bit depth(Max. Size 5MB)'
                                )
 
     def clean_to_number(self):
@@ -29,7 +29,7 @@ class BroadcastForm(forms.Form):
     title = forms.CharField(label='Broadcast Title',widget=forms.TextInput(attrs={'placeholder': 'Broadcast Title'}),max_length=Broadcast._meta.get_field('title').max_length)
     cluster = forms.ChoiceField(label='Select Cluster',choices=[])
     audio_file = forms.FileField(label='Select a .WAV Audio file',
-                               help_text='Upload .WAV, 8Khz Mono format audio file with bit depth must be 16 bit (Max. Size 5MB)'
+                               help_text='Upload .WAV, 8Khz Mono format audio file with 16 bit depth(Max. Size 5MB)'
                                )
 
     def __init__(self, *args, **kwargs):
