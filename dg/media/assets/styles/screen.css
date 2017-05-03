@@ -4216,3 +4216,8 @@ Modal for Survey
 .errorlist {
     color: red;
 }
+
+.helptext {
+    font-style: italic;
+    font-weight: bold;
+}
