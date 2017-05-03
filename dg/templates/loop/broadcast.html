@@ -69,106 +69,13 @@
     </div>
 
     <script type="text/javascript">
-        $(document).ready(function(){
-            $("#broadcast_menu").tabs({active: {{ active_tab }} });
-        });
+        jQuery(function ($) {  //on document.ready
+            $("#broadcast_menu").tabs({active: {{ active_tab }} });  
+        })
     </script>
 
 {% endif %}
 
 <!-- Broadcast template end -->
 
-		 
-		<div class="follow">	
-                <div class="wrapper">
-                    <div class="inner-wrapper">
-                        <div class="hdg-follow">
-                            <h3 class="hdg-a hdg-source-lt">Follow Us</h3>
-                        </div>
-                        <ul class="social" role="navigation">
-						{% include "includes/partials/footer_social_media.html" %}
-                        </ul>
-                    </div> <!-- End .inner-wrapper -->
-                </div>  <!-- End .wrapper -->
-            </div> <!-- End .follow -->
-            
-            <footer>
-                <div class="footer" role="contentinfo">
-                    <div class="wrapper">
-                        <div class="inner-wrapper">
-                            <nav role="navigation">
-                                <ul class="copy-lt hdg-upper copy footer-links">
-                                    <li><a href="/blog">Blog</a></li>
-                                    <li><a href="{% url 'press' %}">Press</a></li>
-                                    <li><a href="{% url 'events' %}">Events</a></li>
-                                    <li><a href="{% url 'career' %}">Careers</a></li>
-                                    <li><a href="{% url 'donate' %}">Donate</a></li>
-                                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
-                                    <li><a href="{% url 'sitemap' %}">Site Map</a></li>
-                                </ul>
-                            </nav>
-                            <a class="footer-btn" href="/coco/" target="_blank">Coco</a>
-                        </div>
-                    </div> <!-- End .inner-wrapper -->
-                </div>  <!-- End .wrapper -->
-                <div class="wrapper">
-                    <div class="inner-wrapper">
-                        <div class="copyright copy">
-                            <a href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"> (cc) 2013 Digital Green</a>
-                        </div>
-                    </div>
-                </div>  <!-- End .wrapper -->
-            </footer>
-        </div>
-
-        <!-- End Main Wrapper -->
-        <!-- JAVASCRIPT -->
-        
-        <!-- For Debugging -->
-        <!--script data-main="{{STATIC_URL}}social_website/scripts/main" src="{{STATIC_URL}}social_website/scripts/libs/external/requirejs/require.js"></script-->
-        <!-- Also change build to scripts in main.js -->
-        
-        <!-- For Production -->
-        
-        <!-- Enabling Google Analytics -->
-        <script type="text/javascript">
-    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    	</script>
-    	<script type="text/javascript">
-    		try {
-    			var pageTracker = _gat._getTracker("UA-16211208-1");
-    			pageTracker._trackPageview();
-    			} 
-    	catch(err) {}
-    	</script>
-
-        <!-- Quantcast Tag -->
-        <script type="text/javascript">
-            var _qevents = _qevents || [];
-
-            (function () {
-                var elem = document.createElement('script');
-                elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
-                elem.async = true;
-                elem.type = "text/javascript";
-                var scpt = document.getElementsByTagName('script')[0];
-                scpt.parentNode.insertBefore(elem, scpt);
-            })();
-
-            _qevents.push({
-                qacct: "p-v8ZfLRLAahkeW"
-            });
-        </script>
-
-        <noscript>
-            <div style="display:none;">
-                <img src="//pixel.quantserve.com/pixel/p-v8ZfLRLAahkeW.gif" border="0" height="1" width="1"
-                     alt="Quantcast"/>
-            </div>
-        </noscript>
-        <!-- End Quantcast tag -->
-
-    </body>
-</html>
-
+{% include "includes/footer.html" %}
