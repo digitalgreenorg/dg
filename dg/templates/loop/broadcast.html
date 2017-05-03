@@ -149,7 +149,7 @@
             <form id="broadcast_test_form" class="form-box" method="POST" action="." enctype="multipart/form-data" >
                 <br/>
                 <br/>
-                <div style="padding: 15px;">
+                <div style="padding-left: 15px;">
                     {% csrf_token %}
                     {{ broadcast_test_form.as_p }}
                     <br/>
@@ -165,15 +165,13 @@
         <!-- Tab 2 -->
         <div id="broadcast">
             <form id="broadcast_form" class="form-box" method="POST" action="." enctype="multipart/form-data" >
-                <br/>
-                <br/>
-                <div style="padding: 15px;">
+                <div style="padding-left: 15px; content: '\a'; white-space: pre;">
                     {% csrf_token %}
                     {{ broadcast_form.as_p }}
-                    <br/>
-                    <br/>
+                </div>
+                <div style="padding-left: 15px;">
                     <input type="submit" class="btn" name="submit" value="Broadcast" />
-                    &nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="reset" class="btn" value="Reset">
                 </div>
                 <br/>
