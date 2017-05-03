@@ -780,6 +780,8 @@ def broadcast(request):
     template_data['broadcast_form'] = BroadcastForm()
     # This will check on template whether to show forms (0) or message(1).
     template_data['acknowledge'] = 0
+    # By default 0 for select Test Broadcast tab.
+    template_data['active_tab'] = 0
     if request.method == 'POST':
         if 'broadcast_test_submit' in request.POST:
             broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
@@ -803,6 +805,8 @@ def broadcast(request):
                 farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
             else:
                 template_data['broadcast_form'] = broadcast_form
+                # Change to 1 for select Broadcast tab.
+                template_data['active_tab'] = 1
                 return render_to_response('loop/broadcast.html',template_data,context_instance=context)
         else:
             HttpResponseBadRequest("<h2>Something is wrong, Please Try Again</h2>")
