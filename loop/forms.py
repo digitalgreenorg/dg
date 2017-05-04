@@ -26,7 +26,7 @@ class BroadcastTestForm(forms.Form):
 
 
 class BroadcastForm(forms.Form):
-    title = forms.CharField(label='Broadcast Title',widget=forms.TextInput(attrs={'placeholder': 'Broadcast Title'}),max_length=Broadcast._meta.get_field('title').max_length)
+    title = forms.CharField(label='Broadcast Title',widget=forms.TextInput(attrs={'placeholder': 'Enter Meaningful Broadcast Title'}),max_length=Broadcast._meta.get_field('title').max_length)
     cluster = forms.ChoiceField(label='Select Cluster',choices=[])
     audio_file = forms.FileField(label='Select a .WAV Audio file',
                                help_text='Upload .WAV, 8Khz Mono format audio file with 16 bit depth(Max. Size 5MB)'
