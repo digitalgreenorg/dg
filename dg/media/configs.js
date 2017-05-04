@@ -1202,12 +1202,13 @@ function() {
                 },
                 age: {
                     digits: true,
-                    min: 1,
-                    max: 100
+                    min: 10,
+                    max: 99
                 },
                 gender: "required",
                 phone_no: {
                     digits: true,
+                    minlength: 10,
                     maxlength: 10
                 },
                 village: {
@@ -1229,8 +1230,8 @@ function() {
 				},
 				age: {
 					digits: "Age should contain only digits",
-					min:"Age should not be less than 1 year",
-					max:"Age should not be more than 100 years"
+					min:"Age should not be less than 10 year",
+					max:"Age should not be less than 100 years"
 				},
 				gender:{
 					required: "Gender is required"
