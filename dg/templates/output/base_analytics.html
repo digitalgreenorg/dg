@@ -22,6 +22,39 @@
 				return node.innerHTML;
 				}
 			});
+
+			//highlight projects based on partner
+			{% if search_box_params.projects %}
+				{% if search_box_params.partners %}
+					highlight_bucket = []
+					simple_bucket = []
+					{% for partner in search_box_params.partners %}
+						{% if partner.highlight == 1 and not partner.unmarked %}
+							highlight_bucket.push({{partner.partner_id}})
+						{% elif partner.highlight == 1 %}
+							simple_bucket.push({{partner.partner_id}})
+						{% endif %}
+					{% endfor %}
+					simple_bucket = simple_bucket.filter(function(partner_id) { return highlight_bucket.indexOf(partner_id) < 0 })
+					project_wise_partners = JSON.parse("{{search_box_params.project_wise_partner}}".replace(/&quot;/g,'"'));
+					$.each(project_wise_partners,function(index,partner_list){
+						// Highlight project if any of its partner exist in highlight_bucket of partner
+						highlighted_match_found = partner_list.filter(function(partner) { return highlight_bucket.indexOf(parseInt(partner)) >= 0 });
+						if(highlighted_match_found.length > 0){
+							$("#projectbodytable input:checkbox[value="+index+"]").parent()
+							.prev().attr('style',  'font-weight:bolder; font-size:100%; color:black; background-color:#f3fdd5;');
+						}
+						else{
+							// Add bold style to project if any of its partner exist in simple_bucket of partner
+							bold_match_found = partner_list.filter(function(partner) { return simple_bucket.indexOf(parseInt(partner)) >= 0 });
+							if(bold_match_found.length > 0){
+								$("#projectbodytable input:checkbox[value="+index+"]").parent()
+								.prev().attr('style',  'font-weight:bolder; font-size:100%; color:black;');
+							}
+						}
+					});
+				{% endif %}
+			{% endif %}
 		}		
     			
 		function reset(){	        
@@ -41,7 +74,7 @@
 				url.push('to_date='+cur_to_date);
 			}
 				
-			if($("input:checkbox:not(:checked)").length > 0) {
+			if($("#partnerbodytable input:checkbox:not(:checked)").length > 0) {
 				$("#partnerbodytable input:checked").each(function() {
 				    if($(this).val()!='-1')
 				    {
@@ -49,6 +82,10 @@
 				    }
 				});
 			}
+
+			$("#projectbodytable input:checkbox:checked").each(function(){
+				url.push("projects="+$(this).val())
+			});
 			
 			var geog = null, id = '1';
 			$("#selectbody select").each(function() {
@@ -104,8 +141,22 @@
 				   $("#"+src+"Id").html(html).removeAttr('disabled');                   
               }
          });
-        }    	
-    
+        }
+
+        function project_wise_partner(){
+			project_wise_partners = JSON.parse("{{search_box_params.project_wise_partner}}".replace(/&quot;/g,'"'));
+			partner_list = [];
+			$("#projectbodytable input:checkbox:checked").each(function(){
+				partner_list = partner_list.concat(project_wise_partners[$(this).val()]);
+			});			
+			$("#partnerbodytable input:checkbox").each(function() {
+				if($(this).val()!='-1' && $.inArray($(this).val(),partner_list)!=-1)
+					$(this).prop('checked', true);	
+				else
+				    $(this).prop('checked', false);
+			});
+		}
+			
     </script>
 {% endblock jsfile %}
 
@@ -252,7 +303,37 @@
 							</div>
 				</div>							
 			</div>
-				
+
+
+			{% if search_box_params.projects %}
+			<div id='project' class='customdiv'>
+				<div id='projecttitle' class='customtitle'>										
+					<table id='projecttitletable' class='customtitletable' cellspacing='0' cellpadding='0'>						
+						<tr>
+							<td class='customtitlename'> Projects </td>
+							<td class='customtitleimg'>  </td>
+						</tr>
+					</table>
+				</div>
+				<div id='arrowimg'>  </div>
+				<div id='projectbody' class='custombody'>
+					<table id='projectbodytable' class='custombodytable'>
+					{% for project in search_box_params.projects %}
+						<tr>
+							<td id='projectbodytd2' class='customprojectbodytd'> 
+								<div id='projectname' class='projectdiv' title='{{project.project_description}}'>{{project.project_name}}</div> 
+								<div class='projectcheckbox'> 
+									<input type="checkbox" name="projects" {% if not project.unmarked %}checked="checked"{% endif %} onChange="project_wise_partner()" value="{{project.id}}"/>
+								</div> 
+							</td>														
+						</tr>
+					{% endfor %}				
+					</table>				
+				</div>
+			</div>
+			{% endif %}
+
+							
 			{% if search_box_params.partners %}
 			<div id='partner' class='customdiv'>
 				<div id='partnertitle' class='customtitle'>										
@@ -277,7 +358,7 @@
 					{% for partner in search_box_params.partners %}
 						<tr>
 							<td id='partnerbodytd2' class='custompartnerbodytd'> 
-								<div id='partnername' class='partnerdiv' {% if partner.highlight == 1 and not partner.unmarked %} style="font-weight:bolder; font-size:100%; color:black; background-color:#f3fdd5;" {% elif partner.highlight == 1 %} style="font-weight:bolder; font-size: 100%; color:black;" {% endif %}>{{partner.PARTNER_NAME}}</div> 
+								<div id='partnername' class='partnerdiv' title='{{partner.FULL_PARTNER_NAME}}' {% if partner.highlight == 1 and not partner.unmarked %} style="font-weight:bolder; font-size:100%; color:black; background-color:#f3fdd5;" {% elif partner.highlight == 1 %} style="font-weight:bolder; font-size: 100%; color:black;" {% endif %}>{{partner.PARTNER_NAME}}</div> 
 								<div class='partnercheckbox'> 
 									<input type="checkbox" name="partners" value="{{partner.partner_id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
 								</div> 

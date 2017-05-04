@@ -5,17 +5,20 @@
 <head>
 <title>{% block title %}Base Page{% endblock %}</title>
 <!--Import Google Icon Font-->
-<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 <!--Import materialize.css-->
 <link rel="stylesheet" href="{% static 'app_dashboards/css/materialize.min.css'%}" media="screen, projection"/>
 <link rel="stylesheet" href="{% static 'app_dashboards/datatablejs_media/css/jquery.dataTables.css'%}" media="screen, projection"/>
 <link rel="stylesheet" href="{% static 'app_dashboards/datatablejs_media/css/jquery.dataTables_themeroller.css'%}" media="screen, projection"/>
 <link rel="stylesheet" href="{% static 'app_dashboards/css/dataTables.tableTools.css'%}" media="screen, projection"/>
 <link rel="stylesheet" href="{% static 'app_dashboards/css/loopdashboard.css'%}" media="screen, projection"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css" media="screen, projection"/>
 {% block extracss %}{% endblock %}
 
 <!--Let browser know website is optimized for mobile-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="keywords" content="loop, dg, dashboard, digitalgreen">
+<meta name="description" content="Loop Dashboard">
 </head>
 
 <body>
@@ -36,13 +39,13 @@
 <script src="{% static 'app_dashboards/js/jquery.sparkline.min.js' %}"></script>
 <script src="{% static 'app_dashboards/datatablejs_media/js/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'social_website/scripts/libs/external/dataTables.tableTools.js' %}"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
 
 {% block script %} {%endblock%}
 <script src="{% static 'app_dashboards/js/highstocks.js' %}"></script>
 <script src="{% static 'app_dashboards/js/highcharts/highcharts-more.js' %}" ></script>
-<script src="{% static 'app_dashboards/js/highcharts/modules/data.js' %}"></script>
+<!-- <script src="{% static 'app_dashboards/js/highcharts/modules/data.js' %}"></script> -->
 <script src="{% static 'app_dashboards/js/highcharts/modules/solid-gauge.js' %}"></script>
 <script src="{% static 'app_dashboards/js/highcharts/modules/drilldown.js' %}"></script>
 <script src="{% static 'app_dashboards/js/highcharts/modules/boost.js' %}"></script>
-<script src="{% static 'app_dashboards/js/highcharts/modules/exporting.js' %}"></script>
 </html>

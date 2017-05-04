@@ -1,4 +1,4 @@
-from tastypie.exceptions import ImmediateHttpResponse, NotFound
+from tastypie.exceptions import ImmediateHttpResponse, NotFound, BadRequest
 from tastypie.authentication import Authentication, ApiKeyAuthentication
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
@@ -16,36 +16,15 @@ import json
 from django.contrib.auth.models import User
 from models import *
 
-
-class FarmerNotSaved(Exception):
-    pass
-
-
-class CropNotSaved(Exception):
-    pass
-
-
-class TransactionNotSaved(Exception):
-    pass
-
-
-class TransporterNotSaved(Exception):
-    pass
-
-
-class TransportationVehicleNotSaved(Exception):
-    pass
-
-
-class DayTransportationNotSaved(Exception):
-    pass
-
-
 class AssignedMandiNotSaved(Exception):
     pass
 
 class AssignedVillageNotSaved(Exception):
     pass
+
+def send_duplicate_message(obj_id):
+    response = {"error_message": {"id": obj_id, "error": "Duplicate"}}
+    raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def foreign_key_to_id(bundle, field_name, sub_field_names):
     field = getattr(bundle.obj, field_name)
@@ -365,7 +344,7 @@ class FarmerResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise FarmerNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -374,8 +353,7 @@ class FarmerResource(BaseResource):
         except Exception, e:
             attempt = Farmer.objects.filter(
                 phone=bundle.data['phone'], name=bundle.data['name'])
-            raise FarmerNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
@@ -464,11 +442,11 @@ class LoopUserResource(BaseResource):
         return bundle
 
     def dehydrate_assigned_mandis(self, bundle):
-        return [{'id': assigned_mandi_obj.mandi_id, 'mandi_name':assigned_mandi_obj.mandi_name} for assigned_mandi_obj in
+        return [{'id': assigned_mandi_obj.id, 'mandi_name':assigned_mandi_obj.mandi_name} for assigned_mandi_obj in
                 set(bundle.obj.assigned_mandis.all())]
 
     def dehydrate_assigned_villages(self, bundle):
-        return [{'id': assigned_village_obj.village_id, 'village_name':assigned_village_obj.village_name} for assigned_village_obj in
+        return [{'id': assigned_village_obj.id, 'village_name':assigned_village_obj.village_name} for assigned_village_obj in
                 set(bundle.obj.assigned_villages.all())]
 
 class CropResource(BaseResource):
@@ -487,8 +465,7 @@ class CropResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(CropResource, self).obj_create(bundle, **kwargs)
         else:
-            raise CropNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -496,13 +473,12 @@ class CropResource(BaseResource):
             bundle = super(CropResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
-            raise CropNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        bundle.data['image_path'] = bundle.data['crop_name']
+        #bundle.data['image_path'] = bundle.data['crop_name']
         return bundle
 
 
@@ -595,8 +571,7 @@ class TransporterResource(BaseResource):
             bundle = super(TransporterResource, self).obj_create(
                 bundle, **kwargs)
         else:
-            raise TransporterNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -606,8 +581,7 @@ class TransporterResource(BaseResource):
         except Exception, e:
             attempt = Transporter.objects.filter(transporter_phone=bundle.data['transporter_phone'],
                                                  transporter_name=bundle.data['transporter_name'])
-            raise TransporterNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
@@ -658,8 +632,7 @@ class TransportationVehicleResource(BaseResource):
             bundle = super(TransportationVehicleResource,
                            self).obj_create(bundle, **kwargs)
         else:
-            raise TransportationVehicleNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -672,8 +645,7 @@ class TransportationVehicleResource(BaseResource):
         except Exception, e:
             attempt = TransportationVehicle.objects.filter(transporter=transporter, vehicle=vehicle,
                                                            vehicle_number=bundle.data["vehicle_number"])
-            raise TransportationVehicleNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
@@ -705,11 +677,10 @@ class TransportationVehicleResource(BaseResource):
             deleted_obj = self.obj_delete(
                 bundle=bundle, **self.remove_api_resource_names(kwargs))
             # build a new bundle with the deleted obj and return it in a response
-            # print del_obj.id, del_obj.amount
-            # print type(del_obj)
+
             deleted_bundle = self.build_bundle(
                 obj=deleted_obj, request=request)
-            # print deleted_bundle
+
             # deleted_bundle = self.full_dehydrate()
             # deleted_bundle = self.alter_detail_data_to_serialize(request, deleted_bundle)
             return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
@@ -726,7 +697,7 @@ class DayTransportationResource(BaseResource):
         limit = 0
         max_limit = 0
         queryset = DayTransportation.objects.all()
-        detail_allowed_methods = ["get", "post", "put", "delete"]
+        detail_allowed_methods = ["get", "post", "put", "delete","patch"]
         resource_name = 'daytransportation'
         authorization = DayTransportationAuthorization()
         authentication = ApiKeyAuthentication()
@@ -744,19 +715,16 @@ class DayTransportationResource(BaseResource):
 
     def obj_create(self, bundle, request=None, **kwargs):
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
+        user = LoopUser.objects.get(user__username=bundle.request.user)
         transportationvehicle = TransportationVehicle.objects.get(
             id=bundle.data["transportation_vehicle"]["online_id"])
-
-        user = LoopUser.objects.get(user__username=bundle.request.user)
-
         attempt = DayTransportation.objects.filter(date=bundle.data[
-            "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+                "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
         if attempt.count() < 1:
             bundle = super(DayTransportationResource,
                            self).obj_create(bundle, **kwargs)
         else:
-            raise DayTransportationNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -771,8 +739,7 @@ class DayTransportationResource(BaseResource):
             user = LoopUser.objects.get(user__username=bundle.request.user)
             attempt = DayTransportation.objects.filter(date=bundle.data[
                 "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
-            raise DayTransportationNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
@@ -807,6 +774,97 @@ class DayTransportationResource(BaseResource):
         except NotFound:
             return http.Http404()
 
+class GaddidarCommissionResource(BaseResource):
+    mandi = fields.ForeignKey(MandiResource,'mandi')
+    gaddidar = fields.ForeignKey(GaddidarResource,'gaddidar')
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = GaddidarCommission.objects.all()
+        authorization = MandiAuthorization('mandi_id__in')
+        authentication = ApiKeyAuthentication()
+        resource_name = 'gaddidarcommission'
+        always_return_data = True
+        excludes = ('time_created','time_modified')
+        include_resource_uri = False
+
+    dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
+    dehydrate_gaddidar = partial(foreign_key_to_id,field_name="gaddidar",sub_field_names=['id'])
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+
+
+class GaddidarShareOutliersResource(BaseResource):
+    mandi = fields.ForeignKey(MandiResource,'mandi')
+    gaddidar = fields.ForeignKey(GaddidarResource,'gaddidar')
+    aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
+    class Meta:
+        queryset =GaddidarShareOutliers.objects.all()
+        allowed_methods = ['post','patch','put','get']
+        authorization = Authorization()
+        authentication =ApiKeyAuthentication()
+        resource_name = 'gaddidarshareoutliers'
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
+    dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
+    dehydrate_gaddidar = partial(foreign_key_to_id,field_name="gaddidar",sub_field_names=['id'])
+    dehydrate_aggregator = partial(foreign_key_to_id,field_name="aggregator",sub_field_names=['id'])
+    hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
+    hydrate_gaddidar = partial(dict_to_foreign_uri,field_name='gaddidar')
+    hydrate_aggregator = partial(dict_to_foreign_uri,field_name='aggregator',resource_name='loopuser')
+
+    def obj_create(self,bundle,request=None,**kwargs):
+        mandiObject = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
+        gaddidarObject = Gaddidar.objects.get(id = bundle.data['gaddidar']['online_id'])
+        aggregatorObject = LoopUser.objects.get(id = bundle.data['aggregator']['online_id'])
+
+        attempt = GaddidarShareOutliers.objects.filter(date=bundle.data['date'],mandi=mandiObject,gaddidar=gaddidarObject,aggregator=aggregatorObject)
+        if attempt.count() < 1:
+            bundle = super(GaddidarShareOutliersResource,self).obj_create(bundle,**kwargs)
+        else:
+            bundle.request.method = 'PUT'
+            bundle.request.path = bundle.request.path + \
+                str(attempt[0].id) + "/"
+            kwargs['pk'] = attempt[0].id
+            bundle = super(GaddidarShareOutliersResource,self).obj_update(bundle, **kwargs)
+        return bundle
+
+class AggregatorShareOutliersResource(BaseResource):
+    mandi = fields.ForeignKey(MandiResource,'mandi')
+    aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
+    class Meta:
+        queryset =AggregatorShareOutliers.objects.all()
+        allowed_methods = ['post','patch','put','get']
+        resource_name = 'aggregatorshareoutliers'
+        authorization = Authorization()
+        authentication =ApiKeyAuthentication()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
+    dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
+    dehydrate_aggregator = partial(foreign_key_to_id,field_name="aggregator",sub_field_names=['id'])
+    hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
+    hydrate_aggregator = partial(dict_to_foreign_uri,field_name='aggregator',resource_name='loopuser')
+
+    def obj_create(self,bundle,request=None,**kwargs):
+        mandiObject = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
+        aggregatorObject = LoopUser.objects.get(id = bundle.data['aggregator']['online_id'])
+
+        attempt = AggregatorShareOutliers.objects.filter(date=bundle.data['date'],mandi=mandiObject,aggregator=aggregatorObject)
+        if attempt.count() < 1:
+            bundle = super(AggregatorShareOutliersResource,self).obj_create(bundle,**kwargs)
+        else:
+            bundle.request.method = 'PUT'
+            bundle.request.path = bundle.request.path + \
+                str(attempt[0].id) + "/"
+            kwargs['pk'] = attempt[0].id
+            bundle = super(AggregatorShareOutliersResource,self).obj_update(bundle, **kwargs)
+        return bundle
 
 class CombinedTransactionResource(BaseResource):
     crop = fields.ForeignKey(CropResource, 'crop')
@@ -852,8 +910,7 @@ class CombinedTransactionResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource,self).obj_create(bundle, **kwargs)
         else:
-            raise TransactionNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -869,7 +926,7 @@ class CombinedTransactionResource(BaseResource):
             user = LoopUser.objects.get(user__username=bundle.request.user)
             attempt = CombinedTransaction.objects.filter(date=bundle.data[
                                                          "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
-            raise TransactionNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):

@@ -1,5 +1,4 @@
 import operator
-
 from django import forms
 from django.conf import settings
 from django.conf.urls import patterns
@@ -11,13 +10,15 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
 from coco.base_models import NONNEGOTIABLE_OPTION
-
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
-from videos.models import  NonNegotiable, ParentCategory
+from videos.models import  NonNegotiable
+from videos.models import ParentCategory
+from programs.models import Project
+
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
     person = forms.ModelChoiceField(Animator.objects.none())
@@ -247,3 +248,8 @@ class QACocoUserAdmin(admin.ModelAdmin):
     form = QACocoUserForm
     list_display = ('user','partner','get_blocks')
     search_fields = ['user__username']
+
+class ProjectAdmin(admin.ModelAdmin):
+    filter_horizontal = ('associate_partner',)
+    list_display = ('id','project_name')
+    search_fields = ['project_name']

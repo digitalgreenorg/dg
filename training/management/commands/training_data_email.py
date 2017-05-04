@@ -10,13 +10,14 @@ from dg.settings import DATABASES
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
-		host = 'localhost'
+		host = DATABASES['default']['HOST']
 		user = DATABASES['default']['USER']
 		password = DATABASES['default']['PASSWORD']
 		database = DATABASES['default']['NAME']
+		port = DATABASES['default']['PORT']
 
 		con = MySQLdb.connect(
-			db = database, host=host,
+			db = database, host=host, port=port,
 			user=user, passwd=password,
 			charset = 'utf8', use_unicode = True)
 

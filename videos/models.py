@@ -17,6 +17,7 @@ from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator
 from people.models import Person
+from training.log.training_log import enter_to_log
 
 
 class PracticeSector(CocoModel):
@@ -68,11 +69,11 @@ class Practice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     practice_name = models.CharField(null=True, blank=True, max_length=200)
-    practice_sector = models.ForeignKey(PracticeSector, default=1) 
+    practice_sector = models.ForeignKey(PracticeSector, default=1)
     practice_subsector = models.ForeignKey(PracticeSubSector, null=True, blank=True)
     practice_topic = models.ForeignKey(PracticeTopic, null=True, blank=True)
     practice_subtopic = models.ForeignKey(PracticeSubtopic, null=True, blank=True)
-    practice_subject = models.ForeignKey(PracticeSubject, null=True, blank=True)    
+    practice_subject = models.ForeignKey(PracticeSubject, null=True, blank=True)
 
     class Meta:
         verbose_name = "Practice"
@@ -115,7 +116,7 @@ class Category(CocoModel):
 
     def get_partner(self):
         return None
-    
+
     class Meta:
         verbose_name_plural = "categories"
 
@@ -143,7 +144,7 @@ class SubCategory(CocoModel):
 
     def get_partner(self):
         return None
-    
+
     class Meta:
         verbose_name_plural = "sub categories"
 
@@ -160,7 +161,7 @@ class VideoPractice(CocoModel):
 
     def get_partner(self):
         return None
-    
+
     def __unicode__(self):
         return self.videopractice_name
 
@@ -174,11 +175,13 @@ class Language(CocoModel):
 
     def get_partner(self):
         return None
-    
+
     def __unicode__(self):
         return self.language_name
 post_save.connect(save_log, sender=Language)
 pre_delete.connect(delete_log, sender=Language)
+post_save.connect(enter_to_log, sender=Language)
+pre_delete.connect(enter_to_log,sender=Language)
 
 
 class Video(CocoModel):
@@ -204,7 +207,7 @@ class Video(CocoModel):
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
     reviewer = models.IntegerField(verbose_name="Organisation", choices=REVIEW_BY, null=True, blank=True, validators=[MaxValueValidator(1)])
     reviewed_by = models.CharField(max_length=80, null=True, blank=True)
-    
+
     class Meta:
         unique_together = ("title", "production_date", "language", "village")
 
@@ -221,7 +224,7 @@ class NonNegotiable(CocoModel):
     video = models.ForeignKey(Video)
     non_negotiable = models.CharField(max_length=500)
     physically_verifiable = models.BooleanField(db_index=True, default=False)
-    
+
     def __unicode__(self):
         return  u'%s' % self.non_negotiable
 post_save.connect(save_log, sender=NonNegotiable)
