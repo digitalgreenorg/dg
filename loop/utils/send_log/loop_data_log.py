@@ -1,7 +1,6 @@
 import json
 
 import datetime
-from django.contrib.auth.models import User
 from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
@@ -40,7 +39,7 @@ def save_log(sender, **kwargs):
         # user = User.objects.get(id=instance.user_modified_id) if instance.user_modified_id else User.objects.get(
             # id=instance.user_created_id)
         user = instance.user_created
-    except Exception, ex:
+    except Exception:
         user = None
 
     model_id = instance.id
@@ -95,7 +94,7 @@ def get_log_object(log_object):
         obj = Obj_model.objects.get(id=log_object.model_id)
         data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': model_to_dict(
             obj), 'online_id': obj.id}
-    except Exception, e:
+    except Exception:
         data = {'log': model_to_dict(
             log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': None, 'online_id': log_object.model_id}
     return data
@@ -105,7 +104,7 @@ def get_latest_timestamp():
     Log = get_model('loop', 'Log')
     try:
         timestamp = Log.objects.latest('id')
-    except Exception as e:
+    except Exception:
         timestamp = None
     return timestamp
 
@@ -119,26 +118,24 @@ def send_updated_log(request):
             try:
                 apikey_object = ApiKey.objects.get(key=apikey)
                 user = apikey_object.user
-            except Exception, e:
+            except Exception:
                 return HttpResponse("-1", status=401)
             LoopUser = get_model('loop', 'LoopUser')
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
                 user_list = LoopUser.objects.filter(
                     village__block_id=requesting_loop_user.village.block.id).values_list('user__id', flat=True)
-            except Exception as e:
+            except Exception:
                 raise UserDoesNotExist(
                     'User with id: ' + str(user.id) + 'does not exist')
             villages = requesting_loop_user.get_villages()
             mandis = requesting_loop_user.get_mandis()
             Log = get_model('loop', 'Log')
             Farmer = get_model('loop', 'Farmer')
-            Mandi = get_model('loop', 'Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')
-            GaddidarCommission = get_model('loop','GaddidarCommission')
             Transporter = get_model('loop', 'Transporter')
             TransportationVehicle = get_model('loop', 'TransportationVehicle')
-            State = get_model('loop','State')
+
             list_rows = []
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
@@ -165,12 +162,12 @@ def send_updated_log(request):
                 'Transporter', 'TransportationVehicle'])
 
             for entry in transporter_trans_vehicle_rows:
-                if entry.entry_table == "Transporter" and entry.loop_user == None:
+                if entry.entry_table == "Transporter" and entry.loop_user is None:
                     if entry.action != -1 and Transporter.objects.get(id=entry.model_id).block.id == requesting_loop_user.village.block.id:
                         list_rows.append(entry)
                     elif entry.action == -1:
                         list_rows.append(entry)
-                elif entry.entry_table == "TransportationVehicle" and entry.loop_user == None:
+                elif entry.entry_table == "TransportationVehicle" and entry.loop_user is None:
                     if entry.action != -1 and TransportationVehicle.objects.get(
                             id=entry.model_id).transporter.block.id == requesting_loop_user.village.block.id:
                         list_rows.append(entry)
@@ -230,7 +227,7 @@ def send_updated_log(request):
                     try:
                         for i in row:
                             data_list.append(get_log_object(i))
-                    except TypeError, te:
+                    except TypeError:
                         data_list.append(get_log_object(row))
             if list_rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
