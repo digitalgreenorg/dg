@@ -1,7 +1,7 @@
 from django.conf.urls import include, patterns, url
 from django.views.generic import TemplateView
 from tastypie.api import Api
-
+from views import upload_data
 from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource
 from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check
 
@@ -32,4 +32,5 @@ urlpatterns = patterns('',
     url(r'^faq/$', TemplateView.as_view(template_name='faq.html'), name="faq"),
     (r'^record_full_download_time/', record_full_download_time),
     (r'^reset_database_check/', reset_database_check),
+    (r'^upload/data/', upload_data),
 )
