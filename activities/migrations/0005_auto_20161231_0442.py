@@ -62,4 +62,10 @@ class Migration(migrations.Migration):
             name='parentcategory',
             field=models.ForeignKey(blank=True, to='videos.ParentCategory', null=True),
         ),
+        migrations.AlterField(
+            model_name='personadoptpractice',
+            name='animator',
+            field=models.ForeignKey(default=None, to='people.Animator'),
+            preserve_default=False,
+        ),
     ]
