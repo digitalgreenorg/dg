@@ -3438,7 +3438,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 "sAjaxUrl": "/loop/api/v1/daytransportation/",
                 "fnClick": function(nButton, oConfig) {
                     var editedDataTransportation = [];
-                    var gaddidarAjaxSuccess = 0;
+                    var transportationAjaxSuccess = 0;
                     $('#ToolTables_table4_0').removeClass('disable-button');
                     flag_edit_Table4 = false;
                     $('#ToolTables_table4_1').addClass('disable-button');
