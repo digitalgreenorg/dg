@@ -2370,7 +2370,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
     var transport_payment_length = transport_payment.length;
     for (var i = 0; i < transport_payment_length; i++) {
-        if (aggregator == transport_payment[i][USER_CREATED__ID].toString()) {
+        if (aggregator == transport_payment[i][USER_CREATED__ID]) {
             date_index = dates.indexOf(transport_payment[i]['date']);
             mandi_index = mandis[date_index].map(function(e) {
                 return e.mandi_name;
