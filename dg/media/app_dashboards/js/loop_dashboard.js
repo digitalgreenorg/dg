@@ -2370,7 +2370,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
     var transport_payment_length = transport_payment.length;
     for (var i = 0; i < transport_payment_length; i++) {
-        if (aggregator == transport_payment[i][USER_CREATED__ID]) {
+        if (aggregator == transport_payment[i][USER_CREATED__ID].toString()) {
             date_index = dates.indexOf(transport_payment[i]['date']);
             mandi_index = mandis[date_index].map(function(e) {
                 return e.mandi_name;
@@ -3474,7 +3474,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                     transporter_data_set[keys - 1][6] = parseFloat($('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
                                     transporter_data_set[keys - 1][7] = $('#table4 tr').eq(parseInt(keys) + 1)[0].childNodes[7].innerHTML;
                                     //console.log(transporter_data_set[keys - 1][7]);
-                                    transport_payment[transporter_data_set[keys - 1][11]] = transporter_data_set[keys - 1];
+                                    transport_payment[transporter_data_set[keys - 1][11]]['transportation_cost__sum'] = transporter_data_set[keys - 1][6];
+                                    transport_payment[transporter_data_set[keys - 1][11]]['transportation_cost_comment'] = transporter_data_set[keys - 1][7];
                                 }
                                 rows_table4 = [];
                                 get_payments_data();
