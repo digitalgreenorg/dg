@@ -234,23 +234,38 @@ def month_wise_data(request):
     return HttpResponse(data)
 
 def sample_data(request):
+    chart_type =  str(request.GET.get('chartType'))
+    placeholder = str(request.GET.get('placeholder'))
+    final_data_list = {}
     db_connection = MySQLdb.connect(host='localhost',
-                                     user=DATABASES['default']['USER'],
-                                     passwd=DATABASES['default']['PASSWORD'],
-                                     db=DATABASES['default']['NAME'],
-                                     charset='utf8',
-                                     use_unicode=True).cursor()
-    db_connection.execute('''select st.state_name 'state', count(t.id) 'no_trainings'
-                            from training_training t
-                            join geographies_district d on d.id = t.district_id
-                            join geographies_state st on st.id = d.state_id
-                            group by st.id''')
-    result = db_connection.fetchall()
-    final_data_list = []    
-    temp_dict = {'categories':[],'data':[]}
-    for row in result:
-        temp_dict['categories'].append(row[0])
-        temp_dict['data'].append(row[1])
-        
-    final_data_list.append(temp_dict)
+                                        user=DATABASES['default']['USER'],
+                                        passwd=DATABASES['default']['PASSWORD'],
+                                        db=DATABASES['default']['NAME'],
+                                        charset='utf8',
+                                        use_unicode=True).cursor()    
+    if(chart_type != 'pie'):
+        db_connection.execute('''select st.state_name 'state', count(t.id) 'no_trainings'
+                                from training_training t
+                                join geographies_district d on d.id = t.district_id
+                                join geographies_state st on st.id = d.state_id
+                                group by st.id''')
+        result = db_connection.fetchall()
+        temp_dict = {'name':[],'data':[]}
+        for row in result:
+            temp_dict['name'].append(row[0])
+            temp_dict['data'].append(row[1])
+        #print placeholder
+        final_data_list[placeholder] = temp_dict
+    else:
+        db_connection.execute('''select st.state_name 'state', count(t.id) 'no_trainings'
+                                from training_training t
+                                join geographies_district d on d.id = t.district_id
+                                join geographies_state st on st.id = d.state_id
+                                group by st.id''')
+        result = db_connection.fetchall()
+        temp_dict = {'name':'Pie Chart','data':[]}
+        for row in result:
+            temp_dict['data'].append({'name':row[0],'y':row[1]})
+        final_data_list[placeholder] = temp_dict
+    print final_data_list
     return HttpResponse(json.dumps(final_data_list))  

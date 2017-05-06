@@ -19,16 +19,14 @@ export class AppComponent implements OnInit{
     constructor(private graphService: GraphsService){}
     
     ngOnInit(): void{
-        
-        for(let json of configs) {
-            this.graphService.getData().then(dataList => {
-                for(let data of dataList){
-                    json.series.push(data);
-                    json.xAxis.categories = data.categories;
-                }
-                console.log(json);
-                this.charts.push(json)
-            });    
-        }
+
+        configs.forEach(config => {
+            this.graphService.getData(config.chart.type, config.placeholder).then(dataList => {
+                config.series.push(dataList[config.placeholder]);
+                config.xAxis.categories = dataList[config.placeholder].name;
+                console.log(config)
+                this.charts.push(config);
+            })
+        });
     }
 }
