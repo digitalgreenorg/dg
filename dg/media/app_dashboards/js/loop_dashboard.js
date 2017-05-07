@@ -774,7 +774,7 @@ function set_filterlistener() {
     $("#aggregator_payments").change(function() {
         var aggregator_id = $('#aggregator_payments :selected').val();
         var agg_id = $(this).children(":selected").attr("id");
-        var aggregator_name_input = $('#aggregator_payment_tab :input').val();
+        var aggregator_name_input = $(this).children(":selected")[0].innerHTML;
         if (table_created) {
             $('#outliers_data').html("");
         }
