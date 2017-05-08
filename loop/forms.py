@@ -9,10 +9,12 @@ class BroadcastTestForm(forms.Form):
 
     def clean_to_number(self):
         to_number = self.cleaned_data.get('to_number')
-        if to_number == '' or len(to_number) < 10 or len(to_number) > 11 or int(to_number) < 7000000000 or int(to_number) > 9999999999:
+        if to_number == '' or len(to_number) < 10 or len(to_number) > 11:
             raise forms.ValidationError("Please Correct Phone Number.")
         if not all(digit.isdigit() for digit in to_number):
             raise forms.ValidationError("Number should contain only digits")
+        if int(to_number) < 7000000000 or int(to_number) > 9999999999:
+            raise forms.ValidationError("Please Correct Phone Number.")
         return to_number
 
     def clean_audio_file(self):

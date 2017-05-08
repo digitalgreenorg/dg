@@ -193,8 +193,8 @@ def decline_previous_broadcast(farmer_number):
 
 def validate_phone_number(number):
     if number == '' or len(number) < 10 or len(number) > 11 or \
-        int(number) < 7000000000 or int(number) > 9999999999 or \
-        not all(digit.isdigit() for digit in number):
+        not all(digit.isdigit() for digit in number) or \
+        int(number) < 7000000000 or int(number) > 9999999999:
         return False
     return True
 
