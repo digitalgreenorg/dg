@@ -3485,8 +3485,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 delay = 3000;
                                 setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
-                                    $("#aggregator_payment_tab :input").val(aggregator_name_input);
-                                    $("select").material_select();
+                                    //$("#aggregator_payment_tab :input").val(aggregator_name_input);
+                                    
                                 }, delay);
 
                             },
