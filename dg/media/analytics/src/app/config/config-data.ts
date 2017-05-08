@@ -1,12 +1,14 @@
 export const STAT: any = [
       {
-        entity_name : 'No. of Mediators',
+        entity_name : 'No. of Trainings',
         overall : {
+            placeHolder : 'overallBar',
             filter:null,
-            show:false,
+            show:true,
             apiUrl:'http://localhost:8000/training/testmethod'
         },
         recent : {
+ 	        placeHolder: 'recentBar',
             dateRange:60, // In days
             filter:{
                 fromDate:'2017-01-01',
@@ -22,11 +24,13 @@ export const STAT: any = [
       {
         entity_name : 'No. of Mediators',
         overall : {
+            placeHolder : 'overallBar',
             filter:null,
-            show:false,
+            show:true,
             apiUrl:'http://localhost:8000/training/testmethod'
         },
         recent : {
+ 	        placeHolder: 'recentBar',
             dateRange:60, // In days
             filter:{
                 fromDate:'2017-01-01',
@@ -40,13 +44,15 @@ export const STAT: any = [
         apiUrl:'http://localhost:8000/training/testMediatorsApi'
       },
       {
-        entity_name : 'No. of Mediators',
+        entity_name : 'Pass Percentage',
         overall : {
+            placeHolder : 'overallBar',
             filter:null,
-            show:false,
+            show:true,
             apiUrl:'http://localhost:8000/training/testmethod'
         },
         recent : {
+ 	        placeHolder: 'recentBar',
             dateRange:60, // In days
             filter:{
                 fromDate:'2017-01-01',
@@ -60,13 +66,15 @@ export const STAT: any = [
         apiUrl:'http://localhost:8000/training/testPassPercentApi'
       },
       {
-        entity_name : 'No. of Mediators',
+        entity_name : 'Avg Score',
         overall : {
+            placeHolder : 'overallBar',
             filter:null,
-            show:false,
+            show:true,
             apiUrl:'http://localhost:8000/training/testmethod'
         },
         recent : {
+ 	        placeHolder: 'recentBar',
             dateRange:60, // In days
             filter:{
                 fromDate:'2017-01-01',

@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { 
+    Component, 
+    OnInit,
+    OnChanges,
+    SimpleChanges } from '@angular/core';
 import { TopBarDataService } from '../top-bar-data.service';
 import { MyData} from '../my-data';
 import { STAT } from '../config/config-data'
@@ -14,19 +18,20 @@ import { DatePipe } from '@angular/common'
   styleUrls: ['./top-bar-data.component.css'],
 })
 
-export class TopBarDataComponent implements OnInit {
+export class TopBarDataComponent implements 
+  OnInit,
+  OnChanges {
 
-  private myData : MyData[];
-  private myData1 : MyData[];
   private myApiData:Config[] = new Array<Config>();
-  // private myApiData:Config = new Config();
   private testConfig: Config = new Config();
-  private testApidata: Config = new Config();
-  private data: Data = new Data();
-  title;
+  overAllData:Overall[] = new Array<Overall>();
+  recentData:Overall[] = new Array<Overall>();
   val;
+  overalltest:Overall = new Overall();
+  recentTest:Overall = new Overall();
+  overallobj:Overall = new Overall();
   private testdate;
-  
+  private reload = true;
   // DatePicker
   private myDatePickerOptions: IMyOptions = {
     dateFormat : 'dd-mm-yyyy',
@@ -69,56 +74,62 @@ export class TopBarDataComponent implements OnInit {
     }
     
     this.topbardataService.getApiData(this.args)
-                          .subscribe(val => {this.myApiData.push(val); console.log('data -> ', val)})
-  }
-  showData() : void {
-    
-    this.data.overall = new Overall();
-    this.data.overall.tagName = 'sujit'
-    this.data.overall.value = 123
-    // console.log('sd -> ', this.testdate.getDate());
-    // this.testConfig.data = {
-    //   overall: [{
-    //   tagName:'sujit',
-    //   value:10
-    //   }],
-    //   recent:[{
-    //     tagName:'chandru',
-    //     value: 20
-    //   }]
-    // };
-    // this.testOverall = {
-    //   tagName:'aman',
-    //   value:30
-    // }
-    // this.testConfig.data.overall.push(this.testOverall);
-    // console.log(this.testConfig.data.overall[0].tagName);
+                          .subscribe(val => {
+                                              // Update overall data:
+                                              if(this.reload) {
+                                                for( let obj of this.overAllData) {
+                                                  if(obj.tagName == val.data.recent.tagName) {
+                                                    obj.value = val.data.recent.value;
+                                                  }
+                                                }
+                                              }
+                                              // for recent data:
+                                              for( let obj of this.recentData) {
+                                                if(obj.tagName == val.data.recent.tagName) {
+                                                  obj.value = val.data.recent.value;
+                                                }
+                                              }
+                                            })
   }
   
-  public getfilteredData():any {
-    this.myApiData = new Array<Config>();
+  getfilteredData():any {
+    this.reload = false;
     for(let stat of STAT) {
-        
       // api call
       if(stat.graphs.show) {
         this.getData(stat);
       }
     }
+  }
+  
+  ngOnChanges(changes : SimpleChanges) {
+    console.log('onChanges called TopBarDataComponent');
+    console.log(changes);
   }
 
   ngOnInit() {
+    
+    for (let stat of STAT) {
+      this.overalltest = new Overall();
+      this.recentTest = new Overall();
+      if(stat.overall.show) {
+        this.overalltest.tagName = stat.entity_name;
+        this.overalltest.placeHolder = stat.overall.placeHolder;
+        this.overalltest.value = null;
+        this.recentTest.tagName = stat.entity_name;
+        this.recentTest.placeHolder = stat.recent.placeHolder;
+        this.recentTest.value = null;
+        this.overAllData.push(this.overalltest);
+        this.recentData.push(this.recentTest);
+      }
+    }
 
     for(let stat of STAT) {
-
       // api call
       if(stat.graphs.show) {
         this.getData(stat);
       }
     }
-    this.showData();
-    
   }
-
-
 
 }

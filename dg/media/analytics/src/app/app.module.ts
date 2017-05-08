@@ -13,6 +13,7 @@ import { NvD3Module } from '../../node_modules/angular2-nvd3';
 import { MyDatePickerModule } from 'mydatepicker';
 import { ButtonsModule } from 'ngx-bootstrap';
 import { DatePipe } from '@angular/common';
+import { CardComponent } from './top-bar-data/card/card.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { DatePipe } from '@angular/common';
     TopBarDataComponent,
     KeysPipe,
     GraphComponent,
+    CardComponent,
   ],
   imports: [
     BrowserModule,
