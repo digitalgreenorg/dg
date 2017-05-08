@@ -44,3 +44,9 @@ class BroadcastForm(forms.Form):
         if audio_file.size/(1024*1024.0) > 5:
              raise forms.ValidationError("Please upload a WAV Audio file less than 5 MB")
         return audio_file
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if title == 'admin_test' or title.strip() == 'admin_test':
+            raise forms.ValidationError("Please select another Meaningful name")
+        return title

@@ -786,7 +786,7 @@ def broadcast(request):
         if 'broadcast_test_submit' in request.POST:
             broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
             if broadcast_test_form.is_valid():
-                broadcast_title = 'test'
+                broadcast_title = 'admin_test'
                 cluster_id = None
                 audio_file = broadcast_test_form.cleaned_data.get('audio_file')
                 to_number = broadcast_test_form.cleaned_data.get('to_number')
