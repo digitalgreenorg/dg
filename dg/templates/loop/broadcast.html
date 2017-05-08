@@ -72,6 +72,12 @@
         jQuery(function ($) {  //on document.ready
             $("#broadcast_menu").tabs({active: {{ active_tab }} });  
         })
+        $("#broadcast_form").submit(function(event) {
+            if($("#id_title").val() == 'admin_test') {
+                alert("Please select another Meaningful name");
+                $("#id_title").val('');
+                event.preventDefault();}
+        });
     </script>
 
 {% endif %}
