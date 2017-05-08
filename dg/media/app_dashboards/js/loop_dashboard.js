@@ -3184,7 +3184,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             url: oConfig.sAjaxUrl,
                             type: 'patch',
                             dataType: 'json',
-                            async: true,
+                            async: false,
                             contentType: "application/json; charset=utf-8",
                             headers: {
                                 "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
@@ -3206,13 +3206,13 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                     gaddidar_data_set_clone[keys - 1][6] = parseFloat($('#table3 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
                                 }
                                 rows_table3 = [];
-                                
+                                get_payments_data();
                                 delay = 3000;
                                 setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
                                     $("#aggregator_payment_tab :input").val(aggregator_name_input);
-                                    //$("select").material_select();
-                                    get_payments_data();
+                                    $("select").material_select();
+                                    
                                 }, delay);
 
                             },
@@ -3464,7 +3464,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             url: oConfig.sAjaxUrl,
                             type: 'patch',
                             dataType: 'json',
-                            async: true,
+                            async: false,
                             contentType: "application/json; charset=utf-8",
                             headers: {
                                 "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
@@ -3481,11 +3481,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                     transport_payment[transporter_data_set[keys - 1][11]]['transportation_cost_comment'] = transporter_data_set[keys - 1][7];
                                 }
                                 rows_table4 = [];
+                                get_payments_data();
                                 delay = 3000;
                                 setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
                                     $("#aggregator_payment_tab :input").val(aggregator_name_input);
-                                    get_payments_data();
+                                    $("select").material_select();
                                 }, delay);
 
                             },
