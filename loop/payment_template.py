@@ -178,60 +178,44 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
             ws = workbook.add_worksheet(name_of_sheets[sheet_index])
             ws.set_margins(0.1, 0.1)
             # setting the col width
-            print "A"
             write_heading_in_sheet(ws_obj=ws,
                                    heading_str=heading_of_sheets[sheet_index],
                                    format_str=heading_format)
             # getting the cell value so that we will write values of columns
-            print "B"
             write_header_in_excel = ws.set_header('&C'+sheet_header if sheet_header is not None else '')
-            print "c"
             cell_value_from_headers = \
                 get_headers_from_template_dict(ws, sheet_index, combined_header, header_format)
-            print "D"
             write_footer_in_excel = ws.set_footer('&C'+sheet_footer if sheet_footer is not None else '')
             # finally writing in process
-            print "E"
             write_values = \
                 write_values_to_sheet(ws, combined_data[sheet_index], cell_value_from_headers.get('cell_value'), row_format)
-            print "F"
             write_total_in_excel_sheet(ws, write_values.get('start'),
                                        write_values.get('end'),
                                        cell_value_from_headers.get('formulacolumn_dict'),
                                        total_cell_format)
-            print "G"
             write_formula_in_values(ws,
                                     combined_data[sheet_index],
                                     cell_value_from_headers.get('cell_value'),
                                     cell_value_from_headers.get('formula_list'),
                                     row_format)
-            print "H"
-            
-    except Exception as e:
-        print "HOPHJHCJWJFWJFFFFFFFFFFFFFFJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ"
-        print e
 
+    except Exception as e:
+        print e
     return workbook
 
 
 def prepare_value_data_generic(data):
-    print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
     if type(data) == 'str':
         data = json.loads(data)
-    print type(data)
-    print data
     combined_data = []
     combined_header = {}
     name_of_sheets = []
     heading_of_sheets = []
-
     combined_header = data.get('header')
-
     data_dict = data.get('data')
     cell_format = data.get('cell_format')
     sheet_header = data.get('sheet_header')
     sheet_footer = data.get('sheet_footer')
-    # print data_dict
 
     for sheet_index, sheet in enumerate(data_dict.keys()):
         sheet_data = data_dict.get(sheet).get('data')
@@ -251,19 +235,3 @@ def prepare_value_data_generic(data):
                         'sheet_header': sheet_header, 'sheet_footer': sheet_footer}
 
     return combined_dict
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
