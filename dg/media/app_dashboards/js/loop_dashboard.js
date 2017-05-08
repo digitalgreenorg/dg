@@ -3211,7 +3211,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
                                     $("#aggregator_payment_tab :input").val(aggregator_name_input);
-                                    $("select").material_select();
+                                    //$("select").material_select();
                                     get_payments_data();
                                 }, delay);
 
