@@ -1,7 +1,7 @@
 __author__ = 'Lokesh'
 
 import MySQLdb
-from dg.settings import *
+from dg.settings import DATABASES
 
 mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'], user=DATABASES['default']['USER'],
                            passwd=DATABASES['default']['PASSWORD'],
