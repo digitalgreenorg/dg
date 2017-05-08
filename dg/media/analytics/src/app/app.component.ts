@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe } from '@angular/core';
 import { configs } from './configs';
 import { GraphsService } from './graphs.service';
 import { ChartModule } from 'angular2-highcharts';
@@ -24,9 +24,9 @@ export class AppComponent implements OnInit{
             this.graphService.getData(config.chart.type, config.placeholder).then(dataList => {
                 config.series.push(dataList[config.placeholder]);
                 config.xAxis.categories = dataList[config.placeholder].name;
-                console.log(config)
                 this.charts.push(config);
             })
         });
+        console.log(this.charts);
     }
 }

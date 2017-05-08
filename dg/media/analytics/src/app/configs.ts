@@ -1,5 +1,8 @@
 export const configs = [
-    {   chart:{type:'line'},
+    {   chart:{
+            type:'line',
+            renderTo: 'mainDiv'
+        },
         placeholder : 'line_chart',
         title : {text : 'State wise traingings conducted'},
         xAxis:{categories:[]},
@@ -11,7 +14,10 @@ export const configs = [
         series: []
     },
     {
-        chart: {type: 'bar'},
+        chart:{
+            type:'bar',
+            renderTo: 'mainDi'
+        },
         placeholder : 'bar_chart',
         title: {text: 'District wise traingings conducted'},
         xAxis: {
@@ -32,10 +38,12 @@ export const configs = [
             }
         },
         series: []
-
     },
     {
-        chart: {type: 'pie'},
+        chart:{
+            type:'pie',
+            renderTo: 'mainD'
+        },
         placeholder : 'pie_chart',
         title: {text: 'State wise number of trainings'},
         tooltip: {pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'},
