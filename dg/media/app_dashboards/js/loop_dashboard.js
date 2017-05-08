@@ -775,6 +775,7 @@ function set_filterlistener() {
         var aggregator_id = $('#aggregator_payments :selected').val();
         var agg_id = $(this).children(":selected").attr("id");
         var aggregator_name_input = $(this).children(":selected")[0].innerHTML;
+
         if (table_created) {
             $('#outliers_data').html("");
         }
@@ -3183,7 +3184,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             url: oConfig.sAjaxUrl,
                             type: 'patch',
                             dataType: 'json',
-                            async: false,
+                            async: true,
                             contentType: "application/json; charset=utf-8",
                             headers: {
                                 "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
@@ -3461,7 +3462,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                             url: oConfig.sAjaxUrl,
                             type: 'patch',
                             dataType: 'json',
-                            async: false,
+                            async: true,
                             contentType: "application/json; charset=utf-8",
                             headers: {
                                 "Authorization": "ApiKey " + window.localStorage.name + ":" + window.localStorage.akey
