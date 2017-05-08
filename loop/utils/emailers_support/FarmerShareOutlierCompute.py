@@ -48,15 +48,7 @@ class FarmerShareOutlier(object):
             FSPTC = line[FSPTC_col]
             if count < no_of_rows + start_point:
                 if FSPK != last_FSPK and FSPTC != last_FSPTC:
-                    # if aggregator_name in aggregator_wise_FShare_outliers.keys():  # Check: Aggregator ID exists
-                    #                        aggregator_wise_FShare_outliers[aggregator_name].append(line[2:])
                     aggregator_wise_FShare_outliers['All'].append(line[2:])
-                    # else:
-                    #                       aggregator_wise_FShare_outliers[aggregator_name] = [line[2:]]
-                    #                       if 'All' in aggregator_wise_FShare_outliers.keys():
-                    #                            aggregator_wise_FShare_outliers['All'].append(line[2:])
-                    #                        else:
-                    #                            aggregator_wise_FShare_outliers['All'] = [line[2:]]
             else:
                 aggregator_id = line[aggregator_id_col]
                 aggregator_name = line[aggregator_name_col]

@@ -68,6 +68,7 @@ class Command(BaseCommand):
             worksheet_name = {'All': 'Farmer Share Outliers_' + str(from_to_date[0]) + "_" + str(from_to_date[1])}
             file_to_send = header_dict_for_farmer_outlier['workbook_name'] % (
             MEDIA_ROOT, '', str(from_to_date[0]), str(from_to_date[1]))
+
             for elements in header_dict_for_farmer_outlier['column_properties']:
                 if 'data_type' in elements.keys() and elements['data_type']=='Date':
                     date_format = workbook.add_format({'num_format': 'd mmm yy'})

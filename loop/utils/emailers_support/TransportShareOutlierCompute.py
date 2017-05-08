@@ -4,7 +4,6 @@ import math
 from loop.utils.emailers_support.queries import *
 from loop.utils.emailers_support.excel_generator import *
 
-
 class TransportCostOutlier(object):
 
     def get_percentile(self, dataset, column, start, length, percentile):
@@ -129,40 +128,22 @@ class TransportCostOutlier(object):
                 daily_a_m_line[dam_TCPK_col] = TCPK
                 if TCPK > a_m_count[(aggregator_id, mandi_id)]['UF']:  # Check: TCPK > Upper Fence
                     daily_a_m_line[dam_type_col] = 'High CPK'
-            #        if 'All' in aggregator_wise_TCost_outliers.keys():  # Check: Aggregator ID exists
                     aggregator_wise_TCost_outliers['All'].append(
                         daily_a_m_line[insert_row_from_this_col:])
-
-                    # if aggregator_name in aggregator_wise_TCost_outliers.keys():  # Check: Aggregator ID exists
-                    #     aggregator_wise_TCost_outliers[aggregator_name].append(
-                    #         daily_a_m_line[insert_row_from_this_col:])
-                    # else:
-                    #     aggregator_wise_TCost_outliers[aggregator_name] = [daily_a_m_line[insert_row_from_this_col:]]
                     high_cpk.append(daily_a_m_line[insert_row_from_this_col:])
+
                 elif TCPK < a_m_count[(aggregator_id, mandi_id)]['LF']:  # Check: TCPK < Lower Fence
                     daily_a_m_line[dam_type_col] = 'Low CPK'
                     aggregator_wise_TCost_outliers['All'].append(
                         daily_a_m_line[insert_row_from_this_col:])
-
-                    # if aggregator_name in aggregator_wise_TCost_outliers.keys():
-                    #     aggregator_wise_TCost_outliers[aggregator_name].append(
-                    #         daily_a_m_line[insert_row_from_this_col:])
-                    # else:
-                    #     aggregator_wise_TCost_outliers[aggregator_name] = [daily_a_m_line[insert_row_from_this_col:]]
                     low_cpk.append(daily_a_m_line[insert_row_from_this_col:])
+
                 else:
-#                    if aggregator_name in aggregator_wise_TCost_correct.keys():
-#                     aggregator_wise_TCost_correct[(aggregator_id, mandi_id, date)].append(daily_a_m_line)
-#                    else:
-#                        aggregator_wise_TCost_correct[(aggregator_id, mandi_id, date)] = [daily_a_m_line]
                      ok_cpk.append(daily_a_m_line[insert_row_from_this_col:])
 
             else:
                 daily_a_m_line[dam_type_col] = 'No CPK'
-#                if aggregator_name in aggregator_wise_TCost_outliers.keys():
                 aggregator_wise_TCost_outliers['All'].append(daily_a_m_line[insert_row_from_this_col:])
-                # else:
-                #     aggregator_wise_TCost_outliers[aggregator_name] = [daily_a_m_line[insert_row_from_this_col:]]
                 no_cpk.append(daily_a_m_line[insert_row_from_this_col:])
 
         print 'high_cpk'
@@ -175,8 +156,5 @@ class TransportCostOutlier(object):
         print len(ok_cpk)
 
         # Adds all No CPK, Low CPK, High CPK entries in this order. Sorting order within each of them is A-M
-        # aggregator_wise_TCost_outliers['All'] = no_cpk
-        # aggregator_wise_TCost_outliers['All'].extend(low_cpk)
-        # aggregator_wise_TCost_outliers['All'].extend(high_cpk)
         return aggregator_wise_TCost_outliers
 
