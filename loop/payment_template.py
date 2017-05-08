@@ -176,6 +176,7 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
     try:
         for sheet_index, item in enumerate(name_of_sheets):
             ws = workbook.add_worksheet(name_of_sheets[sheet_index])
+            ws.set_margins(0.1, 0.1)
             # setting the col width
             print "A"
             write_heading_in_sheet(ws_obj=ws,
