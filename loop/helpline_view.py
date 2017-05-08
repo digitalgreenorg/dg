@@ -213,9 +213,6 @@ def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
     # Here From parameter is actually user number to whom we want to connect.
     parameters = {'From':to_number,'CallerId':from_number,'CallType':'trans','Url':app_url,'StatusCallback':response_url}
     response = requests.post(app_request_url,data=parameters)
-    # If broadcast is for testing then do not make entry for BroadcastAudience.
-    if broadcast_obj == None:
-        return
     module = 'connect_to_broadcast'
     if response.status_code == 200:
         response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
@@ -250,15 +247,11 @@ def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_i
     # Save Broadcast Information.
     broadcast_start_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
     try:
-        # If broadcast is for testing then do not make entry for Broadcast.
-        if broadcast_title != 'admin_test':
-            broadcast_obj = Broadcast(title=broadcast_title,cluster_id=cluster_id,
+        broadcast_obj = Broadcast(title=broadcast_title,cluster_id=cluster_id,
                         audio_url=s3_audio_url,start_time=broadcast_start_time,
                         from_number=from_number
                         )
-            broadcast_obj.save()
-        else:
-            broadcast_obj = None
+        broadcast_obj.save()
     except Exception as e:
         module = 'start_broadcast'
         write_log(HELPLINE_LOG_FILE,module,str(e))
@@ -268,15 +261,13 @@ def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_i
         connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
         time.sleep(1)
 
-    # If broadcast object is None then can not set end time of broadcast.
-    if broadcast_obj != None:
-        broadcast_end_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
-        try:
-            broadcast_obj.end_time = broadcast_end_time
-            broadcast_obj.save()
-        except Exception as e:
-            module = 'start_broadcast'
-            write_log(HELPLINE_LOG_FILE,module,str(e))
+    broadcast_end_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+    try:
+        broadcast_obj.end_time = broadcast_end_time
+        broadcast_obj.save()
+    except Exception as e:
+        module = 'start_broadcast'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
 
 def upload_on_s3(audio_file_path,audio_file_name,s3_bucket_name,s3_upload_path,access_permission):
     # Create Connection with S3
