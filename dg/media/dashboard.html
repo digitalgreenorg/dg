@@ -737,7 +737,6 @@
             <div class="form-group">
                 <div class="controls">
                     <select name="category<%=index%>" id="category_row7" class="chosen-select form-control category_row7_<%=index%>" multiple="multiple">
-                        <option value=''>-----------</option>
                         <option value='1'>Woman of reproductive age (15-49 years)</option>
                         <option value='2'>Adolescent girl (10-19 years)</option>
                         <option value='3'>Mother of a child  2 to 5 years</option>
@@ -1161,9 +1160,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label"><%= videopractice %></label>
                 <div class="col-sm-4">
-                    <select id = "id_videopractice" name="videopractice" class="chosen-select form-control">
-                        <option selected="selected" value="">
-                        </option>
+                    <select size="20" class="chosen-select form-control" id = "id_videopractice" name="videopractice" multiple>
                     </select>
                 </div>
             </div>

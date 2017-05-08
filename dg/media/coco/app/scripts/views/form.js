@@ -269,28 +269,28 @@ define([
             _.each(this.element_entity_map, function(entity, element) {
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
-                    
-                    if (this.entity_config.entity_name == "screening" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "2"| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
-                        // hide the headers
-                        this.$el.find('th#id_age').addClass('hidden');
-                        this.$el.find('th#id_gender').addClass('hidden');
-                        this.$el.find('th#id_category').addClass('hidden');
-                        this.$el.find('input#age_row7').addClass('hidden');
-                        this.$el.find('input#gender_row7').addClass('hidden');
-                        this.$el.find('div#category_row7_chosen').addClass('hidden');
-                        this.$el.find('select#category_row7').removeAttr('required');
-                    }else if(this.entity_config.entity_name == "screening" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "1"){
-                        this.$el.find('th#id_age').removeClass('hidden');
-                        this.$el.find('th#id_gender').removeClass('hidden');
-                        this.$el.find('th#id_category').removeClass('hidden');
-                        this.$el.find('input#age_row7').removeClass('hidden');
-                        this.$el.find('input#gender_row7').removeClass('hidden');
-                        this.$el.find('div#category_row7_chosen').removeClass('hidden');
-                    }else if (this.entity_config.entity_name == "adoption" && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == "2"){
-                        if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == "2"){
+                    if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
+                         // hide the headers and fields
+                        _.each(this.entity_config.headers_to_hide, function(element, index) {
+                            this.$el.find(element).addClass('hidden')
+                        })
+                        _.each(this.entity_config.fields_to_hide, function(element, index) {
+                            this.$el.find(element).addClass('hidden')
+                        })
+                        this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                     }else if(this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.health_variable){
+                         // this.$el.find(this.entity_config.fields_to_hide).removeClass('hidden')
+                        _.each(this.entity_config.fields_to_hide, function(element, index) {
+                            this.$el.find(element).removeClass('hidden')
+                        })
+                     }else if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
+                         if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
                             if (this.edit_case && this.foreign_elements_rendered[element]){
-                                $("#id_adopt_practice").addClass("hidden");
-                                $("#id_recall_nonnegotiable").addClass("hidden");
+                                // $("#id_adopt_practice").addClass("hidden");
+                                // $("#id_recall_nonnegotiable").addClass("hidden");
+                                _.each(this.entity_config.fields_to_hide, function(element, index) {
+                                    this.$el.find(element).addClass('hidden')
+                                })
                             } 
                         }   
                     }
@@ -545,15 +545,24 @@ define([
         },
 
         action_after_render_foreign_element: function(parent_element, dep_element){
-            if (this.$el.find('#id_' + parent_element).val() == "2" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+            if (this.$el.find('#id_' + parent_element).val() == all_configs.misc.agg_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
                 // hide the headers
-                this.$el.find('th#id_member_adopt, th#id_recall_nonnegotiable, td#id_recall_nonnegotiable, td#id_member_adopt').addClass('hidden');
-                this.$el.find("div#id_adopt_practice, div#id_recall_nonnegotiable").addClass("hidden");
-                this.$el.find("#label_health_provider_present, #id_health_provider_present").addClass('hidden');
+                _.each(this.entity_config.headers_to_hide, function(element, index) {
+                    $(element).addClass('hidden')
+                })
+                // hide the fields
+                _.each(this.entity_config.fields_to_hide, function(element, index) {
+                    $(element).addClass('hidden')
+                })
+
             }
-            if (this.$el.find('#id_' + parent_element).val() == "1" && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
-                this.$el.find("th#id_member_adopt, th#id_recall_nonnegotiable").removeClass("hidden");
-                this.$el.find("#label_health_provider_present, #id_health_provider_present").removeClass('hidden');
+            if (this.$el.find('#id_' + parent_element).val() == all_configs.misc.health_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                _.each(this.entity_config.headers_to_hide, function(element, index) {
+                    $(element).removeClass('hidden')
+                })
+                _.each(this.entity_config.fields_to_hide, function(element, index) {
+                    $(element).removeClass('hidden')
+                })
             }
 
 
@@ -828,33 +837,30 @@ define([
                 }
                 this.initiate_form_widgets();
                 $('.inline_table').show();
-                if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == "2"){
-                    this.$el.find('th#id_age').addClass('hidden');
-                    this.$el.find('th#id_gender').addClass('hidden');
-                    this.$el.find('th#id_category').addClass('hidden');
-                    this.$el.find('input#age_row7').addClass('hidden');
-                    this.$el.find('input#gender_row7').addClass('hidden');
-                    this.$el.find('div#category_row7_chosen').addClass('hidden');
-                    this.$el.find('select#category_row7').removeAttr('required');
+
+                if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
+                    _.each(this.entity_config.headers_to_hide, function(element, index) {
+                        $(element).addClass('hidden');
+                    })
+                    _.each(this.entity_config.fields_to_hide, function(element, index) {
+                        $(element).addClass('hidden');
+                    })
                 }
 
             } else {
                 console.log("NOT EXPANDED");
                 if (!this.edit_case && !this.foreign_elements_rendered[element]){
                     $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
-                        // if ($(this).val() == "2"){
-                        //     $('select#category_row7').removeAttr('required');
-                        // }
-                        if ($('#id_group').val() != ''){
+                        if ($(that.entity_config.reset_element).val() != ''){
                             $('.search-choice-close').click();
-                            $('#id_group').trigger("chosen:updated");
+                            $(that.entity_config.reset_element).trigger("chosen:updated");
                         }
                     })
                 }
                 if (this.edit_case && this.foreign_elements_rendered[element]){
                     $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
                         $('.search-choice-close').click();
-                        $('#id_group').trigger("chosen:updated");
+                        $(that.entity_config.reset_element).trigger("chosen:updated");
 
                     })
                 }

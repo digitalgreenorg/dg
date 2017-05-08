@@ -417,19 +417,19 @@ class VideoResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner')
     category = fields.ForeignKey('coco.api.CategoryResource', 'category', null=True)
     subcategory = fields.ForeignKey('coco.api.SubCategoryResource', 'subcategory', null=True)
-    videopractice = fields.ForeignKey('coco.api.VideoPracticeResource', 'videopractice', null=True)
+    videopractice = fields.ToManyField('coco.api.VideoPracticeResource', 'videopractice', null=True)
     
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
     dehydrate_category = partial(foreign_key_to_id, field_name='category', sub_field_names=['id','category_name', 'parent_category'])
     dehydrate_subcategory = partial(foreign_key_to_id, field_name='subcategory', sub_field_names=['id','subcategory_name'])
-    dehydrate_videopractice = partial(foreign_key_to_id, field_name='videopractice', sub_field_names=['id','videopractice_name'])
+    
     hydrate_village = partial(dict_to_foreign_uri, field_name ='village')
     hydrate_language = partial(dict_to_foreign_uri, field_name='language')
     hydrate_category = partial(dict_to_foreign_uri, field_name='category')
     hydrate_subcategory = partial(dict_to_foreign_uri, field_name='subcategory', resource_name='subcategory')
-    hydrate_videopractice = partial(dict_to_foreign_uri, field_name='videopractice', resource_name='videopractice')
 
+    hydrate_videopractice = partial(dict_to_foreign_uri_m2m, field_name='videopractice', resource_name='videopractice')
     hydrate_production_team = partial(dict_to_foreign_uri_m2m, field_name = 'production_team', resource_name = 'mediator')
     hydrate_direct_beneficiaries = partial(dict_to_foreign_uri_m2m, field_name = 'direct_beneficiaries', resource_name = 'directbeneficiaries')
     hydrate_partner = partial(assign_partner)
@@ -446,6 +446,9 @@ class VideoResource(BaseResource):
     
     def dehydrate_production_team(self, bundle):
         return [{'id': animator.id, 'name': animator.name} for animator in bundle.obj.production_team.all()]
+
+    def dehydrate_videopractice(self, bundle):
+        return [{'id': iterable.id, 'name': iterable.videopractice_name} for iterable in bundle.obj.videopractice.all()]
 
     def dehydrate_direct_beneficiaries(self, bundle):
         return [{'id': beneficiaries.id, 'name': beneficiaries.direct_beneficiaries_category} for beneficiaries in bundle.obj.direct_beneficiaries.all() ]

@@ -198,7 +198,7 @@ class Video(CocoModel):
     category = models.ForeignKey(Category, null=True, blank=True)
     direct_beneficiaries = models.ManyToManyField(DirectBeneficiaries, blank=True)
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
-    videopractice = models.ForeignKey(VideoPractice, null=True, blank=True)
+    videopractice = models.ManyToManyField(VideoPractice, blank=True)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     youtubeid = models.CharField(max_length=20, blank=True)
