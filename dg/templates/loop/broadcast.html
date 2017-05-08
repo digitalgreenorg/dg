@@ -2,6 +2,7 @@
 
 <script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
 <script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-ui12.js"></script>
+<script type="text/javascript"  src="{{STATIC_URL}}loop/broadcast.js"></script>
 
 <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/jquery-ui.css" />
 <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
@@ -72,19 +73,6 @@
         jQuery(function ($) {  //on document.ready
             $("#broadcast_menu").tabs({active: {{ active_tab }} });  
         })
-        $("#broadcast_form").submit(function(event) {
-            if($("#id_title").val() == 'admin_test') {
-                alert("Please select another Meaningful name");
-                $("#id_title").val('');
-                event.preventDefault();}
-        });
-        $("#broadcast_test_form").submit(function(event) {
-            phone_number = $("#id_to_number").val();
-            if(phone_number == '' || phone_number.length < 10 || phone_number.length > 11 || phone_number.match(/[a-z]/i) || parseInt(phone_number) < 7000000000 || parseInt(phone_number) > 9999999999) {
-                alert("Please Correct Phone Number.");
-                $("#id_to_number").val('');
-                event.preventDefault();}
-        });
     </script>
 
 {% endif %}
