@@ -774,6 +774,7 @@ function set_filterlistener() {
     $("#aggregator_payments").change(function() {
         var aggregator_id = $('#aggregator_payments :selected').val();
         var agg_id = $(this).children(":selected").attr("id");
+        $("select").material_select();
         var aggregator_name_input = $(this).children(":selected")[0].innerHTML;
 
         if (table_created) {
@@ -3208,12 +3209,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 rows_table3 = [];
                                 get_payments_data();
                                 delay = 3000;
-                                /*setTimeout(function() {
+                                setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
-                                    $("#aggregator_payment_tab :input").val(aggregator_name_input);
-                                    $("select").material_select();
+                                    //$("#aggregator_payment_tab :input").val(aggregator_name_input);
                                     
-                                }, delay);*/
+                                }, delay);
 
                             },
                             error: function() {
