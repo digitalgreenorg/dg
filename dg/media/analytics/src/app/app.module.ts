@@ -6,6 +6,8 @@ import { NvD3Module } from 'angular2-nvd3';
 import { ChartModule } from 'angular2-highcharts'
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import { AppComponent } from './app.component';
+import { GraphsComponent } from './graphs/graphs.component';
+import { GraphsService } from './graphs/graphs.service';
 
 declare var require: any;
 export function highchartsFactory() {
@@ -14,7 +16,8 @@ export function highchartsFactory() {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    GraphsComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,8 @@ export function highchartsFactory() {
   providers: [{
       provide: HighchartsStatic,
       useFactory: highchartsFactory
-    },],
+    },
+    GraphsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
