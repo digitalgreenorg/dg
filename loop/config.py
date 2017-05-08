@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# Code snippet ad imports for email attachment with encodings. To be used in another file for attachmnet in emails
-
-from django.template.context import Context
-from django.template.loader import get_template
 from django.core.mail.message import EmailMultiAlternatives
 import mimetypes
 from email import encoders
 from email.header import Header
 from email.mime.base import MIMEBase
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT
-
 from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE
 
-
+# Code snippet ad imports for email attachment with encodings. To be used in another file for attachmnet in emails
 class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
     def _create_attachment(self, filename, content, mimetype=None):
         """
