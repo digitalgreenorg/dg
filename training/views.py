@@ -233,7 +233,7 @@ def month_wise_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
-def sample_data(request):
+def graph_data(request):
     chart_type =  str(request.GET.get('chartType'))
     chart_name = str(request.GET.get('chartName'))
     final_data_list = {}

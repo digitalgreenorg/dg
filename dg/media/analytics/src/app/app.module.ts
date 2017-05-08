@@ -8,6 +8,7 @@ import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import { AppComponent } from './app.component';
 import { GraphsComponent } from './graphs/graphs.component';
 import { GraphsService } from './graphs/graphs.service';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 declare var require: any;
 export function highchartsFactory() {
@@ -24,7 +25,8 @@ export function highchartsFactory() {
     FormsModule,
     HttpModule,
     NvD3Module,
-    ChartModule
+    ChartModule,
+    TabsModule.forRoot()
   ],
   providers: [{
       provide: HighchartsStatic,

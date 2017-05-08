@@ -6,12 +6,12 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class GraphsService {
   
-    private sampleURL = 'http://localhost:8000/training/sample_data';
+    private graphURL = 'http://localhost:8000/training/graph_data';
     
     constructor(private http: Http) { }
 
     getData(chartType, chartName): any {
-        return this.http.get(this.sampleURL, {'params':{'chartType':chartType,'chartName':chartName}})
+        return this.http.get(this.graphURL, {'params':{'chartType':chartType,'chartName':chartName}})
             .toPromise()
             .then(response => response.json())
             .catch(this.handleError);

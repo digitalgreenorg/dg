@@ -1,5 +1,6 @@
 export const configs = [
-    {   chart:{
+    {   
+        chart:{
             type:'line',
             renderTo: 'line_chart'
         },

@@ -1,4 +1,10 @@
 
+<tabset [justified]="true" #staticTabs>
+    <tab heading="Static title">Static content</tab>
+    <tab heading="Static Title 1">Static content 1</tab>
+    <tab heading="Static Title 2">Static content 2</tab>
+</tabset>
+
 <div *ngFor="let chart of charts">
     <chart [options]="chart"></chart>
 </div>
