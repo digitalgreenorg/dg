@@ -89,9 +89,6 @@ class Command(BaseCommand):
         data_set_all = self.get_all_data(query_result_data)
         worksheet_name = {'All': u'सारे ग़लत मोबाइल नंबर की लिस्ट_' + str(from_to_date[0]) + "_" + str(from_to_date[1])}
 
-        # for columns in header_dict_for_loop_email_mobile_numbers['column_properties']:
-        #     columns['header_format'] = fmt
-
         table_properties = {'data': None, 'autofilter': False, 'banded_rows': False,
                             'style': 'Table Style Light 15',
                             'columns': header_dict_for_loop_email_mobile_numbers['column_properties']}

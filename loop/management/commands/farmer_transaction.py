@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
-import os
-import sys
 import MySQLdb
-import time
 from dg.settings import *
 from loop.models import *
-import csv
-from loop.config import *
 from loop.sendmail import *
 from django.core.management.base import BaseCommand, CommandError
-import xlsxwriter
-import time
 from datetime import datetime, timedelta
 import requests, copy, calendar
 

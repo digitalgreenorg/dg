@@ -47,7 +47,6 @@ class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
 #Extra variables required in other files
 DEFAULT_COLUMN_WIDTH = 9
 
-
 header_dict_for_loop_email_mobile_numbers = {
     'workbook_name': u'%s/loop/Incorrect Mobile Numbers_%s_%s to %s.xlsx',
     'worksheet_name': u'%s_गलत मोबाइल नंबर की लिस्ट_%s to %s',
@@ -124,8 +123,6 @@ header_dict_for_farmer_outlier = {
     ]
 }
 
-# format_for_transport_outlier = ['date_format']
-# all_format_created = create_format(format_for_transport_outlier, workbook)
 header_dict_for_transport_outlier = {
     'workbook_name': u'%s/loop/Transport Share Outliers_%s_%s to %s.xlsx',
     'worksheet_name': u'%s_गाड़ी किराया आउटलाइयर्स की लिस्ट_%s to %s',
@@ -161,7 +158,7 @@ header_dict_for_transport_outlier = {
     ]
 }
 
-header_dict_for_transport_details = [{'column_width': 3.64,
+header_dict_for_farmer_details = [{'column_width': 3.64,
                            'label': 'क्रम',
                            'col_seq': 'A:A',
                           },
@@ -202,35 +199,6 @@ header_dict_for_transport_details = [{'column_width': 3.64,
                            'col_seq': 'J:J',
                           }]
 
-
-header_dict_for_transport_details = [{'column_width': 3.64,
-                                      'label': 'क्रम संख्या',
-                                     },
-                                     {'column_width': 13,
-                                      'label': 'जमाकर्ता का नाम',
-                                     },
-                                     {'column_width': 12,
-                                      'label': 'तारीख',
-                                     },
-                                     {'column_width': 8,
-                                      'label': 'मंडी का नाम',
-                                     },
-                                     {'column_width': 15,
-                                      'label': 'गाड़ी मालिक',
-                                     },
-                                     {'column_width': 8,
-                                      'label': 'गाड़ी नं',
-                                     },
-                                     {'column_width': 10,
-                                      'label': 'गाड़ी का किराया (रु)',
-                                     },
-                                     {'column_width': 10,
-                                      'label': '✓/ X',
-                                     },
-                                     {
-                                         'column_width': 20,
-                                         'label': 'टिप्पडी'
-                                     }]
 
 #
 # query_for_farmer_transaction_all_aggregator = '''
@@ -349,64 +317,6 @@ header_dict_for_transport_details = [{'column_width': 3.64,
 #                                     AND t1.Agg = %s'''
 #
 #
-# query_for_transport_details_all_aggregator = '''
-#                           SELECT
-#                               ll.name Agg_Id,
-#                               ct.date Date_,
-#                               lm.mandi_name Mandi,
-#                               lt.transporter_name T_name,
-#                               tv.vehicle_number Vehicle_Num,
-#                               AVG(dt.transportation_cost) Cost
-#                           FROM
-#                               loop_combinedtransaction ct
-#                                   JOIN
-#                               loop_daytransportation dt ON ct.user_created_id = dt.user_created_id
-#                                   AND ct.mandi_id = dt.mandi_id
-#                                   AND ct.date = dt.date
-#                                   JOIN
-#                               loop_transportationvehicle tv ON tv.id = dt.transportation_vehicle_id
-#                                   JOIN
-#                               loop_mandi lm ON lm.id = ct.mandi_id
-#                                   JOIN
-#                               loop_transporter lt ON lt.id = tv.transporter_id
-#                                   JOIN
-#                               loop_vehicle lv ON lv.id = tv.vehicle_id
-#                                   JOIN
-#                               loop_loopuser ll ON ll.user_id = ct.user_created_id
-#                           WHERE
-#                               ct.date BETWEEN %s AND %s AND ll.role = '2'
-#                           GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
-#                           '''
-#
-#
-# query_for_transport_details_single_aggregator = '''
-#                           SELECT
-#                               ll.name Agg_Id,
-#                               ct.date Date_,
-#                               lm.mandi_name Mandi,
-#                               lt.transporter_name T_name,
-#                               tv.vehicle_number Vehicle_Num,
-#                               AVG(dt.transportation_cost) Cost
-#                           FROM
-#                               loop_combinedtransaction ct
-#                                   JOIN
-#                               loop_daytransportation dt ON ct.user_created_id = dt.user_created_id
-#                                   AND ct.mandi_id = dt.mandi_id
-#                                   AND ct.date = dt.date
-#                                   JOIN
-#                               loop_transportationvehicle tv ON tv.id = dt.transportation_vehicle_id
-#                                   JOIN
-#                               loop_mandi lm ON lm.id = ct.mandi_id
-#                                   JOIN
-#                               loop_transporter lt ON lt.id = tv.transporter_id
-#                                   JOIN
-#                               loop_vehicle lv ON lv.id = tv.vehicle_id
-#                                   JOIN
-#                               loop_loopuser ll ON ll.user_id = ct.user_created_id
-#                           WHERE
-#                               ct.date BETWEEN %s AND %s AND ll.name = \'%s\' and ll.role = '2'
-#                           GROUP BY Agg_Id , Date_ , ct.mandi_id , tv.transporter_id , Vehicle_Num
-#                           '''
 
 
 
