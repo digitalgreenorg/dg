@@ -235,7 +235,7 @@ def month_wise_data(request):
 
 def sample_data(request):
     chart_type =  str(request.GET.get('chartType'))
-    placeholder = str(request.GET.get('placeholder'))
+    chart_name = str(request.GET.get('chartName'))
     final_data_list = {}
     db_connection = MySQLdb.connect(host='localhost',
                                         user=DATABASES['default']['USER'],
@@ -254,8 +254,8 @@ def sample_data(request):
         for row in result:
             temp_dict['name'].append(row[0])
             temp_dict['data'].append(row[1])
-        #print placeholder
-        final_data_list[placeholder] = temp_dict
+        #print chart_name
+        final_data_list[chart_name] = temp_dict
     else:
         db_connection.execute('''select st.state_name 'state', count(t.id) 'no_trainings'
                                 from training_training t
@@ -266,6 +266,7 @@ def sample_data(request):
         temp_dict = {'name':'Pie Chart','data':[]}
         for row in result:
             temp_dict['data'].append({'name':row[0],'y':row[1]})
-        final_data_list[placeholder] = temp_dict
-    print final_data_list
+        final_data_list[chart_name] = temp_dict
+    #print final_data_list
     return HttpResponse(json.dumps(final_data_list))  
+    

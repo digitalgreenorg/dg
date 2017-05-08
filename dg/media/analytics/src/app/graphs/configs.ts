@@ -1,9 +1,9 @@
 export const configs = [
     {   chart:{
             type:'line',
-            renderTo: 'mainDiv'
+            renderTo: 'line_chart'
         },
-        placeholder : 'line_chart',
+        chartName : 'line__state_#trainings',
         title : {text : 'State wise traingings conducted'},
         xAxis:{categories:[]},
         plotOptions: {
@@ -16,9 +16,9 @@ export const configs = [
     {
         chart:{
             type:'bar',
-            renderTo: 'mainDi'
+            renderTo: 'bar_chart'
         },
-        placeholder : 'bar_chart',
+        chartName : 'bar__state_#trainings',
         title: {text: 'District wise traingings conducted'},
         xAxis: {
             categories: [],
@@ -42,9 +42,9 @@ export const configs = [
     {
         chart:{
             type:'pie',
-            renderTo: 'mainD'
+            renderTo: 'pie_chart'
         },
-        placeholder : 'pie_chart',
+        chartName : 'pie__sate_%trainings',
         title: {text: 'State wise number of trainings'},
         tooltip: {pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'},
         plotOptions: {

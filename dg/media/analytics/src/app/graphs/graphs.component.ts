@@ -18,10 +18,9 @@ export class GraphsComponent implements OnInit{
     ngOnInit(): void{
 
         configs.forEach(config => {
-            console.log("hi");
-            this.graphService.getData(config.chart.type, config.placeholder).then(dataList => {
-                config.series.push(dataList[config.placeholder]);
-                config.xAxis.categories = dataList[config.placeholder].name;
+            this.graphService.getData(config.chart.type, config.chartName).then(dataList => {
+                config.series.push(dataList[config.chartName]);
+                config.xAxis.categories = dataList[config.chartName].name;
                 this.charts.push(config);
             })
         });
