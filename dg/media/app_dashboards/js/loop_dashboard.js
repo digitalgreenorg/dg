@@ -3208,12 +3208,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 rows_table3 = [];
                                 get_payments_data();
                                 delay = 3000;
-                                setTimeout(function() {
+                                /*setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
                                     $("#aggregator_payment_tab :input").val(aggregator_name_input);
                                     $("select").material_select();
                                     
-                                }, delay);
+                                }, delay);*/
 
                             },
                             error: function() {
