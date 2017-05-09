@@ -29,6 +29,7 @@ from loop.forms import BroadcastForm, BroadcastTestForm
 import unicodecsv as csv
 import time
 import datetime
+from datetime import timedelta
 from pytz import timezone
 import inspect
 
@@ -587,8 +588,10 @@ def helpline_incoming(request):
         # If yes then redirect user to pending broadcast for this misscall.
         # Behaviour of helpline will be normal if no pending broadcast.
         farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
+        # check if any broadcast pending after this time period.
+        time_period = (datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=2)).replace(tzinfo=None)
         # Check if a pending (0) or DND-faild (2) broadcast exist.
-        if BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2]).exists():
+        if BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2], start_time__gte=time_period).exists():
             # Create thread for redirect helpline flow to play broadcast.
             Thread(target=redirect_to_broadcast,args=[farmer_number,dg_number]).start()
             return HttpResponse(status=200)
