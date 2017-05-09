@@ -1,25 +1,19 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-left">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li>
-          </ul>
-          </div>
-      </div>
-    </nav>
+<div id="mySidenav" #mySidenav class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+  <a href='#' *ngFor='let filter_name of filter_list'>{{filter_name.heading}}
+      <h4 class="row" *ngFor="let data of filter_name.element">
+        <span class="checkbox">
+      <label><input type="checkbox" checked="checked">{{data.value}}</label>
+    </span>
 
-    <br>
-    <br>
-    <br>
+  </h4>
+    </a>
+</div>
+
+<div class="container-fluid" style="background-color: black;height: 70px;">
+  <div class="row" style="-webkit-text-fill-color: white">
+    <div class="col-md-1">
+      <span style="font-size:30px;cursor:pointer" (click)="openNav()">&#9776;</span>
+    </div>
+  </div>
+</div>
