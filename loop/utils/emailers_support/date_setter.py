@@ -3,13 +3,6 @@ __author__ = 'Lokesh'
 from datetime import *
 from datetime import timedelta
 
-# Enters default value in from_date and to_date
-current_date = None
-from_date = date(2017,2,1)
-to_date = None
-no_of_days = 17
-time_period = []
-
 # Finds last cycle of 15 days (1-15 or 16-31) w.r.t. given date
 def find_last_cycle(assigned_date):
     assigned_year = assigned_date.year
