@@ -12,7 +12,7 @@ import { TabsetComponent } from 'ngx-bootstrap';
     providers: [GraphsService]
 })
 
-export class GraphsComponent implements OnInit{
+export class GraphsComponent {
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
     charts = [];
     constructor(private graphService: GraphsService){}
@@ -25,6 +25,10 @@ export class GraphsComponent implements OnInit{
                 this.charts.push(config);
             })
         });
+    }
+
+    ngAfterViewInit() {
+            console.log(this.staticTabs);
     }
 }
 
