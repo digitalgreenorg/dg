@@ -9,10 +9,10 @@ import { FilterElement } from './filter-element';
   styleUrls: ['./filters.component.css']
 })
 export class FiltersComponent implements OnInit {
-  @ViewChild('mySidenav') mySidenav : ElementRef;
+  @ViewChild('mySidenav') mySidenav: ElementRef;
   filter_list: Filter[] = new Array<Filter>();
-  filter:Filter;
-  private showDateFilter:boolean;
+  filter: Filter;
+  private showDateFilter: boolean;
   constructor() { }
 
   ngOnInit() {
@@ -36,8 +36,6 @@ export class FiltersComponent implements OnInit {
         this.filter_list.push(this.filter);
       }
     }
-
-    console.log(this.filter_list);
   }
 
   closeNav() {
@@ -46,6 +44,10 @@ export class FiltersComponent implements OnInit {
 
   openNav() {
     this.mySidenav.nativeElement.style.width = '240px';
+  }
+
+  applyFilters(){
+    console.log(this.filter_list);
   }
 
 }

@@ -3,11 +3,11 @@
   <a href='#' *ngFor='let filter_name of filter_list'>{{filter_name.heading}}
       <h4 class="row" *ngFor="let data of filter_name.element">
         <span class="checkbox">
-      <label><input type="checkbox" checked="checked">{{data.value}}</label>
+      <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked">{{data.value}}->{{data.checked}}</label>
     </span>
-
   </h4>
     </a>
+  <button class="btn btn-primary" (click)="applyFilters()">Apply Filters</button>
 </div>
 
 <div class="container-fluid" style="background-color: black;height: 70px;">
