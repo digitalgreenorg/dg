@@ -1,4 +1,5 @@
-__auther__ = 'Vikas Saini'
+__author__ = 'Vikas Saini'
+
 import time
 import datetime
 from datetime import timedelta
