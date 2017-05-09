@@ -16,3 +16,4 @@ BROADCAST_RESPONSE_URL = 'http://sandbox.dgtest.org/loop/broadcast_call_response
 BROADCAST_S3_BUCKET_NAME = 'dg_ivrs'
 BROADCAST_S3_UPLOAD_PATH = 'broadcast/%s'
 BROADCAST_S3_AUDIO_URL = 'https://s3.amazonaws.com/%s/%s'%(BROADCAST_S3_BUCKET_NAME,BROADCAST_S3_UPLOAD_PATH)
+BROADCAST_PENDING_TIME = 2

@@ -24,7 +24,7 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
-from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL
+from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME
 from loop.forms import BroadcastForm, BroadcastTestForm
 import unicodecsv as csv
 import time
@@ -589,7 +589,7 @@ def helpline_incoming(request):
         # Behaviour of helpline will be normal if no pending broadcast.
         farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
         # check if any broadcast pending after this time period.
-        time_period = (datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=2)).replace(tzinfo=None)
+        time_period = (datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=BROADCAST_PENDING_TIME)).replace(tzinfo=None)
         # Check if a pending (0) or DND-faild (2) broadcast exist.
         if BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2], start_time__gte=time_period).exists():
             # Create thread for redirect helpline flow to play broadcast.

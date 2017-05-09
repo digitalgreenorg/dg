@@ -17,7 +17,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_R
 
 from loop.utils.ivr_helpline.helpline_data import CALL_STATUS_URL, CALL_REQUEST_URL, \
     CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL, BROADCAST_RESPONSE_URL, \
-    BROADCAST_S3_BUCKET_NAME, BROADCAST_S3_UPLOAD_PATH
+    BROADCAST_S3_BUCKET_NAME, BROADCAST_S3_UPLOAD_PATH, BROADCAST_PENDING_TIME
 
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
 BROADCAST_AUDIO_PATH = '%s/loop/broadcast/'%(MEDIA_ROOT,)
@@ -232,7 +232,7 @@ def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
 
 def redirect_to_broadcast(farmer_number,from_number):
     farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
-    time_period = (datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=2)).replace(tzinfo=None)
+    time_period = (datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=BROADCAST_PENDING_TIME)).replace(tzinfo=None)
     audience_obj = BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2], start_time__gte=time_period).select_related('broadcast')[0]
     farmer_info = {'id':audience_obj.farmer_id,'phone':audience_obj.to_number}
     broadcast_obj = audience_obj.broadcast
