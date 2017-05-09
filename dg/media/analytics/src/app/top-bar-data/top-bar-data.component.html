@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <div class="row">
       <app-card class="col-md-3"
-      *ngFor='let key of overAllData'
+      *ngFor='let key of cardDataDict.overallBar'
       [cardData]="key" [cardId]="'overallBar'"></app-card>
     </div>
   </div>    
@@ -33,7 +33,7 @@
         <div class="col-md-6">
           <div class="row">
             <app-card class="col-md-3"
-              *ngFor='let key of recentData'
+              *ngFor='let key of cardDataDict.recentBar'
               [cardData]="key" [cardId]="'recentBar'">
             </app-card>
           </div>
@@ -42,3 +42,18 @@
     </div>
   </div>
 </div>
+<!--<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <app-card 
+          class="col-md-3"
+          *ngFor='let key of cardDataDict.stateBar'
+          [cardData]="key" [cardId]="'stateBar'">
+        </app-card>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+

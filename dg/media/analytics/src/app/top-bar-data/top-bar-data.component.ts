@@ -26,6 +26,8 @@ export class TopBarDataComponent implements
   private testConfig: Config = new Config();
   overAllData:Overall[] = new Array<Overall>();
   recentData:Overall[] = new Array<Overall>();
+  cardDataDict: {[id:string] : Overall[]} = {};
+  configData:Overall;
   val;
   overalltest:Overall = new Overall();
   recentTest:Overall = new Overall();
@@ -75,19 +77,19 @@ export class TopBarDataComponent implements
     
     this.topbardataService.getApiData(this.args)
                           .subscribe(val => {
-                                              // Update overall data:
-                                              if(this.reload) {
-                                                for( let obj of this.overAllData) {
-                                                  if(obj.tagName == val.data.recent.tagName) {
-                                                    obj.value = val.data.recent.value;
+                                              for(let v in val.data) {
+                                                for(let d in this.cardDataDict[v]) {
+                                                  let o = this.cardDataDict[v][d]
+                                                  if(this.reload && o.placeHolder == 'overallBar') {
+                                                    if(o.tagName == val.data[v].tagName) {
+                                                        o.value = val.data[v].value;
+                                                    }
+                                                  } else {
+                                                    if(o.tagName == val.data[v].tagName && o.placeHolder != 'overallBar') {
+                                                      o.value = val.data[v].value;
+                                                    }
                                                   }
-                                                }
-                                              }
-                                              // for recent data:
-                                              for( let obj of this.recentData) {
-                                                if(obj.tagName == val.data.recent.tagName) {
-                                                  obj.value = val.data.recent.value;
-                                                }
+                                                } 
                                               }
                                             })
   }
@@ -96,7 +98,7 @@ export class TopBarDataComponent implements
     this.reload = false;
     for(let stat of STAT) {
       // api call
-      if(stat.graphs.show) {
+      if(stat.overall.show) {
         this.getData(stat);
       }
     }
@@ -108,25 +110,24 @@ export class TopBarDataComponent implements
   }
 
   ngOnInit() {
-    
     for (let stat of STAT) {
-      this.overalltest = new Overall();
-      this.recentTest = new Overall();
-      if(stat.overall.show) {
-        this.overalltest.tagName = stat.entity_name;
-        this.overalltest.placeHolder = stat.overall.placeHolder;
-        this.overalltest.value = null;
-        this.recentTest.tagName = stat.entity_name;
-        this.recentTest.placeHolder = stat.recent.placeHolder;
-        this.recentTest.value = null;
-        this.overAllData.push(this.overalltest);
-        this.recentData.push(this.recentTest);
+      for (let configItems in stat) {
+        this.configData = new Overall();
+        if(stat[configItems].show) {
+          this.configData.tagName = stat.entity_name;
+          this.configData.placeHolder = stat[configItems].placeHolder;
+          this.configData.value = null;
+          if(!(stat[configItems].placeHolder in this.cardDataDict)) {
+            this.cardDataDict[stat[configItems].placeHolder] = []
+          }
+          this.cardDataDict[stat[configItems].placeHolder].push(this.configData);
+        }
       }
     }
-
+    console.log(this.cardDataDict);
     for(let stat of STAT) {
       // api call
-      if(stat.graphs.show) {
+      if(stat.overall.show) {
         this.getData(stat);
       }
     }

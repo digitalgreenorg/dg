@@ -17,7 +17,8 @@ export const STAT: any = [
             show: true,
         },
         graphs:{
-            show:true
+            show:false,
+            placeHolder : 'stateBar'
         },
         apiUrl:'http://localhost:8000/training/testTrainingApi'
       },
@@ -39,7 +40,8 @@ export const STAT: any = [
             show: true,
         },
         graphs:{
-            show:true
+            show:false,
+            placeHolder : 'stateBar'
         },
         apiUrl:'http://localhost:8000/training/testMediatorsApi'
       },
@@ -61,7 +63,8 @@ export const STAT: any = [
             show: true,
         },
         graphs:{
-            show:true
+            show:false,
+            placeHolder : 'stateBar'
         },
         apiUrl:'http://localhost:8000/training/testPassPercentApi'
       },
@@ -83,7 +86,8 @@ export const STAT: any = [
             show: true,
         },
         graphs:{
-            show:true
+            show:false,
+            placeHolder : 'stateBar'
         },
         apiUrl:'http://localhost:8000/training/testAvgScoreApi'
       },

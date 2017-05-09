@@ -14,7 +14,7 @@ def get_training_data_sql(**Kwargs):
     # sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'No. of Trainings'
-    args_dict['component'] = 'overall'
+    args_dict['component'] = 'overallBar'
     args_dict['query_string'] = sql_q
     args_list.append(args_dict)
 
@@ -27,7 +27,7 @@ def get_training_data_sql(**Kwargs):
     # sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'No. of Trainings'
-    args_dict['component'] = 'recent'
+    args_dict['component'] = 'recentBar'
     args_dict['query_string'] = sql_q
     args_list.append(args_dict)
 
@@ -49,7 +49,7 @@ def get_mediators_data_sql(**Kwargs):
     sql_ds['where'].append('ts.score in (0, 1)')
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'No. of Mediators'
-    args_dict['component'] = 'overall'
+    args_dict['component'] = 'overallBar'
     args_dict['query_string'] = sql_q
     args_list.append(args_dict)
 
@@ -61,7 +61,7 @@ def get_mediators_data_sql(**Kwargs):
     sql_ds['where'].append('ts.score in (0, 1)')
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'No. of Mediators'
-    args_dict['component'] = 'recent'
+    args_dict['component'] = 'recentBar'
     args_dict['query_string'] = sql_q
     args_list.append(args_dict)
 
@@ -88,7 +88,7 @@ def get_pass_perc_data_sql(**Kwargs):
     sql_ds['from'].append('(' + sql_q + ') T')
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'Pass Percentage'
-    args_dict['component'] = 'overall'
+    args_dict['component'] = 'overallBar'
     args_dict['query_string'] = sql_q
     args_list.append(args_dict) 
 
@@ -107,7 +107,7 @@ def get_pass_perc_data_sql(**Kwargs):
     sql_ds['from'].append('(' + sql_q + ') T')
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'Pass Percentage'
-    args_dict['component'] = 'recent'
+    args_dict['component'] = 'recentBar'
     args_dict['query_string'] = sql_q
     args_list.append(args_dict)
     
@@ -135,7 +135,7 @@ def get_avg_score_data_sql(**Kwargs):
     sql_ds['from'].append('(' + sql_q + ') T')
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'Avg Score'
-    args_dict['component'] = 'overall'
+    args_dict['component'] = 'overallBar'
     args_dict['query_string'] = sql_q
     args_list.append(args_dict)
 
@@ -153,7 +153,7 @@ def get_avg_score_data_sql(**Kwargs):
     sql_ds['from'].append('(' + sql_q + ') T')
     sql_q = join_sql_ds(sql_ds)
     args_dict['query_tag'] = 'Avg Score'
-    args_dict['component'] = 'recent'
+    args_dict['component'] = 'recentBar'
     args_dict['query_string'] = sql_q
     args_list.append(args_dict)
 
