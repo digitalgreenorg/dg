@@ -797,7 +797,6 @@ def broadcast(request):
         elif 'submit' in request.POST:
             broadcast_form = BroadcastForm(request.POST, request.FILES)
             if broadcast_form.is_valid():
-                # Do your stuff here
                 broadcast_title = str(broadcast_form.cleaned_data.get('title'))
                 cluster_id = int(broadcast_form.cleaned_data.get('cluster'))
                 audio_file = broadcast_form.cleaned_data.get('audio_file')
