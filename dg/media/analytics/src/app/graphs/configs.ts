@@ -62,5 +62,4 @@ export const configs = [
         series: []
     }
    
-
 ]
