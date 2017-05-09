@@ -221,7 +221,7 @@ query_for_farmer_transaction_all_aggregator = '''
                               t1.date BETWEEN %s AND %s
                         '''
 
-query_for_farmer_transaction_single_aggregator = '''
+query_for_farmer_transaction_all_single_aggregator = '''
                                   SELECT
                                 t1.Agg,
                                 t1.date,
@@ -275,5 +275,10 @@ query_for_farmer_transaction_single_aggregator = '''
                                     AND t1.date = t4.Date_
                                     AND t1.Mandi = t4.Mandi_
                             WHERE
-                                t1.date BETWEEN %s AND %s
-                                    AND t1.Agg = %s'''
+                                t1.date BETWEEN %s AND %s %s'''
+
+
+
+
+
+
