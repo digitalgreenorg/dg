@@ -1,4 +1,5 @@
-__auther__ = 'Vikas Saini'
+__author__ = 'Vikas Saini'
+
 import os
 import time
 import datetime
