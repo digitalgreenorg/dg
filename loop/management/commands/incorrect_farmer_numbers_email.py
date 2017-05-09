@@ -13,6 +13,9 @@ from loop.utils.emailers_support.excel_generator import *
 from loop.config import *
 from dg.settings import *
 from django.template import *
+from django.template.loader import render_to_string, get_template
+import requests, calendar
+from django.template.context import Context
 
 
 class Command(BaseCommand):
