@@ -32,12 +32,12 @@ export class GetDataFromServerService {
       if (error instanceof Response) {
         const body = error.json() || '';
         const err = body.error || JSON.stringify(body);
-        console.log(err);
+        // console.log(err);
         errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
       } else {
         errMsg = error.message ? error.message : error.toString();
       }
-      console.error(errMsg);
+      // console.error(errMsg);
       return Observable.throw(errMsg);
     }
 
@@ -64,6 +64,6 @@ function toEntity(r:any): TableData {
   agentfirstname: r.agentfirstname || 'TEST NAME',
   agentprincipalcountry: r.agentprincipalcountry || 'TEST COUNTRY',
 });
-console.log('Parsed entity: ', entity);
+// console.log('Parsed entity: ', entity);
 return entity;
 }

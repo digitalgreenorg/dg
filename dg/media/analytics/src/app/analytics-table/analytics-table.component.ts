@@ -44,8 +44,8 @@ public page:number = 1;
   ngOnInit(): void {
     this.getTableData.getData().subscribe((data:TableData[]) => {
       this.data = data;
-      console.log("From Component : ");
-      console.log(data);
+      // console.log("From Component : ");
+      // console.log(data);
       this.responseData = "Updated";
       this.onChangeTable(this.config);
     },

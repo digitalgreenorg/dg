@@ -8,11 +8,15 @@ import { AnalyticsTableComponent } from './analytics-table/analytics-table.compo
 import { GetDataFromServerService } from './get-data-from-server/get-data-from-server.service';
 import { Ng2TableModule } from 'ng2-table/ng2-table';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { CollapseModule } from 'ngx-bootstrap';
+import { FiltersComponent } from './filters/filters.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     AnalyticsTableComponent,
+    FiltersComponent,
   ],
   imports: [
     BrowserModule,
@@ -20,6 +24,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     HttpModule,
     Ng2TableModule,
     PaginationModule.forRoot(),
+    CollapseModule
   ],
   providers: [GetDataFromServerService],
   bootstrap: [AppComponent]
