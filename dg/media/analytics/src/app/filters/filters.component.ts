@@ -5,22 +5,16 @@ import { FilterElement } from './filter-element';
 
 @Component({
   selector: 'app-filters',
-  host: {
-        '(document:click)': 'handleClick($event)',
-  },
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css']
 })
 export class FiltersComponent implements OnInit {
-  public elementref : ElementRef;
   @ViewChild('mySidenav') mySidenav: ElementRef;
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;
   private showDateFilter: boolean;
-  constructor(myElement : ElementRef) {
-    this.elementref = myElement;
-  }
- 
+  constructor() { }
+
   ngOnInit() {
     for (let data of FILTER_DATA) {
 
@@ -54,26 +48,6 @@ export class FiltersComponent implements OnInit {
 
   applyFilters(){
     console.log(this.filter_list);
-    this.closeNav();
-  }
-
-  handleClick(event) {
-    var clickedComponent  = event.target;
-    var inside = false;
-    do {
-      if(clickedComponent === this.elementref.nativeElement) {
-        inside = true;
-      }
-      clickedComponent = clickedComponent.parentNode;
-    } while(clickedComponent);
-
-    if(inside) {
-      // this.closeNav();
-      console.log('inside');
-    } else {
-      console.log('outside');
-      this.closeNav();
-    }
   }
 
 }
