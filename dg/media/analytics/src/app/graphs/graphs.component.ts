@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { configs } from './configs';
 import { GraphsService } from './graphs.service';
 import { TabsetComponent } from 'ngx-bootstrap';
@@ -14,9 +14,11 @@ import { TabsetComponent } from 'ngx-bootstrap';
 
 export class GraphsComponent {
     @ViewChild('staticTabs') staticTabs: TabsetComponent;
+    tabs = [];
     charts = [];
     constructor(private graphService: GraphsService){}
     
+    tab = new Tab()
     ngOnInit(): void{
         configs.forEach(config => {
             this.graphService.getData(config.chart.type, config.chartName).then(dataList => {
@@ -25,10 +27,14 @@ export class GraphsComponent {
                 this.charts.push(config);
             })
         });
+        this.tab.id = 'line_chart';
+        this.tab.heading = 'Static title';
+        this.tabs.push(this.tab);
     }
 
-    ngAfterViewInit() {
-            console.log(this.staticTabs);
-    }
 }
 
+class Tab {
+    id : string;
+    heading : string;
+}

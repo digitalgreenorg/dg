@@ -1,8 +1,8 @@
 
-<tabset [justified]="true" #staticTabs>
-    <tab heading="Static title" id="line_chart"></tab>
-    <tab heading="Static Title 1" id="bar_chart"></tab>
-    <tab heading="Static Title 2" id="pie_chart"></tab>
+
+
+<tabset [justified]="true" #staticTabs *ngFor="let tab of tabs">
+    <tab [heading]="tab.heading" [id]="tab.id"></tab>
 </tabset>
 
 <div *ngFor="let chart of charts">
