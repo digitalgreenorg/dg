@@ -8,13 +8,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
-<<<<<<< HEAD
 from django.db.models import Count, Min, Sum, Avg, Max, F
-=======
-from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
->>>>>>> origin/master
 
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
@@ -790,19 +786,19 @@ def broadcast_call_response(request):
             if status == 'completed':
                 end_time = str(request.POST.getlist('DateUpdated')[0])
                 audience_obj.end_time = end_time
-                # if call completed then set status done if user has 
+                # if call completed then set status done if user has
                 # listened the broadcast.
                 audience_obj.status = 1
             else:
-                # If call is not completed then set status pending 
-                # so if user call on halpline number then he will redirected to 
+                # If call is not completed then set status pending
+                # so if user call on halpline number then he will redirected to
                 # broadcast message.
                 audience_obj.status = 0
             try:
-                audience_obj.save()        
+                audience_obj.save()
             except Exception as e:
                 module = 'broadcast_call_response'
-                write_log(HELPLINE_LOG_FILE,module,str(e))  
+                write_log(HELPLINE_LOG_FILE,module,str(e))
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
