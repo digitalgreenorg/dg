@@ -54,6 +54,7 @@ export class FiltersComponent implements OnInit {
 
   applyFilters(){
     console.log(this.filter_list);
+    this.closeNav();
   }
 
   handleClick(event) {
