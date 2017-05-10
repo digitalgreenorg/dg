@@ -1,12 +1,7 @@
-
-
-
-<tabset [justified]="true" #staticTabs *ngFor="let tab of tabs">
-    <tab [heading]="tab.heading" [id]="tab.id"></tab>
+<tabset [justified]="true" >
+    <tab *ngFor="let tab of tabs" [heading]="tab.heading" [id]="tab.id"></tab>
 </tabset>
 
 <div *ngFor="let chart of charts">
     <chart [options]="chart"></chart>
 </div>
-
-
