@@ -30,7 +30,7 @@ class BroadcastTestForm(forms.Form):
 class BroadcastForm(forms.Form):
     title = forms.CharField(label='Broadcast Title',widget=forms.TextInput(attrs={'placeholder': 'Enter Meaningful Broadcast Title'}),max_length=Broadcast._meta.get_field('title').max_length)
     cluster = forms.ChoiceField(label='Select Cluster',choices=[])
-    farmer_file = forms.FileField(label='Select a .csv file', help_text='Upload a CSV file with Farmers mobile number only if broadcast is not for full cluster')
+    farmer_file = forms.FileField(required=False, label='Select a .csv file', help_text='Upload a CSV file with Farmers mobile number only if broadcast is not for full cluster')
     audio_file = forms.FileField(label='Select a .WAV Audio file',
                                help_text='Upload .WAV, 8Khz Mono format audio file with 16 bit depth(Max. Size 5MB)'
                                )
