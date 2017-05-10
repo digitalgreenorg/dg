@@ -59,6 +59,6 @@ class BroadcastForm(forms.Form):
         # if farmer_file.content_type != 'text/csv':
         #     raise forms.ValidationError("Please upload a CSV file only.")
         # .size returns size in bytes
-        if farmer_file.size/(1024*1024.0) > 5:
+        if farmer_file and farmer_file.size/(1024*1024.0) > 5:
              raise forms.ValidationError("Please upload a CSV file less than 5 MB")
         return farmer_file
