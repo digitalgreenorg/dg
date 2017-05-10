@@ -1,7 +1,10 @@
 <div id="mySidenav" #mySidenav class="sidenav">
   <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
   <a href='#' *ngFor='let filter_name of filter_list'>{{filter_name.heading}}
-      <h4 class="row" *ngFor="let data of filter_name.element">
+        <div [id]="filter_name.heading">
+            <input #input type="text" placeholder="Search" [(ngModel)]="">
+        </div>
+      <h4 class="row" *ngFor="let data of filter_name.element | search: 'value': search">
         <span class="checkbox">
       <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked">{{data.value}}->{{data.checked}}</label>
     </span>

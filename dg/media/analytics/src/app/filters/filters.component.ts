@@ -9,6 +9,10 @@ import { FilterElement } from './filter-element';
   styleUrls: ['./filters.component.css']
 })
 export class FiltersComponent implements OnInit {
+
+  Trainer_search = "";
+  State_search = "";
+  Assessment_search = "";
   @ViewChild('mySidenav') mySidenav: ElementRef;
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;

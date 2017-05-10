@@ -10,6 +10,7 @@ import { Ng2TableModule } from 'ng2-table/ng2-table';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { CollapseModule } from 'ngx-bootstrap';
 import { FiltersComponent } from './filters/filters.component';
+import { SearchPipe } from './filters/search.pipe';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { FiltersComponent } from './filters/filters.component';
     AppComponent,
     AnalyticsTableComponent,
     FiltersComponent,
+    SearchPipe,
   ],
   imports: [
     BrowserModule,
