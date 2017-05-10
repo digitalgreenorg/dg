@@ -1,7 +1,7 @@
 import json
 import xlsxwriter
 import requests
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from io import BytesIO
 from threading import Thread
 import xml.etree.ElementTree as xml_parse
@@ -26,7 +26,7 @@ from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
 from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME
 from loop.forms import BroadcastForm, BroadcastTestForm
-import unicodecsv as csv
+import csv
 import time
 import datetime
 from datetime import timedelta
@@ -39,7 +39,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPE
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
     update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio, \
-    redirect_to_broadcast
+    redirect_to_broadcast, save_farmer_file
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
@@ -89,7 +89,6 @@ def dashboard(request):
 
 @csrf_exempt
 def download_data_workbook(request):
-    print request
     if request.method == 'POST':
         # this will prepare the data
         formatted_post_data = format_web_request(request)
@@ -803,8 +802,17 @@ def broadcast(request):
                 broadcast_title = str(broadcast_form.cleaned_data.get('title'))
                 cluster_id = int(broadcast_form.cleaned_data.get('cluster'))
                 audio_file = broadcast_form.cleaned_data.get('audio_file')
-                village_list = LoopUserAssignedVillage.objects.filter(loop_user_id=cluster_id).values_list('village',flat=True)
-                farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
+                farmer_file = broadcast_form.cleaned_data.get('farmer_file')
+                if(farmer_file):
+                    farmer_file_name = save_farmer_file(broadcast_title,farmer_file)
+                    farmer_contact_detail = []
+                    with open(farmer_file_name,'rb') as csvfile:
+                        customreader = csv.reader(csvfile)
+                        for row in customreader:
+                            farmer_contact_detail.append({'id':row[0], 'phone':row[1]})
+                else:
+                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id=cluster_id).values_list('village',flat=True)
+                    farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
             else:
                 template_data['broadcast_form'] = broadcast_form
                 # Change to 1 for select Broadcast tab.
