@@ -105,7 +105,8 @@ class Command(BaseCommand):
         for result in data_from_query_result:
             i = i + 1
             temp = list(result)
-            temp[1] = str(temp[1])
+            #convert datetime to str to display in YYYY-MM-DD format.
+            temp[1] = str(temp[1])             
             data['All'].append(temp)
         return data
 
