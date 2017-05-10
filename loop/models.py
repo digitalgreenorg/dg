@@ -14,7 +14,7 @@ MODEL_TYPES = ((MODEL_TYPES_DIRECT, "Direct"), (MODEL_TYPES_TAX_BASED, "Tax Base
 CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
 CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
-
+BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -561,3 +561,29 @@ class LogDeleted(models.Model):
     timestamp = models.DateTimeField(auto_now_add=False, default=datetime.datetime.now)
     entry_table = models.CharField(max_length=100)
     table_object = models.CharField(max_length=500)
+
+class Broadcast(LoopModel):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=50)
+    cluster = models.ForeignKey(LoopUser, blank=True, null=True)
+    audio_url = models.CharField(max_length=130)
+    from_number = models.CharField(max_length=20)     #Exotel No.
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField(blank=True, null=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.title, self.start_time)
+
+
+class BroadcastAudience(LoopModel):
+    id = models.AutoField(primary_key=True)
+    call_id = models.CharField(max_length=100, blank=True, null=True)
+    to_number = models.CharField(max_length=20, db_index=True)       #User No.
+    broadcast = models.ForeignKey(Broadcast, blank=True, null=True)
+    farmer = models.ForeignKey(Farmer, blank=True, null=True)
+    status = models.IntegerField(choices=BROADCAST_STATUS, default=0, db_index=True)
+    start_time = models.DateTimeField(blank=True, null=True)
+    end_time = models.DateTimeField(blank=True, null=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.to_number, self.broadcast)

@@ -186,6 +186,15 @@ class LogDeletedAdmin(admin.ModelAdmin):
     list_display = ('id', 'entry_table','table_object')
     list_filter = ['entry_table']
 
+class BroadcastAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'cluster', 'audio_url', 'from_number', 'start_time', 'end_time')
+    search_fields = ['title', 'cluster', 'from_number']
+
+class BroadcastAudienceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'to_number', 'broadcast', 'farmer', 'status', 'start_time', 'end_time')
+    list_filter = ('broadcast','status')
+    search_fields = ['to_number']
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -219,3 +228,5 @@ loop_admin.register(HelplineCallLog,HelplineCallLogAdmin)
 loop_admin.register(HelplineSmsLog,HelplineSmsLogAdmin)
 loop_admin.register(Log,LogAdmin)
 loop_admin.register(LogDeleted, LogDeletedAdmin)
+loop_admin.register(Broadcast,BroadcastAdmin)
+loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
