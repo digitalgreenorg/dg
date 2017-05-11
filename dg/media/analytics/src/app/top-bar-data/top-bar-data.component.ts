@@ -1,16 +1,15 @@
-import { 
+import {
     Component,
     OnInit,
     OnChanges,
     SimpleChanges } from '@angular/core';
 import { TopBarDataService } from '../top-bar-data.service';
-import { MyData} from '../my-data';
 import { STAT } from '../config/config-data'
 import { Config } from '../config/config';
-import { Data } from '../config/data'
-import { Overall } from '../config/overall'
-import { IMyOptions } from 'mydatepicker'
-import { DatePipe } from '@angular/common'
+import { Data } from '../config/data';
+import { Overall } from '../config/overall';
+import { IMyOptions } from 'mydatepicker';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-top-bar-data',

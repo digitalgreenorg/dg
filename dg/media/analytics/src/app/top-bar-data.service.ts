@@ -3,18 +3,16 @@ import {Headers, Http, URLSearchParams, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { MyData } from './my-data';
-import { DATA } from './our-data'
 import { Observable } from 'rxjs/Rx'
 import { Config } from './config/config'
 
 @Injectable()
 export class TopBarDataService {
-  
+
   constructor(private http: Http) { }
-  
+
   getApiData(args):Observable<Config> {
-    
+
     let params : URLSearchParams = new URLSearchParams();
     params.set('start_date', args.params.start_date);
     params.set('end_date', args.params.end_date);
