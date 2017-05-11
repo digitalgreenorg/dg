@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AnalyticsTableComponent } from './analytics-table/analytics-table.component';
 import { GetDataFromServerService } from './get-data-from-server/get-data-from-server.service';
+import { GetFilterDataService } from './get-filter-data.service';
 import { Ng2TableModule } from 'ng2-table/ng2-table';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { CollapseModule } from 'ngx-bootstrap';
@@ -46,7 +47,7 @@ import { CardComponent } from './top-bar-data/card/card.component';
     MyDatePickerModule,
     ButtonsModule.forRoot(),
   ],
-  providers: [TopBarDataService, DatePipe, GetDataFromServerService],
+  providers: [TopBarDataService, DatePipe, GetDataFromServerService, GetFilterDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
