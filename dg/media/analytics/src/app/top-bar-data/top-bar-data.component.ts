@@ -58,6 +58,7 @@ export class TopBarDataComponent implements
   
   // End Datepicker
   private args;
+  private argstest;
   private webUrl = 'http://localhost:8000/training/testmethod/'
   constructor(
     private topbardataService : TopBarDataService,
@@ -65,48 +66,31 @@ export class TopBarDataComponent implements
   ) {
   }
   
-  // To get ApiResult in the class format
-  getData(stat) : void {
-    this.args = {
-      webUrl: stat.apiUrl,
+  getDatatest(apply_filter) : any {
+    this.argstest = {
+      webUrl: 'http://localhost:8000/training/getData',
       params: {
         start_date:this.datepipe.transform(this.startModel.date.day.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.year.toString(), 'yyyy-MM-dd'),
         end_date:this.datepipe.transform(this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString() + '-' + this.endModel.date.year.toString(), 'yyyy-MM-dd'),
+        apply_filter:apply_filter,
       }
     }
-    
-    this.topbardataService.getApiData(this.args)
+
+    this.topbardataService.getApiData(this.argstest)
                           .subscribe(val => {
-                                              for(let v in val.data) {
-                                                for(let d in this.cardDataDict[v]) {
-                                                  let o = this.cardDataDict[v][d]
-                                                  if(this.reload && o.placeHolder == 'overallBar') {
-                                                    if(o.tagName == val.data[v].tagName) {
-                                                        o.value = val.data[v].value;
-                                                    }
-                                                  } else {
-                                                    if(o.tagName == val.data[v].tagName && o.placeHolder != 'overallBar') {
-                                                      o.value = val.data[v].value;
-                                                    }
+                                              console.log(val);
+                                              for( let v in val.data) {
+                                                let vobj = val.data[v]
+                                                for( let d of this.cardDataDict[vobj['placeHolder']]) {
+                                                  if(d.tagName == vobj['tagName']) {
+                                                    d.value = vobj['value']
                                                   }
-                                                } 
+                                                }
                                               }
-                                            })
-  }
-  
-  getfilteredData():any {
-    this.reload = false;
-    for(let stat of STAT) {
-      // api call
-      if(stat.overall.show) {
-        this.getData(stat);
-      }
-    }
+                                            });
   }
   
   ngOnChanges(changes : SimpleChanges) {
-    console.log('onChanges called TopBarDataComponent');
-    console.log(changes);
   }
 
   ngOnInit() {
@@ -124,13 +108,7 @@ export class TopBarDataComponent implements
         }
       }
     }
-    console.log(this.cardDataDict);
-    for(let stat of STAT) {
-      // api call
-      if(stat.overall.show) {
-        this.getData(stat);
-      }
-    }
+    this.getDatatest(false);
   }
 
 }

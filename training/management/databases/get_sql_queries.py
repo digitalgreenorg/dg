@@ -2,6 +2,7 @@ from training.management.databases.utility import get_init_sql_ds, join_sql_ds
 def get_training_data_sql(**Kwargs):
     start_date = Kwargs['start_date']
     end_date = Kwargs['end_date']
+    apply_filter = Kwargs['apply_filter']
     sql_query_list = []
     args_list = []
 
@@ -16,7 +17,9 @@ def get_training_data_sql(**Kwargs):
     args_dict['query_tag'] = 'No. of Trainings'
     args_dict['component'] = 'overallBar'
     args_dict['query_string'] = sql_q
-    args_list.append(args_dict)
+    args_dict['apply_filter'] = apply_filter
+    if(args_dict['apply_filter'] is False) : 
+        args_list.append(args_dict)
 
     # No. of Trainings
     args_dict = {}
@@ -29,15 +32,15 @@ def get_training_data_sql(**Kwargs):
     args_dict['query_tag'] = 'No. of Trainings'
     args_dict['component'] = 'recentBar'
     args_dict['query_string'] = sql_q
+    args_dict['apply_filter'] = True
     args_list.append(args_dict)
 
-
     return args_list
-    
     
 def get_mediators_data_sql(**Kwargs):
     start_date = Kwargs['start_date']
     end_date = Kwargs['end_date']
+    apply_filter = Kwargs['apply_filter']
     sql_query_list = []
     args_list = []
 
@@ -51,7 +54,9 @@ def get_mediators_data_sql(**Kwargs):
     args_dict['query_tag'] = 'No. of Mediators'
     args_dict['component'] = 'overallBar'
     args_dict['query_string'] = sql_q
-    args_list.append(args_dict)
+    args_dict['apply_filter'] = apply_filter
+    if(args_dict['apply_filter'] is False) : 
+        args_list.append(args_dict)
 
     args_dict = {}
     sql_ds = get_init_sql_ds()
@@ -63,6 +68,7 @@ def get_mediators_data_sql(**Kwargs):
     args_dict['query_tag'] = 'No. of Mediators'
     args_dict['component'] = 'recentBar'
     args_dict['query_string'] = sql_q
+    args_dict['apply_filter'] = True
     args_list.append(args_dict)
 
     return args_list
@@ -71,6 +77,7 @@ def get_mediators_data_sql(**Kwargs):
 def get_pass_perc_data_sql(**Kwargs):
     start_date = Kwargs['start_date']
     end_date = Kwargs['end_date']
+    apply_filter = Kwargs['apply_filter']
     sql_query_list = []
     args_list = []
 
@@ -90,8 +97,9 @@ def get_pass_perc_data_sql(**Kwargs):
     args_dict['query_tag'] = 'Pass Percentage'
     args_dict['component'] = 'overallBar'
     args_dict['query_string'] = sql_q
-    args_list.append(args_dict) 
-
+    args_dict['apply_filter'] = apply_filter
+    if(args_dict['apply_filter'] is False) : 
+        args_list.append(args_dict) 
 
     args_dict = {}
     sql_ds = get_init_sql_ds()
@@ -109,15 +117,15 @@ def get_pass_perc_data_sql(**Kwargs):
     args_dict['query_tag'] = 'Pass Percentage'
     args_dict['component'] = 'recentBar'
     args_dict['query_string'] = sql_q
+    args_dict['apply_filter'] = True
     args_list.append(args_dict)
     
     return args_list
 
-
-
 def get_avg_score_data_sql(**Kwargs):
     start_date = Kwargs['start_date']
     end_date = Kwargs['end_date']
+    apply_filter = Kwargs['apply_filter']
     sql_query_list = []
     args_list = []
 
@@ -137,7 +145,9 @@ def get_avg_score_data_sql(**Kwargs):
     args_dict['query_tag'] = 'Avg Score'
     args_dict['component'] = 'overallBar'
     args_dict['query_string'] = sql_q
-    args_list.append(args_dict)
+    args_dict['apply_filter'] = apply_filter
+    if(args_dict['apply_filter'] is False) : 
+        args_list.append(args_dict)
 
     args_dict = {}
     sql_ds = get_init_sql_ds()
@@ -155,6 +165,8 @@ def get_avg_score_data_sql(**Kwargs):
     args_dict['query_tag'] = 'Avg Score'
     args_dict['component'] = 'recentBar'
     args_dict['query_string'] = sql_q
+    args_dict['apply_filter'] = True
     args_list.append(args_dict)
 
     return args_list
+    
