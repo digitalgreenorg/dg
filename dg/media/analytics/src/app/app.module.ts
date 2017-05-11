@@ -12,6 +12,16 @@ import { CollapseModule } from 'ngx-bootstrap';
 import { FiltersComponent } from './filters/filters.component';
 import { SearchPipe } from './filters/search.pipe';
 
+import { TopBarDataComponent } from './top-bar-data/top-bar-data.component';
+import { TopBarDataService } from './top-bar-data.service';
+import { AccordionModule } from '../../node_modules/ngx-bootstrap';
+import { KeysPipe } from './keys.pipe';
+import { GraphComponent } from './graph/graph.component';
+import { NvD3Module } from '../../node_modules/angular2-nvd3';
+import { MyDatePickerModule } from 'mydatepicker';
+import { ButtonsModule } from 'ngx-bootstrap';
+import { DatePipe } from '@angular/common';
+import { CardComponent } from './top-bar-data/card/card.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +29,10 @@ import { SearchPipe } from './filters/search.pipe';
     AnalyticsTableComponent,
     FiltersComponent,
     SearchPipe,
+    TopBarDataComponent,
+    KeysPipe,
+    GraphComponent,
+    CardComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,9 +40,13 @@ import { SearchPipe } from './filters/search.pipe';
     HttpModule,
     Ng2TableModule,
     PaginationModule.forRoot(),
-    CollapseModule
+    CollapseModule,
+    AccordionModule.forRoot(),
+    NvD3Module,
+    MyDatePickerModule,
+    ButtonsModule.forRoot(),
   ],
-  providers: [GetDataFromServerService],
+  providers: [TopBarDataService, DatePipe, GetDataFromServerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

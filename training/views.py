@@ -15,6 +15,9 @@ from activities.models import Screening, PersonAdoptPractice, PersonMeetingAtten
 from geographies.models import State
 from django.db import connection
 import datetime
+from datetime import date
+from training.management.databases.utility import multiprocessing_dict, multiprocessing_list
+from training.management.databases.get_sql_queries import *
 from training.log.training_log import get_latest_timestamp
 
 # Create your views here.
@@ -44,8 +47,42 @@ def login(request):
         return HttpResponse("0",status=403)
     return HttpResponse("0",status=404)
 
+@csrf_exempt
+def getData(request):
+    start_date = str(request.GET['start_date'])
+    end_date = str(request.GET['end_date'])
+    apply_filter = str(request.GET['apply_filter'])
+    if(apply_filter == 'true'):
+        apply_filter = True
+    else :
+        apply_filter = False
+    args_list = []
+
+    # No of Trainings
+    args_obj = get_training_data_sql(start_date=start_date, end_date=end_date, apply_filter=apply_filter)
+    args_list.extend(args_obj)
+
+    # No of Mediators
+    args_obj = get_mediators_data_sql(start_date=start_date, end_date=end_date, apply_filter=apply_filter)
+    args_list.extend(args_obj)
+
+    # Pass Percentage
+    args_obj = get_pass_perc_data_sql(start_date=start_date,end_date=end_date, apply_filter=apply_filter)
+    args_list.extend(args_obj)
+
+    # Avg Score
+    args_obj = get_avg_score_data_sql(start_date=start_date,end_date=end_date, apply_filter=apply_filter)
+    args_list.extend(args_obj)
+
+    results = multiprocessing_list(args_list = args_list)
+    data = {'data':results}
+    data = json.dumps({'data' : results})
+    return HttpResponse(data)
+
+
 def dashboard(request):
-    return render(request, 'src/index.html')
+    # return render(request, 'src/index.html')
+    return render(request, 'app_dashboards/training_dashboard.html')
 
 def filter_data(request):
     assessments = Assessment.objects.values('id', 'name')
