@@ -1,16 +1,16 @@
-import { 
+import {
     Component,
     OnInit,
     OnChanges,
     SimpleChanges } from '@angular/core';
 import { TopBarDataService } from '../top-bar-data.service';
 import { MyData} from '../my-data';
-import { STAT } from '../config/config-data'
+import { STAT } from '../config/config-data';
 import { Config } from '../config/config';
-import { Data } from '../config/data'
-import { Overall } from '../config/overall'
-import { IMyOptions } from 'mydatepicker'
-import { DatePipe } from '@angular/common'
+import { Data } from '../config/data';
+import { Overall } from '../config/overall';
+import { IMyOptions } from 'mydatepicker';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-top-bar-data',
@@ -70,8 +70,8 @@ export class TopBarDataComponent implements
     this.argstest = {
       webUrl: 'http://localhost:8000/training/getData',
       params: {
-        start_date:this.datepipe.transform(this.startModel.date.day.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.year.toString(), 'yyyy-MM-dd'),
-        end_date:this.datepipe.transform(this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString() + '-' + this.endModel.date.year.toString(), 'yyyy-MM-dd'),
+        start_date:this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd'),
+        end_date:this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd'),
         apply_filter:apply_filter,
       }
     }
