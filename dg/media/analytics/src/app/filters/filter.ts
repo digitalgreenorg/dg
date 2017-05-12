@@ -5,4 +5,5 @@ export class Filter {
   searchTerm: string;
   visible: boolean;
   element: FilterElement[];
+  expand : boolean;
 }

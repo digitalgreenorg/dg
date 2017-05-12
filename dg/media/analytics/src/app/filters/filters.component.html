@@ -1,22 +1,35 @@
 <div id="mySidenav" #mySidenav class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
-  <a href='#' *ngFor='let filter_name of filter_list'>{{filter_name.heading}}
-        <div [id]="filter_name.heading">
-            <input #input type="text" placeholder="Search" [(ngModel)]="filter_name.serachTerm">
+    <div class="row">
+        <div class="col-8">
+            <h5>Filters</h5>
         </div>
-      <h4 class="row" *ngFor="let data of filter_name.element | search: 'value': filter_name.serachTerm">
-        <span class="checkbox">
-      <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked">{{data.value}}->{{data.checked}}</label>
-    </span>
-  </h4>
+        <div class="col-4 pull-left">
+            <h4 href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</h4>
+        </div>
+    </div>
+    <hr class="bg-white">
+    <a href='#' *ngFor='let filter_name of filter_list'>
+      <label (click)="filter_name.expand=!filter_name.expand">{{filter_name.heading}}</label>
+      <div *ngIf="filter_name.expand">
+        <div class="form-group row" [id]="filter_name.heading">
+          <div class="col-8">
+            <input class="form-control" type="search" [(ngModel)]="filter_name.serachTerm">
+          </div>
+        </div>
+        <h6 class="row" *ngFor="let data of filter_name.element | search: 'value': filter_name.serachTerm">
+          <span class="checkbox">
+            <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked"> {{data.value}}</label>
+          </span>
+        </h6>
+      </div>
     </a>
-  <button class="btn btn-primary" (click)="applyFilters()">Apply Filters</button>
+      <button class="btn btn-primary" (click)="applyFilters()">Apply Filters</button>
 </div>
 
 <div class="container-fluid" style="height: 70px;">
-  <div class="row" style="-webkit-text-fill-color: white">
-    <div class="col-md-1">
-      <span style="font-size:30px;cursor:pointer" (click)="openNav()">&#9776;</span>
+    <div class="row" style="-webkit-text-fill-color: white">
+        <div class="col-md-1">
+            <span style="font-size:30px;cursor:pointer" (click)="openNav()">&#9776;</span>
+        </div>
     </div>
-  </div>
 </div>

@@ -8,7 +8,7 @@
     background-color: #424242;
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 60px;
+    padding-top: 20px;
 }
 .sidenav a {
     padding: 8px 8px 8px 32px;
@@ -25,14 +25,14 @@ input {
     color: #f1f1f1;
 }
 .sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
     font-size: 36px;
-    margin-left: 50px;
 }
 
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+}
+
+.bg-white{
+    background:#ffffff;
 }

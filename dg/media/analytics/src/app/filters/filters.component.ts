@@ -32,6 +32,7 @@ export class FiltersComponent implements OnInit {
       else {
         this.filter = new Filter();
         this.filter.heading = data['name'];
+        this.filter.expand = false;
         this.filter.element = new Array<FilterElement>();
         for (let val of data['data']) {
           let filterElement = new FilterElement();
@@ -52,7 +53,7 @@ export class FiltersComponent implements OnInit {
   }
 
   openNav() {
-    this.mySidenav.nativeElement.style.width = '240px';
+    this.mySidenav.nativeElement.style.width = '320px';
   }
 
   applyFilters() {
