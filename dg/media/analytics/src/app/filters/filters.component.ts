@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FILTER_DATA } from './filter-data';
 import { Filter } from './filter';
 import { FilterElement } from './filter-element';
+import { GetFilterDataService } from '../get-filter-data.service';
 
 @Component({
   selector: 'app-filters',
@@ -14,17 +15,17 @@ import { FilterElement } from './filter-element';
 export class FiltersComponent implements OnInit {
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
-  public elementref: ElementRef;
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;
   private showDateFilter: boolean;
-  constructor(myElement: ElementRef) {
-    this.elementref = myElement;
+  constructor(private myElement : ElementRef, private getFilterData : GetFilterDataService) {
   }
 
   ngOnInit() {
-    for (let data of FILTER_DATA) {
 
+    this.getFilterData.getData().subscribe(val =>{
+      console.log(val);
+  for (let data of val) {
       if (data['name'] === 'date' && data['visible'] == true) {
         this.showDateFilter = true;
       }
@@ -43,6 +44,7 @@ export class FiltersComponent implements OnInit {
         this.filter_list.push(this.filter);
       }
     }
+    });
   }
 
   closeNav() {
@@ -61,7 +63,7 @@ export class FiltersComponent implements OnInit {
     var clickedComponent = event.target;
     var inside = false;
     do {
-      if (clickedComponent === this.elementref.nativeElement) {
+      if(clickedComponent === this.myElement.nativeElement) {
         inside = true;
       }
       clickedComponent = clickedComponent.parentNode;

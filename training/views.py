@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F
 from django.core.serializers.json import DjangoJSONEncoder
 
 from tastypie.models import ApiKey, create_api_key
@@ -46,6 +46,21 @@ def login(request):
     else:
         return HttpResponse("0",status=403)
     return HttpResponse("0",status=404)
+
+@csrf_exempt
+def getFilterData(request):
+
+    trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value')
+    states_list = State.objects.annotate(value=F('state_name')).values('id','value')
+    response_list = []
+    trainer_dict = {'name':"Trainer",'visible':True,'data':list(trainers_list)}
+    state_dict = {'name':"State",'visible':True,'data':list(states_list)}
+    response_list.append(trainer_dict)
+    response_list.append(state_dict)
+    json_data = json.dumps(response_list)
+    return HttpResponse(json_data)
+
+
 
 @csrf_exempt
 def getData(request):
