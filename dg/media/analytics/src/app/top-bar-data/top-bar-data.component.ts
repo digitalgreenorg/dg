@@ -21,24 +21,14 @@ export class TopBarDataComponent implements
   OnInit,
   OnChanges {
 
-  private myApiData:Config[] = new Array<Config>();
-  private testConfig: Config = new Config();
-  overAllData:Overall[] = new Array<Overall>();
-  recentData:Overall[] = new Array<Overall>();
   cardDataDict: {[id:string] : Overall[]} = {};
   configData:Overall;
   val;
-  overalltest:Overall = new Overall();
-  recentTest:Overall = new Overall();
-  overallobj:Overall = new Overall();
-  private testdate;
-  private reload = true;
   // DatePicker
   private myDatePickerOptions: IMyOptions = {
     dateFormat : 'dd-mm-yyyy',
   };
   private date = new Date();
-  public disabled:boolean = false;
   private start_date = new Date(2015, 1, 1);
   public startModel = {
                                   date: {
@@ -56,7 +46,6 @@ export class TopBarDataComponent implements
                               };
 
   // End Datepicker
-  private args;
   private argstest;
   private webUrl = 'http://localhost:8000/training/testmethod/'
   constructor(

@@ -6,7 +6,7 @@ import { FilterElement } from './filter-element';
 @Component({
   selector: 'app-filters',
   host: {
-        '(document:click)': 'handleClick($event)',
+    '(document:click)': 'handleClick($event)',
   },
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css']
@@ -14,11 +14,11 @@ import { FilterElement } from './filter-element';
 export class FiltersComponent implements OnInit {
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
-  public elementref : ElementRef;
+  public elementref: ElementRef;
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;
   private showDateFilter: boolean;
-  constructor(myElement : ElementRef) {
+  constructor(myElement: ElementRef) {
     this.elementref = myElement;
   }
 
@@ -53,21 +53,21 @@ export class FiltersComponent implements OnInit {
     this.mySidenav.nativeElement.style.width = '240px';
   }
 
-  applyFilters(){
+  applyFilters() {
     console.log(this.filter_list);
   }
 
   handleClick(event) {
-    var clickedComponent  = event.target;
+    var clickedComponent = event.target;
     var inside = false;
     do {
-      if(clickedComponent === this.elementref.nativeElement) {
+      if (clickedComponent === this.elementref.nativeElement) {
         inside = true;
       }
       clickedComponent = clickedComponent.parentNode;
-    } while(clickedComponent);
+    } while (clickedComponent);
 
-    if(inside) {
+    if (inside) {
       // this.closeNav();
       console.log('inside');
     } else {
