@@ -1,9 +1,9 @@
 <div id="mySidenav" #mySidenav class="sidenav">
     <div class="row">
         <div class="col-8">
-            <h5>Filters</h5>
+            <h5 class="text-center">Filters</h5>
         </div>
-        <div class="col-4 pull-left">
+        <div class="col-4 pull-right">
             <h4 href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</h4>
         </div>
     </div>
@@ -23,7 +23,9 @@
         </h6>
       </div>
     </a>
-      <button class="btn btn-primary" (click)="applyFilters()">Apply Filters</button>
+    <div class="text-center">
+      <button class="btn btn-primary btn-sx" (click)="applyFilters()">Apply Filters</button>
+    </div>
 </div>
 
 <div class="container-fluid" style="height: 70px;">
