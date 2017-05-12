@@ -32,8 +32,8 @@ define([
           success: function(){
               if(username==User.get("username") && password==User.get("password"))
               {
-                  save_login_state(username, password, language, partner_name, type_of_cocouser, partner_id, user_id, true)
 
+                  save_login_state(username, password, language, partner_name, type_of_cocouser, partner_id, user_id, true)
                       .done(function(){
                           return dfd.resolve("Successfully Logged In (Offline Backend)");
                       })

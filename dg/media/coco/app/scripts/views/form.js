@@ -26,7 +26,8 @@ define([
         events: {
             'click #button2': 'button2_clicked',
             // used in inline form
-            'click #add_rows': 'append_new_inlines'
+            'click #add_rows': 'append_new_inlines',
+            'click #add_rows1': 'append_new_inlines1'
         },
         template: '#form_template',
         options_inner_template: _.template($('#options_template')
@@ -44,6 +45,7 @@ define([
             //s_passed["form_template"] = this.form_template;
             // whether its an inline form
             s_passed["inline"] = (this.inline) ? true : false;
+            s_passed["inline1"] = (this.inline1) ? true : false;
             // name of the entity bieng added/edited
             s_passed["entity_name"] = this.entity_name;
             s_passed["language"] = language;
@@ -82,6 +84,7 @@ define([
             //default locations - 
             this.foreign_entities = this.entity_config.foreign_entities;
             this.inline = this.entity_config.inline;
+            this.inline1 = this.entity_config.inline1;
             this.bulk = this.entity_config.bulk;
             this.labels = this.entity_config['labels_'+language]
             if (this.edit_case) {
@@ -96,6 +99,7 @@ define([
                 if (this.entity_config.add) {
                     this.foreign_entities = this.entity_config.add.foreign_entities;
                     this.inline = this.entity_config.add.inline;
+                    this.inline1 = this.entity_config.add.inline;
                     this.bulk = this.entity_config.add.bulk;
                 }
             }
@@ -229,6 +233,9 @@ define([
             if (this.inline)
                 this.render_inlines();
 
+            if (this.inline1)
+                this.render_inlines1();
+
             // call validator on the form
             this.initiate_form_field_validation();
 
@@ -248,10 +255,20 @@ define([
             if (cocousertype == 4){
                 _.each(all_configs.misc.upavan_user_fields, function(element, index) {
                     $f_el.find(element).removeClass('hidden')
+                    $f_el.find("#id_label_animator").html('CSP name')
+                    $f_el.find("#id_label_videos_screened").html('Video Name')
+                    $f_el.find("#id_meeting_topic").addClass('hidden');
+                    $("th#id_pv").addClass('hidden');
+                    $("div#id_pvc").addClass('hidden');
+                    $f_el.find("#id_category").html('Beneficiary')
+                    $f_el.find("#id_dob").html('Date of Home Visit')
+                    $f_el.find('#id_recall_nonnegotiable').html('Beneficiary recalled the knowledge recall point?')
+                    $f_el.find('#id_member_adopt').html('Is the beneficiary practicing the behavior?')
                 })
             }else{
                 _.each(all_configs.misc.upavan_user_fields, function(element, index) {
                     $f_el.find(element).addClass('hidden')
+                    // $f_el.find("#id_label_animator").html('Mediator')
                 })
             }
 
@@ -280,19 +297,32 @@ define([
             _.each(this.element_entity_map, function(entity, element) {
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
-                    //  for screening
                     if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
-                        // hide the headers and fields
-                        this.$el.find(this.entity_config.fields_to_hide).addClass('hidden')
+                         // hide the headers and fields
+                        
+                        _.each(this.entity_config.headers_to_hide, function(element, index) {
+                            console.log(element)
+                            $(element).addClass('hidden')
+                        })
+                        _.each(this.entity_config.fields_to_hide, function(element, index) {
+                            $(element).addClass('hidden')
+                        })
+                        
+                        
                         this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
-                    }else if(this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.health_variable){
-                        this.$el.find(this.entity_config.fields_to_hide).removeClass('hidden')
-                    }else if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
-                        if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
-                            // for adoption
+                     }else if(this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.health_variable){
+                         // this.$el.find(this.entity_config.fields_to_hide).removeClass('hidden')
+                        _.each(this.entity_config.fields_to_hide, function(element, index) {
+                            $(element).removeClass('hidden')
+                        })
+                     }else if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
+                         if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
                             if (this.edit_case && this.foreign_elements_rendered[element]){
-                                $("#id_adopt_practice").addClass("hidden");
-                                $("#id_recall_nonnegotiable").addClass("hidden");
+                                // $("#id_adopt_practice").addClass("hidden");
+                                // $("#id_recall_nonnegotiable").addClass("hidden");
+                                _.each(this.entity_config.fields_to_hide, function(element, index) {
+                                    $(element).addClass('hidden')
+                                })
                             } 
                         }   
                     }
@@ -397,6 +427,40 @@ define([
             //not showing the inlines in case of edit_case_json
         },
 
+        render_inlines1: function() {
+            var that = this;
+            var temp = _.template($('#' + this.inline1.header).html());
+            $f_el = this.$('#inline1_header');
+            $f_el.append(temp(this.labels));
+            //if add case put in empty inlines
+            if (!this.edit_case)
+                this.append_new_inlines1(this.inline1.default_num_rows);
+            else if (this.edit_case_id) {
+                console.log("FORM:EDIT: Fteching inline collection");
+                // fetch inline entity's whole collection! can be improved
+                Offline.fetch_collection(this.inline1.entity)
+                    .done(function(collection) {
+                        // id-json dictionary of inline models - later used to extend the modified inlines
+                        that.inl_models_dict = {};
+                        // filter inline collection to get only the ones related to the parent object
+                        var inl_models = collection.filter(function(model) {
+                            if (model.get(that.inline1.joining_attribute.inline_attribute).id == that.edit_id) {
+                                that.inl_models_dict[model.get("id")] = model.toJSON();
+                                return true
+                            }
+                            return false;
+                        });
+                        console.log(inl_models);
+                        // render the inlines into the form
+                        that.fill_inlines1(inl_models);
+                    })
+                    .fail(function() {
+                        console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                    });
+            }
+            //not showing the inlines in case of edit_case_json
+        },
+
         // fills the inline objects in their templates and puts them into form
         fill_inlines: function(model_array) {
             console.log("Filling inlines");
@@ -410,6 +474,24 @@ define([
                 var filled_tr = that.fill_form_elements($(tr), model.toJSON());
                 $(filled_tr).find(':input').removeClass("donotvalidate");
                 that.$('#inline_body').append(filled_tr);
+                $(filled_tr).on('change', that.switch_validation_for_inlines);
+            });
+        },
+
+        fill_inlines1: function(model_array) {
+            console.log("Filling inlines1");
+            var that = this;
+            var inline_t = _.template($('#' + this.inline1.template).html());
+
+            $.each(model_array, function(index, model) {
+                var tr = inline_t({
+                    index: index
+                });
+
+                var filled_tr = that.fill_form_elements($(tr), model.toJSON());
+                $(filled_tr).find(':input').removeClass("donotvalidate");
+                that.$('#inline1_body').append(filled_tr);
+                console.log(filled_tr, "tsting")
                 $(filled_tr).on('change', that.switch_validation_for_inlines);
             });
         },
@@ -434,6 +516,32 @@ define([
             // get last index of already existing inlines
             function get_index_to_start_from() {
                 var all_present_inlines = this.$('#inline_body tr').not(".form_error");
+                if (!all_present_inlines.length)
+                    return 0
+                var max_index = $(_.last(all_present_inlines)).attr("index");
+                return parseInt(max_index) + 1;
+            }
+        },
+
+        append_new_inlines1: function(num_rows) {
+            // compile the template of inline
+            var inline_t = _.template($('#' + this.inline1.template).html());
+            if (typeof(num_rows) != "number")
+                num_rows = this.inline1.add_row;
+            var start_index = get_index_to_start_from();
+            // append the new inlines
+            for (var i = start_index; i < start_index + num_rows; i++) {
+                var tr = $(inline_t({
+                    index: i
+                }));
+                this.$('#inline1_body').append(tr);
+                // switch validation on/off based on whether the inline is empty or not
+                tr.on('change', this.switch_validation_for_inlines);
+            }
+
+            // get last index of already existing inlines
+            function get_index_to_start_from() {
+                var all_present_inlines = this.$('#inline1_body tr').not(".form_error");
                 if (!all_present_inlines.length)
                     return 0
                 var max_index = $(_.last(all_present_inlines)).attr("index");
@@ -553,50 +661,38 @@ define([
         },
 
         get_curr_value_of_element: function(element) {
+            console.log("nikhil-verma");
             return $('[name=' + element + ']').val();
         },
 
         action_after_render_foreign_element: function(parent_element, dep_element){
-            //  for aggriculture
             if (this.$el.find('#id_' + parent_element).val() == all_configs.misc.agg_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
                 // hide the headers
-                if (this.entity_config.inline_headers_for_hide_show_arr){
-                    _.each(this.entity_config.inline_headers_for_hide_show_arr, function(element, index) {
-                        $(element).addClass('hidden');
-                    })
-                }
-                if (this.entity_config.fields_to_hide_arr){
-                    _.each(this.entity_config.fields_to_hide_arr, function(element, index) {
-                        $(element).addClass('hidden');
-                        
-                    })
-                }
+                _.each(this.entity_config.headers_to_hide, function(element, index) {
+                    $(element).addClass('hidden')
+                })
+                // hide the fields
+                _.each(this.entity_config.fields_to_hide, function(element, index) {
+                    $(element).addClass('hidden')
+                })
+
             }
-            // for health and nutrition
             if (this.$el.find('#id_' + parent_element).val() == all_configs.misc.health_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
-                if (this.entity_config.inline_headers_for_hide_show_arr){
-                    _.each(this.entity_config.inline_headers_for_hide_show_arr, function(element, index) {
-                        // applying for UPAVAN
-                        if (User.get('type_of_cocouser') == 4){
-                            
-                            if(element = "th#id_member_adopt"){
-                                $(element).html('Beneficiary practicing the behavior?')
-                                $(element).removeClass('hidden');
-                            }
-                            if(element = "th#id_recall_nonnegotiable"){
-                                $(element).html('Beneficiary recalled the knowledge recall point? ')
-                                $(element).removeClass('hidden');
-                            }
-                        }
-                        $(element).removeClass('hidden');
-                    })
-                }
-                if (this.entity_config.fields_to_hide_arr){
-                    _.each(this.entity_config.fields_to_hide_arr, function(element, index) {
-                        $(element).removeClass('hidden');
-                        
-                    })
-                }
+
+                _.each(this.entity_config.headers_to_hide, function(element, index) {
+                    $(element).removeClass('hidden')
+                    if (cocousertype == 4){
+                        $("#label_health_provider_present").addClass('hidden')
+                        $("#id_health_provider_present").addClass('hidden')
+                    }
+                    
+                })
+                _.each(this.entity_config.fields_to_hide, function(element, index) {
+                    $(element).removeClass('hidden')
+                    if (cocousertype == 4){
+                        $("#id_health_provider_present").addClass('hidden')
+                    }
+                })
             }
 
         },
@@ -884,28 +980,35 @@ define([
                 }
                 this.initiate_form_widgets();
                 $('.inline_table').show();
-                if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == "2"){
-                    this.$el.find(this.entity_config.fields_to_hide).addClass('hidden')
-                    this.$el.find('select#category_row7').removeAttr('required');
+
+//                 if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == "2"){
+//                     this.$el.find(this.entity_config.fields_to_hide).addClass('hidden')
+//                     this.$el.find('select#category_row7').removeAttr('required');
+
+
+                if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == all_configs.misc.agg_variable){
+                    _.each(this.entity_config.headers_to_hide, function(element, index) {
+                        $(element).addClass('hidden');
+                    })
+                    _.each(this.entity_config.fields_to_hide, function(element, index) {
+                        $(element).addClass('hidden');
+                    })
                 }
 
             } else {
                 console.log("NOT EXPANDED");
                 if (!this.edit_case && !this.foreign_elements_rendered[element]){
                     $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
-                        // if ($(this).val() == "2"){
-                        //     $('select#category_row7').removeAttr('required');
-                        // }
-                        if ($('#id_group').val() != ''){
+                        if ($(that.entity_config.reset_element).val() != ''){
                             $('.search-choice-close').click();
-                            $('#id_group').trigger("chosen:updated");
+                            $(that.entity_config.reset_element).trigger("chosen:updated");
                         }
                     })
                 }
                 if (this.edit_case && this.foreign_elements_rendered[element]){
                     $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
                         $('.search-choice-close').click();
-                        $('#id_group').trigger("chosen:updated");
+                        $(that.entity_config.reset_element).trigger("chosen:updated");
 
                     })
                 }
@@ -1099,6 +1202,53 @@ define([
 
         },
 
+        parse_inlines1: function(raw_json) {
+            console.log("FORM: fetching inlines");
+            var all_inlines = $('#inline1_body tr').not(".form_error");
+            raw_json["inlines1"] = [];
+            var that = this;
+            var inline_attrs = [];
+            $.each(all_inlines, function(index, inl) {
+                var inl_obj = {};
+                var ignore = true;
+                inl_obj.index = $(inl).attr("index");
+                if ($(inl).attr("model_id"))
+                    inl_obj.id = parseInt($(inl).attr("model_id"));
+                $(inl).find(':input').each(function() {
+                    if (!$(this).attr('name'))
+                        return;
+                    else
+                        inline_attrs.push($(this).attr("name"));
+                    var attr_name = $(this).attr("name").replace(new RegExp("[0-9]", "g"), "");
+                    switch (this.type) {
+                        case 'password':
+                        case 'select-multiple':
+                        case 'select-one':
+                        case 'text':
+                        case 'textarea':
+                            inl_obj[attr_name] = $(this).val();
+                            break;
+                        case 'checkbox':
+                        case 'radio':
+                            inl_obj[attr_name] = this.checked;
+                    }
+                    if (inl_obj[attr_name] != "")
+                        ignore = false;
+                });
+                if (!ignore)
+
+                    raw_json["inlines1"].push(inl_obj);
+            });
+
+            //remove inline attrs from raw_json...let them be inside raw_json.inlines only
+            $.each(inline_attrs, function(index, attr) {
+                delete raw_json[attr];
+            });
+            console.log(inline_attrs);
+
+
+        },
+
         // fetch expandeds from the form as a list of objects
         parse_expanded: function(raw_json) {
             console.log("FORM: fetching expandeds");
@@ -1221,6 +1371,14 @@ define([
                     o_json.inlines[index] = $.extend(old_json, inl);
                 }, this);
             }
+
+            if (this.inline1) {
+                _.each(o_json.inlines1, function(inl, index) {
+                    var old_json = this.inl_models_dict[inl.id];
+                    o_json.inlines1[index] = $.extend(old_json, inl);
+                }, this);
+            }
+
             return o_json;
         },
 
@@ -1237,6 +1395,12 @@ define([
                 if (this.inline) {
                     $.each(form_json.inlines, function(index, obj) {
                         clean_object(obj);
+                    });
+                }
+                if (this.inline1) {
+                    $.each(form_json.inlines1, function(index1, obj1) {
+                        console.log("printing inlines")
+                        clean_object(obj1);
                     });
                 }
             }
@@ -1301,6 +1465,8 @@ define([
                     this.parse_expanded(json);
                 if (this.inline)
                     this.parse_inlines(json);
+                if (this.inline1)
+                    this.parse_inlines1(json);
             }
             return json;
         },

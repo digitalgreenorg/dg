@@ -1,5 +1,4 @@
 import operator
-
 from django import forms
 from django.conf import settings
 from django.conf.urls import patterns
@@ -11,14 +10,14 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
 from coco.base_models import NONNEGOTIABLE_OPTION
-
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
 from videos.models import  NonNegotiable
-from videos.models import  ParentCategory
+from videos.models import  SelfReportedBehaviour
+from videos.models import ParentCategory
 from programs.models import Project
 
 
@@ -76,6 +75,11 @@ class NonNegotiablesInline(admin.TabularInline):
     raw_id_fields = ("video",)
     extra = 10
 
+class SelfReportedBehaviourInline(admin.TabularInline):
+    model =  SelfReportedBehaviour
+    raw_id_fields = ("video",)
+    extra = 10
+
 
 class ParentCategoryAdmin(admin.ModelAdmin):
     
@@ -99,7 +103,7 @@ class DirectBeneficiariesAdmin(admin.ModelAdmin):
 
 
 class VideoAdmin(admin.ModelAdmin):
-    inlines = [NonNegotiablesInline,]
+    inlines = [NonNegotiablesInline, SelfReportedBehaviourInline]
     fieldsets = [
                 (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice']}),
                 (None,{'fields':['village','production_team']}),

@@ -23,6 +23,7 @@ from dashboard.admin import VideoPracticeAdmin
 from dashboard.admin import ParentCategoryAdmin
 from dashboard.admin import ProjectAdmin
 from dashboard.admin import DirectBeneficiariesAdmin
+
 from activities.models import PersonAdoptPractice, Screening
 from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village

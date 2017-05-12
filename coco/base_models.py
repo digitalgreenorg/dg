@@ -131,6 +131,18 @@ TYPE_OF_VIDEO = (
     ('4', 'PLA meeting'),
 )
 
+TOPICS   = (
+
+    ('1', 'Introduction and understanding social inequities'),
+    ('2', 'Understanding underlying causes of under nutrition'),
+    ('3', 'Identifying problems that affect nutrition conditions during the 1000-day'),
+    ('4', 'Prioritizing problems'),
+    ('5', 'Understanding the causes and effects'),
+    ('6', 'Understanding barriers and opportunities'),
+    ('7', 'Accountability and sharing of Responsibilities'),
+    ('8', 'Planning and sharing of responsibilities for Village interface Meeting')
+)
+
 
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)

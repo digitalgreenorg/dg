@@ -18,6 +18,7 @@ from coco.base_models import ADOPT_PRACTICE_CATEGORY
 from coco.base_models import FRONTLINE_WORKER_PRESENT
 from coco.base_models import TYPE_OF_VENUE
 from coco.base_models import TYPE_OF_VIDEO
+from coco.base_models import TOPICS
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator
@@ -110,6 +111,9 @@ class Screening(CocoModel):
     type_of_venue = models.CharField(choices=TYPE_OF_VENUE,
                                      blank=True, null=True,
                                      max_length=40)
+    meeting_topics = models.CharField(choices=TOPICS,
+                                     blank=True, null=True,
+                                     max_length=255)
 
     class Meta:
         unique_together = ("date", "start_time", "end_time", "animator", "village")
@@ -139,7 +143,7 @@ class PersonAdoptPractice(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     person = models.ForeignKey(Person)
     video = models.ForeignKey(Video)
-    animator = models.ForeignKey(Animator, null=True, blank=True)
+    animator = models.ForeignKey(Animator)
     date_of_adoption = models.DateField()
     date_of_verification = models.DateField(null=True, blank=True)
     partner = models.ForeignKey(Partner)

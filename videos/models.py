@@ -198,7 +198,7 @@ class Video(CocoModel):
     category = models.ForeignKey(Category, null=True, blank=True)
     direct_beneficiaries = models.ManyToManyField(DirectBeneficiaries, blank=True)
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
-    videopractice = models.ForeignKey(VideoPractice, null=True, blank=True)
+    videopractice = models.ManyToManyField(VideoPractice, blank=True)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     youtubeid = models.CharField(max_length=20, blank=True)
@@ -229,6 +229,18 @@ class NonNegotiable(CocoModel):
         return  u'%s' % self.non_negotiable
 post_save.connect(save_log, sender=NonNegotiable)
 pre_delete.connect(delete_log, sender=NonNegotiable)
+
+
+class SelfReportedBehaviour(CocoModel):
+    id = models.AutoField(primary_key=True)
+    video = models.ForeignKey(Video)
+    self_reported_behaviour = models.CharField(max_length=500)
+
+    def __unicode__(self):
+        return  u'%s' % self.self_reported_behaviour
+post_save.connect(save_log, sender=SelfReportedBehaviour)
+pre_delete.connect(delete_log, sender=SelfReportedBehaviour)
+
 
 class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)

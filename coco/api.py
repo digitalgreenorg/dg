@@ -28,6 +28,7 @@ from people.models import PersonGroup
 from videos.models import Video
 from videos.models import Language
 from videos.models import NonNegotiable
+from videos.models import SelfReportedBehaviour
 from videos.models import Category
 from videos.models import SubCategory
 from videos.models import VideoPractice
@@ -36,6 +37,7 @@ from videos.models import DirectBeneficiaries
 # Will need to changed when the location of forms.py is changed
 from dashboard.forms import AnimatorForm
 from dashboard.forms import NonNegotiableForm
+from dashboard.forms import SelfReportedBehaviourForm
 from dashboard.forms import PersonAdoptPracticeForm
 from dashboard.forms import PersonForm
 from dashboard.forms import PersonGroupForm
@@ -162,6 +164,7 @@ def get_user_videos(user_id):
     user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
     if coco_user.type_of_cocouser not in [3, 4]:
         user_videos = coco_user.videos.filter(category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
+        user_videos.append(5444)
         ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
         videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id, category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
         ###Get videos screened to allow inter partner sharing of videos
@@ -187,6 +190,11 @@ def get_user_based_directbeneficiaries(user):
 def get_user_non_negotiable(user_id):
     video_list = get_user_videos(user_id)
     return list(NonNegotiable.objects.filter(video_id__in = video_list).values_list('id', flat = True))
+
+def get_user_self_reported_behaviour(user_id):
+    video_list = get_user_videos(user_id)
+    return list(SelfReportedBehaviour.objects.filter(video_id__in = video_list).values_list('id', flat = True))
+
 
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
@@ -285,6 +293,18 @@ class NonNegotiableAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download Non-Negotiable")
+
+
+class SelfReportedBehaviourAuthorization(Authorization):
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_self_reported_behaviour(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        if bundle.obj.id in get_user_self_reported_behaviour(bundle.request.user.id):
+            return True
+        else:
+            raise NotFound( "Not allowed to download Self Reported Behaviour")
+
 
 class BaseResource(ModelResource):
     
@@ -430,19 +450,19 @@ class VideoResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner')
     category = fields.ForeignKey('coco.api.CategoryResource', 'category', null=True)
     subcategory = fields.ForeignKey('coco.api.SubCategoryResource', 'subcategory', null=True)
-    videopractice = fields.ForeignKey('coco.api.VideoPracticeResource', 'videopractice', null=True)
+    videopractice = fields.ToManyField('coco.api.VideoPracticeResource', 'videopractice', null=True)
     
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
     dehydrate_category = partial(foreign_key_to_id, field_name='category', sub_field_names=['id','category_name', 'parent_category'])
     dehydrate_subcategory = partial(foreign_key_to_id, field_name='subcategory', sub_field_names=['id','subcategory_name'])
-    dehydrate_videopractice = partial(foreign_key_to_id, field_name='videopractice', sub_field_names=['id','videopractice_name'])
+    
     hydrate_village = partial(dict_to_foreign_uri, field_name ='village')
     hydrate_language = partial(dict_to_foreign_uri, field_name='language')
     hydrate_category = partial(dict_to_foreign_uri, field_name='category')
     hydrate_subcategory = partial(dict_to_foreign_uri, field_name='subcategory', resource_name='subcategory')
-    hydrate_videopractice = partial(dict_to_foreign_uri, field_name='videopractice', resource_name='videopractice')
 
+    hydrate_videopractice = partial(dict_to_foreign_uri_m2m, field_name='videopractice', resource_name='videopractice')
     hydrate_production_team = partial(dict_to_foreign_uri_m2m, field_name = 'production_team', resource_name = 'mediator')
     hydrate_direct_beneficiaries = partial(dict_to_foreign_uri_m2m, field_name = 'direct_beneficiaries', resource_name = 'directbeneficiaries')
     hydrate_partner = partial(assign_partner)
@@ -460,6 +480,9 @@ class VideoResource(BaseResource):
     def dehydrate_production_team(self, bundle):
         return [{'id': animator.id, 'name': animator.name} for animator in bundle.obj.production_team.all()]
 
+    def dehydrate_videopractice(self, bundle):
+        return [{'id': iterable.id, 'name': iterable.videopractice_name} for iterable in bundle.obj.videopractice.all()]
+
     def dehydrate_direct_beneficiaries(self, bundle):
         return [{'id': beneficiaries.id, 'name': beneficiaries.direct_beneficiaries_category} for beneficiaries in bundle.obj.direct_beneficiaries.all() ]
 
@@ -473,6 +496,21 @@ class NonNegotiableResource(BaseResource):
         authentication = SessionAuthentication()
         authorization = NonNegotiableAuthorization()
         validation = ModelFormValidation(form_class=NonNegotiableForm)
+        excludes = ['time_created', 'time_modified']
+        always_return_data = True
+    dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
+
+
+class SelfReportedBehaviourResource(BaseResource):
+    video = fields.ForeignKey(VideoResource, 'video')
+    class Meta:
+        max_limit = None
+        queryset = SelfReportedBehaviour.objects.prefetch_related('video').all()
+        resource_name = 'selfreportedbehaviour'
+        authentication = SessionAuthentication()
+        authorization = SelfReportedBehaviourAuthorization()
+        validation = ModelFormValidation(form_class=SelfReportedBehaviourForm)
         excludes = ['time_created', 'time_modified']
         always_return_data = True
     dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
@@ -679,7 +717,7 @@ class PersonAdoptVideoResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
     partner = fields.ForeignKey(PartnerResource, 'partner')
-    animator = fields.ForeignKey(MediatorResource, 'animator', null=True)
+    animator = fields.ForeignKey(MediatorResource, 'animator')
     group = fields.DictField(null = True)
     village = fields.ForeignKey(VillageResource, 'village', null=True)
     parentcategory = fields.ForeignKey(ParentCategoryResource, 'parentcategory', null=True)

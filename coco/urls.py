@@ -20,6 +20,7 @@ from api import ParentCategoryResource
 from api import SubCategoryResource
 from api import VideoPracticeResource
 from api import DirectBeneficiariesResource
+from api import SelfReportedBehaviourResource
 from views import coco_v2
 from views import debug
 from views import login
@@ -46,6 +47,7 @@ v1_api.register(SubCategoryResource())
 v1_api.register(VideoPracticeResource())
 v1_api.register(ParentCategoryResource())
 v1_api.register(DirectBeneficiariesResource())
+v1_api.register(SelfReportedBehaviourResource())
 
 urlpatterns = patterns('',
     (r'^api/', include(v1_api.urls)),

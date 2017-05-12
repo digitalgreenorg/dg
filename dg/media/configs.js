@@ -235,8 +235,8 @@ function() {
                             youtubeid: "Identité Youtube", reviewed_by: "Approuvé par", reviewer: "organisation", approval_date: "Date de validation", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable", direct_beneficiaries: "Bénéficiaires directs"},
         'labels_English': {video:"Video", title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village",
                            production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", youtubeid: "YouTube ID", 
-                           reviewed_by: "Approved By", reviewer: "Organization", approval_date: "Approval Date", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", physically_verifiable:"Physically Verifiable",
-                            direct_beneficiaries: "DirectBeneficiaries"},
+                           reviewed_by: "Approved By", reviewer: "Organization", approval_date: "Approval Date", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", 
+                           physically_verifiable:"Physically Verifiable", direct_beneficiaries: "DirectBeneficiaries", srb: "Self Reported Behaviour"},
         'list_elements_हिन्दी': [{'header':'आईडी', 'element':'online_id'},{'header':'शीर्षक', 'element':'title'},{'header':'गाँव','element':'village.village_name'},{'header':'उत्पादन की तिथि','element':'production_date'}],
         'list_elements_Français': [{'header':'Identité', 'element':'online_id'},{'header':'Titre', 'element':'title'},{'header':'Villages','element':'village.village_name'},{'header':'Date de production','element':'production_date'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Production Date','element':'production_date'}],
@@ -312,7 +312,7 @@ function() {
             'validation_chk': '#non_negotiable0',
             'default_num_rows': 5,
             'add_row' : 1,
-            'req_nonnegotiable' : 1, 
+            'req_nonnegotiable' : 0, 
             'error_message' : 'Add Non-negotiable',
             'template': 'nonnegotiable_inline',
             'joining_attribute': {
@@ -328,7 +328,33 @@ function() {
                         name_field: 'title'
                     }
                 }
-            }
+            },
+
+        },
+
+        'inline1': {
+            'entity': 'selfreportedbehaviour',
+            'validation_chk': '#selfreportedbehaviour0',
+            'default_num_rows': 2,
+            'add_row' : 1,
+            'req_nonnegotiable' : 1, 
+            'error_message' : 'Add Self Reported Behaviour',
+            'template': 'selfreportedbehaviour_inline',
+            'joining_attribute': {
+                'host_attribute': ["id", "title"],
+                'inline_attribute': "video"
+            },
+            'header': 'selfreportedbehaviour_inline_header',
+            'borrow_attributes': [],
+            foreign_entities: {
+                video: {
+                    video: {
+                        placeholder: 'id_video',
+                        name_field: 'title'
+                    }
+                }
+            },
+
         },
 
         'form_field_validation': {
@@ -535,6 +561,28 @@ function() {
         }
     };
 
+
+    var selfreportedbehaviour_configs = {
+        'config_English': 'Self Reported Behaviour',
+        'config_हिन्दी': 'अति आवश्यक बातें',
+        'config_Français': 'Self Reported Behaviour',
+        'rest_api_url': '/coco/api/v2/selfreportedbehaviour/',
+        'entity_name': 'selfreportedbehaviour',
+        'sort_field': 'self_reported_behaviour',
+        'foreign_entities': {
+                'video': {
+                    'video': {
+                        'placeholder': 'id_video',
+                        'name_field': 'title'
+                    }
+                }
+            },
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
     var district_configs = {
         'config_English': 'Districts',
         'config_हिन्दी': 'जिला',
@@ -659,20 +707,20 @@ function() {
             videos_screened: "वीडियो जो दिखाया गया", groups_attended: "ग्राम संगठन जिन्होने भाग लिया", person: "सदस्य", questions_asked: "पूछे गये सवाल",
             del: "हटाओ", sr_no: "क्रम संख्या", person_attended: "सदस्य जिन्होने भाग लिया", form_type: 'वर्ग', parentcategory: 'अभिभावक श्रेणी', age: 'आयु',
             gender: 'लिंग', category: "वर्ग",
-            health_provider_present: "स्वास्थ्य प्रदाता वर्तमान", video_type: 'वीडियो प्रकार', frontline_worker_present: 'फ्रंटलाइन कर्मचारी मौजूद है?',
-            type_of_venue: "स्थान का प्रकार"
+            health_provider_present: "स्वास्थ्य प्रदाता वर्तमान", video_type: 'सभा का प्रकार', frontline_worker_present: 'फ्रंटलाइन कर्मचारी मौजूद है?',
+            type_of_venue: "स्थान का प्रकार", meeting_topics: 'विषय',
         },
         'labels_Français': {screening:"Projections", date: "Date de projection", start_time: "Heure de début", village: "Village", mediator: "Disséminateur",
             videos_screened: "Vidéo projectée", groups_attended: "Groupe concerné", person: "Personne", questions_asked: "Questions posées",
             del: "effacer", sr_no: "Serie de Numéro", person_attended: "Personne", parentcategory: 'Catégorie', age: 'Âge', gender: 'Le genre',
-            category: "Catégorie", health_provider_present: "Prestataire de santé présent", video_type: 'Type de vidéo',
-            frontline_worker_present: 'Présent du travailleur?', type_of_venue: "Type de lieu",
+            category: "Catégorie", health_provider_present: "Prestataire de santé présent", video_type: 'Type de rassemblement',
+            frontline_worker_present: 'Présent du travailleur?', type_of_venue: "Type de lieu", meeting_topics: 'Les sujets',
         },
         'labels_English': {screening:"Screening",date: "Date", start_time: "Start Time", village: "Village", mediator: "mediator",
             videos_screened: "Videos Screened", groups_attended: "Groups Attended", person: "Person", questions_asked: "Questions Asked",
             del: "Delete", sr_no: "Sr. No.", person_attended: "Person", parentcategory: 'Category', age: 'Age', gender: 'Gender',
-            category: "Category", health_provider_present: "Health Provider Present", video_type: 'Video Type',
-            frontline_worker_present: 'Frontline worker present?', type_of_venue: "Type of Venue",
+            category: "Category", health_provider_present: "Health Provider Present", video_type: 'Type of Gathering',
+            frontline_worker_present: 'Frontline worker present?', type_of_venue: "Type of Venue", meeting_topics: 'Topics',
         },
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'विडियो दिखने की तिथि','element':'date'},{'header':'मध्यस्थ','element':'animator.name'},{'header':'गाँव','element':'village.village_name'},{'header':'ग्राम संगठन जिन्होने भाग लिया','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'वीडियो जो दिखाया गया','subelement':'title','element':'videoes_screened'}],
         'list_elements_Français': [{'header':'Identité', 'element':'online_id'},{'header':'Date de projection','element':'date'},{'header':'Disséminateur','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groupe concerné','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Vidéo projectée','subelement':'title','element':'videoes_screened'}],
@@ -689,17 +737,18 @@ function() {
         'show_health_provider_present': 1,
         'fetch_element_that_manipulate': 'parentcategory',
         'field_change_entity_name': 'screening',
+        'reset_element': '#id_group',
         'parent_element_to_hide': 'health_provider_present',
         'parent_element_label_to_hide': 'label_health_provider_present',
-        'fields_to_hide': 'th#id_age, th#id_gender, th#id_category, input#age_row7, input#gender_row7, div#category_row7_chosen',
-        'headers_to_hide': ['th#id_age', 'th#id_gender', 'th#id_category'],
+        'fields_to_hide': ['input#age_row7, input#gender_row7, div#category_chosen', "div#category_row7_chosen", "#id_health_provider_present"],
+        'headers_to_hide': ['th#id_age', 'th#id_gender', 'th#id_category', "#label_health_provider_present"],
         'parent_id_for_inline': 'row7',
         'remove_attribute_field': 'select#category_row7',
         'fields_to_hide_arr_for_hnn': ["#label_health_provider_present", "#id_health_provider_present"],
         download_chunk_size: 1000,
         'unique_together_fields': ['date', 'start_time', 'village.id', 'animator.id'],
         'text_to_select_display_hack': true,
-        'text_to_select_display_hack_field_array': ['frontline_worker_present', 'type_of_venue', 'video_type'],
+        'text_to_select_display_hack_field_array': ['frontline_worker_present', 'type_of_venue', 'video_type', 'meeting_topics'],
         afterSave: function(off_json, Offline){
             var dfd = new $.Deferred();
             var videos_shown = off_json.videoes_screened;
@@ -923,8 +972,9 @@ function() {
         'parent_element_to_hide': 'adopt_practice_chosen',
         'parent_element_label_to_hide': 'label_id_member_adopt',
         'fetch_key_element': 'id',
-        'fields_to_hide_arr': ["div#id_adopt_practice", "div#id_recall_nonnegotiable"],
-        'headers_to_hide': 'th#id_member_adopt, th#id_recall_nonnegotiable',
+        'fields_to_hide': ['div#id_adopt_practice', 'div#id_recall_nonnegotiable', '#id_health_provider_present'],
+        'headers_to_hide': ['th#id_member_adopt', 'th#id_recall_nonnegotiable', '#label_health_provider_present'],
+        'reset_element': '#id_group',
         'inc_table_name': 'personadoptpractice',
         'unique_together_fields': ['person.id', 'video.id', 'date_of_adoption'],
         'text_to_select_display_hack': true,
@@ -1271,6 +1321,8 @@ function() {
     var misc = {
         download_chunk_size: 2000,
         data_transfer_schema: "uploadqueue",
+        agg_variable: "2",
+        health_variable: "1",
         data_transfer_credentials_schema: "user",
         languages: ['हिन्दी', 'English', 'Français'],
         ethiopia_partners: ['moa-dg ethiopia', 'ide', 'oa', 'saa'],
@@ -1375,6 +1427,7 @@ function() {
         videopractice: videopractice_configs,
         district: district_configs,
         nonnegotiable: nonnegotiable_configs,
+        selfreportedbehaviour: selfreportedbehaviour_configs,
         misc: misc,
 
     }
