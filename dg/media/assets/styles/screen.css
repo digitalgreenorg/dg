@@ -4213,3 +4213,11 @@ Modal for Survey
   color: #047d0a;
 }
 
+.errorlist {
+    color: red;
+}
+
+.helptext {
+    font-style: italic;
+    font-weight: bold;
+}
