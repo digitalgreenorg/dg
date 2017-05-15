@@ -116,7 +116,7 @@ def dropdown_video(request):
     block_selected = request.GET.getlist('block[]')
     village_selected = request.GET.getlist('village[]')
 
-    filter_dict ={'village__block__district__state__country__country_name__in':country_selected,'village__block__district__state__state_name__in':state_selected,'village__block__district__district_name__in':district_selected,'village__block__block_name__in':block_selected,'village__village_name__in':village_selected,'partner__partner_name__in':partner_selected}
+    filter_dict ={'village__block__district__state__country__country_name__in':country_selected,'village__block__district__state__state_name__in':state_selected,'village__block__district__district_name__in':district_selected,'partner__partner_name__in':partner_selected}
     final_dict ={}
     videos = []
 
