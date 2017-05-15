@@ -19,12 +19,22 @@ export class GraphsComponent {
     
     ngOnInit(): void{
         configs.forEach(config => {
-            this.graphService.getData(config.chart.type, config.chartName).then(dataList => {
-                //Generate tabs dynamically
-                this.tabs.push(config.tabHolder);          
-                //Feed data into each graph
-                this.feedData(dataList, config);            
-            })
+            //Generate tabs dynamically
+            this.tabs.push(config.tabHolder); 
+            //Add charts          
+            this.charts.push(config); 
+        });
+        this.charts.forEach(chart => {
+            this.graphService.getData(chart.chart.type, chart.chartName).then(dataList => {
+                Object.keys(dataList).forEach(key => {
+                    if(key === chart.chartName) {
+                        chart.series.push(dataList[key]);
+                        chart.xAxis.categories = dataList[key].name;
+                    }
+                });
+                           
+            });
+            
         });
     }
 
