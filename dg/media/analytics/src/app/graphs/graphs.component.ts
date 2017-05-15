@@ -21,18 +21,11 @@ export class GraphsComponent {
         configs.forEach(config => {
             this.graphService.getData(config.chart.type, config.chartName).then(dataList => {
                 //Generate tabs dynamically
-                this.generateTabs(config);          
+                this.tabs.push(config.tabHolder);          
                 //Feed data into each graph
                 this.feedData(dataList, config);            
             })
         });
-    }
-
-    generateTabs(config) : void {
-        let tab = new Tab()
-        tab.id = config.chart.renderTo;
-        tab.heading = config.chart.renderTo;
-        this.tabs.push(tab); 
     }
 
     feedData(dataList,config) : void {
@@ -40,9 +33,4 @@ export class GraphsComponent {
         config.xAxis.categories = dataList[config.chartName].name;
         this.charts.push(config);
     }
-}
-
-class Tab {
-    id : string;
-    heading : string;
 }

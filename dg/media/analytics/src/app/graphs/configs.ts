@@ -6,6 +6,7 @@ export const configs = [
         },
         chartName : 'state_#trainings',
         title : {text : 'State wise traingings conducted'},
+        tabHolder : {'id':'line_chart','heading':'Line Chart'},
         xAxis:{categories:[]},
         plotOptions: {
             line: {
@@ -21,6 +22,7 @@ export const configs = [
         },
         chartName : 'state_#trainings',
         title: {text: 'District wise traingings conducted'},
+        tabHolder : {'id':'bar_chart','heading':'Bar Chart'},
         xAxis: {
             categories: [],
             title: {
@@ -47,6 +49,7 @@ export const configs = [
         },
         chartName : 'sate_%trainings',
         title: {text: 'State wise number of trainings'},
+        tabHolder : {'id':'pie_chart','heading':'Pie Chart'},
         tooltip: {pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'},
         plotOptions: {
             pie: {
