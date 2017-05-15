@@ -275,7 +275,7 @@ query_for_farmer_transaction_all_single_aggregator = '''
                                     AND t1.date = t4.Date_
                                     AND t1.Mandi = t4.Mandi_
                             WHERE
-                                t1.date BETWEEN %s AND %s %s'''
+                                t1.date BETWEEN \'%s\' AND \'%s\' %s'''
 
 
 

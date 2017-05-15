@@ -54,7 +54,7 @@ class Command(BaseCommand):
         else:
             items = []
             aggregator_to_check = aggregators.get(name_en=options.get('aggregator'))
-            aggregator_to_check_id_string = 'AND t1.Agg = ' + str(aggregator_to_check.id) + ''
+            aggregator_to_check_id_string = 'AND t1.Agg = ' + str(aggregator_to_check.user_id) + ''
             content_for_mail = self.file_creator_date_specific(from_to_date, aggregator_to_check_id_string, aggregators)
             email_file_list.append(content_for_mail[0])
 
@@ -91,10 +91,8 @@ class Command(BaseCommand):
         return [file_to_send]
 
     def data_generator(self, from_to_date, aggregator_to_check_id_string):
-        temp_from = str(from_to_date[0]).replace('-','')
-        temp_to = str(from_to_date[1]).replace('-','')
         query = query_for_farmer_transaction_all_single_aggregator % (
-            temp_from, temp_to, aggregator_to_check_id_string)
+            from_to_date[0], from_to_date[1], aggregator_to_check_id_string)
         query_result = onrun_query(query)
         return query_result
 
