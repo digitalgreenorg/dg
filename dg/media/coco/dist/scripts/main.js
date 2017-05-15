@@ -3368,13 +3368,14 @@ define('auth_offline_backend',[
   }
   
   // if u, p matches that in user table, sets login state = true 
-  var login = function(username, password, language, partner_name, partner_id, user_id){
+  var login = function(username, password, language, partner_name, type_of_cocouser, partner_id, user_id){
       var dfd = new $.Deferred();
       User.fetch({
           success: function(){
               if(username==User.get("username") && password==User.get("password"))
               {
-                  save_login_state(username, password, language, partner_name, partner_id, user_id, true)
+
+                  save_login_state(username, password, language, partner_name, type_of_cocouser, partner_id, user_id, true)
                       .done(function(){
                           return dfd.resolve("Successfully Logged In (Offline Backend)");
                       })
@@ -3389,7 +3390,7 @@ define('auth_offline_backend',[
           },
           error: function(){
               // No user has been found in the database. This is probably a new login, and database is yet to be created.
-               save_login_state(username, password, language, partner_name, partner_id, user_id, true)
+               save_login_state(username, password, language, partner_name, type_of_cocouser, partner_id, user_id, true)
                .done(function (){
                    return dfd.resolve("New user registered in offline database.");
                })
@@ -3402,9 +3403,9 @@ define('auth_offline_backend',[
   }
   
   //saves in offline that this username, password is logged in/out
-  var save_login_state = function(username, password, language, partner_name, partner_id, user_id, loggedin){
+  var save_login_state = function(username, password, language, partner_name, type_of_cocouser, partner_id, user_id, loggedin){
       var dfd = new $.Deferred();
-      User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language, 'partner_name': partner_name, 'partner_id': partner_id, 'user_id': user_id},{
+      User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language, 'partner_name': partner_name, 'type_of_cocouser': type_of_cocouser, 'partner_id': partner_id, 'user_id': user_id},{
           success: function(){
               console.log("user state saved in offline");
               dfd.resolve();
@@ -3532,6 +3533,7 @@ function($, all_configs, pa, indexeddb, OfflineAuthBackend) {
                     off_model.fetch({
                         success: function(off_model){
                             // return fetched model
+                            console.log(off_model);
                             dfd.resolve(off_model);
                         },
                         error: function(model, error){
@@ -3650,6 +3652,10 @@ define('denormalize',['jquery', 'configs', 'backbone', 'indexeddb_backbone_confi
                 return f_entities[entity][element].id_field || "id";
             },
 
+            _get_parent_name_field: function(entity, element, f_entities) {
+                return f_entities[entity][element].parent_name_field || "id";
+            },
+
             // get name of the name_field of the foreign element in object's json - for eg - name or person_name
             _get_name_field: function(entity, element, f_entities) {
                 return f_entities[entity][element].name_field;
@@ -3673,10 +3679,12 @@ define('denormalize',['jquery', 'configs', 'backbone', 'indexeddb_backbone_confi
                         // get details of the foreign element bieng denormalised
                         var id_field = this._get_id_field(entity, element, f_entities);
                         var name_field = this._get_name_field(entity, element, f_entities);
+                        var parent_name_field = this._get_parent_name_field(entity, element, f_entities);
                         var field_desc = {
                             entity_name: entity,
                             id_attribute: id_field,
-                            name_attribute: name_field
+                            name_attribute: name_field,
+                            parent_attribute: parent_name_field
                         };
 
                         //  if the foreign element doesn't exist, put an empty object and return
@@ -3745,6 +3753,7 @@ define('denormalize',['jquery', 'configs', 'backbone', 'indexeddb_backbone_confi
                     success: function(model) {
                         // put in the name attribute - denormalization completed for this element
                         obj[field_desc.name_attribute] = model.get(field_desc.name_attribute);
+                        obj[field_desc.parent_attribute] = model.get(field_desc.parent_attribute)
                         return dfd.resolve();
                     },
                     error: function(model, error) {
@@ -5073,6 +5082,7 @@ define('views/form',[
             // already contains the names of the buttons
             var s_passed = this.options.serialize;
             var language = User.get('language');
+            this.type_of_cocouser = User.get('type_of_cocouser');
             this.entity_config = all_configs[this.entity_name];
             // HTML for form 
             //s_passed["form_template"] = this.form_template;
@@ -5118,6 +5128,8 @@ define('views/form',[
             this.inline = this.entity_config.inline;
             this.bulk = this.entity_config.bulk;
             this.labels = this.entity_config['labels_'+language]
+            this.health_variable = all_configs.misc.variable_dict[Object.keys(all_configs.misc.variable_dict)[1]]
+            this.agg_variable = all_configs.misc.variable_dict[Object.keys(all_configs.misc.variable_dict)[0]]
             if (this.edit_case) {
                 this.form_template = _.template($('#' + this.entity_config.edit_template_name).html());
                 if (this.entity_config.edit) {
@@ -5277,6 +5289,7 @@ define('views/form',[
             if (partner_check < 0){
                 $f_el.find("#is_modelfarmer").addClass('hidden');
             }
+
         },
         
         //fetches all foreign collections and renders them when all are fetched
@@ -5302,7 +5315,45 @@ define('views/form',[
             _.each(this.element_entity_map, function(entity, element) {
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
+                    if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
+                         // hide the headers and fields
+                        _.each(this.entity_config.hide_dict, function(key, value) {
+                            $(key).addClass('hidden')
+                            $(value).addClass('hidden')
+                        })
+                        // _.each(this.entity_config.fields_to_hide, function(element, index) {
+                        //     this.$el.find(element).addClass('hidden')
+                        // })
+                        this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                     }else if(this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.health_variable){
+                         // this.$el.find(this.entity_config.fields_to_hide).removeClass('hidden')
+                        // _.each(this.entity_config.fields_to_hide, function(element, index) {
+                        //     this.$el.find(element).removeClass('hidden')
+                        // })
+
+                        _.each(this.entity_config.hide_dict, function(key, value) {
+                            $(key).removeClass('hidden')
+                            $(value).removeClass('hidden')
+                        })
+
+                     }else if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
+                         if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
+                            if (this.edit_case && this.foreign_elements_rendered[element]){
+                                // $("#id_adopt_practice").addClass("hidden");
+                                // $("#id_recall_nonnegotiable").addClass("hidden");
+                                // _.each(this.entity_config.fields_to_hide, function(element, index) {
+                                //     this.$el.find(element).addClass('hidden')
+                                // })
+                                this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                                _.each(this.entity_config.hide_dict, function(key, value) {
+                                    $(key).addClass('hidden')
+                                    $(value).addClass('hidden')
+                                })
+                            } 
+                        }   
+                    }
             }, this);
+
         },
 
         // fetch edit object and render it into form
@@ -5322,6 +5373,18 @@ define('views/form',[
                         that.model_json = model.toJSON();
                         // normalise json to put into form
                         that.normalize_json(that.model_json);
+                        // fields to hide
+                        if (that.entity_config.show_health_provider_present != that.model_json.parentcategory){
+                            
+                            that.$el.find("#"+that.entity_config.parent_element_label_to_hide).addClass('hidden');
+                            that.$el.find("#id_"+that.entity_config.parent_element_to_hide).addClass('hidden');
+                        }
+                        // text to select
+                        if (that.entity_config.text_to_select_display_hack){
+                            var adopt_practice_val = that.model_json.adopt_practice;
+                            that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ adopt_practice_val +"]").attr('selected', 'selected')
+                            $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
+                        }
                         // put into form
                         that.fill_form();
                     })
@@ -5539,14 +5602,79 @@ define('views/form',[
             return $('[name=' + element + ']').val();
         },
 
+        action_after_render_foreign_element: function(parent_element, dep_element){
+            if (this.$el.find('#id_' + parent_element).val() == this.agg_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                // hide the headers
+                // _.each(this.entity_config.headers_to_hide, function(element, index) {
+                //     $(element).addClass('hidden')
+                // })
+                // hide the fields
+                // _.each(this.entity_config.fields_to_hide, function(element, index) {
+                //     $(element).addClass('hidden')
+                // })
+
+                _.each(this.entity_config.hide_dict, function(key, value) {
+                    $(key).addClass('hidden')
+                    $(value).addClass('hidden')
+                })
+                this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+
+            }
+            if (this.$el.find('#id_' + parent_element).val() == this.health_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                // _.each(this.entity_config.headers_to_hide, function(element, index) {
+                //     $(element).removeClass('hidden')
+                // })
+                // _.each(this.entity_config.fields_to_hide, function(element, index) {
+                //     $(element).removeClass('hidden')
+                // })
+                _.each(this.entity_config.hide_dict, function(key, value) {
+                    $(key).removeClass('hidden')
+                    $(value).removeClass('hidden')
+                })
+            }
+
+
+        },
+
+        // check if element value inside array is empty
+        checkArrayElementisnotEmpty: function(arr, that){
+           for(var i=0; i < arr.length; i++){
+               if(that.$el.find(arr[i]).val() === "")   
+                  return false;
+           }
+           return true;
+        },
+
         // render dependent foreign elements - executes when a source element changes
         render_dep_for_elements: function(ev) {
             var source = $(ev.target).attr("name"); //source changed
+            // var arr = this.entity_config.combination_display_field_with_value
+            for (var key in this.entity_config.combination_display_dict) {
+               var combination_display_field = key
+               var arr = this.entity_config.combination_display_dict[key];
+            }
             console.log("FILLING DEP ENTITIES OF -" + source);
             // Iterate over its dependents
             _.each(this.source_dependents_map[source], function(dep_el) {
                 var filtered_models = this.filter_dep_for_element(dep_el);
                 this.render_foreign_element(dep_el, filtered_models);
+                // var arr = this.entity_config.combination_display_field_with_value
+                var combination_field_to_display = combination_display_field
+                if (!jQuery.isEmptyObject(arr) && this.checkArrayElementisnotEmpty(arr, this)){
+                    this.$el.find(combination_field_to_display).prop("disabled", false);
+                    this.$el.find(combination_field_to_display).trigger("chosen:updated");
+                }
+                if (!jQuery.isEmptyObject(arr) && !this.checkArrayElementisnotEmpty(arr, this)){
+                   this.$el.find(combination_field_to_display).prop("disabled", true);
+                   this.$el.find(combination_field_to_display).trigger("chosen:updated");
+                }
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length == 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).addClass('hidden');
+                }
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length != 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).removeClass('hidden');
+                }
+                this.action_after_render_foreign_element(this.entity_config.fetch_element_that_manipulate, dep_el)
             }, this);
 
             _.each(this.source_filter_dependent_map[source], function(dep_el) {
@@ -5596,29 +5724,37 @@ define('views/form',[
                         return exists;
                     });
                 } else {
+
                     filtered_models = dep_collection.filter(function(model) {
+                        var d = dep_desc;
                         var exists = false;
                         var compare = null;
                         if (typeof model.get(dep_desc.dep_attr) == "object")
                             compare = model.get(dep_desc.dep_attr).id;
                         else
-                            compare = model.get(dep_desc.dep_attr)
-
-                        if (dep_desc.src_attr && dep_desc.src_attr != "id") {
-                            var s_collection = that.get_collection_of_element(source_form_element);
-                            var s_model = s_collection.get(parseInt(source_curr_value[0]));
-                            if (s_model.get(dep_desc.src_attr) instanceof Array) {
-                                //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
-                                $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
-                                    if (compare == src_compare.id)
-                                        exists = true;
-                                });
+                            if (dep_desc.parent_attr){
+                                compare = model.get(dep_desc.parent_attr)[dep_desc.dep_attr];
+                            }else{
+                                compare = model.get(dep_desc.dep_attr)
                             }
-                            return exists;
-                        } else {
-                            if (!($.inArray(String(compare), source_curr_value) == -1))
-                                exists = true;
-                            return exists;
+
+                        if (compare != null) {
+                            if (dep_desc.src_attr && dep_desc.src_attr != "id") {
+                                var s_collection = that.get_collection_of_element(source_form_element);
+                                var s_model = s_collection.get(parseInt(source_curr_value[0]));
+                                if (s_model.get(dep_desc.src_attr) instanceof Array) {
+                                    //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                                    $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
+                                        if (compare == src_compare.id)
+                                            exists = true;
+                                    });
+                                }
+                                return exists;
+                            } else {
+                                if (!($.inArray(String(compare), source_curr_value) == -1))
+                                    exists = true;
+                                return exists;
+                            }
                         }
                     });
                 }
@@ -5635,6 +5771,18 @@ define('views/form',[
             $.each(model_array, function(index, obj) {
                 //LIMIT: assumed to be an object
                 if (obj.get(filter_attr).id == filter_value) {
+                    filtered.push(obj);
+                }
+            });
+            return filtered;
+        },
+
+        // filter an array from attributes rather than array index itself
+        filter_array_with_specific_parameters: function(array, filter_attr, filter_val) {
+            filtered = [];
+            $.each(array, function(index, obj) {
+                
+                if (obj.attributes[filter_attr] == filter_val) {
                     filtered.push(obj);
                 }
             });
@@ -5699,6 +5847,8 @@ define('views/form',[
         // renders a foreign element - dropdown or expanded templates - into the form
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
+            cocousertype = this.type_of_cocouser;
+            inline_var = this.entity_config.inline_var
             var that = this;
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
@@ -5706,6 +5856,10 @@ define('views/form',[
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
+                if (element == this.entity_config.fetch_element_that_manipulate && cocousertype != 3){
+                   model_array = this.filter_array_with_specific_parameters(model_array, this.entity_config.fetch_key_element, cocousertype); 
+                }
+                
             //for filtering based on dependent fields
             if (f_entity_desc.filter_dependency)
                 for(var i=0; i<f_entity_desc.filter_dependency.length; i ++){
@@ -5726,6 +5880,7 @@ define('views/form',[
                     if (f_entity_desc.id_field)
                         id_field = f_entity_desc.id_field;
                     var collection = this.get_collection_of_element(element);
+                    var cat = [];
                     $.each(this.model_json[element], function(index, f_json) {
                         model = collection.get(f_json[id_field]);
                         if (!model)
@@ -5735,8 +5890,14 @@ define('views/form',[
                         $.each(f_entity_desc.expanded.extra_fields, function(index, field) {
                             t_json[field] = f_json[field];
                         });
-                        console.log(t_json);
                         $f_el.append(expanded_template(t_json));
+                        if (t_json.category && t_json.category.length >= 1){
+                            _.each(t_json.category, function(iterable, idx){    
+                                if (iterable.id != 'undefined'){
+                                    $f_el.find("."+inline_var + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');    
+                                }
+                            })
+                        }
                     });
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
@@ -5749,8 +5910,35 @@ define('views/form',[
                 }
                 this.initiate_form_widgets();
                 $('.inline_table').show();
+
+                // if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
+                //     _.each(this.entity_config.headers_to_hide, function(element, index) {
+                //         $(element).addClass('hidden');
+                //     })
+                //     _.each(this.entity_config.fields_to_hide, function(element, index) {
+                //         $(element).addClass('hidden');
+                //     })
+                //     this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                // }
+
             } else {
                 console.log("NOT EXPANDED");
+                if (!this.edit_case && !this.foreign_elements_rendered[element]){
+                    $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
+                        if ($(that.entity_config.reset_element).val() != ''){
+                            $('.search-choice-close').click();
+                            $(that.entity_config.reset_element).trigger("chosen:updated");
+                        }
+                    })
+                }
+                if (this.edit_case && this.foreign_elements_rendered[element]){
+                    $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
+                        $('.search-choice-close').click();
+                        $(that.entity_config.reset_element).trigger("chosen:updated");
+
+                    })
+                }
+
                 $f_el = this.$('#' + f_entity_desc.placeholder);
                 if ($f_el.is('select[multiple]'))
                     $f_el.html('');
@@ -5793,10 +5981,25 @@ define('views/form',[
 
                 //select the options selected in edit model
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
-                    this.$('form [name=' + element + ']').val(this.model_json[element]).change();
-                    this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    if (element == this.entity_config.fetch_element_that_manipulate && isNaN(this.model_json[element])){
+                        this.$('form [name=' + element + ']').val('2').change().trigger("chosen:updated");
+                        $("#id_"+element+" option:not(:selected)").remove();
+                        this.$('form [name=' + element + ']').find("#id_"+element+" option:not(:selected)").remove();
+                        this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    }else{
+                        this.$('form [name=' + element + ']').val(this.model_json[element]).change();
+                        this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    }
+                    
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
+                        // if (this.entity_config.entity_name == "adoption"){
+                        //     if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == "2"){
+                        //         if (this.edit_case && this.foreign_elements_rendered[element]){
+                        //             $("#id_adopt_practice").hide()
+                        //         } 
+                        //     }   
+                        // }
                 }
             }
         },
@@ -5938,6 +6141,9 @@ define('views/form',[
             var element = this.expanded;
             var entity = this.element_entity_map[element];
             var desc = this.foreign_entities[entity][element]
+            var fetch_element = this.entity_config.fetch_element
+            var fetch_element_key = this.entity_config.fetch_key_element
+            var child_element = this.entity_config.fetch_child_element
             console.log("FORM:expande desc -" + JSON.stringify(desc));
             var placeholder = desc.expanded.placeholder;
             var all_inlines = $('#' + placeholder + ' tr');
@@ -5965,7 +6171,41 @@ define('views/form',[
     						inl_obj[attr_name] = this.checked;
     				}
                 });
+                // checking category from inline and then converting inlines request ids to actual objects
+                if (inl_obj.category && inl_obj.category.length >= 0){
+                    var category = []
+                    _.each(inl_obj.category, function(idx, iter){ 
+                        Offline.fetch_object(child_element, fetch_element_key, parseInt(idx))
+                            .done(function(model_var) {
+                                category.push({'id': model_var.attributes.id, 'category': model_var.attributes.direct_beneficiaries_category})
+                                inl_obj.category = category;
+                            })
+                            .fail(function() {
+                                // edit object could not be fetched from offline db
+                                //TODO: error handling
+                                console.log("ERROR: EDIT: Edit model could not be fetched!");
+                                alert("ERROR: EDIT:");
+                            });
+                    })
+                
+                    
+                }
                 raw_json[element].push(inl_obj);
+                if (fetch_element != null){
+                   // saving in fetch_element offline table
+                   var category = []
+                   Offline.fetch_object(fetch_element, fetch_element_key, parseInt(inl_obj.person_id))
+                    .done(function(model) {
+                        model.save({'age': inl_obj.age, 'category': inl_obj.category, 'gender': inl_obj.gender});
+                    })
+                    .fail(function() {
+                        // edit object could not be fetched from offline db
+                        //TODO: error handling
+                        console.log("ERROR: EDIT: Edit model could not be fetched!");
+                        alert("ERROR: EDIT: Edit model could not be fetched!");
+                    }); 
+                }
+                
             });
 
             //remove inline attrs from raw_json...let them be inside raw_json.inlines only
@@ -6649,8 +6889,7 @@ define('auth',[
           .done(function(resp) {
               // online login successful, try offline backend login
               if (resp.success == "1"){
-
-                OfflineAuthBackend.login(username, password, language, resp.partner_name, resp.partner_id, resp.user_id)
+                OfflineAuthBackend.login(username, password, language, resp.partner_name, resp.type_of_cocouser, resp.partner_id, resp.user_id)
                   .done(function() {
                       // login successful
                       console.log("Login Successful");
@@ -8343,116 +8582,10 @@ define('views/full_download',[
     return FullDownloadView;
 });
 
-//This view the page header containt the branding, and the user profile - along with the username and logout action.
-define('views/app_header',['jquery', 'underscore', 'configs', 'layoutmanager', 'models/user_model', 'auth', 'collections/upload_collection'],
-
-function(jquery, pass, configs, layoutmanager, User, Auth, upload_collection) {
-
-    var HeaderView = Backbone.Layout.extend({
-        template: "#page_header",
-        events: {
-            "click #logout": "logout",
-            "click .js_language": "language",
-        },
-        
-        initialize: function() {
-            _(this)
-                .bindAll('render');
-            // Re-render the view when User model changes - to keep username updated    
-            User.on('change', this.render);
-        },
-
-        serialize: function() {
-            // Send username 
-            var username = User.get("username");
-            var language = User.get("language");
-            return {
-                username: username,
-                language: language,
-                configs: configs
-            }
-        },
-
-        afterRender: function() { 
-            console.log("rendering page_header");
-            $( ".img-user" ).click(function(event) {
-                // Stops the event from traveling up the hierarchy div-> container-> html.
-                event.stopPropagation();
-                $( ".user-dropdown" ).toggle();
-            });
-            
-            // Hide dropdown if clicked anywhere outside the dropdown.
-            $( "html" ).click(function() {
-                $( ".user-dropdown" ).hide();
-            });
-            
-            //keep the online-offline indicator up-to-date
-            window.addEventListener("offline", this.user_offline);
-            //keep the online-offline indicator up-to-date
-            window.addEventListener("online", this.user_online);
-
-            //set the online-offline indicator
-            if (User.isOnline()) {
-                this.user_online();
-            } else {
-                this.user_offline();
-            }
-        },
-        
-        //enable sync button, show online indicator
-        user_online: function() {
-            $('#sync')
-                .removeAttr("disabled");
-            $('#export').attr('disabled', true);
-            $('#offline')
-                .hide();
-            $('#online')
-                .show();
-        },
-
-        //disable sync button, show offline indicator
-        user_offline: function() {
-            $('#sync')
-                .attr('disabled', true);
-            if (upload_collection.length >= 1){
-                $('#export')
-                .removeAttr('disabled');
-            }else{
-                $('#export').prop('disabled', true)
-            }
-            
-            $('#online')
-                .hide();
-            $('#offline')
-                .show();
-        },
-        
-        // logout and navigate to login url
-        logout: function() {
-            Auth.logout()
-                .always(function() {
-                window.location.href = window.location.origin + window.location.pathname;
-            });
-        },
-
-        //this function is called when user clicks on language change options
-        language: function(e) {
-            e.preventDefault();
-            var language_chosen = $(e.currentTarget).text();
-            var language_current = User.get("language");
-            if(language_chosen!=language_current){
-                User.save({"language":language_chosen});
-            }
-        }
-    });
-    // Our module now returns our view
-    return HeaderView;
-});
-
 //This view contains the links to add and list pages of entities, the sync button, logout link, online-offline indicator
-define('views/dashboard',['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download', 'views/app_header' ],
+define('views/dashboard',['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download'],
 
-function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView, HeaderView) {
+function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView) {
     
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
@@ -8562,13 +8695,9 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             });
             if(User.isOnline()){
                 $('#sync').removeAttr("disabled");
-                $('#export').attr('disabled', true);
             }
             else{
                 $('#sync').attr('disabled', true);
-                if (upload_collection.length >= 1){
-                    $('#export').removeAttr("disabled");    
-                }
                 
             }
         },
@@ -8780,6 +8909,105 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
 
     // Our module now returns our view
     return DashboardView;
+});
+
+//This view the page header containt the branding, and the user profile - along with the username and logout action.
+define('views/app_header',['jquery', 'underscore', 'configs', 'layoutmanager', 'models/user_model', 'auth', 'collections/upload_collection'],
+
+function(jquery, pass, configs, layoutmanager, User, Auth, upload_collection) {
+
+    var HeaderView = Backbone.Layout.extend({
+        template: "#page_header",
+        events: {
+            "click #logout": "logout",
+            "click .js_language": "language",
+        },
+        
+        initialize: function() {
+            _(this)
+                .bindAll('render');
+            // Re-render the view when User model changes - to keep username updated    
+            User.on('change', this.render);
+        },
+
+        serialize: function() {
+            // Send username 
+            var username = User.get("username");
+            var language = User.get("language");
+            return {
+                username: username,
+                language: language,
+                configs: configs
+            }
+        },
+
+        afterRender: function() { 
+            console.log("rendering page_header");
+            $( ".img-user" ).click(function(event) {
+                // Stops the event from traveling up the hierarchy div-> container-> html.
+                event.stopPropagation();
+                $( ".user-dropdown" ).toggle();
+            });
+            
+            // Hide dropdown if clicked anywhere outside the dropdown.
+            $( "html" ).click(function() {
+                $( ".user-dropdown" ).hide();
+            });
+            
+            //keep the online-offline indicator up-to-date
+            window.addEventListener("offline", this.user_offline);
+            //keep the online-offline indicator up-to-date
+            window.addEventListener("online", this.user_online);
+
+            //set the online-offline indicator
+            if (User.isOnline()) {
+                this.user_online();
+            } else {
+                this.user_offline();
+            }
+        },
+        
+        //enable sync button, show online indicator
+        user_online: function() {
+            $('#sync')
+                .removeAttr("disabled");
+            $('#export').attr('disabled', true);
+            $('#offline')
+                .hide();
+            $('#online')
+                .show();
+        },
+
+        //disable sync button, show offline indicator
+        user_offline: function() {
+            $('#sync')
+                .attr('disabled', true);
+            $('#online')
+                .hide();
+            $('#offline')
+                .show();
+        },
+        
+        // logout and navigate to login url
+        logout: function() {
+            Auth.logout()
+                .always(function() {
+                window.location.href = window.location.origin + window.location.pathname;
+            });
+        },
+
+        //this function is called when user clicks on language change options
+        language: function(e) {
+            e.preventDefault();
+            var language_chosen = $(e.currentTarget).text();
+            var language_current = User.get("language");
+            if(language_chosen!=language_current){
+                User.save({"language":language_chosen});
+            }
+        }
+    });
+    // Our module now returns our view
+    return HeaderView;
 });
 
 /*! DataTables 1.10.2
@@ -12213,6 +12441,15 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
             // fill the table with the relevant values.
             var self = this;
             var language = User.get('language');
+            if (this.entity_config.entity_name == this.entity_config.list_var_check){
+                var filtered_collection = new Backbone.Collection(entity_collection.filter(function(model) {
+                    return model.get('parentcategory').id == User.get("type_of_cocouser")|model.get('parentcategory').id == null;
+                    entity_collection = entity_collection
+                })); 
+            }
+            else{
+                entity_collection = entity_collection
+            }
             console.log("in render_data...change in collection...rendering list view");
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
