@@ -111,7 +111,8 @@ class BlockAuthorization(Authorization):
         kwargs[self.block_field] = LoopUser.objects.get(
             user_id=bundle.request.user.id).village.block
         obj = object_list.filter(**kwargs).distinct()
-        if obj:
+        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
+        if obj or userObject.role == 1:
             return True
         else:
             raise NotFound("Not allowed to download Block")
@@ -183,7 +184,8 @@ class DayTransportationAuthorization(Authorization):
         # Is the requested object owned by the user?
         obj = object_list.filter(
             user_created_id=bundle.request.user.id).distinct()
-        if obj:
+        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
+        if obj or userObject.role == 1:
             return True
         else:
             raise NotFound("Not allowed to download Transportations")
@@ -716,6 +718,8 @@ class DayTransportationResource(BaseResource):
     def obj_create(self, bundle, request=None, **kwargs):
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         user = LoopUser.objects.get(user__username=bundle.request.user)
+        if "aggregator" in bundle.data.keys():
+            user = LoopUser.objects.get(id=bundle.data["aggregator"]["online_id"])
         transportationvehicle = TransportationVehicle.objects.get(
             id=bundle.data["transportation_vehicle"]["online_id"])
         attempt = DayTransportation.objects.filter(date=bundle.data[
@@ -724,7 +728,12 @@ class DayTransportationResource(BaseResource):
             bundle = super(DayTransportationResource,
                            self).obj_create(bundle, **kwargs)
         else:
-            send_duplicate_message(int(attempt[0].id))
+            bundle.request.method = 'put'
+            bundle.request.path = bundle.request.path + \
+                str(attempt[0].id) + "/"
+            kwargs['pk'] = attempt[0].id
+            bundle = super(DayTransportationResource,self).obj_update(bundle, **kwargs)
+        #raise DayTransportationNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
