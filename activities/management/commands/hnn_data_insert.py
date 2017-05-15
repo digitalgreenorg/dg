@@ -6,12 +6,16 @@ from openpyxl import load_workbook
 from videos.models import *
 from people.models import *
 from geographies.models import *
+from programs.models import *
+
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         upload_file = '/Users/nikhilverma/workspace/DG/dg/data_nsert.csv'
         # path = os.path.abspath(pm_file)
+        partner_obj = Partner.objects.get(partner_name="JSNM_HNN")
+        partner_id = partner_obj.id
         with open(upload_file, 'rU') as f:
             reader = csv.reader(f, delimiter=',')
             header = next(reader)
@@ -30,22 +34,31 @@ class Command(BaseCommand):
                 person_group_obj, created = \
                     PersonGroup.objects.get_or_create(village_id=village_obj.id,
                                                       group_name=row[4],
-                                                      partner_id=58)
+                                                      partner_id=partner_id)
                 print "person_group_obj", created
 
                 if row[6] == "Female":
                     gender = 'F'
                 else:
                     gender = 'M'
-                mediator_obj, created = \
-                    Animator.objects.get_or_create(partner_id=58, name=row[5],
-                                                   gender=gender,
-                                                   district_id=district_obj.id)
-                print "mediator_obj", created
+                try:
+                    mediator_obj, created = \
+                        Animator.objects.get_or_create(partner_id=partner_id, name=row[5],
+                                                       gender=gender,
+                                                       district_id=district_obj.id)
+                except:
+                    mediator_obj = Animator.objects.filter(partner_id=partner_id, name=row[5],
+                                                           gender=gender,
+                                                           district_id=district_obj.id)
+                    if len(mediator_obj):
+                        mediator_obj = mediator_obj.latest('id')
 
-                for item in mediator_obj.assigned_villages.all():
-                    mediator_obj.assigned_villages.add(village_obj)
-                    mediator_obj.save()
+                print "mediator_obj", created
+                obj, created = AnimatorAssignedVillage.objects.get_or_create(village_id=village_obj.id, animator=mediator_obj)
+                print created, "CREATED"
+                # mediator_obj.assigned_villages.add(village_obj)
+                # mediator_obj.save()
+                # print mediator_obj
                 
                 if row[9] == "Female":
                     gender = 'F'
@@ -57,5 +70,5 @@ class Command(BaseCommand):
                                                  gender=gender,
                                                  village_id=village_obj.id,
                                                  group_id=person_group_obj.id,
-                                                 partner_id=58)
+                                                 partner_id=partner_id)
                 print "person_obj", created

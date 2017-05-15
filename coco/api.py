@@ -758,7 +758,7 @@ class VideoPracticeResource(ModelResource):
 
 
 class DirectBeneficiariesResource(BaseResource):
-    category = fields.ForeignKey(CategoryResource, 'category', null=True)
+    category = fields.ToManyField(CategoryResource, 'category', null=True)
 
     class Meta:
         queryset = DirectBeneficiaries.objects.all()
@@ -766,5 +766,6 @@ class DirectBeneficiariesResource(BaseResource):
         authentication = SessionAuthentication()
         always_return_data = True
 
-    dehydrate_category = partial(foreign_key_to_id, field_name='category',sub_field_names=['id','category_name'])
-    hydrate_category = partial(dict_to_foreign_uri, field_name='category', resource_name='category')
+    def dehydrate_category(self, bundle):
+        return [{'id': category.id, 'name': category.category_name} for category in bundle.obj.category.all()]
+    hydrate_category = partial(dict_to_foreign_uri_m2m, field_name='category', resource_name='category')
