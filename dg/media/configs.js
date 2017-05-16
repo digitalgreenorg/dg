@@ -535,6 +535,28 @@ function() {
         }
     };
 
+
+    var selfreportedbehaviour_configs = {
+        'config_English': 'Self Reported Behaviour',
+        'config_हिन्दी': 'अति आवश्यक बातें',
+        'config_Français': 'Self Reported Behaviour',
+        'rest_api_url': '/coco/api/v2/selfreportedbehaviour/',
+        'entity_name': 'selfreportedbehaviour',
+        'sort_field': 'self_reported_behaviour',
+        'foreign_entities': {
+                'video': {
+                    'video': {
+                        'placeholder': 'id_video',
+                        'name_field': 'title'
+                    }
+                }
+            },
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
     var district_configs = {
         'config_English': 'Districts',
         'config_हिन्दी': 'जिला',
@@ -657,14 +679,18 @@ function() {
         'config_Français': 'Projections',
         'labels_हिन्दी': {screening:"दिखाए गए वीडियो", date: "विडियो दिखने की तिथि", start_time: "आरंभ करने की तिथि", village: "गाँव", mediator: "मध्यस्थ",
             videos_screened: "वीडियो जो दिखाया गया", groups_attended: "ग्राम संगठन जिन्होने भाग लिया", person: "सदस्य", questions_asked: "पूछे गये सवाल",
-            del: "हटाओ", sr_no: "क्रम संख्या", person_attended: "सदस्य जिन्होने भाग लिया", form_type: 'वर्ग', age: 'आयु', gender: 'लिंग', health_provider_present: "स्वास्थ्य प्रदाता वर्तमान"},
+            del: "हटाओ", sr_no: "क्रम संख्या", person_attended: "सदस्य जिन्होने भाग लिया", form_type: 'वर्ग', age: 'आयु', gender: 'लिंग', health_provider_present: "स्वास्थ्य प्रदाता वर्तमान",
+            type_of_venue:"Type of Venue", type_of_video: "Video Type", meeting_topics: "Topics", frontline_worker_present: "FrontLine Worker Present"},
         'labels_Français': {screening:"Projections", date: "Date de projection", start_time: "Heure de début", village: "Village", mediator: "Disséminateur",
             videos_screened: "Vidéo projectée", groups_attended: "Groupe concerné", person: "Personne", questions_asked: "Questions posées",
             del: "effacer", sr_no: "Serie de Numéro", person_attended: "Personne", parentcategory: 'Catégorie', age: 'Âge', gender: 'Le genre',
-            category: "Catégorie", health_provider_present: "Prestataire de santé présent"},
+            category: "Catégorie", health_provider_present: "Prestataire de santé présent", 
+            type_of_venue:"Type of Venue", type_of_video: "Video Type", meeting_topics: "Topics", frontline_worker_present: "FrontLine Worker Present"},
         'labels_English': {screening:"Screening",date: "Date", start_time: "Start Time", village: "Village", mediator: "mediator",
             videos_screened: "Videos Screened", groups_attended: "Groups Attended", person: "Person", questions_asked: "Questions Asked",
-            del: "Delete", sr_no: "Sr. No.", person_attended: "Person", parentcategory: 'Category', age: 'Age', gender: 'Gender', category: "Category", health_provider_present: "Health Provider Present"},
+            del: "Delete", sr_no: "Sr. No.", person_attended: "Person", parentcategory: 'Category', age: 'Age', gender: 'Gender', category: "Category", 
+            health_provider_present: "Health Provider Present", type_of_venue:"Type of Venue",
+            type_of_video: "Video Type", meeting_topics: "Topics", frontline_worker_present: "FrontLine Worker Present"},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'विडियो दिखने की तिथि','element':'date'},{'header':'मध्यस्थ','element':'animator.name'},{'header':'गाँव','element':'village.village_name'},{'header':'ग्राम संगठन जिन्होने भाग लिया','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'वीडियो जो दिखाया गया','subelement':'title','element':'videoes_screened'}],
         'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':'Date de projection','element':'date'},{'header':'Disséminateur','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groupe concerné','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Vidéo projectée','subelement':'title','element':'videoes_screened'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Videos Screened','subelement':'title','element':'videoes_screened'}],
@@ -1260,6 +1286,7 @@ function() {
     var misc = {
         download_chunk_size: 2000,
         data_transfer_schema: "uploadqueue",
+        upavan_user_fields: ["#type_of_venue", "#csp_name", "#frontline_worker_present"],
         agg_variable: "2",
         health_variable: "1",
         variable_dict: {'agg_variable': '2', 'health_variable': '1'},
@@ -1364,6 +1391,7 @@ function() {
         district: district_configs,
         nonnegotiable: nonnegotiable_configs,
         misc: misc,
+        selfreportedbehaviour: selfreportedbehaviour_configs,
 
     }
 

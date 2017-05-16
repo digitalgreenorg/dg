@@ -104,7 +104,7 @@ class Screening(CocoModel):
     observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
     health_provider_present = models.BooleanField(default=False)
     # UPAVAN fields
-    video_type = models.CharField(max_length=20, choices=TYPE_OF_VIDEO, blank=True)
+    type_of_video = models.CharField(max_length=20, choices=TYPE_OF_VIDEO, blank=True, null=True)
     frontline_worker_present = models.CharField(max_length=20, 
                                                 choices=FRONTLINE_WORKER_PRESENT,
                                                 blank=True, null=True)

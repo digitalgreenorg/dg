@@ -18,7 +18,7 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -432,22 +432,13 @@
                 <button id='add_rows' type= "button" class="btn btn-default btn-sm mrg-btm-sm col-sm-offset-2"><%= add_row %></button>
             <% } %>
 
-            <% if (inline1 == true) { %>
-                <table id= "inline1" class="table">
-                    <thead id ="inline1_header">
-                    </thead>
-                    <tbody id= "inline1_body">
-        
-                    </tbody>
-                </table><button id='add_rows1' type= "button" class="btn btn-default btn-sm mrg-btm-sm col-sm-offset-2"><%= add_row %></button>
-            <% } %>
-
             <div class="form-actions">
                 <button id='button1' type="submit" class="btn btn-primary action_button col-sm-offset-2" data-loading-text="Saving..."><%=button1%></button>
                 <%if(button2){%>
                     <button id='button2' type= "button" class="btn btn-primary action_button"><%=button2%></button>
                 <%}%>
             </div>
+
         </form>
 	
     </div>
@@ -599,10 +590,10 @@
                     </div>
                 </div>
 
-                <div class="form-group" id="video_type"> 
-                    <label class="control-label col-sm-2"><%=video_type%></label>
+                <div class="form-group" id="type_of_video"> 
+                    <label class="control-label col-sm-2"><%=type_of_video%></label>
                     <div class="col-sm-4">
-                        <select name="video_type" id="id_video_type" class="chosen-select form-control" onchange="get_val()">
+                        <select name="type_of_video" id="id_type_of_video" class="chosen-select form-control" onchange="get_val()">
                             <option value=''>-----------</option>
                             <option value='1'>NSA video</option>
                             <option value='2'>MIYCN video</option>
@@ -612,7 +603,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" id="id_meeting_topic">
+                <div class="form-group" id="id_meeting_topic" style="display:none;">
                     <label class="control-label col-sm-2" id="label_id_meeting_topics"><%=meeting_topics%></label>
                     <div class="col-sm-4">
                         <select name="meeting_topics" id="id_meeting_topics" class="chosen-select form-control">
@@ -820,11 +811,11 @@
     function get_val()
     { 
 
-         $("#id_video_type").change(function(){
-             var video_type = this.value;
-             if(video_type == '4'){
-                console.log(video_type, "jkfgaksdgfjkadsfgdsjafghdfjhadjh")
-                $("#id_meeting_topic").removeClass('hidden')
+         $("#id_type_of_video").change(function(){
+             var type_of_video = this.value;
+             alert(type_of_video)
+             if(type_of_video == '4'){
+                $("#id_meeting_topic").removeAttr('style')
              }else{
                 $("#id_meeting_topic").addClass('hidden')
              }
