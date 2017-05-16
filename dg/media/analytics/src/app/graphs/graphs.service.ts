@@ -10,7 +10,7 @@ export class GraphsService {
     
     constructor(private http: Http) { }
 
-    getData(chartType, chartName): any {
+    getData(chartType, chartName): Promise<any> {
         return this.http.get(this.graphURL, {'params':{'chartType':chartType,'chartName':chartName}})
             .toPromise()
             .then(response => response.json())

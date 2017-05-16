@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { NvD3Module } from 'angular2-nvd3';
 import { ChartModule } from 'angular2-highcharts'
@@ -30,9 +31,9 @@ export function highchartsFactory() {
   ],
   providers: [{
       provide: HighchartsStatic,
-      useFactory: highchartsFactory
+      useFactory: highchartsFactory,
     },
-    GraphsService],
+    GraphsService, AsyncPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

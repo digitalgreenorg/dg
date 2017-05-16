@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { configs } from './configs';
 import { GraphsService } from './graphs.service';
 //import { TabsetComponent } from 'ngx-bootstrap';
@@ -24,23 +24,27 @@ export class GraphsComponent {
             //Add charts          
             this.charts.push(config); 
         });
+        
+    }
+
+    ngAfterViewInit(): void {
         this.charts.forEach(chart => {
             this.graphService.getData(chart.chart.type, chart.chartName).then(dataList => {
+                //console.log(dataList);
                 Object.keys(dataList).forEach(key => {
                     if(key === chart.chartName) {
                         chart.series.push(dataList[key]);
                         chart.xAxis.categories = dataList[key].name;
+                        //this.cdRef.detectChanges();
                     }
-                });
-                           
-            });
-            
+                });            
+             });  
         });
     }
 
-    feedData(dataList,config) : void {
+    /*feedData(dataList,config) : void {
         config.series.push(dataList[config.chartName]);
         config.xAxis.categories = dataList[config.chartName].name;
         this.charts.push(config);
-    }
+    }*/
 }
