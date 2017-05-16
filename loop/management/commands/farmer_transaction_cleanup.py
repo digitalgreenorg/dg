@@ -58,7 +58,7 @@ class Command(BaseCommand):
             content_for_mail = self.file_creator_date_specific(from_to_date, aggregator_to_check_id_string, aggregators)
             email_file_list.append(content_for_mail[0])
 
-        common_send_email("Farmers Transaction Data", recipients=RECIPIENTS, files=email_file_list, bcc=[],
+        common_send_email("Farmers Transaction Data", recipients=RECIPIENTS_TEMP, files=email_file_list, bcc=[],
                           from_email=EMAIL_HOST_USER, html="", text="")
         for file_name_to_remove in email_file_list:
             os.remove(str(file_name_to_remove))
