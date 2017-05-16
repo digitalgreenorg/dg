@@ -129,7 +129,7 @@ class DirectBeneficiaries(models.Model):
     Describes the direct beneficiaries of the video
     """
     direct_beneficiaries_category = models.CharField(max_length=80, null=True)
-    category = models.ForeignKey(Category, null=True)
+    category = models.ManyToManyField(Category, blank=True)
 
     def __unicode__(self):
         return self.direct_beneficiaries_category

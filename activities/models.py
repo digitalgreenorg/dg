@@ -151,12 +151,12 @@ class PersonAdoptPractice(CocoModel):
     non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
     verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
     parentcategory = models.ForeignKey(ParentCategory, null=True, blank=True)
-    adopt_practice = models.CharField(max_length=1, choices=ADOPT_PRACTICE_CATEGORY, null=True)
-    krp_one = models.BooleanField(verbose_name="1", db_index=True,default=False)
-    krp_two = models.BooleanField(verbose_name="2", db_index=True,default=False)
+    adopt_practice = models.CharField(max_length=1, choices=ADOPT_PRACTICE_CATEGORY, null=True, blank=True)
+    krp_one = models.BooleanField(verbose_name="1", db_index=True, default=False)
+    krp_two = models.BooleanField(verbose_name="2", db_index=True, default=False)
     krp_three = models.BooleanField(verbose_name="3", db_index=True,default=False)
-    krp_four = models.BooleanField(verbose_name="4", db_index=True,default=False)
-    krp_five = models.BooleanField(verbose_name="5", db_index=True,default=False)
+    krp_four = models.BooleanField(verbose_name="4", db_index=True, default=False)
+    krp_five = models.BooleanField(verbose_name="5", db_index=True, default=False)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)
