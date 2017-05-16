@@ -3211,7 +3211,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 delay = 6000;
                                 setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
-                                    //$("#aggregator_payment_tab :input").val(aggregator_name_input);
+                                    $("#aggregator_payment_tab :input").val(aggregator_name_input);
                                     
                                 }, delay);
 
@@ -3485,7 +3485,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 delay = 6000;
                                 setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
-                                    //$("#aggregator_payment_tab :input").val(aggregator_name_input);
+                                    $("#aggregator_payment_tab :input").val(aggregator_name_input);
                                     
                                 }, delay);
 
