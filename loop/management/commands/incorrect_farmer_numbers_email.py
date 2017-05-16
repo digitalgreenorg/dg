@@ -81,7 +81,7 @@ class Command(BaseCommand):
         context = Context({'items': items})
         final_html = final_html_raw.render(context)
 
-        common_send_email("Farmers List with Incorrect Mobile Numbers", recipients=RECIPIENTS_TEMP, files=email_file_list, bcc=[],
+        common_send_email("Farmers List with Incorrect Mobile Numbers", recipients=RECIPIENTS, files=email_file_list, bcc=[],
                           from_email=EMAIL_HOST_USER, html=final_html, text=final_html)
         for file_name_to_remove in email_file_list:
             os.remove(str(file_name_to_remove))
