@@ -115,6 +115,7 @@ class Command(BaseCommand):
         for row in filtered_data_copy:
             i = i + 1
             row[0] = i
+            #convert datetime to str to display in YYYY-MM-DD format.
             row[1] = str(row[1])
         return filtered_data_copy
 
