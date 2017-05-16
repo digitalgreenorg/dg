@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('loop', '0008_auto_20170309_1259'),
+        ('loop', '0009_broadcast_broadcastaudience'),
     ]
 
     operations = [
