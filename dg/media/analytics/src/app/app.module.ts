@@ -26,7 +26,7 @@ export function highchartsFactory() {
     FormsModule,
     HttpModule,
     NvD3Module,
-    ChartModule,
+    ChartModule.forRoot(require('highcharts')),
     TabsModule.forRoot()
   ],
   providers: [{
