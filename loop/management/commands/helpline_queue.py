@@ -1,3 +1,5 @@
+__author__ = 'Vikas Saini'
+
 import time
 import datetime
 from datetime import timedelta
@@ -58,13 +60,13 @@ class Command(BaseCommand):
         pending_incoming_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
         # Select pending calls from working hours only.
         for pending_call in pending_incoming_call:
-            incoming_hour = pending_call['incoming_time'].hour
-            last_incoming_hour = pending_call['last_incoming_time'].hour
+            #incoming_hour = pending_call['incoming_time'].hour
+            #last_incoming_hour = pending_call['last_incoming_time'].hour
             # Select calls which are incoming or last incoming between 9 AM to 6 PM
-            if (incoming_hour in working_hours) and (last_incoming_hour in working_hours):
-                incoming_call_obj = self.check_pending_or_not(pending_call['id'])
-                if incoming_call_obj:
-                    farmer_number = incoming_call_obj.from_number
-                    # Last parameter more than 0 only when we do not want to acknowledge User if call is not successfull
-                    make_helpline_call(incoming_call_obj,expert_obj,farmer_number,1)
-                    time.sleep(240)
+            #if (incoming_hour in working_hours) and (last_incoming_hour in working_hours):
+            incoming_call_obj = self.check_pending_or_not(pending_call['id'])
+            if incoming_call_obj:
+                farmer_number = incoming_call_obj.from_number
+                # Last parameter more than 0 only when we do not want to acknowledge User if call is not successfull
+                make_helpline_call(incoming_call_obj,expert_obj,farmer_number,1)
+                time.sleep(240)

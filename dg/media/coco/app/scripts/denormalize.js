@@ -11,6 +11,10 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'],
                 return f_entities[entity][element].id_field || "id";
             },
 
+            _get_parent_name_field: function(entity, element, f_entities) {
+                return f_entities[entity][element].parent_name_field || "id";
+            },
+
             // get name of the name_field of the foreign element in object's json - for eg - name or person_name
             _get_name_field: function(entity, element, f_entities) {
                 return f_entities[entity][element].name_field;
@@ -34,10 +38,12 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'],
                         // get details of the foreign element bieng denormalised
                         var id_field = this._get_id_field(entity, element, f_entities);
                         var name_field = this._get_name_field(entity, element, f_entities);
+                        var parent_name_field = this._get_parent_name_field(entity, element, f_entities);
                         var field_desc = {
                             entity_name: entity,
                             id_attribute: id_field,
-                            name_attribute: name_field
+                            name_attribute: name_field,
+                            parent_attribute: parent_name_field
                         };
 
                         //  if the foreign element doesn't exist, put an empty object and return
@@ -106,6 +112,7 @@ define(['jquery', 'configs', 'backbone', 'indexeddb_backbone_config'],
                     success: function(model) {
                         // put in the name attribute - denormalization completed for this element
                         obj[field_desc.name_attribute] = model.get(field_desc.name_attribute);
+                        obj[field_desc.parent_attribute] = model.get(field_desc.parent_attribute)
                         return dfd.resolve();
                     },
                     error: function(model, error) {
