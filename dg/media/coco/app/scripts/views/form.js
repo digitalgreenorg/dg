@@ -869,7 +869,7 @@ define([
                             _.each(t_json.category, function(iterable, idx){   
                                 if (iterable.id != 'undefined'){
                                     $f_el.find("."+inline_var + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');
-                                    $("."+inline_var+index).trigger("chosen:updated");
+                                    // $("."+inline_var+index).trigger("chosen:updated");
                                 }
                             })
                         }
@@ -882,17 +882,17 @@ define([
                         t_json["index"] = index;
 
                         $f_el.append(expanded_template(t_json));
-                        Offline.fetch_collection("directbeneficiaries")
-                            .done(function(collection) {
-                                $.each(collection.models, function (i, item) { 
-                                    $f_el.find("."+inline_var + index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
-                                    $("."+inline_var+index).trigger("chosen:updated");
-                                })
+                        // Offline.fetch_collection("directbeneficiaries")
+                        //     .done(function(collection) {
+                        //         $.each(collection.models, function (i, item) { 
+                        //             $f_el.find("."+inline_var + index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
+                        //             $("."+inline_var+index).trigger("chosen:updated");
+                        //         })
                                 
-                            })
-                            .fail(function() {
-                                console.log("ERROR: EDIT: Inline collection could not be fetched!");
-                            });
+                        //     })
+                        //     .fail(function() {
+                        //         console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                        //     });
                     });
                 }
                 this.initiate_form_widgets();
