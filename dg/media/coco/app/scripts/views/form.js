@@ -869,6 +869,7 @@ define([
                             _.each(t_json.category, function(iterable, idx){   
                                 if (iterable.id != 'undefined'){
                                     $f_el.find("."+inline_var + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');
+                                    $("."+inline_var+index).trigger("chosen:updated");
                                 }
                             })
                         }

@@ -162,7 +162,6 @@ def get_user_videos(user_id):
     user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
     if coco_user.type_of_cocouser not in [3, 4]:
         user_videos = coco_user.videos.filter(category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
-        user_videos.append(5444)
         ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
         videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id, category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
         ###Get videos screened to allow inter partner sharing of videos

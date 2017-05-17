@@ -796,6 +796,9 @@
             <div class="form-group">
                 <div class="controls">
                     <select name="category<%=index%>" id="category_row7" class="chosen-select form-control category_row7_<%=index%>" multiple="multiple">
+                    <option value='4'>Mother of a child 6 months to 2 years</option>
+                        <option value='5'>Mother of a child up to 6 months</option>
+                        <option value='6'>Pregnant Women</option>
                     </select>
                     
                     
@@ -1179,7 +1182,7 @@
 </script>  
 
 <script type="text/template" id="person_inline_header">
-<tr class="hide-header"> <th> <%= person_name %></th><th> <%= father_name %></th><th class = "notbold"> <%= age %></th><th> <%= gender %></th><th class="notbold"> <%= phone_no %></th></tr>
+<tr class="hide-header"> <th> <%= person_name %></th><th id="fhname"> Father/Husband Name</th><th class = "notbold"> <%= age %></th><th> <%= gender %></th><th class="notbold"> <%= phone_no %></th></tr>
 </script>
 
 <!--//////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
