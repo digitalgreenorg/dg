@@ -107,7 +107,7 @@ define(['jquery', 'underscore', 'datatables', 'indexeddb_backbone_config', 'layo
             // fill the table with the relevant values.
             var self = this;
             var language = User.get('language');
-            if (this.entity_config.entity_name == "screening"|this.entity_config.entity_name == "adoption"){
+            if (this.entity_config.entity_name == this.entity_config.list_var_check){
                 var filtered_collection = new Backbone.Collection(entity_collection.filter(function(model) {
                     return model.get('parentcategory').id == User.get("type_of_cocouser")|model.get('parentcategory').id == null;
                     entity_collection = entity_collection

@@ -84,7 +84,7 @@ class SelfReportedBehaviourInline(admin.TabularInline):
 class ParentCategoryAdmin(admin.ModelAdmin):
     
     def has_add_permission(self, request, obj=None):
-        return False
+        return True
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -92,7 +92,7 @@ class ParentCategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'parent_category_name']
     search_fields = ['parent_category_name']
 
-    readonly_fields = list_display
+    # readonly_fields = list_display
 
 
 class DirectBeneficiariesAdmin(admin.ModelAdmin):
