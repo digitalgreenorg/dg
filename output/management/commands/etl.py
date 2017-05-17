@@ -23,11 +23,14 @@ DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class AnalyticsSync():
 
-    def __init__(self, db_root_user, db_root_pass):
+    def __init__(self,db_root_dbname, db_root_user, db_root_pass, db_root_host, db_root_port):
         from django.db import connection
         self.db_cursor = connection.cursor()
+        self.db_root_dbname = db_root_dbname
         self.db_root_user = db_root_user
         self.db_root_pass = db_root_pass
+        self.db_root_host = db_root_host
+        self.db_root_port = db_root_port
         self.video_date_changes = None
         self.person_gender_changes = None
         self.screening_date_changes = None
@@ -47,7 +50,7 @@ class AnalyticsSync():
 
         print time.time()
         # Create schema
-        ret_val = subprocess.call("mysql -u%s -p%s %s < %s" % (self.db_root_user, self.db_root_pass,
+        ret_val = subprocess.call("mysql -h%s -P%s -u%s -p%s %s < %s" % (self.db_root_host, self.db_root_port, self.db_root_user, self.db_root_pass,
                                                                database, os.path.join(DIR_PATH, 'delete_myisam_tables.sql')), shell=True)
         if ret_val != 0:
             raise Exception("Could not create schema on clone DB")
@@ -55,9 +58,10 @@ class AnalyticsSync():
 
         # Fill Data
         try:
-            self.db_connection_clone = MySQLdb.connect(host='localhost',
-                                                 user=DATABASES['default']['USER'],
-                                                 passwd=DATABASES['default']['PASSWORD'],
+            self.db_connection_clone = MySQLdb.connect(host=self.db_root_host,
+                                                       port=self.db_root_port,
+                                                 user=self.db_root_user,
+                                                 passwd=self.db_root_pass,
                                                  db=database,
                                                  charset='utf8',
                                                  use_unicode=True).cursor()
@@ -153,8 +157,7 @@ class AnalyticsSync():
                                         SELECT A.user_created_id, A.time_created, A.user_modified_id, A.time_modified, A.id, A.old_coco_id, A.name,
                                         A.gender, A.phone_no, A.partner_id, A.district_id, A.total_adoptions, B.village_id, B.start_date
                                         FROM people_animator A
-                                        JOIN people_animatorassignedvillage B on A.id=B.animator_id
-                                        AND A.time_created > DATE_ADD(Now(), Interval -1 year)""")
+                                        JOIN people_animatorassignedvillage B on A.id=B.animator_id""")
             print "Finished insert into people_animatorwisedata"
 
             # main_data_dst stores all the counts for every date , every
@@ -340,13 +343,13 @@ class AnalyticsSync():
 
     def copy_myisam_main(self):
         start_time = time.time()
-        database = DATABASES['default']['NAME']
+        database = self.db_root_dbname
         print "Database:", database
 
         try:
             # Create schema
             with open( os.path.join(DIR_PATH, 'create_schema.sql'), 'r') as f:
-                command = ['mysql', '-u%s' % self.db_root_user, '-p%s' % self.db_root_pass, database]
+                command = ['mysql', '-h%s' % self.db_root_host, '-P%s' % self.db_root_port, '-u%s' % self.db_root_user, '-p%s' % self.db_root_pass, database]
                 proc = subprocess.Popen(command, stdin = f)
                 stdout, stderr = proc.communicate()
             print "Tables copied to main DB"
@@ -361,14 +364,13 @@ class Command(BaseCommand):
     arguments: mysql_root_username mysql_root_password
     '''
 
-    def add_arguments(self, parser):
-        parser.add_argument('username')
-        parser.add_argument('password')
-
     def handle(self, *args, **options):
         print("COCO ANALYTICS LOG")
         print(datetime.date.today())
-        mysql_root_username = options['username']
-        mysql_root_password = options['password']
-        an_sync_obj = AnalyticsSync(mysql_root_username, mysql_root_password)
+        mysql_root_dbname = DATABASES['default']['NAME']
+        mysql_root_username = DATABASES['default']['USER']
+        mysql_root_password = DATABASES['default']['PASSWORD']
+        mysql_root_host = DATABASES['default']['HOST']
+        mysql_root_port = DATABASES['default']['PORT']
+        an_sync_obj = AnalyticsSync(mysql_root_dbname, mysql_root_username, mysql_root_password, mysql_root_host, mysql_root_port)
         an_sync_obj.refresh_build()

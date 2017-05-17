@@ -66,7 +66,7 @@ $("#search_trainers").keyup(function() {
             $(this).find('td').each(function () {
                 for(var i = 0; i < trainer_name_array.length; i++){
                     if(trainer_name_array[i].indexOf(value.toLowerCase()) == 0) {
-                            if_td_has = true; 
+                            if_td_has = true;
                             break;
                     }
                 }//Check if td's text matches key and then use OR to check it for all td's
@@ -121,7 +121,7 @@ function hide_progress_bar() {
     $('#progress_bar').hide()
 }
 
-function show_progress_bar() { 
+function show_progress_bar() {
     $('#progress_bar').show();
 }
 
@@ -161,8 +161,8 @@ function set_eventlistener() {
     });
 
     var today = new Date();
-    var _month = (( (today.getMonth() + 1) > 9 ) ? (today.getMonth() + 1).toString(): "0" + (today.getMonth() + 1).toString());
-    var _date = (( (today.getDate() + 1) > 9 ) ? (today.getDate() + 1).toString(): "0" + (today.getDate() + 1).toString());
+    var _month = (( (today.getMonth() + 1) > 9 ) ? (today.getMonth() + 1).toString() : "0" + (today.getMonth() + 1).toString());
+    var _date = (( today.getDate() > 9 ) ? today.getDate().toString() : ("0" + today.getDate().toString()));
     $("#to_date").val(today.getFullYear() + "-" + _month + "-" + _date);
     $("#from_date").val("2015-01-01");
 
@@ -240,7 +240,7 @@ function get_data() {
             if (state_div.checked)
                 state_ids.push(state_div.getAttribute('data'));
         });
-        
+
         get_trainer_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         get_question_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
         get_state_data(start_date, end_date, assessment_ids, trainer_ids, state_ids);
@@ -436,7 +436,7 @@ function plot_trainerwise_data(trainer_list, mediator_list, trainer_wise_average
         var x_axis = [];
         var trainer_scores_dict = [];
         var trainer_trainings_mediators_dict = [];
-      
+
         var avg_score_dict = {};
         var perc_score_dict = {};
         var trainer_trainings_dict = {};
@@ -468,7 +468,7 @@ function plot_trainerwise_data(trainer_list, mediator_list, trainer_wise_average
 
         perc_score_dict['yAxis'] = 1;
         trainer_mediators_dict['yAxis'] = 0;
-         
+
         avg_score_dict['data'] = new Array(trainer_list.length).fill(0.0);
         perc_score_dict['data'] = new Array(trainer_list.length).fill(0.0);
         trainer_trainings_dict['data'] = new Array(trainer_list.length).fill(0.0);
@@ -500,7 +500,7 @@ function plot_trainerwise_data(trainer_list, mediator_list, trainer_wise_average
         }
 
         trainer_scores_dict.push(avg_score_dict);
-        
+
         trainer_trainings_mediators_dict.push(trainer_mediators_dict);
         trainer_trainings_mediators_dict.push(trainer_mediators_pass_dict);
 
@@ -637,7 +637,7 @@ function plot_statewise_data(state_list, mediator_list, state_wise_avg_score_dat
         state_pass_perc_dict['data'] = new Array(state_list.length).fill(0.0);
 
         for (i = 0; i < state_list.length; i++) {
-            state_name = state_list[i]['participant__district__state__state_name']; 
+            state_name = state_list[i]['participant__district__state__state_name'];
             x_axis.push(state_name);
 
             var avg = (state_wise_avg_score_data[i][state_name]['score_sum'] / state_wise_avg_score_data[i][state_name]['participant_count']);
@@ -720,7 +720,7 @@ function plot_monthwise_data(series_name, series_data_list) {
         series: [{
             name: series_name,
             data: series_data_list
-       
+
             }]
     });
 }
@@ -820,7 +820,7 @@ function plot_dual_axis_chart(container_obj, x_axis, data_dict, y_axis_1_text, y
 
             align: 'center',
             layout: 'horizontal',
-        
+
             x: 0,
             y: 0,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
@@ -847,12 +847,12 @@ function plot_multiple_axis_chart(container_obj, x_axis, data_dict, y_axis_1_tex
                 }
             },
             allowOverlap : true
-        }; 
-        data_dict[0]['dataLabels'] = dataLabels;  
+        };
+        data_dict[0]['dataLabels'] = dataLabels;
     }
-    
 
-    
+
+
     container_obj.highcharts({
         chart: {
             zoomType: '',

@@ -1,4 +1,4 @@
-from tastypie.exceptions import ImmediateHttpResponse, NotFound
+from tastypie.exceptions import ImmediateHttpResponse, NotFound, BadRequest
 from tastypie.authentication import Authentication, ApiKeyAuthentication
 from tastypie.authorization import Authorization
 from tastypie.resources import ModelResource
@@ -16,36 +16,15 @@ import json
 from django.contrib.auth.models import User
 from models import *
 
-
-class FarmerNotSaved(Exception):
-    pass
-
-
-class CropNotSaved(Exception):
-    pass
-
-
-class TransactionNotSaved(Exception):
-    pass
-
-
-class TransporterNotSaved(Exception):
-    pass
-
-
-class TransportationVehicleNotSaved(Exception):
-    pass
-
-
-class DayTransportationNotSaved(Exception):
-    pass
-
-
 class AssignedMandiNotSaved(Exception):
     pass
 
 class AssignedVillageNotSaved(Exception):
     pass
+
+def send_duplicate_message(obj_id):
+    response = {"error_message": {"id": obj_id, "error": "Duplicate"}}
+    raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def foreign_key_to_id(bundle, field_name, sub_field_names):
     field = getattr(bundle.obj, field_name)
@@ -132,7 +111,8 @@ class BlockAuthorization(Authorization):
         kwargs[self.block_field] = LoopUser.objects.get(
             user_id=bundle.request.user.id).village.block
         obj = object_list.filter(**kwargs).distinct()
-        if obj:
+        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
+        if obj or userObject.role == 1:
             return True
         else:
             raise NotFound("Not allowed to download Block")
@@ -204,7 +184,8 @@ class DayTransportationAuthorization(Authorization):
         # Is the requested object owned by the user?
         obj = object_list.filter(
             user_created_id=bundle.request.user.id).distinct()
-        if obj:
+        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
+        if obj or userObject.role == 1:
             return True
         else:
             raise NotFound("Not allowed to download Transportations")
@@ -365,7 +346,7 @@ class FarmerResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
-            raise FarmerNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -374,8 +355,7 @@ class FarmerResource(BaseResource):
         except Exception, e:
             attempt = Farmer.objects.filter(
                 phone=bundle.data['phone'], name=bundle.data['name'])
-            raise FarmerNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
@@ -487,8 +467,7 @@ class CropResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(CropResource, self).obj_create(bundle, **kwargs)
         else:
-            raise CropNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -496,13 +475,12 @@ class CropResource(BaseResource):
             bundle = super(CropResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
-            raise CropNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        bundle.data['image_path'] = bundle.data['crop_name']
+        #bundle.data['image_path'] = bundle.data['crop_name']
         return bundle
 
 
@@ -595,8 +573,7 @@ class TransporterResource(BaseResource):
             bundle = super(TransporterResource, self).obj_create(
                 bundle, **kwargs)
         else:
-            raise TransporterNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -606,8 +583,7 @@ class TransporterResource(BaseResource):
         except Exception, e:
             attempt = Transporter.objects.filter(transporter_phone=bundle.data['transporter_phone'],
                                                  transporter_name=bundle.data['transporter_name'])
-            raise TransporterNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
@@ -658,8 +634,7 @@ class TransportationVehicleResource(BaseResource):
             bundle = super(TransportationVehicleResource,
                            self).obj_create(bundle, **kwargs)
         else:
-            raise TransportationVehicleNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -672,8 +647,7 @@ class TransportationVehicleResource(BaseResource):
         except Exception, e:
             attempt = TransportationVehicle.objects.filter(transporter=transporter, vehicle=vehicle,
                                                            vehicle_number=bundle.data["vehicle_number"])
-            raise TransportationVehicleNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
@@ -705,10 +679,10 @@ class TransportationVehicleResource(BaseResource):
             deleted_obj = self.obj_delete(
                 bundle=bundle, **self.remove_api_resource_names(kwargs))
             # build a new bundle with the deleted obj and return it in a response
-            
+
             deleted_bundle = self.build_bundle(
                 obj=deleted_obj, request=request)
-            
+
             # deleted_bundle = self.full_dehydrate()
             # deleted_bundle = self.alter_detail_data_to_serialize(request, deleted_bundle)
             return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
@@ -744,6 +718,8 @@ class DayTransportationResource(BaseResource):
     def obj_create(self, bundle, request=None, **kwargs):
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
         user = LoopUser.objects.get(user__username=bundle.request.user)
+        if "aggregator" in bundle.data.keys():
+            user = LoopUser.objects.get(id=bundle.data["aggregator"]["online_id"])
         transportationvehicle = TransportationVehicle.objects.get(
             id=bundle.data["transportation_vehicle"]["online_id"])
         attempt = DayTransportation.objects.filter(date=bundle.data[
@@ -752,7 +728,12 @@ class DayTransportationResource(BaseResource):
             bundle = super(DayTransportationResource,
                            self).obj_create(bundle, **kwargs)
         else:
-            raise DayTransportationNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
+            bundle.request.method = 'put'
+            bundle.request.path = bundle.request.path + \
+                str(attempt[0].id) + "/"
+            kwargs['pk'] = attempt[0].id
+            bundle = super(DayTransportationResource,self).obj_update(bundle, **kwargs)
+        #raise DayTransportationNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -767,8 +748,7 @@ class DayTransportationResource(BaseResource):
             user = LoopUser.objects.get(user__username=bundle.request.user)
             attempt = DayTransportation.objects.filter(date=bundle.data[
                 "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
-            raise DayTransportationNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
@@ -803,6 +783,26 @@ class DayTransportationResource(BaseResource):
         except NotFound:
             return http.Http404()
 
+class GaddidarCommissionResource(BaseResource):
+    mandi = fields.ForeignKey(MandiResource,'mandi')
+    gaddidar = fields.ForeignKey(GaddidarResource,'gaddidar')
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = GaddidarCommission.objects.all()
+        authorization = MandiAuthorization('mandi_id__in')
+        authentication = ApiKeyAuthentication()
+        resource_name = 'gaddidarcommission'
+        always_return_data = True
+        excludes = ('time_created','time_modified')
+        include_resource_uri = False
+
+    dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
+    dehydrate_gaddidar = partial(foreign_key_to_id,field_name="gaddidar",sub_field_names=['id'])
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 
 class GaddidarShareOutliersResource(BaseResource):
@@ -919,8 +919,7 @@ class CombinedTransactionResource(BaseResource):
         if attempt.count() < 1:
             bundle = super(CombinedTransactionResource,self).obj_create(bundle, **kwargs)
         else:
-            raise TransactionNotSaved(
-                {"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -936,7 +935,7 @@ class CombinedTransactionResource(BaseResource):
             user = LoopUser.objects.get(user__username=bundle.request.user)
             attempt = CombinedTransaction.objects.filter(date=bundle.data[
                                                          "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
-            raise TransactionNotSaved({"id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):

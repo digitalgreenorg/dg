@@ -134,30 +134,51 @@ define(function(require) {
         },
         
         _initVideoPlayer: function() {
-
-            var videoId = 'JYkaf4ucaSc';
-
-            var params = { allowScriptAccess: "always" };
-            var atts = { id: "player", 
-            			 class: 'main-carousel-video-player'
-            		    };
-            
-            swfobject.embedSWF(
-                'https://www.youtube.com/v/' + videoId + '?enablejsapi=1&playerapiid=ytplayer&version=3',
-                'player',
-                '1024',
-                '424',
-                '8',
-                null,
-                null,
-                params,
-                atts
-            );
-
+            // This code loads the IFrame Player API code asynchronously and place the script tag before 
+            // all other script tags.
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            var player;
+            window.onYouTubeIframeAPIReady = this._onYouTubeIframeAPIReady.bind(this);
             window.onYouTubePlayerReady = this._onYouTubePlayerReady.bind(this);
             $("#video-img > div").not("#player").each(function(index, ele){$(ele).hide();});
             $("#player").show();
         },
+
+        _onYouTubeIframeAPIReady: function() {
+            window.onPlayerReady = this._onPlayerReady.bind(this);
+            window.onPlayerStateChange = this._onPlayerStateChange.bind(this);
+            player = new YT.Player('player', {
+                height: '424',
+                width: '1024',
+                videoId: 'JYkaf4ucaSc',
+                autoplay : 1,
+                events: {
+                  'onReady': onPlayerReady,
+                  'onStateChange': onPlayerStateChange
+                }
+            });
+        },
+
+        _onPlayerReady: function(e) {
+            $('.slide-img').hide();
+            $('.player').show();
+            e.target.playVideo();
+        },
+
+        _onPlayerStateChange: function() {
+            var done = false;
+            if (event.data == YT.PlayerState.PLAYING && !done) {
+                done = true;
+            }
+        },
+
+        stopVideo: function() {
+            player.stopVideo();
+        },
+
 
         _onYouTubePlayerReady: function() {
             // clean up the window
