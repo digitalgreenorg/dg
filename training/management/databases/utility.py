@@ -107,7 +107,7 @@ def get_sql_result_api(query_dict):
     # data_dict[query_dict['query_tag']] = res
     data_dict[query_dict['component']] = {
                                             'tagName':query_dict['query_tag'],
-                                            'value':res, 
+                                            'value':res,
                                             'placeHolder':query_dict['component']
                                         }
     return (data_dict[query_dict['component']])
@@ -129,4 +129,3 @@ def multiprocessing_list(**Kwargs):
     pool.close()
     pool.join()
     return results
-    

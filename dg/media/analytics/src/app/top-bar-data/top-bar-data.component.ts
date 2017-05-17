@@ -66,12 +66,12 @@ export class TopBarDataComponent implements
 
     this.topbardataService.getApiData(this.argstest)
                           .subscribe(val => {
-                                              console.log(val);
+                                              // console.log(val);
                                               for( let v in val.data) {
                                                 let vobj = val.data[v]
                                                 for( let d of this.cardDataDict[vobj['placeHolder']]) {
                                                   if(d.tagName == vobj['tagName']) {
-                                                    d.value = vobj['value']
+                                                    d.value = vobj['value'];
                                                   }
                                                 }
                                               }

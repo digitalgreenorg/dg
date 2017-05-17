@@ -3,6 +3,8 @@ import { FILTER_DATA } from './filter-data';
 import { Filter } from './filter';
 import { FilterElement } from './filter-element';
 import { GetFilterDataService } from '../get-filter-data.service';
+import { TopBarDataService } from '../top-bar-data.service';
+
 
 @Component({
   selector: 'app-filters',
@@ -18,33 +20,33 @@ export class FiltersComponent implements OnInit {
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;
   private showDateFilter: boolean;
-  constructor(private myElement : ElementRef, private getFilterData : GetFilterDataService) {
+  private f_list = {};
+  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private topbardataService: TopBarDataService) {
   }
 
   ngOnInit() {
 
-    this.getFilterData.getData().subscribe(val =>{
-      console.log(val);
-  for (let data of val) {
-      if (data['name'] === 'date' && data['visible'] == true) {
-        this.showDateFilter = true;
-      }
-      else {
-        this.filter = new Filter();
-        this.filter.heading = data['name'];
-        this.filter.expand = false;
-        this.filter.element = new Array<FilterElement>();
-        for (let val of data['data']) {
-          let filterElement = new FilterElement();
-          filterElement.id = val['id'];
-          filterElement.value = val['value'];
-          filterElement.checked = true;
-
-          this.filter.element.push(filterElement);
+    this.getFilterData.getData().subscribe(val => {
+      for (let data of val) {
+        if (data['name'] === 'date' && data['visible'] == true) {
+          this.showDateFilter = true;
         }
-        this.filter_list.push(this.filter);
+        else {
+          this.filter = new Filter();
+          this.filter.heading = data['name'];
+          this.filter.expand = false;
+          this.filter.element = new Array<FilterElement>();
+          for (let val of data['data']) {
+            let filterElement = new FilterElement();
+            filterElement.id = val['id'];
+            filterElement.value = val['value'];
+            filterElement.checked = false;
+
+            this.filter.element.push(filterElement);
+          }
+          this.filter_list.push(this.filter);
+        }
       }
-    }
     });
   }
 
@@ -57,14 +59,35 @@ export class FiltersComponent implements OnInit {
   }
 
   applyFilters() {
-    console.log(this.filter_list);
+    this.f_list = {};
+    for (let f of this.filter_list) {
+      let list = f.element.filter(data => { return data.checked }).map(data => {
+        return data.id
+      });
+      this.f_list[f.heading] = list;
+    }
+    this.f_list['apply_filter'] = "true";
+    this.getDatatest();
+  }
+
+  getDatatest(): any {
+    let argstest = {
+      webUrl: 'http://localhost:8000/training/getData',
+      params: this.f_list
+    }
+    console.log(argstest);
+
+    this.topbardataService.getApiData(argstest)
+      .subscribe(val => {
+        console.log(val);
+      });
   }
 
   handleClick(event) {
     var clickedComponent = event.target;
     var inside = false;
     do {
-      if(clickedComponent === this.myElement.nativeElement) {
+      if (clickedComponent === this.myElement.nativeElement) {
         inside = true;
       }
       clickedComponent = clickedComponent.parentNode;
@@ -72,9 +95,9 @@ export class FiltersComponent implements OnInit {
 
     if (inside) {
       // this.closeNav();
-      console.log('inside');
+      // console.log('inside');
     } else {
-      console.log('outside');
+      // console.log('outside');
       this.closeNav();
     }
   }

@@ -50,8 +50,8 @@ def login(request):
 @csrf_exempt
 def getFilterData(request):
 
-    trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value')
-    states_list = State.objects.annotate(value=F('state_name')).values('id','value')
+    trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
+    states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
     response_list = []
     trainer_dict = {'name':"Trainer",'visible':True,'data':list(trainers_list)}
     state_dict = {'name':"State",'visible':True,'data':list(states_list)}
@@ -60,21 +60,30 @@ def getFilterData(request):
     json_data = json.dumps(response_list)
     return HttpResponse(json_data)
 
-
-
 @csrf_exempt
 def getData(request):
-    start_date = str(request.GET['start_date'])
-    end_date = str(request.GET['end_date'])
+    try:
+        start_date = str(request.GET['start_date'])
+        end_date = str(request.GET['end_date'])
+    except:
+        start_date = ''
+        end_date = ''
+        pass
     apply_filter = str(request.GET['apply_filter'])
+    trainers_list = request.GET.getlist('trainer')
+    states_list = request.GET.getlist('state')
     if(apply_filter == 'true'):
         apply_filter = True
     else :
         apply_filter = False
     args_list = []
+    if start_date == "":
+        start_date = '2015-01-01'
+    if end_date == "":
+        end_date = '2017-04-04'
 
     # No of Trainings
-    args_obj = get_training_data_sql(start_date=start_date, end_date=end_date, apply_filter=apply_filter)
+    args_obj = get_training_data_sql(start_date=start_date, end_date=end_date, apply_filter=apply_filter, trainers_list=trainers_list)
     args_list.extend(args_obj)
 
     # No of Mediators

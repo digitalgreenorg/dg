@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {Headers, Http, URLSearchParams, RequestOptions } from '@angular/http';
+import { Headers, Http, URLSearchParams, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { Observable } from 'rxjs/Rx'
-import { Config } from './config/config'
+import { Observable } from 'rxjs/Rx';
+import { Config } from './config/config';
 
 @Injectable()
 export class TopBarDataService {
@@ -14,8 +14,11 @@ export class TopBarDataService {
   getApiData(args):Observable<Config> {
 
     let params : URLSearchParams = new URLSearchParams();
-    params.set('start_date', args.params.start_date);
-    params.set('end_date', args.params.end_date);
+    if (args.params.start_date != null)
+      params.set('start_date', args.params.start_date);
+    if (args.params.end_date != null)
+      params.set('end_date', args.params.end_date);
+    params.set('trainer',args.params.Trainer);
     params.set('apply_filter', args.params.apply_filter);
     let requestOptions : RequestOptions = new RequestOptions();
     requestOptions.search = params;
