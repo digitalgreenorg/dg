@@ -583,7 +583,6 @@ define([
         },
 
         get_curr_value_of_element: function(element) {
-            console.log("nikhil-verma");
             return $('[name=' + element + ']').val();
         },
 
@@ -885,8 +884,8 @@ define([
                         Offline.fetch_collection("directbeneficiaries")
                             .done(function(collection) {
                                 $.each(collection.models, function (i, item) { 
-                                    $f_el.find('.category_row7_'+index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
-                                    $('.category_row7_'+index).trigger("chosen:updated");
+                                    $f_el.find("."+inline_var + index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
+                                    $("."+inline_var+index).trigger("chosen:updated");
                                 })
                                 
                             })

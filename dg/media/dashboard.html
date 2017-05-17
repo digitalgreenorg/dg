@@ -666,8 +666,8 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= parentcategory %></label>
                     <div class="col-sm-4"> 
-                        <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control">
-                        <option value='0' selected='selected'>---------</option> 
+                        <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control" onchange="display_val()">
+                        <option value='' selected='selected'>---------</option> 
                         </select> 
                     </div>
                 </div>
@@ -805,16 +805,58 @@
     </tr>
 </script>
 
-<script language= "javascript">
-    
+<script language="javascript">
+    function display_val()
+    { 
+
+         // $("#id_parentcategory").change(function(){
+         //     alert("ljhgjkghs");
+         //     var category_id = this.value;
+         //     alert(category_id)
+         //     alert($("#id_type_of_video").val())
+         //     if($("#id_type_of_video").val() == '4' && $("#id_parentcategory").val() == "3"){
+         //        $("select#id_videoes_screened option[value='3']").remove();
+         //        $("select#id_videoes_screened").trigger("chosen:updated");
+         //        $("select#id_videoes_screened").append($('<option>', { 
+         //            value: 3,
+         //            text : "PLA Meeting" 
+         //        }));
+         //        $("select#id_videoes_screened").trigger("chosen:updated")
+         //     }else{
+         //        // $("select#id_parentcategory option[value='3']").show();
+         //        // $("select#id_parentcategory").trigger("chosen:updated");
+         //        // $("#id_meeting_topic").addClass('hidden')
+         //     }
+         //  });
+
+    }
+</script>
+
+<script language="javascript">
     function get_val()
     { 
 
          $("#id_type_of_video").change(function(){
              var type_of_video = this.value;
              if(type_of_video == '4'){
+                // $("#id_meeting_topic").removeClass('hidden')
+                // $("select#id_parentcategory option[value='3']").remove();
+                // $("select#id_parentcategory").trigger("chosen:updated");
+                // $("select#id_parentcategory").append($('<option>', { 
+                //     value: 3,
+                //     text : "PLA Meeting" 
+                // }));
+                // $("select#id_parentcategory").trigger("chosen:updated");
+
                 $("#id_meeting_topic").removeClass('hidden')
+
              }else{
+                // $("select#id_parentcategory").append($('<option>', { 
+                //     value: 3,
+                //     text : "PLA Meeting" 
+                // }));
+                $("select#id_parentcategory option[value='3']").remove();
+                $("select#id_parentcategory").trigger("chosen:updated");
                 $("#id_meeting_topic").addClass('hidden')
              }
           });
@@ -1274,6 +1316,22 @@
                     <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="dis-block col-sm-2 control-label notbold"><%= self_reported_behaviour1 %></label>
+                <div class="col-sm-4">
+                    <input name="self_reported_behaviour1" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="dis-block col-sm-2 control-label notbold"><%= self_reported_behaviour2 %></label>
+                <div class="col-sm-4">
+                    <input name="self_reported_behaviour2" type="text" class="form-control">
+                </div>
+            </div>
+
+
         </fieldset>
 </script>
 
@@ -1295,7 +1353,7 @@
 <script type="text/template" id="nonnegotiable_inline_header">
     <tr class="hide-header">  
        <th class="col-md-1 control-label notbold"><%= sr_no %></th>
-       <th class="col-md-6 control-label notbold"><%= non_n %></th>
+       <th id="non_nego" class="col-md-6 control-label notbold">Knowledge recall points</th>
                   
     </tr>
 </script>

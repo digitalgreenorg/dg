@@ -207,6 +207,8 @@ class Video(CocoModel):
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
     reviewer = models.IntegerField(verbose_name="Organisation", choices=REVIEW_BY, null=True, blank=True, validators=[MaxValueValidator(1)])
     reviewed_by = models.CharField(max_length=80, null=True, blank=True)
+    self_reported_behaviour1 = models.CharField(max_length=500, null=True, blank=True)
+    self_reported_behaviour2 = models.CharField(max_length=500, null=True, blank=True)
 
     class Meta:
         unique_together = ("title", "production_date", "language", "village")
@@ -229,17 +231,6 @@ class NonNegotiable(CocoModel):
         return  u'%s' % self.non_negotiable
 post_save.connect(save_log, sender=NonNegotiable)
 pre_delete.connect(delete_log, sender=NonNegotiable)
-
-
-class SelfReportedBehaviour(CocoModel):
-    id = models.AutoField(primary_key=True)
-    video = models.ForeignKey(Video)
-    self_reported_behaviour = models.CharField(max_length=500)
-
-    def __unicode__(self):
-        return  u'%s' % self.self_reported_behaviour
-post_save.connect(save_log, sender=SelfReportedBehaviour)
-pre_delete.connect(delete_log, sender=SelfReportedBehaviour)
 
 
 class JSLPS_Video(CocoModel):

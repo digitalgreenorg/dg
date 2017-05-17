@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 # tastypie imports
 from tastypie.api import Api
 # django imports
-from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, SelfReportedBehaviourResource
+from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource
 from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data
 
 
@@ -25,7 +25,6 @@ v1_api.register(SubCategoryResource())
 v1_api.register(VideoPracticeResource())
 v1_api.register(ParentCategoryResource())
 v1_api.register(DirectBeneficiariesResource())
-v1_api.register(SelfReportedBehaviourResource())
 
 urlpatterns = patterns('',
     (r'^api/', include(v1_api.urls)),

@@ -16,7 +16,6 @@ from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
 from videos.models import  NonNegotiable
-from videos.models import  SelfReportedBehaviour
 from videos.models import ParentCategory
 from programs.models import Project
 
@@ -75,11 +74,6 @@ class NonNegotiablesInline(admin.TabularInline):
     raw_id_fields = ("video",)
     extra = 10
 
-class SelfReportedBehaviourInline(admin.TabularInline):
-    model =  SelfReportedBehaviour
-    raw_id_fields = ("video",)
-    extra = 10
-
 
 class ParentCategoryAdmin(admin.ModelAdmin):
     
@@ -87,7 +81,7 @@ class ParentCategoryAdmin(admin.ModelAdmin):
         return True
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
     list_display = ['id', 'parent_category_name']
     search_fields = ['parent_category_name']
@@ -103,7 +97,7 @@ class DirectBeneficiariesAdmin(admin.ModelAdmin):
 
 
 class VideoAdmin(admin.ModelAdmin):
-    inlines = [NonNegotiablesInline, SelfReportedBehaviourInline]
+    inlines = [NonNegotiablesInline]
     fieldsets = [
                 (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice']}),
                 (None,{'fields':['village','production_team']}),
