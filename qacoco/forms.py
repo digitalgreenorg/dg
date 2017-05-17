@@ -20,7 +20,7 @@ def save_all(instances, user, id):
 
 class UserModelBlockMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return "%s (%s) (%s)" % (obj.block_name, obj.district.district_name, obj.district.state.state_name)
+        return "%s (%s)" % (obj.block_name, obj.district.district_name)
 
 class UserModelVideoMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
