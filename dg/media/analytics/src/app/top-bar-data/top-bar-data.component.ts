@@ -54,17 +54,8 @@ export class TopBarDataComponent implements
   ) {
   }
 
-  getDatatest(apply_filter) : any {
-    this.argstest = {
-      webUrl: 'http://localhost:8000/training/getData',
-      params: {
-        start_date:this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd'),
-        end_date:this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd'),
-        apply_filter:apply_filter,
-      }
-    }
-
-    this.topbardataService.getApiData(this.argstest)
+  public getDatatest(argstest) : any {
+      this.topbardataService.getApiData(argstest)
                           .subscribe(val => {
                                               // console.log(val);
                                               for( let v in val.data) {
@@ -96,7 +87,16 @@ export class TopBarDataComponent implements
         }
       }
     }
-    this.getDatatest(false);
+
+    let argstest = {
+      webUrl: 'http://localhost:8000/training/getData',
+      params: {
+        start_date:this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd'),
+        end_date:this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd'),
+        apply_filter:false,
+      }
+    }
+    this.getDatatest(argstest);
   }
 
 }

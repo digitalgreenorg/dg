@@ -124,6 +124,7 @@ def multiprocessing_dict(**Kwargs):
 def multiprocessing_list(**Kwargs):
     # method_name = Kwargs['method_name']
     args_list = Kwargs['args_list']
+    print args_list
     pool = ThreadPool(4)
     results = pool.map(get_sql_result_api, args_list)
     pool.close()

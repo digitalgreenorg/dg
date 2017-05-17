@@ -4,6 +4,7 @@ import { Filter } from './filter';
 import { FilterElement } from './filter-element';
 import { GetFilterDataService } from '../get-filter-data.service';
 import { TopBarDataService } from '../top-bar-data.service';
+// import { TopBarDataComponent } from '../top-bar-data/top-bar-data.component';
 
 
 @Component({
@@ -75,12 +76,11 @@ export class FiltersComponent implements OnInit {
       webUrl: 'http://localhost:8000/training/getData',
       params: this.f_list
     }
-    console.log(argstest);
-
     this.topbardataService.getApiData(argstest)
       .subscribe(val => {
         console.log(val);
       });
+    // this.topBarDataComponent.getDatatest(argstest);
   }
 
   handleClick(event) {
