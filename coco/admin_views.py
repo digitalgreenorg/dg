@@ -63,6 +63,7 @@ def add_cocouser(request):
             messages.add_message(request, messages.ERROR, message)
             return HttpResponseRedirect(".")
         partner = request.POST.getlist('partner')[0]
+        type_of_cocouser = request.POST.getlist('type_of_cocouser')[0]
         villages = request.POST.getlist('village')
         if 'video' in request.POST:
             videos = request.POST.getlist('video')
@@ -84,6 +85,9 @@ def add_cocouser(request):
                 coco_user_obj.save()
             if partner != coco_user_obj.partner_id:
                 coco_user_obj.partner_id = partner
+                coco_user_obj.save()
+            if type_of_cocouser != coco_user_obj.type_of_cocouser:
+                coco_user_obj.type_of_cocouser = type_of_cocouser
                 coco_user_obj.save()
             new_village_set = set(map(int,villages))
             new_video_set = set(map(int,videos))
@@ -111,7 +115,7 @@ def add_cocouser(request):
                 message = "coco user with \"%s\" User already exists. Select different User."%(CocoUser.objects.get(user_id=user).user.username)
                 messages.add_message(request, messages.ERROR, message)
                 return HttpResponseRedirect(".")
-            coco_user_obj = CocoUser(user_id=user,partner_id=partner)
+            coco_user_obj = CocoUser(user_id=user,partner_id=partner,type_of_cocouser=type_of_cocouser)
             try:
                 coco_user_obj.save()
             except Exception as e:
