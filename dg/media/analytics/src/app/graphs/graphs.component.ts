@@ -25,27 +25,22 @@ export class GraphsComponent {
             //Generate tabs dynamically
             this.tabs.push(config.tabHolder); 
             //Add charts
-/*            this.ch = new Highcharts.Chart(config);
-            console.log(this.ch);*/
-            this.graphService.getData(config.chart.type, config.chartName).then(dataList => {
-                //console.log(dataList);
-                Object.keys(dataList).forEach(key => {
-                    if(key === config.chartName) {
-                        config.series.push(dataList[key]);
-                        config.xAxis.categories = dataList[key].name;
-                        this.charts.push(config); 
-                        //this.cdRef.detectChanges();
-                    }
-                });            
-             }); 
-            
+            this.charts.push(config);
         });
         
     }
 
     ngAfterViewInit(): void {
         this.charts.forEach(chart => {
-             
+             this.graphService.getData(chart.chart.type, chart.chartName).then(dataList => {
+                //console.log(dataList);
+                Object.keys(dataList).forEach(key => {
+                    if(key === chart.chartName) {
+                        chart.series.push(dataList[key]);
+                        chart.xAxis.categories = dataList[key].name;
+                    }
+                });            
+             });
         });
     }
 
