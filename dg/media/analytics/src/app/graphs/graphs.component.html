@@ -1,5 +1,7 @@
 <tabset [justified]="true" >
-    <tab *ngFor="let tab of tabs" [heading]="tab.heading" [id]="tab.id"></tab>
+    <tab *ngFor="let tab of tabs" [heading]="tab.heading" [id]="tab.id">
+        <div *ngFor="let div of tab.showDivs" [id]="div"></div>
+    </tab>
 </tabset>
 
 <div *ngFor="let chart of charts">

@@ -1,12 +1,12 @@
-export const configs = [
+export const chartsConfig = [
     {   
         chart:{
             type:'line',
-            renderTo: 'line_chart'
+            renderTo: 'line_chart',
+            tabID : 'tab1'
         },
         chartName : 'state_#trainings',
         title : {text : 'State wise traingings conducted'},
-        tabHolder : {'id':'line_chart','heading':'Line Chart'},
         xAxis:{categories:[]},
         plotOptions: {
             line: {
@@ -18,11 +18,11 @@ export const configs = [
     {
         chart:{
             type:'bar',
-            renderTo: 'bar_chart'
+            renderTo: 'bar_chart',
+            tabID : 'tab2'
         },
         chartName : 'state_#trainings',
         title: {text: 'District wise traingings conducted'},
-        tabHolder : {'id':'bar_chart','heading':'Bar Chart'},
         xAxis: {
             categories: [],
             title: {
@@ -45,11 +45,11 @@ export const configs = [
     {
         chart:{
             type:'pie',
-            renderTo: 'pie_chart'
+            renderTo: 'pie_chart',
+            tabID : 'tab1'
         },
         chartName : 'sate_%trainings',
         title: {text: 'State wise number of trainings'},
-        tabHolder : {'id':'pie_chart','heading':'Pie Chart'},
         tooltip: {pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'},
         plotOptions: {
             pie: {
