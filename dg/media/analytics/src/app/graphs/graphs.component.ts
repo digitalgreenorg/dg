@@ -4,9 +4,7 @@ import { GraphsService } from './graphs.service';
 //import { TabsetComponent } from 'ngx-bootstrap';
 //import { ChartModule } from 'angular2-highcharts';
 //import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
-declare var require: any
-const Highcharts = require('highcharts/highcharts.src');
-import 'highcharts/adapters/standalone-framework.src';
+
 @Component({
     selector: 'graphs',
     templateUrl: './graphs.component.html',
@@ -25,28 +23,29 @@ export class GraphsComponent {
             //Generate tabs dynamically
             this.tabs.push(config.tabHolder); 
             //Add charts
-            this.charts.push(config);
+            this.charts.push({
+                options: config,
+                nativeChart: null // To be obtained with saveInstance
+            });
         });
         
     }
 
+    saveInstance(chartInstance, chart) {
+        chart.nativeChart = chartInstance;
+    }
+
     ngAfterViewInit(): void {
         this.charts.forEach(chart => {
-             this.graphService.getData(chart.chart.type, chart.chartName).then(dataList => {
+            console.log(chart.options.chart.type);
+             this.graphService.getData(chart.options.chart.type, chart.options.chartName).then(dataList => {
                 //console.log(dataList);
                 Object.keys(dataList).forEach(key => {
-                    if(key === chart.chartName) {
-                        chart.series.push(dataList[key]);
-                        chart.xAxis.categories = dataList[key].name;
+                    if(key === chart.options.chartName) {
+                        chart.nativeChart.addSeries(dataList[key], true);
                     }
                 });            
              });
         });
     }
-
-    /*feedData(dataList,config) : void {
-        config.series.push(dataList[config.chartName]);
-        config.xAxis.categories = dataList[config.chartName].name;
-        this.charts.push(config);
-    }*/
 }

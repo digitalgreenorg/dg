@@ -3,5 +3,5 @@
 </tabset>
 
 <div *ngFor="let chart of charts">
-    <chart [options]="chart" ></chart>
+    <chart [options]="chart.options" (load)="saveInstance($event.context, chart)"></chart>
 </div>
