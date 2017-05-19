@@ -13,7 +13,10 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 
 declare var require: any;
 export function highchartsFactory() {
-  return require('highcharts');
+  const highChart = require('highcharts');
+  const drillDown = require('highcharts/modules/drilldown');
+  drillDown(highChart);
+  return highChart;
 }
 
 @NgModule({

@@ -22,7 +22,6 @@ export class GraphsComponent {
     ngOnInit(): void{
         //Generate tabs dynamically
         tabsConfig.forEach(tab => {
-            //tab['showDivs'] = ['line_chart','bar_chart','pie_chart'];
             this.tabs.push(tab);
         })
 
