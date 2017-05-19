@@ -4,6 +4,7 @@ import { Filter } from './filter';
 import { FilterElement } from './filter-element';
 import { GetFilterDataService } from '../get-filter-data.service';
 import { TopBarDataService } from '../top-bar-data.service';
+import { SharedService } from '../shared.service';
 // import { TopBarDataComponent } from '../top-bar-data/top-bar-data.component';
 
 
@@ -22,7 +23,7 @@ export class FiltersComponent implements OnInit {
   filter: Filter;
   private showDateFilter: boolean;
   private f_list = {};
-  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private topbardataService: TopBarDataService) {
+  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService,private _sharedService: SharedService) {
   }
 
   ngOnInit() {
@@ -76,11 +77,13 @@ export class FiltersComponent implements OnInit {
       webUrl: 'http://localhost:8000/training/getData',
       params: this.f_list
     }
-    this.topbardataService.getApiData(argstest)
-      .subscribe(val => {
-        console.log(val);
-      });
+    this._sharedService.publishData(argstest);
+    // this.topbardataService.getApiData(argstest)
+    //   .subscribe(val => {
+    //     console.log(val);
+    //   });
     // this.topBarDataComponent.getDatatest(argstest);
+
   }
 
   handleClick(event) {

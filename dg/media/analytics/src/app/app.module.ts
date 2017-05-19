@@ -15,6 +15,8 @@ import { SearchPipe } from './filters/search.pipe';
 
 import { TopBarDataComponent } from './top-bar-data/top-bar-data.component';
 import { TopBarDataService } from './top-bar-data.service';
+import { SharedService } from './shared.service';
+
 import { AccordionModule } from '../../node_modules/ngx-bootstrap';
 import { KeysPipe } from './keys.pipe';
 import { GraphComponent } from './graph/graph.component';
@@ -47,7 +49,7 @@ import { CardComponent } from './top-bar-data/card/card.component';
     MyDatePickerModule,
     ButtonsModule.forRoot(),
   ],
-  providers: [TopBarDataService, DatePipe, GetDataFromServerService, GetFilterDataService],
+  providers: [TopBarDataService, DatePipe, GetDataFromServerService, GetFilterDataService, SharedService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -10,6 +10,7 @@ import { Data } from '../config/data';
 import { Overall } from '../config/overall';
 import { IMyOptions } from 'mydatepicker';
 import { DatePipe } from '@angular/common';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-top-bar-data',
@@ -51,7 +52,11 @@ export class TopBarDataComponent implements
   constructor(
     private topbardataService : TopBarDataService,
     private datepipe : DatePipe,
+    private _sharedService: SharedService
   ) {
+    this._sharedService.argsList$.subscribe(data =>{
+      this.getDatatest(data);
+    });
   }
 
   public getDatatest(argstest) : any {
