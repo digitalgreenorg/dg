@@ -23,7 +23,9 @@ export class FiltersComponent implements OnInit {
   filter: Filter;
   private showDateFilter: boolean;
   private f_list = {};
+  private limit;
   constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService) {
+    this.limit = 20;
   }
 
   ngOnInit() {

@@ -25,6 +25,7 @@ import { MyDatePickerModule } from 'mydatepicker';
 import { ButtonsModule } from 'ngx-bootstrap';
 import { DatePipe } from '@angular/common';
 import { CardComponent } from './top-bar-data/card/card.component';
+import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { CardComponent } from './top-bar-data/card/card.component';
     NvD3Module,
     MyDatePickerModule,
     ButtonsModule.forRoot(),
+    InfiniteScrollModule,
   ],
   providers: [TopBarDataService, DatePipe, GetDataFromServerService, GetFilterDataService, SharedService],
   bootstrap: [AppComponent]
