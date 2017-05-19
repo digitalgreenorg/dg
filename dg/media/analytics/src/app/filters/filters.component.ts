@@ -23,7 +23,7 @@ export class FiltersComponent implements OnInit {
   filter: Filter;
   private showDateFilter: boolean;
   private f_list = {};
-  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService,private _sharedService: SharedService) {
+  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService) {
   }
 
   ngOnInit() {
@@ -64,7 +64,7 @@ export class FiltersComponent implements OnInit {
     this.f_list = {};
     for (let f of this.filter_list) {
       let list = f.element.filter(data => { return data.checked }).map(data => {
-        return data.id
+        return data.id;
       });
       this.f_list[f.heading] = list;
     }
@@ -78,12 +78,6 @@ export class FiltersComponent implements OnInit {
       params: this.f_list
     }
     this._sharedService.publishData(argstest);
-    // this.topbardataService.getApiData(argstest)
-    //   .subscribe(val => {
-    //     console.log(val);
-    //   });
-    // this.topBarDataComponent.getDatatest(argstest);
-
   }
 
   handleClick(event) {

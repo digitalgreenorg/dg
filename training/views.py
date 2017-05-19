@@ -70,8 +70,8 @@ def getData(request):
         end_date = ''
         pass
     apply_filter = str(request.GET['apply_filter'])
-    trainers_list = request.GET.getlist('trainer')
-    states_list = request.GET.getlist('state')
+    trainers_list = request.GET.getlist('Trainer')
+    states_list = request.GET.getlist('State')
     if(apply_filter == 'true'):
         apply_filter = True
     else :
