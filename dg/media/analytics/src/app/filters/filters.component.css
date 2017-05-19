@@ -47,6 +47,6 @@ input {
 
 .filter-scrollbar {
   overflow: auto;
-  height: 350px;
+  height: 300px;
   width: 250px;
 }
