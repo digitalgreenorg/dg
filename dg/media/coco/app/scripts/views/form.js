@@ -876,6 +876,7 @@ define([
                     });
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
+
                 } else {
                     $.each(model_array, function(index, f_model) {
                         var t_json = f_model.toJSON();
@@ -894,6 +895,11 @@ define([
                         //         console.log("ERROR: EDIT: Inline collection could not be fetched!");
                         //     });
                     });
+                }
+                if (cocousertype == 4){
+                    $("#id_adopt_practice option[value='3']").hide()
+                }else{
+                    $("#id_adopt_practice option[value='3']").show()
                 }
                 this.initiate_form_widgets();
                 $('.inline_table').show();
