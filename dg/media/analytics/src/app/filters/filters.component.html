@@ -1,13 +1,25 @@
 <div id="mySidenav" #mySidenav class="sidenav">
   <div class="row">
     <div class="col-8">
-      <h5 class="text-center">Filters</h5>
+      <h6 class="text-left text-uppercase">Filters</h6>
     </div>
-    <div class="col-4 pull-right">
-      <h4 href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</h4>
+    <div class="col-4">
+      <button type="button" class="close" aria-label="Close" (click)="closeNav()"><span aria-hidden="true">&times;</span></button>
     </div>
   </div>
   <hr class="bg-white">
+  <!-- <div class="row">
+    <div class="col-md-6">
+      <form #myForm="ngForm" novalidate>
+        <my-date-picker name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
+      </form>
+    </div>
+    <div class="col-md-8">
+      <form #myForm="ngForm" novalidate>
+        <my-date-picker name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
+      </form>
+    </div>
+  </div> -->
   <a href='#' *ngFor='let filter_name of filter_list'>
     <label (click)="filter_name.expand=!filter_name.expand">{{filter_name.heading}}</label>
     <div *ngIf="filter_name.expand">

@@ -28,9 +28,9 @@ input {
   color: #f1f1f1;
 }
 
-.sidenav .closebtn {
+/*.sidenav .closebtn {
   font-size: 36px;
-}
+}*/
 
 @media screen and (max-height: 450px) {
   .sidenav {

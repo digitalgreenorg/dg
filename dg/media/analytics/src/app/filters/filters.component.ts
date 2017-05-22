@@ -5,7 +5,8 @@ import { FilterElement } from './filter-element';
 import { GetFilterDataService } from '../get-filter-data.service';
 import { TopBarDataService } from '../top-bar-data.service';
 import { SharedService } from '../shared.service';
-// import { TopBarDataComponent } from '../top-bar-data/top-bar-data.component';
+import { IMyOptions } from 'mydatepicker';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -24,6 +25,9 @@ export class FiltersComponent implements OnInit {
   private showDateFilter: boolean;
   private f_list = {};
   private limit;
+  private myDatePickerOptions: IMyOptions = {
+    dateFormat: 'dd-mm-yyyy',
+  };
   constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService) {
     this.limit = 20;
   }
