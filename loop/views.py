@@ -1,7 +1,7 @@
 import json
 import xlsxwriter
 import requests
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from io import BytesIO
 from threading import Thread
 import xml.etree.ElementTree as xml_parse
@@ -13,28 +13,33 @@ from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
 
 from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
-from loop.utils.ivr_helpline.helpline_data import helpline_data
-import unicodecsv as csv
+from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME
+from loop.forms import BroadcastForm, BroadcastTestForm
+import csv
 import time
 import datetime
+from datetime import timedelta
 from pytz import timezone
 import inspect
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID, OFF_HOURS_GREETING_APP_ID, \
-    OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT
+    OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT, BROADCAST_APP_ID
 
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, fetch_info_of_incoming_call, \
-    update_incoming_obj, send_acknowledge, send_voicemail
+    update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio, \
+    redirect_to_broadcast, save_farmer_file
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
@@ -43,6 +48,7 @@ import pandas as pd
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
+BROADCAST_AUDIO_PATH = '%s/loop/broadcast/'%(MEDIA_ROOT,)
 
 @csrf_exempt
 def login(request):
@@ -121,7 +127,7 @@ def farmer_payments(request):
                 user = User.objects.get(id = bundle["user_created_id"])
                 attempt = DayTransportation.objects.filter(date=bundle["date"], user_created=user, mandi=mandi)
                 attempt.update(farmer_share = bundle["amount"])
-                attempt.update(comment = bundle["comment"])
+                attempt.update(farmer_share_comment = bundle["comment"])
                 attempt.update(user_modified_id = bundle["user_modified_id"])
                 # attempt.time_modified = get_latest_timestamp().timestamp
             except:
@@ -559,7 +565,7 @@ def payments(request):
         transportation_vehicle__vehicle__vehicle_name=F('transportation_vehicle__vehicle__vehicle_name_en')).values(
         'date', 'user_created__id', 'transportation_vehicle__vehicle__vehicle_name',
         "transportation_vehicle__transporter__transporter_name", 'transportation_vehicle__vehicle_number','transportation_vehicle__transporter__transporter_phone',
-        'mandi__mandi_name', 'farmer_share', 'id', 'comment').order_by('date').annotate(Sum('transportation_cost'))
+        'mandi__mandi_name', 'farmer_share', 'id', 'farmer_share_comment','transportation_cost_comment','mandi__id','transportation_vehicle__id', 'timestamp').order_by('date').annotate(Sum('transportation_cost'))
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
 
@@ -577,6 +583,18 @@ def helpline_incoming(request):
     if request.method == 'GET':
         call_id,farmer_number,dg_number,incoming_time = fetch_info_of_incoming_call(request)
         save_call_log(call_id,farmer_number,dg_number,0,incoming_time)
+        # Check if Any broadcast is pending for this number
+        # If yes then redirect user to pending broadcast for this misscall.
+        # Behaviour of helpline will be normal if no pending broadcast.
+        farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
+        # check if any broadcast pending after this time period.
+        time_period = (datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=BROADCAST_PENDING_TIME)).replace(tzinfo=None)
+        # Check if a pending (0) or DND-faild (2) broadcast exist.
+        if BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2], start_time__gte=time_period).exists():
+            # Create thread for redirect helpline flow to play broadcast.
+            Thread(target=redirect_to_broadcast,args=[farmer_number,dg_number]).start()
+            return HttpResponse(status=200)
+        # If no pending broadcast, then normal helpline flow.
         incoming_call_obj = HelplineIncoming.objects.filter(from_number=farmer_number,call_status=0).order_by('-id')
         # If No pending call with this number
         if len(incoming_call_obj) == 0:
@@ -755,3 +773,100 @@ def helpline_offline(request):
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
+
+@login_required
+def broadcast(request):
+    context = RequestContext(request)
+    template_data = dict()
+    template_data['broadcast_test_form'] = BroadcastTestForm()
+    template_data['broadcast_form'] = BroadcastForm()
+    # This will check on template whether to show forms (0) or message(1).
+    template_data['acknowledge'] = 0
+    # By default 0 for select Test Broadcast tab.
+    template_data['active_tab'] = 0
+    if request.method == 'POST':
+        if 'broadcast_test_submit' in request.POST:
+            broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
+            if broadcast_test_form.is_valid():
+                broadcast_title = 'admin_test'
+                cluster_id = None
+                audio_file = broadcast_test_form.cleaned_data.get('audio_file')
+                to_number = broadcast_test_form.cleaned_data.get('to_number')
+                farmer_contact_detail = [{'id':None,'phone':to_number}]
+            else:
+                template_data['broadcast_test_form'] = broadcast_test_form
+                return render_to_response('loop/broadcast.html',template_data,context_instance=context)
+        elif 'submit' in request.POST:
+            broadcast_form = BroadcastForm(request.POST, request.FILES)
+            if broadcast_form.is_valid():
+                broadcast_title = str(broadcast_form.cleaned_data.get('title'))
+                cluster_id = int(broadcast_form.cleaned_data.get('cluster'))
+                audio_file = broadcast_form.cleaned_data.get('audio_file')
+                farmer_file = broadcast_form.cleaned_data.get('farmer_file')
+                if(farmer_file):
+                    farmer_file_name = save_farmer_file(broadcast_title,farmer_file)
+                    farmer_contact_detail = []
+                    with open(farmer_file_name,'rb') as csvfile:
+                        customreader = csv.reader(csvfile)
+                        for row in customreader:
+                            farmer_contact_detail.append({'id':row[0], 'phone':row[1]})
+                else:
+                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id=cluster_id).values_list('village',flat=True)
+                    farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
+            else:
+                template_data['broadcast_form'] = broadcast_form
+                # Change to 1 for select Broadcast tab.
+                template_data['active_tab'] = 1
+                return render_to_response('loop/broadcast.html',template_data,context_instance=context)
+        else:
+            HttpResponseBadRequest("<h2>Something is wrong, Please Try Again</h2>")
+        audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
+        s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
+        # Start thread for begin broadcast.
+        Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
+        template_data['acknowledge'] = 1
+    elif request.method != 'GET':
+        HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")
+    return render_to_response('loop/broadcast.html',template_data,context_instance=context)
+
+# BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
+@csrf_exempt
+def broadcast_call_response(request):
+    if request.method == 'POST':
+        status = str(request.POST.getlist('Status')[0])
+        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        audience_obj = BroadcastAudience.objects.filter(call_id=outgoing_call_id).order_by('-id')
+        audience_obj = audience_obj[0] if len(audience_obj) > 0 else ''
+        # if call found in our database, then update status accordingly
+        if audience_obj != '':
+            if status == 'completed':
+                end_time = str(request.POST.getlist('DateUpdated')[0])
+                audience_obj.end_time = end_time
+                # if call completed then set status done if user has 
+                # listened the broadcast.
+                audience_obj.status = 1
+            else:
+                # If call is not completed then set status pending 
+                # so if user call on halpline number then he will redirected to 
+                # broadcast message.
+                audience_obj.status = 0
+            try:
+                audience_obj.save()        
+            except Exception as e:
+                module = 'broadcast_call_response'
+                write_log(HELPLINE_LOG_FILE,module,str(e))  
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
+
+# Make sure adding a forward slash (i.e. /) at the end of URL
+# when putting this URL on exotel app.
+def broadcast_audio_request(request):
+    if request.method == 'GET':
+        outgoing_call_id = str(request.GET.getlist('CallSid')[0])
+        broadcast_audio_url = list(BroadcastAudience.objects.filter(call_id=outgoing_call_id).values_list('broadcast__audio_url',flat=True).order_by('-id'))
+        broadcast_audio_url = broadcast_audio_url[0] if len(broadcast_audio_url) > 0 else ''
+        audio_url_response = HttpResponse(broadcast_audio_url, content_type='text/plain')
+        return audio_url_response
+    else:
+        return HttpResponse(status=200)
