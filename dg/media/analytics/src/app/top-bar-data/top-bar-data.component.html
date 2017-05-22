@@ -8,31 +8,10 @@
 <br>
 <br>
 <div class="container">
+  <h5 class="text-muted">Recent</h5>
+  <hr/>
   <div class="row">
-    <div class="col-md-12">
-      <div class="row">
-        <div class="col-md-2">
-          <form #myForm="ngForm" novalidate>
-            <my-date-picker name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
-          </form>
-        </div>
-        <div class="col-md-2">
-          <form #myForm="ngForm" novalidate>
-            <my-date-picker name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
-          </form>
-        </div>
-        <div class="col-md-2">
-          <button type="button" class="btn btn-primary" (click)="getDatatest(true)" [disabled]="disabled">
-              Get Data
-            </button>
-        </div>
-        <div class="col-md-6">
-          <div class="row">
-            <app-card class="col-md-3" *ngFor='let key of cardDataDict.recentBar' [cardData]="key" [cardId]="'recentBar'">
-            </app-card>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-card class="col-md-3" *ngFor='let key of cardDataDict.recentBar' [cardData]="key" [cardId]="'recentBar'">
+    </app-card>
   </div>
 </div>

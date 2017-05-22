@@ -28,7 +28,24 @@ export class FiltersComponent implements OnInit {
   private myDatePickerOptions: IMyOptions = {
     dateFormat: 'dd-mm-yyyy',
   };
-  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService) {
+  private date = new Date();
+  private start_date = new Date(2015, 1, 1);
+  public startModel = {
+    date: {
+      year: this.start_date.getFullYear(),
+      month: this.start_date.getMonth(),
+      day: this.start_date.getDate()
+    }
+  };
+  public endModel = {
+    date: {
+      year: this.date.getFullYear(),
+      month: this.date.getMonth(),
+      day: this.date.getDate()
+    }
+  };
+
+  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, private datepipe: DatePipe) {
     this.limit = 20;
   }
 
@@ -72,9 +89,13 @@ export class FiltersComponent implements OnInit {
       let list = f.element.filter(data => { return data.checked }).map(data => {
         return data.id;
       });
-      this.f_list[f.heading] = list;
+      if (list.length > 0) {
+        this.f_list[f.heading] = list;
+        this.f_list['apply_filter'] = "true";
+      }
     }
-    this.f_list['apply_filter'] = "true";
+    this.f_list['start_date'] = this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd');
+    this.f_list['end_date'] = this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd');
     this.getDatatest();
   }
 

@@ -8,8 +8,8 @@
     </div>
   </div>
   <hr class="bg-white">
-  <!-- <div class="row">
-    <div class="col-md-6">
+  <div class="row datepicker">
+    <div class="col-md-8">
       <form #myForm="ngForm" novalidate>
         <my-date-picker name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
       </form>
@@ -19,7 +19,7 @@
         <my-date-picker name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
       </form>
     </div>
-  </div> -->
+  </div>
   <a href='#' *ngFor='let filter_name of filter_list'>
     <label (click)="filter_name.expand=!filter_name.expand">{{filter_name.heading}}</label>
     <div *ngIf="filter_name.expand">
@@ -36,11 +36,6 @@
              </span>
           </h6>
         </div>
-        <!-- <h6 class="row" *ngFor="let data of filter_name.element | search: 'value': filter_name.serachTerm">
-          <span class="checkbox">
-            <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked"> {{data.value}}</label>
-          </span>
-      </h6> -->
       </div>
     </div>
   </a>

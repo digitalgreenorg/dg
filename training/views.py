@@ -62,25 +62,20 @@ def getFilterData(request):
 
 @csrf_exempt
 def getData(request):
-    try:
+    if 'start_date' in request.GET and 'end_date' in request.GET:
         start_date = str(request.GET['start_date'])
         end_date = str(request.GET['end_date'])
-    except:
-        start_date = ''
-        end_date = ''
-        pass
-    apply_filter = str(request.GET['apply_filter'])
-    trainers_list = request.GET.getlist('Trainer')
-    states_list = request.GET.getlist('State')
-    if(apply_filter == 'true'):
-        apply_filter = True
+    else:
+        start_date = '2015-01-01'
+        end_date = '2017-04-04'
+    if 'apply_filter' in request.GET:
+        apply_filter = True if request.GET['apply_filter'] == 'true' else False
     else :
         apply_filter = False
+
+    trainers_list = request.GET.getlist('Trainer')
+    states_list = request.GET.getlist('State')
     args_list = []
-    if start_date == "":
-        start_date = '2015-01-01'
-    if end_date == "":
-        end_date = '2017-04-04'
 
     # No of Trainings
     args_obj = get_training_data_sql(start_date=start_date, end_date=end_date, apply_filter=apply_filter, trainers_list=trainers_list)
