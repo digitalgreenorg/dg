@@ -9,12 +9,16 @@
   </div>
   <hr class="bg-white">
   <div class="row datepicker">
-    <div class="col-md-8">
+    <h6 class="col-md-4 text-white text-center">Start Date</h6>
+    <div class="col-md-6">
       <form #myForm="ngForm" novalidate>
         <my-date-picker name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
       </form>
     </div>
-    <div class="col-md-8">
+  </div>
+  <div class="row datepicker">
+    <h6 class="col-md-4 text-white text-center">End Date</h6>
+    <div class="col-md-6">
       <form #myForm="ngForm" novalidate>
         <my-date-picker name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
       </form>
@@ -24,13 +28,13 @@
     <label (click)="filter_name.expand=!filter_name.expand">{{filter_name.heading}}</label>
     <div *ngIf="filter_name.expand">
       <div class="form-group row" [id]="filter_name.heading">
-        <div class="col-8">
-          <input class="form-control" type="search" [(ngModel)]="filter_name.serachTerm">
+        <div class="col-md-8">
+          <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
         </div>
       </div>
       <div infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500" [scrollWindow]="false" (scrolled)="limit=limit+10" class="filter-scrollbar">
         <div class="scrollBar">
-          <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.serachTerm | slice:0:limit">
+          <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm | slice:0:limit">
             <span class="checkbox">
                <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked"> {{data.value}}</label>
              </span>

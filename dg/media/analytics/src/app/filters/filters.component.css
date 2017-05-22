@@ -12,28 +12,24 @@
 }
 
 .sidenav a {
-  padding: 8px 8px 8px 32px;
+  padding: 8px 8px 8px 12px;
   font-size: 20px;
   color: white;
   display: block;
   transition: 0.3s;
 }
 
-.datepicker{
+.datepicker {
   -webkit-text-fill-color: black;
+}
+
+.form-control {
+  height: 36px;
 }
 
 input {
   -webkit-text-fill-color: black;
 }
-
-.sidenav a:hover, .offcanvas a:focus {
-  color: #f1f1f1;
-}
-
-/*.sidenav .closebtn {
-  font-size: 36px;
-}*/
 
 @media screen and (max-height: 450px) {
   .sidenav {
@@ -52,4 +48,9 @@ input {
   overflow: auto;
   height: 300px;
   width: 250px;
+}
+
+.text-white {
+  padding-top: 8px;
+  -webkit-text-fill-color: white;
 }
