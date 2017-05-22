@@ -84,6 +84,13 @@ class VRPpayment(models.Manager):
     def get_expected_attendance(self,dissemination_grp_id):
         return Person.objects.filter(group_id__in=dissemination_grp_id)
 
+
+class FrontLineWorkerPresent(models.Model):
+    worker_type = models.CharField(max_length=20, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.worker_type
+
 class Screening(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -105,9 +112,7 @@ class Screening(CocoModel):
     health_provider_present = models.BooleanField(default=False)
     # UPAVAN fields
     type_of_video = models.CharField(max_length=20, choices=TYPE_OF_VIDEO, blank=True)
-    frontline_worker_present = models.CharField(max_length=20, 
-                                                choices=FRONTLINE_WORKER_PRESENT,
-                                                blank=True, null=True)
+    frontlineworkerpresent =  models.ManyToManyField(FrontLineWorkerPresent, blank=True)
     type_of_venue = models.CharField(choices=TYPE_OF_VENUE,
                                      blank=True, null=True,
                                      max_length=40)
@@ -152,6 +157,7 @@ class PersonAdoptPractice(CocoModel):
     verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
     parentcategory = models.ForeignKey(ParentCategory, null=True, blank=True)
     adopt_practice = models.CharField(max_length=1, choices=ADOPT_PRACTICE_CATEGORY, null=True, blank=True)
+    adopt_practice_second = models.CharField(max_length=1, choices=ADOPT_PRACTICE_CATEGORY, null=True, blank=True)
     krp_one = models.BooleanField(verbose_name="1", db_index=True, default=False)
     krp_two = models.BooleanField(verbose_name="2", db_index=True, default=False)
     krp_three = models.BooleanField(verbose_name="3", db_index=True,default=False)

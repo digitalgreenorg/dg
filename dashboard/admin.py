@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
 from coco.base_models import NONNEGOTIABLE_OPTION
-from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
+from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, FrontLineWorkerPresent
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
@@ -86,7 +86,12 @@ class ParentCategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'parent_category_name']
     search_fields = ['parent_category_name']
 
-    # readonly_fields = list_display
+
+class FrontLineWorkerPresentAdmin(admin.ModelAdmin):
+    
+
+    list_display = ['id', 'worker_type']
+    search_fields = ['worker_type']
 
 
 class DirectBeneficiariesAdmin(admin.ModelAdmin):

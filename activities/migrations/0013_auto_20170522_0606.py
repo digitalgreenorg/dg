@@ -7,17 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('activities', '0010_merge'),
+        ('activities', '0012_auto_20170521_0327'),
     ]
 
     operations = [
         migrations.RemoveField(
             model_name='screening',
-            name='video_type',
+            name='worker_type',
         ),
         migrations.AddField(
             model_name='screening',
-            name='type_of_video',
-            field=models.CharField(blank=True, max_length=20, choices=[(b'1', b'NSA video'), (b'2', b'MIYCN video'), (b'3', b'PLA video'), (b'4', b'PLA meeting')]),
+            name='frontlineworkerpresent',
+            field=models.ManyToManyField(to='activities.FrontLineWorkerPresent', blank=True),
         ),
     ]

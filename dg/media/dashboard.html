@@ -602,8 +602,19 @@
                     </div>
                 </div>
 
+
+                <div class="form-group" id="frontlineworkerpresent">
+                    <label class="control-label col-sm-2" id="label_id_frontlineworkerpresent"><%= frontlineworkerpresent%></label>
+                    <div class="col-sm-4">
+                        <select name="frontlineworkerpresent" id="id_frontlineworkerpresent" class="chosen-select form-control" multiple="multiple">
+                            <option value=''>-----------</option>
+                        </select>
+                    </div>
+                </div>
+
+
                 <div class="form-group" id="id_meeting_topic">
-                    <label class="control-label col-sm-2" id="label_id_meeting_topics"><%=meeting_topics%></label>
+                    <label class="control-label col-sm-2" id="label_id_meeting_topics"><%= meeting_topics%></label>
                     <div class="col-sm-4">
                         <select name="meeting_topics" id="id_meeting_topics" class="chosen-select form-control">
                             <option value=''>-----------</option>
@@ -619,18 +630,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" id="frontline_worker_present">
-                    <label class="control-label col-sm-2" id="label_id_frontline_worker_present"><%=frontline_worker_present%></label>
-                    <div class="col-sm-4">
-                        <select name="frontline_worker_present" id="id_frontline_worker_present" class="chosen-select form-control">
-                            <option value=''>-----------</option>
-                            <option value='1'>ANM</option>
-                            <option value='2'>ASHA</option>
-                            <option value='3'>AWW</option>
-                            <option value='4'>Not Present</option>
-                        </select>
-                    </div>
-                </div>
+                
 
 
 
@@ -640,12 +640,20 @@
                         <input class="date-picker form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date">  
                  	</div>
                 </div>
-                <div class="form-group ">
+                <div class="form-group">
                     <label class="control-label col-sm-2"><%= start_time %></label>
                  	<div class="controls bootstrap-timepicker col-sm-4">
                         <input class="time-picker form-control" id="start_time" type="text" placeholder="HH:MM" name="start_time">
                  	</div>
                 </div>
+
+                <div class="form-group ">
+                    <label class="control-label col-sm-2"><%= end_time %></label>
+                    <div class="controls bootstrap-timepicker col-sm-4">
+                        <input class="time-picker form-control" id="end_time" type="text" placeholder="HH:MM" name="end_time">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= village %></label>
                 	<div class="col-sm-4"> 
@@ -666,7 +674,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= parentcategory %></label>
                     <div class="col-sm-4"> 
-                        <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control" onchange="display_val()">
+                        <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control">
                         <option value='' selected='selected'>---------</option> 
                         </select> 
                     </div>
@@ -809,57 +817,16 @@
 </script>
 
 <script language="javascript">
-    function display_val()
-    { 
-
-         // $("#id_parentcategory").change(function(){
-         //     alert("ljhgjkghs");
-         //     var category_id = this.value;
-         //     alert(category_id)
-         //     alert($("#id_type_of_video").val())
-         //     if($("#id_type_of_video").val() == '4' && $("#id_parentcategory").val() == "3"){
-         //        $("select#id_videoes_screened option[value='3']").remove();
-         //        $("select#id_videoes_screened").trigger("chosen:updated");
-         //        $("select#id_videoes_screened").append($('<option>', { 
-         //            value: 3,
-         //            text : "PLA Meeting" 
-         //        }));
-         //        $("select#id_videoes_screened").trigger("chosen:updated")
-         //     }else{
-         //        // $("select#id_parentcategory option[value='3']").show();
-         //        // $("select#id_parentcategory").trigger("chosen:updated");
-         //        // $("#id_meeting_topic").addClass('hidden')
-         //     }
-         //  });
-
-    }
-</script>
-
-<script language="javascript">
     function get_val()
     { 
 
          $("#id_type_of_video").change(function(){
              var type_of_video = this.value;
              if(type_of_video == '4'){
-                // $("#id_meeting_topic").removeClass('hidden')
-                // $("select#id_parentcategory option[value='3']").remove();
-                // $("select#id_parentcategory").trigger("chosen:updated");
-                // $("select#id_parentcategory").append($('<option>', { 
-                //     value: 3,
-                //     text : "PLA Meeting" 
-                // }));
-                // $("select#id_parentcategory").trigger("chosen:updated");
 
                 $("#id_meeting_topic").removeClass('hidden')
 
              }else{
-                // $("select#id_parentcategory").append($('<option>', { 
-                //     value: 3,
-                //     text : "PLA Meeting" 
-                // }));
-                $("select#id_parentcategory option[value='3']").remove();
-                $("select#id_parentcategory").trigger("chosen:updated");
                 $("#id_meeting_topic").addClass('hidden')
              }
           });
@@ -931,8 +898,19 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="control-label col-sm-2" id="label_id_member_adopt_second"><%=member_adopt_second%></label>
+                    <div class="col-sm-4">
+                        <select name="adopt_practice_second" id="id_adopt_practice_second" class="chosen-select form-control">
+                            <option value='1'>Yes</option>
+                            <option value='2'>No</option>
+                            <option value='3'>Not Applicable</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group" id="id_recall_nonnegotiable">
-                    <label class="control-label col-sm-2"><%=recall_nonnegotiable%> ?</label>
+                    <label class="control-label col-sm-2 non"><%=recall_nonnegotiable%> ?</label>
                     <div class="col-sm-4">
                         <label class="checkbox-inline">
                             <input type="checkbox" id="krp_one" value="1" name="krp_one">1
@@ -1023,12 +1001,16 @@
                         <th id="id_dob">
                             <%=date_of_verification%>
                         </th>
-                        <th id="id_member_adopt" class = "notbold">
-                            <%=member_adopt%>?
-                        </th>
                         <th id="id_recall_nonnegotiable" class = "notbold">
                             <%=recall_nonnegotiable%> ?
                         </th>
+                        <th id="id_member_adopt" class = "notbold">
+                            <%=member_adopt%>?
+                        </th>
+                        <th id="id_member_adopt_second" class = "notbold">
+                            <%=member_adopt_second%>
+                        </th>
+                        
                     </tr>
                 </thead>
                 <tbody id="bulk">
@@ -1090,20 +1072,6 @@
             </div>
         </td>
         <td>
-            <div class="form-group" id="id_adopt_practice">
-                <div class="controls">
-                    <select name="adopt_practice<%=index%>" id="id_adopt_practice<%=index%>" class="chosen-select form-control adopt_practice">
-                        <option value=''>---------</option>
-                        <option value='1'>Yes</option>
-                        <option value='2'>No</option>
-                        <option value='3'>Not Applicable</option>
-                    </select>
-                </div>
-            </div>
-        </td>
-        
-
-        <td>
             <div class="form-group" id="id_recall_nonnegotiable">
                 <label class="checkbox-inline">
                     <input type="checkbox" id="krp_one<%=index%>" value="1" name="krp_one<%=index%>">1
@@ -1122,6 +1090,32 @@
                 </label>
             </div>
         </td>
+        <td>
+            <div class="form-group" id="id_adopt_practice">
+                <div class="controls">
+                    <select name="adopt_practice<%=index%>" id="id_adopt_practice<%=index%>" class="chosen-select form-control adopt_practice">
+                        <option value=''>---------</option>
+                        <option value='1'>Yes</option>
+                        <option value='2'>No</option>
+                        <option value='3'>Not Applicable</option>
+                    </select>
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="form-group" id="id_adopt_practice_second">
+                <div class="controls">
+                    <select name="adopt_practice_second<%=index%>" id="id_adopt_practice_second<%=index%>" class="chosen-select form-control adopt_practice_second">
+                        <option value=''>---------</option>
+                        <option value='1'>Yes</option>
+                        <option value='2'>No</option>
+                    </select>
+                </div>
+            </div>
+        </td>
+        
+
+        
         
     </tr>
 </script>
@@ -1319,16 +1313,27 @@
                     <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
                 </div>
             </div>
-
+            <div class="form-group" id="remove-table">
+                <table class="table">
+                    <thead id="inline_headers">
+                        <tr class="hide-header">  
+                           <th class="col-md-1 control-label notbold" style="text-align: left;padding-left:24px"><%= sr_no %></th>
+                           <th id="srf" class="col-md-6 control-label notbold" style="text-align: left;padding-left:24px">Self Reported Behaviours</th>
+                                  
+                        </tr>
+                    </thead>
+                    
+                </table>
+            </div>
             <div class="form-group">
-                <label class="dis-block col-sm-2 control-label notbold"><%= self_reported_behaviour1 %></label>
+                <label class="dis-block col-sm-2 control-label bold" style="text-align: left;margin-left:8px">1.</label>
                 <div class="col-sm-4">
                     <input name="self_reported_behaviour1" type="text" class="form-control">
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="dis-block col-sm-2 control-label notbold"><%= self_reported_behaviour2 %></label>
+                <label class="dis-block col-sm-2 control-label notbold" style="text-align: left;margin-left:8px">2.</label>
                 <div class="col-sm-4">
                     <input name="self_reported_behaviour2" type="text" class="form-control">
                 </div>
@@ -1358,28 +1363,6 @@
        <th class="col-md-1 control-label notbold"><%= sr_no %></th>
        <th id="non_nego" class="col-md-6 control-label notbold">Knowledge recall points</th>
                   
-    </tr>
-</script>
-
-
-<script type="text/template" id="selfreportedbehaviour_inline">
-<% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("videoadd_"+class_ln);%>
-    <tr class="stack-table" index = <%=index%> name="row<%=index%>">
-    <td>
-                <%=index+1%>.</td>
-
-    <td ><div class="form-group"><div class="controls">
-            <textarea name="self_reported_behaviour<%=index%>" id="self_reported_behaviour<%=index%>" class=" input-xlarge form-control donotvalidate" maxlength="500" rows="1" style="resize:vertical; width:82%;" ></textarea>
-                
-            </div></div>
-        </td>
-    </tr>
-</script>
-
-<script type="text/template" id="selfreportedbehaviour_inline_header">
-    <tr class="hide-header">  
-       <th class="col-md-1 control-label notbold"><%= sr_no %></th>
-       <th class="col-md-6 control-label notbold"><%= srb %></th>           
     </tr>
 </script>
 

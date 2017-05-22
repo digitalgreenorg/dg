@@ -33,6 +33,7 @@ from videos.models import SubCategory
 from videos.models import VideoPractice
 from videos.models import ParentCategory
 from videos.models import DirectBeneficiaries
+from activities.models import FrontLineWorkerPresent
 # Will need to changed when the location of forms.py is changed
 from dashboard.forms import AnimatorForm
 from dashboard.forms import NonNegotiableForm
@@ -328,6 +329,24 @@ class ParentCategoryResource(ModelResource):
         authorization = Authorization()
 
 
+class FrontLineWorkerPresentResource(ModelResource):    
+    class Meta:
+        max_limit = None
+        queryset = FrontLineWorkerPresent.objects.all()
+        resource_name = 'frontlineworkerpresent'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
+
+
+class ParenResource(ModelResource):    
+    class Meta:
+        max_limit = None
+        queryset = ParentCategory.objects.all()
+        resource_name = 'parentcategory'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
+
+
 class PartnerResource(ModelResource):    
     class Meta:
         max_limit = None
@@ -523,6 +542,7 @@ class ScreeningResource(BaseResource):
     animator = fields.ForeignKey(MediatorResource, 'animator')
     partner = fields.ForeignKey(PartnerResource, 'partner')
     parentcategory = fields.ForeignKey(ParentCategoryResource, 'parentcategory', null=True)
+    frontlineworkerpresent = fields.ToManyField('coco.api.FrontLineWorkerPresentResource', 'frontlineworkerpresent', related_name='screening')
     videoes_screened = fields.ToManyField('coco.api.VideoResource', 'videoes_screened', related_name='screening')
     farmer_groups_targeted = fields.ToManyField('coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
     farmers_attendance = fields.ListField()
@@ -534,6 +554,7 @@ class ScreeningResource(BaseResource):
     hydrate_animator = partial(dict_to_foreign_uri, field_name='animator', resource_name='mediator')
     hydrate_farmer_groups_targeted = partial(dict_to_foreign_uri_m2m, field_name = 'farmer_groups_targeted', resource_name='group')
     hydrate_videoes_screened = partial(dict_to_foreign_uri_m2m, field_name = 'videoes_screened', resource_name='video')
+    hydrate_frontlineworkerpresent = partial(dict_to_foreign_uri_m2m, field_name = 'frontlineworkerpresent', resource_name='frontlineworkerpresent')
     hydrate_partner = partial(assign_partner)
     hydrate_parentcategory = partial(dict_to_foreign_uri, field_name='parentcategory')
     
@@ -608,7 +629,12 @@ class ScreeningResource(BaseResource):
         return bundle
     
     def dehydrate_videoes_screened(self, bundle):
+        print "NIKHIL", bundle.obj.frontlineworkerpresent.all()
         return [{'id': video.id, 'title': video.title,} for video in bundle.obj.videoes_screened.all()]
+
+    def dehydrate_frontlineworkerpresent(self, bundle):
+        print bundle.obj.frontlineworkerpresent.all()
+        return [{'id': item.id, 'frontlineworkerpresent': item.worker_type} for item in bundle.obj.frontlineworkerpresent.all()]
         
     def dehydrate_farmer_groups_targeted(self, bundle):
         return [{'id': group.id, 'group_name': group.group_name,} for group in bundle.obj.farmer_groups_targeted.all()]
@@ -624,14 +650,12 @@ class ScreeningResource(BaseResource):
                     int_pma_db_list = [int(item) for item in ast.literal_eval(pma.category)]
                 except:
                     int_pma_db_list = [int(item.get('id')) for item in ast.literal_eval(pma.category)]
-                print int_pma_db_list
                 for iterable in int_pma_db_list:
                     data_list.append({'id': iterable, 
                                       'category': DirectBeneficiaries.objects.get(id=iterable).direct_beneficiaries_category,
                                       'person_id': pma.person.id,
                                       'person_name': pma.person.person_name
                                      })
-        print data_list
         return data_list
 
     def dehydrate_category(self, bundle):

@@ -23,8 +23,9 @@ from dashboard.admin import VideoPracticeAdmin
 from dashboard.admin import ParentCategoryAdmin
 from dashboard.admin import ProjectAdmin
 from dashboard.admin import DirectBeneficiariesAdmin
+from dashboard.admin import FrontLineWorkerPresentAdmin
 
-from activities.models import PersonAdoptPractice, Screening
+from activities.models import PersonAdoptPractice, Screening, FrontLineWorkerPresent
 from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
@@ -82,3 +83,4 @@ coco_admin.register(PracticeTopic, PracticeTopicAdmin)
 coco_admin.register(PracticeSubtopic, PracticeSubtopicAdmin)
 coco_admin.register(PracticeSubject, PracticeSubjectAdmin)
 coco_admin.register(CocoUser, CocoUserAdmin)
+coco_admin.register(FrontLineWorkerPresent, FrontLineWorkerPresentAdmin)

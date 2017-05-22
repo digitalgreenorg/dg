@@ -260,8 +260,8 @@ define([
                     $("div#id_pvc").addClass('hidden');
                     $f_el.find("#id_category").html('Beneficiary')
                     $f_el.find("#id_dob").html('Date of Home Visit')
-                    $f_el.find('#id_recall_nonnegotiable').html('Beneficiary recalled the knowledge recall point?')
-                    $f_el.find('#id_member_adopt').html('Is the beneficiary practicing the behavior?')
+                    $f_el.find('.non').html('Beneficiary recalled the knowledge recall point?')
+                    $f_el.find('#id_member_adopt').html('Is the beneficiary practicing the behavior1?')
                 })
             }else{
                 _.each(all_configs.misc.upavan_user_fields, function(element, index) {
