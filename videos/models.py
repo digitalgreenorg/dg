@@ -230,6 +230,18 @@ class NonNegotiable(CocoModel):
 post_save.connect(save_log, sender=NonNegotiable)
 pre_delete.connect(delete_log, sender=NonNegotiable)
 
+
+class SelfReportedBehaviour(CocoModel):
+    id = models.AutoField(primary_key=True)
+    video = models.ForeignKey(Video)
+    self_reported_behaviour = models.CharField(max_length=500)
+
+    def __unicode__(self):
+        return  u'%s' % self.self_reported_behaviour
+post_save.connect(save_log, sender=SelfReportedBehaviour)
+pre_delete.connect(delete_log, sender=SelfReportedBehaviour)
+
+
 class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)
     vc = models.CharField(max_length=100)

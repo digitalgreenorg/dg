@@ -28,6 +28,7 @@ from people.models import PersonGroup
 from videos.models import Video
 from videos.models import Language
 from videos.models import NonNegotiable
+from videos.models import SelfReportedBehaviour
 from videos.models import Category
 from videos.models import SubCategory
 from videos.models import VideoPractice
@@ -36,6 +37,7 @@ from videos.models import DirectBeneficiaries
 # Will need to changed when the location of forms.py is changed
 from dashboard.forms import AnimatorForm
 from dashboard.forms import NonNegotiableForm
+from dashboard.forms import SelfReportedBehaviourForm
 from dashboard.forms import PersonAdoptPracticeForm
 from dashboard.forms import PersonForm
 from dashboard.forms import PersonGroupForm
@@ -160,8 +162,9 @@ def get_user_videos(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
     user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
-    if coco_user.type_of_cocouser != 3:
+    if coco_user.type_of_cocouser not in [3, 4]:
         user_videos = coco_user.videos.filter(category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
+        user_videos.append(5444)
         ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
         videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id, category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
         ###Get videos screened to allow inter partner sharing of videos
@@ -177,9 +180,21 @@ def get_user_videos(user_id):
     return set(list(videos) + list(videos_seen) + list(user_videos))
 
 
+def get_user_based_directbeneficiaries(user):
+    if user.coco_user.type_of_cocouser == 4:
+        return list(DirectBeneficiaries.objects.exclude(id__in=[1,2,3]).order_by('id').values_list('id', flat = True))
+    else:
+        return list(DirectBeneficiaries.objects.order_by('-id').values_list('id', flat = True))
+
+
 def get_user_non_negotiable(user_id):
     video_list = get_user_videos(user_id)
     return list(NonNegotiable.objects.filter(video_id__in = video_list).values_list('id', flat = True))
+
+def get_user_self_reported_behaviour(user_id):
+    video_list = get_user_videos(user_id)
+    return list(SelfReportedBehaviour.objects.filter(video_id__in = video_list).values_list('id', flat = True))
+
 
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
@@ -263,6 +278,12 @@ class VideoAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download video")
 
+class DirectBeneficiariesAuthorization(Authorization):
+    def read_list(self, object_list, bundle): 
+
+        return object_list.filter(id__in= get_user_based_directbeneficiaries(bundle.request.user))
+
+
 class NonNegotiableAuthorization(Authorization):
     def read_list(self, object_list, bundle):        
         return object_list.filter(id__in= get_user_non_negotiable(bundle.request.user.id))
@@ -272,6 +293,18 @@ class NonNegotiableAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download Non-Negotiable")
+
+
+class SelfReportedBehaviourAuthorization(Authorization):
+    def read_list(self, object_list, bundle):        
+        return object_list.filter(id__in= get_user_self_reported_behaviour(bundle.request.user.id))
+    
+    def read_detail(self, object_list, bundle):
+        if bundle.obj.id in get_user_self_reported_behaviour(bundle.request.user.id):
+            return True
+        else:
+            raise NotFound( "Not allowed to download Self Reported Behaviour")
+
 
 class BaseResource(ModelResource):
     
@@ -463,6 +496,21 @@ class NonNegotiableResource(BaseResource):
         authentication = SessionAuthentication()
         authorization = NonNegotiableAuthorization()
         validation = ModelFormValidation(form_class=NonNegotiableForm)
+        excludes = ['time_created', 'time_modified']
+        always_return_data = True
+    dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
+
+
+class SelfReportedBehaviourResource(BaseResource):
+    video = fields.ForeignKey(VideoResource, 'video')
+    class Meta:
+        max_limit = None
+        queryset = SelfReportedBehaviour.objects.prefetch_related('video').all()
+        resource_name = 'selfreportedbehaviour'
+        authentication = SessionAuthentication()
+        authorization = SelfReportedBehaviourAuthorization()
+        validation = ModelFormValidation(form_class=SelfReportedBehaviourForm)
         excludes = ['time_created', 'time_modified']
         always_return_data = True
     dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
@@ -764,6 +812,7 @@ class DirectBeneficiariesResource(BaseResource):
         queryset = DirectBeneficiaries.objects.all()
         resource_name = 'directbeneficiaries'
         authentication = SessionAuthentication()
+        authorization = DirectBeneficiariesAuthorization()
         always_return_data = True
 
     def dehydrate_category(self, bundle):

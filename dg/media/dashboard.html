@@ -18,7 +18,7 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -431,13 +431,14 @@
                 </table>
                 <button id='add_rows' type= "button" class="btn btn-default btn-sm mrg-btm-sm col-sm-offset-2"><%= add_row %></button>
             <% } %>
-        
+
             <div class="form-actions">
                 <button id='button1' type="submit" class="btn btn-primary action_button col-sm-offset-2" data-loading-text="Saving..."><%=button1%></button>
                 <%if(button2){%>
                     <button id='button2' type= "button" class="btn btn-primary action_button"><%=button2%></button>
                 <%}%>
             </div>
+
         </form>
 	
     </div>
@@ -575,6 +576,65 @@
             <fieldset class="form-horizontal">
                 <legend><%= screening %></legend>
 				
+                <div class="form-group" id="type_of_venue">
+                    <label class="control-label col-sm-2" id="label_id_type_of_venue"><%=type_of_venue%></label>
+                    <div class="col-sm-4">
+                        <select name="type_of_venue" id="id_type_of_venue" class="chosen-select form-control">
+                            <option value=''>-----------</option>
+                            <option value='1'>AWC</option>
+                            <option value='2'>school</option>
+                            <option value='3'>open space</option>
+                            <option value='4'>community hall</option>
+                            <option value='5'>other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="type_of_video"> 
+                    <label class="control-label col-sm-2"><%=type_of_video%></label>
+                    <div class="col-sm-4">
+                        <select name="type_of_video" id="id_type_of_video" class="chosen-select form-control" onchange="get_val()">
+                            <option value=''>-----------</option>
+                            <option value='1'>NSA video</option>
+                            <option value='2'>MIYCN video</option>
+                            <option value='3'>PLA video</option>
+                            <option value='4'>PLA meeting</option>
+                        </select>  
+                    </div>
+                </div>
+
+                <div class="form-group" id="id_meeting_topic" style="display:none;">
+                    <label class="control-label col-sm-2" id="label_id_meeting_topics"><%=meeting_topics%></label>
+                    <div class="col-sm-4">
+                        <select name="meeting_topics" id="id_meeting_topics" class="chosen-select form-control">
+                            <option value=''>-----------</option>
+                            <option value='1'>Introduction and understanding social inequities</option>
+                            <option value='2'>Understanding underlying causes of under nutrition</option>
+                            <option value='3'>Identifying problems that affect nutrition conditions during the 1000-day</option>
+                            <option value='4'>Prioritizing problems</option>
+                            <option value='5'>Understanding the causes and effects</option>
+                            <option value='6'>Understanding barriers and opportunities</option>
+                            <option value='7'>Accountability and sharing of Responsibilities</option>
+                            <option value='8'>Planning and sharing of responsibilities for Village interface Meeting</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="frontline_worker_present">
+                    <label class="control-label col-sm-2" id="label_id_frontline_worker_present"><%=frontline_worker_present%></label>
+                    <div class="col-sm-4">
+                        <select name="frontline_worker_present" id="id_frontline_worker_present" class="chosen-select form-control">
+                            <option value=''>-----------</option>
+                            <option value='1'>ANM</option>
+                            <option value='2'>ASHA</option>
+                            <option value='3'>AWW</option>
+                            <option value='4'>Not Present</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%= date %></label>
                 	<div class="col-sm-4">
@@ -596,7 +656,7 @@
                 	</div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-2"><%= mediator %></label>
+                    <label class="control-label col-sm-2" id="id_label_animator"><%= mediator %></label>
                  	<div class="col-sm-4"> 
                         <select name="animator" id="id_animator" class="chosen-select form-control">
                             <option value='' selected='selected'>---------</option> 
@@ -614,7 +674,7 @@
                 </div>
                 
                 <div class="form-group"> 
-                    <label class="control-label col-sm-2"><%= videos_screened %></label>
+                    <label class="control-label col-sm-2" id="id_label_videos_screened"><%= videos_screened %></label>
                 	<div class="col-sm-4"> 
                 	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chosen-select form-control">
                         </select> 
@@ -737,12 +797,6 @@
             <div class="form-group">
                 <div class="controls">
                     <select name="category<%=index%>" id="category_row7" class="chosen-select form-control category_row7_<%=index%>" multiple="multiple">
-                        <option value='1'>Woman of reproductive age (15-49 years)</option>
-                        <option value='2'>Adolescent girl (10-19 years)</option>
-                        <option value='3'>Mother of a child  2 to 5 years</option>
-                        <option value='4'>Mother of a child 6 months to 2 years</option>
-                        <option value='5'>Mother of a child up to 6 months</option>
-                        <option value='6'>Pregnant Women</option>
                     </select>
                     
                     
@@ -751,6 +805,24 @@
         </td>
     </tr>
 </script>
+
+<script language= "javascript">
+    
+    function get_val()
+    { 
+
+         $("#id_type_of_video").change(function(){
+             var type_of_video = this.value;
+             alert(type_of_video)
+             if(type_of_video == '4'){
+                $("#id_meeting_topic").removeAttr('style')
+             }else{
+                $("#id_meeting_topic").addClass('hidden')
+             }
+          });
+
+    }
+</script>
 <!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES END //////////////////////////////////////////////-->
 
 <!--///////////////////////////////////////////////// ADOPTION ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
@@ -758,14 +830,13 @@
         <fieldset class="form-horizontal">
                 <legend><%= adoption %></legend>
                 <div class="form-group">
-
-                <label class="control-label col-sm-2"><%= village %></label>
-                <div class="col-sm-4"> 
-                <select name="village" id="id_village" class="chosen-select form-control">
-                <option value="">---------- </option>
-                </select>
+                    <label class="control-label col-sm-2"><%= village %></label>
+                    <div class="col-sm-4"> 
+                        <select name="village" id="id_village" class="chosen-select form-control">
+                            <option value="">---------- </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= person%></label>
@@ -853,7 +924,7 @@
                 </div>
             </div>
             <div class="form-group">
-                 <label class="control-label col-sm-2"><%= mediator %></label>
+                 <label class="control-label col-sm-2" id="id_label_animator"><%= mediator %></label>
                 <div class="col-sm-4"> 
                 <select name="animator" id="id_animator" class="chosen-select form-control">
                 <option value="">---------- </option>
@@ -906,7 +977,7 @@
                         <th>
                             <%=person%>
                         </th>
-                        <th>
+                        <th id="id_dob">
                             <%=date_of_verification%>
                         </th>
                         <th id="id_member_adopt" class = "notbold">
@@ -1215,13 +1286,7 @@
                 <%=index+1%>.</td>
 
     <td ><div class="form-group"><div class="controls">
-            <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="10" maxlength="500"rows="1" style="resize:vertical; width:82%;" ></textarea>
-                
-            </div></div>
-        </td>
-
-    <td><div class="form-group"><div class="controls">
-            <input class="mrg-lt-auto" type="checkbox" name="physically_verifiable" >
+            <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="10" maxlength="500" rows="1" style="resize:vertical; width:82%;" ></textarea>
                 
             </div></div>
         </td>
@@ -1233,7 +1298,29 @@
     <tr class="hide-header">  
        <th class="col-md-1 control-label notbold"><%= sr_no %></th>
        <th class="col-md-6 control-label notbold"><%= non_n %></th>
-       <th class="col-md-5 control-label notbold"><%= physically_verifiable %></th>             
+                  
+    </tr>
+</script>
+
+
+<script type="text/template" id="selfreportedbehaviour_inline">
+<% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("videoadd_"+class_ln);%>
+    <tr class="stack-table" index = <%=index%> name="row<%=index%>">
+    <td>
+                <%=index+1%>.</td>
+
+    <td ><div class="form-group"><div class="controls">
+            <textarea name="self_reported_behaviour<%=index%>" id="self_reported_behaviour<%=index%>" class=" input-xlarge form-control donotvalidate" maxlength="500" rows="1" style="resize:vertical; width:82%;" ></textarea>
+                
+            </div></div>
+        </td>
+    </tr>
+</script>
+
+<script type="text/template" id="selfreportedbehaviour_inline_header">
+    <tr class="hide-header">  
+       <th class="col-md-1 control-label notbold"><%= sr_no %></th>
+       <th class="col-md-6 control-label notbold"><%= srb %></th>           
     </tr>
 </script>
 

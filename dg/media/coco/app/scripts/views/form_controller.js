@@ -132,6 +132,7 @@ var message_combined_failure = "";
                         // parent form saved
                         if (that.form.inline)
                             //If inline form - save inlines now
+                            console.log(that.inline_models, "hgujkiunbh")
                             that.save_inlines(that.inline_models, off_json, that.form.inline)
                                 .done(function(all_inlines) {
                                     console.log("ALL INLINES SAVED");
