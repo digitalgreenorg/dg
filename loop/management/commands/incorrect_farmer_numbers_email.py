@@ -1,6 +1,10 @@
 # coding=utf-8
 import copy
 import collections
+import os
+from django.template import Context
+from django.template.loader import get_template
+from dg.settings import MEDIA_ROOT
 
 __author__ = 'Lokesh'
 

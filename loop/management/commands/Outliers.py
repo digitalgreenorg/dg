@@ -1,5 +1,7 @@
 # coding=utf-8
 import copy
+import os
+from dg.settings import MEDIA_ROOT
 
 __author__ = 'Lokesh'
 
