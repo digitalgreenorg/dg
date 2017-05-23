@@ -13,9 +13,7 @@ export const chartsConfig = [
         subtitle: {
             text: 'Click the columns to view state wise trainer figures.'
         },
-        xAxis: {
-            categories: []
-        },
+        xAxis: {type: 'category'},
         yAxis: {
             title: {
                 text: 'Number of Mediators'
