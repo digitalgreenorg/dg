@@ -15,6 +15,7 @@ from dashboard.forms import CategoryForm, SubCategoryForm, VideoForm
 from videos.models import Video, Category, SubCategory, NonNegotiable
 from qacoco.forms import VideoQualityReviewForm, DisseminationQualityForm, AdoptionVerificationForm,NonNegotiableForm
 from people.models import Animator, Person, PersonGroup
+from activities.models import PersonAdoptPractice
 
 class AdoptionVerificationNotSaved(Exception):
     pass
