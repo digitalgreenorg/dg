@@ -31,6 +31,7 @@ def coco_v2(request):
     
 def login(request):
     partner_name = None
+    type_of_cocouser = None
     partner_id = None
     user_id = None
     if request.method == 'POST':
@@ -42,15 +43,16 @@ def login(request):
             coco_user_obj = CocoUser.objects.filter(user_id=request.user.id)
             if len(coco_user_obj):
                 partner_name = coco_user_obj[0].partner.partner_name.lower()
+                type_of_cocouser = coco_user_obj[0].type_of_cocouser
                 partner_id = coco_user_obj[0].partner.id
                 user_id = coco_user_obj[0].user.id
-        else:
-            return HttpResponse("0")
     else:
         return HttpResponse("0")
     return JsonResponse({'success': '1', 'partner_name': partner_name,
                          'partner_id': partner_id,
+                         'type_of_cocouser': type_of_cocouser,
                          'user_id': user_id})
+
     
 def logout(request):
     auth.logout(request)    

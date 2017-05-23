@@ -30,6 +30,7 @@ class BroadcastTestForm(forms.Form):
 class BroadcastForm(forms.Form):
     title = forms.CharField(label='Broadcast Title',widget=forms.TextInput(attrs={'placeholder': 'Enter Meaningful Broadcast Title'}),max_length=Broadcast._meta.get_field('title').max_length)
     cluster = forms.ChoiceField(label='Select Cluster',choices=[])
+    farmer_file = forms.FileField(required=False, label='Select a .csv file', help_text='Upload a CSV file with Farmers mobile number only if broadcast is not for full cluster')
     audio_file = forms.FileField(label='Select a .WAV Audio file',
                                help_text='Upload .WAV, 8Khz Mono format audio file with 16 bit depth(Max. Size 5MB)'
                                )
@@ -52,3 +53,12 @@ class BroadcastForm(forms.Form):
         if title == 'admin_test' or title.strip() == 'admin_test':
             raise forms.ValidationError("Please select another Meaningful name")
         return title
+
+    def clean_farmer_file(self):
+        farmer_file = self.cleaned_data.get('farmer_file')
+        # if farmer_file.content_type != 'text/csv':
+        #     raise forms.ValidationError("Please upload a CSV file only.")
+        # .size returns size in bytes
+        if farmer_file and farmer_file.size/(1024*1024.0) > 5:
+             raise forms.ValidationError("Please upload a CSV file less than 5 MB")
+        return farmer_file

@@ -21,7 +21,8 @@ from loop.utils.ivr_helpline.helpline_data import CALL_STATUS_URL, CALL_REQUEST_
     BROADCAST_S3_BUCKET_NAME, BROADCAST_S3_UPLOAD_PATH, BROADCAST_PENDING_TIME
 
 HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
-BROADCAST_AUDIO_PATH = '%s/loop/broadcast/'%(MEDIA_ROOT,)
+BROADCAST_AUDIO_PATH = '%s/loop/broadcast/audio/'%(MEDIA_ROOT,)
+BROADCAST_FARMER_PATH = '%s/loop/broadcast/farmer/'%(MEDIA_ROOT,)
 
 def write_log(log_file,module,log):
     curr_india_time = datetime.datetime.now(timezone('Asia/Kolkata'))
@@ -304,3 +305,18 @@ def save_broadcast_audio(file_name, audio_file):
     # delete local uploaded audio file.
     os.remove(audio_file_path)
     return audio_file_name
+
+def save_farmer_file(file_name, farmer_file):
+    file_name = ''.join(file_name.split())
+    farmer_file_name = file_name + "_" + str(datetime.datetime.now(timezone('Asia/Kolkata')).strftime('%Y_%m_%d_%H_%M_%S_%f')) + '.csv'
+    farmer_file_path = BROADCAST_FARMER_PATH + farmer_file_name
+    with open(farmer_file_path, 'wb+') as broadcast_farmers:
+        for chunk in farmer_file.chunks():
+            broadcast_farmers.write(chunk)
+        broadcast_farmers.close()
+    # upload_on_s3(audio_file_path,audio_file_name,
+    #             BROADCAST_S3_BUCKET_NAME,BROADCAST_S3_UPLOAD_PATH,
+    #             'public-read')
+    # delete local uploaded audio file.
+    # os.remove(audio_file_path)
+    return farmer_file_path

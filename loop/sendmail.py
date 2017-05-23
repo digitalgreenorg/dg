@@ -27,7 +27,7 @@ def common_send_email(subject, recipients, files, bcc=[], from_email=None, html=
     msg.attach_alternative(html, 'text/html')
 
     for file in files:
-        attach_file_name = os.getcwd() + '/'+ file.name
+        attach_file_name = file
         msg.attach_file(attach_file_name)
     msg.send()
     return
