@@ -25,7 +25,7 @@ export class FiltersComponent implements OnInit {
   private limit;
   private myDatePickerOptions: IMyOptions = {
     dateFormat: 'dd-mm-yyyy',
-    alignSelectorRight : true
+    alignSelectorRight: true
   };
   private date = new Date();
   private start_date = new Date(2015, 1, 1);
@@ -90,8 +90,8 @@ export class FiltersComponent implements OnInit {
       });
       if (list.length > 0) {
         this.f_list[f.heading] = list;
-        this.f_list['apply_filter'] = "true";
       }
+      this.f_list['apply_filter'] = "true";
     }
     this.f_list['start_date'] = this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd');
     this.f_list['end_date'] = this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd');

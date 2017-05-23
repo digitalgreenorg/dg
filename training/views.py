@@ -49,7 +49,6 @@ def login(request):
 
 @csrf_exempt
 def getFilterData(request):
-
     trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
     states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
     response_list = []
@@ -75,26 +74,32 @@ def getData(request):
 
     trainers_list = request.GET.getlist('Trainer')
     states_list = request.GET.getlist('State')
-    args_list = []
+    query_list = []
+
+    filter_args = {}
+    filter_args['start_date'] = start_date
+    filter_args['end_date'] = end_date
+    filter_args['apply_filter'] = apply_filter
+    filter_args['trainers_list'] = trainers_list
+    filter_args['states_list'] = states_list
 
     # No of Trainings
-    args_obj = get_training_data_sql(start_date=start_date, end_date=end_date, apply_filter=apply_filter, trainers_list=trainers_list)
-    args_list.extend(args_obj)
+    training_query = get_training_data_sql(**filter_args)
+    query_list.extend(training_query)
 
     # No of Mediators
-    args_obj = get_mediators_data_sql(start_date=start_date, end_date=end_date, apply_filter=apply_filter)
-    args_list.extend(args_obj)
+    mediator_query = get_mediators_data_sql(**filter_args)
+    query_list.extend(mediator_query)
 
     # Pass Percentage
-    args_obj = get_pass_perc_data_sql(start_date=start_date,end_date=end_date, apply_filter=apply_filter)
-    args_list.extend(args_obj)
+    pass_percent_query = get_pass_perc_data_sql(**filter_args)
+    query_list.extend(pass_percent_query)
 
     # Avg Score
-    args_obj = get_avg_score_data_sql(start_date=start_date,end_date=end_date, apply_filter=apply_filter)
-    args_list.extend(args_obj)
+    avg_score_query = get_avg_score_data_sql(**filter_args)
+    query_list.extend(avg_score_query)
 
-    results = multiprocessing_list(args_list = args_list)
-    data = {'data':results}
+    results = multiprocessing_list(query_list = query_list)
     data = json.dumps({'data' : results})
     return HttpResponse(data)
 

@@ -113,8 +113,7 @@ def get_sql_result_api(query_dict):
     return (data_dict[query_dict['component']])
 
 def multiprocessing_dict(**Kwargs):
-    # method_name = Kwargs['method_name']
-    args_list = Kwargs['args_list']
+    args_list = Kwargs['query_list']
     pool = ThreadPool(4)
     results = dict(pool.map(get_sql_result, args_list))
     pool.close()
@@ -122,9 +121,7 @@ def multiprocessing_dict(**Kwargs):
     return results
 
 def multiprocessing_list(**Kwargs):
-    # method_name = Kwargs['method_name']
-    args_list = Kwargs['args_list']
-    print args_list
+    args_list = Kwargs['query_list']
     pool = ThreadPool(4)
     results = pool.map(get_sql_result_api, args_list)
     pool.close()
