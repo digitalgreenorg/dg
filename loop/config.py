@@ -7,7 +7,9 @@ from email.header import Header
 from email.mime.base import MIMEBase
 from django.core.mail.message import DEFAULT_ATTACHMENT_MIME_TYPE
 
-# Code snippet ad imports for email attachment with encodings. To be used in another file for attachmnet in emails
+# Code snippet ad imports for email attachment with encodings. To be used in another file for attachment in emails
+# EmailMultiAlternatives included to provide support to alternative body content like HTML_TEXT
+
 class EmailMultiAlternativesWithEncoding(EmailMultiAlternatives):
     def _create_attachment(self, filename, content, mimetype=None):
         """
