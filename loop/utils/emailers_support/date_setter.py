@@ -40,7 +40,7 @@ def set_from_to_date(from_date, to_date, no_of_days):
             else:
                 print 'From date is greater than to date'
         elif from_date is None and no_of_days:          # to_date and no_of_days - find between this time period
-            from_date = to_date - timedelta(days= no_of_days - 1)
+            from_date = str(datetime.strptime(to_date, '%Y-%m-%d').date() - timedelta(days= int(no_of_days) - 1))
             time_period = [from_date, to_date]
         else:
             print 'Too many parameters'
@@ -50,10 +50,10 @@ def set_from_to_date(from_date, to_date, no_of_days):
         elif from_date and no_of_days is None:          # from_date - find last cycle from from_date
             print 'Please provide to date or no of days'
         elif from_date is None and no_of_days:          # no_of_days - find between today and today-no_of_days
-            time_period = [current_date - timedelta(days = no_of_days - 1), current_date]
+            time_period = [str(datetime.strptime(current_date, '%Y-%m-%d').date() - timedelta(days = int(no_of_days) - 1)), current_date]
         elif from_date and no_of_days:                  # from_date and no_of_days - find between this time period
-            if current_date >= from_date + timedelta(days = no_of_days - 1):
-                to_date = from_date + timedelta(days = no_of_days - 1)
+            if current_date >= str(datetime.strptime(from_date, '%Y-%m-%d').date() + timedelta(days = int(no_of_days) - 1)):
+                to_date = str(datetime.strptime(from_date, '%Y-%m-%d').date() + timedelta(days = int(no_of_days) - 1))
                 time_period = [from_date, to_date]
             else:
                 print 'To date is greater than today'
