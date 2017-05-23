@@ -209,47 +209,6 @@ header_dict_for_transport_outlier = {
     ]
 }
 
-header_dict_for_farmer_details = [{'column_width': 3.64,
-                           'label': 'क्रम',
-                           'col_seq': 'A:A',
-                          },
-                          {'column_width': 9.82,
-                           'label': 'तारीख',
-                           'col_seq': 'B:B',
-                          },
-                          {'column_width': 11.55,
-                           'label': 'मंडी का नाम',
-                           'col_seq': 'C:C',
-                          },
-                          {'column_width': 15,
-                           'label': 'किसान का नाम',
-                           'col_seq': 'D:D',
-                          },
-                          {'column_width': 9.09,
-                           'label': 'कुल वजन (कि.)',
-                           'col_seq': 'E:E',
-                          },
-                          {'column_width': 7,
-                           'label': 'राशि (रु)',
-                           'col_seq': 'F:F',
-                          },
-                          {'column_width': 7.45,
-                           'label': 'किसान का भाग (रु)',
-                           'col_seq': 'G:G',
-                          },
-                          {'column_width': 8.36,
-                           'label': 'कुल राशि (रु)',
-                           'col_seq': 'H:H',
-                          },
-                          {'column_width': 5.91,
-                           'label': '✓/ X',
-                           'col_seq': 'I:I',
-                          },
-                          {'column_width': 16.55,
-                           'label': 'टिप्पडी',
-                           'col_seq': 'J:J',
-                          }]
-
 RECIPIENTS = ['lokesh@digitalgreen.org', 'divish@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
