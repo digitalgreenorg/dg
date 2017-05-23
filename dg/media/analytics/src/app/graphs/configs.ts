@@ -36,7 +36,7 @@ export const chartsConfig = [
 
         tooltip: {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
         },
 
         series: [],
@@ -46,7 +46,8 @@ export const chartsConfig = [
         chart:{
             type:'line',
             renderTo: 'line_chart',
-            tabID : 'tab2'
+            tabID : 'tab2',
+            drillDown: false
         },
         chartName : 'state_#trainings',
         title : {text : 'State wise traingings conducted'},
@@ -56,13 +57,15 @@ export const chartsConfig = [
                 dataLabels: {enabled: true},
             }
         },
-        series: []
+        series: [],
+        drilldown: {series: []}
     },
     {
         chart:{
             type:'bar',
             renderTo: 'bar_chart',
-            tabID : 'tab2'
+            tabID : 'tab2',
+            drillDown: false
         },
         chartName : 'state_#trainings',
         title: {text: 'District wise traingings conducted'},
@@ -83,13 +86,15 @@ export const chartsConfig = [
                 }
             }
         },
-        series: []
+        series: [],
+        drilldown: {series: []}
     },
     {
         chart:{
             type:'pie',
             renderTo: 'pie_chart',
-            tabID : 'tab2'
+            tabID : 'tab2',
+            drillDown: false
         },
         chartName : 'sate_%trainings',
         title: {text: 'State wise number of trainings'},
@@ -105,7 +110,8 @@ export const chartsConfig = [
             }
         },
         xAxis : {categories: []},
-        series: []
+        series: [],
+        drilldown: {series: []}
     }
    
 ]

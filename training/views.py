@@ -294,18 +294,16 @@ def graph_data(request):
                             GROUP BY gs.id , ttr.id'''
     result = pandas.read_sql_query(sql_querry, con=db_connection)
 
-    state_mediators = result.groupby(['state']).sum().reset_index()
-    outer_data = {'outerData': {'series':[],'categories':state_mediators['state'].tolist()}}
-    #outer_data['outerData']['categories']=state_mediators['state'].tolist()
+    state_graouped_data = result.groupby(['state']).sum().reset_index()
+    outer_data = {'outerData': {'series':[],'categories':state_graouped_data['state'].tolist()}}
     
-
     temp_dict_outer = {'name':'Mediators','data':[]}     
-    for row in state_mediators.iterrows():
+    for row in state_graouped_data.iterrows():
         temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].mediators),'drilldown':str(row[1].state)})
     outer_data['outerData']['series'].append(temp_dict_outer)
 
     temp_dict_outer = {'name':'Above70','data':[]} 
-    for row in state_mediators.iterrows():
+    for row in state_graouped_data.iterrows():
         temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].Above70),'drilldown':str(row[1].state)})
 
     outer_data['outerData']['series'].append(temp_dict_outer)
@@ -313,20 +311,20 @@ def graph_data(request):
     final_data_list[chart_name] = outer_data
 
     
-    # inner_data = {'innerData': []}
-    # temp_dict_inner = {'data':[]}
-    # result = pandas.read_sql_query(sql_querry, con=db_connection)  
-    # b = {name: dict(zip(g['trainer'],g['mediators'],g['trainings'])) for name,g in result.groupby('state')}
-  
-    # for row in result:
-    #     temp_dict_inner['name'] = str(row[1].state)
-    #     temp_dict_inner['id'] = str(row[1].state)
-    #     temp_dict_inner['data'].append([str(row[1].trainer), row[1].mediators])
-    #     inner_data['innerData'].append(temp_dict_inner)
-    # #inner_data['innerData'] = temp_dict_inner
+    inner_data = {'innerData': []}
     
-    # print inner_data
-    # final_data_list[chart_name].update(inner_data)
+    trainer_mediators = result.set_index(['state','trainer']).mediators 
+    trainer_pass = result.set_index(['state','trainer']).mediators
+    trainer_mediators_dict = {name: dict(zip(g['trainer'],g['mediators'])) for name,g in result.groupby('state')}
+    trainer_pass_dict = {name: dict(zip(g['trainer'],g['Above70'])) for name,g in result.groupby('state')}
+
+    for key, value in trainer_mediators_dict.iteritems():
+        temp_dict_inner = {'data':[]}
+        temp_dict_inner['name'] = temp_dict_inner['id'] = key
+        for k, v in value.iteritems():
+            temp_dict_inner['data'].append([k,v])
+        inner_data['innerData'].append(temp_dict_inner) 
+    final_data_list[chart_name].update(inner_data)
 
     return HttpResponse(json.dumps(final_data_list))
     
