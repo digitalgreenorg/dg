@@ -91,7 +91,7 @@ class Command(BaseCommand):
             os.remove(str(file_name_to_remove))
 
     def file_creator_date_specific(self, from_to_date, aggregator_to_check_id_string, aggregators):
-        data_list_for_email_body = {}
+        data_list_for_email_body = collections.OrderedDict()
         workbook = create_workbook(header_dict_for_loop_email_mobile_numbers['workbook_name'] % (
         MEDIA_ROOT, '', str(from_to_date[0]), str(from_to_date[1])))
         query_result_data = self.data_generator(from_to_date, aggregator_to_check_id_string)
