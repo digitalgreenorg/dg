@@ -10,6 +10,7 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Sum
 from django.core.serializers.json import DjangoJSONEncoder
 
+import pandas 
 from tastypie.models import ApiKey, create_api_key
 from models import Training, Score, Trainer, Question, Assessment
 from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
@@ -233,6 +234,42 @@ def month_wise_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
+# def graph_data(request):
+#     chart_type =  str(request.GET.get('chartType'))
+#     chart_name = str(request.GET.get('chartName'))
+#     final_data_list = {}
+#     db_connection = MySQLdb.connect(host='localhost',
+#                                         user=DATABASES['default']['USER'],
+#                                         passwd=DATABASES['default']['PASSWORD'],
+#                                         db=DATABASES['default']['NAME'],
+#                                         charset='utf8',
+#                                         use_unicode=True).cursor()    
+#     if(chart_type != 'pie'):
+#         db_connection.execute('''select st.state_name 'state', count(t.id) 'no_trainings'
+#                                 from training_training t
+#                                 join geographies_district d on d.id = t.district_id
+#                                 join geographies_state st on st.id = d.state_id
+#                                 group by st.id''')
+#         result = db_connection.fetchall()
+#         temp_dict = {'name':[],'data':[]}
+#         for row in result:
+#             temp_dict['name'].append(row[0])
+#             temp_dict['data'].append(row[1])
+#         #print chart_name
+#         final_data_list[chart_name] = temp_dict
+#     else:
+#         db_connection.execute('''select st.state_name 'state', count(t.id) 'no_trainings'
+#                                 from training_training t
+#                                 join geographies_district d on d.id = t.district_id
+#                                 join geographies_state st on st.id = d.state_id
+#                                 group by st.id''')
+#         result = db_connection.fetchall()
+#         temp_dict = {'name':'Pie Chart','data':[]}
+#         for row in result:
+#             temp_dict['data'].append({'name':row[0],'y':row[1]})
+#         final_data_list[chart_name] = temp_dict
+#     #print final_data_list
+#     return HttpResponse(json.dumps(final_data_list))  
 def graph_data(request):
     chart_type =  str(request.GET.get('chartType'))
     chart_name = str(request.GET.get('chartName'))
@@ -242,31 +279,62 @@ def graph_data(request):
                                         passwd=DATABASES['default']['PASSWORD'],
                                         db=DATABASES['default']['NAME'],
                                         charset='utf8',
-                                        use_unicode=True).cursor()    
-    if(chart_type != 'pie'):
-        db_connection.execute('''select st.state_name 'state', count(t.id) 'no_trainings'
-                                from training_training t
-                                join geographies_district d on d.id = t.district_id
-                                join geographies_state st on st.id = d.state_id
-                                group by st.id''')
-        result = db_connection.fetchall()
-        temp_dict = {'name':[],'data':[]}
-        for row in result:
-            temp_dict['name'].append(row[0])
-            temp_dict['data'].append(row[1])
-        #print chart_name
-        final_data_list[chart_name] = temp_dict
-    else:
-        db_connection.execute('''select st.state_name 'state', count(t.id) 'no_trainings'
-                                from training_training t
-                                join geographies_district d on d.id = t.district_id
-                                join geographies_state st on st.id = d.state_id
-                                group by st.id''')
-        result = db_connection.fetchall()
-        temp_dict = {'name':'Pie Chart','data':[]}
-        for row in result:
-            temp_dict['data'].append({'name':row[0],'y':row[1]})
-        final_data_list[chart_name] = temp_dict
-    #print final_data_list
-    return HttpResponse(json.dumps(final_data_list))  
+                                        use_unicode=True)  
+    #if(chart_type == 'pie'):
+    sql_querry = '''SELECT gs.state_name 'state', ttr.name 'trainer', COUNT(DISTINCT t1.p_id) 'mediators', COUNT(DISTINCT t1.t_id) 'trainings',0.7 * COUNT(DISTINCT t1.p_id) 'Above70' 
+                             FROM(SELECT tt.id t_id, ts.participant_id p_id, SUM(ts.score)
+                            FROM training_score ts
+                            JOIN training_training tt ON tt.id = ts.training_id AND ts.score IN (0 , 1)
+                            GROUP BY tt.id , ts.participant_id) t1
+                            JOIN training_training_trainer ttt ON ttt.training_id = t1.t_id
+                            JOIN training_trainer ttr ON ttr.id = ttt.trainer_id
+                            JOIN people_animator pa ON pa.id = t1.p_id
+                            JOIN geographies_district gd ON gd.id = pa.district_id
+                            JOIN geographies_state gs ON gs.id = gd.state_id
+                            GROUP BY gs.id , ttr.id'''
+    result = pandas.read_sql_query(sql_querry, con=db_connection)
+
+    outer_data = {'outerData': []}
+    temp_dict_outer = {'name':'Mediators','data':[]} 
+    state_mediators = result.groupby(['state']).sum().reset_index()
+    for row in state_mediators.iterrows():
+        temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].mediators),'drilldown':str(row[1].state)})
+
+    outer_data['outerData'].append(temp_dict_outer)
+
+    temp_dict_outer = {'name':'Above70','data':[]} 
+    for row in state_mediators.iterrows():
+        temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].Above70),'drilldown':str(row[1].state)})
+
+    outer_data['outerData'].append(temp_dict_outer)
+
+    print outer_data
+    #state_mediators = result.groupby(['state']).sum().reset_index()
+
+    #result = db_connection.fetchall()
+    
+    # outer_data = {'outerData': []}
+    # temp_dict_outer = {'name':'trainings','data':[]}  
+    # result = pandas.read_sql_query(sql_querry, con=db_connection).groupby('state').sum().reset_index()
+    # for row in result.iterrows():
+    #     temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].mediators),'drilldown':str(row[1].state)})
+    # outer_data['outerData'] = temp_dict_outer
+    # final_data_list[chart_name] = outer_data
+    
+    # inner_data = {'innerData': []}
+    # temp_dict_inner = {'data':[]}
+    # result = pandas.read_sql_query(sql_querry, con=db_connection)  
+    # b = {name: dict(zip(g['trainer'],g['mediators'],g['trainings'])) for name,g in result.groupby('state')}
+  
+    # for row in result:
+    #     temp_dict_inner['name'] = str(row[1].state)
+    #     temp_dict_inner['id'] = str(row[1].state)
+    #     temp_dict_inner['data'].append([str(row[1].trainer), row[1].mediators])
+    #     inner_data['innerData'].append(temp_dict_inner)
+    # #inner_data['innerData'] = temp_dict_inner
+    
+    # print inner_data
+    # final_data_list[chart_name].update(inner_data)
+
+    return HttpResponse(json.dumps(outer_data))
     
