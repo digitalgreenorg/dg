@@ -333,7 +333,8 @@ class PersonResource(BaseResource):
     group = fields.ForeignKey(PersonGroupResource, 'group',null=True)
     class Meta:
                 max_limit = None
-                queryset = Person.objects.all()
+                person_id = PersonAdoptPractice.objects.filter(date_of_adoption__gte=datetime.now().date() - timedelta(days=365)).values_list('person',flat=True)
+                queryset = Person.objects.filter(id__in=person_id)
                 resource_name = 'person'
                 authentication = Authentication()
                 authorization = BlockAuthorization('village__block_id__in')
