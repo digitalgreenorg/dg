@@ -47,12 +47,18 @@ export class GraphsComponent {
     ngAfterViewInit(): void {
         this.charts.forEach(chart => {
             this.graphService.getData(chart.options.chart.type, chart.options.chartName).then(dataList => {
-                Object.keys(dataList).forEach(key => {
+                dataList['outerData'].forEach(entry => {
+                    chart.nativeChart.addSeries(entry, true);
+                });
+                
+                //console.log(chart)
+                /*Object.keys(dataList).forEach(key => {
                     if(key === chart.options.chartName) {
+                        console.log(key);
                         //add data to chart. True calls chart.redraw()
                         chart.nativeChart.addSeries(dataList[key], true);
                     }
-                });            
+                });*/            
             });
         });
     }
