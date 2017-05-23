@@ -299,12 +299,12 @@ def graph_data(request):
     
     temp_dict_outer = {'name':'Mediators','data':[]}     
     for row in state_graouped_data.iterrows():
-        temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].mediators),'drilldown':str(row[1].state)})
+        temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].mediators),'drilldown':row[1].state+' mediators'})
     outer_data['outerData']['series'].append(temp_dict_outer)
 
     temp_dict_outer = {'name':'Above70','data':[]} 
     for row in state_graouped_data.iterrows():
-        temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].Above70),'drilldown':str(row[1].state)})
+        temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].Above70),'drilldown':row[1].state+' above70'})
 
     outer_data['outerData']['series'].append(temp_dict_outer)
 
@@ -320,10 +320,18 @@ def graph_data(request):
 
     for key, value in trainer_mediators_dict.iteritems():
         temp_dict_inner = {'data':[]}
-        temp_dict_inner['name'] = temp_dict_inner['id'] = key
+        temp_dict_inner['name'] = temp_dict_inner['id'] = key+' mediators'
         for k, v in value.iteritems():
             temp_dict_inner['data'].append([k,v])
-        inner_data['innerData'].append(temp_dict_inner) 
+        inner_data['innerData'].append(temp_dict_inner)
+
+    for key, value in trainer_pass_dict.iteritems():
+        temp_dict_inner = {'data':[]}
+        temp_dict_inner['name'] = temp_dict_inner['id'] = key+' above70'
+        for k, v in value.iteritems():
+            temp_dict_inner['data'].append([k,v])
+        inner_data['innerData'].append(temp_dict_inner)
+
     final_data_list[chart_name].update(inner_data)
 
     return HttpResponse(json.dumps(final_data_list))
