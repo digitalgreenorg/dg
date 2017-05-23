@@ -294,32 +294,24 @@ def graph_data(request):
                             GROUP BY gs.id , ttr.id'''
     result = pandas.read_sql_query(sql_querry, con=db_connection)
 
-    outer_data = {'outerData': []}
-    temp_dict_outer = {'name':'Mediators','data':[]} 
     state_mediators = result.groupby(['state']).sum().reset_index()
+    outer_data = {'outerData': {'series':[],'categories':state_mediators['state'].tolist()}}
+    #outer_data['outerData']['categories']=state_mediators['state'].tolist()
+    
+
+    temp_dict_outer = {'name':'Mediators','data':[]}     
     for row in state_mediators.iterrows():
         temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].mediators),'drilldown':str(row[1].state)})
-
-    outer_data['outerData'].append(temp_dict_outer)
+    outer_data['outerData']['series'].append(temp_dict_outer)
 
     temp_dict_outer = {'name':'Above70','data':[]} 
     for row in state_mediators.iterrows():
         temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].Above70),'drilldown':str(row[1].state)})
 
-    outer_data['outerData'].append(temp_dict_outer)
+    outer_data['outerData']['series'].append(temp_dict_outer)
 
-    print outer_data
-    #state_mediators = result.groupby(['state']).sum().reset_index()
+    final_data_list[chart_name] = outer_data
 
-    #result = db_connection.fetchall()
-    
-    # outer_data = {'outerData': []}
-    # temp_dict_outer = {'name':'trainings','data':[]}  
-    # result = pandas.read_sql_query(sql_querry, con=db_connection).groupby('state').sum().reset_index()
-    # for row in result.iterrows():
-    #     temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].mediators),'drilldown':str(row[1].state)})
-    # outer_data['outerData'] = temp_dict_outer
-    # final_data_list[chart_name] = outer_data
     
     # inner_data = {'innerData': []}
     # temp_dict_inner = {'data':[]}
@@ -336,5 +328,5 @@ def graph_data(request):
     # print inner_data
     # final_data_list[chart_name].update(inner_data)
 
-    return HttpResponse(json.dumps(outer_data))
+    return HttpResponse(json.dumps(final_data_list))
     

@@ -29,7 +29,6 @@ export const chartsConfig = [
                 borderWidth: 0,
                 dataLabels: {
                     enabled: true,
-                    format: '{point.y:.1f}%'
                 },
                 grouping: false            
             }
