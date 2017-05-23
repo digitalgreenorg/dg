@@ -90,7 +90,6 @@ class Command(BaseCommand):
     def data_generator(self, from_to_date, aggregator_to_check_id_string):
         query = query_for_farmer_transaction_all_single_aggregator % (
             from_to_date[0], from_to_date[1], aggregator_to_check_id_string)
-        print query
         query_result = onrun_query(query)
         return query_result
 
