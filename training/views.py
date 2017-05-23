@@ -53,10 +53,10 @@ def getFilterData(request):
     trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
     states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
     response_list = []
-    trainer_dict = {'name':"Trainer",'visible':True,'data':list(trainers_list)}
-    state_dict = {'name':"State",'visible':True,'data':list(states_list)}
-    response_list.append(trainer_dict)
-    response_list.append(state_dict)
+    trainer_dict = {'name':'Trainer', 'visible':True, 'data':list(trainers_list)}
+    state_dict = {'name':'State', 'visible':True, 'data':list(states_list)}
+    date_dict = {'name':'date', 'visible':True}
+    response_list.extend([trainer_dict, state_dict, date_dict])
     json_data = json.dumps(response_list)
     return HttpResponse(json_data)
 

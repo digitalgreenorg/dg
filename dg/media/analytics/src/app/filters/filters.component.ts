@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FILTER_DATA } from './filter-data';
 import { Filter } from './filter';
 import { FilterElement } from './filter-element';
 import { GetFilterDataService } from '../get-filter-data.service';
-import { TopBarDataService } from '../top-bar-data.service';
 import { SharedService } from '../shared.service';
 import { IMyOptions } from 'mydatepicker';
 import { DatePipe } from '@angular/common';
@@ -22,11 +20,12 @@ export class FiltersComponent implements OnInit {
   @ViewChild('mySidenav') mySidenav: ElementRef;
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;
-  private showDateFilter: boolean;
+  private showDateFilter: boolean = false;
   private f_list = {};
   private limit;
   private myDatePickerOptions: IMyOptions = {
     dateFormat: 'dd-mm-yyyy',
+    alignSelectorRight : true
   };
   private date = new Date();
   private start_date = new Date(2015, 1, 1);
@@ -108,8 +107,8 @@ export class FiltersComponent implements OnInit {
   }
 
   handleClick(event) {
-    var clickedComponent = event.target;
-    var inside = false;
+    let clickedComponent = event.target;
+    let inside = false;
     do {
       if (clickedComponent === this.myElement.nativeElement) {
         inside = true;
@@ -118,12 +117,8 @@ export class FiltersComponent implements OnInit {
     } while (clickedComponent);
 
     if (inside) {
-      // this.closeNav();
-      // console.log('inside');
     } else {
-      // console.log('outside');
       this.closeNav();
     }
   }
-
 }

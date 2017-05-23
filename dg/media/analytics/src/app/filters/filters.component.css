@@ -51,6 +51,6 @@ input {
 }
 
 .text-white {
-  padding-top: 8px;
+  padding: 8px 0px 0px 32px;
   -webkit-text-fill-color: white;
 }
