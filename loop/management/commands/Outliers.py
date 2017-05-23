@@ -76,7 +76,6 @@ class Command(BaseCommand):
             table_properties = {'data': None, 'autofilter': False, 'banded_rows': False, 'style': 'Table Style Light 15',
                                 'columns': header_dict_for_farmer_outlier['column_properties']}
 
-
         if case == 'TransportCost':
             workbook = create_workbook(header_dict_for_transport_outlier['workbook_name'] % (
             MEDIA_ROOT, '', str(from_to_date[0]), str(from_to_date[1])))
@@ -93,19 +92,6 @@ class Command(BaseCommand):
                     elements['format'] = date_format
             table_properties = {'data': None, 'autofilter': False, 'banded_rows': False, 'style': 'Table Style Light 15',
                                 'columns': header_dict_for_transport_outlier['column_properties']}
-
-        # Position of All is first as a co-incidence I think.
-        # Set correct column widths
-        # workbook = create_workbook('Farmer Share Outliers.xlsx')
-        # all_format = ['date_format']
-        # all_format_created = create_format(all_format, workbook)
-
-
-
-        # for aggregator in aggregators:
-        #     table_position_to_start = {'row': 2, 'col': 0}
-        #     worksheet_name[aggregator.name_en] = header_dict_for_farmer_outlier['worksheet_name'] % (
-        #     str(aggregator.name_en), str(from_to_date[0]), str(from_to_date[1]))
 
         table_position_to_start = {'row': 2, 'col': 0}
 
