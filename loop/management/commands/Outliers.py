@@ -76,7 +76,7 @@ class Command(BaseCommand):
             table_properties = {'data': None, 'autofilter': False, 'banded_rows': False, 'style': 'Table Style Light 15',
                                 'columns': header_dict_for_farmer_outlier['column_properties']}
 
-        if case == 'TransportCost':
+        elif case == 'TransportCost':
             workbook = create_workbook(header_dict_for_transport_outlier['workbook_name'] % (
             MEDIA_ROOT, '', str(from_to_date[0]), str(from_to_date[1])))
 
