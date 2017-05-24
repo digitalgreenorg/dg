@@ -49,6 +49,7 @@ export class GraphsComponent {
             this.graphService.getData(chart.options.chart.type, chart.options.chartName).then(dataList => {
                Object.keys(dataList).forEach(key => {
                    if(key === chart.options.chartName) {
+                       
                        //chart.nativeChart.xAxis[0].categories = dataList[key]['outerData']['categories'];
                        dataList[key]['outerData']['series'].forEach(entry => {
                             chart.nativeChart.addSeries(entry, true);
@@ -57,10 +58,13 @@ export class GraphsComponent {
                             //chart.nativeChart.xAxis[1].categories = []
                             dataList[key]['innerData'].forEach(drilldownEntry => {
                                 chart.options.drilldown.series.push(drilldownEntry);
+                                console.log(chart.options.drilldown);
                             });
                         }
                     }
                 });
+                console.log(dataList);
+                //console.log(dataList['innerData']);
             });
         });
     }

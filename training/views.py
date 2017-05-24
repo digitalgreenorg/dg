@@ -320,14 +320,16 @@ def graph_data(request):
 
     for key, value in trainer_mediators_dict.iteritems():
         temp_dict_inner = {'data':[]}
-        temp_dict_inner['name'] = temp_dict_inner['id'] = key+' mediators'
+        temp_dict_inner['name'] = key
+        temp_dict_inner['id'] = key+' mediators'
         for k, v in value.iteritems():
             temp_dict_inner['data'].append([k,v])
         inner_data['innerData'].append(temp_dict_inner)
 
     for key, value in trainer_pass_dict.iteritems():
         temp_dict_inner = {'data':[]}
-        temp_dict_inner['name'] = temp_dict_inner['id'] = key+' above70'
+        temp_dict_inner['name'] = key
+        temp_dict_inner['id'] = key+' above70'
         for k, v in value.iteritems():
             temp_dict_inner['data'].append([k,v])
         inner_data['innerData'].append(temp_dict_inner)
