@@ -20,6 +20,13 @@ def format_data_or_saving_in_adoption(request, data_dict, user_id, partner_id):
     verification_status = data_dict.get('verification_status')
     non_negotiable_check = data_dict.get('non_negotiable_check')
     verified_by = data_dict.get('observation_status')
+    parentcategory = data_dict.get('parentcategory')
+    adopt_practice = data_dict.get('adopt_practice')
+    krp_one = data_dict.get('krp_one')
+    krp_two = data_dict.get('krp_two')
+    krp_three = data_dict.get('krp_three')
+    krp_four = data_dict.get('krp_four')
+    krp_five = data_dict.get('krp_five')
     user_created_id = user_id
     _data_dict = {'user_created_id': user_created_id, 'partner_id': partner_id,
                  'person_id': person.get('id') if person else person,
@@ -28,8 +35,15 @@ def format_data_or_saving_in_adoption(request, data_dict, user_id, partner_id):
                  'date_of_adoption': date_of_adoption,
                  'date_of_verification': date_of_verification,
                  'partner_id': partner,
+                 'parentcategory_id': parentcategory.get('id') if parentcategory else parentcategory,
                  'verification_status': verification_status if verification_status else 0,
                  'non_negotiable_check': non_negotiable_check,
+                 'adopt_practice': adopt_practice,
+                 'krp_one': krp_one,
+                 'krp_two': krp_two,
+                 'krp_three': krp_three,
+                 'krp_four': krp_four,
+                 'krp_five': krp_five,
                  'verified_by': verified_by}
 
     _data_dict = dict((k, v) for k, v in _data_dict.iteritems() if v)
@@ -63,6 +77,7 @@ def format_data_or_saving_in_screening(request, data_dict, user_id, partner_id):
     village = data_dict.get('village')
     animator = data_dict.get('animator')
     online_id = data_dict.get('online_id')
+    parentcategory = data_dict.get('parentcategory')
     questions_asked = data_dict.get('questions_asked')
     partner = partner_id
     verification_status = data_dict.get('verification_status')
@@ -71,7 +86,8 @@ def format_data_or_saving_in_screening(request, data_dict, user_id, partner_id):
     observer = data_dict.get('observer')
     videoes_screened = [iterable.get('id') for iterable in data_dict.get('videoes_screened')]
     farmer_groups_targeted = [iterable.get('id') for iterable in data_dict.get('farmer_groups_targeted')]
-    farmers_attendance = [iterable.get('id') for iterable in data_dict.get('farmers_attendance')]
+    farmers_attendance = [{'id': int(iterable.get('person_id')), 'age': iterable.get('age'), 'gender': iterable.get('gender'), 'category': iterable.get('category')} for iterable in data_dict.get('farmers_attendance')]
+    health_provider_present = data_dict.get('health_provider_present')
     _data_dict = {'user_created_id': user_id, 'partner_id': partner_id,
                   'user_modified_id': user_id,
                  'start_time': start_time,
@@ -83,7 +99,9 @@ def format_data_or_saving_in_screening(request, data_dict, user_id, partner_id):
                  'questions_asked': questions_asked,
                  'screening_grade': screening_grade,
                  'observer': observer,
-                 'observation_status': observation_status if observation_status else 0
+                 'parentcategory_id': parentcategory.get('id') if parentcategory else parentcategory,
+                 'observation_status': observation_status if observation_status else 0,
+                 'health_provider_present': health_provider_present,
                  }
     videoes_screened = videoes_screened if checkm2mvalidation(videoes_screened) else False
     farmer_groups_targeted = checkm2mvalidation(farmer_groups_targeted)
@@ -243,7 +261,7 @@ def format_data_or_saving_in_video(request, data_dict, user_id, partner_id):
     language = data_dict.get('language')
     category = data_dict.get('category')
     subcategory = data_dict.get('subcategory')
-    videopractice = data_dict.get('videopractice')
+    videopractice = [int(iterable.get('id')) for iterable in data_dict.get('videopractice')]
     title = data_dict.get('title')
     video_type = data_dict.get('video_type')
     benefit = data_dict.get('benefit')
@@ -261,7 +279,6 @@ def format_data_or_saving_in_video(request, data_dict, user_id, partner_id):
     duration = data_dict.get('duration')
     _data_dict = {'category_id': category.get('id') if category else category,
                  'subcategory_id': subcategory.get('id') if subcategory else subcategory,
-                 'videopractice_id': videopractice.get('id') if videopractice else videopractice,
                  'title': title,
                  'language_id': language.get('id') if language else language,
                  'video_type': video_type,
@@ -290,6 +307,6 @@ def format_data_or_saving_in_video(request, data_dict, user_id, partner_id):
     if not data_dict.get('online_id') and data_dict.get('id'):
         create = True
         update = False
-        crud_of_video(_data_dict, production_team, create, update)
+        crud_of_video(_data_dict, production_team, videopractice, create, update)
     
     return

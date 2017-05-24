@@ -89,6 +89,7 @@ function($, all_configs, pa, indexeddb, OfflineAuthBackend) {
                     off_model.fetch({
                         success: function(off_model){
                             // return fetched model
+                            console.log(off_model);
                             dfd.resolve(off_model);
                         },
                         error: function(model, error){

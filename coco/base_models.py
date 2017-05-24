@@ -81,6 +81,33 @@ NONNEGOTIABLE_OPTION = (
     (5,5),
 )
 
+TYPE_OF_COCOUSER = (
+    (1, 'HNN'),
+    (2, 'AGRICULTURE'),
+    (3, 'BOTH'),
+    )
+
+PARENT_CATEGORY = (
+    (1, 'HNN'),
+    (2, 'AGRICULTURE'),
+    )
+
+ATTENDED_PERSON_CATEGORY = (
+    (0,'Pregnant Woman'),
+    (1,'Mother of a child up to 6 months'),
+    (2,'Mother of a child 6 months to 2 years'),
+    (3,'Mother of a child  2 to 5 years'),
+    (4,'Adolescent girl (10-19 years)'),
+    (5, 'Woman of reproductive age (15-49 years)'),
+)
+
+ADOPT_PRACTICE_CATEGORY = (
+    ("1",'Yes'),
+    ("2",'No'),
+    ("3",'Not Applicable'),
+)
+
+
 class CocoModel(models.Model):
     user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)

@@ -30,8 +30,7 @@ WHERE `screening_date`  > DATE_ADD(Now(), Interval -1 year);
 
 DELETE
 FROM
-	`people_animatorwisedata`
-WHERE `time_created`  > DATE_ADD(Now(), Interval -1 year);
+	`people_animatorwisedata`;
 
 DELETE
 FROM
