@@ -56,6 +56,11 @@ class BroadcastForm(forms.Form):
 
     def clean_farmer_file(self):
         farmer_file = self.cleaned_data.get('farmer_file')
+        cluster = self.cleaned_data.get('cluster')
         if farmer_file and farmer_file.size/(1024*1024.0) > 5:
-             raise forms.ValidationError("Please upload a CSV file less than 5 MB")
+            raise forms.ValidationError("Please upload a CSV file less than 5 MB")
+        if not cluster and not farmer_file:
+            raise forms.ValidationError("Please select one between Cluster and .csv file")
         return farmer_file
+
+

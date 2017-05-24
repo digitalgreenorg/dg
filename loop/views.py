@@ -797,22 +797,25 @@ def broadcast(request):
                 template_data['broadcast_test_form'] = broadcast_test_form
                 return render_to_response('loop/broadcast.html',template_data,context_instance=context)
         elif 'submit' in request.POST:
+            print request.POST
             broadcast_form = BroadcastForm(request.POST, request.FILES)
             if broadcast_form.is_valid():
                 broadcast_title = str(broadcast_form.cleaned_data.get('title'))
                 cluster_id = broadcast_form.cleaned_data.get('cluster')
                 audio_file = broadcast_form.cleaned_data.get('audio_file')
                 farmer_file = broadcast_form.cleaned_data.get('farmer_file')
-                if(farmer_file):
+                farmer_contact_detail = []
+                if cluster_id:
+                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id__in=cluster_id).values_list('village',flat=True)
+                    farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
+                if farmer_file:
                     farmer_file_name = save_farmer_file(broadcast_title,farmer_file)
-                    farmer_contact_detail = []
                     with open(farmer_file_name,'rb') as csvfile:
                         customreader = csv.reader(csvfile)
                         for row in customreader:
-                            farmer_contact_detail.append({'id':row[0], 'phone':row[1]})
-                else:
-                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id=cluster_id).values_list('village',flat=True)
-                    farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
+                            farmer_contact = {'id':row[0], 'phone':row[1]}
+                            if farmer_contact not in farmer_contact_detail:
+                                farmer_contact_detail.append(farmer_contact)                
             else:
                 template_data['broadcast_form'] = broadcast_form
                 # Change to 1 for select Broadcast tab.
@@ -820,8 +823,8 @@ def broadcast(request):
                 return render_to_response('loop/broadcast.html',template_data,context_instance=context)
         else:
             HttpResponseBadRequest("<h2>Something is wrong, Please Try Again</h2>")
-        audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
-        s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
+        #audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
+        #s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
         # Start thread for begin broadcast.
         #Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
         template_data['acknowledge'] = 1
