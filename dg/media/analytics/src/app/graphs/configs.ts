@@ -103,7 +103,7 @@ export const chartsConfig = [
       renderTo: 'pie_chart',
       tab: {
           'id': 'tab1',
-          'class':'col'
+          'class':'col-sm-6'
       },
       drillDown: false
     },
@@ -130,7 +130,10 @@ export const chartsConfig = [
     chart: {
       type: 'column',
       renderTo: 'column_tab_3',
-      tabID: 'tab1',
+      tab: {
+          'id': 'tab1',
+          'class':'col-sm-6'
+      },
       drillDown: true
     },
     chartName: 'state__#trainings',
