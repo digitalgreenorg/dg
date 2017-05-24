@@ -256,7 +256,7 @@ define([
             //  for UPAVAN
             if (cocousertype == 4){
                 //to change labels
-                _.each(all_configs.misc.label_change_dict, function(value, key){
+                _.each(all_configs.misc.label_upavan_dict, function(value, key){
                     $f_el.find(key).text(value)
                 })
                 // to hide fields
@@ -407,10 +407,18 @@ define([
                     $f_el.find(key).addClass('hidden')
                     $f_el.find(val).addClass('hidden')
                 })
+                //to change labels
+                _.each(all_configs.misc.inline_upavan_label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
             }else{
                 _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
                     $f_el.find(key).removeClass('hidden')
                     $f_el.find(val).removeClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.inline_label_dict, function(value, key){
+                    $f_el.find(key).text(value)
                 })
             }
             //if add case put in empty inlines

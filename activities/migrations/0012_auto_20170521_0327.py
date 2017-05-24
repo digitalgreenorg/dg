@@ -18,10 +18,10 @@ class Migration(migrations.Migration):
                 ('worker_type', models.CharField(max_length=20, null=True, blank=True)),
             ],
         ),
-        # migrations.RemoveField(
-        #     model_name='screening',
-        #     name='frontline_worker_present',
-        # ),
+        migrations.RemoveField(
+            model_name='screening',
+            name='frontline_worker_present',
+        ),
         migrations.AddField(
             model_name='screening',
             name='worker_type',
