@@ -22,10 +22,7 @@ from dashboard.admin import SubCategoryAdmin
 from dashboard.admin import VideoPracticeAdmin
 from dashboard.admin import ParentCategoryAdmin
 from dashboard.admin import ProjectAdmin
-from dashboard.admin import DirectBeneficiariesAdmin
-from dashboard.admin import FrontLineWorkerPresentAdmin
-
-from activities.models import PersonAdoptPractice, Screening, FrontLineWorkerPresent
+from activities.models import PersonAdoptPractice, Screening
 from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
@@ -43,7 +40,6 @@ from videos.models import Category
 from videos.models import SubCategory
 from videos.models import VideoPractice
 from videos.models import ParentCategory
-from videos.models import DirectBeneficiaries
 
 
 class CocoAdmin(AdminSite):
@@ -75,7 +71,6 @@ coco_admin.register(VideoPractice, VideoPracticeAdmin)
 coco_admin.register(Practice, PracticesAdmin)
 coco_admin.register(Screening, ScreeningAdmin)
 coco_admin.register(ParentCategory, ParentCategoryAdmin)
-coco_admin.register(DirectBeneficiaries, DirectBeneficiariesAdmin)
 coco_admin.register(PersonAdoptPractice, PersonAdoptPracticeAdmin)
 coco_admin.register(PracticeSector, PracticeSectorAdmin)
 coco_admin.register(PracticeSubSector, PracticeSubSectorAdmin)
@@ -83,4 +78,3 @@ coco_admin.register(PracticeTopic, PracticeTopicAdmin)
 coco_admin.register(PracticeSubtopic, PracticeSubtopicAdmin)
 coco_admin.register(PracticeSubject, PracticeSubjectAdmin)
 coco_admin.register(CocoUser, CocoUserAdmin)
-coco_admin.register(FrontLineWorkerPresent, FrontLineWorkerPresentAdmin)
