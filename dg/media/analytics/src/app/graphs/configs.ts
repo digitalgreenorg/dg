@@ -21,24 +21,24 @@ export const chartsConfig = [
         },
         legend: {
             enabled: false
-        },
+        }, 
         plotOptions: {
-            column: {
-                borderWidth: 0,
-                dataLabels: {
-                    enabled: true,
-                },
-                grouping: false            
-            }
-        },        
-
+           column: {
+               grouping: false,
+               borderWidth: 0,
+               dataLabels: {
+                   enabled: true
+               }
+           }
+        },       
         tooltip: {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
             pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
         },
-
         series: [],
-        drilldown: {series: []}
+        drilldown: {
+            allowPointDrilldown : false,
+            series: []}
     },
     {   
         chart:{
@@ -109,7 +109,8 @@ export const chartsConfig = [
         },
         xAxis : {categories: []},
         series: [],
-        drilldown: {series: []}
+        drilldown: {
+            series: []}
     }
    
 ]
