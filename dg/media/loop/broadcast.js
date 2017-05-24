@@ -12,5 +12,5 @@ $(function() {
             alert("Please Correct Phone Number.");
             $("#id_to_number").val('');
             event.preventDefault();}
-});
+    });
 });

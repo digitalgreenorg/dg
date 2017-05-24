@@ -29,7 +29,7 @@ class BroadcastTestForm(forms.Form):
 
 class BroadcastForm(forms.Form):
     title = forms.CharField(label='Broadcast Title',widget=forms.TextInput(attrs={'placeholder': 'Enter Meaningful Broadcast Title'}),max_length=Broadcast._meta.get_field('title').max_length)
-    cluster = forms.ChoiceField(label='Select Cluster',choices=[])
+    cluster = forms.ChoiceField(required=False, label='Select Cluster',choices=[],widget=forms.Select(attrs={'class': 'chosen-select','multiple':'multiple'}))
     farmer_file = forms.FileField(required=False, label='Select a .csv file', help_text='Upload a CSV file with Farmers mobile number only if broadcast is not for full cluster')
     audio_file = forms.FileField(label='Select a .WAV Audio file',
                                help_text='Upload .WAV, 8Khz Mono format audio file with 16 bit depth(Max. Size 5MB)'
@@ -37,7 +37,7 @@ class BroadcastForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(BroadcastForm, self).__init__(*args, **kwargs)
-        self.fields['cluster'].choices = [('','Select a Cluster')] + [(cluster['id'],'%s (%s)'%(cluster['name'],cluster['village__village_name'])) for cluster in LoopUser.objects.filter(role=2).values('id', 'name', 'village__village_name')]
+        self.fields['cluster'].choices = [(cluster['id'],'%s (%s)'%(cluster['name'],cluster['village__village_name'])) for cluster in LoopUser.objects.filter(role=2).values('id', 'name', 'village__village_name')]
 
     def clean_audio_file(self):
         audio_file = self.cleaned_data.get('audio_file')
@@ -56,9 +56,6 @@ class BroadcastForm(forms.Form):
 
     def clean_farmer_file(self):
         farmer_file = self.cleaned_data.get('farmer_file')
-        # if farmer_file.content_type != 'text/csv':
-        #     raise forms.ValidationError("Please upload a CSV file only.")
-        # .size returns size in bytes
         if farmer_file and farmer_file.size/(1024*1024.0) > 5:
              raise forms.ValidationError("Please upload a CSV file less than 5 MB")
         return farmer_file
