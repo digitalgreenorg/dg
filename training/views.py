@@ -280,7 +280,7 @@ def graph_data(request):
                                         db=DATABASES['default']['NAME'],
                                         charset='utf8',
                                         use_unicode=True)
-    #if(chart_type == 'pie'):
+
     sql_querry = '''SELECT gs.state_name 'state', ttr.name 'trainer', COUNT(DISTINCT t1.p_id) 'mediators', COUNT(DISTINCT t1.t_id) 'trainings',0.7 * COUNT(DISTINCT t1.p_id) 'Above70'
                              FROM(SELECT tt.id t_id, ts.participant_id p_id, SUM(ts.score)
                             FROM training_score ts
@@ -295,18 +295,17 @@ def graph_data(request):
     result = pandas.read_sql_query(sql_querry, con=db_connection)
 
     state_graouped_data = result.groupby(['state']).sum().reset_index()
-    print state_graouped_data
     outer_data = {'outerData': {'series':[],'categories':state_graouped_data['state'].tolist()}}
 
-    if chart_name!='state__#trainings':
+    if chart_name != 'state__#trainings':
         temp_dict_outer = {'name':'Mediators','data':[]}
         for row in state_graouped_data.iterrows():
-            temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].mediators),'drilldown':row[1].state+' mediators'})
+            temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].mediators),'drilldown':row[1].state+' mediators'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
         temp_dict_outer = {'name':'Above70','data':[]}
         for row in state_graouped_data.iterrows():
-            temp_dict_outer['data'].append({'name':str(row[1].state),'y':int(row[1].Above70),'drilldown':row[1].state+' above70'})
+            temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].Above70),'drilldown':row[1].state+' above70'})
 
     else:
         temp_dict_outer = {'name':'Trainings','data':[]}
@@ -317,20 +316,15 @@ def graph_data(request):
 
     final_data_list[chart_name] = outer_data
 
-
     inner_data = {'innerData': []}
 
-    # trainer_mediators = result.set_index(['state','trainer']).mediators
-    # trainer_pass = result.set_index(['state','trainer']).mediators
-    # print trainer_pass
-    trainer_mediators_dict = {name: dict(zip(g['trainer'],g['mediators'])) for name,g in result.groupby('state')}
-    trainer_pass_dict = {name: dict(zip(g['trainer'],g['Above70'])) for name,g in result.groupby('state')}
-    trainer_training_dict = {name:dict(zip(g['trainer'],g['trainings'])) for name,g in result.groupby('state')}
-    if chart_name!='state__#trainings':
+    if chart_name != 'state__#trainings':
+        trainer_mediators_dict = {name: dict(zip(g['trainer'],g['mediators'])) for name,g in result.groupby('state')}
+        trainer_pass_dict = {name: dict(zip(g['trainer'],g['Above70'])) for name,g in result.groupby('state')}
         for key, value in trainer_mediators_dict.iteritems():
             temp_dict_inner = {'data':[]}
             temp_dict_inner['name'] = key
-            temp_dict_inner['id'] = key+' mediators'
+            temp_dict_inner['id'] = key + ' mediators'
             for k, v in value.iteritems():
                 temp_dict_inner['data'].append([k,v])
             inner_data['innerData'].append(temp_dict_inner)
@@ -338,11 +332,12 @@ def graph_data(request):
         for key, value in trainer_pass_dict.iteritems():
             temp_dict_inner = {'data':[]}
             temp_dict_inner['name'] = key
-            temp_dict_inner['id'] = key+' above70'
+            temp_dict_inner['id'] = key + ' above70'
             for k, v in value.iteritems():
                 temp_dict_inner['data'].append([k,v])
             inner_data['innerData'].append(temp_dict_inner)
     else:
+        trainer_training_dict = {name:dict(zip(g['trainer'],g['trainings'])) for name,g in result.groupby('state')}
         for key,value in trainer_training_dict.iteritems():
             temp_dict_inner = {'data':[]}
             temp_dict_inner['name'] = key

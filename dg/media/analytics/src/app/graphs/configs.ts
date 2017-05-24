@@ -118,7 +118,7 @@ export const chartsConfig = [
     chart: {
       type: 'column',
       renderTo: 'column_tab_3',
-      tabID: 'tab3',
+      tabID: 'tab1',
       drillDown: true
     },
     chartName: 'state__#trainings',
