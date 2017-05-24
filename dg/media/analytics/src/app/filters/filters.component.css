@@ -6,9 +6,9 @@
   top: 0;
   left: 0;
   background-color: #424242;
-  overflow-x: hidden;
   transition: 0.5s;
   padding-top: 20px;
+  overflow-x: hidden;
 }
 
 .sidenav a {
@@ -45,11 +45,17 @@ input {
 }
 
 .filter-scrollbar {
-  overflow: auto;
   height: 300px;
   width: 250px;
 }
 .text-white {
   padding: 8px 0px 0px 32px;
   -webkit-text-fill-color: white;
+}
+.scrollBar {
+  height:300px;
+}
+
+.sidenavContainer {
+  height: 620px;
 }

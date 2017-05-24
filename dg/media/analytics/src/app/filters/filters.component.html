@@ -1,5 +1,6 @@
 <div id="mySidenav" #mySidenav class="sidenav">
-  <div class="container">
+  <perfect-scrollbar>
+  <div class="container sidenavContainer">
     <div class="row">
       <div class="col-8">
         <h6 class="text-left text-uppercase">Filters</h6>
@@ -31,8 +32,6 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="container">
     <div class="row">
       <div class="col-md-12">
         <a href='#' *ngFor='let filter_name of filter_list'>
@@ -43,24 +42,33 @@
                 <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
               </div>
             </div>
-            <div infinite-scroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="200" [scrollWindow]="false" (scrolled)="limit=limit+10" class="filter-scrollbar">
-              <div class="scrollBar">
+            <div infinite-scroll 
+                [infiniteScrollDistance]="2" 
+                [infiniteScrollThrottle]="200" 
+                [scrollWindow]="true" 
+                (scrolled)="limit=limit+10" 
+                class="filter-scrollbar">
+              <perfect-scrollbar class="scrollBar">
                 <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm | slice:0:limit">
                   <span class="checkbox">
                     <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked"> {{data.value}}</label>
                   </span>
                 </h6>
-              </div>
+              </perfect-scrollbar>
             </div>
           </div>
         </a>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="text-center">
+        <button class="btn btn-primary btn-sx" (click)="applyFilters()">Apply Filters</button>
+      </div>
+      </div>
+    </div>
   </div>
-
-  <div class="text-center">
-    <button class="btn btn-primary btn-sx" (click)="applyFilters()">Apply Filters</button>
-  </div>
+  </perfect-scrollbar>
 </div>
 
 <div class="container-fluid" style="height: 70px;">

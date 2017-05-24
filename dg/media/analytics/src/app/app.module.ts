@@ -26,6 +26,14 @@ import { ButtonsModule } from 'ngx-bootstrap';
 import { DatePipe } from '@angular/common';
 import { CardComponent } from './top-bar-data/card/card.component';
 import { InfiniteScrollModule } from 'angular2-infinite-scroll';
+import { PerfectScrollbarModule, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+
+const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true,
+  useBothWheelAxes: true,
+  suppressScrollY:false,
+  minScrollbarLength:50,
+};
 
 @NgModule({
   declarations: [
@@ -50,6 +58,7 @@ import { InfiniteScrollModule } from 'angular2-infinite-scroll';
     MyDatePickerModule,
     ButtonsModule.forRoot(),
     InfiniteScrollModule,
+    PerfectScrollbarModule.forRoot(PERFECT_SCROLLBAR_CONFIG),
   ],
   providers: [TopBarDataService, DatePipe, GetDataFromServerService, GetFilterDataService, SharedService],
   bootstrap: [AppComponent]
