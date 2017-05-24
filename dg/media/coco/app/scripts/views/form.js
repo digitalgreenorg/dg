@@ -249,25 +249,29 @@ define([
             if (partner_check < 0){
                 $f_el.find("#is_modelfarmer").addClass('hidden');
             }
+            // force hiding of upavan field
+            _.each(all_configs.misc.element_to_be_hidden_for_upavan, function(val, key){
+                $f_el.find(val).addClass('hidden')
+            })
             //  for UPAVAN
             if (cocousertype == 4){
+                //to change labels
+                _.each(all_configs.misc.label_change_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+                // to hide fields
                 _.each(all_configs.misc.upavan_user_fields, function(element, index) {
                     $f_el.find(element).removeClass('hidden')
-                    $f_el.find("#id_label_animator").html('CSP name')
-                    $f_el.find("#id_label_videos_screened").html('Video Name')
-                    $f_el.find("#id_meeting_topic").addClass('hidden');
-                    $("th#id_pv").addClass('hidden');
-                    $("div#id_pvc").addClass('hidden');
-                    $f_el.find("#id_category").html('Beneficiary')
-                    $f_el.find("#id_dob").html('Date of Home Visit')
-                    $f_el.find('.non').html('Beneficiary recalled the knowledge recall point?')
-                    $f_el.find('#id_member_adopt').html('Is the beneficiary practicing the behavior1?')
                 })
             }else{
                 _.each(all_configs.misc.upavan_user_fields, function(element, index) {
                     $f_el.find(element).addClass('hidden')
-                    // $f_el.find("#id_label_animator").html('Mediator')
                 })
+                //to change labels
+                _.each(all_configs.misc.label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+                
             }
 
         },
@@ -397,6 +401,18 @@ define([
             var temp = _.template($('#' + this.inline.header).html());
             $f_el = this.$('#inline_header');
             $f_el.append(temp(this.labels));
+            if (that.cocousertype == 4){
+                // force hiding of upavan field
+                _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                    $f_el.find(key).addClass('hidden')
+                    $f_el.find(val).addClass('hidden')
+                })
+            }else{
+                _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                    $f_el.find(key).removeClass('hidden')
+                    $f_el.find(val).removeClass('hidden')
+                })
+            }
             //if add case put in empty inlines
             if (!this.edit_case)
                 this.append_new_inlines(this.inline.default_num_rows);
@@ -458,6 +474,18 @@ define([
                 }));
                 this.$('#inline_body').append(tr);
                 // switch validation on/off based on whether the inline is empty or not
+                if (this.cocousertype == 4){
+                    // force hiding of upavan field
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                        this.$('#inline_body').find(key).addClass('hidden')
+                       this.$('#inline_body').find(val).addClass('hidden')
+                    })
+                }else{
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                        this.$('#inline_body').find(key).removeClass('hidden')
+                        this.$('#inline_body').find(val).removeClass('hidden')
+                    })
+                }
                 tr.on('change', this.switch_validation_for_inlines);
             }
 
@@ -590,6 +618,7 @@ define([
             if (this.$el.find('#id_' + parent_element).val() == this.agg_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
                 if (cocousertype != 4){
                     _.each(this.entity_config.hide_dict, function(key, value) {
+                        console.log(key, value)
                         $(key).addClass('hidden')
                         $(value).addClass('hidden')
                     })
@@ -894,15 +923,46 @@ define([
                         //     .fail(function() {
                         //         console.log("ERROR: EDIT: Inline collection could not be fetched!");
                         //     });
+                    
+
                     });
+                    
                 }
                 if (cocousertype == 4){
-                    $("#id_adopt_practice option[value='3']").hide()
+                    //hiding dropdown options
+                    _.each(all_configs.misc.menu_options_to_hide, function(value, key){
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    //to change labels
+                    _.each(all_configs.misc.inline_upavan_label_dict, function(value, key){
+                        $(key).text(value)
+                    })
+                    // hiding inline fields
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(value, key){
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
                 }else{
-                    $("#id_adopt_practice option[value='3']").show()
+                    //hiding dropdown options
+                    _.each(all_configs.misc.menu_options_to_hide, function(value, key){
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                    // hiding inline fields
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(value, key){
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    //to change labels
+                    _.each(all_configs.misc.inline_label_dict, function(value, key){
+                        $(key).text(value)
+                    })
                 }
+
                 this.initiate_form_widgets();
                 $('.inline_table').show();
+
 
                 // if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
                 //     _.each(this.entity_config.headers_to_hide, function(element, index) {

@@ -629,18 +629,15 @@ class ScreeningResource(BaseResource):
         return bundle
     
     def dehydrate_videoes_screened(self, bundle):
-        print "NIKHIL", bundle.obj.frontlineworkerpresent.all()
         return [{'id': video.id, 'title': video.title,} for video in bundle.obj.videoes_screened.all()]
 
     def dehydrate_frontlineworkerpresent(self, bundle):
-        print bundle.obj.frontlineworkerpresent.all()
         return [{'id': item.id, 'frontlineworkerpresent': item.worker_type} for item in bundle.obj.frontlineworkerpresent.all()]
         
     def dehydrate_farmer_groups_targeted(self, bundle):
         return [{'id': group.id, 'group_name': group.group_name,} for group in bundle.obj.farmer_groups_targeted.all()]
     
     def all_category(self, bundle):
-        # import pdb;pdb.set_trace()
         data_list= []
         db_list = DirectBeneficiaries.objects.values_list('id', flat=True)
         int_db_list = [int(item) for item in db_list]
