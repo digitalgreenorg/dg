@@ -800,7 +800,7 @@ def broadcast(request):
             broadcast_form = BroadcastForm(request.POST, request.FILES)
             if broadcast_form.is_valid():
                 broadcast_title = str(broadcast_form.cleaned_data.get('title'))
-                cluster_id = int(broadcast_form.cleaned_data.get('cluster'))
+                cluster_id = broadcast_form.cleaned_data.get('cluster')
                 audio_file = broadcast_form.cleaned_data.get('audio_file')
                 farmer_file = broadcast_form.cleaned_data.get('farmer_file')
                 if(farmer_file):
@@ -823,7 +823,7 @@ def broadcast(request):
         audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
         s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
         # Start thread for begin broadcast.
-        Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
+        #Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
         template_data['acknowledge'] = 1
     elif request.method != 'GET':
         HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")
