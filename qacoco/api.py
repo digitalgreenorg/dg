@@ -15,6 +15,7 @@ from dashboard.forms import CategoryForm, SubCategoryForm, VideoForm
 from videos.models import Video, Category, SubCategory, NonNegotiable
 from qacoco.forms import VideoQualityReviewForm, DisseminationQualityForm, AdoptionVerificationForm,NonNegotiableForm
 from people.models import Animator, Person, PersonGroup
+from activities.models import PersonAdoptPractice
 
 class AdoptionVerificationNotSaved(Exception):
     pass
@@ -333,7 +334,8 @@ class PersonResource(BaseResource):
     group = fields.ForeignKey(PersonGroupResource, 'group',null=True)
     class Meta:
                 max_limit = None
-                queryset = Person.objects.all()
+                person_id = PersonAdoptPractice.objects.filter(date_of_adoption__gte=datetime.now().date() - timedelta(days=365)).values_list('person',flat=True)
+                queryset = Person.objects.filter(id__in=person_id)
                 resource_name = 'person'
                 authentication = Authentication()
                 authorization = BlockAuthorization('village__block_id__in')
