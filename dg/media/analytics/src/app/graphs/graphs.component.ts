@@ -28,8 +28,12 @@ export class GraphsComponent {
         chartsConfig.forEach(config => {
             // divs to tabs
             tabsConfig.forEach(tab => {
-                if(config.chart.tabID === tab.id){
-                    tab.showDivs.push(config.chart.renderTo);
+                if(config.chart.tab.id === tab.id){
+                    //tab.showDivs.push(config.chart.renderTo);
+                    tab.showDivs.push({
+                        'id' : config.chart.renderTo,
+                        'class' : config.chart.tab.class
+                    });
                 }
             })
             //Add charts

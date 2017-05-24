@@ -3,7 +3,10 @@ export const chartsConfig = [
     chart: {
       type: 'column',
       renderTo: 'column',
-      tabID: 'tab1',
+      tab: {
+          'id': 'tab1',
+          'class':'col-sm-6'
+      },
       drillDown: true
     },
     chartName: 'state_district__#trainings',
@@ -45,7 +48,10 @@ export const chartsConfig = [
     chart: {
       type: 'line',
       renderTo: 'line_chart',
-      tabID: 'tab2',
+      tab: {
+          'id': 'tab1',
+          'class':'col-sm-6'
+      },
       drillDown: false
     },
     chartName: 'state_#trainings',
@@ -63,7 +69,10 @@ export const chartsConfig = [
     chart: {
       type: 'bar',
       renderTo: 'bar_chart',
-      tabID: 'tab2',
+      tab: {
+          'id': 'tab1',
+          'class':'col-sm-6'
+      },
       drillDown: false
     },
     chartName: 'state_#trainings',
@@ -92,7 +101,10 @@ export const chartsConfig = [
     chart: {
       type: 'pie',
       renderTo: 'pie_chart',
-      tabID: 'tab2',
+      tab: {
+          'id': 'tab1',
+          'class':'col'
+      },
       drillDown: false
     },
     chartName: 'sate_%trainings',

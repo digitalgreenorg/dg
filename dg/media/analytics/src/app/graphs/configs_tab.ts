@@ -7,11 +7,13 @@ export const tabsConfig = [
     {
         'id':'tab2',
         'heading':'Tab Two',
+        'columnGrid':[],
         'showDivs':[]
     },
     {
         'id':'tab3',
         'heading':'Tab Three',
+        'columnGrid':[],
         'showDivs':[]
     }
 ]
