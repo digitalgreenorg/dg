@@ -15,7 +15,9 @@ declare var require: any;
 export function highchartsFactory() {
   const highChart = require('highcharts');
   const drillDown = require('highcharts/modules/drilldown');
+  const exp = require('highcharts/modules/exporting');
   drillDown(highChart);
+  exp(highChart)
   return highChart;
 }
 
