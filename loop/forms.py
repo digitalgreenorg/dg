@@ -33,7 +33,7 @@ class BroadcastTestForm(forms.Form):
 class BroadcastForm(forms.Form):
     title = forms.CharField(label='Broadcast Title',widget=forms.TextInput(attrs={'placeholder': 'Enter Meaningful Broadcast Title'}),max_length=Broadcast._meta.get_field('title').max_length)
     cluster = forms.MultipleChoiceField(required=False, label='Select Cluster',choices=[],widget=forms.SelectMultiple(attrs={'class': 'chosen-select','multiple':'multiple'}))
-    farmer_file = forms.FileField(required=False, label='Select a .csv file', help_text=mark_safe('<a style="color:blue;" href="%s%s">Sample CSV</a> (Upload a CSV file if broadcast is not for full cluster)'%(BROADCAST_FARMER_PATH,'Sample_Contact_List.csv')))
+    farmer_file = forms.FileField(required=False, label='Select a .csv file', help_text=mark_safe('<a style="color:blue;" href="%s">Sample CSV</a> (Upload a CSV file if broadcast is not for full cluster)'%('/media/social_website/uploads/loop/broadcast/farmer/Sample_Contact_List.csv',)))
     audio_file = forms.FileField(label='Select a .WAV Audio file',
                                help_text='<span class="helptext" style="display:inline-block;">Upload .wav, 8Khz Mono format audio file with 16 bit depth(Max. Size 5MB)<br/> \
                                <a style="color:blue;" target="_blank" href="http://audio.online-convert.com/convert-to-wav">Click Here to Convert</a></span>'
