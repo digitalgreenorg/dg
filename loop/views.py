@@ -25,7 +25,8 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
-from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME
+from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME, \
+    HELPLINE_LOG_FILE
 from loop.forms import BroadcastForm, BroadcastTestForm
 import csv
 import time
@@ -48,8 +49,6 @@ import pandas as pd
 
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
-HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
-BROADCAST_AUDIO_PATH = '%s/loop/broadcast/'%(MEDIA_ROOT,)
 
 @csrf_exempt
 def login(request):
