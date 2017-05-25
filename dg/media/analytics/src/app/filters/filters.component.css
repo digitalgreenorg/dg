@@ -54,8 +54,15 @@ input {
 }
 .scrollBar {
   height:300px;
+  width:250px;
 }
 
 .sidenavContainer {
   height: 620px;
+  width: 320px;
 }
+.sidenavscroll {
+  width:320px;
+  height: 620px;
+}
+
