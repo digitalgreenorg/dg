@@ -431,7 +431,7 @@
                 </table>
                 <button id='add_rows' type= "button" class="btn btn-default btn-sm mrg-btm-sm col-sm-offset-2"><%= add_row %></button>
             <% } %>
-        
+
             <div class="form-actions">
                 <button id='button1' type="submit" class="btn btn-primary action_button col-sm-offset-2" data-loading-text="Saving..."><%=button1%></button>
                 <%if(button2){%>
@@ -575,18 +575,85 @@
             <fieldset class="form-horizontal">
                 <legend><%= screening %></legend>
 				
+                <div class="form-group" id="type_of_venue">
+                    <label class="control-label col-sm-2" id="label_id_type_of_venue"><%=type_of_venue%></label>
+                    <div class="col-sm-4">
+                        <select name="type_of_venue" id="id_type_of_venue" class="chosen-select form-control">
+                            <option value=''>-----------</option>
+                            <option value='1'>AWC</option>
+                            <option value='2'>school</option>
+                            <option value='3'>open space</option>
+                            <option value='4'>community hall</option>
+                            <option value='5'>other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="type_of_video"> 
+                    <label class="control-label col-sm-2"><%=type_of_video%></label>
+                    <div class="col-sm-4">
+                        <select name="type_of_video" id="id_type_of_video" class="chosen-select form-control" onchange="get_val()">
+                            <option value=''>-----------</option>
+                            <option value='1'>NSA video</option>
+                            <option value='2'>MIYCN video</option>
+                            <option value='3'>PLA video</option>
+                            <option value='4'>PLA meeting</option>
+                        </select>  
+                    </div>
+                </div>
+
+
+                <div class="form-group" id="frontlineworkerpresent">
+                    <label class="control-label col-sm-2" id="label_id_frontlineworkerpresent"><%= frontlineworkerpresent%></label>
+                    <div class="col-sm-4">
+                        <select name="frontlineworkerpresent" id="id_frontlineworkerpresent" class="chosen-select form-control" multiple="multiple">
+                            <option value=''>-----------</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group" id="id_meeting_topic">
+                    <label class="control-label col-sm-2" id="label_id_meeting_topics"><%= meeting_topics%></label>
+                    <div class="col-sm-4">
+                        <select name="meeting_topics" id="id_meeting_topics" class="chosen-select form-control">
+                            <option value=''>-----------</option>
+                            <option value='1'>Introduction and understanding social inequities</option>
+                            <option value='2'>Understanding underlying causes of under nutrition</option>
+                            <option value='3'>Identifying problems that affect nutrition conditions during the 1000-day</option>
+                            <option value='4'>Prioritizing problems</option>
+                            <option value='5'>Understanding the causes and effects</option>
+                            <option value='6'>Understanding barriers and opportunities</option>
+                            <option value='7'>Accountability and sharing of Responsibilities</option>
+                            <option value='8'>Planning and sharing of responsibilities for Village interface Meeting</option>
+                        </select>
+                    </div>
+                </div>
+
+                
+
+
+
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%= date %></label>
                 	<div class="col-sm-4">
                         <input class="date-picker form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date">  
                  	</div>
                 </div>
-                <div class="form-group ">
+                <div class="form-group">
                     <label class="control-label col-sm-2"><%= start_time %></label>
                  	<div class="controls bootstrap-timepicker col-sm-4">
                         <input class="time-picker form-control" id="start_time" type="text" placeholder="HH:MM" name="start_time">
                  	</div>
                 </div>
+
+                <div class="form-group" id="end_time">
+                    <label class="control-label col-sm-2"><%= end_time %></label>
+                    <div class="controls bootstrap-timepicker col-sm-4">
+                        <input class="time-picker form-control" id="end_time" type="text" placeholder="HH:MM" name="end_time">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= village %></label>
                 	<div class="col-sm-4"> 
@@ -596,7 +663,7 @@
                 	</div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-2"><%= mediator %></label>
+                    <label class="control-label col-sm-2" id="id_label_animator"><%= mediator %></label>
                  	<div class="col-sm-4"> 
                         <select name="animator" id="id_animator" class="chosen-select form-control">
                             <option value='' selected='selected'>---------</option> 
@@ -608,13 +675,13 @@
                     <label class="control-label col-sm-2"><%= parentcategory %></label>
                     <div class="col-sm-4"> 
                         <select name="parentcategory" id = "id_parentcategory" class="chosen-select form-control">
-                        <option value='0' selected='selected'>---------</option> 
+                        <option value='' selected='selected'>---------</option> 
                         </select> 
                     </div>
                 </div>
                 
                 <div class="form-group"> 
-                    <label class="control-label col-sm-2"><%= videos_screened %></label>
+                    <label class="control-label col-sm-2" id="id_label_videos_screened"><%= videos_screened %></label>
                 	<div class="col-sm-4"> 
                 	<select multiple="multiple" name="videoes_screened" id = "id_videoes_screened" class="chosen-select form-control">
                         </select> 
@@ -737,9 +804,9 @@
             <div class="form-group">
                 <div class="controls">
                     <select name="category<%=index%>" id="category_row7" class="chosen-select form-control category_row7_<%=index%>" multiple="multiple">
-                        <option value='1'>Woman of reproductive age (15-49 years)</option>
-                        <option value='2'>Adolescent girl (10-19 years)</option>
-                        <option value='3'>Mother of a child  2 to 5 years</option>
+                        <option value='1' class="hnn">Woman of reproductive age (15-49 years)</option>
+                        <option value='2' class="hnn">Adolescent girl (10-19 years)</option>
+                        <option value='3' class="hnn">Mother of a child 2 to 5 years</option>
                         <option value='4'>Mother of a child 6 months to 2 years</option>
                         <option value='5'>Mother of a child up to 6 months</option>
                         <option value='6'>Pregnant Women</option>
@@ -751,6 +818,29 @@
         </td>
     </tr>
 </script>
+
+<script language="javascript">
+    function get_val()
+    { 
+
+         $("#id_type_of_video").change(function(){
+             var type_of_video = this.value;
+             if(type_of_video == '4'){
+
+                $("#id_meeting_topic").removeClass('hidden')
+
+             }else if(type_of_video == '3'){
+                $("#id_meeting_topic").addClass('hidden')
+             }else if(type_of_video == '2'){
+                $("#id_meeting_topic").addClass('hidden')
+             }
+             else if(type_of_video == '1'){
+                $("#id_meeting_topic").addClass('hidden')
+             }
+          });
+
+    }
+</script>
 <!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES END //////////////////////////////////////////////-->
 
 <!--///////////////////////////////////////////////// ADOPTION ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
@@ -758,14 +848,13 @@
         <fieldset class="form-horizontal">
                 <legend><%= adoption %></legend>
                 <div class="form-group">
-
-                <label class="control-label col-sm-2"><%= village %></label>
-                <div class="col-sm-4"> 
-                <select name="village" id="id_village" class="chosen-select form-control">
-                <option value="">---------- </option>
-                </select>
+                    <label class="control-label col-sm-2"><%= village %></label>
+                    <div class="col-sm-4"> 
+                        <select name="village" id="id_village" class="chosen-select form-control">
+                            <option value="">---------- </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= person%></label>
@@ -812,13 +901,23 @@
                         <select name="adopt_practice" id="id_adopt_practice" class="chosen-select form-control">
                             <option value='1'>Yes</option>
                             <option value='2'>No</option>
-                            <option value='3'>Not Applicable</option>
+                            <option value='3' class="ahnn">Not Applicable</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" id="label_id_member_adopt_second"><%=member_adopt_second%></label>
+                    <div class="col-sm-4">
+                        <select name="adopt_practice_second" id="id_adopt_practice_second" class="chosen-select form-control">
+                            <option value='1'>Yes</option>
+                            <option value='2'>No</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group" id="id_recall_nonnegotiable">
-                    <label class="control-label col-sm-2"><%=recall_nonnegotiable%> ?</label>
+                    <label class="control-label col-sm-2 non"><%=recall_nonnegotiable%> ?</label>
                     <div class="col-sm-4">
                         <label class="checkbox-inline">
                             <input type="checkbox" id="krp_one" value="1" name="krp_one">1
@@ -853,7 +952,7 @@
                 </div>
             </div>
             <div class="form-group">
-                 <label class="control-label col-sm-2"><%= mediator %></label>
+                 <label class="control-label col-sm-2" id="id_label_animator"><%= mediator %></label>
                 <div class="col-sm-4"> 
                 <select name="animator" id="id_animator" class="chosen-select form-control">
                 <option value="">---------- </option>
@@ -906,15 +1005,19 @@
                         <th>
                             <%=person%>
                         </th>
-                        <th>
+                        <th id="id_dob">
                             <%=date_of_verification%>
+                        </th>
+                        <th id="id_label_recall_nonnegotiable" class = "notbold">
+                            <%=recall_nonnegotiable%> ?
                         </th>
                         <th id="id_member_adopt" class = "notbold">
                             <%=member_adopt%>?
                         </th>
-                        <th id="id_recall_nonnegotiable" class = "notbold">
-                            <%=recall_nonnegotiable%> ?
+                        <th id="id_member_adopt_second" class = "notbold">
+                            <%=member_adopt_second%>
                         </th>
+                        
                     </tr>
                 </thead>
                 <tbody id="bulk">
@@ -976,20 +1079,6 @@
             </div>
         </td>
         <td>
-            <div class="form-group" id="id_adopt_practice">
-                <div class="controls">
-                    <select name="adopt_practice<%=index%>" id="id_adopt_practice<%=index%>" class="chosen-select form-control adopt_practice">
-                        <option value=''>---------</option>
-                        <option value='1'>Yes</option>
-                        <option value='2'>No</option>
-                        <option value='3'>Not Applicable</option>
-                    </select>
-                </div>
-            </div>
-        </td>
-        
-
-        <td>
             <div class="form-group" id="id_recall_nonnegotiable">
                 <label class="checkbox-inline">
                     <input type="checkbox" id="krp_one<%=index%>" value="1" name="krp_one<%=index%>">1
@@ -1008,6 +1097,32 @@
                 </label>
             </div>
         </td>
+        <td>
+            <div class="form-group" id="id_adopt_practice">
+                <div class="controls">
+                    <select name="adopt_practice<%=index%>" id="id_adopt_practice<%=index%>" class="chosen-select form-control adopt_practice">
+                        <option value=''>---------</option>
+                        <option value='1'>Yes</option>
+                        <option value='2'>No</option>
+                        <option value='3' class="ahnn">Not Applicable</option>
+                    </select>
+                </div>
+            </div>
+        </td>
+        <td id="id_adopt_practice_second">
+            <div class="form-group">
+                <div class="controls">
+                    <select name="adopt_practice_second<%=index%>" id="id_adopt_practice_second<%=index%>" class="chosen-select form-control adopt_practice_second">
+                        <option value=''>---------</option>
+                        <option value='1'>Yes</option>
+                        <option value='2'>No</option>
+                    </select>
+                </div>
+            </div>
+        </td>
+        
+
+        
         
     </tr>
 </script>
@@ -1068,7 +1183,7 @@
 </script>  
 
 <script type="text/template" id="person_inline_header">
-<tr class="hide-header"> <th> <%= person_name %></th><th> <%= father_name %></th><th class = "notbold"> <%= age %></th><th> <%= gender %></th><th class="notbold"> <%= phone_no %></th></tr>
+<tr class="hide-header"> <th> <%= person_name %></th><th id="fhname"> Father/Husband Name</th><th class = "notbold"> <%= age %></th><th> <%= gender %></th><th class="notbold"> <%= phone_no %></th></tr>
 </script>
 
 <!--//////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
@@ -1205,6 +1320,33 @@
                     <input class="date-picker form-control" id="approval_date" name="approval_date" type="text" placeholder="YYYY-MM-DD">
                 </div>
             </div>
+            <div class="form-group" id="remove-table">
+                <table class="table">
+                    <thead id="inline_headers">
+                        <tr class="hide-header">  
+                           <th class="col-md-1 control-label notbold" style="text-align: left;padding-left:24px"><%= sr_no %></th>
+                           <th id="srf" class="col-md-6 control-label notbold" style="text-align: left;padding-left:24px">Self Reported Behaviours</th>
+                                  
+                        </tr>
+                    </thead>
+                    
+                </table>
+            </div>
+            <div class="form-group" id="srf-1">
+                <label class="dis-block col-sm-2 control-label" style="text-align: left;margin-left:8px">1.</label>
+                <div class="col-sm-4">
+                    <input name="self_reported_behaviour1" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group" id="srf-2">
+                <label class="dis-block col-sm-2 control-label notbold" style="text-align: left;margin-left:8px">2.</label>
+                <div class="col-sm-4">
+                    <input name="self_reported_behaviour2" type="text" class="form-control">
+                </div>
+            </div>
+
+
         </fieldset>
 </script>
 
@@ -1214,17 +1356,18 @@
     <td>
                 <%=index+1%>.</td>
 
-    <td ><div class="form-group"><div class="controls">
-            <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="10" maxlength="500"rows="1" style="resize:vertical; width:82%;" ></textarea>
+    <td>
+        <div class="form-group"><div class="controls">
+            <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="10" maxlength="500" rows="1" style="resize:vertical; width:82%;" ></textarea>
                 
-            </div></div>
-        </td>
-
-    <td><div class="form-group"><div class="controls">
-            <input class="mrg-lt-auto" type="checkbox" name="physically_verifiable" >
-                
-            </div></div>
-        </td>
+            </div>
+        </div>
+    </td>
+    <td id="phy_check"><div class="form-group"><div class="controls">
+            <input class="mrg-lt-auto" type="checkbox" name="physically_verifiable"> 
+            </div>
+        </div>
+    </td>
         
     </tr>
 </script>
@@ -1232,8 +1375,9 @@
 <script type="text/template" id="nonnegotiable_inline_header">
     <tr class="hide-header">  
        <th class="col-md-1 control-label notbold"><%= sr_no %></th>
-       <th class="col-md-6 control-label notbold"><%= non_n %></th>
-       <th class="col-md-5 control-label notbold"><%= physically_verifiable %></th>             
+       <th id="non_nego" class="col-md-6 control-label notbold"><%=non_n%></th>
+       <th id="phy" class="col-md-5 control-label notbold"><%= physically_verifiable %></th>
+                  
     </tr>
 </script>
 
