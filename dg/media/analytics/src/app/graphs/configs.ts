@@ -5,7 +5,7 @@ export const chartsConfig = [
       renderTo: 'column',
       tab: {
           'id': 'tab1',
-          'class':'col-sm-6'
+          'class':'col-sm-6 imageBox'
       },
       drillDown: true
     },
@@ -49,8 +49,8 @@ export const chartsConfig = [
       type: 'line',
       renderTo: 'line_chart',
       tab: {
-          'id': 'tab1',
-          'class':'col-sm-6'
+          'id': 'tab2',
+          'class':'col-sm-6 imageBox'
       },
       drillDown: false
     },
@@ -70,8 +70,8 @@ export const chartsConfig = [
       type: 'bar',
       renderTo: 'bar_chart',
       tab: {
-          'id': 'tab1',
-          'class':'col-sm-6'
+          'id': 'tab2',
+          'class':'col-sm-6 imageBox'
       },
       drillDown: false
     },
@@ -103,7 +103,7 @@ export const chartsConfig = [
       renderTo: 'pie_chart',
       tab: {
           'id': 'tab1',
-          'class':'col-sm-6'
+          'class':'col-sm-6 imageBox'
       },
       drillDown: false
     },
@@ -132,7 +132,7 @@ export const chartsConfig = [
       renderTo: 'column_tab_3',
       tab: {
           'id': 'tab1',
-          'class':'col-sm-6'
+          'class':'col-sm-6 imageBox'
       },
       drillDown: true
     },
@@ -140,9 +140,6 @@ export const chartsConfig = [
     title: {
       text: '# of Trainings '
     },
-    // subtitle: {
-    //   text: 'Click the columns to view state wise trainer figures.'
-    // },
     xAxis: { type: 'category' },
     yAxis: {
       title: {
