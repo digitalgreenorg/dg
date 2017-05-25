@@ -1,3 +1,4 @@
+import os
 import json
 import xlsxwriter
 import requests
@@ -797,7 +798,6 @@ def broadcast(request):
                 template_data['broadcast_test_form'] = broadcast_test_form
                 return render_to_response('loop/broadcast.html',template_data,context_instance=context)
         elif 'submit' in request.POST:
-            print request.POST
             broadcast_form = BroadcastForm(request.POST, request.FILES)
             if broadcast_form.is_valid():
                 broadcast_title = str(broadcast_form.cleaned_data.get('title'))
@@ -810,12 +810,25 @@ def broadcast(request):
                     farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
                 if farmer_file:
                     farmer_file_name = save_farmer_file(broadcast_title,farmer_file)
+                    # Fetch cantact from csv file
                     with open(farmer_file_name,'rb') as csvfile:
+                        csv_header = ['id','phone']
                         customreader = csv.reader(csvfile)
+                        # If csv file is not in correct format
+                        if customreader.next() != csv_header:
+                            broadcast_form.errors['farmer_file'] = ['Please upload csv file in correct format']
+                            template_data['broadcast_form'] = broadcast_form
+                            # Change to 1 for select Broadcast tab.
+                            template_data['active_tab'] = 1
+                            return render_to_response('loop/broadcast.html',template_data,context_instance=context)
                         for row in customreader:
-                            farmer_contact = {'id':row[0], 'phone':row[1]}
+                            farmer_id = row[0].strip() if row[0].strip() else None
+                            farmer_no = row[1].strip()
+                            farmer_contact = {'id':farmer_id, 'phone':farmer_no}
                             if farmer_contact not in farmer_contact_detail:
-                                farmer_contact_detail.append(farmer_contact)                
+                                farmer_contact_detail.append(farmer_contact) 
+                        print farmer_contact_detail
+                    os.remove(farmer_file_name)          
             else:
                 template_data['broadcast_form'] = broadcast_form
                 # Change to 1 for select Broadcast tab.

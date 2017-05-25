@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.safestring import mark_safe
 from loop.models import Broadcast, LoopUser
 
 class BroadcastTestForm(forms.Form):
@@ -30,7 +31,7 @@ class BroadcastTestForm(forms.Form):
 class BroadcastForm(forms.Form):
     title = forms.CharField(label='Broadcast Title',widget=forms.TextInput(attrs={'placeholder': 'Enter Meaningful Broadcast Title'}),max_length=Broadcast._meta.get_field('title').max_length)
     cluster = forms.MultipleChoiceField(required=False, label='Select Cluster',choices=[],widget=forms.SelectMultiple(attrs={'class': 'chosen-select','multiple':'multiple'}))
-    farmer_file = forms.FileField(required=False, label='Select a .csv file', help_text='Upload a CSV file with Farmers mobile number only if broadcast is not for full cluster')
+    farmer_file = forms.FileField(required=False, label='Select a .csv file', help_text=mark_safe('Upload a CSV file with Farmers mobile number only if broadcast is not for full cluster'))
     audio_file = forms.FileField(label='Select a .WAV Audio file',
                                help_text='Upload .WAV, 8Khz Mono format audio file with 16 bit depth(Max. Size 5MB)'
                                )
@@ -60,7 +61,7 @@ class BroadcastForm(forms.Form):
         if farmer_file and farmer_file.size/(1024*1024.0) > 5:
             raise forms.ValidationError("Please upload a CSV file less than 5 MB")
         if not cluster and not farmer_file:
-            raise forms.ValidationError("Please select one between Cluster and .csv file")
+            raise forms.ValidationError("Please select atleast one Cluster or .csv file")
         return farmer_file
 
 

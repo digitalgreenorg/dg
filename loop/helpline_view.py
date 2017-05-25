@@ -314,9 +314,4 @@ def save_farmer_file(file_name, farmer_file):
         for chunk in farmer_file.chunks():
             broadcast_farmers.write(chunk)
         broadcast_farmers.close()
-    # upload_on_s3(audio_file_path,audio_file_name,
-    #             BROADCAST_S3_BUCKET_NAME,BROADCAST_S3_UPLOAD_PATH,
-    #             'public-read')
-    # delete local uploaded audio file.
-    # os.remove(audio_file_path)
     return farmer_file_path
