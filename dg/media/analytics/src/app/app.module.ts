@@ -39,8 +39,8 @@ export function highchartsFactory() {
 const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
   useBothWheelAxes: true,
-  suppressScrollY:false,
-  minScrollbarLength:50,
+  suppressScrollY: false,
+  minScrollbarLength: 50,
 };
 
 @NgModule({
@@ -55,18 +55,18 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,    ChartModule,
-        TabsModule.forRoot(),
+    HttpModule, ChartModule,
+    TabsModule.forRoot(),
     MyDatePickerModule,
     ButtonsModule.forRoot(),
     InfiniteScrollModule,
     PerfectScrollbarModule.forRoot(PERFECT_SCROLLBAR_CONFIG),
   ],
   providers: [{
-      provide: HighchartsStatic,
-      useFactory: highchartsFactory,
-    },
-    GraphsService,TopBarDataService, DatePipe, GetFilterDataService, SharedService],
+    provide: HighchartsStatic,
+    useFactory: highchartsFactory,
+  },
+    GraphsService, TopBarDataService, DatePipe, GetFilterDataService, SharedService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
