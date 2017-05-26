@@ -60,7 +60,7 @@ def crud_of_mediator(data_dict, assigned_villages, create, update):
 
 
 def crud_of_screening(data_dict, videoes_screened, farmer_groups_targeted,
-                      farmers_attendance, create, update):
+                      farmers_attendance, frontlineworkerpresent, create, update):
     if create and not update:
         scr_obj, created = Screening.objects.get_or_create(**data_dict)
     elif update and not create:
@@ -73,6 +73,9 @@ def crud_of_screening(data_dict, videoes_screened, farmer_groups_targeted,
         scr_obj.save()
     if farmer_groups_targeted:
         scr_obj.farmer_groups_targeted.add(*farmer_groups_targeted)
+        scr_obj.save()
+    if frontlineworkerpresent:
+        scr_obj.frontlineworkerpresent.add(*frontlineworkerpresent)
         scr_obj.save()
     # through table
     if farmers_attendance:

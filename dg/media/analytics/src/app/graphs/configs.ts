@@ -5,7 +5,7 @@ export const chartsConfig = [
       renderTo: 'column_tab_3',
       tab: {
           'id': 'tab1',
-          'class':'col-sm-6 imageBox'
+          'class':'col-sm-6 container'
       },
       drillDown: true
     },
@@ -50,7 +50,7 @@ export const chartsConfig = [
       renderTo: 'column',
       tab: {
           'id': 'tab1',
-          'class':'col-sm-6 imageBox'
+          'class':'col-sm-6 container'
       },
       drillDown: true
     },
