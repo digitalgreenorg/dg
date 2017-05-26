@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { AnalyticsTableComponent } from './analytics-table/analytics-table.component';
 import { GetDataFromServerService } from './get-data-from-server/get-data-from-server.service';
 import { GetFilterDataService } from './get-filter-data.service';
 import { Ng2TableModule } from 'ng2-table/ng2-table';
@@ -18,8 +17,6 @@ import { TopBarDataService } from './top-bar-data.service';
 import { SharedService } from './shared.service';
 
 import { AccordionModule } from '../../node_modules/ngx-bootstrap';
-import { KeysPipe } from './keys.pipe';
-import { GraphComponent } from './graph/graph.component';
 import { NvD3Module } from '../../node_modules/angular2-nvd3';
 import { MyDatePickerModule } from 'mydatepicker';
 import { ButtonsModule } from 'ngx-bootstrap';
@@ -38,12 +35,9 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 @NgModule({
   declarations: [
     AppComponent,
-    AnalyticsTableComponent,
     FiltersComponent,
     SearchPipe,
     TopBarDataComponent,
-    KeysPipe,
-    GraphComponent,
     CardComponent,
   ],
   imports: [
