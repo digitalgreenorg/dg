@@ -214,12 +214,12 @@ def get_graphs_query(**kwargs):
     sql_ds['group by'].append('gs.id , ttr.id')
 
     sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'xyz'
-    args_dict['component'] = 'graph'
+    # args_dict['query_tag'] = 'xyz'
+    # args_dict['component'] = 'graph'
     args_dict['query_string'] = sql_q
-    args_dict['apply_filter'] = apply_filter
-    if args_dict['apply_filter'] is False :
-        args_list.append(args_dict.copy())
+    # args_dict['apply_filter'] = apply_filter
+    # if args_dict['apply_filter'] is False :
+        # args_list.append(args_dict.copy())
 
     # if apply_filter:
     #     inner_sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
