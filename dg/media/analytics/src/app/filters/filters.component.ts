@@ -28,18 +28,17 @@ export class FiltersComponent implements OnInit {
     alignSelectorRight: true
   };
   private date = new Date();
-  private start_date = new Date(2015, 1, 1);
   public startModel = {
     date: {
-      year: this.start_date.getFullYear(),
-      month: this.start_date.getMonth(),
-      day: this.start_date.getDate()
+      year: this.date.getFullYear()-1,
+      month: this.date.getMonth()+1,
+      day: this.date.getDate()+1
     }
   };
   public endModel = {
     date: {
       year: this.date.getFullYear(),
-      month: this.date.getMonth(),
+      month: this.date.getMonth()+1,
       day: this.date.getDate()
     }
   };
