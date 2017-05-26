@@ -1,18 +1,18 @@
 export const tabsConfig = [
     {
         'id' : 'tab1',
-        'heading': 'Tab One',
+        'heading': 'State',
         'showDivs': []
     },
     {
         'id':'tab2',
-        'heading':'Tab Two',
+        'heading':'Questions',
         'columnGrid':[],
         'showDivs':[]
     },
     {
         'id':'tab3',
-        'heading':'Tab Three',
+        'heading':'Time Period',
         'columnGrid':[],
         'showDivs':[]
     }

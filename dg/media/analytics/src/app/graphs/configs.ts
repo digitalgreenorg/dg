@@ -9,6 +9,9 @@ export const chartsConfig = [
       },
       drillDown: true
     },
+    credits: {
+        enabled: false
+    },
     chartName: 'state_district__#trainings',
     title: {
       text: 'Mediators trained '
@@ -54,6 +57,9 @@ export const chartsConfig = [
       },
       drillDown: false
     },
+    credits: {
+        enabled: false
+    },
     chartName: 'state_#trainings',
     title: { text: 'State wise traingings conducted' },
     xAxis: { categories: [] },
@@ -74,6 +80,9 @@ export const chartsConfig = [
           'class':'col-sm-6 imageBox'
       },
       drillDown: false
+    },
+    credits: {
+        enabled: false
     },
     chartName: 'state_#trainings',
     title: { text: 'District wise traingings conducted' },
@@ -107,6 +116,9 @@ export const chartsConfig = [
       },
       drillDown: false
     },
+    credits: {
+        enabled: false
+    },
     chartName: 'sate_%trainings',
     title: { text: 'State wise number of trainings' },
     tooltip: { pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>' },
@@ -135,6 +147,9 @@ export const chartsConfig = [
           'class':'col-sm-6 imageBox'
       },
       drillDown: true
+    },
+    credits: {
+        enabled: false
     },
     chartName: 'state__#trainings',
     title: {
