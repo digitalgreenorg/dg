@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F
 from django.core.serializers.json import DjangoJSONEncoder
 
 import pandas
@@ -17,6 +17,9 @@ from activities.models import Screening, PersonAdoptPractice, PersonMeetingAtten
 from geographies.models import State
 from django.db import connection
 import datetime
+from datetime import date
+from training.management.databases.utility import multiprocessing_dict, multiprocessing_list
+from training.management.databases.get_sql_queries import *
 from training.log.training_log import get_latest_timestamp
 
 # Create your views here.
@@ -46,8 +49,66 @@ def login(request):
         return HttpResponse("0",status=403)
     return HttpResponse("0",status=404)
 
+@csrf_exempt
+def getFilterData(request):
+    trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
+    states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
+    response_list = []
+    trainer_dict = {'name':'Trainer', 'visible':True, 'data':list(trainers_list)}
+    state_dict = {'name':'State', 'visible':True, 'data':list(states_list)}
+    date_dict = {'name':'date', 'visible':True}
+    response_list.extend([trainer_dict, state_dict, date_dict])
+    json_data = json.dumps(response_list)
+    return HttpResponse(json_data)
+
+@csrf_exempt
+def getData(request):
+    if 'start_date' in request.GET and 'end_date' in request.GET:
+        start_date = str(request.GET['start_date'])
+        end_date = str(request.GET['end_date'])
+    else:
+        start_date = '2015-01-01'
+        end_date = '2017-04-04'
+    if 'apply_filter' in request.GET:
+        apply_filter = True if request.GET['apply_filter'] == 'true' else False
+    else :
+        apply_filter = False
+
+    trainers_list = request.GET.getlist('Trainer')
+    states_list = request.GET.getlist('State')
+    query_list = []
+
+    filter_args = {}
+    filter_args['start_date'] = start_date
+    filter_args['end_date'] = end_date
+    filter_args['apply_filter'] = apply_filter
+    filter_args['trainers_list'] = trainers_list
+    filter_args['states_list'] = states_list
+
+    # No of Trainings
+    training_query = get_training_data_sql(**filter_args)
+    query_list.extend(training_query)
+
+    # No of Mediators
+    mediator_query = get_mediators_data_sql(**filter_args)
+    query_list.extend(mediator_query)
+
+    # Pass Percentage
+    pass_percent_query = get_pass_perc_data_sql(**filter_args)
+    query_list.extend(pass_percent_query)
+
+    # Avg Score
+    avg_score_query = get_avg_score_data_sql(**filter_args)
+    query_list.extend(avg_score_query)
+
+    results = multiprocessing_list(query_list = query_list)
+    data = json.dumps({'data' : results})
+    return HttpResponse(data)
+
+
 def dashboard(request):
-    return render(request, 'src/index.html')
+    # return render(request, 'src/index.html')
+    return render(request, 'app_dashboards/training_dashboard.html')
 
 def filter_data(request):
     assessments = Assessment.objects.values('id', 'name')

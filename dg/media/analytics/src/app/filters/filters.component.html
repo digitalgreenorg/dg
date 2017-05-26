@@ -1,0 +1,80 @@
+<div id="mySidenav" #mySidenav class="sidenav">
+  <perfect-scrollbar>
+  <div class="container">
+    <div class="row">
+      <div class="col-8">
+        <h6 class="text-left text-uppercase">Filters</h6>
+      </div>
+      <div class="col-4">
+        <button type="button" class="close" aria-label="Close" (click)="closeNav()"><span aria-hidden="true">&times;</span></button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <hr class="bg-white" style="margin-top:4%">
+      </div>
+    </div>
+    <div *ngIf="showDateFilter">
+      <div class="row">
+        <h6 class="col-md-3 text-white">From</h6>
+        <div class="col-md-8">
+          <form #myForm="ngForm" novalidate>
+            <my-date-picker class="datepicker" name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
+          </form>
+        </div>
+      </div>
+      <div class="row">
+        <h6 class="col-md-3 text-white">To</h6>
+        <div class="col-md-8">
+          <form #myForm="ngForm" novalidate>
+            <my-date-picker class="datepicker" name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <a href='#' *ngFor='let filter_name of filter_list'>
+          <label (click)="filter_name.expand=!filter_name.expand">{{filter_name.heading}}</label>
+          <div class="container" *ngIf="filter_name.expand">
+            <div class="form-group row" [id]="filter_name.heading">
+              <div class="col-md-12">
+                <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
+              </div>
+            </div>
+            <div infinite-scroll 
+                [infiniteScrollDistance]="2" 
+                [infiniteScrollThrottle]="200" 
+                [scrollWindow]="true" 
+                (scrolled)="limit=limit+10" 
+                class="filter-scrollbar">
+              <perfect-scrollbar class="scrollBar">
+                <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm | slice:0:limit">
+                  <span class="checkbox">
+                    <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked"> {{data.value}}</label>
+                  </span>
+                </h6>
+              </perfect-scrollbar>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="text-center">
+        <button class="btn btn-primary btn-sx" (click)="applyFilters()">Apply Filters</button>
+      </div>
+      </div>
+    </div>
+  </div>
+  </perfect-scrollbar>
+</div>
+
+<div class="container-fluid" style="height: 70px;">
+  <div class="row" style="-webkit-text-fill-color: white">
+    <div class="col-md-1">
+      <span style="font-size:20px;cursor:pointer" (click)="openNav()">&#9776;</span>
+    </div>
+  </div>
+</div>
