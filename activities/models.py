@@ -15,6 +15,10 @@ from coco.base_models import SCREENING_GRADE
 from coco.base_models import VERIFIED_BY
 from coco.base_models import ATTENDED_PERSON_CATEGORY
 from coco.base_models import ADOPT_PRACTICE_CATEGORY
+from coco.base_models import FRONTLINE_WORKER_PRESENT
+from coco.base_models import TYPE_OF_VENUE
+from coco.base_models import TYPE_OF_VIDEO
+from coco.base_models import TOPICS
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator
@@ -80,6 +84,13 @@ class VRPpayment(models.Manager):
     def get_expected_attendance(self,dissemination_grp_id):
         return Person.objects.filter(group_id__in=dissemination_grp_id)
 
+
+class FrontLineWorkerPresent(models.Model):
+    worker_type = models.CharField(max_length=20, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.worker_type
+
 class Screening(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -99,6 +110,15 @@ class Screening(CocoModel):
     screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
     observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
     health_provider_present = models.BooleanField(default=False)
+    # UPAVAN fields
+    type_of_video = models.CharField(max_length=20, choices=TYPE_OF_VIDEO, blank=True)
+    frontlineworkerpresent =  models.ManyToManyField(FrontLineWorkerPresent, blank=True)
+    type_of_venue = models.CharField(choices=TYPE_OF_VENUE,
+                                     blank=True, null=True,
+                                     max_length=40)
+    meeting_topics = models.CharField(choices=TOPICS,
+                                     blank=True, null=True,
+                                     max_length=255)
 
     class Meta:
         unique_together = ("date", "start_time", "end_time", "animator", "village")
@@ -137,6 +157,7 @@ class PersonAdoptPractice(CocoModel):
     verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
     parentcategory = models.ForeignKey(ParentCategory, null=True, blank=True)
     adopt_practice = models.CharField(max_length=1, choices=ADOPT_PRACTICE_CATEGORY, null=True, blank=True)
+    adopt_practice_second = models.CharField(max_length=1, choices=ADOPT_PRACTICE_CATEGORY, null=True, blank=True)
     krp_one = models.BooleanField(verbose_name="1", db_index=True, default=False)
     krp_two = models.BooleanField(verbose_name="2", db_index=True, default=False)
     krp_three = models.BooleanField(verbose_name="3", db_index=True,default=False)

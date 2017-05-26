@@ -22,6 +22,7 @@ def format_data_or_saving_in_adoption(request, data_dict, user_id, partner_id):
     verified_by = data_dict.get('observation_status')
     parentcategory = data_dict.get('parentcategory')
     adopt_practice = data_dict.get('adopt_practice')
+    adopt_practice_second = data_dict.get('adopt_practice_second')
     krp_one = data_dict.get('krp_one')
     krp_two = data_dict.get('krp_two')
     krp_three = data_dict.get('krp_three')
@@ -39,6 +40,7 @@ def format_data_or_saving_in_adoption(request, data_dict, user_id, partner_id):
                  'verification_status': verification_status if verification_status else 0,
                  'non_negotiable_check': non_negotiable_check,
                  'adopt_practice': adopt_practice,
+                 'adopt_practice_second': adopt_practice_second,
                  'krp_one': krp_one,
                  'krp_two': krp_two,
                  'krp_three': krp_three,
@@ -87,7 +89,13 @@ def format_data_or_saving_in_screening(request, data_dict, user_id, partner_id):
     videoes_screened = [iterable.get('id') for iterable in data_dict.get('videoes_screened')]
     farmer_groups_targeted = [iterable.get('id') for iterable in data_dict.get('farmer_groups_targeted')]
     farmers_attendance = [{'id': int(iterable.get('person_id')), 'age': iterable.get('age'), 'gender': iterable.get('gender'), 'category': iterable.get('category')} for iterable in data_dict.get('farmers_attendance')]
+    frontlineworkerpresent = [iterable.get('id') for iterable in data_dict.get('frontlineworkerpresent')]
     health_provider_present = data_dict.get('health_provider_present')
+    type_of_video = data_dict.get('type_of_video')
+    type_of_venue = data_dict.get('type_of_venue')
+    meeting_topics = data_dict.get('meeting_topics')
+
+
     _data_dict = {'user_created_id': user_id, 'partner_id': partner_id,
                   'user_modified_id': user_id,
                  'start_time': start_time,
@@ -102,10 +110,14 @@ def format_data_or_saving_in_screening(request, data_dict, user_id, partner_id):
                  'parentcategory_id': parentcategory.get('id') if parentcategory else parentcategory,
                  'observation_status': observation_status if observation_status else 0,
                  'health_provider_present': health_provider_present,
+                 'type_of_video': type_of_video,
+                 'type_of_venue': type_of_venue,
+                 'meeting_topics': meeting_topics,
                  }
     videoes_screened = videoes_screened if checkm2mvalidation(videoes_screened) else False
     farmer_groups_targeted = checkm2mvalidation(farmer_groups_targeted)
     farmers_attendance = checkm2mvalidation(farmers_attendance)
+    frontlineworkerpresent = checkm2mvalidation(frontlineworkerpresent)
     _data_dict = dict((k, v) for k, v in _data_dict.iteritems() if v)
     # for new entries
     if data_dict.get('online_id') is not None:
@@ -115,6 +127,7 @@ def format_data_or_saving_in_screening(request, data_dict, user_id, partner_id):
         crud_of_screening(_data_dict, videoes_screened,
                           farmer_groups_targeted,
                           farmers_attendance,
+                          frontlineworkerpresent,
                           create, update)
     # for updating existing entries
     if not data_dict.get('online_id') and data_dict.get('id'):
@@ -123,6 +136,7 @@ def format_data_or_saving_in_screening(request, data_dict, user_id, partner_id):
         crud_of_screening(_data_dict, videoes_screened,
                           farmer_groups_targeted,
                           farmers_attendance,
+                          frontlineworkerpresent,
                           create, update)
 
     return 

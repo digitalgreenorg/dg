@@ -85,6 +85,7 @@ TYPE_OF_COCOUSER = (
     (1, 'HNN'),
     (2, 'AGRICULTURE'),
     (3, 'BOTH'),
+    (4, 'UPAVAN'),
     )
 
 PARENT_CATEGORY = (
@@ -105,6 +106,41 @@ ADOPT_PRACTICE_CATEGORY = (
     ("1",'Yes'),
     ("2",'No'),
     ("3",'Not Applicable'),
+)
+
+FRONTLINE_WORKER_PRESENT = (
+    ("1",'ANM'),
+    ("2",'ASHA'),
+    ("3",'AWW'),
+)
+
+TYPE_OF_VENUE = (
+
+    ('1', 'AWC'),
+    ('2', 'school'),
+    ('3', 'open space'),
+    ('4', 'community hall'),
+    ('5', 'other'),
+)
+
+TYPE_OF_VIDEO = (
+
+    ('1', 'NSA video'),
+    ('2', 'MIYCN video'),
+    ('3', 'PLA video'),
+    ('4', 'PLA meeting'),
+)
+
+TOPICS   = (
+
+    ('1', 'Introduction and understanding social inequities'),
+    ('2', 'Understanding underlying causes of under nutrition'),
+    ('3', 'Identifying problems that affect nutrition conditions during the 1000-day'),
+    ('4', 'Prioritizing problems'),
+    ('5', 'Understanding the causes and effects'),
+    ('6', 'Understanding barriers and opportunities'),
+    ('7', 'Accountability and sharing of Responsibilities'),
+    ('8', 'Planning and sharing of responsibilities for Village interface Meeting')
 )
 
 
