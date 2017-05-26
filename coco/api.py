@@ -33,6 +33,7 @@ from videos.models import SubCategory
 from videos.models import VideoPractice
 from videos.models import ParentCategory
 from videos.models import DirectBeneficiaries
+from activities.models import FrontLineWorkerPresent
 # Will need to changed when the location of forms.py is changed
 from dashboard.forms import AnimatorForm
 from dashboard.forms import NonNegotiableForm
@@ -160,7 +161,7 @@ def get_user_videos(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
     villages = coco_user.get_villages()
     user_states = State.objects.filter(district__block__village__in = villages).distinct().values_list('id', flat=True)
-    if coco_user.type_of_cocouser != 3:
+    if coco_user.type_of_cocouser not in [3, 4]:
         user_videos = coco_user.videos.filter(category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
         ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
         videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id, category__parent_category_id=coco_user.type_of_cocouser).values_list('id', flat = True)
@@ -177,9 +178,17 @@ def get_user_videos(user_id):
     return set(list(videos) + list(videos_seen) + list(user_videos))
 
 
+def get_user_based_directbeneficiaries(user):
+    if user.coco_user.type_of_cocouser == 4:
+        return list(DirectBeneficiaries.objects.exclude(id__in=[1,2,3]).order_by('id').values_list('id', flat = True))
+    else:
+        return list(DirectBeneficiaries.objects.order_by('-id').values_list('id', flat = True))
+
+
 def get_user_non_negotiable(user_id):
     video_list = get_user_videos(user_id)
     return list(NonNegotiable.objects.filter(video_id__in = video_list).values_list('id', flat = True))
+
 
 def get_user_mediators(user_id):
     coco_user = CocoUser.objects.get(user_id = user_id)
@@ -263,6 +272,12 @@ class VideoAuthorization(Authorization):
         else:
             raise NotFound( "Not allowed to download video")
 
+class DirectBeneficiariesAuthorization(Authorization):
+    def read_list(self, object_list, bundle): 
+
+        return object_list.filter(id__in= get_user_based_directbeneficiaries(bundle.request.user))
+
+
 class NonNegotiableAuthorization(Authorization):
     def read_list(self, object_list, bundle):        
         return object_list.filter(id__in= get_user_non_negotiable(bundle.request.user.id))
@@ -272,6 +287,7 @@ class NonNegotiableAuthorization(Authorization):
             return True
         else:
             raise NotFound( "Not allowed to download Non-Negotiable")
+
 
 class BaseResource(ModelResource):
     
@@ -305,6 +321,24 @@ class BaseResource(ModelResource):
 
 
 class ParentCategoryResource(ModelResource):    
+    class Meta:
+        max_limit = None
+        queryset = ParentCategory.objects.all()
+        resource_name = 'parentcategory'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
+
+
+class FrontLineWorkerPresentResource(ModelResource):    
+    class Meta:
+        max_limit = None
+        queryset = FrontLineWorkerPresent.objects.all()
+        resource_name = 'frontlineworkerpresent'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
+
+
+class ParenResource(ModelResource):    
     class Meta:
         max_limit = None
         queryset = ParentCategory.objects.all()
@@ -468,6 +502,7 @@ class NonNegotiableResource(BaseResource):
     dehydrate_video = partial(foreign_key_to_id, field_name='video', sub_field_names=['id','title'])
     hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
 
+
 class PersonGroupResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group_label = fields.CharField()
@@ -507,6 +542,7 @@ class ScreeningResource(BaseResource):
     animator = fields.ForeignKey(MediatorResource, 'animator')
     partner = fields.ForeignKey(PartnerResource, 'partner')
     parentcategory = fields.ForeignKey(ParentCategoryResource, 'parentcategory', null=True)
+    frontlineworkerpresent = fields.ToManyField('coco.api.FrontLineWorkerPresentResource', 'frontlineworkerpresent', related_name='screening')
     videoes_screened = fields.ToManyField('coco.api.VideoResource', 'videoes_screened', related_name='screening')
     farmer_groups_targeted = fields.ToManyField('coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
     farmers_attendance = fields.ListField()
@@ -518,6 +554,7 @@ class ScreeningResource(BaseResource):
     hydrate_animator = partial(dict_to_foreign_uri, field_name='animator', resource_name='mediator')
     hydrate_farmer_groups_targeted = partial(dict_to_foreign_uri_m2m, field_name = 'farmer_groups_targeted', resource_name='group')
     hydrate_videoes_screened = partial(dict_to_foreign_uri_m2m, field_name = 'videoes_screened', resource_name='video')
+    hydrate_frontlineworkerpresent = partial(dict_to_foreign_uri_m2m, field_name = 'frontlineworkerpresent', resource_name='frontlineworkerpresent')
     hydrate_partner = partial(assign_partner)
     hydrate_parentcategory = partial(dict_to_foreign_uri, field_name='parentcategory')
     
@@ -593,6 +630,9 @@ class ScreeningResource(BaseResource):
     
     def dehydrate_videoes_screened(self, bundle):
         return [{'id': video.id, 'title': video.title,} for video in bundle.obj.videoes_screened.all()]
+
+    def dehydrate_frontlineworkerpresent(self, bundle):
+        return [{'id': item.id, 'frontlineworkerpresent': item.worker_type} for item in bundle.obj.frontlineworkerpresent.all()]
         
     def dehydrate_farmer_groups_targeted(self, bundle):
         return [{'id': group.id, 'group_name': group.group_name,} for group in bundle.obj.farmer_groups_targeted.all()]
@@ -603,7 +643,10 @@ class ScreeningResource(BaseResource):
         int_db_list = [int(item) for item in db_list]
         for pma in bundle.obj.personmeetingattendance_set.all():
             if isinstance(pma.category, unicode):
-                int_pma_db_list = [int(item) for item in ast.literal_eval(pma.category)]
+                try:
+                    int_pma_db_list = [int(item) for item in ast.literal_eval(pma.category)]
+                except:
+                    int_pma_db_list = [int(item.get('id')) for item in ast.literal_eval(pma.category)]
                 for iterable in int_pma_db_list:
                     data_list.append({'id': iterable, 
                                       'category': DirectBeneficiaries.objects.get(id=iterable).direct_beneficiaries_category,
@@ -764,6 +807,7 @@ class DirectBeneficiariesResource(BaseResource):
         queryset = DirectBeneficiaries.objects.all()
         resource_name = 'directbeneficiaries'
         authentication = SessionAuthentication()
+        authorization = DirectBeneficiariesAuthorization()
         always_return_data = True
 
     def dehydrate_category(self, bundle):
