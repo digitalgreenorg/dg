@@ -31,6 +31,7 @@ class LoopModel(models.Model):
 class Language(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=25)
+    notation = models.CharField(max_length=3, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -56,6 +57,8 @@ class State(LoopModel):
     state_name_en = models.CharField(max_length=100, null=True)
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
     crop_add = models.BooleanField(default=False)
+    phone_digit = models.CharField(default=10, max_length=2, blank=True, null=True)
+    phone_start = models.CharField(default=789, max_length=4, blank=True, null=True)
     def __unicode__(self):
         return self.state_name
 
