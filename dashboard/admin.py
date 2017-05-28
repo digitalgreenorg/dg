@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
 from coco.base_models import NONNEGOTIABLE_OPTION
-from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice
+from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, FrontLineWorkerPresent
 from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
@@ -78,18 +78,31 @@ class NonNegotiablesInline(admin.TabularInline):
 class ParentCategoryAdmin(admin.ModelAdmin):
     
     def has_add_permission(self, request, obj=None):
-        return False
+        return True
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
     list_display = ['id', 'parent_category_name']
     search_fields = ['parent_category_name']
 
-    readonly_fields = list_display
+
+class FrontLineWorkerPresentAdmin(admin.ModelAdmin):
+    
+
+    list_display = ['id', 'worker_type']
+    search_fields = ['worker_type']
+
+
+class DirectBeneficiariesAdmin(admin.ModelAdmin):
+
+    list_display = ['id', 'direct_beneficiaries_category']
+    search_fields = ['direct_beneficiaries_category']
+
+
 
 class VideoAdmin(admin.ModelAdmin):
-    inlines = [NonNegotiablesInline,]
+    inlines = [NonNegotiablesInline]
     fieldsets = [
                 (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice']}),
                 (None,{'fields':['village','production_team']}),
