@@ -25,6 +25,7 @@ import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from './shared.service';
 
 import { SearchPipe } from './filters/search.pipe';
+import { CardsComponent } from './cards/cards.component';
 
 declare var require: any;
 export function highchartsFactory() {
@@ -51,6 +52,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SearchPipe,
     TopBarDataComponent,
     CardComponent,
+    CardsComponent,
   ],
   imports: [
     BrowserModule,
