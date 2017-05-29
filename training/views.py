@@ -1,6 +1,5 @@
 import json
 import MySQLdb
-import re
 from dg.settings import DATABASES
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -17,7 +16,6 @@ from activities.models import Screening, PersonAdoptPractice, PersonMeetingAtten
 from geographies.models import State
 from django.db import connection
 import datetime
-from datetime import date
 from training.management.databases.utility import multiprocessing_dict, multiprocessing_list
 from training.management.databases.get_sql_queries import *
 from training.log.training_log import get_latest_timestamp
@@ -49,6 +47,37 @@ def login(request):
         return HttpResponse("0",status=403)
     return HttpResponse("0",status=404)
 
+def extractFiltersFromRequest(request):
+    if 'start_date' in request.GET and 'end_date' in request.GET:
+        start_date = str(request.GET['start_date'])
+        end_date = str(request.GET['end_date'])
+    else:
+        start_date = '2015-01-01'
+        end_date = '2017-04-04'
+    if 'apply_filter' in request.GET:
+        apply_filter = True if request.GET['apply_filter'] == 'true' else False
+    else :
+        apply_filter = False
+    if 'chartType' in request.GET and 'chartName' in request.GET:
+        chart_type =  str(request.GET.get('chartType'))
+        chart_name = str(request.GET.get('chartName'))
+    else:
+        chart_type = ''
+        chart_name = ''
+    trainers_list = request.GET.getlist('Trainer')
+    states_list = request.GET.getlist('State')
+
+    filter_args = {}
+    filter_args['start_date'] = start_date
+    filter_args['end_date'] = end_date
+    filter_args['apply_filter'] = apply_filter
+    filter_args['trainers_list'] = trainers_list
+    filter_args['states_list'] = states_list
+    filter_args['chart_name'] = chart_name
+    filter_args['chart_type'] = chart_type
+
+    return filter_args
+
 @csrf_exempt
 def getFilterData(request):
     trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
@@ -63,27 +92,8 @@ def getFilterData(request):
 
 @csrf_exempt
 def getData(request):
-    if 'start_date' in request.GET and 'end_date' in request.GET:
-        start_date = str(request.GET['start_date'])
-        end_date = str(request.GET['end_date'])
-    else:
-        start_date = '2015-01-01'
-        end_date = '2017-04-04'
-    if 'apply_filter' in request.GET:
-        apply_filter = True if request.GET['apply_filter'] == 'true' else False
-    else :
-        apply_filter = False
-
-    trainers_list = request.GET.getlist('Trainer')
-    states_list = request.GET.getlist('State')
+    filter_args = extractFiltersFromRequest(request)
     query_list = []
-
-    filter_args = {}
-    filter_args['start_date'] = start_date
-    filter_args['end_date'] = end_date
-    filter_args['apply_filter'] = apply_filter
-    filter_args['trainers_list'] = trainers_list
-    filter_args['states_list'] = states_list
 
     # No of Trainings
     training_query = get_training_data_sql(**filter_args)
@@ -358,8 +368,8 @@ def pandas_default_aggregation(chart_name, result):
     return final_data_list
 
 def graph_data(request):
-    chart_type =  str(request.GET.get('chartType'))
-    chart_name = str(request.GET.get('chartName'))
+    filter_args = extractFiltersFromRequest(request)
+
     final_data_list = {}
     db_connection = MySQLdb.connect(host='localhost',
                                         user=DATABASES['default']['USER'],
@@ -368,12 +378,12 @@ def graph_data(request):
                                         charset='utf8',
                                         use_unicode=True)
 
-    sql_query = get_graphs_query(chart_type=chart_type, chart_name=chart_name, apply_filter=False)
+    sql_query = get_graphs_query(**filter_args)
     result = pandas.read_sql_query(sql_query, con=db_connection)
 
-    if chart_name != 'state__#trainings':
-        data_to_send = pandas_default_aggregation(chart_name, result)
+    if filter_args['chart_name'] != 'state__#trainings':
+        data_to_send = pandas_default_aggregation(filter_args['chart_name'], result)
     else:
-        data_to_send = number_of_trainings(chart_name, result)
+        data_to_send = number_of_trainings(filter_args['chart_name'], result)
 
     return HttpResponse(json.dumps(data_to_send))
