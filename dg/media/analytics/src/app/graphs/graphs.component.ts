@@ -1,8 +1,9 @@
 import { Component,OnInit, AfterViewInit } from '@angular/core';
-import { chartsConfig } from './configs';
 import { tabsConfig } from './configs_tab';
 import { GraphsService } from './graphs.service';
 import { SharedService } from '../shared.service';
+import { environment } from '../../environments/environment';
+//import { chartsConfig } from environment
 
 @Component({
   selector: 'graphs',

@@ -20,7 +20,7 @@ export class FiltersComponent implements OnInit {
   @ViewChild('mySidenav') mySidenav: ElementRef;
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;
-  private showDateFilter: boolean = false;
+  showDateFilter: boolean = false;
   private f_list = {};
   private limit;
   private myDatePickerOptions: IMyOptions = {
