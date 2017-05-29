@@ -62,11 +62,7 @@ export class GraphsComponent {
           //Find already displayed cart to enter data
           if (key === chart.options.chartName) {
             chart.nativeChart.hideLoading();
-            if (chart.nativeChart.series.length > 0) {
-              for (var i = chart.nativeChart.series.length - 1; i >= 0; i--) {
-                chart.nativeChart.series[i].remove();
-              }
-            }
+            this.clearSeriesFromGraph(chart);
             dataList[key]['outerData']['series'].forEach(entry => {
               chart.nativeChart.addSeries(entry);
             });
@@ -76,9 +72,21 @@ export class GraphsComponent {
               });
             }
           }
+          else {
+            this.clearSeriesFromGraph(chart);
+            chart.nativeChart.showLoading(dataList['error']);
+          }
         });
       });
     });
 
+  }
+
+  private clearSeriesFromGraph(chart) {
+    if (chart.nativeChart.series.length > 0) {
+      for (var i = chart.nativeChart.series.length - 1; i >= 0; i--) {
+        chart.nativeChart.series[i].remove();
+      }
+    }
   }
 }
