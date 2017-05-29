@@ -21,6 +21,7 @@ import { FiltersComponent } from './filters/filters.component';
 
 import { TopBarDataService } from './top-bar-data.service';
 import { GraphsService } from './graphs/graphs.service';
+import {CardsService } from './cards/cards.service';
 import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from './shared.service';
 
@@ -68,7 +69,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     provide: HighchartsStatic,
     useFactory: highchartsFactory,
   },
-    GraphsService, TopBarDataService, DatePipe, GetFilterDataService, SharedService],
+    GraphsService, CardsService, TopBarDataService, DatePipe, GetFilterDataService, SharedService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

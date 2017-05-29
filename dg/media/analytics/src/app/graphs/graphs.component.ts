@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit, AfterViewInit } from '@angular/core';
 import { chartsConfig } from './configs';
 import { tabsConfig } from './configs_tab';
 import { GraphsService } from './graphs.service';
@@ -10,7 +10,7 @@ import { GraphsService } from './graphs.service';
     providers: [GraphsService]
 })
 
-export class GraphsComponent {
+export class GraphsComponent implements OnInit, AfterViewInit{
     tabs = [];
     charts = [];
 

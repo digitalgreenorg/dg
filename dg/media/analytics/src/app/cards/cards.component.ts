@@ -1,19 +1,58 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,OnInit, AfterViewInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { TopBarDataService } from '../top-bar-data.service';
+import { CardsService } from './cards.service';
 import { IMyOptions } from 'mydatepicker';
 import { SharedService } from '../shared.service';
 
+import { cardConfigs } from './configs';
 @Component({
   selector: 'app-cards',
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.css']
 })
-export class CardsComponent implements OnInit {
 
-  constructor() { }
+export class CardsComponent implements OnInit, AfterViewInit {
+  cardsOverall = [];
+  cardsRecent = [];
+  
+  constructor(private cardsService: CardsService, private sharedService: SharedService) {
+      this.sharedService.argsList$.subscribe(data => {
+      this.getData(data);
+    });
+   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    Object.keys(cardConfigs).forEach(key => {
+        if(cardConfigs[key].overall.show){
+            this.cardsOverall.push({
+                'id': key,
+                'text':cardConfigs[key].text
+            });
+        }
+        if(cardConfigs[key].recent.show){
+            this.cardsRecent.push({
+                'id':key,
+                'text':cardConfigs[key].text
+            });
+        }
+    })
+    let options = {
+        webUrl: 'http://localhost:8000/training/getData',
+        params: {
+          apply_filter: false,
+        }
+    }
+    this.getData(options);
   }
+
+  public getData(options): any {
+    this.cardsService.getApiData(options)
+      .subscribe(val => {
+        
+      });
+  }
+
+  ngAfterViewInit(): void {}
+
 
 }
