@@ -189,7 +189,6 @@ def get_avg_score_data_sql(**Kwargs):
 
 def get_graphs_query(**kwargs):
     start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(kwargs)
-    # apply_filter = False
     sql_query_list = []
     args_list = []
 
@@ -221,5 +220,4 @@ def get_graphs_query(**kwargs):
     inner_sql_q = join_sql_ds(inner_sql_ds)
     sql_ds['from'].append('(' + inner_sql_q + ') T')
     sql_q = join_sql_ds(sql_ds)
-    print sql_q
     return sql_q

@@ -25,26 +25,27 @@ export class FiltersComponent implements OnInit {
   private limit;
   private myDatePickerOptions: IMyOptions = {
     dateFormat: 'dd-mm-yyyy',
-    alignSelectorRight: true
+    alignSelectorRight: true,
+    showClearDateBtn: false
   };
   private date = new Date();
   public startModel = {
     date: {
-      year: this.date.getFullYear()-1,
-      month: this.date.getMonth()+1,
-      day: this.date.getDate()+1
+      year: this.date.getFullYear() - 1,
+      month: this.date.getMonth() + 1,
+      day: this.date.getDate() + 1
     }
   };
   public endModel = {
     date: {
       year: this.date.getFullYear(),
-      month: this.date.getMonth()+1,
+      month: this.date.getMonth() + 1,
       day: this.date.getDate()
     }
   };
 
   constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, private datepipe: DatePipe) {
-    this.limit = 20;
+    this.limit = 40;
   }
 
   ngOnInit() {

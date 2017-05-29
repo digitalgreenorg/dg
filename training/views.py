@@ -308,6 +308,7 @@ def month_wise_data(request):
 def number_of_trainings(chart_name, result):
     final_data_list = {}
     state_grouped_data = result.groupby(['state']).sum().reset_index()
+    print state_grouped_data
     outer_data = {'outerData': {'series':[],'categories':state_grouped_data['state'].tolist()}}
 
     temp_dict_outer = {'name':'Trainings','data':[]}
