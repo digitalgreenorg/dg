@@ -4,14 +4,14 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Rx';
-import { Config } from './config/config';
+import { cardConfigs } from './configs';
 
 @Injectable()
-export class TopBarDataService {
+export class CardsService {
 
   constructor(private http: Http) { }
 
-  getApiData(args): Observable<Config> {
+  getApiData(args): Observable<any> {
 
     let params: URLSearchParams = new URLSearchParams();
     for (let key in args.params) {
@@ -21,7 +21,7 @@ export class TopBarDataService {
     let requestOptions: RequestOptions = new RequestOptions();
     requestOptions.search = params;
     return this.http.get(args.webUrl, requestOptions)
-      .map(response => response.json() as Config)
+      .map(response => response.json())
       .catch(this.handleError);
   }
   private handleError(error: any): Observable<any> {

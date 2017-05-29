@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit, AfterViewInit } from '@angular/core';
 import { chartsConfig } from './configs';
 import { tabsConfig } from './configs_tab';
 import { GraphsService } from './graphs.service';
@@ -8,12 +8,11 @@ import { SharedService } from '../shared.service';
   selector: 'graphs',
   templateUrl: './graphs.component.html',
   styleUrls: ['./graphs.component.css'],
-  // providers: [GraphsService]
 })
 
-export class GraphsComponent {
-  tabs = [];
-  charts = [];
+export class GraphsComponent implements OnInit, AfterViewInit{
+    tabs = [];
+    charts = [];
 
   constructor(private graphService: GraphsService, private _sharedService: SharedService) {
     this._sharedService.argsList$.subscribe(filters => {

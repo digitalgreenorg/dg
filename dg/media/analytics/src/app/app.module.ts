@@ -14,13 +14,12 @@ import { PerfectScrollbarModule, PerfectScrollbarConfigInterface } from 'ngx-per
 import { MyDatePickerModule } from 'mydatepicker';
 
 import { AppComponent } from './app.component';
-import { TopBarDataComponent } from './top-bar-data/top-bar-data.component';
-import { CardComponent } from './top-bar-data/card/card.component';
-import { GraphsComponent } from './graphs/graphs.component';
+import { CardsComponent } from './cards/cards.component';
 import { FiltersComponent } from './filters/filters.component';
+import { GraphsComponent } from './graphs/graphs.component';
 
-import { TopBarDataService } from './top-bar-data.service';
 import { GraphsService } from './graphs/graphs.service';
+import { CardsService } from './cards/cards.service';
 import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from './shared.service';
 
@@ -49,8 +48,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     GraphsComponent,
     FiltersComponent,
     SearchPipe,
-    TopBarDataComponent,
-    CardComponent,
+    CardsComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,7 +64,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     provide: HighchartsStatic,
     useFactory: highchartsFactory,
   },
-    GraphsService, TopBarDataService, DatePipe, GetFilterDataService, SharedService],
+    GraphsService, CardsService, DatePipe, GetFilterDataService, SharedService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
