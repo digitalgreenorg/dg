@@ -1,10 +1,8 @@
 import { Component,OnInit, AfterViewInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { CardsService } from './cards.service';
-import { IMyOptions } from 'mydatepicker';
 import { SharedService } from '../shared.service';
-
 import { cardConfigs } from './configs';
+
 @Component({
     selector: 'app-cards',
     templateUrl: './cards.component.html',
