@@ -11,7 +11,7 @@ import { cardConfigs } from './configs';
   styleUrls: ['./cards.component.css']
 })
 
-export class CardsComponent implements OnInit, AfterViewInit {
+export class CardsComponent implements OnInit {
   cardsOverall = [];
   cardsRecent = [];
   
@@ -43,16 +43,30 @@ export class CardsComponent implements OnInit, AfterViewInit {
         }
     }
     this.getData(options);
+    console.log(this.cardsOverall);
+    console.log(this.cardsRecent);
   }
 
   public getData(options): any {
     this.cardsService.getApiData(options)
-      .subscribe(val => {
-        
+      .subscribe(dataList => {
+        dataList['data'].forEach(cardData => {
+            if(cardData.placeHolder == "overall") {
+              this.cardsOverall.forEach(card => {
+                if(cardData.tagName === card.text){
+                  card['value'] = cardData.value;
+                }
+              });
+            }
+            else {
+              this.cardsRecent.forEach(card => {
+                if(cardData.tagName === card.text){
+                  card['value'] = cardData.value;
+                }
+              });
+            }         
+        });
       });
   }
-
-  ngAfterViewInit(): void {}
-
-
 }
+

@@ -35,11 +35,11 @@ export class TopBarDataComponent implements OnInit {
         // console.log(val);
         for (let v in val.data) {
           let vobj = val.data[v]
-          for (let d of this.cardDataDict[vobj['placeHolder']]) {
+          /*for (let d of this.cardDataDict[vobj['placeHolder']]) {
             if (d.tagName == vobj['tagName']) {
               d.value = vobj['value'];
             }
-          }
+          }*/
         }
       });
   }

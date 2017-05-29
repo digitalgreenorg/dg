@@ -16,7 +16,7 @@ def get_training_data_sql(**Kwargs):
     sql_ds['from'].append('training_training tt')
     sql_ds['join'].append(['training_score ts', 'ts.training_id = tt.id'])
     sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'No. of Trainings'
+    args_dict['query_tag'] = 'Number of Trainings'
     args_dict['component'] = 'overall'
     args_dict['query_string'] = sql_q
     args_dict['apply_filter'] = apply_filter
@@ -55,7 +55,7 @@ def get_mediators_data_sql(**Kwargs):
     sql_ds['from'].append('training_score ts')
     sql_ds['where'].append('ts.score in (0, 1)')
     sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'No. of Mediators'
+    args_dict['query_tag'] = 'Number of Mediators'
     args_dict['component'] = 'overall'
     args_dict['query_string'] = sql_q
     args_dict['apply_filter'] = apply_filter
@@ -155,7 +155,7 @@ def get_avg_score_data_sql(**Kwargs):
     sql_ds['select'].append('cast(round(avg(T.sum_score), 2) as char(10))')
     sql_ds['from'].append('(' + inner_sql_q + ') T')
     sql_q = join_sql_ds(sql_ds)
-    args_dict['query_tag'] = 'Avg Score'
+    args_dict['query_tag'] = 'Average Score'
     args_dict['component'] = 'overall'
     args_dict['query_string'] = sql_q
     args_dict['apply_filter'] = apply_filter
