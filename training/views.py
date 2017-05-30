@@ -78,6 +78,16 @@ def extractFiltersFromRequest(request):
 
     return filter_args
 
+def getPandasDataframe(sql_query):
+    db_connection = MySQLdb.connect(host='localhost',
+                                        user=DATABASES['default']['USER'],
+                                        passwd=DATABASES['default']['PASSWORD'],
+                                        db=DATABASES['default']['NAME'],
+                                        charset='utf8',
+                                        use_unicode=True)
+    return pandas.read_sql_query(sql_query, con=db_connection)
+
+
 @csrf_exempt
 def getFilterData(request):
     trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
@@ -375,17 +385,9 @@ def pandas_default_aggregation(chart_name, result):
 
 def graph_data(request):
     filter_args = extractFiltersFromRequest(request)
-
     final_data_list = {}
-    db_connection = MySQLdb.connect(host='localhost',
-                                        user=DATABASES['default']['USER'],
-                                        passwd=DATABASES['default']['PASSWORD'],
-                                        db=DATABASES['default']['NAME'],
-                                        charset='utf8',
-                                        use_unicode=True)
-
     sql_query = get_graphs_query(**filter_args)
-    result = pandas.read_sql_query(sql_query, con=db_connection)
+    result = getPandasDataframe(sql_query)
 
     if filter_args['chart_name'] != 'state__#trainings':
         data_to_send = pandas_default_aggregation(filter_args['chart_name'], result)
