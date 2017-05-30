@@ -1,9 +1,7 @@
 import { Component,OnInit, AfterViewInit } from '@angular/core';
-import { tabsConfig } from './configs_tab';
 import { GraphsService } from './graphs.service';
 import { SharedService } from '../shared.service';
-import { environment } from '../../environments/environment';
-//import { chartsConfig } from environment
+import { environment } from '../../environments/environment.training';
 
 @Component({
   selector: 'graphs',
@@ -23,12 +21,12 @@ export class GraphsComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void {
     //Generate tabs dynamically
-    tabsConfig.forEach(tab => {
+    environment.tabsConfig.forEach(tab => {
       this.tabs.push(tab);
     });
-    chartsConfig.forEach(config => {
+    environment.chartsConfig.forEach(config => {
       //Add divs to tabs
-      tabsConfig.forEach(tab => {
+      environment.tabsConfig.forEach(tab => {
         if (config.chart.tab.id === tab.id) {
           tab.showDivs.push({
             'id': config.chart.renderTo,

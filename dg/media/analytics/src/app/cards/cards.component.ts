@@ -1,7 +1,7 @@
 import { Component,OnInit, AfterViewInit } from '@angular/core';
 import { CardsService } from './cards.service';
 import { SharedService } from '../shared.service';
-import { cardConfigs } from './configs';
+import { environment } from '../../environments/environment.training';
 
 @Component({
     selector: 'app-cards',
@@ -18,19 +18,19 @@ export class CardsComponent implements OnInit {
         this.getData(data);
       });
     }
-
+    cardsConfigs = environment.cardsConfig;
     ngOnInit(): void {
-        Object.keys(cardConfigs).forEach(key => {
-            if(cardConfigs[key].overall.show){
+        Object.keys(this.cardsConfigs).forEach(key => {
+            if(this.cardsConfigs[key].overall.show){
                 this.cardsOverall.push({
                     'id': key,
-                    'text':cardConfigs[key].text
+                    'text':this.cardsConfigs[key].text
                 });
             }
-            if(cardConfigs[key].recent.show){
+            if(this.cardsConfigs[key].recent.show){
                 this.cardsRecent.push({
                     'id':key,
-                    'text':cardConfigs[key].text
+                    'text':this.cardsConfigs[key].text
                 });
             }
         })

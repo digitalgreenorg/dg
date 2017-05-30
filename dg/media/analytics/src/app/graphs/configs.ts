@@ -1,4 +1,4 @@
-export const chartsConfig = [
+/*export const chartsConfig = [
   {
     chart: {
       type: 'column',
@@ -94,3 +94,4 @@ export const chartsConfig = [
   },
   
 ]
+*/
