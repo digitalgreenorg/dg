@@ -1,4 +1,4 @@
-export const cardConfigs = {
+export const cardConfig = {
 
     'no_trainings':{    
                         text:'Number of Trainings',

@@ -64,7 +64,7 @@ export class GraphsComponent implements OnInit, AfterViewInit{
             dataList[key]['outerData']['series'].forEach(entry => {
               chart.nativeChart.addSeries(entry);
             });
-            if (chart.options.chart.drillDown == true) {
+            if (chart.options.chart.drillDown) {
               dataList[key]['innerData'].forEach(drilldownEntry => {
                 chart.options.drilldown.series.push(drilldownEntry);
               });
