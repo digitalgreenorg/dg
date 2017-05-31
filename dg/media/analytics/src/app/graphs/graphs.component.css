@@ -1,2 +1,7 @@
-.container {
+.container-fluid {
+  width: 90%;
+}
+.active {
+    box-shadow: 0 0 8px grey;
+    padding: 15px 15px 15px 15px;
 }
