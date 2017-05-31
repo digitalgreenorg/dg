@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='broadcast',
             name='cluster',
-            field=models.ManyToManyField(related_name='associate_cluster', null=True, to='loop.LoopUser', blank=True),
+            field=models.ManyToManyField(to='loop.LoopUser', null=True, blank=True),
         ),
     ]
