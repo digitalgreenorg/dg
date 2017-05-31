@@ -32,7 +32,8 @@ def get_training_data_sql(**Kwargs):
             sql_ds['join'].append(['geographies_district gd','pa.district_id = gd.id'])
             sql_ds['join'].append(['geographies_state gs','gs.id = gd.state_id'])
             sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
-        sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+
+    sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
 
     sql_q = join_sql_ds(sql_ds)
     # args_dict['query_tag'] = 'No. of Trainings'
@@ -64,8 +65,6 @@ def get_mediators_data_sql(**Kwargs):
 
 
     if apply_filter:
-        sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
-        sql_ds['join'].append(['training_training tt', 'ts.training_id = tt.id'])
         if len(trainers_list) > 0:
             sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
             sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
@@ -74,6 +73,9 @@ def get_mediators_data_sql(**Kwargs):
             sql_ds['join'].append(['geographies_district gd','pa.district_id = gd.id'])
             sql_ds['join'].append(['geographies_state gs','gs.id = gd.state_id'])
             sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
+
+    sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+    sql_ds['join'].append(['training_training tt', 'ts.training_id = tt.id'])
 
     sql_q = join_sql_ds(sql_ds)
     # args_dict['query_tag'] = 'No. of Mediators'
@@ -112,8 +114,6 @@ def get_pass_perc_data_sql(**Kwargs):
         args_list.append(args_dict.copy())
 
     if apply_filter:
-        inner_sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
-        inner_sql_ds['join'].append(['training_training tt', 'ts.training_id = tt.id'])
         if len(trainers_list) > 0:
             inner_sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
             inner_sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
@@ -122,6 +122,9 @@ def get_pass_perc_data_sql(**Kwargs):
             inner_sql_ds['join'].append(['geographies_district gd','pa.district_id = gd.id'])
             inner_sql_ds['join'].append(['geographies_state gs','gs.id = gd.state_id'])
             inner_sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
+
+    inner_sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+    inner_sql_ds['join'].append(['training_training tt', 'ts.training_id = tt.id'])
 
     inner_sql_q = join_sql_ds(inner_sql_ds)
 
@@ -163,8 +166,6 @@ def get_avg_score_data_sql(**Kwargs):
         args_list.append(args_dict.copy())
 
     if apply_filter:
-        inner_sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
-        inner_sql_ds['join'].append(['training_training tt', 'ts.training_id = tt.id'])
         if len(trainers_list) > 0:
             inner_sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
             inner_sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
@@ -173,6 +174,9 @@ def get_avg_score_data_sql(**Kwargs):
             inner_sql_ds['join'].append(['geographies_district gd','pa.district_id = gd.id'])
             inner_sql_ds['join'].append(['geographies_state gs','gs.id = gd.state_id'])
             inner_sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
+    inner_sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+    inner_sql_ds['join'].append(['training_training tt', 'ts.training_id = tt.id'])
+
     inner_sql_q = join_sql_ds(inner_sql_ds)
 
     sql_ds = get_init_sql_ds()
