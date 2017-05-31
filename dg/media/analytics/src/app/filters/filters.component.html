@@ -36,7 +36,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <a href='#' *ngFor='let filter_name of filter_list'>
+          <a *ngFor='let filter_name of filter_list'>
           <label (click)="filter_name.expand=!filter_name.expand">{{filter_name.heading}}</label>
           <div class="container" *ngIf="filter_name.expand">
             <div class="form-group row" [id]="filter_name.heading">
