@@ -49,25 +49,34 @@ class Command(BaseCommand):
             repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
             total_calls_resolved = HelplineIncoming.objects.filter(call_status=1).count()
             call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
-
             call_count_per_no = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number'))
+            # Cluster-wise bifurcation of calls received(farmer count, number of calls)
+            farmer_detail = Farmer.objects.values('phone','village_id')
+            phone_to_village_map = dict()
+            village_to_call_detail_map = dict()
+            cluster_wise_call_detail = dict()
+            for farmer in farmer_detail:
+                phone_to_village_map[farmer['phone']] = farmer['village_id']
+            for call in call_count_per_no:
+                farmer_number = call['from_number']
+                farmer_number_possibilities = [farmer_number.lstrip('0'), farmer_number, '0'+farmer_number, '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
+                for number in farmer_number_possibilities:
+                    if number in phone_to_village_map:
+                        if phone_to_village_map[number] not in village_to_call_detail_map:
+                            village_to_call_detail_map[phone_to_village_map[number]] = {'farmer_count':1,'total_calls':call['call_count']}
+                        else:
+                            village_to_call_detail_map[phone_to_village_map[number]]['farmer_count'] += 1
+                            village_to_call_detail_map[phone_to_village_map[number]]['total_calls'] += call['call_count']
+                        break
+            loopuser_assigned_village = LoopUserAssignedVillage.objects.values('loop_user_id','loop_user__name','village_id')
+            for user in loopuser_assigned_village:
+                if user['loop_user_id'] not in cluster_wise_call_detail:
+                    cluster_wise_call_detail[user['loop_user_id']] = dict()
+                    cluster_wise_call_detail[user['loop_user_id']]['cluster_name'] = user['loop_user__name']
+                    cluster_wise_call_detail[user['loop_user_id']]['farmer_count'] = 0
+                    cluster_wise_call_detail[user['loop_user_id']]['total_calls'] = 0
+                if user['village_id'] in village_to_call_detail_map:
+                    cluster_wise_call_detail[user['loop_user_id']]['farmer_count'] += village_to_call_detail_map[user['village_id']]['farmer_count']
+                    cluster_wise_call_detail[user['loop_user_id']]['total_calls'] += village_to_call_detail_map[user['village_id']]['total_calls']
 
-        from_to_date = date_setter.set_from_to_date(options.get('from_date'), options.get('to_date'),
-                                                    options.get('num_days'))
-        aggregators = LoopUser.objects.filter(role=2);
-        email_file_list = []
-        if options.get('aggregator') == 'all' or options.get('aggregator') == None:
-            aggregator_to_check_id_string = ''
-            content_for_mail = self.file_creator_date_specific(from_to_date, aggregator_to_check_id_string, aggregators)
-            email_file_list.append(content_for_mail[0])
-        else:
-            aggregator_to_check = aggregators.get(name_en=options.get('aggregator'))
-            aggregator_to_check_id_string = 'AND t1.Agg = ' + str(aggregator_to_check.user_id) + ''
-            content_for_mail = self.file_creator_date_specific(from_to_date, aggregator_to_check_id_string, aggregators)
-            email_file_list.append(content_for_mail[0])
-
-        common_send_email("Farmers Transaction Data", recipients=RECIPIENTS, files=email_file_list, bcc=[],
-                          from_email=EMAIL_HOST_USER, html="", text="")
-        for file_name_to_remove in email_file_list:
-            os.remove(str(file_name_to_remove))
-
+        
