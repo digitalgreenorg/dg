@@ -92,5 +92,47 @@ export const chartsConfig = [
       series: []
     }
   },
+  {
+    chart: {
+      type: 'column',
+      renderTo: 'graph_3',
+      tab: {
+          'id': 'tab2',
+          'class':'col container'
+      },
+      drillDown: false
+    },
+    credits: {
+        enabled: false
+    },
+    chartName: 'question_wise_data',
+    title: {
+      text: 'Questions Answered Correctly'
+    },
+    xAxis: { type: 'category' },
+    yAxis: {
+      title: {
+        text: 'Percentage Answered'
+      }
+    },
+    legend: {
+      enabled: false
+    },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    },
+    series: [],
+    drilldown: {}
+  },
   
 ]

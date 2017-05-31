@@ -384,12 +384,14 @@ def graph_data(request):
                                         charset='utf8',
                                         use_unicode=True)
 
-    sql_query = get_graphs_query(**filter_args)
-    result = pandas.read_sql_query(sql_query, con=db_connection)
+    if filter_args['chart_name'] in ['state__#trainings', 'state_district__#trainings']:
 
-    if filter_args['chart_name'] != 'state__#trainings':
-        data_to_send = pandas_default_aggregation(filter_args['chart_name'], result)
-    else:
-        data_to_send = number_of_trainings(filter_args['chart_name'], result)
+        sql_query = trainings_mediators(**filter_args)
+        result = pandas.read_sql_query(sql_query, con=db_connection)
+
+        if filter_args['chart_name'] == 'state_district__#trainings':
+            data_to_send = pandas_default_aggregation(filter_args['chart_name'], result)
+        elif filter_args['chart_name'] == 'state__#trainings':
+            data_to_send = number_of_trainings(filter_args['chart_name'], result)
 
     return HttpResponse(json.dumps(data_to_send))

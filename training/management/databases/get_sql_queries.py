@@ -187,7 +187,7 @@ def get_avg_score_data_sql(**Kwargs):
 
     return args_list
 
-def get_graphs_query(**kwargs):
+def trainings_mediators(**kwargs):
     start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(kwargs)
     sql_query_list = []
     args_list = []
