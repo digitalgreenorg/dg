@@ -206,10 +206,9 @@ def question_wise_data(chart_name, result):
     final_data_list = {}
     try:
         outer_data = {'outerData': {'series':[],'categories':result['Questions'].tolist()}}
-
         temp_dict_outer = {'name':'Questions','data':[]}
         for row in result.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].Questions,'y':int(row[1].Percentage),'drilldown':null})
+            temp_dict_outer['data'].append({'name':row[1].Questions,'y':int(row[1].Percentage)})
 
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[chart_name] = outer_data
@@ -369,11 +368,9 @@ def year_month_wise_data(chart_name, result):
     year_grouped_data = result.groupby(['year']).sum().reset_index()
     try:
         outer_data = {'outerData': {'series':[],'categories':year_grouped_data['year'].tolist()}}
-
         temp_dict_outer = {'name':'Trainings','data':[]}
-        for row in state_grouped_data.iterrows():
+        for row in year_grouped_data.iterrows():
             temp_dict_outer['data'].append({'name':row[1].year,'y':int(row[1].trainings),'drilldown':row[1].year +' trainings'})
-
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[chart_name] = outer_data
         
@@ -394,7 +391,7 @@ def year_month_wise_data(chart_name, result):
 
 def graph_data(request):
     filter_args = extractFiltersFromRequest(request)
-
+    sql_query = question_wise_data_query(**filter_args)
     final_data_list = {}
     db_connection = MySQLdb.connect(host='localhost',
                                         user=DATABASES['default']['USER'],
@@ -412,13 +409,13 @@ def graph_data(request):
         elif filter_args['chart_name'] == 'state__#trainings':
             data_to_send = number_of_trainings(filter_args['chart_name'], result)
 
-    if filter_args['chart_name'] in ['question_wise_data']:
+    if filter_args['chart_name'] in ['question_wise_data']: 
         sql_query = question_wise_data_query(**filter_args)
         result = pandas.read_sql_query(sql_query, con=db_connection)
         data_to_send = question_wise_data(filter_args['chart_name'], result)
 
     if filter_args['chart_name'] in ['year_month_wise_data']:
-        sql_query = qyear_month_wise_data_query(**filter_args)
+        sql_query = year_month_wise_data_query(**filter_args)
         result = pandas.read_sql_query(sql_query, con=db_connection)
         data_to_send = year_month_wise_data(filter_args['chart_name'], result)
     return HttpResponse(json.dumps(data_to_send))
