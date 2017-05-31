@@ -364,6 +364,34 @@ def pandas_default_aggregation(chart_name, result):
         final_data_list['error']="No data found for the filters applied"
     return final_data_list
 
+def year_month_wise_data(chart_name, result):
+    final_data_list = {}
+    year_grouped_data = result.groupby(['year']).sum().reset_index()
+    try:
+        outer_data = {'outerData': {'series':[],'categories':year_grouped_data['year'].tolist()}}
+
+        temp_dict_outer = {'name':'Trainings','data':[]}
+        for row in state_grouped_data.iterrows():
+            temp_dict_outer['data'].append({'name':row[1].year,'y':int(row[1].trainings),'drilldown':row[1].year +' trainings'})
+
+        outer_data['outerData']['series'].append(temp_dict_outer)
+        final_data_list[chart_name] = outer_data
+        
+        inner_data = {'innerData': []}
+        month_training_dict = {name:dict(zip(g['month'],g['trainings'])) for name,g in result.groupby('year')}
+        for key,value in trainer_training_dict.iteritems():
+            temp_dict_inner = {'data':[]}
+            temp_dict_inner['name'] = key
+            temp_dict_inner['id'] = key + ' trainings'
+            for k, v in value.iteritems():
+                temp_dict_inner['data'].append([k,v])
+            inner_data['innerData'].append(temp_dict_inner)
+
+        final_data_list[chart_name].update(inner_data)
+    except:
+        final_data_list['error']="No data found for the filters applied"
+    return final_data_list    
+
 def graph_data(request):
     filter_args = extractFiltersFromRequest(request)
 

@@ -134,5 +134,50 @@ export const chartsConfig = [
     series: [],
     drilldown: {}
   },
+  {
+    chart: {
+      type: 'column',
+      renderTo: 'graph_4',
+      tab: {
+          'id': 'tab3',
+          'class':'col container'
+      },
+      drillDown: true
+    },
+    credits: {
+        enabled: false
+    },
+    chartName: 'year_month_wise_data',
+    title: {
+      text: 'Periodical Trainings Conducted'
+    },
+    xAxis: { type: 'category' },
+    yAxis: {
+      title: {
+        text: 'Number of Trainings'
+      }
+    },
+    legend: {
+      enabled: false
+    },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    },
+    series: [],
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
+  },
   
 ]
