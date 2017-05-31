@@ -825,8 +825,7 @@ def broadcast(request):
                             farmer_no = row[1].strip()
                             farmer_contact = {'id':farmer_id, 'phone':farmer_no}
                             if farmer_contact not in farmer_contact_detail:
-                                farmer_contact_detail.append(farmer_contact) 
-                        print farmer_contact_detail
+                                farmer_contact_detail.append(farmer_contact)
                     # Remove csv file from server
                     os.remove(farmer_file_name)          
             else:

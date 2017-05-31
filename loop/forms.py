@@ -1,7 +1,6 @@
 from django import forms
 from django.utils.safestring import mark_safe
 from loop.models import Broadcast, LoopUser
-from loop.utils.ivr_helpline.helpline_data import BROADCAST_FARMER_PATH
 
 class BroadcastTestForm(forms.Form):
     to_number = forms.CharField(label='User Number', max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Enter a Phone Number'}))
