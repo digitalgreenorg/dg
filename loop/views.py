@@ -821,14 +821,11 @@ def broadcast(request):
                             template_data['active_tab'] = 1
                             return render_to_response('loop/broadcast.html',template_data,context_instance=context)
                         for row in customreader:
-                            farmer_id = row[0].strip() if row[0].strip() else None
+                            farmer_id = int(row[0].strip()) if row[0].strip() else None
                             farmer_no = row[1].strip()
                             farmer_contact = {'id':farmer_id, 'phone':farmer_no}
-                            print "Here"
-                            print farmer_contact
                             if farmer_contact not in farmer_contact_detail:
                                 farmer_contact_detail.append(farmer_contact)
-                print farmer_contact_detail
                     # Remove csv file from server
                     os.remove(farmer_file_name)          
             else:
