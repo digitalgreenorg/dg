@@ -9,7 +9,7 @@ $(function() {
     $("#broadcast_test_form").submit(function(event) {
         phone_number = $("#id_to_number").val();
         if(phone_number == '' || phone_number.length < 10 || phone_number.length > 11 || phone_number.match(/[a-z]/i) || parseInt(phone_number) < 7000000000 || parseInt(phone_number) > 9999999999) {
-            alert("Please Correct Phone Number.");
+            alert("Please Enter Correct Phone Number.");
             $("#id_to_number").val('');
             event.preventDefault();}
     });

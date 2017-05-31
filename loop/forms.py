@@ -9,6 +9,10 @@ class BroadcastTestForm(forms.Form):
                                <a style="color:blue;" target="_blank" href="http://audio.online-convert.com/convert-to-wav">Click Here to Convert</a></span>'
                                )
 
+    def __init__(self, *args, **kwargs):
+        super(BroadcastTestForm, self).__init__(*args, **kwargs)
+        self.fields['audio_file'].error_messages = {'required':'Audio file is required'}
+
     def clean_to_number(self):
         to_number = self.cleaned_data.get('to_number')
         if to_number == '' or len(to_number) < 10 or len(to_number) > 11:
@@ -41,6 +45,8 @@ class BroadcastForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(BroadcastForm, self).__init__(*args, **kwargs)
         self.fields['cluster'].choices = [(cluster['id'],'%s (%s)'%(cluster['name'],cluster['village__village_name'])) for cluster in LoopUser.objects.filter(role=2).values('id', 'name', 'village__village_name')]
+        self.fields['title'].error_messages = {'required':'Broadcast Title is required'}
+        self.fields['audio_file'].error_messages = {'required':'Audio file is required'}
 
     def clean_audio_file(self):
         audio_file = self.cleaned_data.get('audio_file')
