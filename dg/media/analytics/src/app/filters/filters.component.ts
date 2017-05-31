@@ -21,6 +21,7 @@ export class FiltersComponent implements OnInit {
   filter: Filter;
   showDateFilter: boolean = false;
   invalidDate: boolean = false;
+  invalidDateMessage: string;
   private f_list = {};
   private date = new Date();
   public endModel = {
@@ -42,7 +43,7 @@ export class FiltersComponent implements OnInit {
     dateFormat: 'dd-mm-yyyy',
     alignSelectorRight: true,
     showClearDateBtn: false,
-    editableDateField: false,
+    // editableDateField: false,
     indicateInvalidDate: true,
     inline: false,
     maxYear: this.date.getFullYear() + 1,
@@ -99,15 +100,21 @@ export class FiltersComponent implements OnInit {
     }
     if (this.showDateFilter) {
       this.invalidDate = false;
-      let startDate = this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd');
-      let endDate = this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd');
-      let s_date = new Date(startDate);
-      let e_date = new Date(endDate);
-      if (s_date < e_date) {
-        this.f_list['start_date'] = startDate;
-        this.f_list['end_date'] = endDate;
-      } else {
-        this.invalidDate = true;
+      try {
+        let startDate = this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd');
+        let endDate = this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd');
+        let s_date = new Date(startDate);
+        let e_date = new Date(endDate);
+        if (s_date < e_date) {
+          this.f_list['start_date'] = startDate;
+          this.f_list['end_date'] = endDate;
+        } else {
+          this.invalidDate = true;
+          this.invalidDateMessage = "* End date cannot be smaller than start date."
+        }
+      } catch (err) {
+          this.invalidDate = true;
+          this.invalidDateMessage = "* Invalid date entered."
       }
     }
     if (!this.invalidDate) {

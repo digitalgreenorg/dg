@@ -51,8 +51,9 @@ def extract_filters_request(request):
         start_date = str(request.GET['start_date'])
         end_date = str(request.GET['end_date'])
     else:
-        start_date = '2015-01-01'
-        end_date = '2017-04-04'
+        end_date = datetime.datetime.today().strftime('%Y-%m-%d')
+        delta = datetime.timedelta(days=365)
+        start_date = (datetime.datetime.today() - delta).strftime('%Y-%m-%d')
     if 'apply_filter' in request.GET:
         apply_filter = True if request.GET['apply_filter'] == 'true' else False
     else :
@@ -217,7 +218,7 @@ def year_month_wise_data(chart_name, result):
             temp_dict_outer['data'].append({'name':row[1].year,'y':int(row[1].trainings),'drilldown':str(row[1].year) +' trainings'})
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[chart_name] = outer_data
-        
+
         inner_data = {'innerData': []}
         month_training_dict = {name:dict(zip(g['month'],g['trainings'])) for name,g in result.groupby('year')}
         for key,value in month_training_dict.iteritems():
@@ -230,11 +231,11 @@ def year_month_wise_data(chart_name, result):
         final_data_list[chart_name].update(inner_data)
     except:
         final_data_list['error']="No data found for the filters applied"
-    return final_data_list    
+    return final_data_list
 
 def graph_data(request):
     filter_args = extract_filters_request(request)
-    
+
     if filter_args['chart_name'] in ['state_trainer_#trainings', 'state_trainer_#mediators']:
         sql_query = trainings_mediators_query(**filter_args)
         result = get_pandas_dataframe(sql_query)
@@ -244,7 +245,7 @@ def graph_data(request):
         elif filter_args['chart_name'] == 'state_trainer_#trainings':
             data_to_send = number_of_trainings(filter_args['chart_name'], result)
 
-    elif filter_args['chart_name'] in ['question_wise_data']: 
+    elif filter_args['chart_name'] in ['question_wise_data']:
         sql_query = question_wise_data_query(**filter_args)
         result = get_pandas_dataframe(sql_query)
         data_to_send = question_wise_data(filter_args['chart_name'], result)
@@ -253,10 +254,9 @@ def graph_data(request):
         sql_query = year_month_wise_data_query(**filter_args)
         result = get_pandas_dataframe(sql_query)
         data_to_send = year_month_wise_data(filter_args['chart_name'], result)
-    
+
     return HttpResponse(json.dumps(data_to_send))
 
 def dashboard(request):
     # return render(request, 'src/index.html')
     return render(request, 'app_dashboards/training_dashboard.html')
-    
