@@ -46,6 +46,12 @@ class Command(BaseCommand):
             total_unique_caller = HelplineCallLog.objects.filter(call_type=0).values_list('from_number').distinct().count()
             total_repeat_caller = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).count()
             total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
+            repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
+            total_calls_resolved = HelplineIncoming.objects.filter(call_status=1).count()
+            call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
+
+            call_count_per_no = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number'))
+
         from_to_date = date_setter.set_from_to_date(options.get('from_date'), options.get('to_date'),
                                                     options.get('num_days'))
         aggregators = LoopUser.objects.filter(role=2);
