@@ -5,7 +5,7 @@ export const chartsConfig = [
       renderTo: 'column_tab_3',
       tab: {
           'id': 'tab1',
-          'class':'col-sm-6 container'
+          'class':'col-sm-6'
       },
       drillDown: true
     },
@@ -50,7 +50,7 @@ export const chartsConfig = [
       renderTo: 'column',
       tab: {
           'id': 'tab1',
-          'class':'col-sm-6 container'
+          'class':'col-sm-6'
       },
       drillDown: true
     },
@@ -98,7 +98,7 @@ export const chartsConfig = [
       renderTo: 'graph_3',
       tab: {
           'id': 'tab2',
-          'class':'col container'
+          'class':'col-sm-12'
       },
       drillDown: false
     },
@@ -140,7 +140,7 @@ export const chartsConfig = [
       renderTo: 'graph_4',
       tab: {
           'id': 'tab3',
-          'class':'col container'
+          'class':'col-sm-12'
       },
       drillDown: true
     },
