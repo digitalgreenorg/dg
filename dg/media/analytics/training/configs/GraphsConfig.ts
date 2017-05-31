@@ -1,5 +1,5 @@
 export const chartsConfig = {
-  'state__#trainings' : {
+  'state_trainer_#trainings' : {
                           chart: {
                                   type: 'column',
                                   renderTo: 'column_tab_3',
@@ -10,7 +10,6 @@ export const chartsConfig = {
                                   drillDown: true
                           },
                           credits:{ enabled: false },
-                          //chartName: 'state__#trainings',
                           title: { text: 'Trainings Conducted'},
                           xAxis: { type: 'category' },
                           yAxis: { title: { text: 'Number of Trainings' } },
@@ -34,7 +33,8 @@ export const chartsConfig = {
                                       series: []
                           }
   },
-  'state_district__#trainings':{
+  
+  'state_trainer_#mediators':{
                                 chart: {
                                         type: 'column',
                                         renderTo: 'column',
@@ -45,7 +45,6 @@ export const chartsConfig = {
                                         drillDown: true
                                 },
                                 credits: { enabled: false },
-                                //chartName: 'state_district__#trainings',
                                 title: { text: 'Mediators trained'},
                                 subtitle: { text: 'Click the columns to view state wise trainer figures.'},
                                 xAxis: { type: 'category' },
@@ -70,6 +69,7 @@ export const chartsConfig = {
                                             series: []
                                 }
   },
+
   'question_wise_data':{
                         chart: {
                                 type: 'column',
@@ -81,7 +81,6 @@ export const chartsConfig = {
                                 drillDown: false
                         },
                         credits: { enabled: false },
-                        //chartName: 'question_wise_data',
                         title: {
                                 text: 'Questions Answered Correctly'
                         },
@@ -104,6 +103,7 @@ export const chartsConfig = {
                         series: [],
                         drilldown: {}
   },
+
   'year_month_wise_data':{
                           chart: {
                                   type: 'column',
@@ -115,7 +115,6 @@ export const chartsConfig = {
                                   drillDown: true
                           },
                           credits: { enabled: false },
-                          //chartName: 'year_month_wise_data',
                           title: { text: 'Periodical Trainings Conducted' },
                           xAxis: { type: 'category' },
                           yAxis: { title: { text: 'Number of Trainings'} },
