@@ -1,5 +1,3 @@
-import json
-import MySQLdb
 from dg.settings import DATABASES
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -9,13 +7,14 @@ from django.shortcuts import render, render_to_response
 from django.db.models import Count, Sum, F
 from django.core.serializers.json import DjangoJSONEncoder
 
+import json
+import MySQLdb
 import pandas
-from tastypie.models import ApiKey, create_api_key
-from models import Training, Score, Trainer, Question, Assessment
-from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance
-from geographies.models import State
-from django.db import connection
 import datetime
+from models import Trainer
+from geographies.models import State
+
+from tastypie.models import ApiKey
 from training.management.databases.utility import multiprocessing_dict, multiprocessing_list
 from training.management.databases.get_sql_queries import *
 from training.log.training_log import get_latest_timestamp
@@ -79,7 +78,7 @@ def extract_filters_request(request):
     return filter_args
 
 def get_pandas_dataframe(sql_query):
-    db_connection = MySQLdb.connect(host='localhost',
+    db_connection = MySQLdb.connect(host=DATABASES['default']['HOST'],
                                         user=DATABASES['default']['USER'],
                                         passwd=DATABASES['default']['PASSWORD'],
                                         db=DATABASES['default']['NAME'],
