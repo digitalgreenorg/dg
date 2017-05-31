@@ -109,7 +109,7 @@ class VideoAdmin(admin.ModelAdmin):
                 ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
     list_display = ('id', 'title', 'category',  'location', 'production_date', 'review_status', 'video_grade', 'reviewer')
-    search_fields = ['id', 'title', 'category', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
+    search_fields = ['id', 'title', 'category__category_name', 'partner__partner_name' , 'village__village_name', 'village__block__block_name', 'village__block__district__district_name','village__block__district__state__state_name' ]
     list_filter = ('review_status', 'category', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name', 'reviewer')
     list_editable = ('review_status', 'video_grade', 'reviewer')
     raw_id_fields = ('village', 'production_team', 'related_practice')
