@@ -789,7 +789,7 @@ def broadcast(request):
             broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
             if broadcast_test_form.is_valid():
                 broadcast_title = 'admin_test'
-                cluster_id = None
+                cluster_id_list = []
                 audio_file = broadcast_test_form.cleaned_data.get('audio_file')
                 to_number = broadcast_test_form.cleaned_data.get('to_number')
                 farmer_contact_detail = [{'id':None,'phone':to_number}]
@@ -800,12 +800,12 @@ def broadcast(request):
             broadcast_form = BroadcastForm(request.POST, request.FILES)
             if broadcast_form.is_valid():
                 broadcast_title = str(broadcast_form.cleaned_data.get('title'))
-                cluster_id = broadcast_form.cleaned_data.get('cluster')
+                cluster_id_list = broadcast_form.cleaned_data.get('cluster')
                 audio_file = broadcast_form.cleaned_data.get('audio_file')
                 farmer_file = broadcast_form.cleaned_data.get('farmer_file')
                 farmer_contact_detail = []
-                if cluster_id:
-                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id__in=cluster_id).values_list('village',flat=True)
+                if cluster_id_list:
+                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id__in=cluster_id_list).values_list('village',flat=True)
                     farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
                 if farmer_file:
                     farmer_file_name = save_farmer_file(broadcast_title,farmer_file)
@@ -838,7 +838,7 @@ def broadcast(request):
         audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
         s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
         # Start thread for begin broadcast.
-        Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
+        Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id_list,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
         template_data['acknowledge'] = 1
     elif request.method != 'GET':
         HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")

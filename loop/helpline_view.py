@@ -245,15 +245,15 @@ def redirect_to_broadcast(farmer_number,from_number):
         write_log(HELPLINE_LOG_FILE,module,str(e))
     connect_to_broadcast(farmer_info,broadcast_obj,from_number,BROADCAST_APP_ID)
 
-def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,from_number,broadcast_app_id):
+def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id_list,from_number,broadcast_app_id):
     # Save Broadcast Information.
     broadcast_start_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
     try:
-        broadcast_obj = Broadcast(title=broadcast_title,cluster_id=cluster_id,
-                        audio_url=s3_audio_url,start_time=broadcast_start_time,
-                        from_number=from_number
-                        )
+        broadcast_obj = Broadcast(title=broadcast_title,audio_url=s3_audio_url,
+                        start_time=broadcast_start_time,from_number=from_number)
         broadcast_obj.save()
+        for cluster_id in cluster_id_list:
+            broadcast_obj.cluster.add(cluster_id)
     except Exception as e:
         module = 'start_broadcast'
         write_log(HELPLINE_LOG_FILE,module,str(e))
