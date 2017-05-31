@@ -187,7 +187,7 @@ def get_avg_score_data_sql(**Kwargs):
 
     return args_list
 
-def trainings_mediators(**kwargs):
+def trainings_mediators_query(**kwargs):
     start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(kwargs)
     sql_query_list = []
     args_list = []
@@ -199,6 +199,76 @@ def trainings_mediators(**kwargs):
     inner_sql_ds['join'].append(['training_training tt', 'ts.training_id = tt.id'])
     inner_sql_ds['where'].append('ts.score in (0, 1)')
     inner_sql_ds['group by'].append('tt.id , ts.participant_id')
+
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('gs.state_name state, ttr.name trainer, COUNT(DISTINCT T.p_id) mediators, COUNT(DISTINCT T.t_id) trainings,0.7 * COUNT(DISTINCT T.p_id) Above70')
+
+    sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = T.t_id'])
+    sql_ds['join'].append(['training_trainer ttr','ttr.id = ttt.trainer_id'])
+    sql_ds['join'].append(['people_animator pa', 'pa.id = T.p_id'])
+    sql_ds['join'].append(['geographies_district gd','pa.district_id = gd.id'])
+    sql_ds['join'].append(['geographies_state gs','gs.id = gd.state_id'])
+    sql_ds['group by'].append('gs.id , ttr.id')
+
+    if apply_filter:
+        inner_sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+        if len(trainers_list) > 0:
+            sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
+        if len(states_list) > 0:
+            sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
+
+    inner_sql_q = join_sql_ds(inner_sql_ds)
+    sql_ds['from'].append('(' + inner_sql_q + ') T')
+    sql_q = join_sql_ds(sql_ds)
+    return sql_q
+
+def question_wise_data_query(**kwargs):
+    start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(kwargs)
+    sql_query_list = []
+    args_list = []
+
+    args_dict = {}
+    inner_sql_ds = get_init_sql_ds()
+    inner_sql_ds['select'].append('tq.id, tq.text Questions,COUNT(ts.participant_id) Mediators,count(case when ts.score = 1 then ts.score end) as Correctly_Answered,count(case when ts.score = 1 then ts.score end) / COUNT(ts.participant_id) * 100 as Percentage')
+    inner_sql_ds['from'].append('training_score ts')
+    inner_sql_ds['join'].append(['training_question tq', 'tq.id = ts.question_id'])
+    inner_sql_ds['where'].append('ts.score in (0, 1)')
+    inner_sql_ds['group by'].append('tq.id')
+
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('gs.state_name state, ttr.name trainer, COUNT(DISTINCT T.p_id) mediators, COUNT(DISTINCT T.t_id) trainings,0.7 * COUNT(DISTINCT T.p_id) Above70')
+
+    sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = T.t_id'])
+    sql_ds['join'].append(['training_trainer ttr','ttr.id = ttt.trainer_id'])
+    sql_ds['join'].append(['people_animator pa', 'pa.id = T.p_id'])
+    sql_ds['join'].append(['geographies_district gd','pa.district_id = gd.id'])
+    sql_ds['join'].append(['geographies_state gs','gs.id = gd.state_id'])
+    sql_ds['group by'].append('gs.id , ttr.id')
+
+    if apply_filter:
+        inner_sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+        if len(trainers_list) > 0:
+            sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
+        if len(states_list) > 0:
+            sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
+
+    inner_sql_q = join_sql_ds(inner_sql_ds)
+    sql_ds['from'].append('(' + inner_sql_q + ') T')
+    sql_q = join_sql_ds(sql_ds)
+    return sql_q
+
+def year_month_wise_data(**kwargs):
+    start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(kwargs)
+    sql_query_list = []
+    args_list = []
+
+    args_dict = {}
+    inner_sql_ds = get_init_sql_ds()
+    inner_sql_ds['select'].append('tq.id, tq.text,COUNT(ts.participant_id) Mediators,count(case when ts.score = 1 then ts.score end) as Correctly_Answered,count(case when ts.score = 1 then ts.score end) / COUNT(ts.participant_id) * 100 as Percentage')
+    inner_sql_ds['from'].append('training_score ts')
+    inner_sql_ds['join'].append(['training_question tq', 'tq.id = ts.question_id'])
+    inner_sql_ds['where'].append('ts.score in (0, 1)')
+    inner_sql_ds['group by'].append('tq.id')
 
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('gs.state_name state, ttr.name trainer, COUNT(DISTINCT T.p_id) mediators, COUNT(DISTINCT T.t_id) trainings,0.7 * COUNT(DISTINCT T.p_id) Above70')

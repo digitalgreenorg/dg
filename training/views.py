@@ -202,29 +202,20 @@ def trainer_wise_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
-def question_wise_data(request):
-    start_date = request.GET['start_date']
-    end_date = request.GET['end_date']
-    assessment_ids = request.GET.getlist('assessment_ids[]')
-    trainer_ids = request.GET.getlist('trainer_ids[]')
-    state_ids = request.GET.getlist('state_ids[]')
-    question_data_dict = {}
-    language_count = 0
-    language_eng_id = 2
-    filter_args = {}
-    if(start_date !=""):
-        filter_args["training__date__gte"] = start_date
-    if(end_date != ""):
-        filter_args["training__date__lte"] = end_date
-    filter_args["training__assessment__id__in"] = assessment_ids
-    filter_args["training__trainer__id__in"] = trainer_ids
-    filter_args["participant__district__state__id__in"] = state_ids
-    filter_args["score__in"] = [1, 0]
-    question_list = Score.objects.filter(**filter_args).values('question__text', 'question__language__id', 'question__section', 'question__serial').order_by('question__language_id', 'question__section', 'question__serial').annotate(Sum('score'), Count('score'), Count('participant', distinct=True))
-    language_text_eng = Question.objects.filter(language_id = language_eng_id, assessment_id__in=assessment_ids).values('text', 'section', 'serial').order_by('section', 'serial')
-    question_data_dict = {'question_list' : list(question_list), 'question_language_text_eng':list(language_text_eng)}
-    data = json.dumps(question_data_dict)
-    return HttpResponse(data)
+def question_wise_data(chart_name, result):
+    final_data_list = {}
+    try:
+        outer_data = {'outerData': {'series':[],'categories':result['Questions'].tolist()}}
+
+        temp_dict_outer = {'name':'Questions','data':[]}
+        for row in result.iterrows():
+            temp_dict_outer['data'].append({'name':row[1].Questions,'y':int(row[1].Percentage),'drilldown':null})
+
+        outer_data['outerData']['series'].append(temp_dict_outer)
+        final_data_list[chart_name] = outer_data
+    except:
+        final_data_list['error']="No data found for the filters applied"
+    return final_data_list
 
 def state_wise_data(request):
     start_date = request.GET['start_date']
@@ -385,13 +376,17 @@ def graph_data(request):
                                         use_unicode=True)
 
     if filter_args['chart_name'] in ['state__#trainings', 'state_district__#trainings']:
-
-        sql_query = trainings_mediators(**filter_args)
+        sql_query = trainings_mediators_query(**filter_args)
         result = pandas.read_sql_query(sql_query, con=db_connection)
 
         if filter_args['chart_name'] == 'state_district__#trainings':
             data_to_send = pandas_default_aggregation(filter_args['chart_name'], result)
         elif filter_args['chart_name'] == 'state__#trainings':
             data_to_send = number_of_trainings(filter_args['chart_name'], result)
+
+    if filter_args['chart_name'] in ['question_wise_data']:
+        sql_query = question_wise_data_query(**filter_args)
+        result = pandas.read_sql_query(sql_query, con=db_connection)
+        data_to_send = question_wise_data(filter_args['chart_name'], result)
 
     return HttpResponse(json.dumps(data_to_send))
