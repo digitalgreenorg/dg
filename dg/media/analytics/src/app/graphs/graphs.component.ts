@@ -12,7 +12,9 @@ import { environment } from '../../environments/environment.training';
 export class GraphsComponent implements OnInit, AfterViewInit{
     tabs = [];
     charts = [];
-
+    tabsConfig = environment.tabsConfig;
+    chartsConfig = environment.chartsConfig;
+ 
   constructor(private graphService: GraphsService, private _sharedService: SharedService) {
     this._sharedService.argsList$.subscribe(filters => {
       this.getGraphsData(filters);
@@ -21,27 +23,33 @@ export class GraphsComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void {
     //Generate tabs dynamically
-    environment.tabsConfig.forEach(tab => {
-      this.tabs.push(tab);
-    });
-    environment.chartsConfig.forEach(config => {
+    Object.keys(this.tabsConfig).forEach(tab => {
+        this.tabsConfig[tab].id = tab;
+        this.tabs.push(this.tabsConfig[tab])
+    })
+
+    Object.keys(this.chartsConfig).forEach(config => {
       //Add divs to tabs
-      environment.tabsConfig.forEach(tab => {
-        if (config.chart.tab.id === tab.id) {
-          tab.showDivs.push({
-            'id': config.chart.renderTo,
-            'class': config.chart.tab.class
+      Object.keys(this.tabsConfig).forEach(tab => {
+        if(this.chartsConfig[config].chart.tab.id === this.tabsConfig[tab].id) {
+          //Set div attributes
+          this.tabsConfig[tab].showDivs.push({
+            'id': this.chartsConfig[config].chart.renderTo,
+            'class': this.chartsConfig[config].chart.tab.class
           });
         }
       })
+      //assign key as chart name
+      this.chartsConfig[config].chartName = config
       //Add empty charts to DOM
       this.charts.push({
-        options: config,
+        options: this.chartsConfig[config],
         nativeChart: null // To be obtained with saveInstance
+
       });
     });
   }
-
+  //function to access underlying chart 
   saveInstance(chartInstance, chart) {
     chart.nativeChart = chartInstance;
   }
@@ -79,7 +87,8 @@ export class GraphsComponent implements OnInit, AfterViewInit{
     });
 
   }
-
+  
+  //Empty exting data and then fill in updated data
   private clearSeriesFromGraph(chart) {
     if (chart.nativeChart.series.length > 0) {
       for (var i = chart.nativeChart.series.length - 1; i >= 0; i--) {

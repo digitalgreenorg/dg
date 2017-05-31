@@ -1,19 +1,16 @@
-export const tabsConfig = [
-    {
-        'id' : 'tab1',
-        'heading': 'State',
-        'showDivs': []
-    },
-    {
-        'id':'tab2',
-        'heading':'Questions',
-        'columnGrid':[],
-        'showDivs':[]
-    },
-    {
-        'id':'tab3',
-        'heading':'Time Period',
-        'columnGrid':[],
-        'showDivs':[]
-    }
-]
+export const tabsConfig = {
+    'tab1':{
+            'heading': 'State',
+            'showDivs': []
+           },
+
+    'tab2':{
+            'heading':'Questions',
+            'showDivs':[]
+           },
+
+    'tab3':{
+            'heading':'Time Period',
+            'showDivs':[]
+           }
+}
