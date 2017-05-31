@@ -824,8 +824,11 @@ def broadcast(request):
                             farmer_id = row[0].strip() if row[0].strip() else None
                             farmer_no = row[1].strip()
                             farmer_contact = {'id':farmer_id, 'phone':farmer_no}
+                            print "Here"
+                            print farmer_contact
                             if farmer_contact not in farmer_contact_detail:
                                 farmer_contact_detail.append(farmer_contact)
+                print farmer_contact_detail
                     # Remove csv file from server
                     os.remove(farmer_file_name)          
             else:
@@ -838,7 +841,7 @@ def broadcast(request):
         audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
         s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
         # Start thread for begin broadcast.
-        Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id_list,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
+        #Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id_list,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
         template_data['acknowledge'] = 1
     elif request.method != 'GET':
         HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")
