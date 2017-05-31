@@ -44,14 +44,13 @@ input {
   background: #ffffff;
 }
 
-.filter-scrollbar {
-  height: 300px;
-  width: 250px;
-}
-
 .text-white {
   padding: 8px 0px 0px 32px;
   -webkit-text-fill-color: white;
+}
+
+.parent-scrollbar {
+  height: 100%;
 }
 
 .scrollBar {
