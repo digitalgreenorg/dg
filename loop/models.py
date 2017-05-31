@@ -560,7 +560,7 @@ class HelplineSmsLog(LoopModel):
 class Broadcast(LoopModel):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=50)
-    cluster = models.ForeignKey(LoopUser, blank=True, null=True)
+    cluster = models.ManyToManyField(LoopUser, related_name="associate_cluster", blank=True, null=True)
     audio_url = models.CharField(max_length=130)
     from_number = models.CharField(max_length=20)     #Exotel No.
     start_time = models.DateTimeField()
