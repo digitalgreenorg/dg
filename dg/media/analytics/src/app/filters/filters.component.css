@@ -48,10 +48,12 @@ input {
   height: 300px;
   width: 250px;
 }
+
 .text-white {
   padding: 8px 0px 0px 32px;
   -webkit-text-fill-color: white;
 }
+
 .scrollBar {
-  height:300px;
+  height: 300px;
 }

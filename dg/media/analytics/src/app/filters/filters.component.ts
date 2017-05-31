@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { Filter } from './filter';
 import { FilterElement } from './filter-element';
 import { GetFilterDataService } from '../get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { IMyOptions } from 'mydatepicker';
 import { DatePipe } from '@angular/common';
-
 
 @Component({
   selector: 'app-filters',
@@ -21,31 +20,36 @@ export class FiltersComponent implements OnInit {
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;
   showDateFilter: boolean = false;
+  invalidDate: boolean = false;
   private f_list = {};
-  private limit;
-  private myDatePickerOptions: IMyOptions = {
-    dateFormat: 'dd-mm-yyyy',
-    alignSelectorRight: true,
-    showClearDateBtn: false
-  };
   private date = new Date();
-  public startModel = {
-    date: {
-      year: this.date.getFullYear() - 1,
-      month: this.date.getMonth() + 1,
-      day: this.date.getDate() + 1
-    }
-  };
   public endModel = {
     date: {
-      year: this.date.getFullYear(),
+      day: this.date.getDate(),
       month: this.date.getMonth() + 1,
-      day: this.date.getDate()
+      year: this.date.getFullYear()
+    }
+  };
+  public startModel = {
+    date: {
+      day: new Date(this.date.setDate(this.date.getDate() + 1)).getDate(),
+      month: new Date(this.date.setMonth(this.date.getMonth() + 1)).getMonth(),
+      year: new Date(this.date.setFullYear(this.date.getFullYear() - 1)).getFullYear()
     }
   };
 
+  private myDatePickerOptions: IMyOptions = {
+    dateFormat: 'dd-mm-yyyy',
+    alignSelectorRight: true,
+    showClearDateBtn: false,
+    editableDateField: false,
+    indicateInvalidDate: true,
+    inline: false,
+    maxYear: this.date.getFullYear() + 1,
+    selectionTxtFontSize: '16px',
+  };
+
   constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, private datepipe: DatePipe) {
-    this.limit = 40;
   }
 
   ngOnInit() {
@@ -93,9 +97,22 @@ export class FiltersComponent implements OnInit {
       }
       this.f_list['apply_filter'] = "true";
     }
-    this.f_list['start_date'] = this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd');
-    this.f_list['end_date'] = this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd');
-    this.getDatatest();
+    if (this.showDateFilter) {
+      this.invalidDate = false;
+      let startDate = this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd');
+      let endDate = this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd');
+      let s_date = new Date(startDate);
+      let e_date = new Date(endDate);
+      if (s_date < e_date) {
+        this.f_list['start_date'] = startDate;
+        this.f_list['end_date'] = endDate;
+      } else {
+        this.invalidDate = true;
+      }
+    }
+    if (!this.invalidDate) {
+      this.getDatatest();
+    }
   }
 
   getDatatest(): any {
