@@ -257,7 +257,7 @@ def question_wise_data_query(**kwargs):
     sql_q = join_sql_ds(sql_ds)
     return sql_q
 
-def year_month_wise_data(**kwargs):
+def year_month_wise_data_query(**kwargs):
     start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(kwargs)
     sql_query_list = []
     args_list = []

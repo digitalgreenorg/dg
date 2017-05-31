@@ -417,4 +417,8 @@ def graph_data(request):
         result = pandas.read_sql_query(sql_query, con=db_connection)
         data_to_send = question_wise_data(filter_args['chart_name'], result)
 
+    if filter_args['chart_name'] in ['year_month_wise_data']:
+        sql_query = qyear_month_wise_data_query(**filter_args)
+        result = pandas.read_sql_query(sql_query, con=db_connection)
+        data_to_send = year_month_wise_data(filter_args['chart_name'], result)
     return HttpResponse(json.dumps(data_to_send))
