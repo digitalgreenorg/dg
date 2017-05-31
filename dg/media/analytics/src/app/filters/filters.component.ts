@@ -117,7 +117,7 @@ export class FiltersComponent implements OnInit {
 
   getDatatest(): any {
     let argstest = {
-      webUrl: 'http://localhost:8000/training/getData',
+      webUrl: '/training/getData',
       params: this.f_list
     }
     this._sharedService.publishData(argstest);

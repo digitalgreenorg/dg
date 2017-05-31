@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Rx';
 @Injectable()
 export class GraphsService {
 
-  private graphURL = 'http://localhost:8000/training/graph_data';
+  private graphURL = '/training/graph_data';
 
   constructor(private http: Http) { }
 
