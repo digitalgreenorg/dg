@@ -266,5 +266,5 @@ def graph_data(request):
     return HttpResponse(json.dumps(data_to_send))
 
 def dashboard(request):
-    return render(request, 'analytics/dist/training/compiled/index.html')
+    return render(request, 'analytics/dist/training/index.html')
     # return render(request, 'app_dashboards/training_dashboard.html')
