@@ -66,7 +66,7 @@ def get_mediators_data_sql(**Kwargs):
 
     if apply_filter:
         if len(trainers_list) > 0:
-            sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
+            sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = ts.training_id'])
             sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
         if len(states_list) > 0:
             sql_ds['join'].append(['people_animator pa', 'pa.id = ts.participant_id'])
@@ -115,7 +115,7 @@ def get_pass_perc_data_sql(**Kwargs):
 
     if apply_filter:
         if len(trainers_list) > 0:
-            inner_sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
+            inner_sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = ts.training_id'])
             inner_sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
         if len(states_list) > 0:
             inner_sql_ds['join'].append(['people_animator pa', 'pa.id = ts.participant_id'])
@@ -167,7 +167,7 @@ def get_avg_score_data_sql(**Kwargs):
 
     if apply_filter:
         if len(trainers_list) > 0:
-            inner_sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = tt.id'])
+            inner_sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = ts.training_id'])
             inner_sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
         if len(states_list) > 0:
             inner_sql_ds['join'].append(['people_animator pa', 'pa.id = ts.participant_id'])

@@ -10,7 +10,7 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class GetFilterDataService {
 
-  _baseUrl : string = "/training/get_filter_data";
+  _baseUrl : string = "http://localhost:8000/training/get_filter_data";
   private _request = new Request({
     method: 'GET',
     url: this._baseUrl

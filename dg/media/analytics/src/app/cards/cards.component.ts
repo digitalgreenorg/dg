@@ -35,7 +35,7 @@ export class CardsComponent implements OnInit {
             }
         })
         let options = {
-            webUrl: '/training/getData',
+            webUrl: 'http://localhost:8000/training/getData',
             params: {
               apply_filter: false,
             }

@@ -238,6 +238,9 @@ def graph_data(request):
 
     if filter_args['chart_name'] in ['state_trainer_#trainings', 'state_trainer_#mediators']:
         sql_query = trainings_mediators_query(**filter_args)
+        print '*******************************'
+        print sql_query
+        print '*******************************'
         result = get_pandas_dataframe(sql_query)
 
         if filter_args['chart_name'] == 'state_trainer_#mediators':
@@ -258,5 +261,5 @@ def graph_data(request):
     return HttpResponse(json.dumps(data_to_send))
 
 def dashboard(request):
-    # return render(request, 'src/index.html')
-    return render(request, 'app_dashboards/training_dashboard.html')
+    return render(request, 'dashboard_app/training/dist/index.html')
+    # return render(request, 'app_dashboards/training_dashboard.html')
