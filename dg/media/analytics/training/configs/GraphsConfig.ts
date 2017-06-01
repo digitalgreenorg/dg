@@ -12,7 +12,9 @@ export const chartsConfig = {
                           credits:{ enabled: false },
                           title: { text: 'Trainings Conducted'},
                           xAxis: { type: 'category' },
-                          yAxis: { title: { text: 'Number of Trainings' } },
+                          yAxis: {
+                                  tickInterval: 10, 
+                                  title: { text: 'Number of Trainings' } },
                           legend: { enabled: false },
                           plotOptions: {
                                         column: {
@@ -30,8 +32,18 @@ export const chartsConfig = {
                           series: [],
                           drilldown: {
                                       allowPointDrilldown: false,
+                                       drillUpButton: {
+                                                       relativeTo: 'spacingBox',
+                                                       position: {
+                                                                y: 0,
+                                                                x: -30
+                                                        },
+                                        },
                                       series: []
-                          }
+                          },
+                          lang: {
+                                drillUpText: '<< Back'
+                          },
   },
   
   'state_trainer_#mediators':{
@@ -65,9 +77,19 @@ export const chartsConfig = {
                                 },
                                 series: [],
                                 drilldown: {
+                                            drillUpButton: {
+                                                       relativeTo: 'spacingBox',
+                                                       position: {
+                                                                y: 0,
+                                                                x: -30
+                                                        },
+                                            },
                                             allowPointDrilldown: false,
                                             series: []
-                                }
+                                },
+                                lang: {
+                                        drillUpText: '<< Back'
+                                },
   },
 
   'question_wise_data':{
@@ -85,14 +107,18 @@ export const chartsConfig = {
                                 text: 'Questions Answered Correctly'
                         },
                         xAxis: { type: 'category' },
-                        yAxis: { title: { text: 'Percentage Answered'} },
+                        yAxis: {
+                                min : 0,
+                                max : 100,
+                                title: { text: 'Percentage Answered'} },
                         legend: { enabled: false },
                         plotOptions: {
                                       column: {
                                               grouping: false,
                                               borderWidth: 0,
                                               dataLabels: {
-                                                enabled: true
+                                                enabled: true,
+                                                format: '{point.y}%'
                                               }
                                       }
                         },
@@ -134,9 +160,19 @@ export const chartsConfig = {
                           },
                           series: [],
                           drilldown: {
-                            allowPointDrilldown: false,
-                            series: []
-                          }
-                        },
+                                        drillUpButton: {
+                                                       relativeTo: 'spacingBox',
+                                                       position: {
+                                                                y: 0,
+                                                                x: -30
+                                                        },
+                                        },
+                                        allowPointDrilldown: false,
+                                        series: []
+                          },
+                          lang: {
+                                drillUpText: '<< Back'
+                          },
+        },
   
 }
