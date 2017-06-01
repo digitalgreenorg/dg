@@ -198,14 +198,14 @@ def trainings_mediators_query(**kwargs):
 
     args_dict = {}
     inner_sql_ds = get_init_sql_ds()
-    inner_sql_ds['select'].append('tt.id t_id, ts.participant_id p_id, SUM(ts.score)')
+    inner_sql_ds['select'].append('tt.id t_id, ts.participant_id p_id, SUM(ts.score) Sum_')
     inner_sql_ds['from'].append('training_score ts')
     inner_sql_ds['join'].append(['training_training tt', 'ts.training_id = tt.id'])
     inner_sql_ds['where'].append('ts.score in (0, 1)')
     inner_sql_ds['group by'].append('tt.id , ts.participant_id')
 
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('gs.state_name state, ttr.name trainer, COUNT(DISTINCT T.p_id) mediators, COUNT(DISTINCT T.t_id) trainings,0.7 * COUNT(DISTINCT T.p_id) Above70')
+    sql_ds['select'].append('gs.state_name state, ttr.name trainer, COUNT(DISTINCT T.p_id) mediators, COUNT(DISTINCT T.t_id) trainings, count(case when T.Sum_ >= 11 then 1 end) Above70')
 
     sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = T.t_id'])
     sql_ds['join'].append(['training_trainer ttr','ttr.id = ttt.trainer_id'])
@@ -265,7 +265,6 @@ def year_month_wise_data_query(**kwargs):
     start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(kwargs)
     sql_query_list = []
     args_list = []
-    apply_filter = True
     args_dict = {}
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('MONTHNAME(tt.date) month, YEAR(tt.date) year, COUNT(DISTINCT tt.id) trainings')
