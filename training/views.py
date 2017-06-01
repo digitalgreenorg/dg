@@ -211,6 +211,13 @@ def pandas_default_aggregation(chart_name, result):
 def year_month_wise_data(chart_name, result):
     final_data_list = {}
     year_grouped_data = result.groupby(['year']).sum().reset_index()
+    # sorting months
+    months = {datetime.datetime(2000,i,1).strftime("%B"): i for i in range(1, 13)}
+    result['month_number'] = result['month'].map(months)
+    result = result.sort(columns=['month_number'])
+
+    month_training_dict_test = {}
+
     try:
         outer_data = {'outerData': {'series':[],'categories':year_grouped_data['year'].tolist()}}
         temp_dict_outer = {'name':'Trainings','data':[]}
@@ -220,7 +227,8 @@ def year_month_wise_data(chart_name, result):
         final_data_list[chart_name] = outer_data
 
         inner_data = {'innerData': []}
-        month_training_dict = {name:dict(zip(g['month'],g['trainings'])) for name,g in result.groupby('year')}
+        month_training_dict = {name:dict(zip(g['month'],g['trainings'])) for name,g in result.groupby(['year'])}
+
         for key,value in month_training_dict.iteritems():
             temp_dict_inner = {'data':[]}
             temp_dict_inner['name'] = str(key)
@@ -258,5 +266,5 @@ def graph_data(request):
     return HttpResponse(json.dumps(data_to_send))
 
 def dashboard(request):
-    # return render(request, 'src/index.html')
-    return render(request, 'app_dashboards/training_dashboard.html')
+    return render(request, 'analytics/dist/training/compiled/index.html')
+    # return render(request, 'app_dashboards/training_dashboard.html')

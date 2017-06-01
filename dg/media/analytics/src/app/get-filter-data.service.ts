@@ -9,7 +9,6 @@ import { environment } from '../environments/environment.training';
 
 @Injectable()
 export class GetFilterDataService {
-
   _baseUrl : string = environment.url+"get_filter_data";
   private _request = new Request({
     method: 'GET',
