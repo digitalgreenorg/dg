@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { IMyOptions } from 'mydatepicker';
 import { Filter } from './filter';
 import { FilterElement } from './filter-element';
 import { GetFilterDataService } from '../get-filter-data.service';
 import { SharedService } from '../shared.service';
-import { IMyOptions } from 'mydatepicker';
-import { DatePipe } from '@angular/common';
+import { environment } from '../../environments/environment.training';
 
 @Component({
   selector: 'app-filters',
@@ -124,7 +125,7 @@ export class FiltersComponent implements OnInit {
 
   getDatatest(): any {
     let argstest = {
-      webUrl: '/training/getData',
+      webUrl: environment.url+"getData",
       params: this.f_list
     }
     this._sharedService.publishData(argstest);

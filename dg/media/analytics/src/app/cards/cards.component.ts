@@ -35,7 +35,7 @@ export class CardsComponent implements OnInit {
             }
         })
         let options = {
-            webUrl: '/training/getData',
+            webUrl: environment.url+"getData",
             params: {
               apply_filter: false,
             }
