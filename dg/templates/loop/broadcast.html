@@ -2,6 +2,7 @@
 
 <script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
 <script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-ui12.js"></script>
+<script src="/media/assets/scripts/chosen.jquery.min.js"></script>
 <script type="text/javascript"  src="{{STATIC_URL}}loop/broadcast.js"></script>
 
 <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/jquery-ui.css" />
@@ -72,7 +73,8 @@
     <script type="text/javascript">
         jQuery(function ($) {  //on document.ready
             $("#broadcast_menu").tabs({active: {{ active_tab }} });  
-        })
+        });
+        $(".chosen-select").chosen({width: "34%"});
     </script>
 
 {% endif %}

@@ -1,3 +1,4 @@
+import os
 import json
 import xlsxwriter
 import requests
@@ -24,7 +25,8 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
-from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME
+from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME, \
+    HELPLINE_LOG_FILE
 from loop.forms import BroadcastForm, BroadcastTestForm
 import csv
 import time
@@ -47,8 +49,6 @@ import pandas as pd
 
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
-HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
-BROADCAST_AUDIO_PATH = '%s/loop/broadcast/'%(MEDIA_ROOT,)
 
 @csrf_exempt
 def login(request):
@@ -789,7 +789,7 @@ def broadcast(request):
             broadcast_test_form = BroadcastTestForm(request.POST, request.FILES)
             if broadcast_test_form.is_valid():
                 broadcast_title = 'admin_test'
-                cluster_id = None
+                cluster_id_list = []
                 audio_file = broadcast_test_form.cleaned_data.get('audio_file')
                 to_number = broadcast_test_form.cleaned_data.get('to_number')
                 farmer_contact_detail = [{'id':None,'phone':to_number}]
@@ -800,19 +800,34 @@ def broadcast(request):
             broadcast_form = BroadcastForm(request.POST, request.FILES)
             if broadcast_form.is_valid():
                 broadcast_title = str(broadcast_form.cleaned_data.get('title'))
-                cluster_id = int(broadcast_form.cleaned_data.get('cluster'))
+                cluster_id_list = broadcast_form.cleaned_data.get('cluster')
                 audio_file = broadcast_form.cleaned_data.get('audio_file')
                 farmer_file = broadcast_form.cleaned_data.get('farmer_file')
-                if(farmer_file):
-                    farmer_file_name = save_farmer_file(broadcast_title,farmer_file)
-                    farmer_contact_detail = []
-                    with open(farmer_file_name,'rb') as csvfile:
-                        customreader = csv.reader(csvfile)
-                        for row in customreader:
-                            farmer_contact_detail.append({'id':row[0], 'phone':row[1]})
-                else:
-                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id=cluster_id).values_list('village',flat=True)
+                farmer_contact_detail = []
+                if cluster_id_list:
+                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id__in=cluster_id_list).values_list('village',flat=True)
                     farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
+                if farmer_file:
+                    farmer_file_name = save_farmer_file(broadcast_title,farmer_file)
+                    # Fetch cantact from csv file
+                    with open(farmer_file_name,'rb') as csvfile:
+                        csv_header = ['id','phone']
+                        customreader = csv.reader(csvfile)
+                        # If csv file is not in correct format
+                        if customreader.next() != csv_header:
+                            broadcast_form.errors['farmer_file'] = ['Please upload csv file in correct format']
+                            template_data['broadcast_form'] = broadcast_form
+                            # Change to 1 for select Broadcast tab.
+                            template_data['active_tab'] = 1
+                            return render_to_response('loop/broadcast.html',template_data,context_instance=context)
+                        for row in customreader:
+                            farmer_id = int(row[0].strip()) if row[0].strip() else None
+                            farmer_no = row[1].strip()
+                            farmer_contact = {'id':farmer_id, 'phone':farmer_no}
+                            if farmer_contact not in farmer_contact_detail:
+                                farmer_contact_detail.append(farmer_contact)
+                    # Remove csv file from server
+                    os.remove(farmer_file_name)          
             else:
                 template_data['broadcast_form'] = broadcast_form
                 # Change to 1 for select Broadcast tab.
@@ -823,7 +838,7 @@ def broadcast(request):
         audio_file_name = save_broadcast_audio(broadcast_title,audio_file)
         s3_audio_url = BROADCAST_S3_AUDIO_URL%(audio_file_name,)
         # Start thread for begin broadcast.
-        Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
+        Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id_list,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
         template_data['acknowledge'] = 1
     elif request.method != 'GET':
         HttpResponseBadRequest("<h2>Only GET and POST requests is allow</h2>")
