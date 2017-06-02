@@ -601,6 +601,7 @@ class GaddidarResource(BaseResource):
         return bundle
 
 class VehicleLanguageResource(BaseResource):
+    language = fields.ForeignKey(LanguageResource,'language')
     
     class Meta:
         limit = 0
@@ -612,7 +613,8 @@ class VehicleLanguageResource(BaseResource):
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
-        
+    dehydrate_language = partial(
+        foreign_key_to_id, field_name='language', sub_field_names=['id','notation'])
 
 class VehicleResource(BaseResource):
     vehicles = fields.ToManyField(VehicleLanguageResource, 'vehicles', full=True, null=True, blank=True)
@@ -631,13 +633,20 @@ class VehicleResource(BaseResource):
         # apply filters from url
         languageFilter = request.GET.get('preferred_language', None) if request else None
         if languageFilter:
-            result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language_id=languageFilter)         
+            result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
         else:
             result = super(VehicleResource,self).get_object_list(request).filter()
         return result
 
     def dehydrate(self, bundle):
+
         bundle.data['online_id'] = bundle.data['id']
+        bundle.data['vehicle_name_en'] = bundle.data['vehicle_name']
+        for d in bundle.data['vehicles']:
+            if d.data['language']['notation'] == bundle.request.GET.get('preferred_language'):
+                bundle.data['vehicle_name'] = d.data['vehicle_name']
+                break
+        del bundle.data['vehicles']
         return bundle
 
 
