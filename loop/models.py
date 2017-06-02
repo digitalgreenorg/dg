@@ -296,16 +296,16 @@ class Vehicle(LoopModel):
 post_save.connect(save_log, sender=Vehicle)
 pre_delete.connect(delete_log, sender=Vehicle)
 
-# class VehicleLanguage(LoopModel):
-#     id = models.AutoField(primary_key=True)
-#     language = models.ForeignKey(Language,null=True)
-#     vehicle = models.ForeignKey(Vehicle, related_name="vehicles")
-#     vehicle_name = models.CharField(max_length=30)
+class VehicleLanguage(LoopModel):
+    id = models.AutoField(primary_key=True)
+    language = models.ForeignKey(Language,null=True)
+    vehicle = models.ForeignKey(Vehicle, related_name="vehicles")
+    vehicle_name = models.CharField(max_length=30)
 
-#     def __unicode__(self):
-#         return self.vehicle_name
-#     def __crop__(self):
-#         return "%s" % (self.vehicle.vehicle_name)
+    def __unicode__(self):
+        return self.vehicle_name
+    def __crop__(self):
+        return "%s" % (self.vehicle.vehicle_name)
         
 
 class TransportationVehicle(LoopModel):
