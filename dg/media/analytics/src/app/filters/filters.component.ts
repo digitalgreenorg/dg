@@ -120,6 +120,7 @@ export class FiltersComponent implements OnInit {
     }
     if (!this.invalidDate) {
       this.getDatatest();
+      this.closeNav();
     }
   }
 
