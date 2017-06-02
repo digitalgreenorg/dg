@@ -235,8 +235,7 @@ class Crop(LoopModel):
     id = models.AutoField(primary_key=True)
     image_path = models.CharField(
         max_length=500, default=None, null=True, blank=True)
-    crop_name = models.CharField(max_length=30, null=True, blank=True)
-    crop_name_dup = models.CharField(max_length=30, null=True, blank=True)
+    crop_name = models.CharField(max_length=30, null=False, blank=False)
     measuring_unit = models.CharField(max_length=20, default="kg")
     is_visible = models.BooleanField(default=True)
 
