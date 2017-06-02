@@ -451,16 +451,64 @@ class LoopUserResource(BaseResource):
         return [{'id': assigned_village_obj.id, 'village_name':assigned_village_obj.village_name} for assigned_village_obj in
                 set(bundle.obj.assigned_villages.all())]
 
+class BucketObject(models.Model):
+    """
+    Container to keep data that doesn't conform to any orm model, but has to be returned
+    by some resources.
+    """
+ 
+    def __init__(self, initial=None):
+        self.__dict__['_data'] = {}
+ 
+        if hasattr(initial, 'items'):
+            self.__dict__['_data'] = initial
+ 
+    def __getattr__(self, name):
+        return self._data.get(name, None)
+ 
+    def __setattr__(self, name, value):
+        self.__dict__['_data'][name] = value
+ 
+    def to_dict(self):
+        return self._data
+
+
+class CropLanguageResource(BaseResource):
+    crop = fields.ForeignKey(Crop, 'crops', null=True)
+    
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = CropLanguage.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'croplanguage'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
 class CropResource(BaseResource):
+    crops = fields.ToManyField(CropLanguageResource, 'crops', full=True, null=True, blank=True)
+
     class Meta:
         limit = 0
         max_limit = 0
         queryset = Crop.objects.all()
+        allowed_methods = ['post', 'get']
         resource_name = 'crop'
         authorization = Authorization()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
+ 
+    def get_object_list(self, request):
+        # apply filters from url
+        languageFilter = request.GET.get('preferred_language', None) if request else None
+        if languageFilter:
+            result = super(CropResource, self).get_object_list(request).filter(crops__language_id=languageFilter)         
+        else:
+            result = super(CropResource,self).get_object_list(request)
+        return result
 
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
@@ -479,9 +527,12 @@ class CropResource(BaseResource):
         return bundle
 
     def dehydrate(self, bundle):
-        bundle.data['online_id'] = bundle.data['id']
-        #bundle.data['image_path'] = bundle.data['crop_name']
-        return bundle
+       bundle.data['online_id'] = bundle.data['id']
+       bundle.data['crop_name_regional'] = bundle.data['crop_name']
+       bundle.data['crop_name'] = bundle.data['crops'][0].data['crop_name']
+       del bundle.data['crops']
+       del bundle.data['id']
+       return bundle
 
 
 class MandiResource(BaseResource):
