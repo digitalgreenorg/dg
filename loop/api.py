@@ -531,7 +531,6 @@ class CropResource(BaseResource):
         bundle.data['crop_name_regional'] = bundle.data['crop_name']
         bundle.data['crop_name'] = bundle.data['crops'][0].data['crop_name']
         del bundle.data['crops']
-        del bundle.data['id']
         return bundle
 
 
