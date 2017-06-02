@@ -523,7 +523,7 @@ class CropResource(BaseResource):
         if languageFilter:
             result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
         else:
-            result = super(CropResource,self).get_object_list(request).filter(crops__language_id=2)
+            result = super(CropResource,self).get_object_list(request).filter(crops__language_id=1)
         return result
 
     def obj_create(self, bundle, request=None, **kwargs):
