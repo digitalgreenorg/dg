@@ -16,28 +16,28 @@ class Command(BaseCommand):
         # create mutually exclusive command line switches
         group = parser.add_mutually_exclusive_group()
         group.add_argument('-fd',
-                           dest='from_date',
-                           default=None)
+                           dest='from_date',default=None,
+                           help='Enter From date in format \'yyyy-mm-dd\' without quotes')
 
         parser.add_argument('-td',
-                            dest='to_date',
-                            default=None)
+                            dest='to_date',default=None,
+                            help='Enter To date in format \'yyyy-mm-dd\' without quotes')
 
         group.add_argument('-nd',
-                           dest='last_n_days',
-                           default=None)
+                           dest='last_n_days',default=None,
+                           help='Data of last n days')
 
         group.add_argument('-lm',
-                           dest='last_n_month',
-                           default=None)
+                           dest='last_month',default=None,
+                           help='Enter 1 with this option for retrieve data of last month')
 
         parser.add_argument('-a',
-                            dest='all_data',
-                            default=None)
+                            dest='all_data',default=None,
+                            help='Enter 1 with this option for retrieve all data')
 
         parser.add_argument('-e',
-                            dest='to_email',
-                            default=None)
+                            dest='to_email',default=None,
+                            help='Enter email id to which you want to mail summary')
 
     # Cluster-wise bifurcation of calls received(farmer count, number of calls)
     def cluster_wise_bifurcation(from_date,to_date):
@@ -71,28 +71,54 @@ class Command(BaseCommand):
                 cluster_wise_call_detail[user['loop_user_id']]['total_calls'] += village_to_call_detail_map[user['village_id']]['total_calls']
         return cluster_wise_call_detail
 
-    def helpline_summary(from_date,to_date):
+    def helpline_summary(from_date,to_date,include_extra_summary=0):
         total_calls_received = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).count()
-        total_calls_expert_resolved = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).count()
         total_unique_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values_list('from_number').distinct().count()
         total_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).count()
         total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
+        total_calls_resolved = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).count()
         cluster_wise_call_detail = cluster_wise_bifurcation(from_date,to_date)
+        if include_extra_summary == 1:
+            repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
+            call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
 
     def helpline_summary_from_beginning():
         total_calls_received = HelplineCallLog.objects.filter(call_type=0).count()
         total_unique_caller = HelplineCallLog.objects.filter(call_type=0).values_list('from_number').distinct().count()
         total_repeat_caller = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).count()
         total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
-        repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
         total_calls_resolved = HelplineIncoming.objects.filter(call_status=1).count()
-        call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
         cluster_wise_call_detail = cluster_wise_bifurcation('2017-01-01',datetime.now())
+        repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
+        call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
 
 
     # generate the summary for the given command line arguments
     def handle(self, *args, **options):
         print options
-        return
         all_data = options.get('all_data')
+        last_month = options.get('last_month')
+        last_n_days = options.get('last_n_days')
+        from_date = options.get('from_date')
+        to_date = options.get('to_date')
         to_email = options.get('to_email')
+
+        if all_data != None:
+            summary_data = helpline_summary('2017-01-01',datetime.now(),1)
+            send_mail(summary_data)
+        elif last_month != None:
+            current_month = datetime.now().month
+            current_year = datetime.now().year
+            if current_month == 1:
+                from_date = '%s-12-01'%(current_year-1,)
+                to_date = '%s-12-31'%(current_year-1,)
+            else
+                from_date = '%s-%s-01'%(current_year,current_month-1)
+                to_date = '%s-%s-%s'%(current_year,current_month-1,calendar.monthrange(current_year,current_month)[1])
+                summary_data = summary_data = helpline_summary(from_date,to_date)
+                summary_data += helpline_summary('2017-01-01',datetime.now(),1)
+                send_mail(summary_data)
+        elif last_n_days != None:
+            pass
+        elif from_date != None:
+            pass
