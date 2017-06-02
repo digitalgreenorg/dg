@@ -54,6 +54,12 @@ export class GraphsComponent implements OnInit, AfterViewInit{
     chart.nativeChart = chartInstance;
   }
 
+  chartReflow(tabHeading): void {
+    this.charts.forEach(chart => {
+      chart.nativeChart.reflow();
+    })
+  }
+
   ngAfterViewInit(): void {
     this.getGraphsData({ 'params': {} });
   }
