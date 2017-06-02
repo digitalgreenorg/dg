@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from tastypie.exceptions import ImmediateHttpResponse, NotFound, BadRequest
 from tastypie.authentication import Authentication, ApiKeyAuthentication
 from tastypie.authorization import Authorization
@@ -472,9 +474,21 @@ class BucketObject(models.Model):
     def to_dict(self):
         return self._data
 
-
+class LanguageResource(BaseResource):
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = Language.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'language'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+    
+        
 class CropLanguageResource(BaseResource):
-    crop = fields.ForeignKey(Crop, 'crops', null=True)
+    language = fields.ForeignKey(LanguageResource,'language')
     
     class Meta:
         limit = 0
@@ -486,6 +500,8 @@ class CropLanguageResource(BaseResource):
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
+    dehydrate_language = partial(
+        foreign_key_to_id, field_name='language', sub_field_names=['id','notation'])
 
 class CropResource(BaseResource):
     crops = fields.ToManyField(CropLanguageResource, 'crops', full=True, null=True, blank=True)
@@ -527,9 +543,13 @@ class CropResource(BaseResource):
         return bundle
 
     def dehydrate(self, bundle):
+
         bundle.data['online_id'] = bundle.data['id']
-        bundle.data['crop_name_regional'] = bundle.data['crop_name']
-        bundle.data['crop_name'] = bundle.data['crops'][0].data['crop_name']
+        bundle.data['crop_name_en'] = bundle.data['crop_name']
+        for d in bundle.data['crops']:
+            if d.data['language']['notation'] == bundle.request.GET.get('preferred_language'):
+                bundle.data['crop_name'] = d.data['crop_name']
+                break
         del bundle.data['crops']
         return bundle
 
