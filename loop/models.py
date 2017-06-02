@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
@@ -296,7 +297,7 @@ class Vehicle(LoopModel):
 post_save.connect(save_log, sender=Vehicle)
 pre_delete.connect(delete_log, sender=Vehicle)
 
-class VehicleLanguage(LoopModel):
+class VehicleLanguage(models.Model):
     id = models.AutoField(primary_key=True)
     language = models.ForeignKey(Language,null=True)
     vehicle = models.ForeignKey(Vehicle, related_name="vehicles")
