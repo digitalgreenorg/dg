@@ -58,7 +58,7 @@ class State(LoopModel):
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
     crop_add = models.BooleanField(default=False)
     phone_digit = models.CharField(default=10, max_length=2, blank=True, null=True)
-    phone_start = models.CharField(default=789, max_length=4, blank=True, null=True)
+    phone_start = models.CharField(default=789, max_length=15, blank=True, null=True)
     def __unicode__(self):
         return self.state_name
 
