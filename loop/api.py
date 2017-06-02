@@ -505,7 +505,7 @@ class CropResource(BaseResource):
         # apply filters from url
         languageFilter = request.GET.get('preferred_language', None) if request else None
         if languageFilter:
-            result = super(CropResource, self).get_object_list(request).filter(crops__language_id=languageFilter)         
+            result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
         else:
             result = super(CropResource,self).get_object_list(request).filter(crops__language_id=2)
         return result
