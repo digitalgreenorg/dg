@@ -507,7 +507,7 @@ class CropResource(BaseResource):
         if languageFilter:
             result = super(CropResource, self).get_object_list(request).filter(crops__language_id=languageFilter)         
         else:
-            result = super(CropResource,self).get_object_list(request)
+            result = super(CropResource,self).get_object_list(request).filter(crops__language_id=2)
         return result
 
     def obj_create(self, bundle, request=None, **kwargs):
@@ -527,12 +527,12 @@ class CropResource(BaseResource):
         return bundle
 
     def dehydrate(self, bundle):
-       bundle.data['online_id'] = bundle.data['id']
-       bundle.data['crop_name_regional'] = bundle.data['crop_name']
-       bundle.data['crop_name'] = bundle.data['crops'][0].data['crop_name']
-       del bundle.data['crops']
-       del bundle.data['id']
-       return bundle
+        bundle.data['online_id'] = bundle.data['id']
+        bundle.data['crop_name_regional'] = bundle.data['crop_name']
+        bundle.data['crop_name'] = bundle.data['crops'][0].data['crop_name']
+        del bundle.data['crops']
+        del bundle.data['id']
+        return bundle
 
 
 class MandiResource(BaseResource):
