@@ -581,8 +581,24 @@ class GaddidarResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
+class VehicleLanguageResource(BaseResource):
+    vehicle = fields.ForeignKey(Vehicle, 'vehicles', null=True)
+    
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = VehicleLanguage.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'vehiclelanguage'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+        
 
 class VehicleResource(BaseResource):
+    vehicles = fields.ToManyField(VehicleLanguageResource, 'vehicles', full=True, null=True, blank=True)
+
     class Meta:
         limit = 0
         max_limit = 0
@@ -592,6 +608,15 @@ class VehicleResource(BaseResource):
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
+
+    def get_object_list(self, request):
+        # apply filters from url
+        languageFilter = request.GET.get('preferred_language', None) if request else None
+        if languageFilter:
+            result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language_id=languageFilter)         
+        else:
+            result = super(VehicleResource,self).get_object_list(request).filter(vehicles__language_id=2)
+        return result
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
