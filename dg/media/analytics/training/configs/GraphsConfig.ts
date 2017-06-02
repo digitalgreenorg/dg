@@ -2,7 +2,7 @@ export const chartsConfig = {
   'state_trainer_#trainings' : {
                           chart: {
                                   type: 'column',
-                                  renderTo: 'column_tab_3',
+                                  renderTo: 'graph_1',
                                   tab: {
                                         'id': 'tab1',
                                         'class':'col-sm-6'
@@ -49,7 +49,7 @@ export const chartsConfig = {
   'state_trainer_#mediators':{
                                 chart: {
                                         type: 'column',
-                                        renderTo: 'column',
+                                        renderTo: 'graph_2',
                                         tab: {
                                             'id': 'tab1',
                                             'class':'col-sm-6'
