@@ -8,8 +8,6 @@ from django.db.models import Count, Sum
 
 from loop.models import HelplineIncoming, HelplineCallLog
 
-from loop.utils.ivr_helpline.helpline_data import helpline_data
-
 class Command(BaseCommand):
     # parse arguments from command line
     def add_arguments(self, parser):
@@ -106,7 +104,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
             for expert in call_resoved_per_expert:
                 summary_data = '%s    %s'%(expert['resolved_by__name'],expert['call_count'])
         return summary_data
-        
+
     def helpline_summary_from_beginning():
         total_calls_received = HelplineCallLog.objects.filter(call_type=0).count()
         total_unique_caller = HelplineCallLog.objects.filter(call_type=0).values_list('from_number').distinct().count()
@@ -120,7 +118,6 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
 
     # generate the summary for the given command line arguments
     def handle(self, *args, **options):
-        print options
         all_data = options.get('all_data')
         last_month = options.get('last_month')
         last_n_days = options.get('last_n_days')
@@ -129,7 +126,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
         to_email = options.get('to_email')
 
         if all_data != None:
-            summary_data = helpline_summary('2017-01-01',datetime.now().date(),1)
+            summary_data = self.helpline_summary('2017-01-01',datetime.now().date(),1)
             email_subject = 'Loop helpline Summary from the begining'
             self.send_mail(summary_data)
         elif last_month != None:
@@ -138,23 +135,24 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
             if current_month == 1:
                 from_date = '%s-12-01'%(current_year-1,)
                 to_date = '%s-12-31'%(current_year-1,)
-            else
+            else:
                 from_date = '%s-%s-01'%(current_year,current_month-1)
                 to_date = '%s-%s-%s'%(current_year,current_month-1,calendar.monthrange(current_year,current_month)[1])
-            summary_data = helpline_summary(from_date,to_date)
+            summary_data = self.helpline_summary(from_date,to_date)
             summary_data += '\n\nHelpline Summary from Begining.\n\n'
-            summary_data += helpline_summary('2017-01-01',datetime.now().date(),1)
+            summary_data += self.helpline_summary('2017-01-01',datetime.now().date(),1)
             email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date,to_date)
             self.send_mail(summary_data,email_subject)
         elif last_n_days != None:
+            print "I am here"
             from_date = datetime.now().date()-timedelta(days=int(last_n_days))
             to_date = datetime.now().date()-timedelta(days=1)
             if from_date == from_date:
                 email_subject = 'Loop helpline Summary for %s'%(from_date,)
             else:
                 email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
-
-            summary_data = helpline_summary(from_date,to_date)
+            print "I am now here"
+            summary_data = self.helpline_summary(from_date,to_date)
             self.send_mail(summary_data,email_subject)
         elif from_date != None:
             if not to_date:
@@ -164,5 +162,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
                 print 'From date is greater than current date'
                 return
             email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
-            summary_data = helpline_summary(from_date,to_date)
+            summary_data = self.helpline_summary(from_date,to_date)
             self.send_mail(summary_data,email_subject)
+        else:
+            print "Please Enter atleast one choice, user -h option for see available options"
