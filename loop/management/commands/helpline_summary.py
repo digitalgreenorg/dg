@@ -41,14 +41,11 @@ class Command(BaseCommand):
 
     # send Email
     def send_mail(self,summary_data,subject):
-
-        working_hours_start = helpline_data['working_hours_start']
-        working_hours_end = helpline_data['working_hours_end']
-        today_date = datetime.datetime.now().date()
-        yesterday_date = today_date-timedelta(days=1)
         from_email = dg.settings.EMAIL_HOST_USER
         to_email = ['vikas@digitalgreen.org']
-        body = summary_data
+        body = 'Dear Team,\n\nThis is the status of calls on LOOP IVR Helpline number:'
+        body += summary_data
+        body += 'Please contact system@digitalgreen.org for any clarification.\nThanks you.'
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         msg.send()
 
@@ -91,10 +88,25 @@ class Command(BaseCommand):
         total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
         total_calls_resolved = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).count()
         cluster_wise_call_detail = cluster_wise_bifurcation(from_date,to_date)
+        repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
+        if from_date == to_date:
+            summary_data = 'Total Calls Received: %s\nTotal Calls Handled by experts: %s\n\
+Total Unique Callers: %s\nCluster-wise bifurcation of calls received:\n'%(total_calls_received,total_calls_resolved,
+        total_unique_caller)
+        else:
+            summary_data = 'Total Calls Received: %s\nTotal Unique Callers: %s\n\
+Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
+%% of calls contributed by repeat callers: %s\Cluster-wise bifurcation of calls received:\nCluster Name         Farmer Count        No of calls'%(total_calls_received,
+        total_unique_caller,total_repeat_caller,total_calls_from_repeat_caller,repeat_caller_contribute_percentage)
+        for cluster in cluster_wise_call_detail:
+            summary_data += '%s    %s       %s',(cluster['cluster_name'],cluster['farmer_count'],cluster['total_calls'])
         if include_extra_summary == 1:
-            repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
             call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
-
+            summary_data += 'Total Calls Handled by experts: %s\nBifurcation of calls per expert:\nExpert Name          No of calls handled\n'
+            for expert in call_resoved_per_expert:
+                summary_data = '%s    %s'%(expert['resolved_by__name'],expert['call_count'])
+        return summary_data
+        
     def helpline_summary_from_beginning():
         total_calls_received = HelplineCallLog.objects.filter(call_type=0).count()
         total_unique_caller = HelplineCallLog.objects.filter(call_type=0).values_list('from_number').distinct().count()
@@ -118,7 +130,8 @@ class Command(BaseCommand):
 
         if all_data != None:
             summary_data = helpline_summary('2017-01-01',datetime.now().date(),1)
-            send_mail(summary_data)
+            email_subject = 'Loop helpline Summary from the begining'
+            self.send_mail(summary_data)
         elif last_month != None:
             current_month = datetime.now().month
             current_year = datetime.now().year
@@ -129,13 +142,20 @@ class Command(BaseCommand):
                 from_date = '%s-%s-01'%(current_year,current_month-1)
                 to_date = '%s-%s-%s'%(current_year,current_month-1,calendar.monthrange(current_year,current_month)[1])
             summary_data = helpline_summary(from_date,to_date)
+            summary_data += '\n\nHelpline Summary from Begining.\n\n'
             summary_data += helpline_summary('2017-01-01',datetime.now().date(),1)
-            send_mail(summary_data)
+            email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date,to_date)
+            self.send_mail(summary_data,email_subject)
         elif last_n_days != None:
             from_date = datetime.now().date()-timedelta(days=int(last_n_days))
-            to_date = datetime.now().date()
+            to_date = datetime.now().date()-timedelta(days=1)
+            if from_date == from_date:
+                email_subject = 'Loop helpline Summary for %s'%(from_date,)
+            else:
+                email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
+
             summary_data = helpline_summary(from_date,to_date)
-            send_mail(summary_data)
+            self.send_mail(summary_data,email_subject)
         elif from_date != None:
             if not to_date:
                 print 'Please enter to_date with -td option'
@@ -143,5 +163,6 @@ class Command(BaseCommand):
             elif from_date > current_date:
                 print 'From date is greater than current date'
                 return
+            email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
             summary_data = helpline_summary(from_date,to_date)
-            send_mail(summary_data)
+            self.send_mail(summary_data,email_subject)
