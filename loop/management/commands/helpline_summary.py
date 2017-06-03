@@ -39,6 +39,19 @@ class Command(BaseCommand):
                             dest='to_email',default=None,
                             help='Enter email id to which you want to mail summary')
 
+    # send Email
+    def send_mail(self,summary_data,subject):
+
+        working_hours_start = helpline_data['working_hours_start']
+        working_hours_end = helpline_data['working_hours_end']
+        today_date = datetime.datetime.now().date()
+        yesterday_date = today_date-timedelta(days=1)
+        from_email = dg.settings.EMAIL_HOST_USER
+        to_email = ['vikas@digitalgreen.org']
+        body = summary_data
+        msg = EmailMultiAlternatives(subject, body, from_email, to_email)
+        msg.send()
+
     # Cluster-wise bifurcation of calls received(farmer count, number of calls)
     def cluster_wise_bifurcation(from_date,to_date):
         phone_to_village_map = dict()
@@ -88,7 +101,7 @@ class Command(BaseCommand):
         total_repeat_caller = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).count()
         total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
         total_calls_resolved = HelplineIncoming.objects.filter(call_status=1).count()
-        cluster_wise_call_detail = cluster_wise_bifurcation('2017-01-01',datetime.now())
+        cluster_wise_call_detail = cluster_wise_bifurcation('2017-01-01',datetime.now().date())
         repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
         call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
 
@@ -104,7 +117,7 @@ class Command(BaseCommand):
         to_email = options.get('to_email')
 
         if all_data != None:
-            summary_data = helpline_summary('2017-01-01',datetime.now(),1)
+            summary_data = helpline_summary('2017-01-01',datetime.now().date(),1)
             send_mail(summary_data)
         elif last_month != None:
             current_month = datetime.now().month
@@ -115,10 +128,20 @@ class Command(BaseCommand):
             else
                 from_date = '%s-%s-01'%(current_year,current_month-1)
                 to_date = '%s-%s-%s'%(current_year,current_month-1,calendar.monthrange(current_year,current_month)[1])
-                summary_data = summary_data = helpline_summary(from_date,to_date)
-                summary_data += helpline_summary('2017-01-01',datetime.now(),1)
-                send_mail(summary_data)
+            summary_data = helpline_summary(from_date,to_date)
+            summary_data += helpline_summary('2017-01-01',datetime.now().date(),1)
+            send_mail(summary_data)
         elif last_n_days != None:
-            pass
+            from_date = datetime.now().date()-timedelta(days=int(last_n_days))
+            to_date = datetime.now().date()
+            summary_data = helpline_summary(from_date,to_date)
+            send_mail(summary_data)
         elif from_date != None:
-            pass
+            if not to_date:
+                print 'Please enter to_date with -td option'
+                return
+            elif from_date > current_date:
+                print 'From date is greater than current date'
+                return
+            summary_data = helpline_summary(from_date,to_date)
+            send_mail(summary_data)
