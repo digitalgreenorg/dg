@@ -17,12 +17,9 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_R
     ACCESS_KEY, SECRET_KEY, BROADCAST_APP_ID
 
 from loop.utils.ivr_helpline.helpline_data import CALL_STATUS_URL, CALL_REQUEST_URL, \
-    CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL, BROADCAST_RESPONSE_URL, \
-    BROADCAST_S3_BUCKET_NAME, BROADCAST_S3_UPLOAD_PATH, BROADCAST_PENDING_TIME
-
-HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
-BROADCAST_AUDIO_PATH = '%s/loop/broadcast/audio/'%(MEDIA_ROOT,)
-BROADCAST_FARMER_PATH = '%s/loop/broadcast/farmer/'%(MEDIA_ROOT,)
+    CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL, HELPLINE_LOG_FILE, \
+    BROADCAST_RESPONSE_URL, BROADCAST_S3_BUCKET_NAME, BROADCAST_S3_UPLOAD_PATH, \
+    BROADCAST_PENDING_TIME, BROADCAST_AUDIO_PATH, BROADCAST_FARMER_PATH
 
 def write_log(log_file,module,log):
     curr_india_time = datetime.datetime.now(timezone('Asia/Kolkata'))
@@ -248,15 +245,15 @@ def redirect_to_broadcast(farmer_number,from_number):
         write_log(HELPLINE_LOG_FILE,module,str(e))
     connect_to_broadcast(farmer_info,broadcast_obj,from_number,BROADCAST_APP_ID)
 
-def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id,from_number,broadcast_app_id):
+def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id_list,from_number,broadcast_app_id):
     # Save Broadcast Information.
     broadcast_start_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
     try:
-        broadcast_obj = Broadcast(title=broadcast_title,cluster_id=cluster_id,
-                        audio_url=s3_audio_url,start_time=broadcast_start_time,
-                        from_number=from_number
-                        )
+        broadcast_obj = Broadcast(title=broadcast_title,audio_url=s3_audio_url,
+                        start_time=broadcast_start_time,from_number=from_number)
         broadcast_obj.save()
+        for cluster_id in cluster_id_list:
+            broadcast_obj.cluster.add(cluster_id)
     except Exception as e:
         module = 'start_broadcast'
         write_log(HELPLINE_LOG_FILE,module,str(e))
@@ -314,9 +311,4 @@ def save_farmer_file(file_name, farmer_file):
         for chunk in farmer_file.chunks():
             broadcast_farmers.write(chunk)
         broadcast_farmers.close()
-    # upload_on_s3(audio_file_path,audio_file_name,
-    #             BROADCAST_S3_BUCKET_NAME,BROADCAST_S3_UPLOAD_PATH,
-    #             'public-read')
-    # delete local uploaded audio file.
-    # os.remove(audio_file_path)
     return farmer_file_path
