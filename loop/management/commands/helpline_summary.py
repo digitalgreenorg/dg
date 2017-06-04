@@ -91,7 +91,10 @@ class Command(BaseCommand):
             total_calls_from_repeat_caller = 0
         total_calls_resolved = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).count()
         cluster_wise_call_detail = self.cluster_wise_bifurcation(from_date,to_date)
-        repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
+        if total_calls_received > 0:
+            repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
+        else
+            repeat_caller_contribute_percentage = 0
         summary_data = '<html>'
         summary_data += '<head><style>table, th, td {border: 1px solid black;}</style></head><body>'
         if from_date == to_date:
