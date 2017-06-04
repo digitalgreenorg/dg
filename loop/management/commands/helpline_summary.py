@@ -87,6 +87,8 @@ class Command(BaseCommand):
         total_unique_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values_list('from_number').distinct().count()
         total_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).count()
         total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
+        if total_calls_from_repeat_caller == None:
+            total_calls_from_repeat_caller = 0
         total_calls_resolved = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).count()
         cluster_wise_call_detail = self.cluster_wise_bifurcation(from_date,to_date)
         repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
