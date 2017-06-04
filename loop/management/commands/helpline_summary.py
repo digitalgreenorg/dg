@@ -7,6 +7,7 @@ from django.utils.timezone import now
 from django.db.models import Count, Sum
 
 from loop.models import HelplineIncoming, HelplineCallLog, Farmer, LoopUserAssignedVillage
+from dg.settings import EMAIL_HOST_USER
 
 class Command(BaseCommand):
     # parse arguments from command line
@@ -39,11 +40,11 @@ class Command(BaseCommand):
 
     # send Email
     def send_mail(self,summary_data,subject):
-        from_email = dg.settings.EMAIL_HOST_USER
+        from_email = EMAIL_HOST_USER
         to_email = ['vikas@digitalgreen.org']
-        body = 'Dear Team,\n\nThis is the status of calls on LOOP IVR Helpline number:'
+        body = 'Dear Team,\n\nThis is the status of calls on LOOP IVR Helpline number:\n\n'
         body += summary_data
-        body += 'Please contact system@digitalgreen.org for any clarification.\nThanks you.'
+        body += '\nPlease contact system@digitalgreen.org for any clarification.\n\nThanks you.'
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         msg.send()
 
@@ -94,15 +95,15 @@ Total Unique Callers: %s\nCluster-wise bifurcation of calls received:\n'%(total_
         else:
             summary_data = 'Total Calls Received: %s\nTotal Unique Callers: %s\n\
 Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
-%% of calls contributed by repeat callers: %s\Cluster-wise bifurcation of calls received:\nCluster Name         Farmer Count        No of calls'%(total_calls_received,
+%% of calls contributed by repeat callers: %s\Cluster-wise bifurcation of calls received:\n\nCluster Name         Farmer Count        No of calls\n'%(total_calls_received,
         total_unique_caller,total_repeat_caller,total_calls_from_repeat_caller,repeat_caller_contribute_percentage)
         for cluster in cluster_wise_call_detail:
-            summary_data += '%s    %s       %s',(cluster['cluster_name'],cluster['farmer_count'],cluster['total_calls'])
+            summary_data += '%s    %s       %s\n'%(cluster_wise_call_detail[cluster]['cluster_name'],cluster_wise_call_detail[cluster]['farmer_count'],cluster_wise_call_detail[cluster]['total_calls'])
         if include_extra_summary == 1:
             call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
-            summary_data += 'Total Calls Handled by experts: %s\nBifurcation of calls per expert:\nExpert Name          No of calls handled\n'
+            summary_data += '\nTotal Calls Handled by experts: %s\nBifurcation of calls per expert:\n\nExpert Name          No of calls handled\n'
             for expert in call_resoved_per_expert:
-                summary_data = '%s    %s'%(expert['resolved_by__name'],expert['call_count'])
+                summary_data = '%s    %s\n'%(expert['resolved_by__name'],expert['call_count'])
         return summary_data
 
     def helpline_summary_from_beginning():
@@ -144,14 +145,12 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
             email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date,to_date)
             self.send_mail(summary_data,email_subject)
         elif last_n_days != None:
-            print "I am here"
             from_date = datetime.now().date()-timedelta(days=int(last_n_days))
             to_date = datetime.now().date()-timedelta(days=1)
-            if from_date == from_date:
+            if from_date == to_date:
                 email_subject = 'Loop helpline Summary for %s'%(from_date,)
             else:
-                email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
-            print "I am now here"
+                email_subject = 'Loop helpline Summary from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
             summary_data = self.helpline_summary(from_date,to_date)
             self.send_mail(summary_data,email_subject)
         elif from_date != None:
