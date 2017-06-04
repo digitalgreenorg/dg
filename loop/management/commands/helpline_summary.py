@@ -48,7 +48,7 @@ class Command(BaseCommand):
         msg.send()
 
     # Cluster-wise bifurcation of calls received(farmer count, number of calls)
-    def cluster_wise_bifurcation(from_date,to_date):
+    def cluster_wise_bifurcation(self,from_date,to_date):
         phone_to_village_map = dict()
         village_to_call_detail_map = dict()
         cluster_wise_call_detail = dict()
@@ -128,7 +128,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
         if all_data != None:
             summary_data = self.helpline_summary('2017-01-01',datetime.now().date(),1)
             email_subject = 'Loop helpline Summary from the begining'
-            self.send_mail(summary_data)
+            self.send_mail(summary_data,email_subject)
         elif last_month != None:
             current_month = datetime.now().month
             current_year = datetime.now().year
