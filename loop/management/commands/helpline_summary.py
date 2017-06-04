@@ -104,7 +104,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
             call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
             summary_data += '\nTotal Calls Handled by experts: %s\nBifurcation of calls per expert:\n\nExpert Name          No of calls handled\n'%(total_calls_resolved,)
             for expert in call_resoved_per_expert:
-                summary_data = '%s            %s\n'%(expert['resolved_by__name'],expert['call_count'])
+                summary_data += '%s            %s\n'%(expert['resolved_by__name'],expert['call_count'])
         return summary_data
 
     def helpline_summary_from_beginning():
