@@ -141,7 +141,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
                 to_date = '%s-01-01'%(current_year,)
             else:
                 from_date = '%s-%s-01'%(current_year,current_month-1)
-                to_date = '%s-%s-01'%(current_year,)
+                to_date = '%s-%s-01'%(current_year,current_month)
             summary_data = self.helpline_summary(from_date,to_date)
             summary_data += '<br/><br/>Helpline Summary from Begining.<br/><br/>'
             summary_data += self.helpline_summary('2017-01-01',datetime.now().date(),1)
