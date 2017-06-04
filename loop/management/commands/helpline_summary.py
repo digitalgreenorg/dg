@@ -138,10 +138,10 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
             current_year = datetime.now().year
             if current_month == 1:
                 from_date = '%s-12-01'%(current_year-1,)
-                to_date = '%s-12-31'%(current_year-1,)
+                to_date = '%s-01-01'%(current_year,)
             else:
                 from_date = '%s-%s-01'%(current_year,current_month-1)
-                to_date = '%s-%s-%s'%(current_year,current_month-1,calendar.monthrange(current_year,current_month)[1])
+                to_date = '%s-%s-01'%(current_year,)
             summary_data = self.helpline_summary(from_date,to_date)
             summary_data += '<br/><br/>Helpline Summary from Begining.<br/><br/>'
             summary_data += self.helpline_summary('2017-01-01',datetime.now().date(),1)
@@ -149,11 +149,11 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
             self.send_mail(summary_data,email_subject)
         elif last_n_days != None:
             from_date = datetime.now().date()-timedelta(days=int(last_n_days))
-            to_date = datetime.now().date()-timedelta(days=1)
-            if from_date == to_date:
+            to_date = datetime.now().date()
+            if last_n_days == 1:
                 email_subject = 'Loop helpline Summary for %s'%(from_date,)
             else:
-                email_subject = 'Loop helpline Summary from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
+                email_subject = 'Loop helpline Summary from %s to %s'%(from_date.strftime("%Y-%m-%d"),(datetime.now().date()-timedelta(days=1)).strftime("%Y-%m-%d"))
             summary_data = self.helpline_summary(from_date,to_date)
             self.send_mail(summary_data,email_subject)
         elif from_date != None:
