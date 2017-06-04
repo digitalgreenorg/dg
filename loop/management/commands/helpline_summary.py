@@ -47,6 +47,7 @@ class Command(BaseCommand):
         body += summary_data
         body += '\nPlease contact system@digitalgreen.org for any clarification.\n\nThanks you.'
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
+        msg.content_subtype = "html"
         msg.send()
 
     # Cluster-wise bifurcation of calls received(farmer count, number of calls)
@@ -89,22 +90,29 @@ class Command(BaseCommand):
         total_calls_resolved = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).count()
         cluster_wise_call_detail = self.cluster_wise_bifurcation(from_date,to_date)
         repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
+        summary_data = '<html>'
+        summary_data += '<head><style>table, th, td {border: 1px solid black;}</style></head><body>'
         if from_date == to_date:
-            summary_data = 'Total Calls Received: %s\nTotal Calls Handled by experts: %s\n\
+            summary_data += 'Total Calls Received: %s\nTotal Calls Handled by experts: %s\n\
 Total Unique Callers: %s\nCluster-wise bifurcation of calls received:\n'%(total_calls_received,total_calls_resolved,
         total_unique_caller)
         else:
-            summary_data = 'Total Calls Received: %s\nTotal Unique Callers: %s\n\
+            summary_data += 'Total Calls Received: %s\nTotal Unique Callers: %s\n\
 Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
-%% of calls contributed by repeat callers: %s\nCluster-wise bifurcation of calls received:\n\nCluster Name         Farmer Count        No of calls\n'%(total_calls_received,
+%% of calls contributed by repeat callers: %s\nCluster-wise bifurcation of calls received:\n\n'%(total_calls_received,
         total_unique_caller,total_repeat_caller,total_calls_from_repeat_caller,repeat_caller_contribute_percentage)
+        summary_data += '<table><tr><th>Cluster Name</th><th>Farmer Count</th><th>No of calls</th></tr>'
         for cluster in cluster_wise_call_detail:
-            summary_data += '%s                   %s                              %s\n'%(cluster_wise_call_detail[cluster]['cluster_name'],cluster_wise_call_detail[cluster]['farmer_count'],cluster_wise_call_detail[cluster]['total_calls'])
+            summary_data += '<tr><td>%s</td><td>%s</td><td>%s</td></tr>'%(cluster_wise_call_detail[cluster]['cluster_name'],cluster_wise_call_detail[cluster]['farmer_count'],cluster_wise_call_detail[cluster]['total_calls'])
+        summary_data += '</table>'
         if include_extra_summary == 1:
             call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
-            summary_data += '\nTotal Calls Handled by experts: %s\nBifurcation of calls per expert:\n\nExpert Name          No of calls handled\n'%(total_calls_resolved,)
+            summary_data += '\nTotal Calls Handled by experts: %s\nBifurcation of calls per expert:\n\n'%(total_calls_resolved,)
+            summary_data += '<table><tr><th>Expert Name</th><th>No of calls handled</th></tr>'
             for expert in call_resoved_per_expert:
-                summary_data += '%s            %s\n'%(expert['resolved_by__name'],expert['call_count'])
+                summary_data += '<tr><td>%s</td><td>%s</td></tr>'%(expert['resolved_by__name'],expert['call_count'])
+            summary_data += '</table>'
+        summary_data += '</body><html>'
         return summary_data
 
     def helpline_summary_from_beginning():
