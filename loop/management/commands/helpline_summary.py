@@ -42,7 +42,7 @@ class Command(BaseCommand):
     # send Email
     def send_mail(self,summary_data,subject):
         from_email = EMAIL_HOST_USER
-        to_email = ['vikas@digitalgreen.org']
+        to_email = ['vikas@digitalgreen.org','erica@digitalgreen.org','lokesh@digitalgreen.org','divish@digitalgreen.org']
         body = 'Dear Team,<br/><br/>This is the status of calls on LOOP IVR Helpline number:<br/><br/>'
         body += summary_data
         body += '<br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thanks you.'
