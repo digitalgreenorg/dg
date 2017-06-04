@@ -93,7 +93,7 @@ class Command(BaseCommand):
         cluster_wise_call_detail = self.cluster_wise_bifurcation(from_date,to_date)
         if total_calls_received > 0:
             repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
-        else
+        else:
             repeat_caller_contribute_percentage = 0
         summary_data = '<html>'
         summary_data += '<head><style>table, th, td {border: 1px solid black;}</style></head><body>'
