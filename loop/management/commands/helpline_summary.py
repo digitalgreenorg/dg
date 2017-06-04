@@ -150,7 +150,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
         elif last_n_days != None:
             from_date = datetime.now().date()-timedelta(days=int(last_n_days))
             to_date = datetime.now().date()
-            if last_n_days == 1:
+            if last_n_days == '1':
                 email_subject = 'Loop helpline Summary for %s'%(from_date,)
             else:
                 email_subject = 'Loop helpline Summary from %s to %s'%(from_date.strftime("%Y-%m-%d"),(datetime.now().date()-timedelta(days=1)).strftime("%Y-%m-%d"))
