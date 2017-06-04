@@ -6,7 +6,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.utils.timezone import now
 from django.db.models import Count, Sum
 
-from loop.models import HelplineIncoming, HelplineCallLog
+from loop.models import HelplineIncoming, HelplineCallLog, Farmer, LoopUserAssignedVillage
 
 class Command(BaseCommand):
     # parse arguments from command line
@@ -85,8 +85,8 @@ class Command(BaseCommand):
         total_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).count()
         total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
         total_calls_resolved = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).count()
-        cluster_wise_call_detail = cluster_wise_bifurcation(from_date,to_date)
-        repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
+        cluster_wise_call_detail = self.cluster_wise_bifurcation(from_date,to_date)
+        repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
         if from_date == to_date:
             summary_data = 'Total Calls Received: %s\nTotal Calls Handled by experts: %s\n\
 Total Unique Callers: %s\nCluster-wise bifurcation of calls received:\n'%(total_calls_received,total_calls_resolved,
@@ -111,7 +111,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
         total_repeat_caller = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).count()
         total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
         total_calls_resolved = HelplineIncoming.objects.filter(call_status=1).count()
-        cluster_wise_call_detail = cluster_wise_bifurcation('2017-01-01',datetime.now().date())
+        cluster_wise_call_detail = self.cluster_wise_bifurcation('2017-01-01',datetime.now().date())
         repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls,2)
         call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
 
