@@ -43,9 +43,9 @@ class Command(BaseCommand):
     def send_mail(self,summary_data,subject):
         from_email = EMAIL_HOST_USER
         to_email = ['vikas@digitalgreen.org']
-        body = 'Dear Team,\n\nThis is the status of calls on LOOP IVR Helpline number:\n\n'
+        body = 'Dear Team,<br/><br/>This is the status of calls on LOOP IVR Helpline number:<br/><br/>'
         body += summary_data
-        body += '\nPlease contact system@digitalgreen.org for any clarification.\n\nThanks you.'
+        body += '<br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thanks you.'
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         msg.content_subtype = "html"
         msg.send()
@@ -93,13 +93,13 @@ class Command(BaseCommand):
         summary_data = '<html>'
         summary_data += '<head><style>table, th, td {border: 1px solid black;}</style></head><body>'
         if from_date == to_date:
-            summary_data += 'Total Calls Received: %s\nTotal Calls Handled by experts: %s\n\
-Total Unique Callers: %s\nCluster-wise bifurcation of calls received:\n'%(total_calls_received,total_calls_resolved,
+            summary_data += 'Total Calls Received: %s<br/>Total Calls Handled by experts: %s<br/>\
+Total Unique Callers: %s<br/>Cluster-wise bifurcation of calls received:<br/>'%(total_calls_received,total_calls_resolved,
         total_unique_caller)
         else:
-            summary_data += 'Total Calls Received: %s\nTotal Unique Callers: %s\n\
-Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
-%% of calls contributed by repeat callers: %s\nCluster-wise bifurcation of calls received:\n\n'%(total_calls_received,
+            summary_data += 'Total Calls Received: %s<br/>Total Unique Callers: %s<br/>\
+Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
+%% of calls contributed by repeat callers: %s<br/>Cluster-wise bifurcation of calls received:<br/><br/>'%(total_calls_received,
         total_unique_caller,total_repeat_caller,total_calls_from_repeat_caller,repeat_caller_contribute_percentage)
         summary_data += '<table><tr><th>Cluster Name</th><th>Farmer Count</th><th>No of calls</th></tr>'
         for cluster in cluster_wise_call_detail:
@@ -107,7 +107,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
         summary_data += '</table>'
         if include_extra_summary == 1:
             call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
-            summary_data += '\nTotal Calls Handled by experts: %s\nBifurcation of calls per expert:\n\n'%(total_calls_resolved,)
+            summary_data += '<br/>Total Calls Handled by experts: %s<br/>Bifurcation of calls per expert:<br/><br/>'%(total_calls_resolved,)
             summary_data += '<table><tr><th>Expert Name</th><th>No of calls handled</th></tr>'
             for expert in call_resoved_per_expert:
                 summary_data += '<tr><td>%s</td><td>%s</td></tr>'%(expert['resolved_by__name'],expert['call_count'])
@@ -149,7 +149,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
                 from_date = '%s-%s-01'%(current_year,current_month-1)
                 to_date = '%s-%s-%s'%(current_year,current_month-1,calendar.monthrange(current_year,current_month)[1])
             summary_data = self.helpline_summary(from_date,to_date)
-            summary_data += '\n\nHelpline Summary from Begining.\n\n'
+            summary_data += '<br/><br/>Helpline Summary from Begining.<br/><br/>'
             summary_data += self.helpline_summary('2017-01-01',datetime.now().date(),1)
             email_subject = 'Loop helpline Summary from %s to %s'%(from_date,to_date)
             self.send_mail(summary_data,email_subject)
