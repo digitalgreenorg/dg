@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from pytz import timezone
+import calendar
 
 from django.core.management.base import BaseCommand
 from django.core.mail import EmailMultiAlternatives
@@ -101,7 +102,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
             summary_data += '%s                   %s                              %s\n'%(cluster_wise_call_detail[cluster]['cluster_name'],cluster_wise_call_detail[cluster]['farmer_count'],cluster_wise_call_detail[cluster]['total_calls'])
         if include_extra_summary == 1:
             call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
-            summary_data += '\nTotal Calls Handled by experts: %s\nBifurcation of calls per expert:\n\nExpert Name          No of calls handled\n'
+            summary_data += '\nTotal Calls Handled by experts: %s\nBifurcation of calls per expert:\n\nExpert Name          No of calls handled\n'%(total_calls_resolved,)
             for expert in call_resoved_per_expert:
                 summary_data = '%s            %s\n'%(expert['resolved_by__name'],expert['call_count'])
         return summary_data
@@ -142,7 +143,7 @@ Total number of repeat caller: %s\nTotal Calls from repeat callers: %s\n\
             summary_data = self.helpline_summary(from_date,to_date)
             summary_data += '\n\nHelpline Summary from Begining.\n\n'
             summary_data += self.helpline_summary('2017-01-01',datetime.now().date(),1)
-            email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date,to_date)
+            email_subject = 'Loop helpline Summary from %s to %s'%(from_date,to_date)
             self.send_mail(summary_data,email_subject)
         elif last_n_days != None:
             from_date = datetime.now().date()-timedelta(days=int(last_n_days))
