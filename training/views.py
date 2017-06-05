@@ -18,6 +18,7 @@ from tastypie.models import ApiKey
 from training.management.databases.utility import multiprocessing_dict, multiprocessing_list
 from training.management.databases.get_sql_queries import *
 from training.log.training_log import get_latest_timestamp
+from collections import OrderedDict
 
 # Create your views here.
 @csrf_exempt
@@ -227,7 +228,7 @@ def year_month_wise_data(chart_name, result):
         final_data_list[chart_name] = outer_data
 
         inner_data = {'innerData': []}
-        month_training_dict = {name:dict(zip(g['month'],g['trainings'])) for name,g in result.groupby(['year'])}
+        month_training_dict = {name:OrderedDict(zip(g['month'],g['trainings'])) for name,g in result.groupby(['year'])}
 
         for key,value in month_training_dict.iteritems():
             temp_dict_inner = {'data':[]}
