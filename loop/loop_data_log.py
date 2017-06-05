@@ -51,6 +51,10 @@ def save_log(sender, **kwargs):
         village_id = None
         user = None
         loop_user = None
+    elif sender == "CropLanguage":
+        village_id = None
+        user = None
+        loop_user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
@@ -64,6 +68,10 @@ def save_log(sender, **kwargs):
             loop_user = None
 
     elif sender == "Vehicle":
+        village_id = None
+        user = None
+        loop_user = None
+    elif sender == "VehicleLanguage":
         village_id = None
         user = None
         loop_user = None
@@ -116,6 +124,7 @@ def save_log(sender, **kwargs):
         village_id = instance.village.id
         loop_user = None
     Log = get_model('loop', 'Log')
+    print "POPO"
     log = Log(village=village_id, user=user, action=action, entry_table=sender,
               model_id=model_id, loop_user=loop_user)
     log.save()
@@ -146,6 +155,10 @@ def delete_log(sender, **kwargs):
         village_id = None
         user = None
         loop_user = None
+    elif sender == "CropLanguage":
+        village_id = None
+        user = None
+        loop_user = None    
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
@@ -158,6 +171,10 @@ def delete_log(sender, **kwargs):
         else:
             loop_user = None
     elif sender == "Vehicle":
+        village_id = None
+        user = None
+        loop_user = None
+    elif sender == "VehicleLanguage":
         village_id = None
         user = None
         loop_user = None
@@ -222,13 +239,30 @@ def get_log_object(log_object):
     Obj_model = get_model('loop', log_object.entry_table)
     try:
         obj = Obj_model.objects.get(id=log_object.model_id)
-        data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': model_to_dict(
-            obj), 'online_id': obj.id}
+        obj= model_to_dict(obj)
+        if Obj_model.__name__=='CropLanguage':
+            Obj_model = get_model('loop','Crop')
+            crop_name = obj['crop_name']
+            obj = Obj_model.objects.get(id = obj['crop'])
+            obj = model_to_dict(obj)
+            obj['crop_name_en'] = obj['crop_name']
+            obj['crop_name'] = crop_name
+            obj['online_id'] = obj['id']
+            log_object.entry_table='Crop'
+        elif Obj_model.__name__=='VehicleLanguage':
+            Obj_model = get_model('loop','Vehicle')
+            vehicle_name = obj['vehicle_name']
+            obj = Obj_model.objects.get(id = obj['vehicle'])
+            obj = model_to_dict(obj)
+            obj['vehicle_name_en'] = obj['vehicle_name']
+            obj['vehicle_name'] = vehicle_name
+            obj['online_id'] = obj['id']
+            log_object.entry_table='Vehicle'
+        data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data':obj, 'online_id': obj['id']}
     except Exception, e:
         data = {'log': model_to_dict(
             log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': None, 'online_id': log_object.model_id}
     return data
-
 
 def get_latest_timestamp():
     Log = get_model('loop', 'Log')
@@ -272,7 +306,8 @@ def send_updated_log(request):
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
-                timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle']))
+            
+                timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle','CropLanguage','VehicleLanguage']))
             village_list_queryset = Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Village'])
             list_rows.append(village_list_queryset)

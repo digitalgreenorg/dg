@@ -262,6 +262,9 @@ class CropLanguage(models.Model):
     def __crop__(self):
         return "%s" % (self.crop.crop_name)
 
+post_save.connect(save_log,sender=CropLanguage)
+pre_delete.connect(delete_log,sender=CropLanguage)
+
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
     transporter_name = models.CharField(max_length=90)
@@ -307,6 +310,9 @@ class VehicleLanguage(models.Model):
         return self.vehicle_name
     def __crop__(self):
         return "%s" % (self.vehicle.vehicle_name)
+
+post_save.connect(save_log,sender=VehicleLanguage)
+pre_delete.connect(delete_log,sender=VehicleLanguage)
         
 
 class TransportationVehicle(LoopModel):
