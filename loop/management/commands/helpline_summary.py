@@ -111,7 +111,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
             summary_data += '<tr><td>%s</td><td>%s</td><td>%s</td></tr>'%(cluster_wise_call_detail[cluster]['cluster_name'],cluster_wise_call_detail[cluster]['farmer_count'],cluster_wise_call_detail[cluster]['total_calls'])
         summary_data += '</table>'
         if include_extra_summary == 1:
-            call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1).values('resolved_by__name').annotate(call_count=Count('id'))
+            call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).values('resolved_by__name').annotate(call_count=Count('id'))
             summary_data += '<br/>Total Calls Handled by experts: %s<br/>Bifurcation of calls per expert:<br/><br/>'%(total_calls_resolved,)
             summary_data += '<table><tr><th>Expert Name</th><th>No of calls handled</th></tr>'
             for expert in call_resoved_per_expert:
