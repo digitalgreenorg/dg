@@ -143,7 +143,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
                 from_date = '%s-%s-01'%(current_year,current_month-1)
                 to_date = '%s-%s-01'%(current_year,current_month)
             summary_data = self.helpline_summary(from_date,to_date)
-            summary_data += '<br/><br/>Helpline Summary from Begining.<br/><br/>'
+            summary_data += '<br/><br/><h2>Helpline Summary from Begining.</h2><br/><br/>'
             summary_data += self.helpline_summary('2017-01-01',datetime.now().date(),1)
             email_subject = 'Loop helpline Summary from %s to %s'%(from_date,to_date)
             self.send_mail(summary_data,email_subject)
@@ -163,7 +163,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
             elif from_date > current_date:
                 print 'From date is greater than current date'
                 return
-            email_subject = 'Loop helpline Summary from the begining from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
+            email_subject = 'Loop helpline Summary from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
             summary_data = self.helpline_summary(from_date,to_date)
             self.send_mail(summary_data,email_subject)
         else:
