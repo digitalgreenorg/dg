@@ -160,7 +160,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
             if not to_date:
                 print 'Please enter to_date with -td option'
                 return
-            elif from_date > current_date:
+            elif from_date > to_date:
                 print 'From date is greater than current date'
                 return
             email_subject = 'Loop helpline Summary from %s to %s'%(from_date.strftime("%Y-%m-%d"),to_date.strftime("%Y-%m-%d"))
