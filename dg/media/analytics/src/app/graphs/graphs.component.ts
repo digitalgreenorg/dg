@@ -1,4 +1,4 @@
-import { Component,OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { GraphsService } from './graphs.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.training';
@@ -7,14 +7,17 @@ import { environment } from '../../environments/environment.training';
   selector: 'graphs',
   templateUrl: './graphs.component.html',
   styleUrls: ['./graphs.component.css'],
+  host: {
+    '(window:resize)': 'onResize($event)'
+  }
 })
 
-export class GraphsComponent implements OnInit, AfterViewInit{
-    tabs = [];
-    charts = [];
-    tabsConfig = environment.tabsConfig;
-    chartsConfig = environment.chartsConfig;
- 
+export class GraphsComponent implements OnInit, AfterViewInit {
+  tabs = [];
+  charts = [];
+  tabsConfig = environment.tabsConfig;
+  chartsConfig = environment.chartsConfig;
+
   constructor(private graphService: GraphsService, private _sharedService: SharedService) {
     this._sharedService.argsList$.subscribe(filters => {
       this.getGraphsData(filters);
@@ -24,14 +27,14 @@ export class GraphsComponent implements OnInit, AfterViewInit{
   ngOnInit(): void {
     //Generate tabs dynamically
     Object.keys(this.tabsConfig).forEach(tab => {
-        this.tabsConfig[tab].id = tab;
-        this.tabs.push(this.tabsConfig[tab])
+      this.tabsConfig[tab].id = tab;
+      this.tabs.push(this.tabsConfig[tab])
     })
 
     Object.keys(this.chartsConfig).forEach(config => {
       //Add divs to tabs
       Object.keys(this.tabsConfig).forEach(tab => {
-        if(this.chartsConfig[config].chart.tab.id === this.tabsConfig[tab].id) {
+        if (this.chartsConfig[config].chart.tab.id === this.tabsConfig[tab].id) {
           //Set div attributes
           this.tabsConfig[tab].showDivs.push({
             'id': this.chartsConfig[config].chart.renderTo,
@@ -49,7 +52,7 @@ export class GraphsComponent implements OnInit, AfterViewInit{
       });
     });
   }
-  //function to access underlying chart 
+  //function to access underlying chart
   saveInstance(chartInstance, chart) {
     chart.nativeChart = chartInstance;
   }
@@ -90,10 +93,17 @@ export class GraphsComponent implements OnInit, AfterViewInit{
           }
         });
       });
+      // var height = chart.renderTo.clientHeight;
+      // var width = chart.renderTo.clientWidth;
+      // chart.setSize(width, height);
+      // console.log(chart.options.chartName);
+      // console.log(height);
+      // console.log(width);
+      // chart.nativeChart.reflow();
     });
 
   }
-  
+
   //Empty exting data and then fill in updated data
   private clearSeriesFromGraph(chart) {
     if (chart.nativeChart.series.length > 0) {
@@ -102,4 +112,8 @@ export class GraphsComponent implements OnInit, AfterViewInit{
       }
     }
   }
+
+  onResize(event){
+     event.target.innerWidth; // window width
+   }
 }
