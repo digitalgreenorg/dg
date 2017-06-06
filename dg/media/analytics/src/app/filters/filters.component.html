@@ -1,11 +1,11 @@
 <div id="mySidenav" #mySidenav class="sidenav">
   <perfect-scrollbar class="parent-scrollbar">
-    <div class="container">
+    <div #sideNavContent class="container">
       <div class="row">
-        <div class="col-8">
+        <div class="col-md-8">
           <h6 class="text-left text-uppercase">Filters</h6>
         </div>
-        <div class="col-4">
+        <div class="col-md-4">
           <button type="button" class="close" aria-label="Close" (click)="closeNav()"><span aria-hidden="true">&times;</span></button>
         </div>
       </div>
@@ -16,16 +16,16 @@
       </div>
       <div *ngIf="showDateFilter">
         <div class="row">
-          <h6 class="col-md-3 text-white">From</h6>
-          <div class="col-md-8">
+          <h6 class="col-md-3 col-sm-3 text-white">From</h6>
+          <div class="col-md-8 col-sm-8">
             <form #myForm="ngForm" novalidate>
               <my-date-picker class="datepicker" name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
             </form>
           </div>
         </div>
         <div class="row">
-          <h6 class="col-md-3 text-white">To</h6>
-          <div class="col-md-8">
+          <h6 class="col-md-3 col-sm-3 text-white">To</h6>
+          <div class="col-md-8 col-sm-8">
             <form #myForm="ngForm" novalidate>
               <my-date-picker class="datepicker" name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
             </form>
@@ -35,12 +35,12 @@
           <h6>{{invalidDateMessage}}</h6></div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 col-sm-12">
           <a *ngFor='let filter_name of filter_list'>
           <label (click)="filter_name.expand=!filter_name.expand">{{filter_name.heading}}</label>
           <div class="container" *ngIf="filter_name.expand">
             <div class="form-group row" [id]="filter_name.heading">
-              <div class="col-md-12">
+              <div class="col-md-12 col-sm-12">
                 <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
               </div>
             </div>
@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 col-sm-12">
           <div class="text-center">
             <button class="btn btn-success btn-sx btn-submit" (click)="applyFilters()">Apply Filters</button>
           </div>
@@ -68,7 +68,7 @@
   </perfect-scrollbar>
 </div>
 
-<div class="container-fluid" style="height: 70px;">
+<div class="container" style="height: 70px;">
   <div class="row" style="-webkit-text-fill-color: white">
     <div class="col-md-1">
       <span style="font-size:20px;cursor:pointer" (click)="openNav()">&#9776;</span>

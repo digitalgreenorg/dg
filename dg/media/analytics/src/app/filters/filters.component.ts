@@ -18,6 +18,7 @@ import { environment } from '../../environments/environment.training';
 export class FiltersComponent implements OnInit {
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
+  @ViewChild('sideNavContent') sideNavContent : ElementRef;
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;
   showDateFilter: boolean = false;
@@ -82,10 +83,12 @@ export class FiltersComponent implements OnInit {
 
   closeNav() {
     this.mySidenav.nativeElement.style.width = '0px';
+    this.sideNavContent.nativeElement.style.display = 'none';
   }
 
   openNav() {
     this.mySidenav.nativeElement.style.width = '320px';
+    this.sideNavContent.nativeElement.style.display = 'block';
   }
 
   applyFilters() {
