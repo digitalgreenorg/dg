@@ -1,12 +1,10 @@
 <div class="container-fluid">
   <tabset [justified]="true">
-    <tab *ngFor="let tab of tabs" [heading]="tab.heading" [id]="tab.id" (select)="chartReflow(tab.id)">
+    <tab *ngFor="let tab of tabs" [heading]="tab.heading" [id]="tab.id">
       <br><br>
       <div class="row">
         <div *ngFor="let div of tab.showDivs" [class]="div.class">
-          <div class="col-sm-12">
-            <div [id]="div.id"></div>
-          </div>
+          <div [id]="div.id"></div>
           <br><br>
         </div>
       </div>

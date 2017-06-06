@@ -7,9 +7,6 @@ import { environment } from '../../environments/environment.training';
   selector: 'graphs',
   templateUrl: './graphs.component.html',
   styleUrls: ['./graphs.component.css'],
-  host: {
-    '(window:resize)': 'onResize($event)'
-  }
 })
 
 export class GraphsComponent implements OnInit, AfterViewInit {
@@ -22,6 +19,12 @@ export class GraphsComponent implements OnInit, AfterViewInit {
     this._sharedService.argsList$.subscribe(filters => {
       this.getGraphsData(filters);
     });
+    setInterval(() => {
+      this.charts.forEach(chart => {
+        chart.nativeChart.reflow();
+      });
+    }, 0);
+
   }
 
   ngOnInit(): void {
@@ -55,22 +58,8 @@ export class GraphsComponent implements OnInit, AfterViewInit {
   //function to access underlying chart
   saveInstance(chartInstance, chart) {
     chart.nativeChart = chartInstance;
-    // console.log(chartInstance);
   }
 
-  chartReflow(tab): void {
-    this.charts.forEach(chart => {
-      // if (chart.options.chart.tab.id === tab) {
-      //   chart.nativeChart.setSize(
-      //     chart.nativeChart.chartWidth - 30,
-      //     0,
-      //     false
-      //   );
-      //   chart.resizable = false;
-      // }
-      chart.nativeChart.reflow();
-    });
-  }
   ngAfterViewInit(): void {
     this.getGraphsData({ 'params': {} });
   }
@@ -112,14 +101,5 @@ export class GraphsComponent implements OnInit, AfterViewInit {
         chart.nativeChart.series[i].remove();
       }
     }
-  }
-
-  onResize(event) {
-    // console.log(event.target.innerWidth);
-    //
-    // this.charts.forEach(chart => {
-    //   console.log(typeof(chart.nativeChart));
-    //   chart.nativeChart.reflow();
-    // });// window width
   }
 }
