@@ -55,7 +55,7 @@ export class GraphsComponent implements OnInit, AfterViewInit {
   //function to access underlying chart
   saveInstance(chartInstance, chart) {
     chart.nativeChart = chartInstance;
-    console.log(chartInstance);
+    // console.log(chartInstance);
   }
 
   chartReflow(tab): void {
