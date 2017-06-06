@@ -19,6 +19,28 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='state',
             name='phone_start',
-            field=models.CharField(default=789, max_length=4, null=True, blank=True),
+            field=models.CharField(default=789, max_length=15, null=True, blank=True),
+        ),
+        migrations.AddField(
+            model_name='language',
+            name='notation',
+            field=models.CharField(max_length=3, null=True, blank=True),
+        ),
+        migrations.AlterField(
+            model_name='croplanguage',
+            name='crop',
+            field=models.ForeignKey(related_name='crops', to='loop.Crop'),
+        ),
+        migrations.CreateModel(
+            name='VehicleLanguage',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('vehicle_name', models.CharField(max_length=30)),
+                ('language', models.ForeignKey(to='loop.Language', null=True)),
+                ('vehicle', models.ForeignKey(related_name='vehicles', to='loop.Vehicle')),
+            ],
+            options={
+                'abstract': False,
+            },
         ),
     ]
