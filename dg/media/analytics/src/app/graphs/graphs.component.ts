@@ -28,8 +28,8 @@ export class GraphsComponent implements OnInit, AfterViewInit {
     //Generate tabs dynamically
     Object.keys(this.tabsConfig).forEach(tab => {
       this.tabsConfig[tab].id = tab;
-      this.tabs.push(this.tabsConfig[tab])
-    })
+      this.tabs.push(this.tabsConfig[tab]);
+    });
 
     Object.keys(this.chartsConfig).forEach(config => {
       //Add divs to tabs
@@ -43,26 +43,34 @@ export class GraphsComponent implements OnInit, AfterViewInit {
         }
       })
       //assign key as chart name
-      this.chartsConfig[config].chartName = config
+      this.chartsConfig[config].chartName = config;
       //Add empty charts to DOM
       this.charts.push({
         options: this.chartsConfig[config],
         nativeChart: null // To be obtained with saveInstance
-
       });
     });
   }
+
   //function to access underlying chart
   saveInstance(chartInstance, chart) {
     chart.nativeChart = chartInstance;
+    console.log(chartInstance);
   }
 
-  chartReflow(tabHeading): void {
+  chartReflow(tab): void {
     this.charts.forEach(chart => {
+      // if (chart.options.chart.tab.id === tab) {
+      //   chart.nativeChart.setSize(
+      //     chart.nativeChart.chartWidth - 30,
+      //     0,
+      //     false
+      //   );
+      //   chart.resizable = false;
+      // }
       chart.nativeChart.reflow();
-    })
+    });
   }
-
   ngAfterViewInit(): void {
     this.getGraphsData({ 'params': {} });
   }
@@ -93,13 +101,6 @@ export class GraphsComponent implements OnInit, AfterViewInit {
           }
         });
       });
-      // var height = chart.renderTo.clientHeight;
-      // var width = chart.renderTo.clientWidth;
-      // chart.setSize(width, height);
-      // console.log(chart.options.chartName);
-      // console.log(height);
-      // console.log(width);
-      // chart.nativeChart.reflow();
     });
 
   }
@@ -113,7 +114,12 @@ export class GraphsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onResize(event){
-     event.target.innerWidth; // window width
-   }
+  onResize(event) {
+    // console.log(event.target.innerWidth);
+    //
+    // this.charts.forEach(chart => {
+    //   console.log(typeof(chart.nativeChart));
+    //   chart.nativeChart.reflow();
+    // });// window width
+  }
 }

@@ -114,8 +114,8 @@ export class FiltersComponent implements OnInit {
           this.invalidDateMessage = "* End date cannot be smaller than start date."
         }
       } catch (err) {
-          this.invalidDate = true;
-          this.invalidDateMessage = "* Invalid date entered."
+        this.invalidDate = true;
+        this.invalidDateMessage = "* Invalid date entered."
       }
     }
     if (!this.invalidDate) {
@@ -126,7 +126,7 @@ export class FiltersComponent implements OnInit {
 
   getDatatest(): any {
     let argstest = {
-      webUrl: environment.url+"getData",
+      webUrl: environment.url + "getData",
       params: this.f_list
     }
     this._sharedService.publishData(argstest);
