@@ -145,7 +145,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
             summary_data = self.helpline_summary(from_date,to_date)
             summary_data += '<br/><br/><h2>Helpline Summary from Begining.</h2><br/><br/>'
             summary_data += self.helpline_summary('2017-01-01',datetime.now().date(),1)
-            email_subject = 'Loop helpline Summary from %s to %s'%(from_date,to_date)
+            email_subject = 'Loop helpline Summary from %s to %s'%(from_date,(datetime.strptime(to_date,'%Y-%m-%d')-timedelta(days=1)).strftime("%Y-%m-%d"))
             self.send_mail(summary_data,email_subject)
         elif last_n_days != None:
             from_date = datetime.now().date()-timedelta(days=int(last_n_days))
