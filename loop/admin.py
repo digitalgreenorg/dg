@@ -187,8 +187,8 @@ class LogDeletedAdmin(admin.ModelAdmin):
     list_filter = ['entry_table']
 
 class BroadcastAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'cluster', 'audio_url', 'from_number', 'start_time', 'end_time')
-    search_fields = ['title', 'cluster', 'from_number']
+    list_display = ('id', 'title', 'audio_url', 'from_number', 'start_time', 'end_time')
+    search_fields = ['title', 'from_number']
 
 class BroadcastAudienceAdmin(admin.ModelAdmin):
     list_display = ('id', 'to_number', 'broadcast', 'farmer', 'status', 'start_time', 'end_time')

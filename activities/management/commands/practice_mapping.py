@@ -8,12 +8,11 @@ from videos.models import *
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        pm_file = '/Users/nikhilverma/workspace/DG/dg/practice_map.xlsx'
+        pm_file = '/Users/nikhilverma/workspace/DG/dg/Practice_map2.xlsx'
         # path = os.path.abspath(pm_file)
         wb = load_workbook(pm_file)
         # This
-        sheet_names = ['APTel', 'Bihar', 'Jharkhand', 'Maharashtra', 'Odisha', 'Rajasthan',
-                       'Karnataka', 'MP', 'UP', 'Ethiopia']
+        sheet_names = ['Bihar', 'Rajasthan']
         # sheet_names = ['UP', 'Ethiopia']
 
         video_data_list = []
