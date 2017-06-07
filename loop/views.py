@@ -421,7 +421,7 @@ def data_for_drilldown_graphs(request):
                                                                       Count('farmer', distinct=True)))
     for crop_obj in crop_prices:
         try:
-            crop = CropLanguage.objects.get(crop=crop_obj['crop__id'])
+            crop = CropLanguage.objects.get(crop=crop_obj['crop__id'],language_id=1)
             crop_obj['crop__crop_name_en'] = crop.crop_name
         except CropLanguage.DoesNotExist:
             pass
