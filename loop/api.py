@@ -453,27 +453,6 @@ class LoopUserResource(BaseResource):
         return [{'id': assigned_village_obj.id, 'village_name':assigned_village_obj.village_name} for assigned_village_obj in
                 set(bundle.obj.assigned_villages.all())]
 
-class BucketObject(models.Model):
-    """
-    Container to keep data that doesn't conform to any orm model, but has to be returned
-    by some resources.
-    """
- 
-    def __init__(self, initial=None):
-        self.__dict__['_data'] = {}
- 
-        if hasattr(initial, 'items'):
-            self.__dict__['_data'] = initial
- 
-    def __getattr__(self, name):
-        return self._data.get(name, None)
- 
-    def __setattr__(self, name, value):
-        self.__dict__['_data'][name] = value
- 
-    def to_dict(self):
-        return self._data
-
 class LanguageResource(BaseResource):
     class Meta:
         limit = 0
