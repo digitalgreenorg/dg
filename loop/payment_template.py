@@ -205,7 +205,7 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
 
 
 def prepare_value_data_generic(data):
-    if type(data) == 'str':
+    if isinstance(data,str):
         data = json.loads(data)
     combined_data = []
     combined_header = {}

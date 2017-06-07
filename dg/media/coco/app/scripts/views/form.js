@@ -26,7 +26,7 @@ define([
         events: {
             'click #button2': 'button2_clicked',
             // used in inline form
-            'click #add_rows': 'append_new_inlines'
+            'click #add_rows': 'append_new_inlines',
         },
         template: '#form_template',
         options_inner_template: _.template($('#options_template')
@@ -77,6 +77,8 @@ define([
 //         Reads entity_config and sets basic properties on view object for easy access
         read_form_config: function(params) {
             var language = User.get("language");
+            var cocousertype = User.get('type_of_cocouser')
+            this.cocousertype = cocousertype
             this.entity_name = params.entity_name;
             this.entity_config = all_configs[this.entity_name];
             //default locations - 
@@ -86,6 +88,7 @@ define([
             this.labels = this.entity_config['labels_'+language]
             this.health_variable = all_configs.misc.variable_dict[Object.keys(all_configs.misc.variable_dict)[1]]
             this.agg_variable = all_configs.misc.variable_dict[Object.keys(all_configs.misc.variable_dict)[0]]
+            
             if (this.edit_case) {
                 this.form_template = _.template($('#' + this.entity_config.edit_template_name).html());
                 if (this.entity_config.edit) {
@@ -240,10 +243,35 @@ define([
         render_labels: function(){
             $f_el = this.$("#form_template_render");
             $f_el.append(this.form_template(this.labels));
+            var cocousertype = User.get('type_of_cocouser')
             var partner_name = User.get('partner_name');
             var partner_check = jQuery.inArray(partner_name, all_configs.misc.ethiopia_partners)
             if (partner_check < 0){
                 $f_el.find("#is_modelfarmer").addClass('hidden');
+            }
+            // force hiding of upavan field
+            _.each(all_configs.misc.element_to_be_hidden_for_upavan, function(val, key){
+                $f_el.find(val).addClass('hidden')
+            })
+            //  for UPAVAN
+            if (cocousertype == 4){
+                //to change labels
+                _.each(all_configs.misc.label_upavan_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+                // to hide fields
+                _.each(all_configs.misc.upavan_user_fields, function(element, index) {
+                    $f_el.find(element).removeClass('hidden')
+                })
+            }else{
+                _.each(all_configs.misc.upavan_user_fields, function(element, index) {
+                    $f_el.find(element).addClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+                
             }
 
         },
@@ -272,39 +300,32 @@ define([
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
                     if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
-                         // hide the headers and fields
-                        _.each(this.entity_config.hide_dict, function(key, value) {
-                            $(key).addClass('hidden')
-                            $(value).addClass('hidden')
-                        })
-                        // _.each(this.entity_config.fields_to_hide, function(element, index) {
-                        //     this.$el.find(element).addClass('hidden')
-                        // })
-                        this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                        if (cocousertype != 4){
+                            // hide the headers and fields
+                            _.each(this.entity_config.hide_dict, function(key, value) {
+                                $(key).addClass('hidden')
+                                $(value).addClass('hidden')
+                            })
+                            this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                        }
                      }else if(this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.health_variable){
-                         // this.$el.find(this.entity_config.fields_to_hide).removeClass('hidden')
-                        // _.each(this.entity_config.fields_to_hide, function(element, index) {
-                        //     this.$el.find(element).removeClass('hidden')
-                        // })
-
-                        _.each(this.entity_config.hide_dict, function(key, value) {
-                            $(key).removeClass('hidden')
-                            $(value).removeClass('hidden')
-                        })
+                        if (cocousertype != 4){
+                            _.each(this.entity_config.hide_dict, function(key, value) {
+                                $(key).removeClass('hidden')
+                                $(value).removeClass('hidden')
+                            })
+                        }
 
                      }else if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
                          if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
                             if (this.edit_case && this.foreign_elements_rendered[element]){
-                                // $("#id_adopt_practice").addClass("hidden");
-                                // $("#id_recall_nonnegotiable").addClass("hidden");
-                                // _.each(this.entity_config.fields_to_hide, function(element, index) {
-                                //     this.$el.find(element).addClass('hidden')
-                                // })
                                 this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
-                                _.each(this.entity_config.hide_dict, function(key, value) {
-                                    $(key).addClass('hidden')
-                                    $(value).addClass('hidden')
-                                })
+                                if (cocousertype != 4){
+                                    _.each(this.entity_config.hide_dict, function(key, value) {
+                                        $(key).addClass('hidden')
+                                        $(value).addClass('hidden')
+                                    })
+                                }
                             } 
                         }   
                     }
@@ -335,11 +356,21 @@ define([
                             that.$el.find("#"+that.entity_config.parent_element_label_to_hide).addClass('hidden');
                             that.$el.find("#id_"+that.entity_config.parent_element_to_hide).addClass('hidden');
                         }
-                        // text to select
+                        // text to select 
                         if (that.entity_config.text_to_select_display_hack){
-                            var adopt_practice_val = that.model_json.adopt_practice;
-                            that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ adopt_practice_val +"]").attr('selected', 'selected')
-                            $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
+                             // for multiple fields
+                            if (that.entity_config.text_to_select_display_hack_field_array){
+                                _.each(that.entity_config.text_to_select_display_hack_field_array, function(element, index) {
+                                    that.$el.find("#id_" + element + " option[value="+ that.model_json[element]+"]").attr('selected', 'selected')
+                                    $("#id_" + element).change().trigger("chosen:updated");
+                                })
+                            }
+                            // for single fields
+                            if(that.entity_config.text_to_select_display_hack_field_id){
+                                var text_to_select_display_var  = that.model_json[that.entity_config.text_to_select_display_hack_field_id]
+                                that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ text_to_select_display_var +"]").attr('selected', 'selected')
+                                $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
+                            }
                         }
                         // put into form
                         that.fill_form();
@@ -370,6 +401,26 @@ define([
             var temp = _.template($('#' + this.inline.header).html());
             $f_el = this.$('#inline_header');
             $f_el.append(temp(this.labels));
+            if (that.cocousertype == 4){
+                // force hiding of upavan field
+                _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                    $f_el.find(key).addClass('hidden')
+                    $f_el.find(val).addClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.inline_upavan_label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+            }else{
+                _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                    $f_el.find(key).removeClass('hidden')
+                    $f_el.find(val).removeClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.inline_label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+            }
             //if add case put in empty inlines
             if (!this.edit_case)
                 this.append_new_inlines(this.inline.default_num_rows);
@@ -398,6 +449,7 @@ define([
             }
             //not showing the inlines in case of edit_case_json
         },
+
 
         // fills the inline objects in their templates and puts them into form
         fill_inlines: function(model_array) {
@@ -430,6 +482,18 @@ define([
                 }));
                 this.$('#inline_body').append(tr);
                 // switch validation on/off based on whether the inline is empty or not
+                if (this.cocousertype == 4){
+                    // force hiding of upavan field
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                        this.$('#inline_body').find(key).addClass('hidden')
+                       this.$('#inline_body').find(val).addClass('hidden')
+                    })
+                }else{
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                        this.$('#inline_body').find(key).removeClass('hidden')
+                        this.$('#inline_body').find(val).removeClass('hidden')
+                    })
+                }
                 tr.on('change', this.switch_validation_for_inlines);
             }
 
@@ -560,35 +624,26 @@ define([
 
         action_after_render_foreign_element: function(parent_element, dep_element){
             if (this.$el.find('#id_' + parent_element).val() == this.agg_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
-                // hide the headers
-                // _.each(this.entity_config.headers_to_hide, function(element, index) {
-                //     $(element).addClass('hidden')
-                // })
-                // hide the fields
-                // _.each(this.entity_config.fields_to_hide, function(element, index) {
-                //     $(element).addClass('hidden')
-                // })
-
-                _.each(this.entity_config.hide_dict, function(key, value) {
-                    $(key).addClass('hidden')
-                    $(value).addClass('hidden')
-                })
-                this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                if (cocousertype != 4){
+                    _.each(this.entity_config.hide_dict, function(key, value) {
+                        console.log(key, value)
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                }
 
             }
             if (this.$el.find('#id_' + parent_element).val() == this.health_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
-                // _.each(this.entity_config.headers_to_hide, function(element, index) {
-                //     $(element).removeClass('hidden')
-                // })
-                // _.each(this.entity_config.fields_to_hide, function(element, index) {
-                //     $(element).removeClass('hidden')
-                // })
-                _.each(this.entity_config.hide_dict, function(key, value) {
-                    $(key).removeClass('hidden')
-                    $(value).removeClass('hidden')
-                })
+                if (cocousertype != 4){
+                    _.each(this.entity_config.hide_dict, function(key, value) {
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                }else if(cocousertype == 4){
+                    $("#id_health_provider_present").addClass('hidden')
+                }
             }
-
 
         },
 
@@ -804,7 +859,7 @@ define([
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
             cocousertype = this.type_of_cocouser;
-            inline_var = this.entity_config.inline_var
+            inline_var = this.entity_config.inline_var;
             var that = this;
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
@@ -812,7 +867,7 @@ define([
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
-                if (element == this.entity_config.fetch_element_that_manipulate && cocousertype != 3){
+                if (element == this.entity_config.fetch_element_that_manipulate && (cocousertype != 3 && cocousertype != 4)){
                    model_array = this.filter_array_with_specific_parameters(model_array, this.entity_config.fetch_key_element, cocousertype); 
                 }
                 
@@ -848,24 +903,74 @@ define([
                         });
                         $f_el.append(expanded_template(t_json));
                         if (t_json.category && t_json.category.length >= 1){
-                            _.each(t_json.category, function(iterable, idx){    
+                            _.each(t_json.category, function(iterable, idx){   
                                 if (iterable.id != 'undefined'){
-                                    $f_el.find("."+inline_var + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');    
+                                    $f_el.find("."+inline_var + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');
+                                    // $("."+inline_var+index).trigger("chosen:updated");
                                 }
                             })
                         }
                     });
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
+
                 } else {
                     $.each(model_array, function(index, f_model) {
                         var t_json = f_model.toJSON();
                         t_json["index"] = index;
+
                         $f_el.append(expanded_template(t_json));
+                        // Offline.fetch_collection("directbeneficiaries")
+                        //     .done(function(collection) {
+                        //         $.each(collection.models, function (i, item) { 
+                        //             $f_el.find("."+inline_var + index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
+                        //             $("."+inline_var+index).trigger("chosen:updated");
+                        //         })
+                                
+                        //     })
+                        //     .fail(function() {
+                        //         console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                        //     });
+                    
+
                     });
+                    
                 }
+                if (cocousertype == 4){
+                    //hiding dropdown options
+                    _.each(all_configs.misc.menu_options_to_hide, function(value, key){
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    //to change labels
+                    _.each(all_configs.misc.inline_upavan_label_dict, function(value, key){
+                        $(key).text(value)
+                    })
+                    // hiding inline fields
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(value, key){
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                }else{
+                    //hiding dropdown options
+                    _.each(all_configs.misc.menu_options_to_hide, function(value, key){
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                    // hiding inline fields
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(value, key){
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    //to change labels
+                    _.each(all_configs.misc.inline_label_dict, function(value, key){
+                        $(key).text(value)
+                    })
+                }
+
                 this.initiate_form_widgets();
                 $('.inline_table').show();
+
 
                 // if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
                 //     _.each(this.entity_config.headers_to_hide, function(element, index) {
@@ -876,6 +981,7 @@ define([
                 //     })
                 //     this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
                 // }
+
 
             } else {
                 console.log("NOT EXPANDED");
@@ -949,13 +1055,6 @@ define([
                     
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
-                        // if (this.entity_config.entity_name == "adoption"){
-                        //     if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == "2"){
-                        //         if (this.edit_case && this.foreign_elements_rendered[element]){
-                        //             $("#id_adopt_practice").hide()
-                        //         } 
-                        //     }   
-                        // }
                 }
             }
         },
@@ -1091,6 +1190,7 @@ define([
 
         },
 
+
         // fetch expandeds from the form as a list of objects
         parse_expanded: function(raw_json) {
             console.log("FORM: fetching expandeds");
@@ -1213,6 +1313,7 @@ define([
                     o_json.inlines[index] = $.extend(old_json, inl);
                 }, this);
             }
+
             return o_json;
         },
 

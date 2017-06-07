@@ -49,6 +49,7 @@ def login(request):
     else:
         return HttpResponse("0")
     return JsonResponse({'success': '1', 'partner_name': partner_name,
+                         'type_of_cocouser': type_of_cocouser,
                          'partner_id': partner_id,
                          'type_of_cocouser': type_of_cocouser,
                          'user_id': user_id})
