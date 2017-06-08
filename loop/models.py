@@ -203,7 +203,7 @@ class Gaddidar(LoopModel):
         return self.gaddidar_name
 
     class Meta:
-        unique_together = ("gaddidar_phone", "gaddidar_name")
+        unique_together = ("gaddidar_phone", "gaddidar_name","mandi")
 
 post_save.connect(save_log, sender=Gaddidar)
 pre_delete.connect(delete_log, sender=Gaddidar)
