@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from tastypie.exceptions import ImmediateHttpResponse, NotFound, BadRequest
 from tastypie.authentication import Authentication, ApiKeyAuthentication
 from tastypie.authorization import Authorization
@@ -451,16 +453,57 @@ class LoopUserResource(BaseResource):
         return [{'id': assigned_village_obj.id, 'village_name':assigned_village_obj.village_name} for assigned_village_obj in
                 set(bundle.obj.assigned_villages.all())]
 
+class LanguageResource(BaseResource):
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = Language.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'language'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+    
+        
+class CropLanguageResource(BaseResource):
+    language = fields.ForeignKey(LanguageResource,'language')
+    
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = CropLanguage.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'croplanguage'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+    dehydrate_language = partial(
+        foreign_key_to_id, field_name='language', sub_field_names=['id','notation'])
+
 class CropResource(BaseResource):
+    crops = fields.ToManyField(CropLanguageResource, 'crops', full=True, null=True, blank=True)
+
     class Meta:
         limit = 0
         max_limit = 0
         queryset = Crop.objects.all()
+        allowed_methods = ['post', 'get']
         resource_name = 'crop'
         authorization = Authorization()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
+ 
+    def get_object_list(self, request):
+        # apply filters from url
+        languageFilter = request.GET.get('preferred_language', None) if request else None
+        if languageFilter:
+            result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
+        else:
+            result = super(CropResource,self).get_object_list(request).filter(crops__language_id=1)
+        return result
 
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
@@ -479,8 +522,14 @@ class CropResource(BaseResource):
         return bundle
 
     def dehydrate(self, bundle):
+
         bundle.data['online_id'] = bundle.data['id']
-        #bundle.data['image_path'] = bundle.data['crop_name']
+        bundle.data['crop_name_en'] = bundle.data['crop_name']
+        for d in bundle.data['crops']:
+            if d.data['language']['notation'] == bundle.request.GET.get('preferred_language'):
+                bundle.data['crop_name'] = d.data['crop_name']
+                break
+        del bundle.data['crops']
         return bundle
 
 
@@ -530,8 +579,25 @@ class GaddidarResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
+class VehicleLanguageResource(BaseResource):
+    language = fields.ForeignKey(LanguageResource,'language')
+    
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = VehicleLanguage.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'vehiclelanguage'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+    dehydrate_language = partial(
+        foreign_key_to_id, field_name='language', sub_field_names=['id','notation'])
 
 class VehicleResource(BaseResource):
+    vehicles = fields.ToManyField(VehicleLanguageResource, 'vehicles', full=True, null=True, blank=True)
+
     class Meta:
         limit = 0
         max_limit = 0
@@ -542,8 +608,24 @@ class VehicleResource(BaseResource):
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
+    def get_object_list(self, request):
+        # apply filters from url
+        languageFilter = request.GET.get('preferred_language', None) if request else None
+        if languageFilter:
+            result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
+        else:
+            result = super(VehicleResource,self).get_object_list(request).filter(vehicles__language__id=1)
+        return result
+
     def dehydrate(self, bundle):
+
         bundle.data['online_id'] = bundle.data['id']
+        bundle.data['vehicle_name_en'] = bundle.data['vehicle_name']
+        for d in bundle.data['vehicles']:
+            if d.data['language']['notation'] == bundle.request.GET.get('preferred_language'):
+                bundle.data['vehicle_name'] = d.data['vehicle_name']
+                break
+        del bundle.data['vehicles']
         return bundle
 
 
