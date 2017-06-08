@@ -614,7 +614,7 @@ class VehicleResource(BaseResource):
         if languageFilter:
             result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
         else:
-            result = super(VehicleResource,self).get_object_list(request).filter()
+            result = super(VehicleResource,self).get_object_list(request).filter(vehicles__language__id=1)
         return result
 
     def dehydrate(self, bundle):
