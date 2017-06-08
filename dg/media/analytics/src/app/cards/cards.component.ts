@@ -1,7 +1,7 @@
 import { Component,OnInit, AfterViewInit } from '@angular/core';
 import { CardsService } from './cards.service';
 import { SharedService } from '../shared.service';
-import { environment } from '../../environments/environment.training';
+import { environment } from '../../environments/environment.loop';
 
 @Component({
     selector: 'app-cards',

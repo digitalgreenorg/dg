@@ -5,7 +5,7 @@ import { Filter } from './filter';
 import { FilterElement } from './filter-element';
 import { GetFilterDataService } from '../get-filter-data.service';
 import { SharedService } from '../shared.service';
-import { environment } from '../../environments/environment.training';
+import { environment } from '../../environments/environment.loop';
 
 @Component({
   selector: 'app-filters',

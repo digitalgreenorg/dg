@@ -27,7 +27,8 @@
       "environments": {
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts",
-        "training":"environments/environment.training.ts"
+        "training":"environments/environment.training.ts",
+        "loop":"environments/environment.loop.ts"
       }
     }
   ],
