@@ -124,7 +124,6 @@ def save_log(sender, **kwargs):
         village_id = instance.village.id
         loop_user = None
     Log = get_model('loop', 'Log')
-    print "POPO"
     log = Log(village=village_id, user=user, action=action, entry_table=sender,
               model_id=model_id, loop_user=loop_user)
     log.save()
