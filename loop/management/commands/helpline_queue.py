@@ -12,8 +12,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_R
 
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing
 from loop.helpline_view import get_status, make_helpline_call, write_log
-
-HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
+from loop.utils.ivr_helpline.helpline_data import HELPLINE_LOG_FILE
 
 class Command(BaseCommand):
 
