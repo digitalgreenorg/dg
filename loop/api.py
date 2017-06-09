@@ -492,13 +492,15 @@ class CropResource(BaseResource):
         allowed_methods = ['post', 'get']
         resource_name = 'crop'
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
  
     def get_object_list(self, request):
-        # apply filters from url
-        languageFilter = request.GET.get('preferred_language', None) if request else None
+        # apply filters from url        
+        user = LoopUser.objects.get(user_id=request.user)
+        languageFilter = str(user.preferred_language.notation)
         if languageFilter:
             result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
         else:
@@ -604,13 +606,15 @@ class VehicleResource(BaseResource):
         queryset = Vehicle.objects.all()
         resource_name = 'vehicle'
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
     def get_object_list(self, request):
         # apply filters from url
-        languageFilter = request.GET.get('preferred_language', None) if request else None
+        user = LoopUser.objects.get(user_id=request.user)
+        languageFilter = user.preferred_language.notation
         if languageFilter:
             result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
         else:
@@ -713,8 +717,13 @@ class TransportationVehicleResource(BaseResource):
         attempt = TransportationVehicle.objects.filter(transporter=transporter, vehicle=vehicle,
                                                        vehicle_number=bundle.data["vehicle_number"])
         if attempt.count() < 1:
-            bundle = super(TransportationVehicleResource,
-                           self).obj_create(bundle, **kwargs)
+            try:
+                import pdb;pdb.set_trace()
+                bundle = super(TransportationVehicleResource,
+                           self).obj_create(bundle, **kwargs)    
+            except Exception, e:
+                print e
+            
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
