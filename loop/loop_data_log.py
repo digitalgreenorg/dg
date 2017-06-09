@@ -157,7 +157,7 @@ def delete_log(sender, **kwargs):
     elif sender == "CropLanguage":
         village_id = None
         user = None
-        loop_user = None    
+        loop_user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
@@ -234,12 +234,14 @@ def delete_log(sender, **kwargs):
         pass
 
 
-def get_log_object(log_object):
+def get_log_object(log_object, preferred_language):
     Obj_model = get_model('loop', log_object.entry_table)
     try:
         obj = Obj_model.objects.get(id=log_object.model_id)
-        obj= model_to_dict(obj)
+        # obj = model_to_dict(obj)
         if Obj_model.__name__=='CropLanguage':
+            obj.filter(language__notation=preferred_language)
+            obj = model_to_dict(obj)
             Obj_model = get_model('loop','Crop')
             crop_name = obj['crop_name']
             obj = Obj_model.objects.get(id = obj['crop'])
@@ -250,6 +252,8 @@ def get_log_object(log_object):
             log_object.entry_table='Crop'
             log_object.model_id = obj['id']
         elif Obj_model.__name__=='VehicleLanguage':
+            obj.filter(language__notation=preferred_language)
+            obj = model_to_dict(obj)
             Obj_model = get_model('loop','Vehicle')
             vehicle_name = obj['vehicle_name']
             obj = Obj_model.objects.get(id = obj['vehicle'])
@@ -259,6 +263,8 @@ def get_log_object(log_object):
             obj['online_id'] = obj['id']
             log_object.entry_table='Vehicle'
             log_object.model_id = obj['id']
+        else:
+            obj = model_to_dict(obj)
         data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data':obj, 'online_id': obj['id']}
     except Exception, e:
         data = {'log': model_to_dict(
@@ -288,6 +294,7 @@ def send_updated_log(request):
             LoopUser = get_model('loop', 'LoopUser')
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
+                preferred_language = requesting_loop_user.preferred_language.notation
                 user_list = LoopUser.objects.filter(
                     village__block_id=requesting_loop_user.village.block.id).values_list('user__id', flat=True)
             except Exception as e:
@@ -307,7 +314,6 @@ def send_updated_log(request):
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
-            
                 timestamp__gt=timestamp, entry_table__in=['CropLanguage','VehicleLanguage']))
             village_list_queryset = Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Village'])
@@ -425,7 +431,7 @@ def send_updated_log(request):
             for row in list_rows:
                 if row:
                     for i in row:
-                        data_list.append(get_log_object(i))
+                        data_list.append(get_log_object(i, preferred_language))
             if list_rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
                 return HttpResponse(data, content_type="application/json")
