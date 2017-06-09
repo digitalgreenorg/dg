@@ -492,13 +492,15 @@ class CropResource(BaseResource):
         allowed_methods = ['post', 'get']
         resource_name = 'crop'
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
  
     def get_object_list(self, request):
-        # apply filters from url
-        languageFilter = request.GET.get('preferred_language', None) if request else None
+        # apply filters from url        
+        user = LoopUser.objects.get(user_id=request.user)
+        languageFilter = str(user.preferred_language.notation)
         if languageFilter:
             result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
         else:
@@ -522,11 +524,11 @@ class CropResource(BaseResource):
         return bundle
 
     def dehydrate(self, bundle):
-
+        user = LoopUser.objects.get(user_id=bundle.request.user)
         bundle.data['online_id'] = bundle.data['id']
         bundle.data['crop_name_en'] = bundle.data['crop_name']
         for d in bundle.data['crops']:
-            if d.data['language']['notation'] == bundle.request.GET.get('preferred_language'):
+            if d.data['language']['notation'] == user.preferred_language.notation:
                 bundle.data['crop_name'] = d.data['crop_name']
                 break
         del bundle.data['crops']
@@ -604,13 +606,15 @@ class VehicleResource(BaseResource):
         queryset = Vehicle.objects.all()
         resource_name = 'vehicle'
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
     def get_object_list(self, request):
         # apply filters from url
-        languageFilter = request.GET.get('preferred_language', None) if request else None
+        user = LoopUser.objects.get(user_id=request.user)
+        languageFilter = user.preferred_language.notation
         if languageFilter:
             result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
         else:
@@ -618,11 +622,11 @@ class VehicleResource(BaseResource):
         return result
 
     def dehydrate(self, bundle):
-
+        user = LoopUser.objects.get(user_id=bundle.request.user)
         bundle.data['online_id'] = bundle.data['id']
         bundle.data['vehicle_name_en'] = bundle.data['vehicle_name']
         for d in bundle.data['vehicles']:
-            if d.data['language']['notation'] == bundle.request.GET.get('preferred_language'):
+            if d.data['language']['notation'] == user.preferred_language.notation:
                 bundle.data['vehicle_name'] = d.data['vehicle_name']
                 break
         del bundle.data['vehicles']
@@ -713,8 +717,12 @@ class TransportationVehicleResource(BaseResource):
         attempt = TransportationVehicle.objects.filter(transporter=transporter, vehicle=vehicle,
                                                        vehicle_number=bundle.data["vehicle_number"])
         if attempt.count() < 1:
-            bundle = super(TransportationVehicleResource,
-                           self).obj_create(bundle, **kwargs)
+            try:
+                bundle = super(TransportationVehicleResource,
+                           self).obj_create(bundle, **kwargs)    
+            except Exception, e:
+                print e
+            
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
