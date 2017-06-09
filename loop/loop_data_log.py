@@ -248,6 +248,7 @@ def get_log_object(log_object):
             obj['crop_name'] = crop_name
             obj['online_id'] = obj['id']
             log_object.entry_table='Crop'
+            log_object.model_id = obj['id']
         elif Obj_model.__name__=='VehicleLanguage':
             Obj_model = get_model('loop','Vehicle')
             vehicle_name = obj['vehicle_name']
@@ -257,6 +258,7 @@ def get_log_object(log_object):
             obj['vehicle_name'] = vehicle_name
             obj['online_id'] = obj['id']
             log_object.entry_table='Vehicle'
+            log_object.model_id = obj['id']
         data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data':obj, 'online_id': obj['id']}
     except Exception, e:
         data = {'log': model_to_dict(
