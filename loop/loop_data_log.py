@@ -157,7 +157,7 @@ def delete_log(sender, **kwargs):
     elif sender == "CropLanguage":
         village_id = None
         user = None
-        loop_user = None    
+        loop_user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
@@ -307,8 +307,8 @@ def send_updated_log(request):
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
-            
-                timestamp__gt=timestamp, entry_table__in=['CropLanguage','VehicleLanguage']))
+
+                timestamp__gt=timestamp, entry_table__in=['Crop', 'CropLanguage','VehicleLanguage']))
             village_list_queryset = Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Village'])
             list_rows.append(village_list_queryset)
