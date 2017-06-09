@@ -308,7 +308,7 @@ def send_updated_log(request):
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
             
-                timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle','CropLanguage','VehicleLanguage']))
+                timestamp__gt=timestamp, entry_table__in=['CropLanguage','VehicleLanguage']))
             village_list_queryset = Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Village'])
             list_rows.append(village_list_queryset)
