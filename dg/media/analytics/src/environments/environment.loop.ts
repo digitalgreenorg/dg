@@ -1,6 +1,7 @@
 import { chartsConfig } from '../../loop/configs/GraphsConfig';
 import { tabsConfig } from '../../loop/configs/TabsConfig';
 import { cardConfig } from '../../loop/configs/CardsConfig';
+import { navsConfig } from '../../loop/configs/NavsConfig';
 
 export const environment = {
   production: true,
@@ -8,5 +9,6 @@ export const environment = {
   url: 'http://127.0.0.1:8000/loop/',
   chartsConfig: chartsConfig,
   tabsConfig : tabsConfig,
-  cardsConfig : cardConfig
+  cardsConfig : cardConfig,
+  navsConfig : navsConfig
 };

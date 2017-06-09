@@ -1,0 +1,13 @@
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+  <button class="navbar-toggler navbar-toggler-right" type="button"  data-target="#navbarNavAltMarkup" (click)="isCollapsed = !isCollapsed">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-center navbar-brand" href="#">LOOP</a>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup" [collapse]="isCollapsed">
+    <div class="navbar-nav" >
+      <ng-container *ngFor="let nav of navs">
+        <a class="nav-item nav-link" [ngClass]="{'active':nav.active}">{{nav.name}}</a>
+      </ng-container>
+    </div>
+  </div>
+</nav> 

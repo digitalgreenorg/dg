@@ -10,6 +10,7 @@ import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ButtonsModule } from 'ngx-bootstrap';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { PerfectScrollbarModule, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { MyDatePickerModule } from 'mydatepicker';
 
@@ -24,6 +25,7 @@ import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from './shared.service';
 
 import { SearchPipe } from './filters/search.pipe';
+import { NavsComponent } from './navs/navs.component';
 
 declare var require: any;
 export function highchartsFactory() {
@@ -49,6 +51,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FiltersComponent,
     SearchPipe,
     CardsComponent,
+    NavsComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +62,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ButtonsModule.forRoot(),
     InfiniteScrollModule,
     PerfectScrollbarModule.forRoot(PERFECT_SCROLLBAR_CONFIG),
+    CollapseModule.forRoot(),
   ],
   providers: [{
     provide: HighchartsStatic,
