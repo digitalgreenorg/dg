@@ -234,35 +234,37 @@ def delete_log(sender, **kwargs):
         pass
 
 
+def get_log_crop_vehicle_object(log_object, preferred_language):
+    Obj_model = get_model('loop', log_object.entry_table)
+    if log_object.entry_table == 'CropLanguage':
+        table = 'Crop'
+        attr = 'crop_name'
+    else:
+        table = 'Vehicle'
+        attr = 'vehicle_name'
+
+    obj=Obj_model.objects.get(id=log_object.model_id,language__notation=preferred_language)
+    obj = model_to_dict(obj)
+    Obj_model = get_model('loop',table)
+    attr_value = obj[attr]
+    obj = Obj_model.objects.get(id = obj[table.lower()])
+    obj = model_to_dict(obj)
+    obj[attr] = attr_value
+    log_object.entry_table = table
+    log_object.model_id = obj['id']
+    return obj,log_object
+
+
+
 def get_log_object(log_object, preferred_language):
     Obj_model = get_model('loop', log_object.entry_table)
     try:
         obj = Obj_model.objects.get(id=log_object.model_id)
-        # obj = model_to_dict(obj)
-        if Obj_model.__name__=='CropLanguage':
-            obj.filter(language__notation=preferred_language)
-            obj = model_to_dict(obj)
-            Obj_model = get_model('loop','Crop')
-            crop_name = obj['crop_name']
-            obj = Obj_model.objects.get(id = obj['crop'])
-            obj = model_to_dict(obj)
-            obj['crop_name_en'] = obj['crop_name']
-            obj['crop_name'] = crop_name
-            obj['online_id'] = obj['id']
-            log_object.entry_table='Crop'
-            log_object.model_id = obj['id']
-        elif Obj_model.__name__=='VehicleLanguage':
-            obj.filter(language__notation=preferred_language)
-            obj = model_to_dict(obj)
-            Obj_model = get_model('loop','Vehicle')
-            vehicle_name = obj['vehicle_name']
-            obj = Obj_model.objects.get(id = obj['vehicle'])
-            obj = model_to_dict(obj)
-            obj['vehicle_name_en'] = obj['vehicle_name']
-            obj['vehicle_name'] = vehicle_name
-            obj['online_id'] = obj['id']
-            log_object.entry_table='Vehicle'
-            log_object.model_id = obj['id']
+        if Obj_model.__name__=='CropLanguage' or Obj_model.__name__=='VehicleLanguage':
+            if obj.language.notation == preferred_language:
+                obj,log_object = get_log_crop_vehicle_object(log_object,preferred_language)
+            else:
+                return
         else:
             obj = model_to_dict(obj)
         data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data':obj, 'online_id': obj['id']}
@@ -431,7 +433,9 @@ def send_updated_log(request):
             for row in list_rows:
                 if row:
                     for i in row:
-                        data_list.append(get_log_object(i, preferred_language))
+                        objectData = get_log_object(i, preferred_language)
+                        if objectData is not None:
+                            data_list.append(objectData)
             if list_rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
                 return HttpResponse(data, content_type="application/json")
