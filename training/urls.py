@@ -6,7 +6,8 @@ from django.views.generic import TemplateView
 from tastypie.api import Api
 from training.api import TrainerResource, LanguageResource, AssessmentResource, QuestionResource, MediatorResource, DistrictResource, VillageResource, PartnerResource, TrainingResource, StateResource, ScoreResource
 
-from views import login, dashboard, filter_data, trainer_wise_data, question_wise_data, state_wise_data, date_filter_data, month_wise_data
+from views import login, dashboard, graph_data, get_overall_data, get_filter_data
+
 from training.log.training_log import send_updated_log
 
 api = Api(api_name = "v1")
@@ -26,11 +27,8 @@ urlpatterns = patterns('',
     url(r'^login/', login),
     url(r'^api/', include(api.urls)),
     url(r'^dashboard/', dashboard),
-    url(r'^filter_data/', filter_data),
-    url(r'^date_filter_data/', date_filter_data),
-    url(r'^trainer_wise_data', trainer_wise_data),
-    url(r'^question_wise_data', question_wise_data),
-    url(r'^state_wise_data', state_wise_data),
-    url(r'^month_wise_data', month_wise_data),
+    url(r'^graph_data', graph_data),
     url(r'^get_log/', send_updated_log),
+    url(r'^getData/', get_overall_data),
+    url(r'^get_filter_data',get_filter_data),
     )
