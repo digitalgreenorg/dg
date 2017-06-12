@@ -203,7 +203,7 @@ class Gaddidar(LoopModel):
         return self.gaddidar_name
 
     class Meta:
-        unique_together = ("gaddidar_phone", "gaddidar_name")
+        unique_together = ("gaddidar_phone", "gaddidar_name","mandi")
 
 post_save.connect(save_log, sender=Gaddidar)
 pre_delete.connect(save_log, sender=Gaddidar)
@@ -313,7 +313,6 @@ class VehicleLanguage(models.Model):
 
 post_save.connect(save_log,sender=VehicleLanguage)
 pre_delete.connect(save_log,sender=VehicleLanguage)
-
 
 class TransportationVehicle(LoopModel):
     id = models.AutoField(primary_key=True)
