@@ -182,15 +182,17 @@ def send_updated_log(request):
 
             for entry in transporter_trans_vehicle_rows:
                 if entry.entry_table == "Transporter" and entry.loop_user is None:
-                    if entry.action != -1 and Transporter.objects.get(id=entry.model_id).block.id == requesting_loop_user.village.block.id:
-                        list_rows.append(entry)
-                    elif entry.action == -1:
+                    try:
+                        if Transporter.objects.get(id=entry.model_id).block.id == requesting_loop_user.village.block.id:
+                            list_rows.append(entry)
+                    except:
                         list_rows.append(entry)
                 elif entry.entry_table == "TransportationVehicle" and entry.loop_user is None:
-                    if entry.action != -1 and TransportationVehicle.objects.get(
-                            id=entry.model_id).transporter.block.id == requesting_loop_user.village.block.id:
-                        list_rows.append(entry)
-                    elif entry.action == -1:
+                    try:
+                        if TransportationVehicle.objects.get(
+                                id=entry.model_id).transporter.block.id == requesting_loop_user.village.block.id:
+                            list_rows.append(entry)
+                    except:
                         list_rows.append(entry)
 
             mandi_list_queryset = Log.objects.filter(
@@ -200,9 +202,10 @@ def send_updated_log(request):
             gaddidar_rows = Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
             for grow in gaddidar_rows:
-                if grow.action !=-1 and Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
-                    list_rows.append(grow)
-                elif grow.action == -1:
+                try:
+                    if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
+                        list_rows.append(grow)
+                except:
                     list_rows.append(grow)
 
             gaddidar_commission_rows = Log.objects.filter(
