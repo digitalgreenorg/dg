@@ -1,4 +1,4 @@
-<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+<!--<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
   <button class="navbar-toggler navbar-toggler-right" type="button"  data-target="#navbarLevelOne" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -21,5 +21,28 @@
         <a href="#">{{nav.name}}</a>
       </ng-container>
     </div>
+  </div>
+</nav> -->
+
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+  <button class="navbar-toggler navbar-toggler-right" type="button"  data-target="#navbarLevelOne" (click)="isCollapsed = !isCollapsed">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#">LOOP</a>
+  <div class="collapse navbar-collapse" id="navbarLevelOne" [collapse]="isCollapsed">
+    <ul class="navbar-nav">
+      <li class="nav-item" *ngFor="let nav of navsFirst">
+        <a class="nav-link" href="#" [data-target]="nav.data-target">{{nav.name}}</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav" *ngFor="let nav of navsSecond" [id]="nav.id" >
+      <li class="nav-item" *ngFor="let subNav of nav.name">
+        <a class="nav-link" href="#" id="">{{subNav}}</a>
+      </li>
+    </ul>
   </div>
 </nav>

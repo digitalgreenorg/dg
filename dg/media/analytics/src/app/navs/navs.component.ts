@@ -20,16 +20,16 @@ export class NavsComponent implements OnInit {
     Object.keys(this.navsConfig).forEach(navOne => {
       this.navsFirst.push({
         'name': navOne,
-        'data-target': '#'+navOne,
-        'active': this.navsConfig[navOne].active
+        'data-target': '#'+navOne
       });
+      let subNav = []
       Object.keys(this.navsConfig[navOne]).forEach(navTwo => {
-        this.navsSecond.push({
-          'id': navOne,
-          'name':navTwo,
-          'active':this.navsConfig[navOne][navTwo].active
-        })
+        subNav.push(navTwo);
       });
+      this.navsSecond.push({
+          'id': navOne,
+          'name':subNav
+        })
     });
   }
 
