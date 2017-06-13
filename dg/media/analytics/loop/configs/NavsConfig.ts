@@ -1,16 +1,21 @@
 export const navsConfig = {
     'Home':{
             'active':true,
+            'overall':false,
+            'recent':false,
             'showDivs':[]  
      },
 
     'Analytics':{
-                 'active':false,
+                 'Aggregators':{},
+                 'Mandi':{},
+                 'Crop':{},
                  'showDivs':[]
      },
 
      'Time Series': {
-                     'active':false,
+                     'Time Series 1':{},
+                     'Time Series 2':{},
                      'showDivs':[]   
      }
 

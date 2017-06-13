@@ -9,24 +9,33 @@ import { environment } from '../../environments/environment.loop';
 
 export class NavsComponent implements OnInit {
   public isCollapsed:boolean = false;
-  navs = []
+  navsFirst = [];
+  navsSecond = [];
+  overall : false;
+  recent : false;
   navsConfig = environment.navsConfig;
   constructor() { }
 
   ngOnInit() {
-    Object.keys(this.navsConfig).forEach(nav => {
-      if(this.navsConfig[nav].active){
-        let active = true;
-      }
-      this.navs.push({
-        'name': nav,
-        'active': this.navsConfig[nav].active
+    Object.keys(this.navsConfig).forEach(navOne => {
+      this.navsFirst.push({
+        'name': navOne,
+        'data-target': '#'+navOne,
+        'active': this.navsConfig[navOne].active
       });
-    })
+      Object.keys(this.navsConfig[navOne]).forEach(navTwo => {
+        this.navsSecond.push({
+          'id': navOne,
+          'name':navTwo,
+          'active':this.navsConfig[navOne][navTwo].active
+        })
+      });
+    });
   }
 
   ngAfterViewInit() {
-    console.log(this.navs);
+    console.log(this.navsFirst);
+    console.log(this.navsSecond);
   }
   
 
