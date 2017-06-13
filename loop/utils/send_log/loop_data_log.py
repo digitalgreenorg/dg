@@ -1,12 +1,10 @@
 import json
-
 import datetime
 from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from tastypie.models import ApiKey
-
 
 class TimestampException(Exception):
     pass
@@ -88,36 +86,42 @@ def save_log(sender, **kwargs):
         deletedObject.save()
 
 
-def get_log_object(log_object):
+def get_log_crop_vehicle_object(log_object, preferred_language):
+    Obj_model = get_model('loop', log_object.entry_table)
+    if log_object.entry_table == 'CropLanguage':
+        table = 'Crop'
+        attr = 'crop_name'
+    else:
+        table = 'Vehicle'
+        attr = 'vehicle_name'
+
+    obj = Obj_model.objects.get(id=log_object.model_id,language__notation=preferred_language)
+    obj = model_to_dict(obj)
+    Obj_model = get_model('loop',table)
+    attr_value = obj[attr]
+    obj = Obj_model.objects.get(id = obj[table.lower()])
+    obj = model_to_dict(obj)
+    obj[attr] = attr_value
+    log_object.entry_table = table
+    log_object.model_id = obj['id']
+    return obj,log_object
+
+def get_log_object(log_object, preferred_language):
     Obj_model = get_model('loop', log_object.entry_table)
     try:
         obj = Obj_model.objects.get(id=log_object.model_id)
-        obj= model_to_dict(obj)
-        if Obj_model.__name__=='CropLanguage':
-            Obj_model = get_model('loop','Crop')
-            crop_name = obj['crop_name']
-            obj = Obj_model.objects.get(id = obj['crop'])
+        if Obj_model.__name__=='CropLanguage' or Obj_model.__name__=='VehicleLanguage':
+            if obj.language.notation == preferred_language:
+                obj,log_object = get_log_crop_vehicle_object(log_object,preferred_language)
+            else:
+                return
+        else:
             obj = model_to_dict(obj)
-            obj['crop_name_en'] = obj['crop_name']
-            obj['crop_name'] = crop_name
-            obj['online_id'] = obj['id']
-            log_object.entry_table='Crop'
-        elif Obj_model.__name__=='VehicleLanguage':
-            Obj_model = get_model('loop','Vehicle')
-            vehicle_name = obj['vehicle_name']
-            obj = Obj_model.objects.get(id = obj['vehicle'])
-            obj = model_to_dict(obj)
-            obj['vehicle_name_en'] = obj['vehicle_name']
-            obj['vehicle_name'] = vehicle_name
-            obj['online_id'] = obj['id']
-            log_object.entry_table='Vehicle'
-        data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': model_to_dict(
-            obj), 'online_id': obj.id}
-    except Exception:
+        data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data':obj, 'online_id': obj['id']}
+    except Exception, e:
         data = {'log': model_to_dict(
             log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': None, 'online_id': log_object.model_id}
     return data
-
 
 def get_latest_timestamp():
     Log = get_model('loop', 'Log')
@@ -142,6 +146,7 @@ def send_updated_log(request):
             LoopUser = get_model('loop', 'LoopUser')
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
+                preferred_language = requesting_loop_user.preferred_language.notation
                 user_list = LoopUser.objects.filter(
                     village__block_id=requesting_loop_user.village.block.id).values_list('user__id', flat=True)
             except Exception:
@@ -159,7 +164,7 @@ def send_updated_log(request):
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
-                timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle', 'CropLanguage', 'VehicleLanguage']))
+                timestamp__gt=timestamp, entry_table__in=['CropLanguage', 'VehicleLanguage']))
             village_list_queryset = Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Village'])
             list_rows.append(village_list_queryset)
@@ -186,14 +191,14 @@ def send_updated_log(request):
                         if Transporter.objects.get(id=entry.model_id).block.id == requesting_loop_user.village.block.id:
                             list_rows.append(entry)
                     except:
-                        list_rows.append(entry)
+                        pass
                 elif entry.entry_table == "TransportationVehicle" and entry.loop_user is None:
                     try:
                         if TransportationVehicle.objects.get(
                                 id=entry.model_id).transporter.block.id == requesting_loop_user.village.block.id:
                             list_rows.append(entry)
                     except:
-                        list_rows.append(entry)
+                        pass
 
             mandi_list_queryset = Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Mandi'])
@@ -206,7 +211,7 @@ def send_updated_log(request):
                     if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
                         list_rows.append(grow)
                 except:
-                    list_rows.append(grow)
+                    pass
 
             gaddidar_commission_rows = Log.objects.filter(
                 timestamp__gt=timestamp,entry_table__in=['GaddidarCommission'])
@@ -248,7 +253,9 @@ def send_updated_log(request):
                 if row:
                     try:
                         for i in row:
-                            data_list.append(get_log_object(i))
+                            objectData = get_log_object(i, preferred_language)
+                            if objectData is not None:
+                                data_list.append(objectData)
                     except TypeError:
                         data_list.append(get_log_object(row))
             if list_rows:

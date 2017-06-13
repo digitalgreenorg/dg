@@ -308,7 +308,7 @@ class VehicleLanguage(models.Model):
 
     def __unicode__(self):
         return self.vehicle_name
-    def __crop__(self):
+    def __vehicle__(self):
         return "%s" % (self.vehicle.vehicle_name)
 
 post_save.connect(save_log,sender=VehicleLanguage)
