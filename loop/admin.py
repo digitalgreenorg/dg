@@ -52,7 +52,8 @@ class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
-    search_fields = ['name', 'village__village_name']
+    search_fields = ['name', 'village__village_name', 'village__block__district__state__country']
+    list_filter = ['village__block__district__state__country']
 
 # class LoopUserInline(admin.TabularInline):
 #     model = LoopUser
@@ -63,7 +64,7 @@ class LoopUserAdmin(admin.ModelAdmin):
 class FarmerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'phone', '__village__')
     search_fields = ['name', 'phone', 'village__village_name']
-    list_filter = ['village__village_name']
+    list_filter = ['village__village_name', 'village__block__district__state__country']
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__crop__', 'price',
@@ -80,6 +81,7 @@ class TransporterAdmin(admin.ModelAdmin):
     list_display = ('id', 'transporter_name',
                     'transporter_phone', '__block__')
     search_fields = ['transporter_name', 'transporter_phone']
+    list_filter = ['block__district__state__country']
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
@@ -115,7 +117,7 @@ class VillageAdmin(admin.ModelAdmin):
     fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
     list_display = ('id', 'village_name', 'block', 'village_name_en')
     search_fields = ['village_name', 'block__block_name']
-    list_filter = ['block__block_name']
+    list_filter = ['block__block_name', 'block__district__state__country']
 
 
 class CropAdmin(admin.ModelAdmin):
