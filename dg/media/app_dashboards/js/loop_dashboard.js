@@ -1,7 +1,7 @@
 /* This file should contain all the JS for Loop dashboard */
 window.onload = initialize;
 
-var language, selected_tab, selected_parameter, selected_page;
+var language, selected_tab, selected_parameter, selected_page, country_id = 1;
 var days_to_average, time_series_frequency;
 //Arrays containing ids and corresponding names as were selected in the filters.
 var aggregator_ids, aggregator_names, crop_ids, crop_names, mandi_ids, mandi_names, gaddidar_ids, gaddidar_names;
@@ -69,8 +69,8 @@ function initialize() {
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     $("#from_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     showLoader();
-    total_static_data();
-    recent_graphs_data(language);
+    total_static_data(country_id);
+    recent_graphs_data(language, country_id);
     days_to_average = 15;
 
     gaddidar = true;
@@ -80,7 +80,7 @@ function initialize() {
 
     time_series_frequency = 1;
 
-    get_filter_data(language);
+    get_filter_data(language, country_id);
     set_filterlistener();
     $('#aggregator_payment_tab').hide();
     $("#download_payment_sheets").hide();
@@ -391,8 +391,8 @@ var drilldownGraphOptions = {
 
 
 //To compute data for home page overall cards
-function total_static_data() {
-    $.get("/loop/total_static_data/", {}).done(function(data) {
+function total_static_data(country_id) {
+    $.get("/loop/total_static_data/", {'country_id':country_id}).done(function(data) {
         hideLoader();
         var json_data = JSON.parse(data);
 
@@ -419,8 +419,8 @@ function total_static_data() {
 }
 
 //To request data for recent graphs on home page
-function recent_graphs_data(language) {
-    $.get("/loop/recent_graphs_data/", {}).done(function(data) {
+function recent_graphs_data(language, country_id) {
+    $.get("/loop/recent_graphs_data/", {'country_id':country_id}).done(function(data) {
         var json_data = JSON.parse(data.replace(/\bNaN\b/g, 0));
         aggregated_result = json_data['aggregated_result'];
         plot_cards_data();
@@ -627,7 +627,7 @@ function set_filterlistener() {
         time_series_frequency = 1;
         $('#time_series_frequency option[value="' + 1 + '"]').prop('selected', true);
         $('#time_series_frequency').material_select();
-        get_data();
+        get_data("",country_id);
     });
 
     $('#aggregator_all').on('change', function(e) {
@@ -830,7 +830,7 @@ function set_filterlistener() {
 
     $('#get_filter_data_button').click(function() {
         gaddidar = true;
-        get_data();
+        get_data("",country_id);
     });
 }
 
@@ -841,9 +841,10 @@ function hidePaymentDetails() {
 }
 
 //To make a call when filters are changed
-function get_filter_data(language) {
+function get_filter_data(language, country_id) {
     $.get("/loop/filter_data/", {
-            language: language
+            language: language,
+            'country_id': country_id
         })
         .done(function(data) {
             var data_json = JSON.parse(data);
@@ -861,7 +862,7 @@ function get_filter_data(language) {
             else
                 fill_crop_filter(crops_for_filter);
 
-            get_data();
+            get_data("",country_id);
         });
 }
 
@@ -930,7 +931,7 @@ function create_filter(tbody_obj, id, name, checked) {
 }
 
 //To get data after filters are aplied
-function get_data(location) {
+function get_data(location, country_id) {
     if (location == 'drawer') {
         start_date = $('#from_date_drawer').val();
         end_date = $('#to_date_drawer').val();
@@ -982,19 +983,20 @@ function get_data(location) {
             }
         });
         // $(".button-collapse1").sideNav('hide');
-        get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
-        get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids);
+        get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id);
+        get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id);
     }
 }
 
-function get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids) {
+function get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id) {
     $.get("/loop/data_for_drilldown_graphs/", {
             'start_date': start_date,
             'end_date': end_date,
-            'aggregator_ids[]': aggregator_ids,
-            'crop_ids[]': crop_ids,
-            'mandi_ids[]': mandi_ids,
-            'gaddidar_ids[]': gaddidar_ids
+            'country_id': country_id,
+            'a_id[]': aggregator_ids,
+            'c_id[]': crop_ids,
+            'm_id[]': mandi_ids,
+            'g_id[]': gaddidar_ids,
         })
         .done(function(data) {
             bar_graphs_json_data = JSON.parse(data);
@@ -1639,14 +1641,15 @@ function farmer_crop_visits(container, json_data) {
 }
 
 //Data for Time series grpahs request is being made here
-function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids) {
+function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id) {
     $.get("/loop/data_for_line_graph/", {
             'start_date': start_date,
             'end_date': end_date,
-            'aggregator_ids[]': aggregator_ids,
-            'crop_ids[]': crop_ids,
-            'mandi_ids[]': mandi_ids,
-            'gaddidar_ids[]': gaddidar_ids
+            'country_id': country_id,
+            'a_id[]': aggregator_ids,
+            'c_id[]': crop_ids,
+            'm_id[]': mandi_ids,
+            'g_id[]': gaddidar_ids
         })
         .done(function(data) {
             line_json_data = JSON.parse(data);
@@ -4021,8 +4024,14 @@ function change_language(lang) {
         fill_crop_filter(croplanguage_for_filter);
     else
         fill_crop_filter(crops_for_filter);
-    get_data();
+    get_data("",country_id);
     if (selected_page == ANALYTICS_PAGE || selected_page == TIME_SERIES_PAGE) {
         show_nav(selected_page);
     }
+}
+
+function change_country(country) {
+  total_static_data(country);
+  recent_graphs_data(language, country);
+  get_filter_data(language, country);
 }

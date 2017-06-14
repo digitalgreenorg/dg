@@ -147,7 +147,7 @@ def farmer_payments(request):
 
 def filter_data(request):
     language = request.GET.get('language')
-    country_id = 2
+    country_id = request.GET.get('country_id')
     aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id')
     # villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
@@ -165,7 +165,7 @@ def filter_data(request):
 
 
 def total_static_data(request):
-    country_id = 2 #To be fetched from request
+    country_id = request.GET['country_id'] #To be fetched from request
     total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('farmer').distinct().count()
     total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).count()
 
@@ -361,7 +361,7 @@ def crop_language_data(request):
 
 
 def recent_graphs_data(request):
-    country_id = 2 #To be fetched from request
+    country_id = request.GET['country_id'] #To be fetched from request
     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id)
 
     chart_dict = {'aggregated_result': aggregated_result, 'cummulative_vol_farmer': cummulative_vol_farmer}
@@ -372,11 +372,11 @@ def recent_graphs_data(request):
 def data_for_drilldown_graphs(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    gaddidar_ids = request.GET.getlist('gaddidar_ids[]')
-    country_id = 2 #To be fetched from request
+    aggregator_ids = request.GET.getlist('a_id[]')
+    crop_ids = request.GET.getlist('c_id[]')
+    mandi_ids = request.GET.getlist('m_id[]')
+    gaddidar_ids = request.GET.getlist('g_id[]')
+    country_id = request.GET['country_id'] #To be fetched from request
     filter_args = {}
     filter_transportation = {}
     filter_args_no_crops = {}
@@ -463,7 +463,7 @@ def data_for_line_graph(request):
     crop_ids = request.GET.getlist('crop_ids[]')
     mandi_ids = request.GET.getlist('mandi_ids[]')
     gaddidar_ids = request.GET.getlist('gaddidar_ids[]')
-    country_id = 2 #To be fetched from request
+    country_id = request.GET['country_id'] #To be fetched from request
     filter_args = {}
     filter_transportation = {}
     if (start_date != ""):
