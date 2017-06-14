@@ -459,10 +459,10 @@ def data_for_drilldown_graphs(request):
 def data_for_line_graph(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
-    aggregator_ids = request.GET.getlist('aggregator_ids[]')
-    crop_ids = request.GET.getlist('crop_ids[]')
-    mandi_ids = request.GET.getlist('mandi_ids[]')
-    gaddidar_ids = request.GET.getlist('gaddidar_ids[]')
+    aggregator_ids = request.GET.getlist('a_id[]')
+    crop_ids = request.GET.getlist('c_id[]')
+    mandi_ids = request.GET.getlist('m_id[]')
+    gaddidar_ids = request.GET.getlist('g_id[]')
     country_id = request.GET['country_id'] #To be fetched from request
     filter_args = {}
     filter_transportation = {}
