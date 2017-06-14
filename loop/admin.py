@@ -52,7 +52,8 @@ class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
-    search_fields = ['name', 'village__village_name']
+    search_fields = ['name', 'village__village_name', 'village__block__district__state__country']
+    list_filter = ['village__block__district__state__country']
 
 # class LoopUserInline(admin.TabularInline):
 #     model = LoopUser
@@ -63,7 +64,7 @@ class LoopUserAdmin(admin.ModelAdmin):
 class FarmerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'phone', '__village__')
     search_fields = ['name', 'phone', 'village__village_name']
-    list_filter = ['village__village_name']
+    list_filter = ['village__village_name', 'village__block__district__state__country']
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__crop__', 'price',
@@ -71,7 +72,7 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
     search_fields = ['farmer__name', 'farmer__village__village_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
     list_filter = (UserListFilter,'status',
-                   'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name', 'farmer__village__village_name')
+                   'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name', 'farmer__village__village_name', 'mandi__district__state__country')
     date_hierarchy = 'date'
 
 
@@ -80,13 +81,14 @@ class TransporterAdmin(admin.ModelAdmin):
     list_display = ('id', 'transporter_name',
                     'transporter_phone', '__block__')
     search_fields = ['transporter_name', 'transporter_phone']
+    list_filter = ['block__district__state__country']
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__','__vehicle__',
                     'transportation_cost', 'farmer_share', 'farmer_share_comment','transportation_cost_comment')
     search_fields = ['user_created__username', 'mandi__mandi_name']
-    list_filter = (UserListFilter, 'mandi__mandi_name')
+    list_filter = (UserListFilter, 'mandi__mandi_name', 'mandi__district__state__country')
     date_hierarchy = 'date'
 
 
@@ -95,7 +97,7 @@ class GaddidarAdmin(admin.ModelAdmin):
     list_display = ('id', 'gaddidar_name',
                     'gaddidar_phone', 'mandi','discount_criteria', 'commission', 'gaddidar_name_en')
     search_fields = ['gaddidar_name', 'mandi__mandi_name']
-    list_filter = ['mandi__mandi_name']
+    list_filter = ['mandi__mandi_name', 'mandi__district__state__country']
 
 
 class TransportationVehicleAdmin(admin.ModelAdmin):
@@ -108,14 +110,14 @@ class MandiAdmin(admin.ModelAdmin):
     fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible')
     list_display = ('id', 'mandi_name', 'district', 'mandi_name_en')
     search_fields = ['mandi_name', 'district__district_name']
-    list_filter = ['district__district_name']
+    list_filter = ['district__district_name', 'district__state__country']
 
 
 class VillageAdmin(admin.ModelAdmin):
     fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
     list_display = ('id', 'village_name', 'block', 'village_name_en')
     search_fields = ['village_name', 'block__block_name']
-    list_filter = ['block__block_name']
+    list_filter = ['block__block_name', 'block__district__state__country']
 
 
 class CropAdmin(admin.ModelAdmin):
@@ -125,12 +127,12 @@ class CropAdmin(admin.ModelAdmin):
 class GaddidarCommisionAdmin(admin.ModelAdmin):
     fields = ('start_date','mandi','gaddidar','discount_percent')
     list_display = ('id', 'start_date', '__unicode__','discount_percent')
-    list_filter = ('mandi','gaddidar')
+    list_filter = ['mandi','gaddidar', 'mandi__district__state__country']
 
 class GaddidarShareOutliersAdmin(admin.ModelAdmin):
     fields = ('date','aggregator','mandi','gaddidar','amount' ,'comment')
     list_display = ('id', 'date','__aggregator__', '__unicode__','amount', 'comment')
-    list_filter = ('aggregator', 'mandi', 'gaddidar')
+    list_filter = ['aggregator', 'mandi', 'gaddidar', 'mandi__district__state__country']
     date_hierarchy = 'date'
 
 class CropLanguageAdmin(admin.ModelAdmin):
