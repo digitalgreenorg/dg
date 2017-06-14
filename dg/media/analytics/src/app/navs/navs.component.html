@@ -32,7 +32,7 @@
   <div class="collapse navbar-collapse" id="navbarLevelOne" [collapse]="isCollapsed">
     <ul class="navbar-nav">
       <li class="nav-item" *ngFor="let nav of navsFirst">
-        <a class="nav-link" href="#" [data-target]="nav.data-target">{{nav.name}}</a>
+        <a class="nav-link" routerLinkActive="active" href="#" data-target="nav.data-target">{{nav.name}}</a>
       </li>
     </ul>
   </div>
