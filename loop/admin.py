@@ -84,7 +84,7 @@ class TransporterAdmin(admin.ModelAdmin):
 
 class DayTransportationAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__','__vehicle__',
-                    'transportation_cost', 'farmer_share', 'comment')
+                    'transportation_cost', 'farmer_share', 'farmer_share_comment','transportation_cost_comment')
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = (UserListFilter, 'mandi__mandi_name')
     date_hierarchy = 'date'
@@ -135,6 +135,7 @@ class GaddidarShareOutliersAdmin(admin.ModelAdmin):
 
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')
+    search_fields = ['crop_name']
 
 class AggregatorIncentiveAdmin(admin.ModelAdmin):
     fields = ('start_date','aggregator','model_type','incentive_model')
@@ -174,6 +175,15 @@ class HelplineSmsLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'sms_id', 'from_number', 'to_number', 'sent_time')
     search_fields = ['from_number', 'to_number', 'sent_time']
 
+class BroadcastAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'audio_url', 'from_number', 'start_time', 'end_time')
+    search_fields = ['title', 'from_number']
+
+class BroadcastAudienceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'to_number', 'broadcast', 'farmer', 'status', 'start_time', 'end_time')
+    list_filter = ('broadcast','status')
+    search_fields = ['to_number']
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -205,3 +215,6 @@ loop_admin.register(HelplineIncoming,HelplineIncomingAdmin)
 loop_admin.register(HelplineOutgoing,HelplineOutgoingAdmin)
 loop_admin.register(HelplineCallLog,HelplineCallLogAdmin)
 loop_admin.register(HelplineSmsLog,HelplineSmsLogAdmin)
+loop_admin.register(Broadcast,BroadcastAdmin)
+loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
+loop_admin.register(VehicleLanguage)

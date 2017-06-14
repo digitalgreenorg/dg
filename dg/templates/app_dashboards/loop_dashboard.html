@@ -1,5 +1,3 @@
-
-
 {% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}Loop{% endblock %} {% block extracss %}
 <style>
    li.not-hoverable:hover,
@@ -764,7 +762,7 @@
             <div class="col s5">
                <div class="input-field inline">
                   <input id="gaddidar_share_row" value="share" type="text" >
-                  <label id="gaddidar_share_label" for="share_row" class="active" >Commission Agent Contribution[CAC] (in Rs) (Q*CAD)</label>
+                  <label id="gaddidar_share_label" for="gaddidar_share_row" class="active" >Commission Agent Contribution[CAC] (in Rs) (Q*CAD)</label>
                </div>
             </div>
          </div>
@@ -787,69 +785,67 @@
       <a id="gaddidar_reset_modal" class="left modal-action waves-effect waves-green btn-flat">Reset</a>
    </div>
 </div>
-<!-- <div id="modal4" class="modal">
-   <div class="modal-content">
-      <h5>Change Transport Cost</h5>
-      <form >
-         <div class="row ">
-            <div class="col s3">
-               <div class="input-field inline" >
-                  <input id="transportation_date_row" value="00-00-00" type="text" disabled>
-                  <label for="transportation_date_row">Date</label>
-               </div>
+<!-- Transportation Payment Modal -->
+<div id="transportation_modal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <div id="transportation_header" class="row">
+            <div class="col s10">
+                <h5>Change Transport Cost</h5>
             </div>
-            <div class="col s3">
-               <div class="input-field inline" >
-                  <input id="transportation_mandi_row" value="mandi" type="text" disabled>
-                  <label for="transportation_mandi_row">Mandi</label>
-               </div>
+            <a id="transportation_close" class="col s2 right-align"><img src="/media/app_dashboards/images/cancel.png" /></a>
+        </div>
+        <form>
+            <div id="transportation_disabled_elements">
+                <div class="row ">
+                    <div class="col s2">
+                        Date
+                        <input id="transportation_date_row" value="00-00-00" type="text" disabled>
+                    </div>
+                    <div class="col s2">
+                        Mandi
+                        <input id="transportation_mandi_row" value="mandi" type="text" disabled>
+                    </div>
+                    <div class="col s3">
+                        Transporter
+                        <input id="transportation_transporter_row" value="gaddidar" type="text" disabled>
+                    </div>
+                    <div class="col s2">
+                        Vehicle
+                        <input id="transportation_vehicle_row" value="quantity" type="text" disabled>
+                    </div>
+                    <div class="col s3">
+                        Vehicle Number
+                        <input id="transportation_number_row" value="commission" type="text" disabled>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="input-field inline">
+                            <input id="transportation_cost_row" value="share" type="text">
+                            <label class="active" for="transportation_cost_label">Transport Cost</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row center" id="transportation_error_div" hide>
+                    <p class="red-text" id="transportation_error_message"></p>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="input-field inline">
+                            <input id="transportation_comment_row" value=" " type="text" maxlength="180">
+                            <label for="transportation_comment_row" class="active">Comment</label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col s3">
-               <div class="input-field inline" >
-                  <input id="transportation_transporter_row" value="gaddidar" type="text" disabled>
-                  <label for="transportation_transporter_row">Transporter</label>
-               </div>
-            </div>
-            <div class="col s3">
-               <div class="input-field inline" >
-                  <input id="transportation_vehicle_row" value="quantity" type="text" disabled>
-                  <label for="transportation_vehicle_row">Vehicle</label>
-               </div>
-            </div>
-         </div>
-         <div class="row">
-            <div class="col s5">
-               <div class="input-field inline" >
-                  <input id="transportation_number_row" value="commission"  type="text" disabled>
-                  <label for="transportation_number_label">Vehicle Number</label>
-               </div>
-            </div>
-            <div class="col s2">
-               OR
-            </div>
-            <div class="col s5">
-               <div class="input-field inline">
-                  <input id="transportation_cost_row" value="share" type="text" >
-                  <label for="transportation_cost_label">Transport Cost</label>
-               </div>
-            </div>
-         </div>
-         <div class="row">
-            <div class="col s12">
-               <div class="input-field inline" >
-                  <input id="transportation_comment_row"  type="text">
-                  <label for="transportation_comment_row">Comment
-                  </label>
-               </div>
-            </div>
-         </div>
-      </form>
-   </div>
-   <div class="modal-footer">
-      <a id="transportation_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat" style="display:none">Submit</a>
-      <a id="transportation_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat" style="display:none">Cancel</a>
-   </div>
-   </div> -->
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a id="transportation_submit_modal" class=" modal-action waves-effect waves-green btn-flat">Submit</a>
+        <a id="transportation_reset_modal" class="left modal-action waves-effect waves-green btn-flat">Reset</a>
+    </div>
+</div>
 {% endblock %} {% block script %}
 <!-- ?1 after js represents js version for refreshing cached version of javascript-->
 <script src="{% static 'app_dashboards/js/loop_dashboard.js?2' %}"></script>
