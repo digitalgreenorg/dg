@@ -14,18 +14,29 @@ export class NavsComponent implements OnInit {
   navsSecond = [];
   overall : false;
   recent : false;
-  
-  constructor() {}
 
+  constructor() {}
+  
   ngOnInit() {
+    let exceptionNavs = ['active','overall','recent','showDivs']
     Object.keys(this.navsConfig).forEach(navOne => {
       let tempDict = {}
       tempDict['status'] = false;
-      tempDict['subNav'] = Object.keys(this.navsConfig[navOne])
+      tempDict['subNav'] = fillSubNav(this.navsConfig[navOne])
       this.toggleNav[navOne] = tempDict;
     })
+     function fillSubNav(subNavs) {
+      let navsList = []
+      Object.keys(subNavs).forEach(nav => {
+        if(!(exceptionNavs.indexOf(nav)>-1)) {
+          navsList.push(nav);
+        }
+      })
+      return navsList
+    }
   }
 
+  
   toggleNavKeys() {
     return Object.keys(this.toggleNav)
   }
