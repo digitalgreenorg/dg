@@ -1,46 +1,20 @@
-<!--<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
-  <button class="navbar-toggler navbar-toggler-right" type="button"  data-target="#navbarLevelOne" (click)="isCollapsed = !isCollapsed">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-center navbar-brand" href="#">LOOP</a>
-  <div class="collapse navbar-collapse" id="navbarLevelOne" [collapse]="isCollapsed">
-    <div class="navbar-nav" >
-      <ng-container *ngFor="let nav of navsFirst">
-        <a class="nav-item nav-link" [ngClass]="{'active':nav.active}" data-target="nav.data-target">{{nav.name}}</a>
-      </ng-container>
-    </div>
-  </div>
-</nav>
-<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-  <button class="navbar-toggler navbar-toggler-right" type="button"  data-target="#navbarLevelTwo" (click)="isCollapsed = !isCollapsed">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="#navbarLevelTwo" [collapse]="isCollapsed">
-    <div class="navbar-nav" >
-      <ng-container *ngFor="let nav of navsSecond" id="nav.id">
-        <a href="#">{{nav.name}}</a>
-      </ng-container>
-    </div>
-  </div>
-</nav> -->
-
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
-  <button class="navbar-toggler navbar-toggler-right" type="button"  data-target="#navbarLevelOne" (click)="isCollapsed = !isCollapsed">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarLevelOne" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
   </button>
   <a class="navbar-brand" href="#">LOOP</a>
   <div class="collapse navbar-collapse" id="navbarLevelOne" [collapse]="isCollapsed">
     <ul class="navbar-nav">
-      <li class="nav-item" *ngFor="let nav of navsFirst">
-        <a class="nav-link" routerLinkActive="active" href="#" data-target="nav.data-target">{{nav.name}}</a>
+      <li class="nav-item" *ngFor="let nav of toggleNavKeys();">
+        <a class="nav-link" data-toggle="collapse" routerLinkActive="active" data-target="nav" (click)="setNav(nav)">{{nav}}</a>
       </li>
     </ul>
   </div>
 </nav>
 <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-  <div class="collapse navbar-collapse">
-    <ul class="navbar-nav" *ngFor="let nav of navsSecond" [id]="nav.id" >
-      <li class="nav-item" *ngFor="let subNav of nav.name">
+  <div class="collapse navbar-collapse" [collapse]="isCollapsed">
+    <ul class="navbar-nav">
+      <li class="nav-item" *ngFor="let subNav of navsSecond">
         <a class="nav-link" href="#" id="">{{subNav}}</a>
       </li>
     </ul>
