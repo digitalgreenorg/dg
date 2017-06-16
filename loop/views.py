@@ -21,7 +21,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, PriceInfoIncoming, PriceInfoLog
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
@@ -933,3 +933,25 @@ def broadcast_audio_request(request):
         return audio_url_response
     else:
         return HttpResponse(status=200)
+
+
+def crop_info(request):
+    if request.method == 'GET':
+    call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+    try:
+        crop_info = str(request.GET.get('digits')).strip('"')
+        price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
+                                    to_number=dg_number, incoming_time=incoming_time, query_for_crop=crop_info)
+        price_info_incoming_obj.save()
+    except Exception as e:
+        module = 'crop_info'
+        log = "Call Id: %s Error: %s"%(str(call_id),str(e))
+        write_log(HELPLINE_LOG_FILE,module,log)
+        return HttpResponse(status=500)
+    return HttpResponse(status=200)
+
+
+def mandi_info(request):
+    if request.method == 'GET':
+
+    return HttpResponse(status=200)
