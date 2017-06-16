@@ -937,18 +937,19 @@ def broadcast_audio_request(request):
 
 def crop_info(request):
     if request.method == 'GET':
-    call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-    try:
-        crop_info = str(request.GET.get('digits')).strip('"')
-        price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
-                                    to_number=dg_number, incoming_time=incoming_time, query_for_crop=crop_info)
-        price_info_incoming_obj.save()
-    except Exception as e:
-        module = 'crop_info'
-        log = "Call Id: %s Error: %s"%(str(call_id),str(e))
-        write_log(HELPLINE_LOG_FILE,module,log)
-        return HttpResponse(status=500)
-    return HttpResponse(status=200)
+        call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        try:
+            crop_info = str(request.GET.get('digits')).strip('"')
+            price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
+                                        to_number=dg_number, incoming_time=incoming_time, query_for_crop=crop_info)
+            price_info_incoming_obj.save()
+        except Exception as e:
+            module = 'crop_info'
+            log = "Call Id: %s Error: %s"%(str(call_id),str(e))
+            write_log(HELPLINE_LOG_FILE,module,log)
+            return HttpResponse(status=500)
+        return HttpResponse(status=200)
+    return HttpResponse(status=403)
 
 
 def mandi_info(request):
