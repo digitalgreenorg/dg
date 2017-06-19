@@ -9,6 +9,10 @@ from loop_ivr.helper_function import get_valid_list, run_query, send_info
 from loop.utils.ivr_helpline.helpline_data import HELPLINE_LOG_FILE
 from loop.helpline_view import fetch_info_of_incoming_call
 
+
+def home(request):
+    return render_to_response(request, 'loop_base.html')
+
 def crop_info(request):
     # Serve only Get request
     if request.method == 'GET':

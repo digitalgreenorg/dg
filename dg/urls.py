@@ -58,6 +58,9 @@ mcoco_admin.logout_template = 'social_website/home.html'
 ivr_admin.index_template = 'social_website/index.html'
 ivr_admin.login_template = 'social_website/login.html'
 ivr_admin.logout_template = 'social_website/home.html'
+loop_ivr_admin.index_template = 'social_website/index.html'
+loop_ivr_admin.login_template = 'social_website/login.html'
+loop_ivr_admin.logout_template = 'social_website/home.html'
 
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
