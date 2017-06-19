@@ -21,7 +21,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, PriceInfoIncoming, PriceInfoLog
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
