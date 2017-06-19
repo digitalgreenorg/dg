@@ -13,10 +13,11 @@
 </nav>
 <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
   <div class="collapse navbar-collapse" [collapse]="isCollapsed">
-    <ul class="navbar-nav">
-      <li class="nav-item" *ngFor="let subNav of navsSecond">
-        <a class="nav-link" href="#" id="">{{subNav}}</a>
+    <ul class="navbar-nav" *ngFor="let nav of toggleNavKeys();">
+      <li class="nav-item" *ngFor="let subNav of toggleNav[nav].subNav">
+        <a *ngIf="toggleNav[nav].status" class="nav-link" href="#" id="" (click)="showContent(subNav)">{{subNav}}</a>
       </li>
     </ul>
   </div>
 </nav>
+<div *ngIf="test">hi</div>

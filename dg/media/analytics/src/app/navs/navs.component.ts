@@ -10,10 +10,10 @@ import { environment } from '../../environments/environment.loop';
 export class NavsComponent implements OnInit {
   public isCollapsed:boolean = false;
   navsConfig = environment.navsConfig;
-  toggleNav = {};
-  navsSecond = [];
   overall : false;
   recent : false;
+  test = false;
+  toggleNav = {};
 
   constructor() {}
   
@@ -34,9 +34,13 @@ export class NavsComponent implements OnInit {
       })
       return navsList
     }
+    console.log(this.toggleNav)
   }
 
-  
+  showContent(subNav) {
+    this.test = true
+    //console.log(subNav)
+  }  
   toggleNavKeys() {
     return Object.keys(this.toggleNav)
   }
@@ -46,6 +50,5 @@ export class NavsComponent implements OnInit {
       this.toggleNav[nav].status = false
     });
     this.toggleNav[selectedItem].status = true;
-    this.navsSecond = this.toggleNav[selectedItem].subNav;
   }
 }
