@@ -24,3 +24,6 @@ def send_info(to_number, content):
     while index < len(final_result):
 		send_sms(from_number, to_number, content[index,index+1998])
 		index += 1998
+
+def get_price_info(crop_id,mandi_id):
+	pass

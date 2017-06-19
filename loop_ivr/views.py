@@ -27,9 +27,6 @@ def crop_info(request):
     return HttpResponse(status=403)
 
 
-def get_price_info(crop_id,mandi_id):
-
-
 def mandi_info(request):
     # Serve only Get request
     if request.method == 'GET':
