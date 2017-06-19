@@ -5,8 +5,9 @@ from django.http import HttpResponse
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog
 from loop_ivr.utils.marketinfo import raw_sql
+from loop_ivr.helper_function import get_valid_list, run_query
 from loop.utils.ivr_helpline.helpline_data import HELPLINE_LOG_FILE
-from loop.helpline_view import fetch_info_of_incoming_call, get_valid_list
+from loop.helpline_view import fetch_info_of_incoming_call
 
 def crop_info(request):
     # Serve only Get request
