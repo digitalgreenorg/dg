@@ -11,7 +11,7 @@ from loop.helpline_view import fetch_info_of_incoming_call
 
 
 def home(request):
-    return render_to_response(request, 'loop_base.html')
+    return HttpResponse(status=200)
 
 def crop_info(request):
     # Serve only Get request
