@@ -39,7 +39,6 @@ class LoopAdmin(AdminSite):
     def has_permission(self, request):
         return request.user.is_active
 
-
 class LoopUserAssignedMandis(admin.StackedInline):
     model = LoopUserAssignedMandi
     extra = 4
@@ -54,6 +53,13 @@ class LoopUserAdmin(admin.ModelAdmin):
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'village__village_name']
 
+class AdminAssignedDistricts(admin.StackedInline):
+    model = AdminAssignedDistrict
+    extra = 4
+
+class AdminUserAdmin(admin.ModelAdmin):
+    inlines = [AdminAssignedDistricts]    
+    list_display = ('__user__','name')
 # class LoopUserInline(admin.TabularInline):
 #     model = LoopUser
 #     extra = 5
@@ -190,6 +196,7 @@ loop_admin.register(Block)
 loop_admin.register(District)
 loop_admin.register(State)
 loop_admin.register(Country)
+loop_admin.register(AdminUser,AdminUserAdmin)
 # loop_admin.register(LoopUserAssignedMandi, LoopUserAssignedMandiAdmin)
 # loop_admin.register(LoopUserAssignedVillage, LoopUserAssignedVillageAdmin)
 loop_admin.register(LoopUser, LoopUserAdmin)

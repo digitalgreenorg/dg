@@ -136,6 +136,7 @@ post_save.connect(save_log, sender=Mandi)
 pre_delete.connect(delete_log, sender=Mandi)
 
 
+
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, related_name="loop_user")
@@ -188,6 +189,44 @@ class LoopUserAssignedVillage(LoopModel):
 post_save.connect(save_log, sender=LoopUserAssignedVillage)
 pre_delete.connect(delete_log, sender=LoopUserAssignedVillage)
 
+class AdminUser(LoopModel):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, related_name="admin_user")
+    name = models.CharField(max_length=100, default="default")
+    assigned_districts = models.ManyToManyField(
+        District,through='AdminAssignedDistrict', blank=True)
+    assigned_loopusers = models.ManyToManyField(LoopUser,related_name="assigned_loopusers")
+    phone_number = models.CharField(
+        max_length=14, null=False, blank=False, default="0")
+    name_en = models.CharField(max_length=100, null=True)
+    village = models.ForeignKey(Village, default=None, null=True)
+    preferred_language = models.ForeignKey(Language, null=True)
+    is_visible = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.name
+
+    def get_districts(self):
+        return self.assigned_districts.all()
+
+    def get_loopusers(self):
+        return self.assigned_loopusers.all()
+
+    def __user__(self):
+        return "%s" % self.user.id
+
+#post_save.connect(save_log, sender=AdminUser)
+#pre_delete.connect(delete_log, sender=AdminUser)
+        
+class AdminAssignedDistrict(LoopModel):
+    id = models.AutoField(primary_key=True)
+    admin_user = models.ForeignKey(AdminUser)
+    district = models.ForeignKey(District)
+    aggregation_switch = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
+
+#post_save.connect(save_log, sender=AdminAssignedDistrict)
+#pre_delete.connect(delete_log, sender=AdminAssignedDistrict)
 
 class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)

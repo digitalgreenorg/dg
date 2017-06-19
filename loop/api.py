@@ -72,6 +72,15 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     bundle.data[field_name] = resource_uri_list
     return bundle
 
+class LoopUserAuthorization(Authorization):
+    def __init__(self, field):
+        self.loopuser_field = field
+
+    def read_list(self,object_list,bundle):
+        aggregators = AdminUser.objects.get(user_id=bundle.request.user.id).get_loopusers()
+        kwargs = {}
+        kwargs[self.loopuser_field] = aggregators
+        return object_list.filter(**kwargs).distinct()
 
 class VillageAuthorization(Authorization):
     def __init__(self, field):
@@ -125,15 +134,26 @@ class MandiAuthorization(Authorization):
         self.mandi_field = field
 
     def read_list(self, object_list, bundle):
-        mandis = LoopUser.objects.get(user_id=bundle.request.user.id).get_mandis()
-        mandis_list = {}
-        mandis_list[self.mandi_field] = mandis
+        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
+            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+            mandis_list = {}
+            mandis_list[self.mandi_field] = Mandi.objects.filter(district__in=districts)
+        else:
+            user = LoopUser.objects.get(user_id=bundle.request.user.id)
+            mandis = user.get_mandis()
+            mandis_list = {}
+            mandis_list[self.mandi_field] = mandis
         return object_list.filter(**mandis_list).distinct()
 
     def read_details(self, object_list, bundle):
-        mandis_list = {}
-        mandis_list[self.mandi_field] = LoopUser.objects.get(
-            user_id=bundle.request.user.id).get_mandis()
+        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
+            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+            mandis_list = {}
+            mandi_list[self.mandi_field] = Mandi.objects.filter(district__in=districts)
+        else:            
+            mandis_list = {}
+            mandis_list[self.mandi_field] = LoopUser.objects.get(
+                user_id=bundle.request.user.id).get_mandis()
         obj = object_list.filter(**mandis_list).distinct()
         if obj:
             return True
@@ -376,7 +396,7 @@ class LoopUserResource(BaseResource):
         queryset = LoopUser.objects.prefetch_related(
             'assigned_villages', 'assigned_mandis','user').all()
         resource_name = 'loopuser'
-        authorization = Authorization()
+        authorization = LoopUserAuthorization('id__in')
 
     hydrate_user = partial(dict_to_foreign_uri, field_name='user')
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
@@ -499,10 +519,17 @@ class CropResource(BaseResource):
  
     def get_object_list(self, request):
         # apply filters from url        
-        user = LoopUser.objects.get(user_id=request.user)
+        if AdminUser.objects.filter(user_id=request.user.id).count()>0:
+            user = AdminUser.objects.get(user_id=request.user.id)
+            admin = True
+        else:
+            user = LoopUser.objects.get(user_id=request.user.id)
         languageFilter = str(user.preferred_language.notation)
-        if languageFilter:
-            result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
+        if languageFilter and admin:
+            crops = Crop.objects.all()
+            result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)        
+        elif languageFilter:
+            result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)
         else:
             result = super(CropResource,self).get_object_list(request).filter(crops__language_id=1)
         return result
@@ -524,7 +551,10 @@ class CropResource(BaseResource):
         return bundle
 
     def dehydrate(self, bundle):
-        user = LoopUser.objects.get(user_id=bundle.request.user)
+        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
+            user = AdminUser.objects.get(user_id=bundle.request.user.id)
+        else:
+            user = LoopUser.objects.get(user_id=bundle.request.user)
         bundle.data['online_id'] = bundle.data['id']
         bundle.data['crop_name_en'] = bundle.data['crop_name']
         for d in bundle.data['crops']:
