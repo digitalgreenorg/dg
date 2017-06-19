@@ -1,12 +1,12 @@
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarLevelOne" (click)="isCollapsed = !isCollapsed">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
   </button>
   <a class="navbar-brand" href="#">LOOP</a>
-  <div class="collapse navbar-collapse" id="navbarLevelOne" [collapse]="isCollapsed">
+  <div class="collapse navbar-collapse" [collapse]="isCollapsed">
     <ul class="navbar-nav">
       <li class="nav-item" *ngFor="let nav of toggleNavKeys();">
-        <a class="nav-link" data-toggle="collapse" routerLinkActive="active" data-target="nav" (click)="setNav(nav)">{{nav}}</a>
+        <a class="nav-link" data-toggle="collapse" routerLinkActive="active" (click)="setNav(nav)">{{nav}}</a>
       </li>
     </ul>
   </div>
