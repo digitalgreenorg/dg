@@ -50,14 +50,17 @@ def mandi_info(request):
         crops_info = price_info_incoming_obj.query_for_crop
         crop_list = get_valid_list('loop', 'crop', crops_info)
         mandi_list = get_valid_list('loop', 'mandi', mandis_info)
+        price_info_incoming_obj.query_for_mandi = mandis_info
         if not crop_list:
             final_result = 'Please correct crop list'
-            print "crop nhi mili"
+            price_info_incoming_obj.info_status = 2
+            price_info_incoming_obj.save()
             #send_info(from_number, final_result)
             return HttpResponse(status=200)
         if not mandi_list:
             final_result = 'Please correct mandi list'
-            print "mandi nhi mili"
+            price_info_incoming_obj.info_status = 2
+            price_info_incoming_obj.save()
             #send_info(from_number, final_result)
             return HttpResponse(status=200)
         #Thread(target=get_price_info, args=[from_number, crop_list, mandi_list]).start()

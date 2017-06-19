@@ -12,7 +12,7 @@ def get_valid_list(app_name, model_name, requested_item):
     requested_list = set(int(item) for item in requested_item.split('*') if item)
     if 0 in requested_list:
         return list(id_list)
-    return list(id_list-requested_list)
+    return list(requested_list.intersection(id_list))
 
 def run_query(query):
     cursor = connection.cursor()
