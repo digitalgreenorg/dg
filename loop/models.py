@@ -232,11 +232,11 @@ class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)
     gaddidar_name = models.CharField(max_length=100)
     gaddidar_phone = models.CharField(max_length=13)
-    commission = models.FloatField("Discount",default=1.0)
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
     gaddidar_name_en = models.CharField(max_length=100, null=True)
     discount_criteria = models.IntegerField(choices=DISCOUNT_CRITERIA, default=0)
+    is_prime = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.gaddidar_name
@@ -295,6 +295,7 @@ class CropLanguage(models.Model):
     language = models.ForeignKey(Language,null=True)
     crop = models.ForeignKey(Crop, related_name="crops")
     crop_name = models.CharField(max_length=30)
+    measuring_unit = models.CharField(max_length=20, default="kg")
 
     def __unicode__(self):
         return self.crop_name

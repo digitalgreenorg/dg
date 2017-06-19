@@ -342,6 +342,28 @@ class VillageResource(BaseResource):
         foreign_key_to_id, field_name='block', sub_field_names=['id'])
     hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
+    def obj_create(self, bundle, request=None, **kwargs):
+        block_id = bundle.data['block']['id']
+        block = Block.objects.get(id=block_id)
+        attempt = Village.objects.filter(village_name=bundle.data['village_name'],block=block)
+        if attempt.count() < 1:
+            bundle = super(VillageResource, self).obj_create(
+                bundle, **kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(VillageResource, self).obj_update(
+                bundle, **kwargs)
+        except Exception, e:
+            block_id = bundle.data['block']['id']
+            block = Block.objects.get(id=block_id)
+            attempt = Village.objects.filter(village_name=bundle.data['village_name'],block=block)
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
@@ -567,9 +589,11 @@ class CropResource(BaseResource):
             for d in bundle.data['crops']:
                 if d.data['language']['notation'] is not None and d.data['language']['notation'] == user.preferred_language.notation:
                     bundle.data['crop_name'] = d.data['crop_name']
+                    bundle.data['measuring_unit'] = d.data['measuring_unit']
                     break
                 else:
                     bundle.data['crop_name']=""
+                    bundle.data['measuring_unit']=""
             del bundle.data['crops']
             return bundle    
         else:
@@ -603,6 +627,28 @@ class MandiResource(BaseResource):
         foreign_key_to_id, field_name='district', sub_field_names=['id'])
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
 
+    def obj_create(self, bundle, request=None, **kwargs):
+        district_id = bundle.data['district']['id']
+        district = District.objects.get(id=district_id)
+        attempt = Mandi.objects.filter(mandi_name=bundle.data['mandi_name'],district=district)
+        if attempt.count() < 1:
+            bundle = super(MandiResource, self).obj_create(
+                bundle, **kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(MandiResource, self).obj_update(
+                bundle, **kwargs)
+        except Exception, e:
+            district_id = bundle.data['district']['id']
+            district = District.objects.get(id=district_id)
+            attempt = Mandi.objects.filter(mandi_name=bundle.data['mandi_name'],district=district)
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
@@ -625,6 +671,28 @@ class GaddidarResource(BaseResource):
         dehydrate_mandi = partial(
             foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
         hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        mandi_id = bundle.data['mandi']['id']
+        mandi = Mandi.objects.get(id=mandi_id)
+        attempt = Gaddidar.objects.filter(gaddidar_phone=bundle.data['gaddidar_phone'],gadddiar_name=bundle.data['gaddidar_name'],mandi=mandi)
+        if attempt.count() < 1:
+            bundle = super(GaddidarResource, self).obj_create(
+                bundle, **kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(GaddidarResource, self).obj_update(
+                bundle, **kwargs)
+        except Exception, e:
+            mandi_id = bundle.data['mandi']['id']
+            mandi = Mandi.objects.get(id=mandi_id)
+            attempt = Gaddidar.objects.filter(gaddidar_phone=bundle.data['gaddidar_phone'],gadddiar_name=bundle.data['gaddidar_name'],mandi=mandi)
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']

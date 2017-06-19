@@ -97,9 +97,9 @@ class DayTransportationAdmin(admin.ModelAdmin):
 
 
 class GaddidarAdmin(admin.ModelAdmin):
-    fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','commission','is_visible')
+    fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','is_visible')
     list_display = ('id', 'gaddidar_name',
-                    'gaddidar_phone', 'mandi','discount_criteria', 'commission', 'gaddidar_name_en')
+                    'gaddidar_phone', 'mandi','discount_criteria', 'gaddidar_name_en')
     search_fields = ['gaddidar_name', 'mandi__mandi_name']
     list_filter = ['mandi__mandi_name']
 
