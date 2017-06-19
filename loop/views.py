@@ -43,7 +43,7 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, \
     fetch_info_of_incoming_call, \
     update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio, \
-    redirect_to_broadcast, save_farmer_file, get_valid_list
+    redirect_to_broadcast, save_farmer_file
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
@@ -933,47 +933,3 @@ def broadcast_audio_request(request):
         return audio_url_response
     else:
         return HttpResponse(status=200)
-
-
-def crop_info(request):
-    # Serve only Get request
-    if request.method == 'GET':
-        call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-        try:
-            crops_info = str(request.GET.get('digits')).strip('"')
-            price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
-                                        to_number=dg_number, incoming_time=incoming_time, query_for_crop=crops_info)
-            price_info_incoming_obj.save()
-        except Exception as e:
-            module = 'crop_info'
-            log = "Call Id: %s Error: %s"%(str(call_id),str(e))
-            write_log(HELPLINE_LOG_FILE,module,log)
-            return HttpResponse(status=500)
-        return HttpResponse(status=200)
-    return HttpResponse(status=403)
-    
-
-def mandi_info(request):
-    # Serve only Get request
-    if request.method == 'GET':
-        call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-        mandis_info = str(request.GET.get('digits')).strip('"')
-        try:
-            price_info_incoming_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=farmer_number,
-                                        to_number=dg_number, info_status = 0, incoming_time=incoming_time)
-        except:
-            module = 'mandi_info'
-            log = "Call Id: %s Error: %s"%(str(call_id),str(e))
-            write_log(HELPLINE_LOG_FILE,module,log)
-            return HttpResponse(status=200)
-        crops_info = price_info_incoming_obj.query_for_crop
-        crop_list = get_valid_list('loop', 'crop', crops_info)
-        mandi_list = get_valid_list('loop', 'mandi', mandis_info)
-        if not crop_list:
-            # send sms for correct crop
-            pass
-        if not mandi_list:
-            # send sms for correct mandi
-            pass        
-        return HttpResponse(status=200)
-    return HttpResponse(status=403)
