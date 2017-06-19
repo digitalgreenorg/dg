@@ -1,5 +1,5 @@
 last_three_trans = ''''SELECT 
-    final.crop, final.mandi, final.datee, final.minp, final.maxp
+    final.crop, final.mandi, final.datee, final.minp, final.maxp, final.mean 'mean'
 FROM
     (SELECT 
         add_row_no.crop,
@@ -7,6 +7,7 @@ FROM
             add_row_no.datee,
             add_row_no.minp,
             add_row_no.maxp,
+            add_row_no.mean,
             (@num:=IF(@crop = add_row_no.crop
                 AND @mandi = add_row_no.mandi, @num + 1, IF(@crop:=add_row_no.crop
                 AND @mandi:=add_row_no.mandi, 1, 1))) 'row_number'
@@ -16,7 +17,8 @@ FROM
             lc.mandi_id 'mandi',
             lc.date 'datee',
             MIN(lc.price) 'minp',
-            MAX(lc.price) 'maxp'
+            MAX(lc.price) 'maxp',
+            SUM(lc.price * lc.quantity) / SUM(lc.quantity) AS 'mean'
     FROM
         loop_combinedtransaction lc
     where lc.crop_id in [%s] AND lc.mandi_id in [%s]
