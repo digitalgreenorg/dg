@@ -5,7 +5,7 @@
   <a class="navbar-brand" href="#">LOOP</a>
   <div class="collapse navbar-collapse" [collapse]="isCollapsed">
     <ul class="navbar-nav">
-      <li class="nav-item" *ngFor="let nav of toggleNavKeys();">
+      <li class="nav-item" *ngFor="let nav of getDictKeys(toggleNav);">
         <a class="nav-link" data-toggle="collapse" routerLinkActive="active" (click)="setNav(nav)">{{nav}}</a>
       </li>
     </ul>
@@ -13,11 +13,13 @@
 </nav>
 <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
   <div class="collapse navbar-collapse" [collapse]="isCollapsed">
-    <ul class="navbar-nav" *ngFor="let nav of toggleNavKeys();">
+    <ul class="navbar-nav" *ngFor="let nav of getDictKeys(toggleNav);">
       <li class="nav-item" *ngFor="let subNav of toggleNav[nav].subNav">
-        <a *ngIf="toggleNav[nav].status" class="nav-link" href="#" id="" (click)="showContent(subNav)">{{subNav}}</a>
+        <a *ngIf="toggleNav[nav].status" class="nav-link" href="#" routerLinkActive="active" (click)="showContent(nav,subNav)">{{subNav}}</a>
       </li>
     </ul>
   </div>
 </nav>
-<div *ngIf="test">hi</div>
+<div id="container" *ngFor="let container of containers">
+  <div id="container.id">{{container.content}}</div>
+</div>

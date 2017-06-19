@@ -1,6 +1,5 @@
 export const navsConfig = {
     'Home':{
-            'active':true,
             'overall':false,
             'recent':false,
             'showDivs':[]  

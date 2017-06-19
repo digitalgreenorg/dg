@@ -12,8 +12,8 @@ export class NavsComponent implements OnInit {
   navsConfig = environment.navsConfig;
   overall : false;
   recent : false;
-  test = false;
   toggleNav = {};
+  containers = []
 
   constructor() {}
   
@@ -31,18 +31,31 @@ export class NavsComponent implements OnInit {
         if(!(exceptionNavs.indexOf(nav)>-1)) {
           navsList.push(nav);
         }
-      })
+      });
       return navsList
     }
-    console.log(this.toggleNav)
+    
   }
 
-  showContent(subNav) {
-    this.test = true
-    //console.log(subNav)
+  showContent(nav,subNav) {
+    this.containers = []
+    let contentDict = {}
+    if(subNav != null){
+      contentDict = this.navsConfig[nav][subNav]
+    }
+    else {
+      contentDict = this.navsConfig[nav]
+    }
+    Object.keys(contentDict).forEach(element => {
+      this.containers.push({
+        'id':element,
+        'content':contentDict[element]
+      });
+    });
   }  
-  toggleNavKeys() {
-    return Object.keys(this.toggleNav)
+  
+  getDictKeys(dict) {
+    return Object.keys(dict)
   }
 
   setNav(selectedItem : string) {
@@ -50,5 +63,8 @@ export class NavsComponent implements OnInit {
       this.toggleNav[nav].status = false
     });
     this.toggleNav[selectedItem].status = true;
+    if(this.toggleNav[selectedItem].subNav.length == 0){
+      this.showContent(selectedItem, null);
+    }
   }
 }
