@@ -87,8 +87,13 @@ class VillageAuthorization(Authorization):
         self.village_field = field
 
     def read_list(self, object_list, bundle):
-        villages = LoopUser.objects.get(
-            user_id=bundle.request.user.id).get_villages()
+        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
+            user = AdminUser.objects.get(user_id=bundle.request.user.id);
+            districts =District.objects.filter(adminassigneddistrict__admin_user_id=user,adminassigneddistrict__aggregation_switch=True)
+            villages = Village.objects.filter(block__district__in=districts)
+        else:
+            villages = LoopUser.objects.get(
+                user_id=bundle.request.user.id).get_villages()
         kwargs = {}
         kwargs[self.village_field] = villages
         return object_list.filter(**kwargs).distinct()
@@ -526,8 +531,6 @@ class CropResource(BaseResource):
             user = LoopUser.objects.get(user_id=request.user.id)
         languageFilter = str(user.preferred_language.notation)
         if languageFilter and admin:
-            crops = Crop.objects.all()
-            
             result = super(CropResource, self).get_object_list(request)  
         elif languageFilter:
             result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)
@@ -559,7 +562,7 @@ class CropResource(BaseResource):
             user = AdminUser.objects.get(user_id=bundle.request.user.id)
             bundle.data['online_id'] = bundle.data['id']
             bundle.data['crop_name_en'] = bundle.data['crop_name']
-            # clearing crop_name for crops which donot have any translations
+            # clearing crop_name for crops which do not have any translations
             bundle.data['crop_name']=""
             for d in bundle.data['crops']:
                 if d.data['language']['notation'] is not None and d.data['language']['notation'] == user.preferred_language.notation:
@@ -659,24 +662,44 @@ class VehicleResource(BaseResource):
 
     def get_object_list(self, request):
         # apply filters from url
-        user = LoopUser.objects.get(user_id=request.user)
-        languageFilter = user.preferred_language.notation
-        if languageFilter:
-            result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
+        if AdminUser.objects.filter(user_id=request.user.id).count()>0:
+            user = AdminUser.objects.get(user_id=request.user.id)
+            admin = True
+        else:
+            user = LoopUser.objects.get(user_id=request.user.id)
+        languageFilter = str(user.preferred_language.notation)
+        if languageFilter and admin:
+            result = super(VehicleResource, self).get_object_list(request)
+        elif languageFilter:
+            result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)
         else:
             result = super(VehicleResource,self).get_object_list(request).filter(vehicles__language__id=1)
         return result
 
     def dehydrate(self, bundle):
-        user = LoopUser.objects.get(user_id=bundle.request.user)
-        bundle.data['online_id'] = bundle.data['id']
-        bundle.data['vehicle_name_en'] = bundle.data['vehicle_name']
-        for d in bundle.data['vehicles']:
-            if d.data['language']['notation'] == user.preferred_language.notation:
-                bundle.data['vehicle_name'] = d.data['vehicle_name']
-                break
-        del bundle.data['vehicles']
-        return bundle
+        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
+            user = AdminUser.objects.get(user_id=bundle.request.user.id)
+            bundle.data['online_id'] = bundle.data['id']
+            bundle.data['vehicle_name_en'] = bundle.data['vehicle_name']
+            bundle.data['vehicle_name'] =""
+            for d in bundle.data['vehicles']:
+                if d.data['language']['notation'] == user.preferred_language.notation:
+                    bundle.data['vehicle_name'] = d.data['vehicle_name']
+                    break
+                else:
+                    bundle.data['vehicle_name']=""
+            del bundle.data['vehicles']
+            return bundle            
+        else:
+            user = LoopUser.objects.get(user_id=bundle.request.user)
+            bundle.data['online_id'] = bundle.data['id']
+            bundle.data['vehicle_name_en'] = bundle.data['vehicle_name']
+            for d in bundle.data['vehicles']:
+                if d.data['language']['notation'] == user.preferred_language.notation:
+                    bundle.data['vehicle_name'] = d.data['vehicle_name']
+                    break
+            del bundle.data['vehicles']
+            return bundle
 
 
 class TransporterResource(BaseResource):
