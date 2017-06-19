@@ -527,7 +527,8 @@ class CropResource(BaseResource):
         languageFilter = str(user.preferred_language.notation)
         if languageFilter and admin:
             crops = Crop.objects.all()
-            result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)        
+            
+            result = super(CropResource, self).get_object_list(request)  
         elif languageFilter:
             result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)
         else:
@@ -551,8 +552,23 @@ class CropResource(BaseResource):
         return bundle
 
     def dehydrate(self, bundle):
+        '''
+        For AdminUser sending preferred language crops union crops without preferred language translation
+        '''
         if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
             user = AdminUser.objects.get(user_id=bundle.request.user.id)
+            bundle.data['online_id'] = bundle.data['id']
+            bundle.data['crop_name_en'] = bundle.data['crop_name']
+            # clearing crop_name for crops which donot have any translations
+            bundle.data['crop_name']=""
+            for d in bundle.data['crops']:
+                if d.data['language']['notation'] is not None and d.data['language']['notation'] == user.preferred_language.notation:
+                    bundle.data['crop_name'] = d.data['crop_name']
+                    break
+                else:
+                    bundle.data['crop_name']=""
+            del bundle.data['crops']
+            return bundle    
         else:
             user = LoopUser.objects.get(user_id=bundle.request.user)
         bundle.data['online_id'] = bundle.data['id']
