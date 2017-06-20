@@ -54,13 +54,13 @@ def mandi_info(request):
             final_result = 'Please correct crop list'
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()
-            #send_info(from_number, final_result)
+            send_info(from_number, final_result)
             return HttpResponse(status=200)
         if not mandi_list:
             final_result = 'Please correct mandi list'
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()
-            #send_info(from_number, final_result)
+            send_info(from_number, final_result)
             return HttpResponse(status=200)
         Thread(target=get_price_info, args=[from_number, crop_list, mandi_list, price_info_incoming_obj]).start()
         return HttpResponse(status=200)

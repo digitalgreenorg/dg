@@ -73,7 +73,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj):
             temp_str = ('\n%s,%s\n')%(crop_map[crop].encode("utf-8"),mandi_map[mandi].encode("utf-8"))
             price_info_list.append(temp_str)
             if not query_result:
-                price_info_list.append('Information not available')
+                price_info_list.append('Information not available\n')
             for row in query_result:
                 date, min_price, max_price, mean = row[2], row[3], row[4], row[5]
                 if max_price-min_price >= 2:
