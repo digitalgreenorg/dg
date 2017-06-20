@@ -62,6 +62,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj):
     for mandi in all_mandi:
         mandi_map[mandi['id']] = mandi['mandi_name']
     # Fetching price from DB
+    price_info_list.append('लूप मंडी रेट\n')
     for crop in crop_list:
         for mandi in mandi_list:
             # creating obj for log
@@ -71,16 +72,19 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj):
             # Preparing Raw SQL Query
             last_three_trans = raw_sql.last_three_trans%(crop,mandi)
             query_result = run_query(last_three_trans)
-            temp_str = ('\n%s,%s\n')%(crop_map[crop].encode("utf-8"),mandi_map[mandi].encode("utf-8"))
+            temp_str = ('\n%s,%s मंडी\n')%(crop_map[crop].encode("utf-8"),mandi_map[mandi].encode("utf-8"))
             price_info_list.append(temp_str)
             if not query_result:
-                price_info_list.append('Information not available\n')
+                price_info_list.append('रेट उपलब्ध नही है\n')
             for row in query_result:
                 date, min_price, max_price, mean = row[2], int(row[3]), int(row[4]), int(row[5])
                 if max_price-min_price >= 2:
                     min_price = mean-1
                     max_price = mean+1
-                temp_str = ('%s: %s to %s\n')%(date.strftime('%d-%m-%Y'),str(min_price),str(max_price))
+                if min_price != max_price:
+                    temp_str = ('%s: रु %s-%s\n')%(date.strftime('%d-%m-%Y'),str(min_price),str(max_price))
+                else:
+                    temp_str = ('%s: रु %s\n')%(date.strftime('%d-%m-%Y'),str(max_price))
                 price_info_list.append(temp_str)
     final_result = ''.join(price_info_list)
     print ".................Final message........................"
