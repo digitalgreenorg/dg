@@ -9,7 +9,7 @@ from django.db.models import get_model
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN
 
-from loop.models import Crop, Mandi
+from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
 
 from loop_ivr.utils.marketinfo import raw_sql
@@ -55,12 +55,16 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj):
     price_info_log_list = []
     crop_map = dict()
     mandi_map = dict()
+    crop_in_hindi_map = dict()
     all_crop = Crop.objects.filter(id__in=crop_list).values('id', 'crop_name')
     all_mandi = Mandi.objects.filter(id__in=mandi_list).values('id', 'mandi_name')
+    crop_in_hindi = CropLanguage.objects.filter(language_id=1, crop_id__in=crop_list).values('crop_id', 'crop_name')
     for crop in all_crop:
         crop_map[crop['id']] = crop['crop_name']
     for mandi in all_mandi:
         mandi_map[mandi['id']] = mandi['mandi_name']
+    for crop in crop_in_hindi_map:
+        crop_in_hindi_map[crop['crop_id']] = crop['crop_name']
     # Fetching price from DB
     price_info_list.append('लूप मंडी रेट\n')
     for crop in crop_list:
@@ -72,7 +76,9 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj):
             # Preparing Raw SQL Query
             last_three_trans = raw_sql.last_three_trans%(crop,mandi)
             query_result = run_query(last_three_trans)
-            temp_str = ('\n%s,%s मंडी\n')%(crop_map[crop].encode("utf-8"),mandi_map[mandi].encode("utf-8"))
+            crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
+            mandi_name = mandi_map[mandi].encode("utf-8")
+            temp_str = ('\n%s,%s मंडी\n')%(crop_name,mandi_name)
             price_info_list.append(temp_str)
             if not query_result:
                 price_info_list.append('रेट उपलब्ध नही है\n')
