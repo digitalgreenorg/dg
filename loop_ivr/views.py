@@ -7,8 +7,8 @@ from threading import Thread
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info
+from loop_ivr.utils.data import LOG_FILE
 
-from loop.utils.ivr_helpline.helpline_data import HELPLINE_LOG_FILE
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 
 
@@ -27,7 +27,7 @@ def crop_info(request):
         except Exception as e:
             module = 'crop_info'
             log = "Call Id: %s Error: %s"%(str(call_id),str(e))
-            write_log(HELPLINE_LOG_FILE,module,log)
+            write_log(LOG_FILE,module,log)
             return HttpResponse(status=500)
         return HttpResponse(status=200)
     return HttpResponse(status=403)
@@ -44,7 +44,7 @@ def mandi_info(request):
         except Exception as e:
             module = 'mandi_info'
             log = "Call Id: %s Error: %s"%(str(call_id),str(e))
-            write_log(HELPLINE_LOG_FILE,module,log)
+            write_log(LOG_FILE,module,log)
             return HttpResponse(status=200)
         crops_info = price_info_incoming_obj.query_for_crop
         crop_list = get_valid_list('loop', 'crop', crops_info)

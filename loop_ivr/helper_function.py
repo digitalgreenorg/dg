@@ -10,9 +10,10 @@ from django.db.models import get_model
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN
 
 from loop.models import Crop, Mandi
-from loop.utils.ivr_helpline.helpline_data import HELPLINE_LOG_FILE, SMS_REQUEST_URL
+from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
 
 from loop_ivr.utils.marketinfo import raw_sql
+from loop_ivr.utils.data import LOG_FILE
 from loop_ivr.models import PriceInfoLog
 
 
