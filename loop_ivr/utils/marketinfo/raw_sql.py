@@ -1,30 +1,15 @@
-last_three_trans = ''''SELECT 
-    final.crop, final.mandi, final.datee, final.minp, final.maxp, final.mean 'mean'
+last_three_trans = '''SELECT 
+    lc.crop_id 'crop',
+    lc.mandi_id 'mandi',
+    lc.date,
+    MIN(lc.price) 'minp',
+    MAX(lc.price) 'maxp',
+    SUM(lc.price * lc.quantity) / SUM(lc.quantity) AS 'mean'
 FROM
-    (SELECT 
-        add_row_no.crop,
-            add_row_no.mandi,
-            add_row_no.datee,
-            add_row_no.minp,
-            add_row_no.maxp,
-            add_row_no.mean,
-            (@num:=IF(@crop = add_row_no.crop
-                AND @mandi = add_row_no.mandi, @num + 1, IF(@crop:=add_row_no.crop
-                AND @mandi:=add_row_no.mandi, 1, 1))) 'row_number'
-    FROM
-        (SELECT 
-        lc.crop_id 'crop',
-            lc.mandi_id 'mandi',
-            lc.date 'datee',
-            MIN(lc.price) 'minp',
-            MAX(lc.price) 'maxp',
-            SUM(lc.price * lc.quantity) / SUM(lc.quantity) AS 'mean'
-    FROM
-        loop_combinedtransaction lc
-    where lc.crop_id in [%s] AND lc.mandi_id in [%s]
-    GROUP BY lc.date , lc.crop_id , lc.mandi_id
-    ORDER BY lc.crop_id , lc.mandi_id , lc.date DESC) add_row_no
-    CROSS JOIN (SELECT @num:=0, @crop:=NULL, @mandi:=NULL) c) final
+    loop_combinedtransaction lc
 WHERE
-    final.row_number <= 3
+    lc.crop_id = %s AND lc.mandi_id = %s
+GROUP BY lc.date , lc.crop_id , lc.mandi_id
+ORDER BY lc.crop_id , lc.mandi_id , lc.date DESC
+LIMIT 3
 '''

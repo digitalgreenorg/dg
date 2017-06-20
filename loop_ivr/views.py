@@ -6,11 +6,10 @@ from django.http import HttpResponse
 from threading import Thread
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog
-from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info
 
 from loop.utils.ivr_helpline.helpline_data import HELPLINE_LOG_FILE
-from loop.helpline_view import fetch_info_of_incoming_call
+from loop.helpline_view import fetch_info_of_incoming_call, write_log
 
 
 def home(request):
@@ -42,7 +41,7 @@ def mandi_info(request):
         try:
             price_info_incoming_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=from_number,
                                         to_number=dg_number, info_status = 0, incoming_time=incoming_time)
-        except:
+        except Exception as e:
             module = 'mandi_info'
             log = "Call Id: %s Error: %s"%(str(call_id),str(e))
             write_log(HELPLINE_LOG_FILE,module,log)
@@ -63,6 +62,6 @@ def mandi_info(request):
             price_info_incoming_obj.save()
             #send_info(from_number, final_result)
             return HttpResponse(status=200)
-        #Thread(target=get_price_info, args=[from_number, crop_list, mandi_list]).start()
+        Thread(target=get_price_info, args=[from_number, crop_list, mandi_list, price_info_incoming_obj]).start()
         return HttpResponse(status=200)
     return HttpResponse(status=403)
