@@ -26,7 +26,7 @@ def send_sms(from_number,to_number,sms_body):
     else:
         module = 'send_sms'
         log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
-        write_log(HELPLINE_LOG_FILE,module,log)
+        write_log(LOG_FILE,module,log)
 
 def get_valid_list(app_name, model_name, requested_item):
     model = get_model(app_name, model_name)
