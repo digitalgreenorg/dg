@@ -885,3 +885,14 @@ def broadcast_audio_request(request):
         return audio_url_response
     else:
         return HttpResponse(status=200)
+
+def get_card_graph_data(request):
+
+    results = [{
+        'placeHolder' : 'cardGraphs',
+        'tagName' : 'farmers',
+        'value' : 70,
+    },]
+    data = json.dumps({'data' : results})
+    print data
+    return HttpResponse(data);

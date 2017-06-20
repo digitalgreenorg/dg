@@ -4,14 +4,16 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Rx';
+import { environment } from '../../environments/environment.loop'
 
 @Injectable()
 export class CardsService {
 
   constructor(private http: Http) { }
+  private cardUrl = 'http://localhost:8000/loop/';
 
   getApiData(args): Observable<any> {
-
+    let webUrl = this.cardUrl + args.webUrl;
     let params: URLSearchParams = new URLSearchParams();
     for (let key in args.params) {
       params.set(key.toString(), args.params[key]);
@@ -19,7 +21,7 @@ export class CardsService {
 
     let requestOptions: RequestOptions = new RequestOptions();
     requestOptions.search = params;
-    return this.http.get(args.webUrl, requestOptions)
+    return this.http.get(webUrl, requestOptions)
       .map(response => response.json())
       .catch(this.handleError);
   }

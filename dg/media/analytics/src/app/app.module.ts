@@ -59,6 +59,11 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ButtonsModule.forRoot(),
     InfiniteScrollModule,
     PerfectScrollbarModule.forRoot(PERFECT_SCROLLBAR_CONFIG),
+    ChartModule.forRoot(
+                        require('highcharts')
+		                    ,require('highcharts/highcharts-more')
+		                    ,require('highcharts/modules/solid-gauge')
+                        ),
   ],
   providers: [{
     provide: HighchartsStatic,

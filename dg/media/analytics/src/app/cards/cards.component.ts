@@ -9,10 +9,11 @@ import { environment } from '../../environments/environment.loop';
     styleUrls: ['./cards.component.css']
 })
 
-export class CardsComponent implements OnInit {
+export class CardsComponent implements OnInit, AfterViewInit {
     cardsOverall = [];
     cardsRecent = [];
-    
+    charts = [];
+    cardGraphConfig = environment.cardGraphConfig;
     constructor(private cardsService: CardsService, private sharedService: SharedService) {
         this.sharedService.argsList$.subscribe(data => {
         this.getData(data);
@@ -35,11 +36,31 @@ export class CardsComponent implements OnInit {
             }
         })
         let options = {
-            webUrl: environment.url+"getData",
+            webUrl: "getData",
             params: {
               apply_filter: false,
             }
         }
+        this.getData(options);
+        // graph-Cards
+        Object.keys(this.cardGraphConfig).forEach(config => {
+            this.charts.push({
+                options:this.cardGraphConfig[config],
+                nativeChart:null,
+            })
+        });
+        Object.keys(this.cardsConfigs).forEach(cardData => {
+            console.log(this.cardsConfigs[cardData]);
+        });
+    }
+
+    ngAfterViewInit(): void {
+        let options = {
+            webUrl : "getCardGraphData",
+            params: {
+              apply_filter: false,
+            }
+        };
         this.getData(options);
     }
 
@@ -54,15 +75,24 @@ export class CardsComponent implements OnInit {
                         }
                       });
                   }
-                  else {
+                  else if(cardData.placeHolder == "recent") {
                       this.cardsRecent.forEach(card => {
                         if(cardData.tagName === card.text){
                           card['value'] = cardData.value;
                         }
                       });
-                  }         
+                  }
+                  else if(cardData.placeHolder == "cardGraphs") {
+                    this.charts.forEach(chart=> {
+                       chart.nativeChart.series[0].update({'data':[cardData.value]})
+                    })
+                  }
               });
           });
+    }
+
+    saveInstance(chartInstance, chart) {
+        chart.nativeChart = chartInstance;
     }
 }
 
