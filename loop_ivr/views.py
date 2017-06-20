@@ -49,8 +49,8 @@ def mandi_info(request):
             write_log(LOG_FILE,module,log)
             return HttpResponse(status=200)
         crops_info = price_info_incoming_obj.query_for_crop
-        crop_list = get_valid_list('loop', 'crop', crops_info)
-        mandi_list = get_valid_list('loop', 'mandi', mandis_info)
+        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crops_info)
+        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandis_info)
         price_info_incoming_obj.query_for_mandi = mandis_info
         if not crop_list:
             final_result = 'कृपया सब्जी की सूची ठीक करे.'
@@ -64,6 +64,6 @@ def mandi_info(request):
             price_info_incoming_obj.save()
             send_info(from_number, final_result)
             return HttpResponse(status=200)
-        Thread(target=get_price_info, args=[from_number, crop_list, mandi_list, price_info_incoming_obj]).start()
+        Thread(target=get_price_info, args=[from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
         return HttpResponse(status=200)
     return HttpResponse(status=403)
