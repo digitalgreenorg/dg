@@ -63,7 +63,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj):
         crop_map[crop['id']] = crop['crop_name']
     for mandi in all_mandi:
         mandi_map[mandi['id']] = mandi['mandi_name']
-    for crop in crop_in_hindi_map:
+    for crop in crop_in_hindi:
         crop_in_hindi_map[crop['crop_id']] = crop['crop_name']
     # Fetching price from DB
     price_info_list.append('लूप मंडी रेट\n')
