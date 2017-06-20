@@ -13,7 +13,7 @@ export class NavsComponent implements OnInit {
   overall : false;
   recent : false;
   toggleNav = {};
-  containers = []
+  containers = {}
 
   constructor() {}
   
@@ -38,22 +38,16 @@ export class NavsComponent implements OnInit {
   }
 
   showContent(nav,subNav) {
-    this.containers = []
+    this.containers = {}
     let contentDict = {}
     if(subNav != null){
-      contentDict = this.navsConfig[nav][subNav]
+      this.containers = this.navsConfig[nav][subNav]
     }
     else {
-      contentDict = this.navsConfig[nav]
+      this.containers = this.navsConfig[nav]
     }
-    Object.keys(contentDict).forEach(element => {
-      this.containers.push({
-        'id':element,
-        'content':contentDict[element]
-      });
-    });
-  }  
-  
+  }
+
   getDictKeys(dict) {
     return Object.keys(dict)
   }

@@ -7,16 +7,42 @@ export const navsConfig = {
 
     'Analytics':{
                  'Aggregators':{
-                                'container1':'Aggregator Container One',
-                                'container2':'Aggregator Container Two'
+                                'container1':{
+                                              'Volume':{},
+                                              'Visits':{}
+                                },
+                                'container2':{
+                                              'SPK/CPk':{},
+                                              'Recovered/Total':{}
+                                },
+                                'container3':{
+                                              'Farmer Count':{}
+                                }
                  },
                  'Mandi':{
-                          'container1':'Mandi Container One',
-                          'container2':'Mandi Container Two'
+                            'container1':{
+                                              'Volume':{},
+                                              'Visits':{}
+                            },
+                            'container2':{
+                                              'SPK/CPk':{},
+                                              'Recovered/Total':{}
+                            },
+                            'container3':{
+                                              'Farmer Count':{}
+                            }
                  },
                  'Crop':{
-                          'container1':'Crop Container One',
-                          'container2':'Crop Container Two'
+                            'container1':{
+                                              'Volume':{},
+                                              'Amount':{}
+                            },
+                            'container2':{
+                                              'Crop Prices':{}
+                            },
+                            'container3':{
+                                              'Farmer Count':{}
+                            }
                  },
                  'showDivs':[]
      },

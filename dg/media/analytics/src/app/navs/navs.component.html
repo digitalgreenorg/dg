@@ -20,6 +20,13 @@
     </ul>
   </div>
 </nav>
-<div id="container" *ngFor="let container of containers">
-  <div id="container.id">{{container.content}}</div>
+<br>
+<div class="container">
+  <div class="row"><br>
+    <div id="container" *ngFor="let container of getDictKeys(containers);" class="container-box col-sm-5 pull-sm-1">
+      <tabset [justified]="true">
+        <tab *ngFor="let tab of getDictKeys(containers[container]);" [heading]="tab"></tab>
+      </tabset>
+    </div>
+  </div>
 </div>
