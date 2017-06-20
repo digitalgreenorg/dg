@@ -80,8 +80,10 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             mandi_name = mandi_map[mandi].encode("utf-8")
             temp_str = ('\n%s,%s मंडी\n')%(crop_name,mandi_name)
             price_info_list.append(temp_str)
-            if not query_result and (all_crop_flag or all_mandi_flag):
+            if not query_result and all_crop_flag==0 and all_mandi_flag==0:
                 price_info_list.append('रेट उपलब्ध नही है\n')
+            else:
+                price_info_list.pop()
             for row in query_result:
                 date, min_price, max_price, mean = row[2], int(row[3]), int(row[4]), int(row[5])
                 if max_price-min_price >= 2:
