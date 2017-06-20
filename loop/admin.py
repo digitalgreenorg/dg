@@ -135,6 +135,7 @@ class GaddidarShareOutliersAdmin(admin.ModelAdmin):
 
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name')
+    search_fields = ['crop_name']
 
 class AggregatorIncentiveAdmin(admin.ModelAdmin):
     fields = ('start_date','aggregator','model_type','incentive_model')
@@ -216,3 +217,4 @@ loop_admin.register(HelplineCallLog,HelplineCallLogAdmin)
 loop_admin.register(HelplineSmsLog,HelplineSmsLogAdmin)
 loop_admin.register(Broadcast,BroadcastAdmin)
 loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
+loop_admin.register(VehicleLanguage)

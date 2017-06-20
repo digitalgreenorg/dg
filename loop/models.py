@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
@@ -31,6 +32,7 @@ class LoopModel(models.Model):
 class Language(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=25)
+    notation = models.CharField(max_length=3, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -56,6 +58,8 @@ class State(LoopModel):
     state_name_en = models.CharField(max_length=100, null=True)
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
     crop_add = models.BooleanField(default=False)
+    phone_digit = models.CharField(default=10, max_length=2, blank=True, null=True)
+    phone_start = models.CharField(default=789, max_length=15, blank=True, null=True)
     def __unicode__(self):
         return self.state_name
 
@@ -199,7 +203,7 @@ class Gaddidar(LoopModel):
         return self.gaddidar_name
 
     class Meta:
-        unique_together = ("gaddidar_phone", "gaddidar_name")
+        unique_together = ("gaddidar_phone", "gaddidar_name","mandi")
 
 post_save.connect(save_log, sender=Gaddidar)
 pre_delete.connect(delete_log, sender=Gaddidar)
@@ -250,13 +254,16 @@ pre_delete.connect(delete_log, sender=Crop)
 class CropLanguage(models.Model):
     id = models.AutoField(primary_key=True)
     language = models.ForeignKey(Language,null=True)
-    crop = models.ForeignKey(Crop)
+    crop = models.ForeignKey(Crop, related_name="crops")
     crop_name = models.CharField(max_length=30)
 
     def __unicode__(self):
         return self.crop_name
     def __crop__(self):
         return "%s" % (self.crop.crop_name)
+
+post_save.connect(save_log,sender=CropLanguage)
+pre_delete.connect(delete_log,sender=CropLanguage)
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -292,6 +299,20 @@ class Vehicle(LoopModel):
 
 post_save.connect(save_log, sender=Vehicle)
 pre_delete.connect(delete_log, sender=Vehicle)
+
+class VehicleLanguage(models.Model):
+    id = models.AutoField(primary_key=True)
+    language = models.ForeignKey(Language,null=True)
+    vehicle = models.ForeignKey(Vehicle, related_name="vehicles")
+    vehicle_name = models.CharField(max_length=30)
+
+    def __unicode__(self):
+        return self.vehicle_name
+    def __crop__(self):
+        return "%s" % (self.vehicle.vehicle_name)
+
+post_save.connect(save_log,sender=VehicleLanguage)
+pre_delete.connect(delete_log,sender=VehicleLanguage)
 
 
 class TransportationVehicle(LoopModel):
@@ -560,7 +581,7 @@ class HelplineSmsLog(LoopModel):
 class Broadcast(LoopModel):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=50)
-    cluster = models.ManyToManyField(LoopUser, blank=True, null=True)
+    cluster = models.ManyToManyField(LoopUser)
     audio_url = models.CharField(max_length=130)
     from_number = models.CharField(max_length=20)     #Exotel No.
     start_time = models.DateTimeField()

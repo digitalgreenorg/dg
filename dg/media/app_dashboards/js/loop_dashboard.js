@@ -65,7 +65,7 @@ function initialize() {
     var today = new Date();
     $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     $("#to_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
-    today.setMonth(today.getMonth() - 1);
+    today.setDate(today.getDate() - 15);
     $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     $("#from_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
     showLoader();
@@ -3212,7 +3212,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
                                     $("#aggregator_payment_tab :input").val(aggregator_name_input);
-                                    
+
                                 }, delay);
 
                             },
@@ -3275,7 +3275,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         $('#transportation_comment_row').val($this.parent()[0].childNodes[7].textContent);
         $('#transportation_error_div').hide();
     };
-    
+
 
     $('#table4').on('click', 'tbody td', function(e) {
         $this = $(this);
@@ -3395,10 +3395,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         }, {
             title: "Comment",
             defaultContent: " "
-        }, { 
+        }, {
             title: "Mandi Id",
             visible:false
-        }, { 
+        }, {
             title: "Transportation Vehicle Id",
             visible:false
         }, {
@@ -3486,14 +3486,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                 setTimeout(function() {
                                     $("#aggregator_payments").val(aggregator).change();
                                     $("#aggregator_payment_tab :input").val(aggregator_name_input);
-                                    
+
                                 }, delay);
 
                             },
                             error: function() {
                                 alert("Error While Syncing Transportation Data");
                                 transportationAjaxSuccess = -1;
-                                
+
                             },
                             timeout: 10000
                         });
