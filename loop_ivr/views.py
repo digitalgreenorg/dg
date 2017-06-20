@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 __author__ = 'Vikas Saini'
 
 from django.shortcuts import render
@@ -51,13 +53,13 @@ def mandi_info(request):
         mandi_list = get_valid_list('loop', 'mandi', mandis_info)
         price_info_incoming_obj.query_for_mandi = mandis_info
         if not crop_list:
-            final_result = 'Please correct crop list'
+            final_result = 'कृपया सब्जी की सूची ठीक करे.'
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()
             send_info(from_number, final_result)
             return HttpResponse(status=200)
         if not mandi_list:
-            final_result = 'Please correct mandi list'
+            final_result = 'कृपया मंडी की सूची ठीक करे.'
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()
             send_info(from_number, final_result)
