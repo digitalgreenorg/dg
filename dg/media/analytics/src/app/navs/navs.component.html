@@ -21,12 +21,10 @@
   </div>
 </nav>
 <br>
-<div class="container">
-  <div class="row"><br>
-    <div id="container" *ngFor="let container of getDictKeys(containers);" class="container-box col-sm-5 pull-sm-1">
+<div class="row justify-content-center" style="box-sizing: None"><br>
+    <div id="container" *ngFor="let container of getDictKeys(containers);" class="container-box col-sm-5">
       <tabset [justified]="true">
         <tab *ngFor="let tab of getDictKeys(containers[container]);" [heading]="tab"></tab>
       </tabset>
     </div>
-  </div>
 </div>

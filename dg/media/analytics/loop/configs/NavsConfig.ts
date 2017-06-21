@@ -44,7 +44,6 @@ export const navsConfig = {
                                               'Farmer Count':{}
                             }
                  },
-                 'showDivs':[]
      },
 
      'Time Series': {

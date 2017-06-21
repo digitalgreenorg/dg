@@ -34,7 +34,8 @@ export class NavsComponent implements OnInit {
       });
       return navsList
     }
-    
+    console.log(this.toggleNav);
+    console.log(this.containers);
   }
 
   showContent(nav,subNav) {
@@ -46,6 +47,7 @@ export class NavsComponent implements OnInit {
     else {
       this.containers = this.navsConfig[nav]
     }
+    console.log(this.containers)
   }
 
   getDictKeys(dict) {
