@@ -184,6 +184,11 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
     list_filter = ('broadcast','status')
     search_fields = ['to_number']
 
+class JharkhandIncomingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'call_id', 'from_number', 'to_number', 'incoming_time')
+    search_fields = ['from_number', 'to_number']
+
+
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block)
@@ -218,3 +223,4 @@ loop_admin.register(HelplineSmsLog,HelplineSmsLogAdmin)
 loop_admin.register(Broadcast,BroadcastAdmin)
 loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
 loop_admin.register(VehicleLanguage)
+loop_admin.register(JharkhandIncoming,JharkhandIncomingAdmin)
