@@ -22,13 +22,13 @@ export class CardsComponent implements OnInit, AfterViewInit {
     cardsConfigs = environment.cardsConfig;
     ngOnInit(): void {
         Object.keys(this.cardsConfigs).forEach(key => {
-            if(this.cardsConfigs[key].overall.show){
+            if(this.cardsConfigs[key].overall.cards){
                 this.cardsOverall.push({
                     'id': key,
                     'text':this.cardsConfigs[key].text
                 });
             }
-            if(this.cardsConfigs[key].recent.show){
+            if(this.cardsConfigs[key].recent.cards){
                 this.cardsRecent.push({
                     'id':key,
                     'text':this.cardsConfigs[key].text
@@ -42,15 +42,14 @@ export class CardsComponent implements OnInit, AfterViewInit {
             }
         }
         this.getData(options);
-        // graph-Cards
-        Object.keys(this.cardGraphConfig).forEach(config => {
-            this.charts.push({
-                options:this.cardGraphConfig[config],
-                nativeChart:null,
-            })
-        });
+
         Object.keys(this.cardsConfigs).forEach(cardData => {
-            console.log(this.cardsConfigs[cardData]);
+            if(this.cardsConfigs[cardData].overall.graph) {
+                this.charts.push({
+                    options:this.cardsConfigs[cardData].overall.graph.options,
+                    nativeChart:null,
+                })
+            }
         });
     }
 
@@ -77,6 +76,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
                   }
                   else if(cardData.placeHolder == "recent") {
                       this.cardsRecent.forEach(card => {
+                          console.log(this.cardsRecent[card].value);
                         if(cardData.tagName === card.text){
                           card['value'] = cardData.value;
                         }
@@ -84,7 +84,10 @@ export class CardsComponent implements OnInit, AfterViewInit {
                   }
                   else if(cardData.placeHolder == "cardGraphs") {
                     this.charts.forEach(chart=> {
-                       chart.nativeChart.series[0].update({'data':[cardData.value]})
+                        console.log(cardData.tagName);
+                        if(cardData.tagName === chart.options.title) {
+                            chart.nativeChart.series[0].update({'data':[cardData.value]})
+                        }
                     })
                   }
               });

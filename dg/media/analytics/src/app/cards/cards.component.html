@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div *ngIf="cardsOverall.length > 0" class="container-fluid">
   <h5 class="text-muted">Overall</h5>
   <hr/>
   <div class="row">
@@ -14,7 +14,7 @@
 </div>
 <br>
 <br>
-<div class="container-fluid">
+<div  *ngIf="cardsRecent.length > 0" class="container-fluid">
   <h5 class="text-muted">Recent</h5>
   <hr/>
   <div class="row">
@@ -31,11 +31,12 @@
 <br>
 <br>
 
-<div class="container-fluid">
+<div *ngIf="charts.length > 0" class="container-fluid">
   <div class="row">
     <div class="col-md-3" *ngFor="let chart of charts">
       <div class="card">
         <div class="card-block">
+          <h6 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.options.title}}</h6>
           <chart [options]="chart.options" (load)="saveInstance($event.context, chart)" ></chart>    
         </div>
       </div>

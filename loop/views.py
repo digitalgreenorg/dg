@@ -48,6 +48,8 @@ from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
 import pandas as pd
+from training.management.databases.utility import multiprocessing_dict, multiprocessing_list
+from loop.management.commands.get_sql_queries import *
 
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
@@ -936,11 +938,42 @@ def broadcast_audio_request(request):
 
 def get_card_graph_data(request):
 
+    query_list = []
+
+    cluster_query = get_cluster_sql();
+    query_list.extend(cluster_query)
+
+
+    volume_query = get_volume_sql()
+    query_list.extend(volume_query)
+
+    payment_query = get_payment_sql()
+    query_list.extend(payment_query)
+
+    farmer_query = get_farmer_sql()
+    query_list.extend(farmer_query)
+
+    results = multiprocessing_list(query_list = query_list)
+
     results = [{
         'placeHolder' : 'cardGraphs',
-        'tagName' : 'farmers',
+        'tagName' : '#Clusters',
         'value' : 70,
+    },
+    {
+        'placeHolder' : 'cardGraphs',
+        'tagName' : '#Farmers',
+        'value' : 80,
+    },
+    {
+        'placeHolder' : 'cardGraphs',
+        'tagName' : 'Volume(Kg)',
+        'value' : 1000,
+    },
+    {
+        'placeHolder' : 'cardGraphs',
+        'tagName' : 'Payments(Rs)',
+        'value' : 12030,
     },]
     data = json.dumps({'data' : results})
-    print data
     return HttpResponse(data);
