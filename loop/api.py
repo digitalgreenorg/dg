@@ -256,6 +256,7 @@ class UserResource(ModelResource):
         # }
 
 
+
 class CountryResource(BaseResource):
     class Meta:
         queryset = Country.objects.all()
@@ -329,7 +330,7 @@ class VillageResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
-        allowed_methods = ['post', 'get']
+        allowed_methods = ['post', 'get','put']
         always_return_data = True
         queryset = Village.objects.all()
         resource_name = 'village'
@@ -437,6 +438,7 @@ class LoopUserResource(BaseResource):
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
 
     def obj_create(self, bundle, **kwargs):
+        user = User.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name'])
         bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
         assigned_mandi_list = bundle.data.get('assigned_mandis')
         assigned_village_list = bundle.data.get('assigned_villages')
@@ -561,7 +563,7 @@ class CropResource(BaseResource):
         return result
 
     def obj_create(self, bundle, request=None, **kwargs):
-        attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
+        attempt = Crop.objects.filter(crop_name=bundle.data['crop_name_en'])
         if attempt.count() < 1:
             bundle = super(CropResource, self).obj_create(bundle, **kwargs)
         else:
@@ -572,7 +574,7 @@ class CropResource(BaseResource):
         try:
             bundle = super(CropResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
+            attempt = Crop.objects.filter(crop_name=bundle.data['crop_name_en'])
             send_duplicate_message(int(attempt[0].id))
         return bundle
 
@@ -1026,6 +1028,32 @@ class GaddidarCommissionResource(BaseResource):
 
     dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
     dehydrate_gaddidar = partial(foreign_key_to_id,field_name="gaddidar",sub_field_names=['id'])
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        mandi_id = bundle.data['mandi']['id']
+        mandi = Mandi.objects.get(id=mandi_id)
+        gaddidar_id = bundle.data['gaddidar']['id']
+        gaddidar = Gaddidar.objects.get(id=gaddidar_id)
+        attempt = GaddidarCommission.objects.filter(start_date=bundle.data['start_date'],gaddidar=gaddidar,mandi=mandi)
+        if attempt.count() < 1:
+            bundle = super(GaddidarCommissionResource, self).obj_create(
+                bundle, **kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(GaddidarCommissionResource, self).obj_update(
+                bundle, **kwargs)
+        except Exception, e:
+            mandi_id = bundle.data['mandi']['id']
+            mandi = Mandi.objects.get(id=mandi_id)
+            gaddidar_id = bundle.data['gaddidar']['id']
+            gaddidar = Gaddidar.objects.get(id=gaddidar_id)
+            attempt = GaddidarCommission.objects.filter(start_date=bundle.data['start_date'],gaddidar=gaddidar,mandi=mandi)
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
