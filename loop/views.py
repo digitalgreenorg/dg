@@ -21,7 +21,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, JharkhandIncoming
 
 from loop_data_log import get_latest_timestamp
 from loop.payment_template import *
@@ -607,7 +607,6 @@ def payments(request):
 
     return HttpResponse(data)
 
-
 def helpline_incoming(request):
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
@@ -933,3 +932,21 @@ def broadcast_audio_request(request):
         return audio_url_response
     else:
         return HttpResponse(status=200)
+
+
+def jharkhand_pilot_call(request):
+    app_id = '136200'
+    if request.method == 'GET':
+        call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        call_obj = JharkhandIncoming(call_id=call_id,from_number=from_number,
+                                    to_number=to_number,incoming_time=incoming_time)
+        try:
+            call_obj.save()
+        except Exception as e:
+            # if error then log
+            module = 'save_call_log'
+            write_log(HELPLINE_LOG_FILE,module,str(e))
+        connect_to_app(farmer_number,app_id)
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)

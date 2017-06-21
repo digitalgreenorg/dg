@@ -603,3 +603,17 @@ class BroadcastAudience(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (self.to_number, self.broadcast)
+
+
+class JharkhandIncoming(LoopModel):
+    id = models.AutoField(primary_key=True)
+    call_id = models.CharField(max_length=100)
+    from_number = models.CharField(max_length=20, db_index=True) #User No.
+    to_number = models.CharField(max_length=20)                  #DG Exotel No.
+    incoming_time = models.DateTimeField()
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.from_number, self.incoming_time)
+
+    class Meta:
+        unique_together = ("call_id", "from_number", "incoming_time")
