@@ -13,7 +13,7 @@ from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
 
 from loop_ivr.utils.marketinfo import raw_sql
-from loop_ivr.utils.data import LOG_FILE
+from loop_ivr.utils.data import LOG_FILE, AGGREGATOR_SMS_NO
 from loop_ivr.models import PriceInfoLog
 
 
@@ -44,7 +44,7 @@ def run_query(query):
 
 def send_info(to_number, content):
     index = 0
-    from_number = '01139589707'
+    from_number = AGGREGATOR_SMS_NO
     while index < len(content):
         send_sms(from_number, to_number, content[index:index+1998])
         index += 1998
