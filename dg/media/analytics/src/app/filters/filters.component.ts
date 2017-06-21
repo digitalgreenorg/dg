@@ -18,7 +18,8 @@ import { environment } from '../../environments/environment.training';
 export class FiltersComponent implements OnInit {
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
-  @ViewChild('sideNavContent') sideNavContent : ElementRef;
+  @ViewChild('sideNavContent') sideNavContent: ElementRef;
+  filterConfig = environment.filtersConfig;
   filter_list: Filter[] = new Array<Filter>();
   filter: Filter;
   showDateFilter: boolean = false;
@@ -53,32 +54,83 @@ export class FiltersComponent implements OnInit {
   };
 
   constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, private datepipe: DatePipe) {
-  }
-
-  ngOnInit() {
-
-    this.getFilterData.getData().subscribe(val => {
-      for (let data of val) {
-        if (data['name'] === 'date' && data['visible'] == true) {
+    Object.keys(this.filterConfig).forEach(key => {
+      if (this.filterConfig[key].show) {
+        if (this.filterConfig[key].name == 'date') {
           this.showDateFilter = true;
         }
         else {
           this.filter = new Filter();
-          this.filter.heading = data['name'];
-          this.filter.expand = false;
+          this.filter.heading = this.filterConfig[key].name;
+          this.filter.expand = this.filterConfig[key].expand;
+          this.filter.parent = this.filterConfig[key].parent;
+          this.filter.initialLoad = this.filterConfig[key].initialLoad;
           this.filter.element = new Array<FilterElement>();
-          for (let val of data['data']) {
-            let filterElement = new FilterElement();
-            filterElement.id = val['id'];
-            filterElement.value = val['value'];
-            filterElement.checked = false;
-
-            this.filter.element.push(filterElement);
-          }
           this.filter_list.push(this.filter);
         }
       }
     });
+
+    this.getFilterData.getData().subscribe(res => {
+      console.log(res);
+      let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res[0]['name']; });
+      let data = res[0];
+      for (let val of data['data']) {
+        let filterElement = new FilterElement();
+        filterElement.id = val['id'];
+        filterElement.value = val['value'];
+        filter[0].element.push(filterElement);
+      }
+    });
+  }
+  onFilterClick(filter_detail) {
+    if (!filter_detail.expand && !filter_detail.initialLoad) {
+      let options = {
+        filter: filter_detail.heading
+      }
+      let parent_list = this.filter_list.filter(f_obj => {
+        return f_obj.heading === filter_detail.parent;
+      });
+      if (parent_list.length > 0) {
+        let parent = parent_list[0];
+        let parent_name = parent.heading;
+        let list = parent.element.filter(data => { return data.checked }).map(data => {
+          return data.id;
+        });
+        if (list.length > 0) {
+          options['parent'] = parent_name;
+          options[parent_name] = list;
+        }
+      }
+      this.getFilterData.getDataForParentFilter(options).subscribe(val => {
+        console.log(val);
+      });
+    }
+  }
+
+  ngOnInit() {
+    // this.getFilterData.getData().subscribe(val => {
+    //   for (let data of val) {
+    //     if (data['name'] === 'date' && data['visible'] == true) {
+    //       this.showDateFilter = true;
+    //     }
+    //     else {
+    //       this.filter = new Filter();
+    //       this.filter.heading = data['name'];
+    //       this.filter.expand = false;
+    //       this.filter.element = new Array<FilterElement>();
+    //       for (let val of data['data']) {
+    //         let filterElement = new FilterElement();
+    //         filterElement.id = val['id'];
+    //         filterElement.value = val['value'];
+    //         filterElement.checked = false;
+    //
+    //         this.filter.element.push(filterElement);
+    //       }
+    //       this.filter_list.push(this.filter);
+    //     }
+    //   }
+    // });
   }
 
   closeNav() {
@@ -122,12 +174,12 @@ export class FiltersComponent implements OnInit {
       }
     }
     if (!this.invalidDate) {
-      this.getDatatest();
+      this.getDataForFilters();
       this.closeNav();
     }
   }
 
-  getDatatest(): any {
+  getDataForFilters(): any {
     let argstest = {
       webUrl: environment.url + "getData",
       params: this.f_list
