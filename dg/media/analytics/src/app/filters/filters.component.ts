@@ -100,11 +100,11 @@ export class FiltersComponent implements OnInit {
         if (list.length > 0) {
           options['parent'] = parent_name;
           options[parent_name] = list;
+          this.getFilterData.getDataForParentFilter(options).subscribe(val => {
+            console.log(val);
+          });
         }
       }
-      this.getFilterData.getDataForParentFilter(options).subscribe(val => {
-        console.log(val);
-      });
     }
   }
 

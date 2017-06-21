@@ -91,20 +91,22 @@ def get_pandas_dataframe(sql_query):
 
 @csrf_exempt
 def get_filter_data(request):
+    table_name = None
     try:
         print request.GET
         table_name = request.GET['filter']
         parent = request.GET['parent']
         parent_table = request.GET.getlist(parent)
-        print parent_table
     except:
         pass
     states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
-    trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
     response_list = []
-    # trainer_dict = {'name':'Trainer', 'visible':True, 'data':list(trainers_list)}
     state_dict = {'name':'State', 'visible':True, 'data':list(states_list)}
     response_list.extend([state_dict])
+    if table_name and table_name == 'Trainer':
+        trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
+        trainer_dict = {'name':'Trainer', 'visible':True, 'data':list(trainers_list)}
+        response_list.extend([trainer_dict])
     json_data = json.dumps(response_list)
     return HttpResponse(json_data)
 
