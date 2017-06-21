@@ -938,8 +938,8 @@ def jharkhand_pilot_call(request):
     app_id = '136200'
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-        call_obj = JharkhandIncoming(call_id=call_id,from_number=from_number,
-                                    to_number=to_number,incoming_time=incoming_time)
+        call_obj = JharkhandIncoming(call_id=call_id,from_number=farmer_number,
+                                    to_number=dg_number,incoming_time=incoming_time)
         try:
             call_obj.save()
         except Exception as e:
