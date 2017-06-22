@@ -120,13 +120,9 @@ class BlockAuthorization(Authorization):
             kwargs = {}
             kwargs[self.block_field] = Block.objects.filter(district__in=districts)
         else:
-            if self.block_field == 'id__in':
-                block = []
-                block.append(LoopUser.objects.get(
-                    user_id=bundle.request.user.id).village.block.id)
-            else:
-                block = LoopUser.objects.get(
-                    user_id=bundle.request.user.id).village.block
+            block = []
+            block.append(LoopUser.objects.get(
+                user_id=bundle.request.user.id).village.block.id)
             kwargs = {}
             kwargs[self.block_field] = block
         return object_list.filter(**kwargs).distinct()
@@ -789,7 +785,7 @@ class TransporterResource(BaseResource):
         allowed_methods = ["get", "post", "put", "delete"]
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
-        authorization = BlockAuthorization('block')
+        authorization = BlockAuthorization('block_id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
@@ -843,7 +839,7 @@ class TransportationVehicleResource(BaseResource):
         queryset = TransportationVehicle.objects.all()
         allowed_methods = ["get", "post", "put", "delete"]
         resource_name = 'transportationvehicle'
-        authorization = BlockAuthorization('transporter__block')
+        authorization = BlockAuthorization('transporter__block_id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
