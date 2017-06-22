@@ -71,8 +71,12 @@
                     <div class='layout-vr-xlg'>
                         <p class='copy copy-para'>{{job.description}}
                         </p>
-                        {% if job.keyresponsibility_set.all %}
+                        {% if job.keyresponsibility_set.all or job.key_res_content %}
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Key Responsibilities</h3>
+                            {% if job.key_res_content %}
+                            <div class="class='bullet-list copy copy-para" style="padding-left:35px;">{{ job.key_res_content }}</div>
+                            {% endif %}
+                            
                             <ul class='bullet-list copy copy-para'>
                                 {% for keyres in job.keyresponsibility_set.all %}
                                     <li>{{keyres}}
