@@ -75,20 +75,22 @@ export class NavsComponent implements OnInit {
       }
       this.toggleNav[navOne] = tempDict;
     });
-    console.log(this.toggleNav);
   }
+
   getDictKeys(dict) {
     return Object.keys(dict)
   }
+  
   setNav(selectedItem : string) {
     Object.keys(this.toggleNav).forEach(nav => {
       this.toggleNav[nav].status = false
     });
     this.toggleNav[selectedItem].status = true;
-    /*if(this.toggleNav[selectedItem].subNav.length == 0){
+    if(!(this.toggleNav[selectedItem].hasOwnProperty('subNavs'))){
       this.showContent(selectedItem, null);
-    }*/
+    }
   }
+
   showContent(nav,subNav) {
     this.containers = {}
     if(subNav != null){
@@ -97,6 +99,5 @@ export class NavsComponent implements OnInit {
     else {
       this.containers = this.navsConfig.navs[nav]
     }
-    console.log(this.containers)
   }
 }
