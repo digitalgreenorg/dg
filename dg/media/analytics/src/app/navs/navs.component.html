@@ -1,34 +1,3 @@
-<!--<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
-  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand" href="#">LOOP</a>
-  <div class="collapse navbar-collapse" [collapse]="isCollapsed">
-    <ul class="navbar-nav">
-      <li class="nav-item" *ngFor="let nav of getDictKeys(toggleNav);">
-        <a class="nav-link" data-toggle="collapse" routerLinkActive="active" (click)="setNav(nav)">{{nav}}</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-  <div class="collapse navbar-collapse" [collapse]="isCollapsed">
-    <ul class="navbar-nav" *ngFor="let nav of getDictKeys(toggleNav);">
-      <li class="nav-item" *ngFor="let subNav of toggleNav[nav].subNav">
-        <a *ngIf="toggleNav[nav].status" class="nav-link" href="#" routerLinkActive="active" (click)="showContent(nav,subNav)">{{subNav}}</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-<br>
-<div class="row justify-content-center" style="box-sizing: None"><br>
-    <div id="container" *ngFor="let container of getDictKeys(containers);" class="container-box col-sm-5">
-      <tabset [justified]="true">
-        <tab *ngFor="let tab of getDictKeys(containers[container]);" [heading]="tab"></tab>
-      </tabset>
-    </div>
-</div> -->
-
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
@@ -53,5 +22,13 @@
         </ul>
       </div>
     </nav>
+  </div>
+</div>
+
+<div class="row justify-content-center" *ngIf="displayContent">
+  <div id="container" *ngFor="let container of getDictKeys(containers['containers']);" class="container-box col-sm-5">
+    <tabset [justified]="true">
+        <tab *ngFor="let tab of getDictKeys(containers['containers'][container]);" [heading]="tab"></tab>
+      </tabset>
   </div>
 </div>

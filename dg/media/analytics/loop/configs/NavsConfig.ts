@@ -3,7 +3,6 @@ export const navsConfig = {
         'Home':{
             'overall':false,
             'recent':false,
-            'showDivs':[],
             'containers':{
                 'container1':{
                     'test1':{},
@@ -62,8 +61,8 @@ export const navsConfig = {
         'Time Series': {
             'containers':{
                 'container1':{
-                    'test1':{},
-                    'test2':{}
+                    'test3':{},
+                    'test4':{}
                 }
             }   
         }
