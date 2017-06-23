@@ -93,20 +93,21 @@ def get_pandas_dataframe(sql_query):
 def get_filter_data(request):
     table_name = None
     try:
-        print request.GET
         table_name = request.GET['filter']
         parent = request.GET['parent']
-        parent_table = request.GET.getlist(parent)
+        parent_id_list = request.GET.getlist(parent)
     except:
         pass
-    states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
     response_list = []
-    state_dict = {'name':'State', 'visible':True, 'data':list(states_list)}
-    response_list.extend([state_dict])
     if table_name and table_name == 'Trainer':
-        trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
-        trainer_dict = {'name':'Trainer', 'visible':True, 'data':list(trainers_list)}
+        trainers_list = Trainer.objects.filter(training_user__states__in = parent_id_list[0].split(',')).annotate(value=F('name')).values('id','value').distinct().order_by('value')
+        trainer_dict = {'name':'Trainer', 'data':list(trainers_list)}
         response_list.extend([trainer_dict])
+    else:
+        states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
+        state_dict = {'name':'State', 'data':list(states_list)}
+        response_list.extend([state_dict])
+
     json_data = json.dumps(response_list)
     return HttpResponse(json_data)
 

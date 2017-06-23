@@ -72,7 +72,6 @@ export class FiltersComponent implements OnInit {
     });
 
     this.getFilterData.getData().subscribe(res => {
-      console.log(res);
       let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res[0]['name']; });
       let data = res[0];
       for (let val of data['data']) {
@@ -100,11 +99,20 @@ export class FiltersComponent implements OnInit {
         if (list.length > 0) {
           options['parent'] = parent_name;
           options[parent_name] = list;
-          this.getFilterData.getDataForParentFilter(options).subscribe(val => {
-            console.log(val);
-          });
         }
       }
+      this.getFilterData.getDataForParentFilter(options).subscribe(response => {
+        console.log(response);
+        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === response[0]['name']; });
+        filter[0].element = [];
+        let data = response[0];
+        for (let val of data['data']) {
+          let filterElement = new FilterElement();
+          filterElement.id = val['id'];
+          filterElement.value = val['value'];
+          filter[0].element.push(filterElement);
+        }
+      });
     }
   }
 
