@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { IMyOptions } from 'mydatepicker';
 import { Filter } from './filter';
 import { FilterElement } from './filter-element';
-import { GetFilterDataService } from '../get-filter-data.service';
+import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.training';
 
