@@ -25,7 +25,7 @@
   </div>
 </div>
 
-<div class="row justify-content-center" *ngIf="displayContent">
+<div class="row justify-content-center" *ngIf="containers.displayContent">
   <div id="container" *ngFor="let container of getDictKeys(containers['containers']);" class="container-box col-sm-5">
     <tabset [justified]="true">
         <tab *ngFor="let tab of getDictKeys(containers['containers'][container]);" [heading]="tab"></tab>

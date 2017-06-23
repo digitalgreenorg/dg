@@ -12,10 +12,8 @@ export class NavsComponent implements OnInit {
   navsConfig = environment.navsConfig;
   overall : false;
   recent : false;
-  
   toggleNav = {};
   containers = {};
-  displayContent = false;
   constructor() {}
   
   ngOnInit() {
@@ -37,6 +35,7 @@ export class NavsComponent implements OnInit {
   }
   
   setNav(selectedItem : string) {
+    this.containers['displayContent'] = false;
     Object.keys(this.toggleNav).forEach(nav => {
       this.toggleNav[nav].status = false
     });
@@ -44,7 +43,6 @@ export class NavsComponent implements OnInit {
     if(!(this.toggleNav[selectedItem].hasOwnProperty('subNavs'))){
       this.showContent(selectedItem, null);
     }
-    console.log(this.toggleNav)
   }
 
   showContent(nav,subNav) {
@@ -55,6 +53,6 @@ export class NavsComponent implements OnInit {
     else {
       this.containers = this.navsConfig.navs[nav]
     }
-    this.displayContent = true;
+    this.containers['displayContent'] = true
   }
 }
