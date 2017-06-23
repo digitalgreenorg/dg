@@ -5,8 +5,12 @@ export const navsConfig = {
             'recent':false,
             'containers':{
                 'container1':{
-                    'test1':{},
-                    'test2':{}
+                    'test1':{
+                        'addDivs':['testDiv1']
+                    },
+                    'test2':{
+                        'addDivs':['testDiv2']
+                    }
                 }
             } 
         },

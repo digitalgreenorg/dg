@@ -16,19 +16,20 @@
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
       <div class="collapse navbar-collapse" [collapse]="isCollapsed">
         <ul class="navbar-nav">
-          <li class="nav-item" *ngFor="let subNav of getDictKeys(toggleNav[nav].subNavs)">
-            <a *ngIf="toggleNav[nav].status" class="nav-link" href="#" routerLinkActive="active" (click)="showContent(nav,subNav)">{{subNav}}</a>
+          <li class="nav-item" *ngFor="let subNav of toggleNav[nav].subNavs">
+            <a *ngIf="toggleNav[nav].status" class="nav-link" href="#" routerLinkActive="active" (click)="showContent(subNav)">{{subNav}}</a>
           </li>
         </ul>
       </div>
     </nav>
   </div>
 </div>
-
-<div class="row justify-content-center" *ngIf="containers.displayContent">
-  <div id="container" *ngFor="let container of getDictKeys(containers['containers']);" class="container-box col-sm-11">
-    <tabset [justified]="true">
-        <tab *ngFor="let tab of getDictKeys(containers['containers'][container]);" [heading]="tab"></tab>
+<br>
+<div *ngFor="let container of getDictKeys(containers);">
+<div class="row justify-content-center"  *ngIf="containers[container].displayContent">
+  <div id="container" class="container-box col-sm-11">
+    <tabset [justified]="true" *ngFor="let option of getDictKeys(containers[container]['containers']);">
+        <tab *ngFor="let tab of getDictKeys(containers[container]['containers'][option]);" [heading]="tab"></tab>
     </tabset>
   </div>
 </div>
