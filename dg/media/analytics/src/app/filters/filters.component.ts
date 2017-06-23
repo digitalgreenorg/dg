@@ -84,13 +84,16 @@ export class FiltersComponent implements OnInit {
       }
     });
   }
-  onFilterClick(filter_detail) {
-    if (!filter_detail.expand && !filter_detail.initialLoad) {
+  onFilterClick(filter_clicked) {
+    if (!filter_clicked.expand && !filter_clicked.initialLoad) {
+      if (filter_clicked.element.length == 0) {
+        filter_clicked.expand = true;
+      }
       let options = {
-        filter: filter_detail.heading
+        filter: filter_clicked.heading
       }
       let parent_list = this.filter_list.filter(f_obj => {
-        return f_obj.heading === filter_detail.parent;
+        return f_obj.heading === filter_clicked.parent;
       });
       let parent_changed: boolean = false;
       if (parent_list.length > 0) {
@@ -108,6 +111,7 @@ export class FiltersComponent implements OnInit {
       if (parent_changed) {
         this.getFilterData.getDataForParentFilter(options).subscribe(response => {
           parent_list[0].changed = false;
+          filter_clicked.expand = true;
           let filter = this.filter_list.filter(f_obj => { return f_obj.heading === response[0]['name']; });
           filter[0].element = [];
           let data = response[0];
