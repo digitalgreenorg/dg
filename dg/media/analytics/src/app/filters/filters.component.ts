@@ -92,9 +92,11 @@ export class FiltersComponent implements OnInit {
       let parent_list = this.filter_list.filter(f_obj => {
         return f_obj.heading === filter_detail.parent;
       });
+      let parent_changed: boolean = false;
       if (parent_list.length > 0) {
         let parent = parent_list[0];
         let parent_name = parent.heading;
+        parent_changed = parent.changed;
         let list = parent.element.filter(data => { return data.checked }).map(data => {
           return data.id;
         });
@@ -103,18 +105,20 @@ export class FiltersComponent implements OnInit {
           options[parent_name] = list;
         }
       }
-      this.getFilterData.getDataForParentFilter(options).subscribe(response => {
-        console.log(response);
-        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === response[0]['name']; });
-        filter[0].element = [];
-        let data = response[0];
-        for (let val of data['data']) {
-          let filterElement = new FilterElement();
-          filterElement.id = val['id'];
-          filterElement.value = val['value'];
-          filter[0].element.push(filterElement);
-        }
-      });
+      if (parent_changed) {
+        this.getFilterData.getDataForParentFilter(options).subscribe(response => {
+          parent_list[0].changed = false;
+          let filter = this.filter_list.filter(f_obj => { return f_obj.heading === response[0]['name']; });
+          filter[0].element = [];
+          let data = response[0];
+          for (let val of data['data']) {
+            let filterElement = new FilterElement();
+            filterElement.id = val['id'];
+            filterElement.value = val['value'];
+            filter[0].element.push(filterElement);
+          }
+        });
+      }
     }
   }
 

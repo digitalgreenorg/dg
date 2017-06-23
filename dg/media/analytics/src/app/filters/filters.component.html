@@ -48,7 +48,7 @@
               <perfect-scrollbar class="scrollBar">
                 <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm">
                   <span class="checkbox">
-                    <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked"> {{data.value}}</label>
+                    <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked" (change)="filter_name.changed = true"> {{data.value}}</label>
                   </span>
                 </h6>
               </perfect-scrollbar>

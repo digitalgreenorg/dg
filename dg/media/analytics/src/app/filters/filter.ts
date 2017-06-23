@@ -8,4 +8,5 @@ export class Filter {
   expand: boolean;
   parent: string;
   initialLoad: boolean;
+  changed: boolean = false;
 }
