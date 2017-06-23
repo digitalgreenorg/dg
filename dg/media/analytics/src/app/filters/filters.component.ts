@@ -109,18 +109,22 @@ export class FiltersComponent implements OnInit {
         }
       }
       if (parent_changed) {
+        filter_clicked.element = [];
+        filter_clicked.expand = true;
         this.getFilterData.getDataForParentFilter(options).subscribe(response => {
           parent_list[0].changed = false;
-          filter_clicked.expand = true;
-          let filter = this.filter_list.filter(f_obj => { return f_obj.heading === response[0]['name']; });
-          filter[0].element = [];
-          let data = response[0];
-          for (let val of data['data']) {
-            let filterElement = new FilterElement();
-            filterElement.id = val['id'];
-            filterElement.value = val['value'];
-            filter[0].element.push(filterElement);
+          // let filter = this.filter_list.filter(f_obj => { return f_obj.heading === response[0]['name']; });
+          try {
+            let data = response[0];
+            for (let val of data['data']) {
+              let filterElement = new FilterElement();
+              filterElement.id = val['id'];
+              filterElement.value = val['value'];
+              filter_clicked.element.push(filterElement);
+            }
+            filter_clicked.expand = true;
           }
+          catch (e) { }
         });
       }
     }
