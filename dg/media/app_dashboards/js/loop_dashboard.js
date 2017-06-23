@@ -65,7 +65,8 @@ function initialize() {
     closeOnClick: true
   });
   $(".button-collapse1").sideNav();
-
+  $("#totalpaytext").text(Payments(CURRENCY));
+  $("#recentpaytext").text(Payments(CURRENCY));
   var today = new Date();
   $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
   $("#to_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
@@ -4042,9 +4043,15 @@ function change_country(country) {
   country_id = country;
   if (country_id == 1){
     CURRENCY = RUPEE;
+    $("#totalpaytext").text(Payments(CURRENCY));
+    $("#recentpaytext").text(Payments(CURRENCY));
+
   }
   else{
     CURRENCY = TAKA;
+    $("#totalpaytext").text(Payments(CURRENCY));
+    $("#recentpaytext").text(Payments(CURRENCY));
+
   }
   total_static_data(country);
   recent_graphs_data(language, country);
