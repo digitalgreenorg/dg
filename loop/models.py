@@ -226,7 +226,7 @@ class Farmer(LoopModel):
         return "%s" % (self.village.village_name)
 
     class Meta:
-        unique_together = ("phone", "name")
+        unique_together = ("phone", "name", "village")
 
 post_save.connect(save_log, sender=Farmer)
 pre_delete.connect(delete_log, sender=Farmer)
