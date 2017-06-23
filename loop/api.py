@@ -77,9 +77,11 @@ class LoopUserAuthorization(Authorization):
         self.loopuser_field = field
 
     def read_list(self,object_list,bundle):
-        aggregators = AdminUser.objects.get(user_id=bundle.request.user.id).get_loopusers()
         kwargs = {}
-        kwargs[self.loopuser_field] = aggregators
+        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
+            user = AdminUser.objects.get(user_id=bundle.request.user.id)
+            aggregators = user.get_loopusers()
+            kwargs[self.loopuser_field] = aggregators
         return object_list.filter(**kwargs).distinct()
 
 class VillageAuthorization(Authorization):
@@ -115,10 +117,16 @@ class BlockAuthorization(Authorization):
         self.block_field = field
 
     def read_list(self, object_list, bundle):
-        block = LoopUser.objects.get(
-            user_id=bundle.request.user.id).village.block
-        kwargs = {}
-        kwargs[self.block_field] = block
+        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
+            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+            kwargs = {}
+            kwargs[self.block_field] = Block.objects.filter(district__in=districts)
+        else:
+            block = []
+            block.append(LoopUser.objects.get(
+                user_id=bundle.request.user.id).village.block.id)
+            kwargs = {}
+            kwargs[self.block_field] = block
         return object_list.filter(**kwargs).distinct()
 
     def read_detail(self, object_list, bundle):
@@ -781,7 +789,7 @@ class TransporterResource(BaseResource):
         allowed_methods = ["get", "post", "put", "delete"]
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
-        authorization = BlockAuthorization('block')
+        authorization = BlockAuthorization('block_id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
@@ -835,7 +843,7 @@ class TransportationVehicleResource(BaseResource):
         queryset = TransportationVehicle.objects.all()
         allowed_methods = ["get", "post", "put", "delete"]
         resource_name = 'transportationvehicle'
-        authorization = BlockAuthorization('transporter__block')
+        authorization = BlockAuthorization('transporter__block_id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
