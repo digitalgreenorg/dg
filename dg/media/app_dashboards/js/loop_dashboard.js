@@ -26,7 +26,11 @@ var PAYMENTS_PAGE = "payments";
 var ANALYTICS_PAGE = "analytics";
 var TIME_SERIES_PAGE = "time_series";
 var RUPEE = "₹ ";
+var TAKA = "৳";
+var CURRENCY = RUPEE;
+
 var KG = " Kg";
+
 var VOLUME = "volume",
   MANDI = "mandi",
   VISITS = "visits",
@@ -468,10 +472,10 @@ function plot_cards_data() {
   document.getElementById('recent_active_farmers_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + c_active_farmers[0];
   $('#recent_active_farmers_sparkline').sparkline(c_active_farmers.reverse(), sparkline_option);
 
-  document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(c_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+  document.getElementById('recent_revenue_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + CURRENCY.concat(c_amt[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
   $('#recent_revenue_sparkline').sparkline(c_amt.reverse(), sparkline_option);
 
-  document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + RUPEE.concat(parseFloat(c_cpk[0]).toFixed(2));
+  document.getElementById('cpk_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + CURRENCY.concat(parseFloat(c_cpk[0]).toFixed(2));
   $('#cpk_sparkline').sparkline(c_cpk.reverse(), sparkline_option);
 
   document.getElementById('recent_sustainability_card').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + parseFloat(c_sustainability[0]).toFixed(2) + "%";
@@ -1128,10 +1132,10 @@ function totals() {
   total_cost += aggregator_cost;
 
   $("#aggregator_volume").text("Volume: " + parseFloat(total_volume).toFixed(0) + " " + KG);
-  $("#aggregator_amount").text("amount: " + RUPEE + parseFloat(total_amount).toFixed(0));
+  $("#aggregator_amount").text("amount: " + CURRENCY + parseFloat(total_amount).toFixed(0));
   $("#aggregator_visits").text("visits: " + total_visits);
   $("#aggregator_cpk").text("SPK/CPK : " + spk + "/" + cpk);
-  $("#aggregator_cost").text("Recovered/Total : " + RUPEE + total_recovered.toFixed(2) + "/ " + RUPEE + total_cost.toFixed(2));
+  $("#aggregator_cost").text("Recovered/Total : " + CURRENCY + total_recovered.toFixed(2) + "/ " + CURRENCY + total_cost.toFixed(2));
 
 }
 
@@ -4034,7 +4038,14 @@ function change_language(lang) {
 }
 
 function change_country(country) {
+
   country_id = country;
+  if (country_id == 1){
+    CURRENCY = RUPEE;
+  }
+  else{
+    CURRENCY = TAKA;
+  }
   total_static_data(country);
   recent_graphs_data(language, country);
   get_filter_data(language, country);
