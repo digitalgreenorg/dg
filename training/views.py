@@ -11,7 +11,7 @@ import json
 import MySQLdb
 import pandas
 import datetime
-from models import Trainer
+from models import Trainer, Assessment
 from geographies.models import State
 
 from tastypie.models import ApiKey

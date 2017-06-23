@@ -71,14 +71,16 @@ export class FiltersComponent implements OnInit {
       }
     });
 
-    this.getFilterData.getData().subscribe(res => {
-      let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res[0]['name']; });
-      let data = res[0];
-      for (let val of data['data']) {
-        let filterElement = new FilterElement();
-        filterElement.id = val['id'];
-        filterElement.value = val['value'];
-        filter[0].element.push(filterElement);
+    this.getFilterData.getData().subscribe(response => {
+      for (let res_obj of response) {
+        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
+        let data = res_obj;
+        for (let val of data['data']) {
+          let filterElement = new FilterElement();
+          filterElement.id = val['id'];
+          filterElement.value = val['value'];
+          filter[0].element.push(filterElement);
+        }
       }
     });
   }

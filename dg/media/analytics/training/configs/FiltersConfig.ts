@@ -1,4 +1,10 @@
 export const filterConfig = {
+  'filter0': {
+    name: 'Assessment',
+    show: false,
+    expand: false,
+    initialLoad: true
+  },
   'filter1': {
     name: 'Country',
     show: false,
