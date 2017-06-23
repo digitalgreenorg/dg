@@ -26,7 +26,7 @@ var PAYMENTS_PAGE = "payments";
 var ANALYTICS_PAGE = "analytics";
 var TIME_SERIES_PAGE = "time_series";
 var RUPEE = "₹ ";
-var TAKA = "৳";
+var TAKA = "৳ ";
 var CURRENCY = RUPEE;
 
 var KG = " Kg";
