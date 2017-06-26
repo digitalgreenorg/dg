@@ -296,11 +296,13 @@ hr {
         opacity: 100%;
     }
 }
-#language .select-wrapper span.caret {
+#language .select-wrapper span.caret,
+#country .select-wrapper span.caret {
     top: 3px !important;
 }
 #language .select-wrapper input.select-dropdown,
-#recent_graphs .select-wrapper input.select-dropdown {
+#recent_graphs .select-wrapper input.select-dropdown,
+#country .select-wrapper input.select-dropdown {
     border-bottom: none;
 }
 .disable-button {
