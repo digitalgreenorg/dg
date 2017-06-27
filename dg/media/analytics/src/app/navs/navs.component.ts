@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
 import { environment } from '../../environments/environment.loop';
 
 @Component({
@@ -15,12 +14,7 @@ export class NavsComponent implements OnInit {
   recent : false;
   toggleNav = {};
   containers = {};
-  constructor(private router: Router) {
-    this.router.events.subscribe(route => {
-            this.containers['Home'].displayContent = true;
-            console.log(route['url']);
-        });
-  }
+  constructor() {}
   
   ngOnInit() {
     Object.keys(this.navsConfig.navs).forEach(nav => {
