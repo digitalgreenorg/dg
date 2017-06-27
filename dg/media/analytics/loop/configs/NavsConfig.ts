@@ -1,16 +1,15 @@
 export const navsConfig = {
     'navs':{
         'Home':{
-            'overall':false,
-            'recent':false,
+            'import':{
+                'overall':false,
+                'recent':false,
+            },
             'containers':{
                 'container1':{
-                    'test1':{
-                        'addDivs':['testDiv1']
+                    'Volume and Famers Cummulative Count':{
+                        'addDivs':['cummulativeCount']
                     },
-                    'test2':{
-                        'addDivs':['testDiv2']
-                    }
                 }
             } 
         },

@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { DatePipe } from '@angular/common';
+import {Router} from "@angular/router";
+import { AppRoutingModule } from './app-routing.module';
 
 import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
 import { ChartModule } from 'angular2-highcharts'
@@ -63,6 +65,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     InfiniteScrollModule,
     PerfectScrollbarModule.forRoot(PERFECT_SCROLLBAR_CONFIG),
     CollapseModule.forRoot(),
+    AppRoutingModule,
   ],
   providers: [{
     provide: HighchartsStatic,
