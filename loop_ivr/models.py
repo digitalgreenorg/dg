@@ -11,6 +11,7 @@ class PriceInfoIncoming(LoopModel):
     incoming_time = models.DateTimeField()
     info_status = models.IntegerField(choices=INFO_STATUS, default=0, db_index=True)
     query_code = models.CharField(max_length=120, null=True, blank=True)
+    price_result = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.from_number, self.incoming_time)
