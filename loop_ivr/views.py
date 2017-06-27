@@ -37,17 +37,29 @@ def crop_price_query(request):
             price_info_incoming_obj.save()
             return HttpResponse(status=404)
         crop_info, mandi_info = query_code[0], query_code[1]
-        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crops_info)
+        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info)
         mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info)
         if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()
             return HttpResponse(status=404)
-        Thread(target=get_price_info, args=[from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
+        Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
         return HttpResponse(status=200)
     return HttpResponse(status=403)
 
 def crop_price_sms_content(request):
-    print request
-    print request.GET
-    return HttpResponse(status=200)
+    if request.method == 'HEAD':
+        return HttpResponse(status=200, content_type='text/plain')
+    if request.method == 'GET':
+        call_id = str(request.GET.getlist('CallSid')[0])
+        farmer_number = str(request.GET.getlist('From')[0])
+        dg_number = str(request.GET.getlist('To')[0])
+        try:
+            price_info_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=farmer_number,
+                                        to_number=dg_number)
+            sms_content = price_info_obj.price_result
+            response = HttpResponse(sms_content, content_type='text/plain')
+        except Exception as e:
+            response = HttpResponse(status=200, content_type='text/plain')
+        return response
+    return HttpResponse(status=403)
