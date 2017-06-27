@@ -58,6 +58,8 @@ def crop_price_sms_content(request):
             price_info_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=farmer_number,
                                         to_number=dg_number)
             sms_content = price_info_obj.price_result
+            price_info_obj.info_status = 1
+            price_info_obj.save()
             response = HttpResponse(sms_content, content_type='text/plain')
         except Exception as e:
             response = HttpResponse(status=200, content_type='text/plain')
