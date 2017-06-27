@@ -6,6 +6,5 @@ from loop_ivr.views import *
 
 urlpatterns = patterns('',
     url(r'^$', home, name='loop_ivr'),
-    url(r'^crop_info/',crop_info),
-    url(r'^mandi_info/',mandi_info),
+    url(r'^crop_price_query/',crop_price_query),
     )

@@ -10,8 +10,7 @@ class PriceInfoIncoming(LoopModel):
     to_number = models.CharField(max_length=20)                  #DG Exotel No.
     incoming_time = models.DateTimeField()
     info_status = models.IntegerField(choices=INFO_STATUS, default=0, db_index=True)
-    query_for_crop = models.CharField(max_length=120, null=True, blank=True)
-    query_for_mandi = models.CharField(max_length=120, null=True, blank=True)
+    query_code = models.CharField(max_length=120, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.from_number, self.incoming_time)
