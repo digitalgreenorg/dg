@@ -38,64 +38,14 @@ def crop_price_query(request):
         crop_list, all_crop_flag = get_valid_list('loop', 'crop', crops_info)
         mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandis_info)
         if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
+            price_info_incoming_obj.info_status = 2
+            price_info_incoming_obj.save()
             return HttpResponse(status=404)
-        return HttpResponse(status=200)
-    return HttpResponse(status=403)
-
-
-def crop_info(request):
-    # Serve only Get request
-    if request.method == 'GET':
-        call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-        try:
-            crops_info = str(request.GET.get('digits')).strip('"')
-            price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
-                                        to_number=dg_number, incoming_time=incoming_time, query_for_crop=crops_info)
-            price_info_incoming_obj.save()
-        except Exception as e:
-            module = 'crop_info'
-            log = "Call Id: %s Error: %s"%(str(call_id),str(e))
-            write_log(LOG_FILE,module,log)
-            return HttpResponse(status=500)
-        return HttpResponse(status=200)
-    return HttpResponse(status=403)
-
-
-def mandi_info(request):
-    # Serve only Get request
-    if request.method == 'GET':
-        call_id, from_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-        mandis_info = str(request.GET.get('digits')).strip('"')
-        try:
-            price_info_incoming_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=from_number,
-                                        to_number=dg_number, info_status = 0, incoming_time=incoming_time)
-        except Exception as e:
-            module = 'mandi_info'
-            log = "Call Id: %s Error: %s"%(str(call_id),str(e))
-            write_log(LOG_FILE,module,log)
-            return HttpResponse(status=200)
-        crops_info = price_info_incoming_obj.query_for_crop
-        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crops_info)
-        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandis_info)
-        price_info_incoming_obj.query_for_mandi = mandis_info
-        if all_crop_flag and all_mandi_flag:
-            final_result = 'कृपया सब्जी और मंडी की सूची ठीक करे.'
-            price_info_incoming_obj.info_status = 2
-            price_info_incoming_obj.save()
-            send_info(from_number, final_result)
-            return HttpResponse(status=200)
-        if not crop_list:
-            final_result = 'कृपया सब्जी की सूची ठीक करे.'
-            price_info_incoming_obj.info_status = 2
-            price_info_incoming_obj.save()
-            send_info(from_number, final_result)
-            return HttpResponse(status=200)
-        if not mandi_list:
-            final_result = 'कृपया मंडी की सूची ठीक करे.'
-            price_info_incoming_obj.info_status = 2
-            price_info_incoming_obj.save()
-            send_info(from_number, final_result)
-            return HttpResponse(status=200)
         Thread(target=get_price_info, args=[from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
         return HttpResponse(status=200)
     return HttpResponse(status=403)
+
+def crop_price_sms_content(request):
+    print request
+    print request.GET
+    return HttpResponse(status=200)

@@ -99,24 +99,6 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     final_result = ''.join(price_info_list)
     print ".................Final message........................"
     print final_result
-    send_info(from_number, final_result)
-    price_info_incoming_obj.info_status = 1
+    price_info_incoming_obj.price_result = final_result
     price_info_incoming_obj.save()
     PriceInfoLog.objects.bulk_create(price_info_log_list)
-    '''
-    last_three_trans = raw_sql.last_three_trans%(','.join(map(str,crop_list)),','.join(map(str,mandi_list)))
-    query_result = run_query(last_three_trans)
-    pre_mandi = -1
-    pre_crop = -1
-    for row in query_result:
-        if (pre_crop != row[0]) or (pre_mandi != row[1]):
-            temp_str = ('\n%s,%s\n')%(crop_map[row[0]].encode("utf-8"),mandi_map[row[1]].encode("utf-8"))
-            price_info_list.append(temp_str)
-            pre_crop, pre_mandi = row[0], row[1]
-        date, min_price, max_price, mean = row[2], row[3], row[4], row[5]
-        if max_price-min_price >= 2:
-            min_price = mean-1
-            max_price = mean+1
-        temp_str = ('%s: %s to %s\n')%(date.strftime('%d-%m-%Y'),str(min_price),str(max_price))
-        price_info_list.append(temp_str)
-    '''
