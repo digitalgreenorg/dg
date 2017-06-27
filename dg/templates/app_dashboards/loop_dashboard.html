@@ -31,6 +31,12 @@
                <option value='English' selected>English</option>
             </select>
          </div>
+         <div id="country" class="col s2 initialized" style="float:right;">
+            <select id='countryId' onchange='change_country(this.value)'>
+              <option value='1' selected>India</option>
+               <option value='2'>Bangladesh</option>
+            </select>
+         </div>
          <ul class="side-nav" id="page-navigation">
             <li><a onclick="hide_nav()">Home</a></li>
             <li><a onclick="show_nav('analytics')">Analytics</a></li>
@@ -262,7 +268,7 @@
          <div class="col s6 m4 l2">
             <div class="card-content white darken-1">
                <span class="card-title">
-                  &nbsp;&nbsp;&nbsp;Payments(₹)
+                  &nbsp;&nbsp;&nbsp;<font id="totalpaytext">Payments(₹)</font>
                   <div class="help-tip">
                      <p>Total amount of payments made to farmers for their produce.</p>
                   </div>
@@ -336,7 +342,7 @@
          </div>
          <div class="col s6 m4 l2">
             <div class="card-content white darken-1">
-               <span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Payments(₹)</span>
+               <span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;<font id="recentpaytext">Payments(₹)</font></span>
                <h5 id="recent_revenue_card"></h5>
                <span id="recent_revenue_sparkline" class="sparkline_graph"></span>
             </div>
