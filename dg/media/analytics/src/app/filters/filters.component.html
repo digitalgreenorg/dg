@@ -40,6 +40,9 @@
           <label (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand">{{filter_name.heading}}</label>
           <div class="container" *ngIf="filter_name.expand">
             <div class="form-group row" [id]="filter_name.heading">
+              <span class="checkbox">
+                <label><input id={{filter_name.heading}} type="checkbox" checked="checked" [(ngModel)]="filter_name.select_all" (change)="select_all(filter_name)"> Select All</label>
+              </span>
               <div class="col-md-12 col-sm-12">
                 <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
               </div>
@@ -48,7 +51,7 @@
               <perfect-scrollbar class="scrollBar">
                 <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm">
                   <span class="checkbox">
-                    <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked" (change)="filter_name.changed = true"> {{data.value}}</label>
+                    <label><input id={{data.id}} type="checkbox" [checked]="filter_name.select_all" [(ngModel)]="data.checked" (change)="filter_name.changed = true"> {{data.value}}</label>
                   </span>
                 </h6>
               </perfect-scrollbar>

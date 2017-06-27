@@ -84,7 +84,15 @@ export class FiltersComponent implements OnInit {
       }
     });
   }
-  onFilterClick(filter_clicked) {
+
+  select_all(filter): void {
+    for (let element of filter['element']) {
+      element.checked = filter.select_all;
+    }
+    filter.changed = true;
+  }
+
+  onFilterClick(filter_clicked): void {
     if (!filter_clicked.expand && !filter_clicked.initialLoad) {
       if (filter_clicked.element.length == 0) {
         filter_clicked.expand = true;

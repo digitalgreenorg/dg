@@ -9,4 +9,5 @@ export class Filter {
   parent: string;
   initialLoad: boolean;
   changed: boolean = false;
+  select_all: boolean = false;
 }
