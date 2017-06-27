@@ -33,10 +33,12 @@ def crop_price_query(request):
         query_code = query_code.split('**')
         # If query code is not in correct format
         if len(query_code) != 2:
+            price_info_incoming_obj.info_status = 2
+            price_info_incoming_obj.save()
             return HttpResponse(status=404)
         crop_info, mandi_info = query_code[0], query_code[1]
         crop_list, all_crop_flag = get_valid_list('loop', 'crop', crops_info)
-        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandis_info)
+        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info)
         if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()
