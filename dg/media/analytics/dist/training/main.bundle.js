@@ -1690,8 +1690,8 @@ var SharedService = (function () {
 
 var environment = {
     production: true,
-    // url: '/training/',
-    url: 'http://127.0.0.1:8000/training/',
+    url: '/training/',
+    // url: 'http://127.0.0.1:8000/training/',
     chartsConfig: __WEBPACK_IMPORTED_MODULE_0__training_configs_GraphsConfig__["a" /* chartsConfig */],
     tabsConfig: __WEBPACK_IMPORTED_MODULE_1__training_configs_TabsConfig__["a" /* tabsConfig */],
     cardsConfig: __WEBPACK_IMPORTED_MODULE_2__training_configs_CardsConfig__["a" /* cardConfig */],
