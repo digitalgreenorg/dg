@@ -48,7 +48,14 @@ export class NavsComponent implements OnInit {
       this.toggleNav[nav].status = false
     });
     this.toggleNav[selectedItem].status = true;
-    if(!(this.toggleNav[selectedItem].hasOwnProperty('subNavs'))){
+    if((this.toggleNav[selectedItem].hasOwnProperty('subNavs'))){
+       this.toggleNav[selectedItem].subNavs.forEach(subNav => {
+        if(this.navsConfig.navs[selectedItem].subNavs[subNav].hasOwnProperty('active')) {
+          this.showContent(subNav)
+        }
+      });
+    }
+    else {
       this.showContent(selectedItem);
     }
   }

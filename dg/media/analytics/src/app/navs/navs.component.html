@@ -17,7 +17,7 @@
       <div class="collapse navbar-collapse" [collapse]="isCollapsed">
         <ul class="navbar-nav">
           <li class="nav-item" *ngFor="let subNav of toggleNav[nav].subNavs">
-            <a *ngIf="toggleNav[nav].status" class="nav-link" [ngClass]="{'active':toggleNav[nav].status === true}" href="#" routerLinkActive="active" (click)="showContent(subNav)">{{subNav}}</a>
+            <a *ngIf="toggleNav[nav].status" class="nav-link" href="#" routerLinkActive="active" (click)="showContent(subNav)">{{subNav}}</a>
           </li>
         </ul>
       </div>
