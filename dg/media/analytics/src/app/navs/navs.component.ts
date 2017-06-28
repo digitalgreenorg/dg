@@ -49,6 +49,10 @@ export class NavsComponent implements OnInit {
     });
   }
   
+  ngAfterViewInit(): void {
+      console.log(this.containers)
+  }
+
   //function to return list of keys from a dictionary
   getDictKeys(dict) {
     return Object.keys(dict)
