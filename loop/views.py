@@ -151,15 +151,19 @@ def filter_data(request):
     aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id')
     # villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
-    crops_lang = CropLanguage.objects.values('crop__id', 'crop_name')
-    crops_language = [{'id': obj['crop__id'],
-                       'crop_name': obj['crop_name']} for obj in crops_lang]
+    crops_lang = CropLanguage.objects.values('crop_id', 'crop_name', 'language_id')
+    crops_language = dict()
+    for obj in crops_lang:
+        if obj['language_id'] not in crops_language:
+            crops_language[obj['language_id']] = list()
+        crops_language[obj['language_id']].append({'id': obj['crop_id'],
+                                            'crop_name': obj['crop_name']})
     mandis = Mandi.objects.filter(district__state__country=country_id).values('id', 'mandi_name', 'mandi_name_en')
     gaddidars = Gaddidar.objects.filter(mandi__district__state__country=country_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
     # transporters = Transporter.objects.values('id', 'transporter_name')
     data_dict = {'aggregators': list(aggregators), 'crops': list(crops),
-                 'mandis': list(mandis), 'gaddidars': list(gaddidars), 'croplanguage': list(crops_language)}
+                 'mandis': list(mandis), 'gaddidars': list(gaddidars), 'croplanguage': crops_language}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
