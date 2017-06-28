@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from tastypie.exceptions import ImmediateHttpResponse, NotFound, BadRequest
 from tastypie.authentication import Authentication, ApiKeyAuthentication
 from tastypie.authorization import Authorization
@@ -352,7 +351,7 @@ class VillageResource(BaseResource):
     hydrate_block = partial(dict_to_foreign_uri, field_name='block')
 
     def obj_create(self, bundle, request=None, **kwargs):
-        block_id = bundle.data['block']['id']
+        block_id = bundle.data['block']['online_id']
         block = Block.objects.get(id=block_id)
         attempt = Village.objects.filter(village_name=bundle.data['village_name'],block=block)
         if attempt.count() < 1:
@@ -367,7 +366,7 @@ class VillageResource(BaseResource):
             bundle = super(VillageResource, self).obj_update(
                 bundle, **kwargs)
         except Exception, e:
-            block_id = bundle.data['block']['id']
+            block_id = bundle.data['block']['online_id']
             block = Block.objects.get(id=block_id)
             attempt = Village.objects.filter(village_name=bundle.data['village_name'],block=block)
             send_duplicate_message(int(attempt[0].id))
@@ -624,7 +623,7 @@ class MandiResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
-        allowed_methods = ['post', 'get']
+        allowed_methods = ['post', 'get','put']
         always_return_data = True
         queryset = Mandi.objects.all()
         resource_name = 'mandi'
@@ -638,7 +637,7 @@ class MandiResource(BaseResource):
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
 
     def obj_create(self, bundle, request=None, **kwargs):
-        district_id = bundle.data['district']['id']
+        district_id = bundle.data['district']['online_id']
         district = District.objects.get(id=district_id)
         attempt = Mandi.objects.filter(mandi_name=bundle.data['mandi_name'],district=district)
         if attempt.count() < 1:
@@ -653,7 +652,7 @@ class MandiResource(BaseResource):
             bundle = super(MandiResource, self).obj_update(
                 bundle, **kwargs)
         except Exception, e:
-            district_id = bundle.data['district']['id']
+            district_id = bundle.data['district']['online_id']
             district = District.objects.get(id=district_id)
             attempt = Mandi.objects.filter(mandi_name=bundle.data['mandi_name'],district=district)
             send_duplicate_message(int(attempt[0].id))
