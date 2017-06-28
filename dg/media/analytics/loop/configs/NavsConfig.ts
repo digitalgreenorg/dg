@@ -21,23 +21,23 @@ export const navsConfig = {
                     'containers': {
                         'container1':{
                             'Volume':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['aggrvol']
                             },
                             'Visits':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['aggrvisit']
                             }
                         },
                         'container2':{
                             'SPK/CPk':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['aggrspkcpk']
                             },
                             'Recovered/Total':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['aggrrecoveredtotal']
                             }
                         },
                         'container3':{
                             'Farmer Count':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['aggrfarmercount']
                             }
                         }
                     }
@@ -46,23 +46,23 @@ export const navsConfig = {
                     'containers':{
                         'container1':{
                             'Volume':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['mandivolume']
                             },
                             'Visits':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['mandivisit']
                             }
                         },
                         'container2':{
                             'SPK/CPk':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['mandispkcpk']
                             },
                             'Recovered/Total':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['mandirecoveredtotal']
                             }
                         },
                         'container3':{
                             'Farmer Count':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['mandifarmercount']
                             }
                         }
                     }
@@ -71,20 +71,20 @@ export const navsConfig = {
                     'containers':{
                         'container1':{
                             'Volume':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['cropvolume']
                             },
                             'Amount':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['cropamount']
                             }
                         },
                         'container2':{
                             'Crop Prices':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['cropprices']
                             }
                         },
                         'container3':{
                             'Farmer Count':{
-                                'addDivs':['cummulativeCount']
+                                'addDivs':['cropfarmercount']
                             }
                         }
                     }
