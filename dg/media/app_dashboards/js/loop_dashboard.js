@@ -1646,11 +1646,16 @@ function farmer_crop_visits(container, json_data) {
 
   for (var i = 0; i < json_data.length; i++) {
     if (language == ENGLISH_LANGUAGE) {
-      series[0]['data'].push([json_data[i]['crop__crop_name_en'], json_data[i]['farmer__count']]);
-    } else {
       series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
+    } 
+    else {
+      if (window.country_id == 1)
+        series[0]['data'].push([json_data[i]['crop__crop_name_hi'], json_data[i]['farmer__count']]);
+      else if (window.country_id == 2)
+        series[0]['data'].push([json_data[i]['crop__crop_name_bn'], json_data[i]['farmer__count']]);
     }
   }
+
   // plot_stacked_chart(container, series);
   plot_drilldown(container, series, {}, false, json_data[0]['farmer__count'], 'bar');
 }
