@@ -21,7 +21,6 @@ export class FiltersComponent implements OnInit {
   @ViewChild('sideNavContent') sideNavContent: ElementRef;
   filterConfig = environment.filtersConfig;
   filter_list: Filter[] = new Array<Filter>();
-  filter: Filter;
   showDateFilter: boolean = false;
   invalidDate: boolean = false;
   invalidDateMessage: string;
@@ -60,13 +59,13 @@ export class FiltersComponent implements OnInit {
           this.showDateFilter = true;
         }
         else {
-          this.filter = new Filter();
-          this.filter.heading = this.filterConfig[key].name;
-          this.filter.expand = this.filterConfig[key].expand;
-          this.filter.parent = this.filterConfig[key].parent;
-          this.filter.initialLoad = this.filterConfig[key].initialLoad;
-          this.filter.element = new Array<FilterElement>();
-          this.filter_list.push(this.filter);
+          let filter = new Filter();
+          filter.heading = this.filterConfig[key].name;
+          filter.expand = this.filterConfig[key].expand;
+          filter.parent = this.filterConfig[key].parent;
+          filter.initialLoad = this.filterConfig[key].initialLoad;
+          filter.element = new Array<FilterElement>();
+          this.filter_list.push(filter);
         }
       }
     });
@@ -139,41 +138,19 @@ export class FiltersComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.getFilterData.getData().subscribe(val => {
-    //   for (let data of val) {
-    //     if (data['name'] === 'date' && data['visible'] == true) {
-    //       this.showDateFilter = true;
-    //     }
-    //     else {
-    //       this.filter = new Filter();
-    //       this.filter.heading = data['name'];
-    //       this.filter.expand = false;
-    //       this.filter.element = new Array<FilterElement>();
-    //       for (let val of data['data']) {
-    //         let filterElement = new FilterElement();
-    //         filterElement.id = val['id'];
-    //         filterElement.value = val['value'];
-    //         filterElement.checked = false;
-    //
-    //         this.filter.element.push(filterElement);
-    //       }
-    //       this.filter_list.push(this.filter);
-    //     }
-    //   }
-    // });
   }
 
-  closeNav() {
+  closeNav(): void {
     this.mySidenav.nativeElement.style.width = '0px';
     this.sideNavContent.nativeElement.style.display = 'none';
   }
 
-  openNav() {
+  openNav(): void {
     this.mySidenav.nativeElement.style.width = '320px';
     this.sideNavContent.nativeElement.style.display = 'block';
   }
 
-  applyFilters() {
+  applyFilters(): void {
     this.f_list = {};
     for (let f of this.filter_list) {
       let list = f.element.filter(data => { return data.checked }).map(data => {
@@ -209,7 +186,7 @@ export class FiltersComponent implements OnInit {
     }
   }
 
-  getDataForFilters(): any {
+  private getDataForFilters(): any {
     let argstest = {
       webUrl: environment.url + "getData",
       params: this.f_list
