@@ -14,9 +14,9 @@ export class NavsComponent implements OnInit {
   recent : false;
   toggleNav = {};
   containers = {};
-  constructor() {}
+  constructor() { }
   
-  ngOnInit() {
+  ngOnInit(): void {
     Object.keys(this.navsConfig.navs).forEach(nav => {
       let tempDict = {};
       tempDict['status'] = false;
@@ -32,8 +32,11 @@ export class NavsComponent implements OnInit {
         this.containers[nav]['displayContent'] = false;
       }
       this.toggleNav[nav] = tempDict;
+      if(this.navsConfig.navs[nav].hasOwnProperty('active')){
+        this.toggleNav[nav].status = true;
+        this.showContent(nav);
+      }
     });
-
   }
 
   getDictKeys(dict) {

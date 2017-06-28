@@ -1,6 +1,7 @@
 export const navsConfig = {
     'navs':{
         'Home':{
+            'active':true,
             'import':{
                 'overall':false,
                 'recent':false,
@@ -16,6 +17,7 @@ export const navsConfig = {
         'Analytics':{
             'subNavs':{
                 'Aggregators':{
+                    'active':true,
                     'containers': {
                         'container1':{
                             'Volume':{},
