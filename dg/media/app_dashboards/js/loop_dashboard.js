@@ -869,8 +869,14 @@ function get_filter_data(language, country_id) {
       if (language == ENGLISH_LANGUAGE)
         fill_crop_filter(crops_for_filter);
       else
-        fill_crop_filter(croplanguage_for_filter);
-
+      {
+        // If country is India, then Regional Language is Hindi
+        if (window.country_id == 1)
+          fill_crop_filter(croplanguage_for_filter[1]);
+        // If country is Bangladesh, then Regional Language is Bangla
+        else if (window.country_id == 2)
+          fill_crop_filter(croplanguage_for_filter[3]);
+      }
       get_data("", country_id);
     });
 }
@@ -1675,9 +1681,16 @@ function fill_crop_drop_down() {
   tbody_obj.append('<option value="" disabled selected> Choose a Crop </option>');
   var crops_names_time_series;
   if (language == ENGLISH_LANGUAGE)
-    crops_names_time_series = croplanguage_for_filter;
-  else
     crops_names_time_series = crops_for_filter;
+  else
+  {
+    // If country is India, then Regional Language is Hindi
+    if (window.country_id == 1)
+      crops_names_time_series = croplanguage_for_filter[1];
+    // If country is Bangladesh, then Regional Language is Bangla
+    else if (window.country_id == 2)
+      crops_names_time_series = croplanguage_for_filter[3];
+  }
   $.each(crops_names_time_series, function(index, data) {
     var li_item = '<option value=' + data.id + '>' + data.crop_name + '</option>';
     tbody_obj.append(li_item);
@@ -4031,7 +4044,14 @@ function change_language(lang) {
   if (language == ENGLISH_LANGUAGE)
     fill_crop_filter(crops_for_filter);
   else
-    fill_crop_filter(croplanguage_for_filter);
+  {
+    // If country is India, then Regional Language is Hindi
+    if (window.country_id == 1)
+      fill_crop_filter(croplanguage_for_filter[1]);
+    // If country is Bangladesh, then Regional Language is Bangla
+    else if (window.country_id == 2)
+      fill_crop_filter(croplanguage_for_filter[3]);
+  }
   get_data("", country_id);
   if (selected_page == ANALYTICS_PAGE || selected_page == TIME_SERIES_PAGE) {
     show_nav(selected_page);
