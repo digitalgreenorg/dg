@@ -4029,9 +4029,9 @@ function change_language(lang) {
   fill_mandi_filter(mandis_for_filter, language);
   fill_gaddidar_filter(gaddidars_for_filter, language);
   if (language == ENGLISH_LANGUAGE)
-    fill_crop_filter(croplanguage_for_filter);
-  else
     fill_crop_filter(crops_for_filter);
+  else
+    fill_crop_filter(croplanguage_for_filter);
   get_data("", country_id);
   if (selected_page == ANALYTICS_PAGE || selected_page == TIME_SERIES_PAGE) {
     show_nav(selected_page);
