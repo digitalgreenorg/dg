@@ -428,12 +428,24 @@ def data_for_drilldown_graphs(request):
     crop_prices = list(CombinedTransaction.objects.filter(
         **filter_args).values('crop__crop_name', 'crop__id').annotate(Min('price'), Max('price'),
                                                                       Count('farmer', distinct=True)))
+
+    crop_language_data = CropLanguage.objects.values('crop_id', 'crop_name', 'language_id')
+    language_wise_crop_name = dict()
+    for crop in crop_language_data:
+        if crop['language_id'] not in language_wise_crop_name:
+            language_wise_crop_name[crop['language_id']] = dict()
+        language_wise_crop_name[crop['language_id']][crop['crop_id']] = crop['crop_name']
     for crop_obj in crop_prices:
-        try:
-            crop = CropLanguage.objects.get(crop=crop_obj['crop__id'],language_id=1)
-            crop_obj['crop__crop_name_en'] = crop.crop_name
-        except CropLanguage.DoesNotExist:
-            pass
+        # For Hindi Language
+        if crop_obj['crop__id'] in language_wise_crop_name[1]:
+            crop_obj['crop__crop_name_hi'] = language_wise_crop_name[1][crop_obj['crop__id']]
+        else:
+            crop_obj['crop__crop_name_hi'] = crop_obj['crop__crop_name']
+        # For Bangla Language
+        if crop_obj['crop__id'] in language_wise_crop_name[3]:
+            crop_obj['crop__crop_name_bn'] = language_wise_crop_name[3][crop_obj['crop__id']]
+        else:
+            crop_obj['crop__crop_name_bn'] = crop_obj['crop__crop_name']
 
     mandi_crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'mandi__id').annotate(Min('price'), Max('price'))
