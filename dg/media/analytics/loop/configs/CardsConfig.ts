@@ -1,55 +1,69 @@
+import { cardGraphConfig } from './GraphCardsConfig'
 export const cardConfig = {
 
-    'no_trainings':{    
-                        text:'Number of Trainings',
+    'No_of_clusters':{    
+                        text:'#Clusters',
                         overall : {
                             filter:false,
-                            show:true,
+                            graph : {
+                                show: true,
+                                options : cardGraphConfig.No_of_clusters,
+                            },
                         },
                         recent : {
                             dateRange:60, // In days
                             filter:true,
-                            show: true,
+                            cards:true,
                         },
                    },
 
-    'no_mediators':{
-                        text:'Number of Mediators',
+    'No_of_Farmers':{
+                        text:'#Farmers',
                         overall : {
                             filter:false,
-                            show:true,
+                            graph : {
+                                show: true,
+                                options : cardGraphConfig.No_of_Farmers,
+                            },
                         },
                         recent : {
                             dateRange:60, // In days
                             filter:true,
-                            show: true,
+                            cards:true,
+                        },
+                   
+                    },
+    'Volume':      {
+                        text:'Volume()%',
+                        overall : {
+                            filter:false,
+                            graph : {
+                                show: true,
+                                options : cardGraphConfig.total_volume,
+                            },
+                        },
+                        recent : {
+                            dateRange:60, // In days
+                            filter:true,
+                            cards:true,
                         },
                    },
 
-    'pass_%':      {
-                        text:'Pass Percentage',
+    'Total_payment':   {    
+                        text:'Payment',
                         overall : {
                             filter:false,
-                            show:true,
+                            graph : {
+                                show: true,
+                                options : cardGraphConfig.Total_payment,
+                            },
                         },
                         recent : {
                             dateRange:60, // In days
                             filter:true,
-                            show: true,
-                        },
-                   },
-
-    'avg_score':   {    
-                        text:'Average Score',
-                        overall : {
-                            filter:false,
-                            show:true,
-                        },
-                        recent : {
-                            dateRange:60, // In days
-                            filter:true,
-                            show: true,
+                            cards:true,
                         },
                   },
                   
+
 }

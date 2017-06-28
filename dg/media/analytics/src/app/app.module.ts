@@ -25,6 +25,8 @@ import { SharedService } from './shared.service';
 
 import { SearchPipe } from './filters/search.pipe';
 
+import { BsDropdownModule } from 'ngx-bootstrap';
+
 declare var require: any;
 export function highchartsFactory() {
   const highChart = require('highcharts');
@@ -64,6 +66,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		                    ,require('highcharts/highcharts-more')
 		                    ,require('highcharts/modules/solid-gauge')
                         ),
+    BsDropdownModule.forRoot(),
   ],
   providers: [{
     provide: HighchartsStatic,
