@@ -78,7 +78,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             query_result = run_query(last_three_trans)
             crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
             mandi_name = mandi_map[mandi].encode("utf-8")
-            temp_str = ('\n%s,%s मंडी\n')%(crop_name,mandi_name)
+            temp_str = ('\n%s,%s मंडी\n')%(crop_name,mandi_name.rstrip('मंडी'))
             price_info_list.append(temp_str)
             if not query_result and all_crop_flag==0 and all_mandi_flag==0:
                 price_info_list.append('रेट उपलब्ध नही है\n')
