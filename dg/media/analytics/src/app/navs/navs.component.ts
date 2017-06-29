@@ -10,7 +10,10 @@ import { environment } from '../../environments/environment.loop';
 export class NavsComponent implements OnInit {
   //used for collapse button
   public isCollapsed:boolean = false;
+
+  //read config files from environment created for each app
   navsConfig = environment.navsConfig;
+  chartsConfig = environment.chartsConfig;
 
   //initialize modules as false and toggle based on user configuration
   overall : false;
@@ -20,10 +23,13 @@ export class NavsComponent implements OnInit {
   toggleNav = {};
   //dict with key as end nav and its corresponding containers
   containers = {};
+  //list of charts in DOM
+  charts = []
 
-  constructor() { }
+  constructor() {}
   
   ngOnInit(): void {
+    //render nav links to respective navBars
     Object.keys(this.navsConfig.navs).forEach(nav => {
       let tempDict = {};
       tempDict['status'] = false;
@@ -47,10 +53,29 @@ export class NavsComponent implements OnInit {
         this.showContent(nav);
       }
     });
+    this.renderGraphs()
+  }
+  
+  renderGraphs() {
+    Object.keys(this.chartsConfig).forEach(chart => {
+      //assign key as chart name
+      this.chartsConfig[chart].chartName = chart;
+      //Add empty charts to DOM
+      this.charts.push({
+        options: this.chartsConfig[chart],
+        nativeChart: null // To be obtained with saveInstance
+      });      
+    });
+    console.log(this.charts)
+  }
+
+  //function to access underlying chart
+  saveInstance(chartInstance, chart) {
+    chart.nativeChart = chartInstance;
   }
   
   ngAfterViewInit(): void {
-      console.log(this.containers)
+      //console.log(this.containers)
   }
 
   //function to return list of keys from a dictionary
