@@ -85,10 +85,12 @@ class LoopStatistics():
             df_farmer_count = pd.read_sql("SELECT T.date, T.country_id, count(T.farmer_id) as distinct_farmer_count FROM ( SELECT lct.farmer_id, ls.country_id, min(lct.date) as date FROM loop_combinedtransaction lct join loop_farmer lf on lf.id = lct.farmer_id  join loop_village lv on lv.id = lf.village_id join loop_block lb on lb.id = lv.block_id join loop_district ld on ld.id=lb.district_id join loop_state ls on ls.id = ld.state_id GROUP BY lct.farmer_id) as T GROUP BY T.date, T.country_id",con=self.mysql_cn)
 
             # Cummulating sum of farmers that were unique and did any transaction till a particular date
+            print "I am here"
             df_farmer_count['cummulative_distinct_farmer'] = df_farmer_count.groupby(by=['country_id'])['distinct_farmer_count'].cumsum()
+            print "After"
             df_farmer_count.drop(['distinct_farmer_count'],axis=1,inplace=True)
 
-            result = pd.merge(result,df_farmer_count,left_on='date',right_on='date',how='left')
+            result = pd.merge(result,df_farmer_count,left_on=['date','country_id'],right_on=['date','country_id'],how='left')
             result['cummulative_distinct_farmer'].fillna(method='ffill',inplace=True)
 
             # Final result DataFrame contains same value for transportation_cost, farmer share, aggregator_incentive where date,aggregator_id,mandi are same but gaddidar_id is different.
