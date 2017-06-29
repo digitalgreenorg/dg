@@ -1,4 +1,4 @@
-import { cardGraphConfig } from './GraphCardsConfig'
+import { cardGraphConfig } from './GraphCardsConfig';
 export const cardConfig = {
 
     'No_of_clusters':{    

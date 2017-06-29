@@ -66,6 +66,12 @@ export class CardsComponent implements OnInit, AfterViewInit {
                     'text':this.cardsConfigs[key].text
                 });
             }
+            if(this.cardsConfigs[key].overall.graph) {
+                this.charts.push({
+                    options:this.cardsConfigs[key].overall.graph.options,
+                    nativeChart:null,
+                })
+            }
         })
         let options = {
             webUrl: "getData",
@@ -74,15 +80,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
             }
         }
         this.getData(options);
-
-        Object.keys(this.cardsConfigs).forEach(cardData => {
-            if(this.cardsConfigs[cardData].overall.graph) {
-                this.charts.push({
-                    options:this.cardsConfigs[cardData].overall.graph.options,
-                    nativeChart:null,
-                })
-            }
-        });
+        
     }
 
     ngAfterViewInit(): void {

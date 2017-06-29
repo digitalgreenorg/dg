@@ -943,29 +943,27 @@ def broadcast_audio_request(request):
         audio_url_response = HttpResponse(broadcast_audio_url, content_type='text/plain')
         return audio_url_response
     else:
-<<<<<<< HEAD
-        return HttpResponse(status=200)
-=======
         return HttpResponse(status=200)
 
 def get_card_graph_data(request):
 
     query_list = []
 
-    # cluster_query = get_cluster_sql();
-    # query_list.extend(cluster_query)
+    cluster_query = get_cluster_sql();
+    query_list.extend(cluster_query)
 
 
-    # volume_query = get_volume_sql()
-    # query_list.extend(volume_query)
+    volume_query = get_volume_sql()
+    query_list.extend(volume_query)
 
-    # payment_query = get_payment_sql()
-    # query_list.extend(payment_query)
+    payment_query = get_payment_sql()
+    query_list.extend(payment_query)
 
-    # farmer_query = get_farmer_sql()
-    # query_list.extend(farmer_query)
+    farmer_query = get_farmer_sql()
+    query_list.extend(farmer_query)
 
-    # results = multiprocessing_list(query_list = query_list)
+    results_t = multiprocessing_list(query_list = query_list)
+    print results_t
 
     results = [{
         'placeHolder' : 'cardGraphs',
@@ -989,4 +987,3 @@ def get_card_graph_data(request):
     },]
     data = json.dumps({'data' : results})
     return HttpResponse(data);
->>>>>>> analytics_loop_sujit
