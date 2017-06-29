@@ -28,9 +28,28 @@ export class NavsComponent implements OnInit {
   //list of charts in DOM
   charts = []
 
-  constructor(private graphService: GraphsService, private _sharedService: SharedService) {}
+  constructor(private graphService: GraphsService, private _sharedService: SharedService) {
+    console.log("hi");
+    this._sharedService.argsList$.subscribe(filters => {
+      this.getGraphsData(filters);
+    });
+    setInterval(() => {
+      this.charts.forEach(chart => {
+        chart.nativeChart.reflow();
+      });
+    }, 0);
+  }
   
   ngOnInit(): void {
+    this.renderNavs();
+    this.renderGraphs();
+  }
+
+  ngAfterViewInit(): void {
+      this.getGraphsData({ 'params': {} });
+  }  
+
+  renderNavs() {
     //render nav links to respective navBars
     Object.keys(this.navsConfig.navs).forEach(nav => {
       let tempDict = {};
@@ -55,12 +74,7 @@ export class NavsComponent implements OnInit {
         this.showContent(nav);
       }
     });
-    this.renderGraphs()
   }
-
-  ngAfterViewInit(): void {
-      this.getGraphsData({ 'params': {} });
-  }  
 
   renderGraphs() {
     Object.keys(this.chartsConfig).forEach(chart => {
@@ -72,7 +86,6 @@ export class NavsComponent implements OnInit {
         nativeChart: null // To be obtained with saveInstance
       });      
     });
-    console.log(this.charts)
   }
   
   //function to access underlying chart
@@ -85,7 +98,7 @@ export class NavsComponent implements OnInit {
       chart.nativeChart.showLoading();
       filters.params['chartType'] = chart.options.chart.type;
       filters.params['chartName'] = chart.options.chartName;
-      /*this.graphService.getData(filters).subscribe(dataList => {
+      this.graphService.getData(filters).subscribe(dataList => {
         Object.keys(dataList).forEach(key => {
           //Find already displayed chart to enter data
           if (key === chart.options.chartName) {
@@ -105,7 +118,7 @@ export class NavsComponent implements OnInit {
             chart.nativeChart.showLoading(dataList['error']);
           }
         });
-      });*/
+      });
     });
   }
 
