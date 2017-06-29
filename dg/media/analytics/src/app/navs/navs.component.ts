@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment.loop';
+import { GraphsService } from './navs.service';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-navs',
@@ -26,7 +28,7 @@ export class NavsComponent implements OnInit {
   //list of charts in DOM
   charts = []
 
-  constructor() {}
+  constructor(private graphService: GraphsService, private _sharedService: SharedService) {}
   
   ngOnInit(): void {
     //render nav links to respective navBars
@@ -55,7 +57,11 @@ export class NavsComponent implements OnInit {
     });
     this.renderGraphs()
   }
-  
+
+  ngAfterViewInit(): void {
+      this.getGraphsData({ 'params': {} });
+  }  
+
   renderGraphs() {
     Object.keys(this.chartsConfig).forEach(chart => {
       //assign key as chart name
@@ -68,14 +74,48 @@ export class NavsComponent implements OnInit {
     });
     console.log(this.charts)
   }
-
+  
   //function to access underlying chart
   saveInstance(chartInstance, chart) {
     chart.nativeChart = chartInstance;
   }
-  
-  ngAfterViewInit(): void {
-      //console.log(this.containers)
+
+  getGraphsData(filters): void {
+    this.charts.forEach(chart => {
+      chart.nativeChart.showLoading();
+      filters.params['chartType'] = chart.options.chart.type;
+      filters.params['chartName'] = chart.options.chartName;
+      /*this.graphService.getData(filters).subscribe(dataList => {
+        Object.keys(dataList).forEach(key => {
+          //Find already displayed chart to enter data
+          if (key === chart.options.chartName) {
+            chart.nativeChart.hideLoading();
+            this.clearSeriesFromGraph(chart);
+            dataList[key]['outerData']['series'].forEach(entry => {
+              chart.nativeChart.addSeries(entry);
+            });
+            if (chart.options.chart.drillDown) {
+              dataList[key]['innerData'].forEach(drilldownEntry => {
+                chart.options.drilldown.series.push(drilldownEntry);
+              });
+            }
+          }
+          else {
+            this.clearSeriesFromGraph(chart);
+            chart.nativeChart.showLoading(dataList['error']);
+          }
+        });
+      });*/
+    });
+  }
+
+  //Empty exting data and then fill in updated data
+  private clearSeriesFromGraph(chart) {
+    if (chart.nativeChart.series.length > 0) {
+      for (var i = chart.nativeChart.series.length - 1; i >= 0; i--) {
+        chart.nativeChart.series[i].remove();
+      }
+    }
   }
 
   //function to return list of keys from a dictionary
@@ -89,7 +129,6 @@ export class NavsComponent implements OnInit {
       this.toggleNav[nav].status = false
     });
     this.toggleNav[selectedItem].status = true;
-
     //set show content for navs with subNavs
     if((this.toggleNav[selectedItem].hasOwnProperty('subNavs'))){
        this.toggleNav[selectedItem].subNavs.forEach(subNav => {

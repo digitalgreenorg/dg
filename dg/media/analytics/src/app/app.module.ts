@@ -18,14 +18,14 @@ import { AppComponent } from './app.component';
 import { CardsComponent } from './cards/cards.component';
 import { FiltersComponent } from './filters/filters.component';
 import { GraphsComponent } from './graphs/graphs.component';
+import { NavsComponent } from './navs/navs.component';
 
-import { GraphsService } from './graphs/graphs.service';
+import { GraphsService } from './navs/navs.service';
 import { CardsService } from './cards/cards.service';
 import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from './shared.service';
 
 import { SearchPipe } from './filters/search.pipe';
-import { NavsComponent } from './navs/navs.component';
 
 declare var require: any;
 export function highchartsFactory() {

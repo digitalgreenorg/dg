@@ -41,6 +41,6 @@
     </tabset>
   </div>
 </div> 
-  <div *ngFor="let chart of charts">
-    <chart [options]="chart.options" (load)="saveInstance($event.context, chart)"></chart>
-  </div>
+<div *ngFor="let chart of charts">
+  <chart [options]="chart.options" (load)="saveInstance($event.context, chart)"></chart>
+</div>
