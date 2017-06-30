@@ -445,7 +445,7 @@ class LoopUserResource(BaseResource):
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
 
     def obj_create(self, bundle, **kwargs):
-        user = User.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name'])
+        user = User.objects.create_user(username=bundle.data['user'],password=bundle.data['password'],first_name=bundle.data['aggregator_name_en'])
         bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
         assigned_mandi_list = bundle.data.get('assigned_mandis')
         assigned_village_list = bundle.data.get('assigned_villages')
@@ -502,12 +502,49 @@ class LoopUserResource(BaseResource):
         return bundle
 
     def dehydrate_assigned_mandis(self, bundle):
-        return [{'id': assigned_mandi_obj.id, 'mandi_name':assigned_mandi_obj.mandi_name} for assigned_mandi_obj in
-                set(bundle.obj.assigned_mandis.all())]
+        return [{'row_id':assigned_mandi_obj.id, 'id': assigned_mandi_obj.mandi.id ,'mandi_name':assigned_mandi_obj.mandi.mandi_name} for assigned_mandi_obj in
+                set(LoopUserAssignedMandi.objects.select_related('mandi').filter(loop_user=bundle.obj))]
 
     def dehydrate_assigned_villages(self, bundle):
-        return [{'id': assigned_village_obj.id, 'village_name':assigned_village_obj.village_name} for assigned_village_obj in
-                set(bundle.obj.assigned_villages.all())]
+
+        return [{'row_id': assigned_village_obj.id,'id': assigned_village_obj.village.id,'village_name':assigned_village_obj.village.village_name} for assigned_village_obj in
+                set(LoopUserAssignedVillage.objects.select_related('village').filter(loop_user=bundle.obj))]
+
+class LoopUserAssignedVillageResource(BaseResource):
+    loopuser = fields.ForeignKey(LoopUserResource,'loopuser')
+    village = fields.ForeignKey(VillageResource, 'village')
+    
+    class Meta:
+        limit = 0
+        max_limit = 0
+        allowed_methods = ['post', 'put','delete']
+        resource_name = 'loopuserassignedvillage'
+        authorization = LoopUserAuthorization('id__in')
+    
+    hydrate_loopuser = partial(dict_to_foreign_uri,field_name="aggregator")
+    hydrate_village = partial(dict_to_foreign_uri,field_name="village")
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        loopuser = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
+        village = Village.objects.get(id=bundle.data['village']['online_id'])
+        attempt = LoopUserAssignedVillage.objects.get(loopuser=loopuser ,village=village)
+        if attempt < 1:
+            bundle = super(LoopUserAssignedVillageResource,self).obj_create(bundle,**kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(LoopUserAssignedVillageResource, self).obj_update(
+                bundle, **kwargs)
+        except Exception, e:
+            loopuser = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
+            village = Village.objects.get(id=bundle.data['village']['online_id'])
+            attempt = LoopUserAssignedVillage.objects.get(loopuser=loopuser ,village=village)
+            send_duplicate_message(int(attempt[0].id))
+        return bundle        
+
+
 
 class LanguageResource(BaseResource):
     class Meta:
@@ -571,6 +608,9 @@ class CropResource(BaseResource):
 
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Crop.objects.filter(crop_name=bundle.data['crop_name_en'])
+        if AdminUser.objects.filter(user_id=request.user.id).count()>0:
+            user = AdminUser.objects.get(user_id=request.user.id)
+            language = user.preferred_language
         if attempt.count() < 1:
             bundle = super(CropResource, self).obj_create(bundle, **kwargs)
         else:
@@ -1233,3 +1273,37 @@ class CombinedTransactionResource(BaseResource):
             return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
         except NotFound:
             return http.Http404()
+
+class LoopUserAssignedMandiResource(BaseResource):
+    loopuser = fields.ForeignKey(LoopUserResource,'loopuser')
+    mandi = fields.ForeignKey(MandiResource, 'mandi')
+    
+    class Meta:
+        limit = 0
+        max_limit = 0
+        allowed_methods = ['post', 'put','delete']
+        resource_name = 'loopuserassignedmandi'
+        authorization = LoopUserAuthorization('id__in')
+    
+    hydrate_loopuser = partial(foreign_key_to_id,field_name="aggregator",sub_field_names=['id'])
+    hydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        loopuser = LoopUser.objects.get(id=bundle.data['aggregator']['id'])
+        mandi = Mandi.objects.get(id=bundle.data['mandi']['id'])
+        attempt = LoopUserAssignedVillage.objects.get(loopuser=loopuser ,mandi=mandi)
+        if attempt < 1:
+            bundle = super(LoopUserAssignedMandiResource,self).obj_create(bundle,**kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(LoopUserAssignedMandiResource, self).obj_update(
+                bundle, **kwargs)
+        except Exception, e:
+            loopuser = LoopUser.objects.get(id=bundle.data['aggregator']['id'])
+            mandi = Mandi.objects.get(id=bundle.data['mandi']['id'])
+            attempt = LoopUserAssignedVillage.objects.get(loopuser=loopuser ,mandi=mandi)
+            send_duplicate_message(int(attempt[0].id))
+        return bundle        
