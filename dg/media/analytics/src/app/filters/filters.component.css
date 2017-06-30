@@ -48,7 +48,10 @@ input {
   padding: 8px 0px 0px 32px;
   -webkit-text-fill-color: white;
 }
-
+.no-margin {
+  padding-top: 5px;
+  margin-bottom: 0px;
+}
 .parent-scrollbar {
   height: 100%;
 }
@@ -64,4 +67,5 @@ input {
 
 .red-text {
   -webkit-text-fill-color: red;
+  margin-bottom: 0px;
 }

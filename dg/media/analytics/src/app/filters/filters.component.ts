@@ -173,7 +173,7 @@ export class FiltersComponent implements OnInit {
           this.f_list['end_date'] = endDate;
         } else {
           this.invalidDate = true;
-          this.invalidDateMessage = "* End date cannot be smaller than start date."
+          this.invalidDateMessage = "*'From' date should be less than 'To' date."
         }
       } catch (err) {
         this.invalidDate = true;
