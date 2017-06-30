@@ -28,6 +28,8 @@ var TIME_SERIES_PAGE = "time_series";
 var RUPEE = "₹ ";
 var TAKA = "৳ ";
 var CURRENCY = RUPEE;
+var HINDI_ID = 1;
+var BANGLA_ID = 3;
 
 var KG = " Kg";
 
@@ -872,10 +874,10 @@ function get_filter_data(language, country_id) {
       {
         // If country is India, then Regional Language is Hindi
         if (country_id == 1)
-          fill_crop_filter(croplanguage_for_filter[1]);
+          fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
         // If country is Bangladesh, then Regional Language is Bangla
         else if (country_id == 2)
-          fill_crop_filter(croplanguage_for_filter[3]);
+          fill_crop_filter(croplanguage_for_filter[BANGLA_ID]);
       }
       get_data("", country_id);
     });
@@ -1691,10 +1693,10 @@ function fill_crop_drop_down() {
   {
     // If country is India, then Regional Language is Hindi
     if (country_id == 1)
-      crops_names_time_series = croplanguage_for_filter[1];
+      crops_names_time_series = croplanguage_for_filter[HINDI_ID];
     // If country is Bangladesh, then Regional Language is Bangla
     else if (country_id == 2)
-      crops_names_time_series = croplanguage_for_filter[3];
+      crops_names_time_series = croplanguage_for_filter[BANGLA_ID];
   }
   $.each(crops_names_time_series, function(index, data) {
     var li_item = '<option value=' + data.id + '>' + data.crop_name + '</option>';
@@ -4052,10 +4054,10 @@ function change_language(lang) {
   {
     // If country is India, then Regional Language is Hindi
     if (country_id == 1)
-      fill_crop_filter(croplanguage_for_filter[1]);
+      fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
     // If country is Bangladesh, then Regional Language is Bangla
     else if (country_id == 2)
-      fill_crop_filter(croplanguage_for_filter[3]);
+      fill_crop_filter(croplanguage_for_filter[BANGLA_ID]);
   }
   get_data("", country_id);
   if (selected_page == ANALYTICS_PAGE || selected_page == TIME_SERIES_PAGE) {
