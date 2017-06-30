@@ -104,7 +104,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         price_info_incoming_obj.return_result_to_app = 0
         price_info_incoming_obj.info_status = 1
         price_info_incoming_obj.save()
-        send_info(from_number, content)
+        send_info(from_number, final_result)
     else:
         price_info_incoming_obj.save()
     PriceInfoLog.objects.bulk_create(price_info_log_list)
