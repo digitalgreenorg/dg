@@ -871,10 +871,10 @@ function get_filter_data(language, country_id) {
       else
       {
         // If country is India, then Regional Language is Hindi
-        if (window.country_id == 1)
+        if (country_id == 1)
           fill_crop_filter(croplanguage_for_filter[1]);
         // If country is Bangladesh, then Regional Language is Bangla
-        else if (window.country_id == 2)
+        else if (country_id == 2)
           fill_crop_filter(croplanguage_for_filter[3]);
       }
       get_data("", country_id);
@@ -1649,9 +1649,9 @@ function farmer_crop_visits(container, json_data) {
       series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
     } 
     else {
-      if (window.country_id == 1)
+      if (country_id == 1)
         series[0]['data'].push([json_data[i]['crop__crop_name_hi'], json_data[i]['farmer__count']]);
-      else if (window.country_id == 2)
+      else if (country_id == 2)
         series[0]['data'].push([json_data[i]['crop__crop_name_bn'], json_data[i]['farmer__count']]);
     }
   }
@@ -1690,10 +1690,10 @@ function fill_crop_drop_down() {
   else
   {
     // If country is India, then Regional Language is Hindi
-    if (window.country_id == 1)
+    if (country_id == 1)
       crops_names_time_series = croplanguage_for_filter[1];
     // If country is Bangladesh, then Regional Language is Bangla
-    else if (window.country_id == 2)
+    else if (country_id == 2)
       crops_names_time_series = croplanguage_for_filter[3];
   }
   $.each(crops_names_time_series, function(index, data) {
@@ -4051,10 +4051,10 @@ function change_language(lang) {
   else
   {
     // If country is India, then Regional Language is Hindi
-    if (window.country_id == 1)
+    if (country_id == 1)
       fill_crop_filter(croplanguage_for_filter[1]);
     // If country is Bangladesh, then Regional Language is Bangla
-    else if (window.country_id == 2)
+    else if (country_id == 2)
       fill_crop_filter(croplanguage_for_filter[3]);
   }
   get_data("", country_id);
