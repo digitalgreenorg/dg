@@ -82,7 +82,8 @@ def get_data_from_myisam(get_total, country_id):
 
     cumm_vol_farmer = {}
     if get_total == 0:
-        df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
+        #df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
+        df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('date','farmer_id').order_by('date')))
         df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
 
         dictionary = {}

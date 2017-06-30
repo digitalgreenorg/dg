@@ -28,6 +28,8 @@ var TIME_SERIES_PAGE = "time_series";
 var RUPEE = "₹ ";
 var TAKA = "৳ ";
 var CURRENCY = RUPEE;
+var HINDI_ID = 1;
+var BANGLA_ID = 3;
 
 var KG = " Kg";
 
@@ -867,10 +869,16 @@ function get_filter_data(language, country_id) {
       fill_mandi_filter(mandis_for_filter, language);
       fill_gaddidar_filter(gaddidars_for_filter, language);
       if (language == ENGLISH_LANGUAGE)
-        fill_crop_filter(croplanguage_for_filter);
-      else
         fill_crop_filter(crops_for_filter);
-
+      else
+      {
+        // If country is India, then Regional Language is Hindi
+        if (country_id == 1)
+          fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
+        // If country is Bangladesh, then Regional Language is Bangla
+        else if (country_id == 2)
+          fill_crop_filter(croplanguage_for_filter[BANGLA_ID]);
+      }
       get_data("", country_id);
     });
 }
@@ -1640,11 +1648,16 @@ function farmer_crop_visits(container, json_data) {
 
   for (var i = 0; i < json_data.length; i++) {
     if (language == ENGLISH_LANGUAGE) {
-      series[0]['data'].push([json_data[i]['crop__crop_name_en'], json_data[i]['farmer__count']]);
-    } else {
       series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
+    } 
+    else {
+      if (country_id == 1)
+        series[0]['data'].push([json_data[i]['crop__crop_name_hi'], json_data[i]['farmer__count']]);
+      else if (country_id == 2)
+        series[0]['data'].push([json_data[i]['crop__crop_name_bn'], json_data[i]['farmer__count']]);
     }
   }
+
   // plot_stacked_chart(container, series);
   plot_drilldown(container, series, {}, false, json_data[0]['farmer__count'], 'bar');
 }
@@ -1675,9 +1688,16 @@ function fill_crop_drop_down() {
   tbody_obj.append('<option value="" disabled selected> Choose a Crop </option>');
   var crops_names_time_series;
   if (language == ENGLISH_LANGUAGE)
-    crops_names_time_series = croplanguage_for_filter;
-  else
     crops_names_time_series = crops_for_filter;
+  else
+  {
+    // If country is India, then Regional Language is Hindi
+    if (country_id == 1)
+      crops_names_time_series = croplanguage_for_filter[HINDI_ID];
+    // If country is Bangladesh, then Regional Language is Bangla
+    else if (country_id == 2)
+      crops_names_time_series = croplanguage_for_filter[BANGLA_ID];
+  }
   $.each(crops_names_time_series, function(index, data) {
     var li_item = '<option value=' + data.id + '>' + data.crop_name + '</option>';
     tbody_obj.append(li_item);
@@ -4029,9 +4049,16 @@ function change_language(lang) {
   fill_mandi_filter(mandis_for_filter, language);
   fill_gaddidar_filter(gaddidars_for_filter, language);
   if (language == ENGLISH_LANGUAGE)
-    fill_crop_filter(croplanguage_for_filter);
-  else
     fill_crop_filter(crops_for_filter);
+  else
+  {
+    // If country is India, then Regional Language is Hindi
+    if (country_id == 1)
+      fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
+    // If country is Bangladesh, then Regional Language is Bangla
+    else if (country_id == 2)
+      fill_crop_filter(croplanguage_for_filter[BANGLA_ID]);
+  }
   get_data("", country_id);
   if (selected_page == ANALYTICS_PAGE || selected_page == TIME_SERIES_PAGE) {
     show_nav(selected_page);
