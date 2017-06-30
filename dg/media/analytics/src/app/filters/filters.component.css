@@ -56,7 +56,12 @@ input {
 .scrollBar {
   height: 300px;
 }
+
 .btn-success {
   background-color: #009688;
   border-color: #009688;
+}
+
+.red-text {
+  -webkit-text-fill-color: red;
 }
