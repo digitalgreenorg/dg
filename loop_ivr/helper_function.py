@@ -100,5 +100,11 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     print ".................Final message........................"
     print final_result
     price_info_incoming_obj.price_result = final_result
-    price_info_incoming_obj.save()
+    if len(final_result) >= 2000:
+        price_info_incoming_obj.return_result_to_app = 0
+        price_info_incoming_obj.info_status = 1
+        price_info_incoming_obj.save()
+        send_info(from_number, content)
+    else:
+        price_info_incoming_obj.save()
     PriceInfoLog.objects.bulk_create(price_info_log_list)

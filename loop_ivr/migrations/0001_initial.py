@@ -26,6 +26,7 @@ class Migration(migrations.Migration):
                 ('info_status', models.IntegerField(default=0, db_index=True, choices=[(0, b'Pending'), (1, b'Done'), (2, b'Wrong Query')])),
                 ('query_code', models.CharField(max_length=120, null=True, blank=True)),
                 ('price_result', models.TextField(null=True, blank=True)),
+                ('return_result_to_app', models.IntegerField(default=1, choices=[(0, b'No'), (1, b'Yes')])),
                 ('user_created', models.ForeignKey(related_name='loop_ivr_priceinfoincoming_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
                 ('user_modified', models.ForeignKey(related_name='loop_ivr_priceinfoincoming_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
             ],
