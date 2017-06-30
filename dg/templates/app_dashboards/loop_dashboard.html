@@ -1,5 +1,3 @@
-
-
 {% extends "app_dashboards/loop_base.html" %} {% load static %} {% block title %}Loop{% endblock %} {% block extracss %}
 <style>
    li.not-hoverable:hover,
@@ -16,7 +14,7 @@
 {% endblock %} {% block navbar %}
 <div class="navbar-fixed">
    <nav class="top-nav" id="analytics_page_nav_bar">
-      <div class="nav-wrapper grey darken-3">
+      <div class="nav-wrapper grey darken-3 row nav_row">
          <a class="brand-logo center white-text">LOOP</a>
          <a data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
          <div class="left col s5">
@@ -27,10 +25,16 @@
                <li id="payments_tab"><a class="white-text" onclick="hide_nav('payments')">Payments</a></li>
             </ul>
          </div>
-         <div id="language" class="col s2" class="initialized" style="float:right;">
+         <div id="language" class="col s2 initialized" style="float:right;">
             <select id='languageID' onchange='change_language(this.value)'>
                <option value='Regional'>Regional</option>
                <option value='English' selected>English</option>
+            </select>
+         </div>
+         <div id="country" class="col s2 initialized" style="float:right;">
+            <select id='countryId' onchange='change_country(this.value)'>
+              <option value='1' selected>India</option>
+               <option value='2'>Bangladesh</option>
             </select>
          </div>
          <ul class="side-nav" id="page-navigation">
@@ -40,7 +44,7 @@
             <li><a onclick="hide_nav('payments')">Payments</a></li>
          </ul>
       </div>
-      <div class="nav-wrapper  grey lighten-2 hide" id="filters_nav">
+      <div class="nav-wrapper grey lighten-2 hide" id="filters_nav">
          <a data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
          <ul class="hide-on-med-and-down">
             <ul class="left">
@@ -264,7 +268,7 @@
          <div class="col s6 m4 l2">
             <div class="card-content white darken-1">
                <span class="card-title">
-                  &nbsp;&nbsp;&nbsp;Payments(₹)
+                  &nbsp;&nbsp;&nbsp;<font id="totalpaytext">Payments(₹)</font>
                   <div class="help-tip">
                      <p>Total amount of payments made to farmers for their produce.</p>
                   </div>
@@ -338,7 +342,7 @@
          </div>
          <div class="col s6 m4 l2">
             <div class="card-content white darken-1">
-               <span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;Payments(₹)</span>
+               <span class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;<font id="recentpaytext">Payments(₹)</font></span>
                <h5 id="recent_revenue_card"></h5>
                <span id="recent_revenue_sparkline" class="sparkline_graph"></span>
             </div>
@@ -496,13 +500,7 @@
                <table id="table2" class="stripe">
                   <tfoot>
                      <tr>
-                        <th align="left">Total:</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th colspan="3" align="left">Total:</th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -530,7 +528,7 @@
                <table id="table4" class="stripe" >
                   <tfoot>
                      <tr>
-                        <th colspan="5">Total:</th>
+                        <th colspan="6">Total:</th>
                         <th></th>
                      </tr>
                   </tfoot>
@@ -542,7 +540,7 @@
       </div>
    </div>
 </div>
-<div id="login_modal" class="modal">
+<div id="login_modal" class="modal login_modal">
    <div class="modal-content">
       <h4 class="row center">User Login</h4>
       <div class="row">
@@ -770,7 +768,7 @@
             <div class="col s5">
                <div class="input-field inline">
                   <input id="gaddidar_share_row" value="share" type="text" >
-                  <label id="gaddidar_share_label" for="share_row" class="active" >Commission Agent Contribution[CAC] (in Rs) (Q*CAD)</label>
+                  <label id="gaddidar_share_label" for="gaddidar_share_row" class="active" >Commission Agent Contribution[CAC] (in Rs) (Q*CAD)</label>
                </div>
             </div>
          </div>
@@ -793,69 +791,67 @@
       <a id="gaddidar_reset_modal" class="left modal-action waves-effect waves-green btn-flat">Reset</a>
    </div>
 </div>
-<!-- <div id="modal4" class="modal">
-   <div class="modal-content">
-      <h5>Change Transport Cost</h5>
-      <form >
-         <div class="row ">
-            <div class="col s3">
-               <div class="input-field inline" >
-                  <input id="transportation_date_row" value="00-00-00" type="text" disabled>
-                  <label for="transportation_date_row">Date</label>
-               </div>
+<!-- Transportation Payment Modal -->
+<div id="transportation_modal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <div id="transportation_header" class="row">
+            <div class="col s10">
+                <h5>Change Transport Cost</h5>
             </div>
-            <div class="col s3">
-               <div class="input-field inline" >
-                  <input id="transportation_mandi_row" value="mandi" type="text" disabled>
-                  <label for="transportation_mandi_row">Mandi</label>
-               </div>
+            <a id="transportation_close" class="col s2 right-align"><img src="/media/app_dashboards/images/cancel.png" /></a>
+        </div>
+        <form>
+            <div id="transportation_disabled_elements">
+                <div class="row ">
+                    <div class="col s2">
+                        Date
+                        <input id="transportation_date_row" value="00-00-00" type="text" disabled>
+                    </div>
+                    <div class="col s2">
+                        Mandi
+                        <input id="transportation_mandi_row" value="mandi" type="text" disabled>
+                    </div>
+                    <div class="col s3">
+                        Transporter
+                        <input id="transportation_transporter_row" value="gaddidar" type="text" disabled>
+                    </div>
+                    <div class="col s2">
+                        Vehicle
+                        <input id="transportation_vehicle_row" value="quantity" type="text" disabled>
+                    </div>
+                    <div class="col s3">
+                        Vehicle Number
+                        <input id="transportation_number_row" value="commission" type="text" disabled>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="input-field inline">
+                            <input id="transportation_cost_row" value="share" type="text">
+                            <label class="active" for="transportation_cost_label">Transport Cost</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row center" id="transportation_error_div" hide>
+                    <p class="red-text" id="transportation_error_message"></p>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="input-field inline">
+                            <input id="transportation_comment_row" value=" " type="text" maxlength="180">
+                            <label for="transportation_comment_row" class="active">Comment</label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col s3">
-               <div class="input-field inline" >
-                  <input id="transportation_transporter_row" value="gaddidar" type="text" disabled>
-                  <label for="transportation_transporter_row">Transporter</label>
-               </div>
-            </div>
-            <div class="col s3">
-               <div class="input-field inline" >
-                  <input id="transportation_vehicle_row" value="quantity" type="text" disabled>
-                  <label for="transportation_vehicle_row">Vehicle</label>
-               </div>
-            </div>
-         </div>
-         <div class="row">
-            <div class="col s5">
-               <div class="input-field inline" >
-                  <input id="transportation_number_row" value="commission"  type="text" disabled>
-                  <label for="transportation_number_label">Vehicle Number</label>
-               </div>
-            </div>
-            <div class="col s2">
-               OR
-            </div>
-            <div class="col s5">
-               <div class="input-field inline">
-                  <input id="transportation_cost_row" value="share" type="text" >
-                  <label for="transportation_cost_label">Transport Cost</label>
-               </div>
-            </div>
-         </div>
-         <div class="row">
-            <div class="col s12">
-               <div class="input-field inline" >
-                  <input id="transportation_comment_row"  type="text">
-                  <label for="transportation_comment_row">Comment
-                  </label>
-               </div>
-            </div>
-         </div>
-      </form>
-   </div>
-   <div class="modal-footer">
-      <a id="transportation_submit_modal" class=" modal-action modal-close waves-effect waves-green btn-flat" style="display:none">Submit</a>
-      <a id="transportation_cancel_modal" class=" modal-action modal-close waves-effect waves-green btn-flat" style="display:none">Cancel</a>
-   </div>
-   </div> -->
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a id="transportation_submit_modal" class=" modal-action waves-effect waves-green btn-flat">Submit</a>
+        <a id="transportation_reset_modal" class="left modal-action waves-effect waves-green btn-flat">Reset</a>
+    </div>
+</div>
 {% endblock %} {% block script %}
 <!-- ?1 after js represents js version for refreshing cached version of javascript-->
 <script src="{% static 'app_dashboards/js/loop_dashboard.js?2' %}"></script>

@@ -3368,13 +3368,14 @@ define('auth_offline_backend',[
   }
   
   // if u, p matches that in user table, sets login state = true 
-  var login = function(username, password, language, partner_name){
+  var login = function(username, password, language, partner_name, type_of_cocouser, partner_id, user_id){
       var dfd = new $.Deferred();
       User.fetch({
           success: function(){
               if(username==User.get("username") && password==User.get("password"))
               {
-                  save_login_state(username, password, language, partner_name, true)
+
+                  save_login_state(username, password, language, partner_name, type_of_cocouser, partner_id, user_id, true)
                       .done(function(){
                           return dfd.resolve("Successfully Logged In (Offline Backend)");
                       })
@@ -3389,7 +3390,7 @@ define('auth_offline_backend',[
           },
           error: function(){
               // No user has been found in the database. This is probably a new login, and database is yet to be created.
-               save_login_state(username, password, language, partner_name, true)
+               save_login_state(username, password, language, partner_name, type_of_cocouser, partner_id, user_id, true)
                .done(function (){
                    return dfd.resolve("New user registered in offline database.");
                })
@@ -3402,9 +3403,9 @@ define('auth_offline_backend',[
   }
   
   //saves in offline that this username, password is logged in/out
-  var save_login_state = function(username, password, language, partner_name, loggedin){
+  var save_login_state = function(username, password, language, partner_name, type_of_cocouser, partner_id, user_id, loggedin){
       var dfd = new $.Deferred();
-      User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language, 'partner_name': partner_name},{
+      User.save({'username':username, 'password':password, 'loggedin':loggedin, 'language':language, 'partner_name': partner_name, 'type_of_cocouser': type_of_cocouser, 'partner_id': partner_id, 'user_id': user_id},{
           success: function(){
               console.log("user state saved in offline");
               dfd.resolve();
@@ -3532,6 +3533,7 @@ function($, all_configs, pa, indexeddb, OfflineAuthBackend) {
                     off_model.fetch({
                         success: function(off_model){
                             // return fetched model
+                            console.log(off_model);
                             dfd.resolve(off_model);
                         },
                         error: function(model, error){
@@ -3650,6 +3652,10 @@ define('denormalize',['jquery', 'configs', 'backbone', 'indexeddb_backbone_confi
                 return f_entities[entity][element].id_field || "id";
             },
 
+            _get_parent_name_field: function(entity, element, f_entities) {
+                return f_entities[entity][element].parent_name_field || "id";
+            },
+
             // get name of the name_field of the foreign element in object's json - for eg - name or person_name
             _get_name_field: function(entity, element, f_entities) {
                 return f_entities[entity][element].name_field;
@@ -3673,10 +3679,12 @@ define('denormalize',['jquery', 'configs', 'backbone', 'indexeddb_backbone_confi
                         // get details of the foreign element bieng denormalised
                         var id_field = this._get_id_field(entity, element, f_entities);
                         var name_field = this._get_name_field(entity, element, f_entities);
+                        var parent_name_field = this._get_parent_name_field(entity, element, f_entities);
                         var field_desc = {
                             entity_name: entity,
                             id_attribute: id_field,
-                            name_attribute: name_field
+                            name_attribute: name_field,
+                            parent_attribute: parent_name_field
                         };
 
                         //  if the foreign element doesn't exist, put an empty object and return
@@ -3745,6 +3753,7 @@ define('denormalize',['jquery', 'configs', 'backbone', 'indexeddb_backbone_confi
                     success: function(model) {
                         // put in the name attribute - denormalization completed for this element
                         obj[field_desc.name_attribute] = model.get(field_desc.name_attribute);
+                        obj[field_desc.parent_attribute] = model.get(field_desc.parent_attribute)
                         return dfd.resolve();
                     },
                     error: function(model, error) {
@@ -5030,7 +5039,7 @@ define("date_picker", function(){});
 * Copyright (c) 2013 Joris de Wit 
 * MIT License 
 */
-(function(e,t,n,r){var i=function(t,n){this.widget="",this.$element=e(t),this.defaultTime=n.defaultTime,this.disableFocus=n.disableFocus,this.isOpen=n.isOpen,this.minuteStep=n.minuteStep,this.modalBackdrop=n.modalBackdrop,this.secondStep=n.secondStep,this.showInputs=n.showInputs,this.showMeridian=n.showMeridian,this.showSeconds=n.showSeconds,this.template=n.template,this.appendWidgetTo=n.appendWidgetTo,this._init()};i.prototype={constructor:i,_init:function(){var t=this;this.$element.parent().hasClass("input-append")||this.$element.parent().hasClass("input-prepend")?(this.$element.parent(".input-append, .input-prepend").find(".add-on").on({"click.timepicker":e.proxy(this.showWidget,this)}),this.$element.on({"focus.timepicker":e.proxy(this.highlightUnit,this),"click.timepicker":e.proxy(this.highlightUnit,this),"keydown.timepicker":e.proxy(this.elementKeydown,this),"blur.timepicker":e.proxy(this.blurElement,this)})):this.template?this.$element.on({"focus.timepicker":e.proxy(this.showWidget,this),"click.timepicker":e.proxy(this.showWidget,this),"blur.timepicker":e.proxy(this.blurElement,this)}):this.$element.on({"focus.timepicker":e.proxy(this.highlightUnit,this),"click.timepicker":e.proxy(this.highlightUnit,this),"keydown.timepicker":e.proxy(this.elementKeydown,this),"blur.timepicker":e.proxy(this.blurElement,this)}),this.template!==!1?this.$widget=e(this.getTemplate()).appendTo(this.$element.parents(this.appendWidgetTo)).on("click",e.proxy(this.widgetClick,this)):this.$widget=!1,this.showInputs&&this.$widget!==!1&&this.$widget.find("input").each(function(){e(this).on({"click.timepicker":function(){e(this).select()},"keydown.timepicker":e.proxy(t.widgetKeydown,t)})}),this.setDefaultTime(this.defaultTime)},blurElement:function(){this.highlightedUnit=r,this.updateFromElementVal()},decrementHour:function(){if(this.showMeridian)if(this.hour===1)this.hour=12;else{if(this.hour===12)return this.hour--,this.toggleMeridian();if(this.hour===0)return this.hour=11,this.toggleMeridian();this.hour--}else this.hour===0?this.hour=23:this.hour--;this.update()},decrementMinute:function(e){var t;e?t=this.minute-e:t=this.minute-this.minuteStep,t<0?(this.decrementHour(),this.minute=t+60):this.minute=t,this.update()},decrementSecond:function(){var e=this.second-this.secondStep;e<0?(this.decrementMinute(!0),this.second=e+60):this.second=e,this.update()},elementKeydown:function(e){switch(e.keyCode){case 9:this.updateFromElementVal();switch(this.highlightedUnit){case"hour":e.preventDefault(),this.highlightNextUnit();break;case"minute":if(this.showMeridian||this.showSeconds)e.preventDefault(),this.highlightNextUnit();break;case"second":this.showMeridian&&(e.preventDefault(),this.highlightNextUnit())}break;case 27:this.updateFromElementVal();break;case 37:e.preventDefault(),this.highlightPrevUnit(),this.updateFromElementVal();break;case 38:e.preventDefault();switch(this.highlightedUnit){case"hour":this.incrementHour(),this.highlightHour();break;case"minute":this.incrementMinute(),this.highlightMinute();break;case"second":this.incrementSecond(),this.highlightSecond();break;case"meridian":this.toggleMeridian(),this.highlightMeridian()}break;case 39:e.preventDefault(),this.updateFromElementVal(),this.highlightNextUnit();break;case 40:e.preventDefault();switch(this.highlightedUnit){case"hour":this.decrementHour(),this.highlightHour();break;case"minute":this.decrementMinute(),this.highlightMinute();break;case"second":this.decrementSecond(),this.highlightSecond();break;case"meridian":this.toggleMeridian(),this.highlightMeridian()}}},formatTime:function(e,t,n,r){return e=e<10?"0"+e:e,t=t<10?"0"+t:t,n=n<10?"0"+n:n,e+":"+t+(this.showSeconds?":"+n:"")+(this.showMeridian?" "+r:"")},getCursorPosition:function(){var e=this.$element.get(0);if("selectionStart"in e)return e.selectionStart;if(n.selection){e.focus();var t=n.selection.createRange(),r=n.selection.createRange().text.length;return t.moveStart("character",-e.value.length),t.text.length-r}},getTemplate:function(){var e,t,n,r,i,s;this.showInputs?(t='<input type="text" name="hour" class="bootstrap-timepicker-hour" maxlength="2"/>',n='<input type="text" name="minute" class="bootstrap-timepicker-minute" maxlength="2"/>',r='<input type="text" name="second" class="bootstrap-timepicker-second" maxlength="2"/>',i='<input type="text" name="meridian" class="bootstrap-timepicker-meridian" maxlength="2"/>'):(t='<span class="bootstrap-timepicker-hour"></span>',n='<span class="bootstrap-timepicker-minute"></span>',r='<span class="bootstrap-timepicker-second"></span>',i='<span class="bootstrap-timepicker-meridian"></span>'),s='<table><tr><td><a href="#" data-action="incrementHour"><i class="glyphicon glyphicon-chevron-up"></i></a></td><td class="separator">&nbsp;</td><td><a href="#" data-action="incrementMinute"><i class="glyphicon glyphicon-chevron-up"></i></a></td>'+(this.showSeconds?'<td class="separator">&nbsp;</td><td><a href="#" data-action="incrementSecond"><i class="glyphicon glyphicon-chevron-up"></i></a></td>':"")+(this.showMeridian?'<td class="separator">&nbsp;</td><td class="meridian-column"><a href="#" data-action="toggleMeridian"><i class="glyphicon glyphicon-chevron-up"></i></a></td>':"")+"</tr>"+"<tr>"+"<td>"+t+"</td> "+'<td class="separator">:</td>'+"<td>"+n+"</td> "+(this.showSeconds?'<td class="separator">:</td><td>'+r+"</td>":"")+(this.showMeridian?'<td class="separator">&nbsp;</td><td>'+i+"</td>":"")+"</tr>"+"<tr>"+'<td><a href="#" data-action="decrementHour"><i class="glyphicon glyphicon-chevron-down"></i></a></td>'+'<td class="separator"></td>'+'<td><a href="#" data-action="decrementMinute"><i class="glyphicon glyphicon-chevron-down"></i></a></td>'+(this.showSeconds?'<td class="separator">&nbsp;</td><td><a href="#" data-action="decrementSecond"><i class="glyphicon glyphicon-chevron-down"></i></a></td>':"")+(this.showMeridian?'<td class="separator">&nbsp;</td><td><a href="#" data-action="toggleMeridian"><i class="glyphicon glyphicon-chevron-down"></i></a></td>':"")+"</tr>"+"</table>";switch(this.template){case"modal":e='<div class="bootstrap-timepicker-widget modal hide fade in" data-backdrop="'+(this.modalBackdrop?"true":"false")+'">'+'<div class="modal-header">'+'<a href="#" class="close" data-dismiss="modal">×</a>'+"<h3>Pick a Time</h3>"+"</div>"+'<div class="modal-content">'+s+"</div>"+'<div class="modal-footer">'+'<a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>'+"</div>"+"</div>";break;case"dropdown":e='<div class="bootstrap-timepicker-widget dropdown-menu">'+s+"</div>"}return e},getTime:function(){return this.formatTime(this.hour,this.minute,this.second,this.meridian)},hideWidget:function(){if(this.isOpen===!1)return;this.showInputs&&this.updateFromWidgetInputs(),this.$element.trigger({type:"hide.timepicker",time:{value:this.getTime(),hours:this.hour,minutes:this.minute,seconds:this.second,meridian:this.meridian}}),this.template==="modal"?this.$widget.modal("hide"):this.$widget.removeClass("open"),e(n).off("mousedown.timepicker"),this.isOpen=!1},highlightUnit:function(){this.position=this.getCursorPosition(),this.position>=0&&this.position<=2?this.highlightHour():this.position>=3&&this.position<=5?this.highlightMinute():this.position>=6&&this.position<=8?this.showSeconds?this.highlightSecond():this.highlightMeridian():this.position>=9&&this.position<=11&&this.highlightMeridian()},highlightNextUnit:function(){switch(this.highlightedUnit){case"hour":this.highlightMinute();break;case"minute":this.showSeconds?this.highlightSecond():this.showMeridian?this.highlightMeridian():this.highlightHour();break;case"second":this.showMeridian?this.highlightMeridian():this.highlightHour();break;case"meridian":this.highlightHour()}},highlightPrevUnit:function(){switch(this.highlightedUnit){case"hour":this.highlightMeridian();break;case"minute":this.highlightHour();break;case"second":this.highlightMinute();break;case"meridian":this.showSeconds?this.highlightSecond():this.highlightMinute()}},highlightHour:function(){var e=this.$element.get(0);this.highlightedUnit="hour",e.setSelectionRange&&setTimeout(function(){e.setSelectionRange(0,2)},0)},highlightMinute:function(){var e=this.$element.get(0);this.highlightedUnit="minute",e.setSelectionRange&&setTimeout(function(){e.setSelectionRange(3,5)},0)},highlightSecond:function(){var e=this.$element.get(0);this.highlightedUnit="second",e.setSelectionRange&&setTimeout(function(){e.setSelectionRange(6,8)},0)},highlightMeridian:function(){var e=this.$element.get(0);this.highlightedUnit="meridian",e.setSelectionRange&&(this.showSeconds?setTimeout(function(){e.setSelectionRange(9,11)},0):setTimeout(function(){e.setSelectionRange(6,8)},0))},incrementHour:function(){if(this.showMeridian){if(this.hour===11)return this.hour++,this.toggleMeridian();this.hour===12&&(this.hour=0)}if(this.hour===23)return this.hour=0;this.hour++,this.update()},incrementMinute:function(e){var t;e?t=this.minute+e:t=this.minute+this.minuteStep-this.minute%this.minuteStep,t>59?(this.incrementHour(),this.minute=t-60):this.minute=t,this.update()},incrementSecond:function(){var e=this.second+this.secondStep-this.second%this.secondStep;e>59?(this.incrementMinute(!0),this.second=e-60):this.second=e,this.update()},remove:function(){e("document").off(".timepicker"),this.$widget&&this.$widget.remove(),delete this.$element.data().timepicker},setDefaultTime:function(e){if(!this.$element.val())if(e==="current"){var t=new Date,n=t.getHours(),r=Math.floor(t.getMinutes()/this.minuteStep)*this.minuteStep,i=Math.floor(t.getSeconds()/this.secondStep)*this.secondStep,s="AM";this.showMeridian&&(n===0?n=12:n>=12?(n>12&&(n-=12),s="PM"):s="AM"),this.hour=n,this.minute=r,this.second=i,this.meridian=s,this.update()}else e===!1?(this.hour=0,this.minute=0,this.second=0,this.meridian="AM"):this.setTime(e);else this.updateFromElementVal()},setTime:function(e){var t,n;this.showMeridian?(t=e.split(" "),n=t[0].split(":"),this.meridian=t[1]):n=e.split(":"),this.hour=parseInt(n[0],10),this.minute=parseInt(n[1],10),this.second=parseInt(n[2],10),isNaN(this.hour)&&(this.hour=0),isNaN(this.minute)&&(this.minute=0);if(this.showMeridian){this.hour>12?this.hour=12:this.hour<1&&(this.hour=12);if(this.meridian==="am"||this.meridian==="a")this.meridian="AM";else if(this.meridian==="pm"||this.meridian==="p")this.meridian="PM";this.meridian!=="AM"&&this.meridian!=="PM"&&(this.meridian="AM")}else this.hour>=24?this.hour=23:this.hour<0&&(this.hour=0);this.minute<0?this.minute=0:this.minute>=60&&(this.minute=59),this.showSeconds&&(isNaN(this.second)?this.second=0:this.second<0?this.second=0:this.second>=60&&(this.second=59)),this.update()},showWidget:function(){if(this.isOpen)return;var t=this;e(n).on("mousedown.timepicker",function(n){e(n.target).closest(".bootstrap-timepicker-widget").length===0&&t.hideWidget()}),this.$element.trigger({type:"show.timepicker",time:{value:this.getTime(),hours:this.hour,minutes:this.minute,seconds:this.second,meridian:this.meridian}}),this.disableFocus&&this.$element.blur(),this.updateFromElementVal(),this.template==="modal"?this.$widget.modal("show").on("hidden",e.proxy(this.hideWidget,this)):this.isOpen===!1&&this.$widget.addClass("open"),this.isOpen=!0},toggleMeridian:function(){this.meridian=this.meridian==="AM"?"PM":"AM",this.update()},update:function(){this.$element.trigger({type:"changeTime.timepicker",time:{value:this.getTime(),hours:this.hour,minutes:this.minute,seconds:this.second,meridian:this.meridian}}),this.updateElement(),this.updateWidget()},updateElement:function(){this.$element.val(this.getTime()).change()},updateFromElementVal:function(){var e=this.$element.val();e&&this.setTime(e)},updateWidget:function(){if(this.$widget===!1)return;var e=this.hour<10?"0"+this.hour:this.hour,t=this.minute<10?"0"+this.minute:this.minute,n=this.second<10?"0"+this.second:this.second;this.showInputs?(this.$widget.find("input.bootstrap-timepicker-hour").val(e),this.$widget.find("input.bootstrap-timepicker-minute").val(t),this.showSeconds&&this.$widget.find("input.bootstrap-timepicker-second").val(n),this.showMeridian&&this.$widget.find("input.bootstrap-timepicker-meridian").val(this.meridian)):(this.$widget.find("span.bootstrap-timepicker-hour").text(e),this.$widget.find("span.bootstrap-timepicker-minute").text(t),this.showSeconds&&this.$widget.find("span.bootstrap-timepicker-second").text(n),this.showMeridian&&this.$widget.find("span.bootstrap-timepicker-meridian").text(this.meridian))},updateFromWidgetInputs:function(){if(this.$widget===!1)return;var t=e("input.bootstrap-timepicker-hour",this.$widget).val()+":"+e("input.bootstrap-timepicker-minute",this.$widget).val()+(this.showSeconds?":"+e("input.bootstrap-timepicker-second",this.$widget).val():"")+(this.showMeridian?" "+e("input.bootstrap-timepicker-meridian",this.$widget).val():"");this.setTime(t)},widgetClick:function(t){t.stopPropagation(),t.preventDefault();var n=e(t.target).closest("a").data("action");n&&this[n]()},widgetKeydown:function(t){var n=e(t.target).closest("input"),r=n.attr("name");switch(t.keyCode){case 9:if(this.showMeridian){if(r==="meridian")return this.hideWidget()}else if(this.showSeconds){if(r==="second")return this.hideWidget()}else if(r==="minute")return this.hideWidget();this.updateFromWidgetInputs();break;case 27:this.hideWidget();break;case 38:t.preventDefault();switch(r){case"hour":this.incrementHour();break;case"minute":this.incrementMinute();break;case"second":this.incrementSecond();break;case"meridian":this.toggleMeridian()}break;case 40:t.preventDefault();switch(r){case"hour":this.decrementHour();break;case"minute":this.decrementMinute();break;case"second":this.decrementSecond();break;case"meridian":this.toggleMeridian()}}}},e.fn.timepicker=function(t){var n=Array.apply(null,arguments);return n.shift(),this.each(function(){var r=e(this),s=r.data("timepicker"),o=typeof t=="object"&&t;s||r.data("timepicker",s=new i(this,e.extend({},e.fn.timepicker.defaults,o,e(this).data()))),typeof t=="string"&&s[t].apply(s,n)})},e.fn.timepicker.defaults={defaultTime:"current",disableFocus:!1,isOpen:!1,minuteStep:15,modalBackdrop:!1,secondStep:15,showSeconds:!1,showInputs:!0,showMeridian:!0,template:"dropdown",appendWidgetTo:".bootstrap-timepicker"},e.fn.timepicker.Constructor=i})(jQuery,window,document);
+(function(e,t,n,r){"use strict";var i=function(t,n){this.widget="",this.$element=e(t),this.defaultTime=n.defaultTime,this.disableFocus=n.disableFocus,this.isOpen=n.isOpen,this.minuteStep=n.minuteStep,this.modalBackdrop=n.modalBackdrop,this.secondStep=n.secondStep,this.showInputs=n.showInputs,this.showMeridian=n.showMeridian,this.showSeconds=n.showSeconds,this.template=n.template,this.appendWidgetTo=n.appendWidgetTo,this._init()};i.prototype={constructor:i,_init:function(){var t=this;this.$element.parent().hasClass("input-append")||this.$element.parent().hasClass("input-prepend")?(this.$element.parent(".input-append, .input-prepend").find(".add-on").on({"click.timepicker":e.proxy(this.showWidget,this)}),this.$element.on({"focus.timepicker":e.proxy(this.highlightUnit,this),"click.timepicker":e.proxy(this.highlightUnit,this),"keydown.timepicker":e.proxy(this.elementKeydown,this),"blur.timepicker":e.proxy(this.blurElement,this)})):this.template?this.$element.on({"focus.timepicker":e.proxy(this.showWidget,this),"click.timepicker":e.proxy(this.showWidget,this),"blur.timepicker":e.proxy(this.blurElement,this)}):this.$element.on({"focus.timepicker":e.proxy(this.highlightUnit,this),"click.timepicker":e.proxy(this.highlightUnit,this),"keydown.timepicker":e.proxy(this.elementKeydown,this),"blur.timepicker":e.proxy(this.blurElement,this)}),this.template!==!1?this.$widget=e(this.getTemplate()).appendTo(this.$element.parents(this.appendWidgetTo)).on("click",e.proxy(this.widgetClick,this)):this.$widget=!1,this.showInputs&&this.$widget!==!1&&this.$widget.find("input").each(function(){e(this).on({"click.timepicker":function(){e(this).select()},"keydown.timepicker":e.proxy(t.widgetKeydown,t)})}),this.setDefaultTime(this.defaultTime)},blurElement:function(){this.highlightedUnit=r,this.updateFromElementVal()},decrementHour:function(){if(this.showMeridian)if(this.hour===1)this.hour=12;else{if(this.hour===12)return this.hour--,this.toggleMeridian();if(this.hour===0)return this.hour=11,this.toggleMeridian();this.hour--}else this.hour===0?this.hour=23:this.hour--;this.update()},decrementMinute:function(e){var t;e?t=this.minute-e:t=this.minute-this.minuteStep,t<0?(this.decrementHour(),this.minute=t+60):this.minute=t,this.update()},decrementSecond:function(){var e=this.second-this.secondStep;e<0?(this.decrementMinute(!0),this.second=e+60):this.second=e,this.update()},elementKeydown:function(e){switch(e.keyCode){case 9:this.updateFromElementVal();switch(this.highlightedUnit){case"hour":e.preventDefault(),this.highlightNextUnit();break;case"minute":if(this.showMeridian||this.showSeconds)e.preventDefault(),this.highlightNextUnit();break;case"second":this.showMeridian&&(e.preventDefault(),this.highlightNextUnit())}break;case 27:this.updateFromElementVal();break;case 37:e.preventDefault(),this.highlightPrevUnit(),this.updateFromElementVal();break;case 38:e.preventDefault();switch(this.highlightedUnit){case"hour":this.incrementHour(),this.highlightHour();break;case"minute":this.incrementMinute(),this.highlightMinute();break;case"second":this.incrementSecond(),this.highlightSecond();break;case"meridian":this.toggleMeridian(),this.highlightMeridian()}break;case 39:e.preventDefault(),this.updateFromElementVal(),this.highlightNextUnit();break;case 40:e.preventDefault();switch(this.highlightedUnit){case"hour":this.decrementHour(),this.highlightHour();break;case"minute":this.decrementMinute(),this.highlightMinute();break;case"second":this.decrementSecond(),this.highlightSecond();break;case"meridian":this.toggleMeridian(),this.highlightMeridian()}}},formatTime:function(e,t,n,r){return e=e<10?"0"+e:e,t=t<10?"0"+t:t,n=n<10?"0"+n:n,e+":"+t+(this.showSeconds?":"+n:"")+(this.showMeridian?" "+r:"")},getCursorPosition:function(){var e=this.$element.get(0);if("selectionStart"in e)return e.selectionStart;if(n.selection){e.focus();var t=n.selection.createRange(),r=n.selection.createRange().text.length;return t.moveStart("character",-e.value.length),t.text.length-r}},getTemplate:function(){var e,t,n,r,i,s;this.showInputs?(t='<input type="text" name="hour" class="bootstrap-timepicker-hour" maxlength="2"/>',n='<input type="text" name="minute" class="bootstrap-timepicker-minute" maxlength="2"/>',r='<input type="text" name="second" class="bootstrap-timepicker-second" maxlength="2"/>',i='<input type="text" name="meridian" class="bootstrap-timepicker-meridian" maxlength="2"/>'):(t='<span class="bootstrap-timepicker-hour"></span>',n='<span class="bootstrap-timepicker-minute"></span>',r='<span class="bootstrap-timepicker-second"></span>',i='<span class="bootstrap-timepicker-meridian"></span>'),s='<table><tr><td><a href="#" data-action="incrementHour"><i class="glyphicon glyphicon-chevron-up"></i></a></td><td class="separator">&nbsp;</td><td><a href="#" data-action="incrementMinute"><i class="glyphicon glyphicon-chevron-up"></i></a></td>'+(this.showSeconds?'<td class="separator">&nbsp;</td><td><a href="#" data-action="incrementSecond"><i class="glyphicon glyphicon-chevron-up"></i></a></td>':"")+(this.showMeridian?'<td class="separator">&nbsp;</td><td class="meridian-column"><a href="#" data-action="toggleMeridian"><i class="glyphicon glyphicon-chevron-up"></i></a></td>':"")+"</tr>"+"<tr>"+"<td>"+t+"</td> "+'<td class="separator">:</td>'+"<td>"+n+"</td> "+(this.showSeconds?'<td class="separator">:</td><td>'+r+"</td>":"")+(this.showMeridian?'<td class="separator">&nbsp;</td><td>'+i+"</td>":"")+"</tr>"+"<tr>"+'<td><a href="#" data-action="decrementHour"><i class="glyphicon glyphicon-chevron-down"></i></a></td>'+'<td class="separator"></td>'+'<td><a href="#" data-action="decrementMinute"><i class="glyphicon glyphicon-chevron-down"></i></a></td>'+(this.showSeconds?'<td class="separator">&nbsp;</td><td><a href="#" data-action="decrementSecond"><i class="glyphicon glyphicon-chevron-down"></i></a></td>':"")+(this.showMeridian?'<td class="separator">&nbsp;</td><td><a href="#" data-action="toggleMeridian"><i class="glyphicon glyphicon-chevron-down"></i></a></td>':"")+"</tr>"+"</table>";switch(this.template){case"modal":e='<div class="bootstrap-timepicker-widget modal hide fade in" data-backdrop="'+(this.modalBackdrop?"true":"false")+'">'+'<div class="modal-header">'+'<a href="#" class="close" data-dismiss="modal">×</a>'+"<h3>Pick a Time</h3>"+"</div>"+'<div class="modal-content">'+s+"</div>"+'<div class="modal-footer">'+'<a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>'+"</div>"+"</div>";break;case"dropdown":e='<div class="bootstrap-timepicker-widget dropdown-menu">'+s+"</div>"}return e},getTime:function(){return this.formatTime(this.hour,this.minute,this.second,this.meridian)},hideWidget:function(){if(this.isOpen===!1)return;this.showInputs&&this.updateFromWidgetInputs(),this.$element.trigger({type:"hide.timepicker",time:{value:this.getTime(),hours:this.hour,minutes:this.minute,seconds:this.second,meridian:this.meridian}}),this.template==="modal"?this.$widget.modal("hide"):this.$widget.removeClass("open"),e(n).off("mousedown.timepicker"),this.isOpen=!1},highlightUnit:function(){this.position=this.getCursorPosition(),this.position>=0&&this.position<=2?this.highlightHour():this.position>=3&&this.position<=5?this.highlightMinute():this.position>=6&&this.position<=8?this.showSeconds?this.highlightSecond():this.highlightMeridian():this.position>=9&&this.position<=11&&this.highlightMeridian()},highlightNextUnit:function(){switch(this.highlightedUnit){case"hour":this.highlightMinute();break;case"minute":this.showSeconds?this.highlightSecond():this.showMeridian?this.highlightMeridian():this.highlightHour();break;case"second":this.showMeridian?this.highlightMeridian():this.highlightHour();break;case"meridian":this.highlightHour()}},highlightPrevUnit:function(){switch(this.highlightedUnit){case"hour":this.highlightMeridian();break;case"minute":this.highlightHour();break;case"second":this.highlightMinute();break;case"meridian":this.showSeconds?this.highlightSecond():this.highlightMinute()}},highlightHour:function(){var e=this.$element.get(0);this.highlightedUnit="hour",e.setSelectionRange&&setTimeout(function(){e.setSelectionRange(0,2)},0)},highlightMinute:function(){var e=this.$element.get(0);this.highlightedUnit="minute",e.setSelectionRange&&setTimeout(function(){e.setSelectionRange(3,5)},0)},highlightSecond:function(){var e=this.$element.get(0);this.highlightedUnit="second",e.setSelectionRange&&setTimeout(function(){e.setSelectionRange(6,8)},0)},highlightMeridian:function(){var e=this.$element.get(0);this.highlightedUnit="meridian",e.setSelectionRange&&(this.showSeconds?setTimeout(function(){e.setSelectionRange(9,11)},0):setTimeout(function(){e.setSelectionRange(6,8)},0))},incrementHour:function(){if(this.showMeridian){if(this.hour===11)return this.hour++,this.toggleMeridian();this.hour===12&&(this.hour=0)}if(this.hour===23)return this.hour=0;this.hour++,this.update()},incrementMinute:function(e){var t;e?t=this.minute+e:t=this.minute+this.minuteStep-this.minute%this.minuteStep,t>59?(this.incrementHour(),this.minute=t-60):this.minute=t,this.update()},incrementSecond:function(){var e=this.second+this.secondStep-this.second%this.secondStep;e>59?(this.incrementMinute(!0),this.second=e-60):this.second=e,this.update()},remove:function(){e("document").off(".timepicker"),this.$widget&&this.$widget.remove(),delete this.$element.data().timepicker},setDefaultTime:function(e){if(!this.$element.val())if(e==="current"){var t=new Date,n=t.getHours(),r=Math.floor(t.getMinutes()/this.minuteStep)*this.minuteStep,i=Math.floor(t.getSeconds()/this.secondStep)*this.secondStep,s="AM";this.showMeridian&&(n===0?n=12:n>=12?(n>12&&(n-=12),s="PM"):s="AM"),this.hour=n,this.minute=r,this.second=i,this.meridian=s,this.update()}else e===!1?(this.hour=0,this.minute=0,this.second=0,this.meridian="AM"):this.setTime(e);else this.updateFromElementVal()},setTime:function(e){var t,n;this.showMeridian?(t=e.split(" "),n=t[0].split(":"),this.meridian=t[1]):n=e.split(":"),this.hour=parseInt(n[0],10),this.minute=parseInt(n[1],10),this.second=parseInt(n[2],10),isNaN(this.hour)&&(this.hour=0),isNaN(this.minute)&&(this.minute=0);if(this.showMeridian){this.hour>12?this.hour=12:this.hour<1&&(this.hour=12);if(this.meridian==="am"||this.meridian==="a")this.meridian="AM";else if(this.meridian==="pm"||this.meridian==="p")this.meridian="PM";this.meridian!=="AM"&&this.meridian!=="PM"&&(this.meridian="AM")}else this.hour>=24?this.hour=23:this.hour<0&&(this.hour=0);this.minute<0?this.minute=0:this.minute>=60&&(this.minute=59),this.showSeconds&&(isNaN(this.second)?this.second=0:this.second<0?this.second=0:this.second>=60&&(this.second=59)),this.update()},showWidget:function(){if(this.isOpen)return;var t=this;e(n).on("mousedown.timepicker",function(n){e(n.target).closest(".bootstrap-timepicker-widget").length===0&&t.hideWidget()}),this.$element.trigger({type:"show.timepicker",time:{value:this.getTime(),hours:this.hour,minutes:this.minute,seconds:this.second,meridian:this.meridian}}),this.disableFocus&&this.$element.blur(),this.updateFromElementVal(),this.template==="modal"?this.$widget.modal("show").on("hidden",e.proxy(this.hideWidget,this)):this.isOpen===!1&&this.$widget.addClass("open"),this.isOpen=!0},toggleMeridian:function(){this.meridian=this.meridian==="AM"?"PM":"AM",this.update()},update:function(){this.$element.trigger({type:"changeTime.timepicker",time:{value:this.getTime(),hours:this.hour,minutes:this.minute,seconds:this.second,meridian:this.meridian}}),this.updateElement(),this.updateWidget()},updateElement:function(){this.$element.val(this.getTime()).change()},updateFromElementVal:function(){var e=this.$element.val();e&&this.setTime(e)},updateWidget:function(){if(this.$widget===!1)return;var e=this.hour<10?"0"+this.hour:this.hour,t=this.minute<10?"0"+this.minute:this.minute,n=this.second<10?"0"+this.second:this.second;this.showInputs?(this.$widget.find("input.bootstrap-timepicker-hour").val(e),this.$widget.find("input.bootstrap-timepicker-minute").val(t),this.showSeconds&&this.$widget.find("input.bootstrap-timepicker-second").val(n),this.showMeridian&&this.$widget.find("input.bootstrap-timepicker-meridian").val(this.meridian)):(this.$widget.find("span.bootstrap-timepicker-hour").text(e),this.$widget.find("span.bootstrap-timepicker-minute").text(t),this.showSeconds&&this.$widget.find("span.bootstrap-timepicker-second").text(n),this.showMeridian&&this.$widget.find("span.bootstrap-timepicker-meridian").text(this.meridian))},updateFromWidgetInputs:function(){if(this.$widget===!1)return;var t=e("input.bootstrap-timepicker-hour",this.$widget).val()+":"+e("input.bootstrap-timepicker-minute",this.$widget).val()+(this.showSeconds?":"+e("input.bootstrap-timepicker-second",this.$widget).val():"")+(this.showMeridian?" "+e("input.bootstrap-timepicker-meridian",this.$widget).val():"");this.setTime(t)},widgetClick:function(t){t.stopPropagation(),t.preventDefault();var n=e(t.target).closest("a").data("action");n&&this[n]()},widgetKeydown:function(t){var n=e(t.target).closest("input"),r=n.attr("name");switch(t.keyCode){case 9:if(this.showMeridian){if(r==="meridian")return this.hideWidget()}else if(this.showSeconds){if(r==="second")return this.hideWidget()}else if(r==="minute")return this.hideWidget();this.updateFromWidgetInputs();break;case 27:this.hideWidget();break;case 38:t.preventDefault();switch(r){case"hour":this.incrementHour();break;case"minute":this.incrementMinute();break;case"second":this.incrementSecond();break;case"meridian":this.toggleMeridian()}break;case 40:t.preventDefault();switch(r){case"hour":this.decrementHour();break;case"minute":this.decrementMinute();break;case"second":this.decrementSecond();break;case"meridian":this.toggleMeridian()}}}},e.fn.timepicker=function(t){var n=Array.apply(null,arguments);return n.shift(),this.each(function(){var r=e(this),s=r.data("timepicker"),o=typeof t=="object"&&t;s||r.data("timepicker",s=new i(this,e.extend({},e.fn.timepicker.defaults,o,e(this).data()))),typeof t=="string"&&s[t].apply(s,n)})},e.fn.timepicker.defaults={defaultTime:"current",disableFocus:!1,isOpen:!1,minuteStep:15,modalBackdrop:!1,secondStep:15,showSeconds:!1,showInputs:!0,showMeridian:!0,template:"dropdown",appendWidgetTo:".bootstrap-timepicker"},e.fn.timepicker.Constructor=i})(jQuery,window,document);
 define("time_picker", function(){});
 
 // Responsible for preparing form - for both Add and Edit, converting form to json, cleaning json, denormalising json and then triggering "save_clicked" event.
@@ -5061,7 +5070,7 @@ define('views/form',[
         events: {
             'click #button2': 'button2_clicked',
             // used in inline form
-            'click #add_rows': 'append_new_inlines'
+            'click #add_rows': 'append_new_inlines',
         },
         template: '#form_template',
         options_inner_template: _.template($('#options_template')
@@ -5073,6 +5082,7 @@ define('views/form',[
             // already contains the names of the buttons
             var s_passed = this.options.serialize;
             var language = User.get('language');
+            this.type_of_cocouser = User.get('type_of_cocouser');
             this.entity_config = all_configs[this.entity_name];
             // HTML for form 
             //s_passed["form_template"] = this.form_template;
@@ -5111,6 +5121,8 @@ define('views/form',[
 //         Reads entity_config and sets basic properties on view object for easy access
         read_form_config: function(params) {
             var language = User.get("language");
+            var cocousertype = User.get('type_of_cocouser')
+            this.cocousertype = cocousertype
             this.entity_name = params.entity_name;
             this.entity_config = all_configs[this.entity_name];
             //default locations - 
@@ -5118,6 +5130,9 @@ define('views/form',[
             this.inline = this.entity_config.inline;
             this.bulk = this.entity_config.bulk;
             this.labels = this.entity_config['labels_'+language]
+            this.health_variable = all_configs.misc.variable_dict[Object.keys(all_configs.misc.variable_dict)[1]]
+            this.agg_variable = all_configs.misc.variable_dict[Object.keys(all_configs.misc.variable_dict)[0]]
+            
             if (this.edit_case) {
                 this.form_template = _.template($('#' + this.entity_config.edit_template_name).html());
                 if (this.entity_config.edit) {
@@ -5272,11 +5287,37 @@ define('views/form',[
         render_labels: function(){
             $f_el = this.$("#form_template_render");
             $f_el.append(this.form_template(this.labels));
+            var cocousertype = User.get('type_of_cocouser')
             var partner_name = User.get('partner_name');
             var partner_check = jQuery.inArray(partner_name, all_configs.misc.ethiopia_partners)
             if (partner_check < 0){
                 $f_el.find("#is_modelfarmer").addClass('hidden');
             }
+            // force hiding of upavan field
+            _.each(all_configs.misc.element_to_be_hidden_for_upavan, function(val, key){
+                $f_el.find(val).addClass('hidden')
+            })
+            //  for UPAVAN
+            if (cocousertype == 4){
+                //to change labels
+                _.each(all_configs.misc.label_upavan_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+                // to hide fields
+                _.each(all_configs.misc.upavan_user_fields, function(element, index) {
+                    $f_el.find(element).removeClass('hidden')
+                })
+            }else{
+                _.each(all_configs.misc.upavan_user_fields, function(element, index) {
+                    $f_el.find(element).addClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+                
+            }
+
         },
         
         //fetches all foreign collections and renders them when all are fetched
@@ -5302,7 +5343,38 @@ define('views/form',[
             _.each(this.element_entity_map, function(entity, element) {
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
+                    if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
+                        if (cocousertype != 4){
+                            // hide the headers and fields
+                            _.each(this.entity_config.hide_dict, function(key, value) {
+                                $(key).addClass('hidden')
+                                $(value).addClass('hidden')
+                            })
+                            this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                        }
+                     }else if(this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.health_variable){
+                        if (cocousertype != 4){
+                            _.each(this.entity_config.hide_dict, function(key, value) {
+                                $(key).removeClass('hidden')
+                                $(value).removeClass('hidden')
+                            })
+                        }
+
+                     }else if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
+                         if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
+                            if (this.edit_case && this.foreign_elements_rendered[element]){
+                                this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                                if (cocousertype != 4){
+                                    _.each(this.entity_config.hide_dict, function(key, value) {
+                                        $(key).addClass('hidden')
+                                        $(value).addClass('hidden')
+                                    })
+                                }
+                            } 
+                        }   
+                    }
             }, this);
+
         },
 
         // fetch edit object and render it into form
@@ -5322,6 +5394,28 @@ define('views/form',[
                         that.model_json = model.toJSON();
                         // normalise json to put into form
                         that.normalize_json(that.model_json);
+                        // fields to hide
+                        if (that.entity_config.show_health_provider_present != that.model_json.parentcategory){
+                            
+                            that.$el.find("#"+that.entity_config.parent_element_label_to_hide).addClass('hidden');
+                            that.$el.find("#id_"+that.entity_config.parent_element_to_hide).addClass('hidden');
+                        }
+                        // text to select 
+                        if (that.entity_config.text_to_select_display_hack){
+                             // for multiple fields
+                            if (that.entity_config.text_to_select_display_hack_field_array){
+                                _.each(that.entity_config.text_to_select_display_hack_field_array, function(element, index) {
+                                    that.$el.find("#id_" + element + " option[value="+ that.model_json[element]+"]").attr('selected', 'selected')
+                                    $("#id_" + element).change().trigger("chosen:updated");
+                                })
+                            }
+                            // for single fields
+                            if(that.entity_config.text_to_select_display_hack_field_id){
+                                var text_to_select_display_var  = that.model_json[that.entity_config.text_to_select_display_hack_field_id]
+                                that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ text_to_select_display_var +"]").attr('selected', 'selected')
+                                $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
+                            }
+                        }
                         // put into form
                         that.fill_form();
                     })
@@ -5351,6 +5445,26 @@ define('views/form',[
             var temp = _.template($('#' + this.inline.header).html());
             $f_el = this.$('#inline_header');
             $f_el.append(temp(this.labels));
+            if (that.cocousertype == 4){
+                // force hiding of upavan field
+                _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                    $f_el.find(key).addClass('hidden')
+                    $f_el.find(val).addClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.inline_upavan_label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+            }else{
+                _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                    $f_el.find(key).removeClass('hidden')
+                    $f_el.find(val).removeClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.inline_label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+            }
             //if add case put in empty inlines
             if (!this.edit_case)
                 this.append_new_inlines(this.inline.default_num_rows);
@@ -5379,6 +5493,7 @@ define('views/form',[
             }
             //not showing the inlines in case of edit_case_json
         },
+
 
         // fills the inline objects in their templates and puts them into form
         fill_inlines: function(model_array) {
@@ -5411,6 +5526,18 @@ define('views/form',[
                 }));
                 this.$('#inline_body').append(tr);
                 // switch validation on/off based on whether the inline is empty or not
+                if (this.cocousertype == 4){
+                    // force hiding of upavan field
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                        this.$('#inline_body').find(key).addClass('hidden')
+                       this.$('#inline_body').find(val).addClass('hidden')
+                    })
+                }else{
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                        this.$('#inline_body').find(key).removeClass('hidden')
+                        this.$('#inline_body').find(val).removeClass('hidden')
+                    })
+                }
                 tr.on('change', this.switch_validation_for_inlines);
             }
 
@@ -5539,14 +5666,70 @@ define('views/form',[
             return $('[name=' + element + ']').val();
         },
 
+        action_after_render_foreign_element: function(parent_element, dep_element){
+            if (this.$el.find('#id_' + parent_element).val() == this.agg_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                if (cocousertype != 4){
+                    _.each(this.entity_config.hide_dict, function(key, value) {
+                        console.log(key, value)
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                }
+
+            }
+            if (this.$el.find('#id_' + parent_element).val() == this.health_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                if (cocousertype != 4){
+                    _.each(this.entity_config.hide_dict, function(key, value) {
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                }else if(cocousertype == 4){
+                    $("#id_health_provider_present").addClass('hidden')
+                }
+            }
+
+        },
+
+        // check if element value inside array is empty
+        checkArrayElementisnotEmpty: function(arr, that){
+           for(var i=0; i < arr.length; i++){
+               if(that.$el.find(arr[i]).val() === "")   
+                  return false;
+           }
+           return true;
+        },
+
         // render dependent foreign elements - executes when a source element changes
         render_dep_for_elements: function(ev) {
             var source = $(ev.target).attr("name"); //source changed
+            // var arr = this.entity_config.combination_display_field_with_value
+            for (var key in this.entity_config.combination_display_dict) {
+               var combination_display_field = key
+               var arr = this.entity_config.combination_display_dict[key];
+            }
             console.log("FILLING DEP ENTITIES OF -" + source);
             // Iterate over its dependents
             _.each(this.source_dependents_map[source], function(dep_el) {
                 var filtered_models = this.filter_dep_for_element(dep_el);
                 this.render_foreign_element(dep_el, filtered_models);
+                // var arr = this.entity_config.combination_display_field_with_value
+                var combination_field_to_display = combination_display_field
+                if (!jQuery.isEmptyObject(arr) && this.checkArrayElementisnotEmpty(arr, this)){
+                    this.$el.find(combination_field_to_display).prop("disabled", false);
+                    this.$el.find(combination_field_to_display).trigger("chosen:updated");
+                }
+                if (!jQuery.isEmptyObject(arr) && !this.checkArrayElementisnotEmpty(arr, this)){
+                   this.$el.find(combination_field_to_display).prop("disabled", true);
+                   this.$el.find(combination_field_to_display).trigger("chosen:updated");
+                }
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length == 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).addClass('hidden');
+                }
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length != 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).removeClass('hidden');
+                }
+                this.action_after_render_foreign_element(this.entity_config.fetch_element_that_manipulate, dep_el)
             }, this);
 
             _.each(this.source_filter_dependent_map[source], function(dep_el) {
@@ -5596,29 +5779,37 @@ define('views/form',[
                         return exists;
                     });
                 } else {
+
                     filtered_models = dep_collection.filter(function(model) {
+                        var d = dep_desc;
                         var exists = false;
                         var compare = null;
                         if (typeof model.get(dep_desc.dep_attr) == "object")
                             compare = model.get(dep_desc.dep_attr).id;
                         else
-                            compare = model.get(dep_desc.dep_attr)
-
-                        if (dep_desc.src_attr && dep_desc.src_attr != "id") {
-                            var s_collection = that.get_collection_of_element(source_form_element);
-                            var s_model = s_collection.get(parseInt(source_curr_value[0]));
-                            if (s_model.get(dep_desc.src_attr) instanceof Array) {
-                                //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
-                                $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
-                                    if (compare == src_compare.id)
-                                        exists = true;
-                                });
+                            if (dep_desc.parent_attr){
+                                compare = model.get(dep_desc.parent_attr)[dep_desc.dep_attr];
+                            }else{
+                                compare = model.get(dep_desc.dep_attr)
                             }
-                            return exists;
-                        } else {
-                            if (!($.inArray(String(compare), source_curr_value) == -1))
-                                exists = true;
-                            return exists;
+
+                        if (compare != null) {
+                            if (dep_desc.src_attr && dep_desc.src_attr != "id") {
+                                var s_collection = that.get_collection_of_element(source_form_element);
+                                var s_model = s_collection.get(parseInt(source_curr_value[0]));
+                                if (s_model.get(dep_desc.src_attr) instanceof Array) {
+                                    //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                                    $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
+                                        if (compare == src_compare.id)
+                                            exists = true;
+                                    });
+                                }
+                                return exists;
+                            } else {
+                                if (!($.inArray(String(compare), source_curr_value) == -1))
+                                    exists = true;
+                                return exists;
+                            }
                         }
                     });
                 }
@@ -5635,6 +5826,18 @@ define('views/form',[
             $.each(model_array, function(index, obj) {
                 //LIMIT: assumed to be an object
                 if (obj.get(filter_attr).id == filter_value) {
+                    filtered.push(obj);
+                }
+            });
+            return filtered;
+        },
+
+        // filter an array from attributes rather than array index itself
+        filter_array_with_specific_parameters: function(array, filter_attr, filter_val) {
+            filtered = [];
+            $.each(array, function(index, obj) {
+                
+                if (obj.attributes[filter_attr] == filter_val) {
                     filtered.push(obj);
                 }
             });
@@ -5699,6 +5902,8 @@ define('views/form',[
         // renders a foreign element - dropdown or expanded templates - into the form
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
+            cocousertype = this.type_of_cocouser;
+            inline_var = this.entity_config.inline_var;
             var that = this;
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
@@ -5706,6 +5911,10 @@ define('views/form',[
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
+                if (element == this.entity_config.fetch_element_that_manipulate && (cocousertype != 3 && cocousertype != 4)){
+                   model_array = this.filter_array_with_specific_parameters(model_array, this.entity_config.fetch_key_element, cocousertype); 
+                }
+                
             //for filtering based on dependent fields
             if (f_entity_desc.filter_dependency)
                 for(var i=0; i<f_entity_desc.filter_dependency.length; i ++){
@@ -5726,6 +5935,7 @@ define('views/form',[
                     if (f_entity_desc.id_field)
                         id_field = f_entity_desc.id_field;
                     var collection = this.get_collection_of_element(element);
+                    var cat = [];
                     $.each(this.model_json[element], function(index, f_json) {
                         model = collection.get(f_json[id_field]);
                         if (!model)
@@ -5735,22 +5945,106 @@ define('views/form',[
                         $.each(f_entity_desc.expanded.extra_fields, function(index, field) {
                             t_json[field] = f_json[field];
                         });
-                        console.log(t_json);
                         $f_el.append(expanded_template(t_json));
+                        if (t_json.category && t_json.category.length >= 1){
+                            _.each(t_json.category, function(iterable, idx){   
+                                if (iterable.id != 'undefined'){
+                                    $f_el.find("."+inline_var + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');
+                                    // $("."+inline_var+index).trigger("chosen:updated");
+                                }
+                            })
+                        }
                     });
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
+
                 } else {
                     $.each(model_array, function(index, f_model) {
                         var t_json = f_model.toJSON();
                         t_json["index"] = index;
+
                         $f_el.append(expanded_template(t_json));
+                        // Offline.fetch_collection("directbeneficiaries")
+                        //     .done(function(collection) {
+                        //         $.each(collection.models, function (i, item) { 
+                        //             $f_el.find("."+inline_var + index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
+                        //             $("."+inline_var+index).trigger("chosen:updated");
+                        //         })
+                                
+                        //     })
+                        //     .fail(function() {
+                        //         console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                        //     });
+                    
+
                     });
+                    
                 }
+                if (cocousertype == 4){
+                    //hiding dropdown options
+                    _.each(all_configs.misc.menu_options_to_hide, function(value, key){
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    //to change labels
+                    _.each(all_configs.misc.inline_upavan_label_dict, function(value, key){
+                        $(key).text(value)
+                    })
+                    // hiding inline fields
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(value, key){
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                }else{
+                    //hiding dropdown options
+                    _.each(all_configs.misc.menu_options_to_hide, function(value, key){
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                    // hiding inline fields
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(value, key){
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    //to change labels
+                    _.each(all_configs.misc.inline_label_dict, function(value, key){
+                        $(key).text(value)
+                    })
+                }
+
                 this.initiate_form_widgets();
                 $('.inline_table').show();
+
+
+                // if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
+                //     _.each(this.entity_config.headers_to_hide, function(element, index) {
+                //         $(element).addClass('hidden');
+                //     })
+                //     _.each(this.entity_config.fields_to_hide, function(element, index) {
+                //         $(element).addClass('hidden');
+                //     })
+                //     this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                // }
+
+
             } else {
                 console.log("NOT EXPANDED");
+                if (!this.edit_case && !this.foreign_elements_rendered[element]){
+                    $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
+                        if ($(that.entity_config.reset_element).val() != ''){
+                            $('.search-choice-close').click();
+                            $(that.entity_config.reset_element).trigger("chosen:updated");
+                        }
+                    })
+                }
+                if (this.edit_case && this.foreign_elements_rendered[element]){
+                    $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
+                        $('.search-choice-close').click();
+                        $(that.entity_config.reset_element).trigger("chosen:updated");
+
+                    })
+                }
+
                 $f_el = this.$('#' + f_entity_desc.placeholder);
                 if ($f_el.is('select[multiple]'))
                     $f_el.html('');
@@ -5793,8 +6087,16 @@ define('views/form',[
 
                 //select the options selected in edit model
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
-                    this.$('form [name=' + element + ']').val(this.model_json[element]).change();
-                    this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    if (element == this.entity_config.fetch_element_that_manipulate && isNaN(this.model_json[element])){
+                        this.$('form [name=' + element + ']').val('2').change().trigger("chosen:updated");
+                        $("#id_"+element+" option:not(:selected)").remove();
+                        this.$('form [name=' + element + ']').find("#id_"+element+" option:not(:selected)").remove();
+                        this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    }else{
+                        this.$('form [name=' + element + ']').val(this.model_json[element]).change();
+                        this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    }
+                    
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
                 }
@@ -5932,12 +6234,16 @@ define('views/form',[
 
         },
 
+
         // fetch expandeds from the form as a list of objects
         parse_expanded: function(raw_json) {
             console.log("FORM: fetching expandeds");
             var element = this.expanded;
             var entity = this.element_entity_map[element];
             var desc = this.foreign_entities[entity][element]
+            var fetch_element = this.entity_config.fetch_element
+            var fetch_element_key = this.entity_config.fetch_key_element
+            var child_element = this.entity_config.fetch_child_element
             console.log("FORM:expande desc -" + JSON.stringify(desc));
             var placeholder = desc.expanded.placeholder;
             var all_inlines = $('#' + placeholder + ' tr');
@@ -5965,7 +6271,41 @@ define('views/form',[
     						inl_obj[attr_name] = this.checked;
     				}
                 });
+                // checking category from inline and then converting inlines request ids to actual objects
+                if (inl_obj.category && inl_obj.category.length >= 0){
+                    var category = []
+                    _.each(inl_obj.category, function(idx, iter){ 
+                        Offline.fetch_object(child_element, fetch_element_key, parseInt(idx))
+                            .done(function(model_var) {
+                                category.push({'id': model_var.attributes.id, 'category': model_var.attributes.direct_beneficiaries_category})
+                                inl_obj.category = category;
+                            })
+                            .fail(function() {
+                                // edit object could not be fetched from offline db
+                                //TODO: error handling
+                                console.log("ERROR: EDIT: Edit model could not be fetched!");
+                                alert("ERROR: EDIT:");
+                            });
+                    })
+                
+                    
+                }
                 raw_json[element].push(inl_obj);
+                if (fetch_element != null){
+                   // saving in fetch_element offline table
+                   var category = []
+                   Offline.fetch_object(fetch_element, fetch_element_key, parseInt(inl_obj.person_id))
+                    .done(function(model) {
+                        model.save({'age': inl_obj.age, 'category': inl_obj.category, 'gender': inl_obj.gender});
+                    })
+                    .fail(function() {
+                        // edit object could not be fetched from offline db
+                        //TODO: error handling
+                        console.log("ERROR: EDIT: Edit model could not be fetched!");
+                        alert("ERROR: EDIT: Edit model could not be fetched!");
+                    }); 
+                }
+                
             });
 
             //remove inline attrs from raw_json...let them be inside raw_json.inlines only
@@ -6017,6 +6357,7 @@ define('views/form',[
                     o_json.inlines[index] = $.extend(old_json, inl);
                 }, this);
             }
+
             return o_json;
         },
 
@@ -6649,8 +6990,8 @@ define('auth',[
           .done(function(resp) {
               // online login successful, try offline backend login
               if (resp.success == "1"){
-
-                OfflineAuthBackend.login(username, password, language, resp.partner_name)
+                OfflineAuthBackend.login(username, password, language, resp.partner_name, resp.type_of_cocouser, resp.partner_id, resp.user_id)
+        
                   .done(function() {
                       // login successful
                       console.log("Login Successful");
@@ -6731,7 +7072,7 @@ define('auth',[
  * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=ce6915ce5ec86b748fec)
  * Config saved to config.json and https://gist.github.com/ce6915ce5ec86b748fec
  */
-if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires jQuery");+function(t){function e(e){return this.each(function(){var i=t(this),s=i.data("bs.alert");s||i.data("bs.alert",s=new o(this)),"string"==typeof e&&s[e].call(i)})}var i='[data-dismiss="alert"]',o=function(e){t(e).on("click",i,this.close)};o.VERSION="3.2.0",o.prototype.close=function(e){function i(){n.detach().trigger("closed.bs.alert").remove()}var o=t(this),s=o.attr("data-target");s||(s=o.attr("href"),s=s&&s.replace(/.*(?=#[^\s]*$)/,""));var n=t(s);e&&e.preventDefault(),n.length||(n=o.hasClass("alert")?o:o.parent()),n.trigger(e=t.Event("close.bs.alert")),e.isDefaultPrevented()||(n.removeClass("in"),t.support.transition&&n.hasClass("fade")?n.one("bsTransitionEnd",i).emulateTransitionEnd(150):i())};var s=t.fn.alert;t.fn.alert=e,t.fn.alert.Constructor=o,t.fn.alert.noConflict=function(){return t.fn.alert=s,this},t(document).on("click.bs.alert.data-api",i,o.prototype.close)}(jQuery),+function(t){function e(e){return this.each(function(){var o=t(this),s=o.data("bs.button"),n="object"==typeof e&&e;s||o.data("bs.button",s=new i(this,n)),"toggle"==e?s.toggle():e&&s.setState(e)})}var i=function(e,o){this.$element=t(e),this.options=t.extend({},i.DEFAULTS,o),this.isLoading=!1};i.VERSION="3.2.0",i.DEFAULTS={loadingText:"loading..."},i.prototype.setState=function(e){var i="disabled",o=this.$element,s=o.is("input")?"val":"html",n=o.data();e+="Text",null==n.resetText&&o.data("resetText",o[s]()),o[s](null==n[e]?this.options[e]:n[e]),setTimeout(t.proxy(function(){"loadingText"==e?(this.isLoading=!0,o.addClass(i).attr(i,i)):this.isLoading&&(this.isLoading=!1,o.removeClass(i).removeAttr(i))},this),0)},i.prototype.toggle=function(){var t=!0,e=this.$element.closest('[data-toggle="buttons"]');if(e.length){var i=this.$element.find("input");"radio"==i.prop("type")&&(i.prop("checked")&&this.$element.hasClass("active")?t=!1:e.find(".active").removeClass("active")),t&&i.prop("checked",!this.$element.hasClass("active")).trigger("change")}t&&this.$element.toggleClass("active")};var o=t.fn.button;t.fn.button=e,t.fn.button.Constructor=i,t.fn.button.noConflict=function(){return t.fn.button=o,this},t(document).on("click.bs.button.data-api",'[data-toggle^="button"]',function(i){var o=t(i.target);o.hasClass("btn")||(o=o.closest(".btn")),e.call(o,"toggle"),i.preventDefault()})}(jQuery),+function(t){function e(e){return this.each(function(){var o=t(this),s=o.data("bs.carousel"),n=t.extend({},i.DEFAULTS,o.data(),"object"==typeof e&&e),r="string"==typeof e?e:n.slide;s||o.data("bs.carousel",s=new i(this,n)),"number"==typeof e?s.to(e):r?s[r]():n.interval&&s.pause().cycle()})}var i=function(e,i){this.$element=t(e).on("keydown.bs.carousel",t.proxy(this.keydown,this)),this.$indicators=this.$element.find(".carousel-indicators"),this.options=i,this.paused=this.sliding=this.interval=this.$active=this.$items=null,"hover"==this.options.pause&&this.$element.on("mouseenter.bs.carousel",t.proxy(this.pause,this)).on("mouseleave.bs.carousel",t.proxy(this.cycle,this))};i.VERSION="3.2.0",i.DEFAULTS={interval:5e3,pause:"hover",wrap:!0},i.prototype.keydown=function(t){switch(t.which){case 37:this.prev();break;case 39:this.next();break;default:return}t.preventDefault()},i.prototype.cycle=function(e){return e||(this.paused=!1),this.interval&&clearInterval(this.interval),this.options.interval&&!this.paused&&(this.interval=setInterval(t.proxy(this.next,this),this.options.interval)),this},i.prototype.getItemIndex=function(t){return this.$items=t.parent().children(".item"),this.$items.index(t||this.$active)},i.prototype.to=function(e){var i=this,o=this.getItemIndex(this.$active=this.$element.find(".item.active"));return e>this.$items.length-1||0>e?void 0:this.sliding?this.$element.one("slid.bs.carousel",function(){i.to(e)}):o==e?this.pause().cycle():this.slide(e>o?"next":"prev",t(this.$items[e]))},i.prototype.pause=function(e){return e||(this.paused=!0),this.$element.find(".next, .prev").length&&t.support.transition&&(this.$element.trigger(t.support.transition.end),this.cycle(!0)),this.interval=clearInterval(this.interval),this},i.prototype.next=function(){return this.sliding?void 0:this.slide("next")},i.prototype.prev=function(){return this.sliding?void 0:this.slide("prev")},i.prototype.slide=function(e,i){var o=this.$element.find(".item.active"),s=i||o[e](),n=this.interval,r="next"==e?"left":"right",a="next"==e?"first":"last",l=this;if(!s.length){if(!this.options.wrap)return;s=this.$element.find(".item")[a]()}if(s.hasClass("active"))return this.sliding=!1;var h=s[0],p=t.Event("slide.bs.carousel",{relatedTarget:h,direction:r});if(this.$element.trigger(p),!p.isDefaultPrevented()){if(this.sliding=!0,n&&this.pause(),this.$indicators.length){this.$indicators.find(".active").removeClass("active");var c=t(this.$indicators.children()[this.getItemIndex(s)]);c&&c.addClass("active")}var d=t.Event("slid.bs.carousel",{relatedTarget:h,direction:r});return t.support.transition&&this.$element.hasClass("slide")?(s.addClass(e),s[0].offsetWidth,o.addClass(r),s.addClass(r),o.one("bsTransitionEnd",function(){s.removeClass([e,r].join(" ")).addClass("active"),o.removeClass(["active",r].join(" ")),l.sliding=!1,setTimeout(function(){l.$element.trigger(d)},0)}).emulateTransitionEnd(1e3*o.css("transition-duration").slice(0,-1))):(o.removeClass("active"),s.addClass("active"),this.sliding=!1,this.$element.trigger(d)),n&&this.cycle(),this}};var o=t.fn.carousel;t.fn.carousel=e,t.fn.carousel.Constructor=i,t.fn.carousel.noConflict=function(){return t.fn.carousel=o,this},t(document).on("click.bs.carousel.data-api","[data-slide], [data-slide-to]",function(i){var o,s=t(this),n=t(s.attr("data-target")||(o=s.attr("href"))&&o.replace(/.*(?=#[^\s]+$)/,""));if(n.hasClass("carousel")){var r=t.extend({},n.data(),s.data()),a=s.attr("data-slide-to");a&&(r.interval=!1),e.call(n,r),a&&n.data("bs.carousel").to(a),i.preventDefault()}}),t(window).on("load",function(){t('[data-ride="carousel"]').each(function(){var i=t(this);e.call(i,i.data())})})}(jQuery),+function(t){function e(e){e&&3===e.which||(t(s).remove(),t(n).each(function(){var o=i(t(this)),s={relatedTarget:this};o.hasClass("open")&&(o.trigger(e=t.Event("hide.bs.dropdown",s)),e.isDefaultPrevented()||o.removeClass("open").trigger("hidden.bs.dropdown",s))}))}function i(e){var i=e.attr("data-target");i||(i=e.attr("href"),i=i&&/#[A-Za-z]/.test(i)&&i.replace(/.*(?=#[^\s]*$)/,""));var o=i&&t(i);return o&&o.length?o:e.parent()}function o(e){return this.each(function(){var i=t(this),o=i.data("bs.dropdown");o||i.data("bs.dropdown",o=new r(this)),"string"==typeof e&&o[e].call(i)})}var s=".dropdown-backdrop",n='[data-toggle="dropdown"]',r=function(e){t(e).on("click.bs.dropdown",this.toggle)};r.VERSION="3.2.0",r.prototype.toggle=function(o){var s=t(this);if(!s.is(".disabled, :disabled")){var n=i(s),r=n.hasClass("open");if(e(),!r){"ontouchstart"in document.documentElement&&!n.closest(".navbar-nav").length&&t('<div class="dropdown-backdrop"/>').insertAfter(t(this)).on("click",e);var a={relatedTarget:this};if(n.trigger(o=t.Event("show.bs.dropdown",a)),o.isDefaultPrevented())return;s.trigger("focus"),n.toggleClass("open").trigger("shown.bs.dropdown",a)}return!1}},r.prototype.keydown=function(e){if(/(38|40|27)/.test(e.keyCode)){var o=t(this);if(e.preventDefault(),e.stopPropagation(),!o.is(".disabled, :disabled")){var s=i(o),r=s.hasClass("open");if(!r||r&&27==e.keyCode)return 27==e.which&&s.find(n).trigger("focus"),o.trigger("click");var a=" li:not(.divider):visible a",l=s.find('[role="menu"]'+a+', [role="listbox"]'+a);if(l.length){var h=l.index(l.filter(":focus"));38==e.keyCode&&h>0&&h--,40==e.keyCode&&h<l.length-1&&h++,~h||(h=0),l.eq(h).trigger("focus")}}}};var a=t.fn.dropdown;t.fn.dropdown=o,t.fn.dropdown.Constructor=r,t.fn.dropdown.noConflict=function(){return t.fn.dropdown=a,this},t(document).on("click.bs.dropdown.data-api",e).on("click.bs.dropdown.data-api",".dropdown form",function(t){t.stopPropagation()}).on("click.bs.dropdown.data-api",n,r.prototype.toggle).on("keydown.bs.dropdown.data-api",n+', [role="menu"], [role="listbox"]',r.prototype.keydown)}(jQuery),+function(t){function e(e,o){return this.each(function(){var s=t(this),n=s.data("bs.modal"),r=t.extend({},i.DEFAULTS,s.data(),"object"==typeof e&&e);n||s.data("bs.modal",n=new i(this,r)),"string"==typeof e?n[e](o):r.show&&n.show(o)})}var i=function(e,i){this.options=i,this.$body=t(document.body),this.$element=t(e),this.$backdrop=this.isShown=null,this.scrollbarWidth=0,this.options.remote&&this.$element.find(".modal-content").load(this.options.remote,t.proxy(function(){this.$element.trigger("loaded.bs.modal")},this))};i.VERSION="3.2.0",i.DEFAULTS={backdrop:!0,keyboard:!0,show:!0},i.prototype.toggle=function(t){return this.isShown?this.hide():this.show(t)},i.prototype.show=function(e){var i=this,o=t.Event("show.bs.modal",{relatedTarget:e});this.$element.trigger(o),this.isShown||o.isDefaultPrevented()||(this.isShown=!0,this.checkScrollbar(),this.$body.addClass("modal-open"),this.setScrollbar(),this.escape(),this.$element.on("click.dismiss.bs.modal",'[data-dismiss="modal"]',t.proxy(this.hide,this)),this.backdrop(function(){var o=t.support.transition&&i.$element.hasClass("fade");i.$element.parent().length||i.$element.appendTo(i.$body),i.$element.show().scrollTop(0),o&&i.$element[0].offsetWidth,i.$element.addClass("in").attr("aria-hidden",!1),i.enforceFocus();var s=t.Event("shown.bs.modal",{relatedTarget:e});o?i.$element.find(".modal-dialog").one("bsTransitionEnd",function(){i.$element.trigger("focus").trigger(s)}).emulateTransitionEnd(300):i.$element.trigger("focus").trigger(s)}))},i.prototype.hide=function(e){e&&e.preventDefault(),e=t.Event("hide.bs.modal"),this.$element.trigger(e),this.isShown&&!e.isDefaultPrevented()&&(this.isShown=!1,this.$body.removeClass("modal-open"),this.resetScrollbar(),this.escape(),t(document).off("focusin.bs.modal"),this.$element.removeClass("in").attr("aria-hidden",!0).off("click.dismiss.bs.modal"),t.support.transition&&this.$element.hasClass("fade")?this.$element.one("bsTransitionEnd",t.proxy(this.hideModal,this)).emulateTransitionEnd(300):this.hideModal())},i.prototype.enforceFocus=function(){t(document).off("focusin.bs.modal").on("focusin.bs.modal",t.proxy(function(t){this.$element[0]===t.target||this.$element.has(t.target).length||this.$element.trigger("focus")},this))},i.prototype.escape=function(){this.isShown&&this.options.keyboard?this.$element.on("keyup.dismiss.bs.modal",t.proxy(function(t){27==t.which&&this.hide()},this)):this.isShown||this.$element.off("keyup.dismiss.bs.modal")},i.prototype.hideModal=function(){var t=this;this.$element.hide(),this.backdrop(function(){t.$element.trigger("hidden.bs.modal")})},i.prototype.removeBackdrop=function(){this.$backdrop&&this.$backdrop.remove(),this.$backdrop=null},i.prototype.backdrop=function(e){var i=this,o=this.$element.hasClass("fade")?"fade":"";if(this.isShown&&this.options.backdrop){var s=t.support.transition&&o;if(this.$backdrop=t('<div class="modal-backdrop '+o+'" />').appendTo(this.$body),this.$element.on("click.dismiss.bs.modal",t.proxy(function(t){t.target===t.currentTarget&&("static"==this.options.backdrop?this.$element[0].focus.call(this.$element[0]):this.hide.call(this))},this)),s&&this.$backdrop[0].offsetWidth,this.$backdrop.addClass("in"),!e)return;s?this.$backdrop.one("bsTransitionEnd",e).emulateTransitionEnd(150):e()}else if(!this.isShown&&this.$backdrop){this.$backdrop.removeClass("in");var n=function(){i.removeBackdrop(),e&&e()};t.support.transition&&this.$element.hasClass("fade")?this.$backdrop.one("bsTransitionEnd",n).emulateTransitionEnd(150):n()}else e&&e()},i.prototype.checkScrollbar=function(){document.body.clientWidth>=window.innerWidth||(this.scrollbarWidth=this.scrollbarWidth||this.measureScrollbar())},i.prototype.setScrollbar=function(){var t=parseInt(this.$body.css("padding-right")||0,10);this.scrollbarWidth&&this.$body.css("padding-right",t+this.scrollbarWidth)},i.prototype.resetScrollbar=function(){this.$body.css("padding-right","")},i.prototype.measureScrollbar=function(){var t=document.createElement("div");t.className="modal-scrollbar-measure",this.$body.append(t);var e=t.offsetWidth-t.clientWidth;return this.$body[0].removeChild(t),e};var o=t.fn.modal;t.fn.modal=e,t.fn.modal.Constructor=i,t.fn.modal.noConflict=function(){return t.fn.modal=o,this},t(document).on("click.bs.modal.data-api",'[data-toggle="modal"]',function(i){var o=t(this),s=o.attr("href"),n=t(o.attr("data-target")||s&&s.replace(/.*(?=#[^\s]+$)/,"")),r=n.data("bs.modal")?"toggle":t.extend({remote:!/#/.test(s)&&s},n.data(),o.data());o.is("a")&&i.preventDefault(),n.one("show.bs.modal",function(t){t.isDefaultPrevented()||n.one("hidden.bs.modal",function(){o.is(":visible")&&o.trigger("focus")})}),e.call(n,r,this)})}(jQuery),+function(t){function e(e){return this.each(function(){var o=t(this),s=o.data("bs.tooltip"),n="object"==typeof e&&e;(s||"destroy"!=e)&&(s||o.data("bs.tooltip",s=new i(this,n)),"string"==typeof e&&s[e]())})}var i=function(t,e){this.type=this.options=this.enabled=this.timeout=this.hoverState=this.$element=null,this.init("tooltip",t,e)};i.VERSION="3.2.0",i.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,container:!1,viewport:{selector:"body",padding:0}},i.prototype.init=function(e,i,o){this.enabled=!0,this.type=e,this.$element=t(i),this.options=this.getOptions(o),this.$viewport=this.options.viewport&&t(this.options.viewport.selector||this.options.viewport);for(var s=this.options.trigger.split(" "),n=s.length;n--;){var r=s[n];if("click"==r)this.$element.on("click."+this.type,this.options.selector,t.proxy(this.toggle,this));else if("manual"!=r){var a="hover"==r?"mouseenter":"focusin",l="hover"==r?"mouseleave":"focusout";this.$element.on(a+"."+this.type,this.options.selector,t.proxy(this.enter,this)),this.$element.on(l+"."+this.type,this.options.selector,t.proxy(this.leave,this))}}this.options.selector?this._options=t.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},i.prototype.getDefaults=function(){return i.DEFAULTS},i.prototype.getOptions=function(e){return e=t.extend({},this.getDefaults(),this.$element.data(),e),e.delay&&"number"==typeof e.delay&&(e.delay={show:e.delay,hide:e.delay}),e},i.prototype.getDelegateOptions=function(){var e={},i=this.getDefaults();return this._options&&t.each(this._options,function(t,o){i[t]!=o&&(e[t]=o)}),e},i.prototype.enter=function(e){var i=e instanceof this.constructor?e:t(e.currentTarget).data("bs."+this.type);return i||(i=new this.constructor(e.currentTarget,this.getDelegateOptions()),t(e.currentTarget).data("bs."+this.type,i)),clearTimeout(i.timeout),i.hoverState="in",i.options.delay&&i.options.delay.show?void(i.timeout=setTimeout(function(){"in"==i.hoverState&&i.show()},i.options.delay.show)):i.show()},i.prototype.leave=function(e){var i=e instanceof this.constructor?e:t(e.currentTarget).data("bs."+this.type);return i||(i=new this.constructor(e.currentTarget,this.getDelegateOptions()),t(e.currentTarget).data("bs."+this.type,i)),clearTimeout(i.timeout),i.hoverState="out",i.options.delay&&i.options.delay.hide?void(i.timeout=setTimeout(function(){"out"==i.hoverState&&i.hide()},i.options.delay.hide)):i.hide()},i.prototype.show=function(){var e=t.Event("show.bs."+this.type);if(this.hasContent()&&this.enabled){this.$element.trigger(e);var i=t.contains(document.documentElement,this.$element[0]);if(e.isDefaultPrevented()||!i)return;var o=this,s=this.tip(),n=this.getUID(this.type);this.setContent(),s.attr("id",n),this.$element.attr("aria-describedby",n),this.options.animation&&s.addClass("fade");var r="function"==typeof this.options.placement?this.options.placement.call(this,s[0],this.$element[0]):this.options.placement,a=/\s?auto?\s?/i,l=a.test(r);l&&(r=r.replace(a,"")||"top"),s.detach().css({top:0,left:0,display:"block"}).addClass(r).data("bs."+this.type,this),this.options.container?s.appendTo(this.options.container):s.insertAfter(this.$element);var h=this.getPosition(),p=s[0].offsetWidth,c=s[0].offsetHeight;if(l){var d=r,f=this.$element.parent(),u=this.getPosition(f);r="bottom"==r&&h.top+h.height+c-u.scroll>u.height?"top":"top"==r&&h.top-u.scroll-c<0?"bottom":"right"==r&&h.right+p>u.width?"left":"left"==r&&h.left-p<u.left?"right":r,s.removeClass(d).addClass(r)}var g=this.getCalculatedOffset(r,h,p,c);this.applyPlacement(g,r);var v=function(){o.$element.trigger("shown.bs."+o.type),o.hoverState=null};t.support.transition&&this.$tip.hasClass("fade")?s.one("bsTransitionEnd",v).emulateTransitionEnd(150):v()}},i.prototype.applyPlacement=function(e,i){var o=this.tip(),s=o[0].offsetWidth,n=o[0].offsetHeight,r=parseInt(o.css("margin-top"),10),a=parseInt(o.css("margin-left"),10);isNaN(r)&&(r=0),isNaN(a)&&(a=0),e.top=e.top+r,e.left=e.left+a,t.offset.setOffset(o[0],t.extend({using:function(t){o.css({top:Math.round(t.top),left:Math.round(t.left)})}},e),0),o.addClass("in");var l=o[0].offsetWidth,h=o[0].offsetHeight;"top"==i&&h!=n&&(e.top=e.top+n-h);var p=this.getViewportAdjustedDelta(i,e,l,h);p.left?e.left+=p.left:e.top+=p.top;var c=p.left?2*p.left-s+l:2*p.top-n+h,d=p.left?"left":"top",f=p.left?"offsetWidth":"offsetHeight";o.offset(e),this.replaceArrow(c,o[0][f],d)},i.prototype.replaceArrow=function(t,e,i){this.arrow().css(i,t?50*(1-t/e)+"%":"")},i.prototype.setContent=function(){var t=this.tip(),e=this.getTitle();t.find(".tooltip-inner")[this.options.html?"html":"text"](e),t.removeClass("fade in top bottom left right")},i.prototype.hide=function(){function e(){"in"!=i.hoverState&&o.detach(),i.$element.trigger("hidden.bs."+i.type)}var i=this,o=this.tip(),s=t.Event("hide.bs."+this.type);return this.$element.removeAttr("aria-describedby"),this.$element.trigger(s),s.isDefaultPrevented()?void 0:(o.removeClass("in"),t.support.transition&&this.$tip.hasClass("fade")?o.one("bsTransitionEnd",e).emulateTransitionEnd(150):e(),this.hoverState=null,this)},i.prototype.fixTitle=function(){var t=this.$element;(t.attr("title")||"string"!=typeof t.attr("data-original-title"))&&t.attr("data-original-title",t.attr("title")||"").attr("title","")},i.prototype.hasContent=function(){return this.getTitle()},i.prototype.getPosition=function(e){e=e||this.$element;var i=e[0],o="BODY"==i.tagName;return t.extend({},"function"==typeof i.getBoundingClientRect?i.getBoundingClientRect():null,{scroll:o?document.documentElement.scrollTop||document.body.scrollTop:e.scrollTop(),width:o?t(window).width():e.outerWidth(),height:o?t(window).height():e.outerHeight()},o?{top:0,left:0}:e.offset())},i.prototype.getCalculatedOffset=function(t,e,i,o){return"bottom"==t?{top:e.top+e.height,left:e.left+e.width/2-i/2}:"top"==t?{top:e.top-o,left:e.left+e.width/2-i/2}:"left"==t?{top:e.top+e.height/2-o/2,left:e.left-i}:{top:e.top+e.height/2-o/2,left:e.left+e.width}},i.prototype.getViewportAdjustedDelta=function(t,e,i,o){var s={top:0,left:0};if(!this.$viewport)return s;var n=this.options.viewport&&this.options.viewport.padding||0,r=this.getPosition(this.$viewport);if(/right|left/.test(t)){var a=e.top-n-r.scroll,l=e.top+n-r.scroll+o;a<r.top?s.top=r.top-a:l>r.top+r.height&&(s.top=r.top+r.height-l)}else{var h=e.left-n,p=e.left+n+i;h<r.left?s.left=r.left-h:p>r.width&&(s.left=r.left+r.width-p)}return s},i.prototype.getTitle=function(){var t,e=this.$element,i=this.options;return t=e.attr("data-original-title")||("function"==typeof i.title?i.title.call(e[0]):i.title)},i.prototype.getUID=function(t){do t+=~~(1e6*Math.random());while(document.getElementById(t));return t},i.prototype.tip=function(){return this.$tip=this.$tip||t(this.options.template)},i.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},i.prototype.validate=function(){this.$element[0].parentNode||(this.hide(),this.$element=null,this.options=null)},i.prototype.enable=function(){this.enabled=!0},i.prototype.disable=function(){this.enabled=!1},i.prototype.toggleEnabled=function(){this.enabled=!this.enabled},i.prototype.toggle=function(e){var i=this;e&&(i=t(e.currentTarget).data("bs."+this.type),i||(i=new this.constructor(e.currentTarget,this.getDelegateOptions()),t(e.currentTarget).data("bs."+this.type,i))),i.tip().hasClass("in")?i.leave(i):i.enter(i)},i.prototype.destroy=function(){clearTimeout(this.timeout),this.hide().$element.off("."+this.type).removeData("bs."+this.type)};var o=t.fn.tooltip;t.fn.tooltip=e,t.fn.tooltip.Constructor=i,t.fn.tooltip.noConflict=function(){return t.fn.tooltip=o,this}}(jQuery),+function(t){function e(e){return this.each(function(){var o=t(this),s=o.data("bs.popover"),n="object"==typeof e&&e;(s||"destroy"!=e)&&(s||o.data("bs.popover",s=new i(this,n)),"string"==typeof e&&s[e]())})}var i=function(t,e){this.init("popover",t,e)};if(!t.fn.tooltip)throw new Error("Popover requires tooltip.js");i.VERSION="3.2.0",i.DEFAULTS=t.extend({},t.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),i.prototype=t.extend({},t.fn.tooltip.Constructor.prototype),i.prototype.constructor=i,i.prototype.getDefaults=function(){return i.DEFAULTS},i.prototype.setContent=function(){var t=this.tip(),e=this.getTitle(),i=this.getContent();t.find(".popover-title")[this.options.html?"html":"text"](e),t.find(".popover-content").empty()[this.options.html?"string"==typeof i?"html":"append":"text"](i),t.removeClass("fade top bottom left right in"),t.find(".popover-title").html()||t.find(".popover-title").hide()},i.prototype.hasContent=function(){return this.getTitle()||this.getContent()},i.prototype.getContent=function(){var t=this.$element,e=this.options;return t.attr("data-content")||("function"==typeof e.content?e.content.call(t[0]):e.content)},i.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")},i.prototype.tip=function(){return this.$tip||(this.$tip=t(this.options.template)),this.$tip};var o=t.fn.popover;t.fn.popover=e,t.fn.popover.Constructor=i,t.fn.popover.noConflict=function(){return t.fn.popover=o,this}}(jQuery),+function(t){function e(e){return this.each(function(){var o=t(this),s=o.data("bs.tab");s||o.data("bs.tab",s=new i(this)),"string"==typeof e&&s[e]()})}var i=function(e){this.element=t(e)};i.VERSION="3.2.0",i.prototype.show=function(){var e=this.element,i=e.closest("ul:not(.dropdown-menu)"),o=e.data("target");if(o||(o=e.attr("href"),o=o&&o.replace(/.*(?=#[^\s]*$)/,"")),!e.parent("li").hasClass("active")){var s=i.find(".active:last a")[0],n=t.Event("show.bs.tab",{relatedTarget:s});if(e.trigger(n),!n.isDefaultPrevented()){var r=t(o);this.activate(e.closest("li"),i),this.activate(r,r.parent(),function(){e.trigger({type:"shown.bs.tab",relatedTarget:s})})}}},i.prototype.activate=function(e,i,o){function s(){n.removeClass("active").find("> .dropdown-menu > .active").removeClass("active"),e.addClass("active"),r?(e[0].offsetWidth,e.addClass("in")):e.removeClass("fade"),e.parent(".dropdown-menu")&&e.closest("li.dropdown").addClass("active"),o&&o()}var n=i.find("> .active"),r=o&&t.support.transition&&n.hasClass("fade");r?n.one("bsTransitionEnd",s).emulateTransitionEnd(150):s(),n.removeClass("in")};var o=t.fn.tab;t.fn.tab=e,t.fn.tab.Constructor=i,t.fn.tab.noConflict=function(){return t.fn.tab=o,this},t(document).on("click.bs.tab.data-api",'[data-toggle="tab"], [data-toggle="pill"]',function(i){i.preventDefault(),e.call(t(this),"show")})}(jQuery),+function(t){function e(e){return this.each(function(){var o=t(this),s=o.data("bs.affix"),n="object"==typeof e&&e;s||o.data("bs.affix",s=new i(this,n)),"string"==typeof e&&s[e]()})}var i=function(e,o){this.options=t.extend({},i.DEFAULTS,o),this.$target=t(this.options.target).on("scroll.bs.affix.data-api",t.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",t.proxy(this.checkPositionWithEventLoop,this)),this.$element=t(e),this.affixed=this.unpin=this.pinnedOffset=null,this.checkPosition()};i.VERSION="3.2.0",i.RESET="affix affix-top affix-bottom",i.DEFAULTS={offset:0,target:window},i.prototype.getPinnedOffset=function(){if(this.pinnedOffset)return this.pinnedOffset;this.$element.removeClass(i.RESET).addClass("affix");var t=this.$target.scrollTop(),e=this.$element.offset();return this.pinnedOffset=e.top-t},i.prototype.checkPositionWithEventLoop=function(){setTimeout(t.proxy(this.checkPosition,this),1)},i.prototype.checkPosition=function(){if(this.$element.is(":visible")){var e=t(document).height(),o=this.$target.scrollTop(),s=this.$element.offset(),n=this.options.offset,r=n.top,a=n.bottom;"object"!=typeof n&&(a=r=n),"function"==typeof r&&(r=n.top(this.$element)),"function"==typeof a&&(a=n.bottom(this.$element));var l=null!=this.unpin&&o+this.unpin<=s.top?!1:null!=a&&s.top+this.$element.height()>=e-a?"bottom":null!=r&&r>=o?"top":!1;if(this.affixed!==l){null!=this.unpin&&this.$element.css("top","");var h="affix"+(l?"-"+l:""),p=t.Event(h+".bs.affix");this.$element.trigger(p),p.isDefaultPrevented()||(this.affixed=l,this.unpin="bottom"==l?this.getPinnedOffset():null,this.$element.removeClass(i.RESET).addClass(h).trigger(t.Event(h.replace("affix","affixed"))),"bottom"==l&&this.$element.offset({top:e-this.$element.height()-a}))}}};var o=t.fn.affix;t.fn.affix=e,t.fn.affix.Constructor=i,t.fn.affix.noConflict=function(){return t.fn.affix=o,this},t(window).on("load",function(){t('[data-spy="affix"]').each(function(){var i=t(this),o=i.data();o.offset=o.offset||{},o.offsetBottom&&(o.offset.bottom=o.offsetBottom),o.offsetTop&&(o.offset.top=o.offsetTop),e.call(i,o)})})}(jQuery),+function(t){function e(e){return this.each(function(){var o=t(this),s=o.data("bs.collapse"),n=t.extend({},i.DEFAULTS,o.data(),"object"==typeof e&&e);!s&&n.toggle&&"show"==e&&(e=!e),s||o.data("bs.collapse",s=new i(this,n)),"string"==typeof e&&s[e]()})}var i=function(e,o){this.$element=t(e),this.options=t.extend({},i.DEFAULTS,o),this.transitioning=null,this.options.parent&&(this.$parent=t(this.options.parent)),this.options.toggle&&this.toggle()};i.VERSION="3.2.0",i.DEFAULTS={toggle:!0},i.prototype.dimension=function(){var t=this.$element.hasClass("width");return t?"width":"height"},i.prototype.show=function(){if(!this.transitioning&&!this.$element.hasClass("in")){var i=t.Event("show.bs.collapse");if(this.$element.trigger(i),!i.isDefaultPrevented()){var o=this.$parent&&this.$parent.find("> .panel > .in");if(o&&o.length){var s=o.data("bs.collapse");if(s&&s.transitioning)return;e.call(o,"hide"),s||o.data("bs.collapse",null)}var n=this.dimension();this.$element.removeClass("collapse").addClass("collapsing")[n](0),this.transitioning=1;var r=function(){this.$element.removeClass("collapsing").addClass("collapse in")[n](""),this.transitioning=0,this.$element.trigger("shown.bs.collapse")};if(!t.support.transition)return r.call(this);var a=t.camelCase(["scroll",n].join("-"));this.$element.one("bsTransitionEnd",t.proxy(r,this)).emulateTransitionEnd(350)[n](this.$element[0][a])}}},i.prototype.hide=function(){if(!this.transitioning&&this.$element.hasClass("in")){var e=t.Event("hide.bs.collapse");if(this.$element.trigger(e),!e.isDefaultPrevented()){var i=this.dimension();this.$element[i](this.$element[i]())[0].offsetHeight,this.$element.addClass("collapsing").removeClass("collapse").removeClass("in"),this.transitioning=1;var o=function(){this.transitioning=0,this.$element.trigger("hidden.bs.collapse").removeClass("collapsing").addClass("collapse")};return t.support.transition?void this.$element[i](0).one("bsTransitionEnd",t.proxy(o,this)).emulateTransitionEnd(350):o.call(this)}}},i.prototype.toggle=function(){this[this.$element.hasClass("in")?"hide":"show"]()};var o=t.fn.collapse;t.fn.collapse=e,t.fn.collapse.Constructor=i,t.fn.collapse.noConflict=function(){return t.fn.collapse=o,this},t(document).on("click.bs.collapse.data-api",'[data-toggle="collapse"]',function(i){var o,s=t(this),n=s.attr("data-target")||i.preventDefault()||(o=s.attr("href"))&&o.replace(/.*(?=#[^\s]+$)/,""),r=t(n),a=r.data("bs.collapse"),l=a?"toggle":s.data(),h=s.attr("data-parent"),p=h&&t(h);a&&a.transitioning||(p&&p.find('[data-toggle="collapse"][data-parent="'+h+'"]').not(s).addClass("collapsed"),s[r.hasClass("in")?"addClass":"removeClass"]("collapsed")),e.call(r,l)})}(jQuery),+function(t){function e(i,o){var s=t.proxy(this.process,this);this.$body=t("body"),this.$scrollElement=t(t(i).is("body")?window:i),this.options=t.extend({},e.DEFAULTS,o),this.selector=(this.options.target||"")+" .nav li > a",this.offsets=[],this.targets=[],this.activeTarget=null,this.scrollHeight=0,this.$scrollElement.on("scroll.bs.scrollspy",s),this.refresh(),this.process()}function i(i){return this.each(function(){var o=t(this),s=o.data("bs.scrollspy"),n="object"==typeof i&&i;s||o.data("bs.scrollspy",s=new e(this,n)),"string"==typeof i&&s[i]()})}e.VERSION="3.2.0",e.DEFAULTS={offset:10},e.prototype.getScrollHeight=function(){return this.$scrollElement[0].scrollHeight||Math.max(this.$body[0].scrollHeight,document.documentElement.scrollHeight)},e.prototype.refresh=function(){var e="offset",i=0;t.isWindow(this.$scrollElement[0])||(e="position",i=this.$scrollElement.scrollTop()),this.offsets=[],this.targets=[],this.scrollHeight=this.getScrollHeight();var o=this;this.$body.find(this.selector).map(function(){var o=t(this),s=o.data("target")||o.attr("href"),n=/^#./.test(s)&&t(s);return n&&n.length&&n.is(":visible")&&[[n[e]().top+i,s]]||null}).sort(function(t,e){return t[0]-e[0]}).each(function(){o.offsets.push(this[0]),o.targets.push(this[1])})},e.prototype.process=function(){var t,e=this.$scrollElement.scrollTop()+this.options.offset,i=this.getScrollHeight(),o=this.options.offset+i-this.$scrollElement.height(),s=this.offsets,n=this.targets,r=this.activeTarget;if(this.scrollHeight!=i&&this.refresh(),e>=o)return r!=(t=n[n.length-1])&&this.activate(t);if(r&&e<=s[0])return r!=(t=n[0])&&this.activate(t);for(t=s.length;t--;)r!=n[t]&&e>=s[t]&&(!s[t+1]||e<=s[t+1])&&this.activate(n[t])},e.prototype.activate=function(e){this.activeTarget=e,t(this.selector).parentsUntil(this.options.target,".active").removeClass("active");var i=this.selector+'[data-target="'+e+'"],'+this.selector+'[href="'+e+'"]',o=t(i).parents("li").addClass("active");o.parent(".dropdown-menu").length&&(o=o.closest("li.dropdown").addClass("active")),o.trigger("activate.bs.scrollspy")};var o=t.fn.scrollspy;t.fn.scrollspy=i,t.fn.scrollspy.Constructor=e,t.fn.scrollspy.noConflict=function(){return t.fn.scrollspy=o,this},t(window).on("load.bs.scrollspy.data-api",function(){t('[data-spy="scroll"]').each(function(){var e=t(this);i.call(e,e.data())})})}(jQuery),+function(t){function e(){var t=document.createElement("bootstrap"),e={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"};for(var i in e)if(void 0!==t.style[i])return{end:e[i]};return!1}t.fn.emulateTransitionEnd=function(e){var i=!1,o=this;t(this).one("bsTransitionEnd",function(){i=!0});var s=function(){i||t(o).trigger(t.support.transition.end)};return setTimeout(s,e),this},t(function(){t.support.transition=e(),t.support.transition&&(t.event.special.bsTransitionEnd={bindType:t.support.transition.end,delegateType:t.support.transition.end,handle:function(e){return t(e.target).is(this)?e.handleObj.handler.apply(this,arguments):void 0}})})}(jQuery);
+if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires jQuery");+function(t){"use strict";function e(e){return this.each(function(){var i=t(this),s=i.data("bs.alert");s||i.data("bs.alert",s=new o(this)),"string"==typeof e&&s[e].call(i)})}var i='[data-dismiss="alert"]',o=function(e){t(e).on("click",i,this.close)};o.VERSION="3.2.0",o.prototype.close=function(e){function i(){n.detach().trigger("closed.bs.alert").remove()}var o=t(this),s=o.attr("data-target");s||(s=o.attr("href"),s=s&&s.replace(/.*(?=#[^\s]*$)/,""));var n=t(s);e&&e.preventDefault(),n.length||(n=o.hasClass("alert")?o:o.parent()),n.trigger(e=t.Event("close.bs.alert")),e.isDefaultPrevented()||(n.removeClass("in"),t.support.transition&&n.hasClass("fade")?n.one("bsTransitionEnd",i).emulateTransitionEnd(150):i())};var s=t.fn.alert;t.fn.alert=e,t.fn.alert.Constructor=o,t.fn.alert.noConflict=function(){return t.fn.alert=s,this},t(document).on("click.bs.alert.data-api",i,o.prototype.close)}(jQuery),+function(t){"use strict";function e(e){return this.each(function(){var o=t(this),s=o.data("bs.button"),n="object"==typeof e&&e;s||o.data("bs.button",s=new i(this,n)),"toggle"==e?s.toggle():e&&s.setState(e)})}var i=function(e,o){this.$element=t(e),this.options=t.extend({},i.DEFAULTS,o),this.isLoading=!1};i.VERSION="3.2.0",i.DEFAULTS={loadingText:"loading..."},i.prototype.setState=function(e){var i="disabled",o=this.$element,s=o.is("input")?"val":"html",n=o.data();e+="Text",null==n.resetText&&o.data("resetText",o[s]()),o[s](null==n[e]?this.options[e]:n[e]),setTimeout(t.proxy(function(){"loadingText"==e?(this.isLoading=!0,o.addClass(i).attr(i,i)):this.isLoading&&(this.isLoading=!1,o.removeClass(i).removeAttr(i))},this),0)},i.prototype.toggle=function(){var t=!0,e=this.$element.closest('[data-toggle="buttons"]');if(e.length){var i=this.$element.find("input");"radio"==i.prop("type")&&(i.prop("checked")&&this.$element.hasClass("active")?t=!1:e.find(".active").removeClass("active")),t&&i.prop("checked",!this.$element.hasClass("active")).trigger("change")}t&&this.$element.toggleClass("active")};var o=t.fn.button;t.fn.button=e,t.fn.button.Constructor=i,t.fn.button.noConflict=function(){return t.fn.button=o,this},t(document).on("click.bs.button.data-api",'[data-toggle^="button"]',function(i){var o=t(i.target);o.hasClass("btn")||(o=o.closest(".btn")),e.call(o,"toggle"),i.preventDefault()})}(jQuery),+function(t){"use strict";function e(e){return this.each(function(){var o=t(this),s=o.data("bs.carousel"),n=t.extend({},i.DEFAULTS,o.data(),"object"==typeof e&&e),r="string"==typeof e?e:n.slide;s||o.data("bs.carousel",s=new i(this,n)),"number"==typeof e?s.to(e):r?s[r]():n.interval&&s.pause().cycle()})}var i=function(e,i){this.$element=t(e).on("keydown.bs.carousel",t.proxy(this.keydown,this)),this.$indicators=this.$element.find(".carousel-indicators"),this.options=i,this.paused=this.sliding=this.interval=this.$active=this.$items=null,"hover"==this.options.pause&&this.$element.on("mouseenter.bs.carousel",t.proxy(this.pause,this)).on("mouseleave.bs.carousel",t.proxy(this.cycle,this))};i.VERSION="3.2.0",i.DEFAULTS={interval:5e3,pause:"hover",wrap:!0},i.prototype.keydown=function(t){switch(t.which){case 37:this.prev();break;case 39:this.next();break;default:return}t.preventDefault()},i.prototype.cycle=function(e){return e||(this.paused=!1),this.interval&&clearInterval(this.interval),this.options.interval&&!this.paused&&(this.interval=setInterval(t.proxy(this.next,this),this.options.interval)),this},i.prototype.getItemIndex=function(t){return this.$items=t.parent().children(".item"),this.$items.index(t||this.$active)},i.prototype.to=function(e){var i=this,o=this.getItemIndex(this.$active=this.$element.find(".item.active"));return e>this.$items.length-1||0>e?void 0:this.sliding?this.$element.one("slid.bs.carousel",function(){i.to(e)}):o==e?this.pause().cycle():this.slide(e>o?"next":"prev",t(this.$items[e]))},i.prototype.pause=function(e){return e||(this.paused=!0),this.$element.find(".next, .prev").length&&t.support.transition&&(this.$element.trigger(t.support.transition.end),this.cycle(!0)),this.interval=clearInterval(this.interval),this},i.prototype.next=function(){return this.sliding?void 0:this.slide("next")},i.prototype.prev=function(){return this.sliding?void 0:this.slide("prev")},i.prototype.slide=function(e,i){var o=this.$element.find(".item.active"),s=i||o[e](),n=this.interval,r="next"==e?"left":"right",a="next"==e?"first":"last",l=this;if(!s.length){if(!this.options.wrap)return;s=this.$element.find(".item")[a]()}if(s.hasClass("active"))return this.sliding=!1;var h=s[0],p=t.Event("slide.bs.carousel",{relatedTarget:h,direction:r});if(this.$element.trigger(p),!p.isDefaultPrevented()){if(this.sliding=!0,n&&this.pause(),this.$indicators.length){this.$indicators.find(".active").removeClass("active");var c=t(this.$indicators.children()[this.getItemIndex(s)]);c&&c.addClass("active")}var d=t.Event("slid.bs.carousel",{relatedTarget:h,direction:r});return t.support.transition&&this.$element.hasClass("slide")?(s.addClass(e),s[0].offsetWidth,o.addClass(r),s.addClass(r),o.one("bsTransitionEnd",function(){s.removeClass([e,r].join(" ")).addClass("active"),o.removeClass(["active",r].join(" ")),l.sliding=!1,setTimeout(function(){l.$element.trigger(d)},0)}).emulateTransitionEnd(1e3*o.css("transition-duration").slice(0,-1))):(o.removeClass("active"),s.addClass("active"),this.sliding=!1,this.$element.trigger(d)),n&&this.cycle(),this}};var o=t.fn.carousel;t.fn.carousel=e,t.fn.carousel.Constructor=i,t.fn.carousel.noConflict=function(){return t.fn.carousel=o,this},t(document).on("click.bs.carousel.data-api","[data-slide], [data-slide-to]",function(i){var o,s=t(this),n=t(s.attr("data-target")||(o=s.attr("href"))&&o.replace(/.*(?=#[^\s]+$)/,""));if(n.hasClass("carousel")){var r=t.extend({},n.data(),s.data()),a=s.attr("data-slide-to");a&&(r.interval=!1),e.call(n,r),a&&n.data("bs.carousel").to(a),i.preventDefault()}}),t(window).on("load",function(){t('[data-ride="carousel"]').each(function(){var i=t(this);e.call(i,i.data())})})}(jQuery),+function(t){"use strict";function e(e){e&&3===e.which||(t(s).remove(),t(n).each(function(){var o=i(t(this)),s={relatedTarget:this};o.hasClass("open")&&(o.trigger(e=t.Event("hide.bs.dropdown",s)),e.isDefaultPrevented()||o.removeClass("open").trigger("hidden.bs.dropdown",s))}))}function i(e){var i=e.attr("data-target");i||(i=e.attr("href"),i=i&&/#[A-Za-z]/.test(i)&&i.replace(/.*(?=#[^\s]*$)/,""));var o=i&&t(i);return o&&o.length?o:e.parent()}function o(e){return this.each(function(){var i=t(this),o=i.data("bs.dropdown");o||i.data("bs.dropdown",o=new r(this)),"string"==typeof e&&o[e].call(i)})}var s=".dropdown-backdrop",n='[data-toggle="dropdown"]',r=function(e){t(e).on("click.bs.dropdown",this.toggle)};r.VERSION="3.2.0",r.prototype.toggle=function(o){var s=t(this);if(!s.is(".disabled, :disabled")){var n=i(s),r=n.hasClass("open");if(e(),!r){"ontouchstart"in document.documentElement&&!n.closest(".navbar-nav").length&&t('<div class="dropdown-backdrop"/>').insertAfter(t(this)).on("click",e);var a={relatedTarget:this};if(n.trigger(o=t.Event("show.bs.dropdown",a)),o.isDefaultPrevented())return;s.trigger("focus"),n.toggleClass("open").trigger("shown.bs.dropdown",a)}return!1}},r.prototype.keydown=function(e){if(/(38|40|27)/.test(e.keyCode)){var o=t(this);if(e.preventDefault(),e.stopPropagation(),!o.is(".disabled, :disabled")){var s=i(o),r=s.hasClass("open");if(!r||r&&27==e.keyCode)return 27==e.which&&s.find(n).trigger("focus"),o.trigger("click");var a=" li:not(.divider):visible a",l=s.find('[role="menu"]'+a+', [role="listbox"]'+a);if(l.length){var h=l.index(l.filter(":focus"));38==e.keyCode&&h>0&&h--,40==e.keyCode&&h<l.length-1&&h++,~h||(h=0),l.eq(h).trigger("focus")}}}};var a=t.fn.dropdown;t.fn.dropdown=o,t.fn.dropdown.Constructor=r,t.fn.dropdown.noConflict=function(){return t.fn.dropdown=a,this},t(document).on("click.bs.dropdown.data-api",e).on("click.bs.dropdown.data-api",".dropdown form",function(t){t.stopPropagation()}).on("click.bs.dropdown.data-api",n,r.prototype.toggle).on("keydown.bs.dropdown.data-api",n+', [role="menu"], [role="listbox"]',r.prototype.keydown)}(jQuery),+function(t){"use strict";function e(e,o){return this.each(function(){var s=t(this),n=s.data("bs.modal"),r=t.extend({},i.DEFAULTS,s.data(),"object"==typeof e&&e);n||s.data("bs.modal",n=new i(this,r)),"string"==typeof e?n[e](o):r.show&&n.show(o)})}var i=function(e,i){this.options=i,this.$body=t(document.body),this.$element=t(e),this.$backdrop=this.isShown=null,this.scrollbarWidth=0,this.options.remote&&this.$element.find(".modal-content").load(this.options.remote,t.proxy(function(){this.$element.trigger("loaded.bs.modal")},this))};i.VERSION="3.2.0",i.DEFAULTS={backdrop:!0,keyboard:!0,show:!0},i.prototype.toggle=function(t){return this.isShown?this.hide():this.show(t)},i.prototype.show=function(e){var i=this,o=t.Event("show.bs.modal",{relatedTarget:e});this.$element.trigger(o),this.isShown||o.isDefaultPrevented()||(this.isShown=!0,this.checkScrollbar(),this.$body.addClass("modal-open"),this.setScrollbar(),this.escape(),this.$element.on("click.dismiss.bs.modal",'[data-dismiss="modal"]',t.proxy(this.hide,this)),this.backdrop(function(){var o=t.support.transition&&i.$element.hasClass("fade");i.$element.parent().length||i.$element.appendTo(i.$body),i.$element.show().scrollTop(0),o&&i.$element[0].offsetWidth,i.$element.addClass("in").attr("aria-hidden",!1),i.enforceFocus();var s=t.Event("shown.bs.modal",{relatedTarget:e});o?i.$element.find(".modal-dialog").one("bsTransitionEnd",function(){i.$element.trigger("focus").trigger(s)}).emulateTransitionEnd(300):i.$element.trigger("focus").trigger(s)}))},i.prototype.hide=function(e){e&&e.preventDefault(),e=t.Event("hide.bs.modal"),this.$element.trigger(e),this.isShown&&!e.isDefaultPrevented()&&(this.isShown=!1,this.$body.removeClass("modal-open"),this.resetScrollbar(),this.escape(),t(document).off("focusin.bs.modal"),this.$element.removeClass("in").attr("aria-hidden",!0).off("click.dismiss.bs.modal"),t.support.transition&&this.$element.hasClass("fade")?this.$element.one("bsTransitionEnd",t.proxy(this.hideModal,this)).emulateTransitionEnd(300):this.hideModal())},i.prototype.enforceFocus=function(){t(document).off("focusin.bs.modal").on("focusin.bs.modal",t.proxy(function(t){this.$element[0]===t.target||this.$element.has(t.target).length||this.$element.trigger("focus")},this))},i.prototype.escape=function(){this.isShown&&this.options.keyboard?this.$element.on("keyup.dismiss.bs.modal",t.proxy(function(t){27==t.which&&this.hide()},this)):this.isShown||this.$element.off("keyup.dismiss.bs.modal")},i.prototype.hideModal=function(){var t=this;this.$element.hide(),this.backdrop(function(){t.$element.trigger("hidden.bs.modal")})},i.prototype.removeBackdrop=function(){this.$backdrop&&this.$backdrop.remove(),this.$backdrop=null},i.prototype.backdrop=function(e){var i=this,o=this.$element.hasClass("fade")?"fade":"";if(this.isShown&&this.options.backdrop){var s=t.support.transition&&o;if(this.$backdrop=t('<div class="modal-backdrop '+o+'" />').appendTo(this.$body),this.$element.on("click.dismiss.bs.modal",t.proxy(function(t){t.target===t.currentTarget&&("static"==this.options.backdrop?this.$element[0].focus.call(this.$element[0]):this.hide.call(this))},this)),s&&this.$backdrop[0].offsetWidth,this.$backdrop.addClass("in"),!e)return;s?this.$backdrop.one("bsTransitionEnd",e).emulateTransitionEnd(150):e()}else if(!this.isShown&&this.$backdrop){this.$backdrop.removeClass("in");var n=function(){i.removeBackdrop(),e&&e()};t.support.transition&&this.$element.hasClass("fade")?this.$backdrop.one("bsTransitionEnd",n).emulateTransitionEnd(150):n()}else e&&e()},i.prototype.checkScrollbar=function(){document.body.clientWidth>=window.innerWidth||(this.scrollbarWidth=this.scrollbarWidth||this.measureScrollbar())},i.prototype.setScrollbar=function(){var t=parseInt(this.$body.css("padding-right")||0,10);this.scrollbarWidth&&this.$body.css("padding-right",t+this.scrollbarWidth)},i.prototype.resetScrollbar=function(){this.$body.css("padding-right","")},i.prototype.measureScrollbar=function(){var t=document.createElement("div");t.className="modal-scrollbar-measure",this.$body.append(t);var e=t.offsetWidth-t.clientWidth;return this.$body[0].removeChild(t),e};var o=t.fn.modal;t.fn.modal=e,t.fn.modal.Constructor=i,t.fn.modal.noConflict=function(){return t.fn.modal=o,this},t(document).on("click.bs.modal.data-api",'[data-toggle="modal"]',function(i){var o=t(this),s=o.attr("href"),n=t(o.attr("data-target")||s&&s.replace(/.*(?=#[^\s]+$)/,"")),r=n.data("bs.modal")?"toggle":t.extend({remote:!/#/.test(s)&&s},n.data(),o.data());o.is("a")&&i.preventDefault(),n.one("show.bs.modal",function(t){t.isDefaultPrevented()||n.one("hidden.bs.modal",function(){o.is(":visible")&&o.trigger("focus")})}),e.call(n,r,this)})}(jQuery),+function(t){"use strict";function e(e){return this.each(function(){var o=t(this),s=o.data("bs.tooltip"),n="object"==typeof e&&e;(s||"destroy"!=e)&&(s||o.data("bs.tooltip",s=new i(this,n)),"string"==typeof e&&s[e]())})}var i=function(t,e){this.type=this.options=this.enabled=this.timeout=this.hoverState=this.$element=null,this.init("tooltip",t,e)};i.VERSION="3.2.0",i.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,container:!1,viewport:{selector:"body",padding:0}},i.prototype.init=function(e,i,o){this.enabled=!0,this.type=e,this.$element=t(i),this.options=this.getOptions(o),this.$viewport=this.options.viewport&&t(this.options.viewport.selector||this.options.viewport);for(var s=this.options.trigger.split(" "),n=s.length;n--;){var r=s[n];if("click"==r)this.$element.on("click."+this.type,this.options.selector,t.proxy(this.toggle,this));else if("manual"!=r){var a="hover"==r?"mouseenter":"focusin",l="hover"==r?"mouseleave":"focusout";this.$element.on(a+"."+this.type,this.options.selector,t.proxy(this.enter,this)),this.$element.on(l+"."+this.type,this.options.selector,t.proxy(this.leave,this))}}this.options.selector?this._options=t.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},i.prototype.getDefaults=function(){return i.DEFAULTS},i.prototype.getOptions=function(e){return e=t.extend({},this.getDefaults(),this.$element.data(),e),e.delay&&"number"==typeof e.delay&&(e.delay={show:e.delay,hide:e.delay}),e},i.prototype.getDelegateOptions=function(){var e={},i=this.getDefaults();return this._options&&t.each(this._options,function(t,o){i[t]!=o&&(e[t]=o)}),e},i.prototype.enter=function(e){var i=e instanceof this.constructor?e:t(e.currentTarget).data("bs."+this.type);return i||(i=new this.constructor(e.currentTarget,this.getDelegateOptions()),t(e.currentTarget).data("bs."+this.type,i)),clearTimeout(i.timeout),i.hoverState="in",i.options.delay&&i.options.delay.show?void(i.timeout=setTimeout(function(){"in"==i.hoverState&&i.show()},i.options.delay.show)):i.show()},i.prototype.leave=function(e){var i=e instanceof this.constructor?e:t(e.currentTarget).data("bs."+this.type);return i||(i=new this.constructor(e.currentTarget,this.getDelegateOptions()),t(e.currentTarget).data("bs."+this.type,i)),clearTimeout(i.timeout),i.hoverState="out",i.options.delay&&i.options.delay.hide?void(i.timeout=setTimeout(function(){"out"==i.hoverState&&i.hide()},i.options.delay.hide)):i.hide()},i.prototype.show=function(){var e=t.Event("show.bs."+this.type);if(this.hasContent()&&this.enabled){this.$element.trigger(e);var i=t.contains(document.documentElement,this.$element[0]);if(e.isDefaultPrevented()||!i)return;var o=this,s=this.tip(),n=this.getUID(this.type);this.setContent(),s.attr("id",n),this.$element.attr("aria-describedby",n),this.options.animation&&s.addClass("fade");var r="function"==typeof this.options.placement?this.options.placement.call(this,s[0],this.$element[0]):this.options.placement,a=/\s?auto?\s?/i,l=a.test(r);l&&(r=r.replace(a,"")||"top"),s.detach().css({top:0,left:0,display:"block"}).addClass(r).data("bs."+this.type,this),this.options.container?s.appendTo(this.options.container):s.insertAfter(this.$element);var h=this.getPosition(),p=s[0].offsetWidth,c=s[0].offsetHeight;if(l){var d=r,f=this.$element.parent(),u=this.getPosition(f);r="bottom"==r&&h.top+h.height+c-u.scroll>u.height?"top":"top"==r&&h.top-u.scroll-c<0?"bottom":"right"==r&&h.right+p>u.width?"left":"left"==r&&h.left-p<u.left?"right":r,s.removeClass(d).addClass(r)}var g=this.getCalculatedOffset(r,h,p,c);this.applyPlacement(g,r);var v=function(){o.$element.trigger("shown.bs."+o.type),o.hoverState=null};t.support.transition&&this.$tip.hasClass("fade")?s.one("bsTransitionEnd",v).emulateTransitionEnd(150):v()}},i.prototype.applyPlacement=function(e,i){var o=this.tip(),s=o[0].offsetWidth,n=o[0].offsetHeight,r=parseInt(o.css("margin-top"),10),a=parseInt(o.css("margin-left"),10);isNaN(r)&&(r=0),isNaN(a)&&(a=0),e.top=e.top+r,e.left=e.left+a,t.offset.setOffset(o[0],t.extend({using:function(t){o.css({top:Math.round(t.top),left:Math.round(t.left)})}},e),0),o.addClass("in");var l=o[0].offsetWidth,h=o[0].offsetHeight;"top"==i&&h!=n&&(e.top=e.top+n-h);var p=this.getViewportAdjustedDelta(i,e,l,h);p.left?e.left+=p.left:e.top+=p.top;var c=p.left?2*p.left-s+l:2*p.top-n+h,d=p.left?"left":"top",f=p.left?"offsetWidth":"offsetHeight";o.offset(e),this.replaceArrow(c,o[0][f],d)},i.prototype.replaceArrow=function(t,e,i){this.arrow().css(i,t?50*(1-t/e)+"%":"")},i.prototype.setContent=function(){var t=this.tip(),e=this.getTitle();t.find(".tooltip-inner")[this.options.html?"html":"text"](e),t.removeClass("fade in top bottom left right")},i.prototype.hide=function(){function e(){"in"!=i.hoverState&&o.detach(),i.$element.trigger("hidden.bs."+i.type)}var i=this,o=this.tip(),s=t.Event("hide.bs."+this.type);return this.$element.removeAttr("aria-describedby"),this.$element.trigger(s),s.isDefaultPrevented()?void 0:(o.removeClass("in"),t.support.transition&&this.$tip.hasClass("fade")?o.one("bsTransitionEnd",e).emulateTransitionEnd(150):e(),this.hoverState=null,this)},i.prototype.fixTitle=function(){var t=this.$element;(t.attr("title")||"string"!=typeof t.attr("data-original-title"))&&t.attr("data-original-title",t.attr("title")||"").attr("title","")},i.prototype.hasContent=function(){return this.getTitle()},i.prototype.getPosition=function(e){e=e||this.$element;var i=e[0],o="BODY"==i.tagName;return t.extend({},"function"==typeof i.getBoundingClientRect?i.getBoundingClientRect():null,{scroll:o?document.documentElement.scrollTop||document.body.scrollTop:e.scrollTop(),width:o?t(window).width():e.outerWidth(),height:o?t(window).height():e.outerHeight()},o?{top:0,left:0}:e.offset())},i.prototype.getCalculatedOffset=function(t,e,i,o){return"bottom"==t?{top:e.top+e.height,left:e.left+e.width/2-i/2}:"top"==t?{top:e.top-o,left:e.left+e.width/2-i/2}:"left"==t?{top:e.top+e.height/2-o/2,left:e.left-i}:{top:e.top+e.height/2-o/2,left:e.left+e.width}},i.prototype.getViewportAdjustedDelta=function(t,e,i,o){var s={top:0,left:0};if(!this.$viewport)return s;var n=this.options.viewport&&this.options.viewport.padding||0,r=this.getPosition(this.$viewport);if(/right|left/.test(t)){var a=e.top-n-r.scroll,l=e.top+n-r.scroll+o;a<r.top?s.top=r.top-a:l>r.top+r.height&&(s.top=r.top+r.height-l)}else{var h=e.left-n,p=e.left+n+i;h<r.left?s.left=r.left-h:p>r.width&&(s.left=r.left+r.width-p)}return s},i.prototype.getTitle=function(){var t,e=this.$element,i=this.options;return t=e.attr("data-original-title")||("function"==typeof i.title?i.title.call(e[0]):i.title)},i.prototype.getUID=function(t){do t+=~~(1e6*Math.random());while(document.getElementById(t));return t},i.prototype.tip=function(){return this.$tip=this.$tip||t(this.options.template)},i.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},i.prototype.validate=function(){this.$element[0].parentNode||(this.hide(),this.$element=null,this.options=null)},i.prototype.enable=function(){this.enabled=!0},i.prototype.disable=function(){this.enabled=!1},i.prototype.toggleEnabled=function(){this.enabled=!this.enabled},i.prototype.toggle=function(e){var i=this;e&&(i=t(e.currentTarget).data("bs."+this.type),i||(i=new this.constructor(e.currentTarget,this.getDelegateOptions()),t(e.currentTarget).data("bs."+this.type,i))),i.tip().hasClass("in")?i.leave(i):i.enter(i)},i.prototype.destroy=function(){clearTimeout(this.timeout),this.hide().$element.off("."+this.type).removeData("bs."+this.type)};var o=t.fn.tooltip;t.fn.tooltip=e,t.fn.tooltip.Constructor=i,t.fn.tooltip.noConflict=function(){return t.fn.tooltip=o,this}}(jQuery),+function(t){"use strict";function e(e){return this.each(function(){var o=t(this),s=o.data("bs.popover"),n="object"==typeof e&&e;(s||"destroy"!=e)&&(s||o.data("bs.popover",s=new i(this,n)),"string"==typeof e&&s[e]())})}var i=function(t,e){this.init("popover",t,e)};if(!t.fn.tooltip)throw new Error("Popover requires tooltip.js");i.VERSION="3.2.0",i.DEFAULTS=t.extend({},t.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),i.prototype=t.extend({},t.fn.tooltip.Constructor.prototype),i.prototype.constructor=i,i.prototype.getDefaults=function(){return i.DEFAULTS},i.prototype.setContent=function(){var t=this.tip(),e=this.getTitle(),i=this.getContent();t.find(".popover-title")[this.options.html?"html":"text"](e),t.find(".popover-content").empty()[this.options.html?"string"==typeof i?"html":"append":"text"](i),t.removeClass("fade top bottom left right in"),t.find(".popover-title").html()||t.find(".popover-title").hide()},i.prototype.hasContent=function(){return this.getTitle()||this.getContent()},i.prototype.getContent=function(){var t=this.$element,e=this.options;return t.attr("data-content")||("function"==typeof e.content?e.content.call(t[0]):e.content)},i.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")},i.prototype.tip=function(){return this.$tip||(this.$tip=t(this.options.template)),this.$tip};var o=t.fn.popover;t.fn.popover=e,t.fn.popover.Constructor=i,t.fn.popover.noConflict=function(){return t.fn.popover=o,this}}(jQuery),+function(t){"use strict";function e(e){return this.each(function(){var o=t(this),s=o.data("bs.tab");s||o.data("bs.tab",s=new i(this)),"string"==typeof e&&s[e]()})}var i=function(e){this.element=t(e)};i.VERSION="3.2.0",i.prototype.show=function(){var e=this.element,i=e.closest("ul:not(.dropdown-menu)"),o=e.data("target");if(o||(o=e.attr("href"),o=o&&o.replace(/.*(?=#[^\s]*$)/,"")),!e.parent("li").hasClass("active")){var s=i.find(".active:last a")[0],n=t.Event("show.bs.tab",{relatedTarget:s});if(e.trigger(n),!n.isDefaultPrevented()){var r=t(o);this.activate(e.closest("li"),i),this.activate(r,r.parent(),function(){e.trigger({type:"shown.bs.tab",relatedTarget:s})})}}},i.prototype.activate=function(e,i,o){function s(){n.removeClass("active").find("> .dropdown-menu > .active").removeClass("active"),e.addClass("active"),r?(e[0].offsetWidth,e.addClass("in")):e.removeClass("fade"),e.parent(".dropdown-menu")&&e.closest("li.dropdown").addClass("active"),o&&o()}var n=i.find("> .active"),r=o&&t.support.transition&&n.hasClass("fade");r?n.one("bsTransitionEnd",s).emulateTransitionEnd(150):s(),n.removeClass("in")};var o=t.fn.tab;t.fn.tab=e,t.fn.tab.Constructor=i,t.fn.tab.noConflict=function(){return t.fn.tab=o,this},t(document).on("click.bs.tab.data-api",'[data-toggle="tab"], [data-toggle="pill"]',function(i){i.preventDefault(),e.call(t(this),"show")})}(jQuery),+function(t){"use strict";function e(e){return this.each(function(){var o=t(this),s=o.data("bs.affix"),n="object"==typeof e&&e;s||o.data("bs.affix",s=new i(this,n)),"string"==typeof e&&s[e]()})}var i=function(e,o){this.options=t.extend({},i.DEFAULTS,o),this.$target=t(this.options.target).on("scroll.bs.affix.data-api",t.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",t.proxy(this.checkPositionWithEventLoop,this)),this.$element=t(e),this.affixed=this.unpin=this.pinnedOffset=null,this.checkPosition()};i.VERSION="3.2.0",i.RESET="affix affix-top affix-bottom",i.DEFAULTS={offset:0,target:window},i.prototype.getPinnedOffset=function(){if(this.pinnedOffset)return this.pinnedOffset;this.$element.removeClass(i.RESET).addClass("affix");var t=this.$target.scrollTop(),e=this.$element.offset();return this.pinnedOffset=e.top-t},i.prototype.checkPositionWithEventLoop=function(){setTimeout(t.proxy(this.checkPosition,this),1)},i.prototype.checkPosition=function(){if(this.$element.is(":visible")){var e=t(document).height(),o=this.$target.scrollTop(),s=this.$element.offset(),n=this.options.offset,r=n.top,a=n.bottom;"object"!=typeof n&&(a=r=n),"function"==typeof r&&(r=n.top(this.$element)),"function"==typeof a&&(a=n.bottom(this.$element));var l=null!=this.unpin&&o+this.unpin<=s.top?!1:null!=a&&s.top+this.$element.height()>=e-a?"bottom":null!=r&&r>=o?"top":!1;if(this.affixed!==l){null!=this.unpin&&this.$element.css("top","");var h="affix"+(l?"-"+l:""),p=t.Event(h+".bs.affix");this.$element.trigger(p),p.isDefaultPrevented()||(this.affixed=l,this.unpin="bottom"==l?this.getPinnedOffset():null,this.$element.removeClass(i.RESET).addClass(h).trigger(t.Event(h.replace("affix","affixed"))),"bottom"==l&&this.$element.offset({top:e-this.$element.height()-a}))}}};var o=t.fn.affix;t.fn.affix=e,t.fn.affix.Constructor=i,t.fn.affix.noConflict=function(){return t.fn.affix=o,this},t(window).on("load",function(){t('[data-spy="affix"]').each(function(){var i=t(this),o=i.data();o.offset=o.offset||{},o.offsetBottom&&(o.offset.bottom=o.offsetBottom),o.offsetTop&&(o.offset.top=o.offsetTop),e.call(i,o)})})}(jQuery),+function(t){"use strict";function e(e){return this.each(function(){var o=t(this),s=o.data("bs.collapse"),n=t.extend({},i.DEFAULTS,o.data(),"object"==typeof e&&e);!s&&n.toggle&&"show"==e&&(e=!e),s||o.data("bs.collapse",s=new i(this,n)),"string"==typeof e&&s[e]()})}var i=function(e,o){this.$element=t(e),this.options=t.extend({},i.DEFAULTS,o),this.transitioning=null,this.options.parent&&(this.$parent=t(this.options.parent)),this.options.toggle&&this.toggle()};i.VERSION="3.2.0",i.DEFAULTS={toggle:!0},i.prototype.dimension=function(){var t=this.$element.hasClass("width");return t?"width":"height"},i.prototype.show=function(){if(!this.transitioning&&!this.$element.hasClass("in")){var i=t.Event("show.bs.collapse");if(this.$element.trigger(i),!i.isDefaultPrevented()){var o=this.$parent&&this.$parent.find("> .panel > .in");if(o&&o.length){var s=o.data("bs.collapse");if(s&&s.transitioning)return;e.call(o,"hide"),s||o.data("bs.collapse",null)}var n=this.dimension();this.$element.removeClass("collapse").addClass("collapsing")[n](0),this.transitioning=1;var r=function(){this.$element.removeClass("collapsing").addClass("collapse in")[n](""),this.transitioning=0,this.$element.trigger("shown.bs.collapse")};if(!t.support.transition)return r.call(this);var a=t.camelCase(["scroll",n].join("-"));this.$element.one("bsTransitionEnd",t.proxy(r,this)).emulateTransitionEnd(350)[n](this.$element[0][a])}}},i.prototype.hide=function(){if(!this.transitioning&&this.$element.hasClass("in")){var e=t.Event("hide.bs.collapse");if(this.$element.trigger(e),!e.isDefaultPrevented()){var i=this.dimension();this.$element[i](this.$element[i]())[0].offsetHeight,this.$element.addClass("collapsing").removeClass("collapse").removeClass("in"),this.transitioning=1;var o=function(){this.transitioning=0,this.$element.trigger("hidden.bs.collapse").removeClass("collapsing").addClass("collapse")};return t.support.transition?void this.$element[i](0).one("bsTransitionEnd",t.proxy(o,this)).emulateTransitionEnd(350):o.call(this)}}},i.prototype.toggle=function(){this[this.$element.hasClass("in")?"hide":"show"]()};var o=t.fn.collapse;t.fn.collapse=e,t.fn.collapse.Constructor=i,t.fn.collapse.noConflict=function(){return t.fn.collapse=o,this},t(document).on("click.bs.collapse.data-api",'[data-toggle="collapse"]',function(i){var o,s=t(this),n=s.attr("data-target")||i.preventDefault()||(o=s.attr("href"))&&o.replace(/.*(?=#[^\s]+$)/,""),r=t(n),a=r.data("bs.collapse"),l=a?"toggle":s.data(),h=s.attr("data-parent"),p=h&&t(h);a&&a.transitioning||(p&&p.find('[data-toggle="collapse"][data-parent="'+h+'"]').not(s).addClass("collapsed"),s[r.hasClass("in")?"addClass":"removeClass"]("collapsed")),e.call(r,l)})}(jQuery),+function(t){"use strict";function e(i,o){var s=t.proxy(this.process,this);this.$body=t("body"),this.$scrollElement=t(t(i).is("body")?window:i),this.options=t.extend({},e.DEFAULTS,o),this.selector=(this.options.target||"")+" .nav li > a",this.offsets=[],this.targets=[],this.activeTarget=null,this.scrollHeight=0,this.$scrollElement.on("scroll.bs.scrollspy",s),this.refresh(),this.process()}function i(i){return this.each(function(){var o=t(this),s=o.data("bs.scrollspy"),n="object"==typeof i&&i;s||o.data("bs.scrollspy",s=new e(this,n)),"string"==typeof i&&s[i]()})}e.VERSION="3.2.0",e.DEFAULTS={offset:10},e.prototype.getScrollHeight=function(){return this.$scrollElement[0].scrollHeight||Math.max(this.$body[0].scrollHeight,document.documentElement.scrollHeight)},e.prototype.refresh=function(){var e="offset",i=0;t.isWindow(this.$scrollElement[0])||(e="position",i=this.$scrollElement.scrollTop()),this.offsets=[],this.targets=[],this.scrollHeight=this.getScrollHeight();var o=this;this.$body.find(this.selector).map(function(){var o=t(this),s=o.data("target")||o.attr("href"),n=/^#./.test(s)&&t(s);return n&&n.length&&n.is(":visible")&&[[n[e]().top+i,s]]||null}).sort(function(t,e){return t[0]-e[0]}).each(function(){o.offsets.push(this[0]),o.targets.push(this[1])})},e.prototype.process=function(){var t,e=this.$scrollElement.scrollTop()+this.options.offset,i=this.getScrollHeight(),o=this.options.offset+i-this.$scrollElement.height(),s=this.offsets,n=this.targets,r=this.activeTarget;if(this.scrollHeight!=i&&this.refresh(),e>=o)return r!=(t=n[n.length-1])&&this.activate(t);if(r&&e<=s[0])return r!=(t=n[0])&&this.activate(t);for(t=s.length;t--;)r!=n[t]&&e>=s[t]&&(!s[t+1]||e<=s[t+1])&&this.activate(n[t])},e.prototype.activate=function(e){this.activeTarget=e,t(this.selector).parentsUntil(this.options.target,".active").removeClass("active");var i=this.selector+'[data-target="'+e+'"],'+this.selector+'[href="'+e+'"]',o=t(i).parents("li").addClass("active");o.parent(".dropdown-menu").length&&(o=o.closest("li.dropdown").addClass("active")),o.trigger("activate.bs.scrollspy")};var o=t.fn.scrollspy;t.fn.scrollspy=i,t.fn.scrollspy.Constructor=e,t.fn.scrollspy.noConflict=function(){return t.fn.scrollspy=o,this},t(window).on("load.bs.scrollspy.data-api",function(){t('[data-spy="scroll"]').each(function(){var e=t(this);i.call(e,e.data())})})}(jQuery),+function(t){"use strict";function e(){var t=document.createElement("bootstrap"),e={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"};for(var i in e)if(void 0!==t.style[i])return{end:e[i]};return!1}t.fn.emulateTransitionEnd=function(e){var i=!1,o=this;t(this).one("bsTransitionEnd",function(){i=!0});var s=function(){i||t(o).trigger(t.support.transition.end)};return setTimeout(s,e),this},t(function(){t.support.transition=e(),t.support.transition&&(t.event.special.bsTransitionEnd={bindType:t.support.transition.end,delegateType:t.support.transition.end,handle:function(e){return t(e.target).is(this)?e.handleObj.handler.apply(this,arguments):void 0}})})}(jQuery);
 define("bootstrapjs", function(){});
 
 // Uploads any data that is present in the uploadq to the server
@@ -8344,10 +8685,10 @@ define('views/full_download',[
 });
 
 //This view contains the links to add and list pages of entities, the sync button, logout link, online-offline indicator
-define('views/dashboard',['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download' ],
+define('views/dashboard',['jquery', 'underscore', 'configs', 'indexeddb_backbone_config', 'collections/upload_collection', 'views/upload', 'views/incremental_download', 'views/notification', 'layoutmanager', 'models/user_model', 'auth', 'offline_utils', 'views/full_download'],
 
 function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDownloadView, notifs_view, layoutmanager, User, Auth, Offline, FullDownloadView) {
-
+    
     var DashboardView = Backbone.Layout.extend({
         template: "#dashboard",
         events: {
@@ -8403,11 +8744,11 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                     enable_months = configs[member].dashboard_display.enable_months;
                 }
                 if(typeof enable_months != 'undefined'){
-                	var d = new Date();
+                  var d = new Date();
                     n = d.getMonth() + 1;
                     res = $.inArray(n, enable_months);
                     if(res === -1){
-                    	add = false;
+                      add = false;
                     }
                 }
                 if (listing || add) {
@@ -8459,9 +8800,10 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             }
             else{
                 $('#sync').attr('disabled', true);
+                
             }
         },
-        
+         
         //enable add, list links
         db_downloaded: function() {
             $('.list_items')
@@ -8471,6 +8813,17 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
             console.log("Dashboard links enabled");
             $("#helptext")
                 .hide();
+            if(User.isOnline()){
+                $('#sync').removeAttr("disabled");
+                $('#export').attr('disabled', true);
+            }
+            else{
+                $('#sync').attr('disabled', true);
+                if (upload_collection.length >= 1){
+                    $('#export').removeAttr("disabled");    
+                }
+                
+            }
         },
 
         //disable add, list links
@@ -8575,13 +8928,12 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
                 notifs_view.add_alert({
                     notif_type: "error",
                     message: "Failed to download the database : " + error
-                });
+                    });
                 dfd.reject();
             });
             return dfd;
         },
 
-        //method to initiate upload
         upload: function() {
             var dfd = $.Deferred();
             if (!this.upload_v) {
@@ -8662,9 +9014,9 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
 });
 
 //This view the page header containt the branding, and the user profile - along with the username and logout action.
-define('views/app_header',['jquery', 'underscore', 'configs', 'layoutmanager', 'models/user_model', 'auth'],
+define('views/app_header',['jquery', 'underscore', 'configs', 'layoutmanager', 'models/user_model', 'auth', 'collections/upload_collection'],
 
-function(jquery, pass, configs, layoutmanager, User, Auth) {
+function(jquery, pass, configs, layoutmanager, User, Auth, upload_collection) {
 
     var HeaderView = Backbone.Layout.extend({
         template: "#page_header",
@@ -8721,6 +9073,7 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
         user_online: function() {
             $('#sync')
                 .removeAttr("disabled");
+            $('#export').attr('disabled', true);
             $('#offline')
                 .hide();
             $('#online')
@@ -8951,7 +9304,7 @@ var TableTools;
 
 
 var factory = function( $, DataTable ) {
-
+"use strict";
 
 
 //include ZeroClipboard.js
@@ -12190,6 +12543,15 @@ define('views/list',['jquery', 'underscore', 'datatables', 'indexeddb_backbone_c
             // fill the table with the relevant values.
             var self = this;
             var language = User.get('language');
+            if (this.entity_config.entity_name == this.entity_config.list_var_check){
+                var filtered_collection = new Backbone.Collection(entity_collection.filter(function(model) {
+                    return model.get('parentcategory').id == User.get("type_of_cocouser")|model.get('parentcategory').id == null;
+                    entity_collection = entity_collection
+                })); 
+            }
+            else{
+                entity_collection = entity_collection
+            }
             console.log("in render_data...change in collection...rendering list view");
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
                 return [self.get_row(model)];
@@ -12640,6 +13002,7 @@ var message_combined_failure = "";
                         success: function(u_model) {
                             // successfully saved in uploadQ
                             console.log("FORMCNTROLLER: model added to uploadqueue - " + JSON.stringify(u_model.toJSON()));
+                            $('#export').removeAttr('disabled');
                             return dfd.resolve(off_m.toJSON());
                         },
                         error: function(error) {
@@ -12729,7 +13092,6 @@ var message_combined_failure = "";
     // Our module now returns our view
     return FormControllerView;
 });
-
 // This is the home/status view shown at root url. It contains the welcome message, usage instructions and some offline db stats.
 // It checks whether offline db exists or not, if not initiates the full download module.
 
@@ -12744,7 +13106,7 @@ define('views/status',[
     'views/notification',
     'models/user_model',
     'offline_utils',
-    'indexeddb-backbone'
+    'indexeddb-backbone',
 ], function(jquery, underscore, layoutmanager, indexeddb, FullDownloadView, configs, upload_collection, notifs_view, User, Offline) {
 
     var StatusView = Backbone.Layout.extend({
@@ -12753,7 +13115,8 @@ define('views/status',[
         upload_entries: null,
         events: {
             "click button#download": "download",
-            "click button#reset_database": "reset"
+            "click button#reset_database": "reset",
+            "click #export": "export",
         },
 
         initialize: function() {
@@ -12819,6 +13182,84 @@ define('views/status',[
 
         },
 
+
+        destroyClickedElement: function(event){
+            document.body.removeChild(event.target);
+        },
+
+        saveToFile: function(filedata){
+            var that =this;
+            var jsonData = JSON.stringify(filedata);
+            var textToSaveAsBlob = new Blob([jsonData], {type:"application/json"});
+            var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+            var user_id = User.get('user_id')
+            var dt = new Date($.now());
+            var fileNameToSaveAs = user_id + "-" +dt.getDate() + "-" + dt.getMonth() + "-" + dt.getFullYear() + "-"+ "export-data.json";
+            var downloadLink = document.createElement("a");
+            downloadLink.download = fileNameToSaveAs;
+            downloadLink.innerHTML = "Download File";
+            downloadLink.href = textToSaveAsURL;
+            downloadLink.onclick = that.destroyClickedElement;
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+        },
+
+        export: function(dfd) {
+            var that = this;
+            var dfd = $.Deferred();
+            var listing=[]
+            listItem = "uploadqueue"
+            var filedata = {};
+            Offline.fetch_collection(listItem)
+                .done(function(collection) {
+                   data=JSON.stringify(collection.toJSON());
+                   filedata[listItem]=data;
+                   Offline.fetch_collection("user")
+                        .done(function(collection) {
+                           userdata=JSON.stringify(collection.toJSON());
+                           filedata['user']=userdata;
+                           that.saveToFile(filedata);
+                           // empty the uploadqueue
+                            _.times(upload_collection.length, function(i){
+                                var current_model = upload_collection.shift()
+                                // delete the object from offline db if its add case
+                                Offline.delete_object(null, current_model.attributes.entity_name, current_model.attributes.data.id)
+                                    .done(function(off_model) {
+                                        console.log(off_model)
+                                        off_model.destroy()
+                                        current_model.destroy();
+                                        $('#export').attr('disabled', true);
+                                        dfd.resolve();
+
+                                    })
+                                    .fail(function(off_model, error) {
+                                        console.log(error);
+                                    });
+                                
+                            });
+                            
+                        })
+                        .fail(function() {
+                            console.log("Not able to fetch user data");
+                            filedata[listItem]=JSON.stringify([]);
+                            that.saveToFile(filedata);
+                        }); 
+                   
+                })
+                .fail(function() {
+                    console.log("Not able to fetch data");
+                    filedata[listItem]=JSON.stringify([]);
+                    that.saveToFile(filedata);
+                });                        
+            
+            },
+        
+        //method to initiate upload
+        setCollections: function(collection,data){
+            collection = data;
+        },
+
         //method to initiate full download
         download: function() {
             var dfd = new $.Deferred();
@@ -12848,6 +13289,20 @@ define('views/status',[
                     dfd.reject();
                 });
             return dfd;
+        },
+        
+        afterRender: function() { 
+            if(User.isOnline()){
+                $('#export').attr("disabled", true);
+            }
+            else{
+                if (upload_collection.length >= 1){
+                    $('#export').removeAttr("disabled");    
+                }else{
+                    $('#export').attr("disabled", true);
+                }
+                
+            }
         },
 
         // Resets the offline db
@@ -13415,8 +13870,7 @@ require.config({
         'date_picker': 'libs/bootstrap/js/bootstrap-datepicker',
         'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',
         'jquery_cookie': 'libs/jquery.cookie',
-        'TableTools': 'libs/tabletools_media/js/dataTables.tableTools',
-        'configs': '../../../configs'
+        'TableTools': 'libs/tabletools_media/js/dataTables.tableTools'
     },
 
     //specifying dependencies of non-amd libraries

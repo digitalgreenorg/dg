@@ -10,6 +10,8 @@ from django.db.models import Count
 import dg.settings
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, HelplineCallLog
 
+from loop.utils.ivr_helpline.helpline_data import helpline_data
+
 class Command(BaseCommand):
 
     def send_mail(self,total_pending_call_count,
@@ -19,6 +21,8 @@ class Command(BaseCommand):
             yesterday_received_call_count,
             yesterday_resolved_call_count):
 
+        working_hours_start = helpline_data['working_hours_start']
+        working_hours_end = helpline_data['working_hours_end']
         today_date = datetime.datetime.now().date()
         yesterday_date = today_date-timedelta(days=1)
         subject = "Loop IVR Helpline Call Status"
@@ -37,11 +41,11 @@ class Command(BaseCommand):
                     '<table>',
                     '<tr><th>Parameters</th><th>Count</th></tr>',
                     '<tr><td>Total Pending Calls Till Now (Received during Operational Hours)</td><td> %s</td></tr>'%(total_pending_call_count,),
-                    '<tr><td>Total Received Calls on %s from 9:00 AM to 6:00 PM</td><td> %s</td></tr>'%(yesterday_date,yesterday_received_call_count),
-                    '<tr><td>Total Attended Calls on %s from 9:00 AM to 6:00 PM</td><td> %s</td></tr>'%(yesterday_date,yesterday_resolved_call_count),
+                    '<tr><td>Total Received Calls on %s from %s:00 AM to %s:00 PM</td><td> %s</td></tr>'%(yesterday_date,working_hours_start,working_hours_end%12,yesterday_received_call_count),
+                    '<tr><td>Total Attended Calls on %s from %s:00 AM to %s:00 PM</td><td> %s</td></tr>'%(yesterday_date,working_hours_start,working_hours_end%12,yesterday_resolved_call_count),
                     '<tr><td>Total Declined Calls Till now</td><td> %s</td></tr>'%(total_declined_call_count,),
                     '<tr><td>Total Declined Calls on %s</td><td> %s</td></tr>'%(yesterday_date,yesterday_declined_call_count),
-                    '<tr><td>Total Received Calls During Off Hours i.e. 6:00 PM, %s to 9:00 AM, %s</td><td> %s</td></tr>'%(yesterday_date,today_date,yesterday_off_hours_incoming_call_count),
+                    '<tr><td>Total Received Calls During Off Hours i.e. %s:00 PM, %s to %s:00 AM, %s</td><td> %s</td></tr>'%(working_hours_end%12,yesterday_date,working_hours_start,today_date,yesterday_off_hours_incoming_call_count),
                     '</table>',
                     '<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>',
                     'Disclaimer: Please note that it\'s a automated system generated mail intended to provide notification for approximate number of OFF hours calls. ',
@@ -54,33 +58,44 @@ class Command(BaseCommand):
         msg.content_subtype = "html"
         msg.send()
 
-    def handle(self, *args, **options):
-        # Change dates from Yesterday 6:00 PM to Today 9:00 AM (Non-Operational Hours of Helpline).
-        today_date = datetime.datetime.now().replace(hour=9,minute=0,second=0)
-        yesterday_date = today_date-timedelta(days=1)
-        yesterday_date_morning = yesterday_date.replace(hour=9,minute=0,second=0)
-        yesterday_date_evening = yesterday_date.replace(hour=18,minute=0,second=0)
-        working_hours = range(9,18)
-        total_pending_call_count = 0
-        # Total Calls declined Till now from beginning.
-        total_declined_call_count = HelplineIncoming.objects.filter(call_status=2).count()
-        # Total Calls received by unique callers in working hours of previous day (i.e. 9 AM to 6 PM).
-        yesterday_received_call_count = HelplineIncoming.objects.filter(incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
-        # Total Calls received by unique callers and resolved within working hours of previous day (i.e. 9 AM to 6 PM).
-        yesterday_resolved_call_count = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
-        # Total Calls received by unique callers in non-working hours i.e. 6 PM of previous day to 9 AM of today.
-        yesterday_off_hours_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date_evening,start_time__lte=today_date).count()
-        # Total pending Calls that were not addressed for last two days,hence turned into declined previous day.
-        today_date = datetime.datetime.now().date()
-        yesterday_date = today_date-timedelta(days=1)
-        yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date,time_modified__lt=today_date).count()
-        pending_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
-        for call in pending_call:
+    def during_working_hour(self,call_obj):
+        working_hours_start = helpline_data['working_hours_start']
+        working_hours_end = helpline_data['working_hours_end']
+        working_hours = range(working_hours_start,working_hours_end)
+        count = 0
+        for call in call_obj:
             incoming_hour = call['incoming_time'].hour
             last_incoming_hour = call['last_incoming_time'].hour
-            # Count Pending calls of working hours i.e. incoming time and last incoming time between 9 AM to 6 PM
+            # Count calls of working hours i.e. incoming time and last incoming time between 9 AM to 6 PM
             if (incoming_hour in working_hours) and (last_incoming_hour in working_hours):
-                total_pending_call_count += 1
+                count += 1   
+        return count     
+
+    def handle(self, *args, **options):
+        working_hours_start = helpline_data['working_hours_start']
+        working_hours_end = helpline_data['working_hours_end']
+        # Change dates from Yesterday 6:00 PM to Today 9:00 AM (Non-Operational Hours of Helpline).
+        today_date = datetime.datetime.now().replace(hour=working_hours_start,minute=0,second=0)
+        yesterday_date = today_date-timedelta(days=1)
+        yesterday_date_morning = yesterday_date.replace(hour=working_hours_start,minute=0,second=0)
+        yesterday_date_evening = yesterday_date.replace(hour=working_hours_end,minute=0,second=0)
+        # Total Calls received during operational hours only and got declined Till now from beginning.
+        total_declined_call = HelplineIncoming.objects.filter(call_status=2).values('id','incoming_time','last_incoming_time')
+        # Total Calls received by unique callers in working hours of previous day (i.e. x AM to y PM).
+        yesterday_received_call_count = HelplineIncoming.objects.filter(incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
+        # Total Calls received by unique callers and resolved within working hours of previous day (i.e. x AM to y PM).
+        yesterday_resolved_call_count = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
+        # Total Calls received by unique callers in non-working hours i.e. y PM of previous day to x AM of today.
+        yesterday_off_hours_incoming_call_count = HelplineCallLog.objects.filter(call_type=0,start_time__gte=yesterday_date_evening,start_time__lte=today_date).count()
+        today_date = datetime.datetime.now().date()
+        yesterday_date = today_date-timedelta(days=1)
+        # Total pending Calls received in operation hours that were not addressed for last two days, hence turned into declined previous day.
+        yesterday_declined_call = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date,time_modified__lte=today_date).values('id','incoming_time','last_incoming_time')
+        pending_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
+
+        total_pending_call_count = self.during_working_hour(pending_call)
+        total_declined_call_count = self.during_working_hour(total_declined_call)
+        yesterday_declined_call_count = self.during_working_hour(yesterday_declined_call)
 
         self.send_mail(total_pending_call_count,
             total_declined_call_count,

@@ -51,6 +51,10 @@ def save_log(sender, **kwargs):
         village_id = None
         user = None
         loop_user = None
+    elif sender == "CropLanguage":
+        village_id = None
+        user = None
+        loop_user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
@@ -64,6 +68,10 @@ def save_log(sender, **kwargs):
             loop_user = None
 
     elif sender == "Vehicle":
+        village_id = None
+        user = None
+        loop_user = None
+    elif sender == "VehicleLanguage":
         village_id = None
         user = None
         loop_user = None
@@ -100,6 +108,18 @@ def save_log(sender, **kwargs):
         user = instance.user_created
         loop_user = instance.loop_user
         sender = "Village"
+    elif sender == "GaddidarCommission":
+        village_id = None
+        user = instance.user_created
+        loop_user=None
+    elif sender == "State":
+        village_id=None
+        user = instance.user_created
+        loop_user = None
+    elif sender == "LoopUser":
+        village_id=None
+        user = instance.user_created
+        loop_user = None
     else:           # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -134,6 +154,10 @@ def delete_log(sender, **kwargs):
         village_id = None
         user = None
         loop_user = None
+    elif sender == "CropLanguage":
+        village_id = None
+        user = None
+        loop_user = None
     elif sender == "CombinedTransaction":
         village_id = instance.farmer.village.id
         user = instance.user_created
@@ -146,6 +170,10 @@ def delete_log(sender, **kwargs):
         else:
             loop_user = None
     elif sender == "Vehicle":
+        village_id = None
+        user = None
+        loop_user = None
+    elif sender == "VehicleLanguage":
         village_id = None
         user = None
         loop_user = None
@@ -170,6 +198,10 @@ def delete_log(sender, **kwargs):
         user = None
         # Loop user not required
         loop_user = None
+    elif sender == "GaddidarCommission":
+        village_id=None
+        user = instance.user_created
+        loop_user = None
     elif sender == "LoopUserAssignedMandi":
         village_id = None
         user = None
@@ -182,6 +214,14 @@ def delete_log(sender, **kwargs):
         loop_user = instance.loop_user
         sender = "Village"
         model_id = instance.village.id
+    elif sender == "State":
+        village_id = None
+        user = instance.user_created
+        loop_user = None
+    elif sender == "LoopUser":
+        village_id = None
+        user = instance.user_created
+        loop_user = None
     else:               # farmer add
         village_id = instance.village.id
         loop_user = None
@@ -194,17 +234,44 @@ def delete_log(sender, **kwargs):
         pass
 
 
-def get_log_object(log_object):
+def get_log_crop_vehicle_object(log_object, preferred_language):
+    Obj_model = get_model('loop', log_object.entry_table)
+    if log_object.entry_table == 'CropLanguage':
+        table = 'Crop'
+        attr = 'crop_name'
+    else:
+        table = 'Vehicle'
+        attr = 'vehicle_name'
+
+    obj=Obj_model.objects.get(id=log_object.model_id,language__notation=preferred_language)
+    obj = model_to_dict(obj)
+    Obj_model = get_model('loop',table)
+    attr_value = obj[attr]
+    obj = Obj_model.objects.get(id = obj[table.lower()])
+    obj = model_to_dict(obj)
+    obj[attr] = attr_value
+    log_object.entry_table = table
+    log_object.model_id = obj['id']
+    return obj,log_object
+
+
+
+def get_log_object(log_object, preferred_language):
     Obj_model = get_model('loop', log_object.entry_table)
     try:
         obj = Obj_model.objects.get(id=log_object.model_id)
-        data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': model_to_dict(
-            obj), 'online_id': obj.id}
+        if Obj_model.__name__=='CropLanguage' or Obj_model.__name__=='VehicleLanguage':
+            if obj.language.notation == preferred_language:
+                obj,log_object = get_log_crop_vehicle_object(log_object,preferred_language)
+            else:
+                return
+        else:
+            obj = model_to_dict(obj)
+        data = {'log': model_to_dict(log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data':obj, 'online_id': obj['id']}
     except Exception, e:
         data = {'log': model_to_dict(
             log_object, exclude=['loop_user', 'user', 'village', 'id']), 'data': None, 'online_id': log_object.model_id}
     return data
-
 
 def get_latest_timestamp():
     Log = get_model('loop', 'Log')
@@ -229,6 +296,7 @@ def send_updated_log(request):
             LoopUser = get_model('loop', 'LoopUser')
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
+                preferred_language = requesting_loop_user.preferred_language.notation
                 user_list = LoopUser.objects.filter(
                     village__block_id=requesting_loop_user.village.block.id).values_list('user__id', flat=True)
             except Exception as e:
@@ -240,13 +308,15 @@ def send_updated_log(request):
             Farmer = get_model('loop', 'Farmer')
             Mandi = get_model('loop', 'Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')
+            GaddidarCommission = get_model('loop','GaddidarCommission')
             Transporter = get_model('loop', 'Transporter')
             TransportationVehicle = get_model('loop', 'TransportationVehicle')
-
+            State = get_model('loop','State')
             list_rows = []
-
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
             list_rows.append(Log.objects.filter(
-                timestamp__gt=timestamp, entry_table__in=['Crop', 'Vehicle']))
+                timestamp__gt=timestamp, entry_table__in=['CropLanguage','VehicleLanguage']))
             village_list_queryset = Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Village'])
             list_rows.append(village_list_queryset)
@@ -288,6 +358,11 @@ def send_updated_log(request):
             for grow in gaddidar_rows:
                 if Gaddidar.objects.get(id=grow.model_id).mandi in mandis:
                     list_rows.append(Log.objects.filter(id=grow.id))
+
+            gaddidar_commission_rows = Log.objects.filter(
+                timestamp__gt=timestamp,entry_table__in=['GaddidarCommission'])
+            for gcrow in gaddidar_commission_rows:
+                list_rows.append(Log.objects.filter(id=gcrow.id))
 
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['CombinedTransaction']))
@@ -358,7 +433,9 @@ def send_updated_log(request):
             for row in list_rows:
                 if row:
                     for i in row:
-                        data_list.append(get_log_object(i))
+                        objectData = get_log_object(i, preferred_language)
+                        if objectData is not None:
+                            data_list.append(objectData)
             if list_rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
                 return HttpResponse(data, content_type="application/json")

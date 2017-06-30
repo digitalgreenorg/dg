@@ -402,6 +402,7 @@ var message_combined_failure = "";
                         success: function(u_model) {
                             // successfully saved in uploadQ
                             console.log("FORMCNTROLLER: model added to uploadqueue - " + JSON.stringify(u_model.toJSON()));
+                            $('#export').removeAttr('disabled');
                             return dfd.resolve(off_m.toJSON());
                         },
                         error: function(error) {

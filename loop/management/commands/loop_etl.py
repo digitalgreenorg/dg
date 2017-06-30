@@ -22,10 +22,12 @@ class LoopStatistics():
         database = DATABASES['default']['NAME']
         username = DATABASES['default']['USER']
         password = DATABASES['default']['PASSWORD']
+        host = DATABASES['default']['HOST']
+        port = DATABASES['default']['PORT']
         print 'Database : ', database
         print datetime.datetime.utcnow()
 
-        create_schema = subprocess.call("mysql -u%s -p%s %s < %s" % (username, password, database, os.path.join(DIR_PATH,'recreate_schema.sql')), shell=True)
+        create_schema = subprocess.call("mysql -u%s -p%s -h%s -P%s %s < %s" % (username, password, host, port, database, os.path.join(DIR_PATH,'recreate_schema.sql')), shell=True)
 
         if create_schema !=0:
             raise Exception("Could not create schema for loop etl")
@@ -33,11 +35,11 @@ class LoopStatistics():
 
         try:
             start_time = time.time()
-            self.mysql_cn = MySQLdb.connect(host='localhost',user=DATABASES['default']['USER'], passwd=DATABASES['default']['PASSWORD'], db=DATABASES['default']['NAME'], charset='utf8', use_unicode=True)
+            self.mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
             # .cursor()
 
-            df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id','user__id','name_en')))
-            df_loopuser.rename(columns={"user__id":"user_created__id","name_en":"name"},inplace=True)
+            df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id', 'user__id', 'name_en', 'village__block__district__state__id', 'village__block__district__state__country__id')))
+            df_loopuser.rename(columns={"user__id":"user_created__id", "name_en":"name", "village__block__district__state__id":"state_id", "village__block__district__state__country__id":"country_id"},inplace=True)
 
             print "Loop User Shape",df_loopuser.shape
 
@@ -93,22 +95,19 @@ class LoopStatistics():
             # Also cummulative_distinct_farmer is same where date is same but aggregator_id,gaddidar_id,mandi_id are different
             print "After adding cummulative distinct farmer ", result.shape
 
-            for index,row in result.iterrows():
-                self.mysql_cn.cursor().execute("""INSERT INTO loop_aggregated_myisam (date,aggregator_id,mandi_id,gaddidar_id,quantity,amount,transportation_cost,farmer_share,gaddidar_share,aggregator_incentive,aggregator_name,mandi_name,gaddidar_name,cum_distinct_farmer) values(""" + '"'+row['date'].strftime('%Y-%m-%d %H:%M:%S')+'"' + "," + str(row['user_created__id']) + ","
-                + str(row['mandi__id']) + ","
-                + str(row['gaddidar__id']) + ","
-                + str(row['quantity__sum']) + ","
-                + str(row['amount__sum']) + ","
-                + str(row['transportation_cost__sum']) + ","
-                + str(row['farmer_share__avg']) + ","
-                + str(row['gaddidar_share_amount']) + ","
-                + str(row['aggregator_incentive']) + ","
-                + '"'+row['name']+'"' + ","
-                + '"'+row['mandi__mandi_name']+'"' + ","
-                + '"'+row['gaddidar__gaddidar_name']+'",'
-                + str(row['cummulative_distinct_farmer']) + """)""")
+            if not result.empty:
+                values_list = []
+                for index,row in result.iterrows():
+                    values_list.append((row['date'].strftime('%Y-%m-%d %H:%M:%S'), str(row['user_created__id']), str(row['mandi__id']), str(row['gaddidar__id']), str(row['quantity__sum']), str(row['amount__sum']), str(row['transportation_cost__sum']), str(row['farmer_share__avg']), str(row['gaddidar_share_amount']), str(row['aggregator_incentive']), row['name'], row['mandi__mandi_name'], row['gaddidar__gaddidar_name'], str(row['cummulative_distinct_farmer']), str(row['country_id']), str(row['state_id'])))
 
-            print "Myisam insertion complete"
+                print "Number of rows to be inserted : ", len(values_list)
+
+                sql_base_query = "INSERT INTO loop_aggregated_myisam (date, aggregator_id, mandi_id, gaddidar_id, quantity, amount, transportation_cost, farmer_share, gaddidar_share, aggregator_incentive, aggregator_name, mandi_name, gaddidar_name, cum_distinct_farmer, country_id, state_id) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
+                self.mysql_cn.cursor().executemany(sql_base_query, values_list)
+                self.mysql_cn.commit()
+                print "Myisam insertion complete"
+
             end_time = time.time()
             print "Total time taken (secs) : %f" % (end_time-start_time)
 
@@ -118,7 +117,7 @@ class LoopStatistics():
                 print "successfully Completed"
             else:
                 print "Issue: Some aggregator has DT but no CT corresponding to date(s).", ct_outer_merge_dt.shape
-            # print ct_outer_merge_dt[ct_outer_merge_dt.isnull().any(axis=1)]
+                # print ct_outer_merge_dt[ct_outer_merge_dt.isnull().any(axis=1)]
             print "=================================="
 
 

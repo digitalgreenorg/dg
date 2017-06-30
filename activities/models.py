@@ -1,16 +1,31 @@
-import json, datetime
+# python imports
+import json
+import datetime
 import calendar
+# django imports
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MaxValueValidator
-
+# app imports
 from coco.data_log import delete_log, save_log
 from coco.base_models import CocoModel
+from coco.base_models import ADOPTION_VERIFICATION
+from coco.base_models import SCREENING_OBSERVATION
+from coco.base_models import SCREENING_GRADE
+from coco.base_models import VERIFIED_BY
+from coco.base_models import ATTENDED_PERSON_CATEGORY
+from coco.base_models import ADOPT_PRACTICE_CATEGORY
+from coco.base_models import FRONTLINE_WORKER_PRESENT
+from coco.base_models import TYPE_OF_VENUE
+from coco.base_models import TYPE_OF_VIDEO
+from coco.base_models import TOPICS
 from geographies.models import Village
 from programs.models import Partner
-from people.models import Animator, Person, PersonGroup
+from people.models import Animator
+from people.models import Person
+from people.models import PersonGroup
 from videos.models import Video
-from coco.base_models import ADOPTION_VERIFICATION, SCREENING_OBSERVATION, SCREENING_GRADE, VERIFIED_BY
+from videos.models import ParentCategory
 
 
 class VRPpayment(models.Manager):
@@ -69,6 +84,13 @@ class VRPpayment(models.Manager):
     def get_expected_attendance(self,dissemination_grp_id):
         return Person.objects.filter(group_id__in=dissemination_grp_id)
 
+
+class FrontLineWorkerPresent(models.Model):
+    worker_type = models.CharField(max_length=20, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.worker_type
+
 class Screening(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -76,6 +98,7 @@ class Screening(CocoModel):
     start_time = models.TimeField()
     end_time = models.TimeField(null=True, blank=True)
     location = models.CharField(max_length=200, blank=True)
+    parentcategory = models.ForeignKey(ParentCategory, null=True, blank=True)
     village = models.ForeignKey(Village)
     animator = models.ForeignKey(Animator)
     farmer_groups_targeted = models.ManyToManyField(PersonGroup)
@@ -86,6 +109,16 @@ class Screening(CocoModel):
     observation_status = models.IntegerField(choices=SCREENING_OBSERVATION, default=0, validators=[MaxValueValidator(1)])
     screening_grade = models.CharField(max_length=1,choices=SCREENING_GRADE,null=True,blank=True)
     observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
+    health_provider_present = models.BooleanField(default=False)
+    # UPAVAN fields
+    type_of_video = models.CharField(max_length=20, choices=TYPE_OF_VIDEO, blank=True)
+    frontlineworkerpresent =  models.ManyToManyField(FrontLineWorkerPresent, blank=True)
+    type_of_venue = models.CharField(choices=TYPE_OF_VENUE,
+                                     blank=True, null=True,
+                                     max_length=40)
+    meeting_topics = models.CharField(choices=TOPICS,
+                                     blank=True, null=True,
+                                     max_length=255)
 
     class Meta:
         unique_together = ("date", "start_time", "end_time", "animator", "village")
@@ -105,6 +138,7 @@ class PersonMeetingAttendance(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     screening = models.ForeignKey(Screening)
     person = models.ForeignKey(Person)
+    category = models.CharField(max_length=80, null=True)
     
     def __unicode__(self):
         return  u'%s' % (self.id)
@@ -114,13 +148,21 @@ class PersonAdoptPractice(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     person = models.ForeignKey(Person)
     video = models.ForeignKey(Video)
-    animator = models.ForeignKey(Animator, null=True, blank=True)
+    animator = models.ForeignKey(Animator)
     date_of_adoption = models.DateField()
     date_of_verification = models.DateField(null=True, blank=True)
     partner = models.ForeignKey(Partner)
     verification_status = models.IntegerField(choices=ADOPTION_VERIFICATION, default=0, validators=[MaxValueValidator(2)])
     non_negotiable_check = models.CharField(max_length=256, blank=True, null=True)
     verified_by = models.IntegerField(choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
+    parentcategory = models.ForeignKey(ParentCategory, null=True, blank=True)
+    adopt_practice = models.CharField(max_length=1, choices=ADOPT_PRACTICE_CATEGORY, null=True, blank=True)
+    adopt_practice_second = models.CharField(max_length=1, choices=ADOPT_PRACTICE_CATEGORY, null=True, blank=True)
+    krp_one = models.BooleanField(verbose_name="1", db_index=True, default=False)
+    krp_two = models.BooleanField(verbose_name="2", db_index=True, default=False)
+    krp_three = models.BooleanField(verbose_name="3", db_index=True,default=False)
+    krp_four = models.BooleanField(verbose_name="4", db_index=True, default=False)
+    krp_five = models.BooleanField(verbose_name="5", db_index=True, default=False)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)

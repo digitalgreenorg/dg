@@ -9,6 +9,8 @@ from dg.settings import DATABASES
 
 user_name = DATABASES['default']['USER']
 password = DATABASES['default']['PASSWORD']
+host = DATABASES['default']['HOST']
+port = DATABASES['default']['PORT']
 
 #script to download db from S3
 execfile("download_from_s3.py")
@@ -33,7 +35,7 @@ else :
 	custom_db_name = 'dg_' + prev_day
 
 # Mysql Connection
-db = MySQLdb.connect("localhost", user_name, password)
+db = MySQLdb.connect(host=host, port=port, user=user_name, passwd=password)
 cursor = db.cursor()
 drop_database_sql = "DROP DATABASE IF EXISTS " + custom_db_name
 cursor.execute(drop_database_sql)
@@ -46,7 +48,7 @@ database = custom_db_name
 
 print ("Import started : %s" %dg_gz[:-3])
 #mysql command to import db
-dumpcmd = 'mysql -u' + user_name + ' -p' + password + ' ' + database + '<' +  dg_gz[:-3]
+dumpcmd = 'mysql -u' + user_name + ' -p' + password + ' -h' + host + ' ' + database + '<' +  dg_gz[:-3]
 os.system(dumpcmd)
 
 # #set buffer size to remove previous sql and gz files
