@@ -343,8 +343,9 @@ class FarmerResource(BaseResource):
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
     def obj_create(self, bundle, request=None, **kwargs):
+        village = Village.objects.get(id=bundle.data["village"]["online_id"])
         attempt = Farmer.objects.filter(
-            phone=bundle.data['phone'], name=bundle.data['name'])
+            phone=bundle.data['phone'], name=bundle.data['name'], village=village)
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
@@ -355,8 +356,9 @@ class FarmerResource(BaseResource):
         try:
             bundle = super(FarmerResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
+            village = Village.objects.get(id=bundle.data["village"]["online_id"])
             attempt = Farmer.objects.filter(
-                phone=bundle.data['phone'], name=bundle.data['name'])
+                phone=bundle.data['phone'], name=bundle.data['name'], village=village)
             send_duplicate_message(int(attempt[0].id))
         return bundle
 
