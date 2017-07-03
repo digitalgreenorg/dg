@@ -52,13 +52,9 @@ def save_log(sender, **kwargs):
     elif sender == "Transporter":
         if instance.user_created is not None:
             loop_user = LoopUser.objects.get(user=instance.user_created)
-        else:
-            loop_user = None
     elif sender == "TransportationVehicle":
         if instance.user_created is not None:
             loop_user = LoopUser.objects.get(user=instance.user_created)
-        else:
-            loop_user = None
     elif sender == "DayTransportation":
         loop_user = LoopUser.objects.get(user=instance.user_created)
     elif sender == "LoopUserAssignedMandi":
@@ -66,7 +62,6 @@ def save_log(sender, **kwargs):
         model_id = instance.mandi.id
         loop_user = instance.loop_user
     elif sender == "LoopUserAssignedVillage":
-        sender = "Village"
         model_id = instance.village.id
         village_id = instance.village.id
         loop_user = instance.loop_user
