@@ -69,7 +69,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     # Fetching price from DB
     price_info_list.append('लूप मंडी रेट\n')
     today_date = datetime.now()
-    raw_query = raw_sql.format(tuple(crop_list), tuple(mandi_list), tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(1,4)))
+    raw_query = raw_sql.last_three_trans.format(tuple(crop_list), tuple(mandi_list), tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(1,4)))
     query_result = run_query(raw_query)
     if not query_result:
         price_info_list.append("अभी रेट उपलब्ध नही है.")
