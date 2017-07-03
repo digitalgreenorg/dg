@@ -58,6 +58,10 @@ class AdminAssignedDistricts(admin.StackedInline):
     model = AdminAssignedDistrict
     extra = 4
 
+class AdminAssignedDistricts(admin.StackedInline):
+    model = AdminAssignedDistrict
+    extra = 4
+
 class AdminUserAdmin(admin.ModelAdmin):
     inlines = [AdminAssignedDistricts]    
     list_display = ('__user__','name')
