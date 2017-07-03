@@ -34,8 +34,8 @@ def get_valid_list(app_name, model_name, requested_item):
     id_list = set(model.objects.values_list('id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item)
     if 0 in requested_list:
-        return list(id_list),1
-    return list(requested_list.intersection(id_list)),0
+        return tuple(map(int,id_list)),1
+    return tuple(map(int,requested_list.intersection(id_list))),0
 
 def run_query(query):
     cursor = connection.cursor()
@@ -69,7 +69,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     # Fetching price from DB
     price_info_list.append('लूप मंडी रेट\n')
     today_date = datetime.now()
-    raw_query = raw_sql.last_three_trans.format(tuple(crop_list), tuple(mandi_list), tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(1,4)))
+    raw_query = raw_sql.last_three_trans.format(crop_list, mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(1,4)))
+    print raw_query
     query_result = run_query(raw_query)
     if not query_result:
         price_info_list.append("अभी रेट उपलब्ध नही है.")
