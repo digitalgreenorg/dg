@@ -39,7 +39,6 @@ class LoopAdmin(AdminSite):
     def has_permission(self, request):
         return request.user.is_active
 
-
 class LoopUserAssignedMandis(admin.StackedInline):
     model = LoopUserAssignedMandi
     extra = 4
@@ -55,6 +54,13 @@ class LoopUserAdmin(admin.ModelAdmin):
     search_fields = ['name', 'village__village_name', 'village__block__district__state__country']
     list_filter = ['village__block__district__state__country']
 
+class AdminAssignedDistricts(admin.StackedInline):
+    model = AdminAssignedDistrict
+    extra = 4
+
+class AdminUserAdmin(admin.ModelAdmin):
+    inlines = [AdminAssignedDistricts]    
+    list_display = ('__user__','name')
 # class LoopUserInline(admin.TabularInline):
 #     model = LoopUser
 #     extra = 5
@@ -93,9 +99,9 @@ class DayTransportationAdmin(admin.ModelAdmin):
 
 
 class GaddidarAdmin(admin.ModelAdmin):
-    fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','commission','is_visible')
+    fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','is_visible')
     list_display = ('id', 'gaddidar_name',
-                    'gaddidar_phone', 'mandi','discount_criteria', 'commission', 'gaddidar_name_en')
+                    'gaddidar_phone', 'mandi','discount_criteria', 'gaddidar_name_en')
     search_fields = ['gaddidar_name', 'mandi__mandi_name']
     list_filter = ['mandi__mandi_name', 'mandi__district__state__country']
 
@@ -192,6 +198,7 @@ loop_admin.register(Block)
 loop_admin.register(District)
 loop_admin.register(State)
 loop_admin.register(Country)
+loop_admin.register(AdminUser,AdminUserAdmin)
 # loop_admin.register(LoopUserAssignedMandi, LoopUserAssignedMandiAdmin)
 # loop_admin.register(LoopUserAssignedVillage, LoopUserAssignedVillageAdmin)
 loop_admin.register(LoopUser, LoopUserAdmin)
