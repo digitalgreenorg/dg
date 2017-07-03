@@ -8,8 +8,7 @@ last_three_trans = '''SELECT
 FROM
     loop_combinedtransaction lc
 WHERE
-    lc.crop_id = %s AND lc.mandi_id = %s
+    lc.crop_id in {} AND lc.mandi_id in {} and date in {}
 GROUP BY lc.date , lc.crop_id , lc.mandi_id
 ORDER BY lc.crop_id , lc.mandi_id , lc.date DESC
-LIMIT 3
 '''

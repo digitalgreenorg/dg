@@ -3,6 +3,7 @@ __author__ = 'Vikas Saini'
 
 import requests
 import time
+from datetime import datetime, timedelta
 
 from django.db import connection
 from django.db.models import get_model
@@ -67,6 +68,30 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         crop_in_hindi_map[crop['crop_id']] = crop['crop_name']
     # Fetching price from DB
     price_info_list.append('लूप मंडी रेट\n')
+    today_date = datetime.now()
+    raw_query = raw_sql.format(tuple(crop_list), tuple(mandi_list), tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(1,4)))
+    query_result = run_query(raw_query)
+    if not query_result:
+        price_info_list.append("अभी रेट उपलब्ध नही है.")
+    else:
+        prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
+        for row in query_result:
+            crop, mandi, date, min_price, max_price, mean = row[0], row[1], row[2], int(row[3]), int(row[4]), int(row[5])
+            if crop != prev_crop or mandi != prev_mandi:
+                prev_crop, prev_mandi = crop, mandi
+                crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
+                mandi_name = mandi_map[mandi].encode("utf-8")
+                temp_str = ('\n%s,%s मंडी\n')%(crop_name,mandi_name.rstrip('मंडी'))
+                price_info_list.append(temp_str)
+            if max_price-min_price >= 2:
+                min_price = mean-1
+                max_price = mean+1
+            if min_price != max_price:
+                temp_str = ('%s: रु %s-%s\n')%(date.strftime('%d-%m-%Y'),str(min_price),str(max_price))
+            else:
+                temp_str = ('%s: रु %s\n')%(date.strftime('%d-%m-%Y'),str(max_price))
+            price_info_list.append(temp_str)
+    '''
     for crop in crop_list:
         for mandi in mandi_list:
             # creating obj for log
@@ -96,6 +121,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                 else:
                     temp_str = ('%s: रु %s\n')%(date.strftime('%d-%m-%Y'),str(max_price))
                 price_info_list.append(temp_str)
+    '''
     final_result = ''.join(price_info_list)
     print ".................Final message........................"
     print final_result
