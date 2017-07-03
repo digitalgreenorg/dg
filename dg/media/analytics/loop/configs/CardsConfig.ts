@@ -4,6 +4,7 @@ export const cardConfig = {
     'No_of_clusters':{    
                         text:'#Clusters',
                         overall : {
+                            borrowData:false,
                             filter:false,
                             graph : {
                                 show: true,
@@ -11,6 +12,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            borrowData:false,
                             dateRange:60, // In days
                             filter:true,
                             cards:true,
@@ -20,6 +22,7 @@ export const cardConfig = {
     'No_of_Farmers':{
                         text:'#Farmers',
                         overall : {
+                            borrowData:true,
                             filter:false,
                             graph : {
                                 show: true,
@@ -27,6 +30,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            borrowData:true,
                             dateRange:60, // In days
                             filter:true,
                             cards:true,
@@ -36,6 +40,7 @@ export const cardConfig = {
     'Volume':      {
                         text:'Volume()%',
                         overall : {
+                            borrowData:true,
                             filter:false,
                             graph : {
                                 show: true,
@@ -43,6 +48,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            borrowData:true,
                             dateRange:60, // In days
                             filter:true,
                             cards:true,
@@ -52,6 +58,7 @@ export const cardConfig = {
     'Total_payment':   {    
                         text:'Payment',
                         overall : {
+                            borrowData:true,
                             filter:false,
                             graph : {
                                 show: true,
@@ -59,6 +66,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            borrowData:true,
                             dateRange:60, // In days
                             filter:true,
                             cards:true,

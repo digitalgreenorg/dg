@@ -94,34 +94,69 @@ export class CardsComponent implements OnInit, AfterViewInit {
     }
 
     public getData(options): any {
-        this.cardsService.getApiData(options)
-          .subscribe(dataList => {
-              dataList['data'].forEach(cardData => {
-                  if(cardData.placeHolder == "overall") {
-                      this.cardsOverall.forEach(card => {
-                        if(cardData.tagName === card.text){
-                          card['value'] = cardData.value;
-                        }
-                      });
-                  }
-                  else if(cardData.placeHolder == "recent") {
-                      this.cardsRecent.forEach(card => {
-                          console.log(this.cardsRecent[card].value);
-                        if(cardData.tagName === card.text){
-                          card['value'] = cardData.value;
-                        }
-                      });
-                  }
-                  else if(cardData.placeHolder == "cardGraphs") {
-                    this.charts.forEach(chart=> {
-                        console.log(cardData.tagName);
-                        if(cardData.tagName === chart.options.title) {
-                            chart.nativeChart.series[0].update({'data':[cardData.value]})
-                        }
-                    })
-                  }
-              });
-          });
+
+
+        Object.keys(this.cardsConfigs).forEach(key => {
+            if(this.cardsConfigs[key].overall.borrowData == false) {
+                options.params.cardName = key;
+                this.cardsService.getApiData(options)
+                    .subscribe(dataList => {
+                        dataList['data'].forEach( cardData => {
+                            if(cardData.placeHolder == "overall") {
+                                this.cardsOverall.forEach(card => {
+                                    if(card.text == cardData.tagName) {
+                                        card['value'] = cardData.value
+                                    }
+                                });
+                            }
+                            if(cardData.placeHolder == "recent") {
+                                this.cardsRecent.forEach(card => {
+                                    if(card.text == cardData.tagName) {
+                                        card['value'] = cardData.value
+                                    }
+                                });
+                            }
+                            if(cardData.placeHolder == "cardGraphs") {
+                                this.charts.forEach(chart=> {
+                                    console.log(cardData.tagName);
+                                    if(cardData.tagName === chart.options.title) {
+                                        chart.nativeChart.series[0].update({'data':[cardData.value]})
+                                    }
+                                })
+                            }
+                        });
+                });
+            }
+        });
+
+        // this.cardsService.getApiData(options)
+        //   .subscribe(dataList => {
+        //       dataList['data'].forEach(cardData => {
+        //           if(cardData.placeHolder == "overall") {
+        //               this.cardsOverall.forEach(card => {
+        //                 if(cardData.tagName === card.text){
+        //                   card['value'] = cardData.value;
+        //                 }
+        //               });
+        //           }
+        //           else if(cardData.placeHolder == "recent") {
+        //               this.cardsRecent.forEach(card => {
+        //                   console.log(this.cardsRecent[card].value);
+        //                 if(cardData.tagName === card.text){
+        //                   card['value'] = cardData.value;
+        //                 }
+        //               });
+        //           }
+        //           else if(cardData.placeHolder == "cardGraphs") {
+        //             this.charts.forEach(chart=> {
+        //                 console.log(cardData.tagName);
+        //                 if(cardData.tagName === chart.options.title) {
+        //                     chart.nativeChart.series[0].update({'data':[cardData.value]})
+        //                 }
+        //             })
+        //           }
+        //       });
+        //   });
     }
 
     saveInstance(chartInstance, chart) {

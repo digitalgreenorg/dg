@@ -48,9 +48,10 @@ from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
 import pandas as pd
-from training.management.databases.utility import multiprocessing_dict, multiprocessing_list
+from training.management.databases.utility import *
 from loop.management.commands.get_sql_queries import *
-
+import MySQLdb
+from dg.settings import DATABASES
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 
@@ -177,6 +178,7 @@ def total_static_data(request):
                   'total_cluster_reached': total_cluster_reached,
                   'aggregated_result': aggregated_result}
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+    print data
     return HttpResponse(data)
 
 
@@ -945,25 +947,21 @@ def broadcast_audio_request(request):
     else:
         return HttpResponse(status=200)
 
+def get_cluster_related_data(result) :
+    pass
+
 def get_card_graph_data(request):
 
     query_list = []
-
-    cluster_query = get_cluster_sql();
-    query_list.extend(cluster_query)
+    filter_args = extract_filters_request(request)
 
 
-    volume_query = get_volume_sql()
-    query_list.extend(volume_query)
+    if filter_args['cardName'] in ['No_of_clusters']:
+        cluster_related_query = get_cluster_related_sql()
+        result = get_pandas_dataframe(cluster_related_query)
+        data_to_send = get_cluster_related_data(result)
 
-    payment_query = get_payment_sql()
-    query_list.extend(payment_query)
-
-    farmer_query = get_farmer_sql()
-    query_list.extend(farmer_query)
-
-    results_t = multiprocessing_list(query_list = query_list)
-    print results_t
+    
 
     results = [{
         'placeHolder' : 'cardGraphs',
@@ -987,3 +985,23 @@ def get_card_graph_data(request):
     },]
     data = json.dumps({'data' : results})
     return HttpResponse(data);
+
+
+def extract_filters_request(request):
+
+    if 'cardName' in request.GET:
+        cardName = str(request.GET.get('cardName'))
+    else:
+        cardName = ''
+    filter_args = {}
+    filter_args['cardName'] = cardName
+    return filter_args
+
+def get_pandas_dataframe(sql_query):
+    db_connection = MySQLdb.connect(host=DATABASES['default']['HOST'],
+                                        user=DATABASES['default']['USER'],
+                                        passwd=DATABASES['default']['PASSWORD'],
+                                        db=DATABASES['default']['NAME'],
+                                        charset='utf8',
+                                        use_unicode=True)
+    return pd.read_sql_query(sql_query, con=db_connection)
