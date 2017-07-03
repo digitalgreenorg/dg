@@ -80,7 +80,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         for row in query_result:
             crop, mandi, date, min_price, max_price, mean = row[0], row[1], row[2], int(row[3]), int(row[4]), int(row[5])
             if crop != prev_crop or mandi != prev_mandi:
-                crop_mandi_comb.append((crop,mandi))
+                if not all_crop_flag and not all_mandi_flag:
+                    crop_mandi_comb.append((crop,mandi))
                 prev_crop, prev_mandi = crop, mandi
                 crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                 mandi_name = mandi_map[mandi].encode("utf-8")
@@ -94,14 +95,15 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             else:
                 temp_str = ('%s: रु %s\n')%(date.strftime('%d-%m-%Y'),str(max_price))
             price_info_list.append(temp_str)
-        for crop in crop_list:
-            for mandi in mandi_list:
-                if (crop,mandi) not in crop_mandi_comb:
-                    crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
-                    mandi_name = mandi_map[mandi].encode("utf-8")
-                    temp_str = ('\n%s,%s मंडी\n')%(crop_name,mandi_name.rstrip('मंडी'))
-                    price_info_list.append(temp_str)
-                    price_info_list.append('रेट उपलब्ध नही है\n')
+        if not all_crop_flag and not all_mandi_flag:
+            for crop in crop_list:
+                for mandi in mandi_list:
+                    if (crop,mandi) not in crop_mandi_comb:
+                        crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
+                        mandi_name = mandi_map[mandi].encode("utf-8")
+                        temp_str = ('\n%s,%s मंडी\n')%(crop_name,mandi_name.rstrip('मंडी'))
+                        price_info_list.append(temp_str)
+                        price_info_list.append('रेट उपलब्ध नही है\n')
     '''
     for crop in crop_list:
         for mandi in mandi_list:
