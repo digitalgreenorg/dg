@@ -4,7 +4,7 @@ from django.conf.urls import patterns, include, url
 
 from tastypie.api import Api
 
-from api import FarmerResource, VillageResource, LoopUserResource, CropResource, MandiResource, CombinedTransactionResource, TransporterResource, VehicleResource,TransportationVehicleResource, DayTransportationResource,GaddidarResource,BlockResource,DistrictResource,StateResource,GaddidarShareOutliersResource,AggregatorShareOutliersResource,GaddidarCommissionResource
+from api import *
 
 from loop.views import *
 
@@ -29,6 +29,8 @@ api.register(StateResource())
 api.register(GaddidarCommissionResource())
 api.register(GaddidarShareOutliersResource())
 api.register(AggregatorShareOutliersResource())
+api.register(LoopUserAssignedMandiResource())
+api.register(LoopUserAssignedVillageResource())
 
 
 

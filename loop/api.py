@@ -511,36 +511,38 @@ class LoopUserResource(BaseResource):
                 set(LoopUserAssignedVillage.objects.select_related('village').filter(loop_user=bundle.obj))]
 
 class LoopUserAssignedVillageResource(BaseResource):
-    loopuser = fields.ForeignKey(LoopUserResource,'loopuser')
+    aggregator = fields.ForeignKey(LoopUserResource, 'loop_user')
     village = fields.ForeignKey(VillageResource, 'village')
     
     class Meta:
         limit = 0
         max_limit = 0
+        queryset = LoopUserAssignedVillage.objects.all()
         allowed_methods = ['post', 'put','delete']
         resource_name = 'loopuserassignedvillage'
-        authorization = LoopUserAuthorization('id__in')
+        authorization = Authorization()
     
-    hydrate_loopuser = partial(dict_to_foreign_uri,field_name="aggregator")
-    hydrate_village = partial(dict_to_foreign_uri,field_name="village")
+    hydrate_aggregator = partial(dict_to_foreign_uri, field_name="aggregator", resource_name="loopuser")
+    hydrate_village = partial(dict_to_foreign_uri,field_name="village", resource_name="village")
 
-    def obj_create(self, bundle, request=None, **kwargs):
-        loopuser = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
-        village = Village.objects.get(id=bundle.data['village']['online_id'])
-        attempt = LoopUserAssignedVillage.objects.get(loopuser=loopuser ,village=village)
-        if attempt < 1:
+    def obj_create(self, bundle, **kwargs):
+        loop_user = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
+        village_ = Village.objects.get(id=bundle.data['village']['online_id'])
+        attempt = LoopUserAssignedVillage.objects.filter(loop_user=loop_user ,village=village_)
+        if attempt.count() < 1:
             bundle = super(LoopUserAssignedVillageResource,self).obj_create(bundle,**kwargs)
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
-    def obj_update(self, bundle, request=None, **kwargs):
+    
+    def obj_update(self, bundle, **kwargs):
         try:
             bundle = super(LoopUserAssignedVillageResource, self).obj_update(
                 bundle, **kwargs)
         except Exception, e:
-            loopuser = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
-            village = Village.objects.get(id=bundle.data['village']['online_id'])
-            attempt = LoopUserAssignedVillage.objects.get(loopuser=loopuser ,village=village)
+            loop_user = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
+            village_ = Village.objects.get(id=bundle.data['village']['online_id'])
+            attempt = LoopUserAssignedVillage.objects.filter(loop_user=loop_user ,village=village_)
             send_duplicate_message(int(attempt[0].id))
         return bundle        
 
@@ -591,16 +593,18 @@ class CropResource(BaseResource):
         include_resource_uri = False
  
     def get_object_list(self, request):
-        # apply filters from url        
+        # apply filters from url
+        admin = False        
         if AdminUser.objects.filter(user_id=request.user.id).count()>0:
             user = AdminUser.objects.get(user_id=request.user.id)
             admin = True
         else:
             user = LoopUser.objects.get(user_id=request.user.id)
         languageFilter = str(user.preferred_language.notation)
-        if languageFilter and admin:
+        # import pdb; pdb.set_trace()
+        if languageFilter is not None and admin:
             result = super(CropResource, self).get_object_list(request)  
-        elif languageFilter:
+        elif languageFilter is not None:
             result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)
         else:
             result = super(CropResource,self).get_object_list(request).filter(crops__language_id=1)
@@ -779,6 +783,7 @@ class VehicleResource(BaseResource):
 
     def get_object_list(self, request):
         # apply filters from url
+        admin = False
         if AdminUser.objects.filter(user_id=request.user.id).count()>0:
             user = AdminUser.objects.get(user_id=request.user.id)
             admin = True
@@ -1126,7 +1131,7 @@ class GaddidarShareOutliersResource(BaseResource):
     dehydrate_aggregator = partial(foreign_key_to_id,field_name="aggregator",sub_field_names=['id'])
     hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
     hydrate_gaddidar = partial(dict_to_foreign_uri,field_name='gaddidar')
-    hydrate_aggregator = partial(dict_to_foreign_uri,field_name='aggregator',resource_name='loopuser')
+    hydrate_aggregator = partial(dict_to_foreign_uri, field_name='aggregator',resource_name='loopuser')
 
     def obj_create(self,bundle,request=None,**kwargs):
         mandiObject = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
@@ -1275,35 +1280,37 @@ class CombinedTransactionResource(BaseResource):
             return http.Http404()
 
 class LoopUserAssignedMandiResource(BaseResource):
-    loopuser = fields.ForeignKey(LoopUserResource,'loopuser')
+    aggregator = fields.ForeignKey(LoopUserResource, 'loop_user')
     mandi = fields.ForeignKey(MandiResource, 'mandi')
     
     class Meta:
         limit = 0
         max_limit = 0
+        queryset = LoopUserAssignedMandi.objects.all()
         allowed_methods = ['post', 'put','delete']
         resource_name = 'loopuserassignedmandi'
-        authorization = LoopUserAuthorization('id__in')
+        authorization = Authorization()
     
-    hydrate_loopuser = partial(foreign_key_to_id,field_name="aggregator",sub_field_names=['id'])
-    hydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
+    hydrate_aggregator = partial(dict_to_foreign_uri, field_name="aggregator", resource_name="loopuser")
+    hydrate_mandi = partial(dict_to_foreign_uri,field_name="mandi")
 
-    def obj_create(self, bundle, request=None, **kwargs):
-        loopuser = LoopUser.objects.get(id=bundle.data['aggregator']['id'])
-        mandi = Mandi.objects.get(id=bundle.data['mandi']['id'])
-        attempt = LoopUserAssignedVillage.objects.get(loopuser=loopuser ,mandi=mandi)
-        if attempt < 1:
+    def obj_create(self, bundle, **kwargs):
+        loop_user = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
+        mandi = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
+        attempt = LoopUserAssignedMandi.objects.filter(loop_user=loop_user ,mandi=mandi)
+        if attempt.count() < 1:
             bundle = super(LoopUserAssignedMandiResource,self).obj_create(bundle,**kwargs)
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
-    def obj_update(self, bundle, request=None, **kwargs):
+    
+    def obj_update(self, bundle, **kwargs):
         try:
             bundle = super(LoopUserAssignedMandiResource, self).obj_update(
                 bundle, **kwargs)
         except Exception, e:
-            loopuser = LoopUser.objects.get(id=bundle.data['aggregator']['id'])
-            mandi = Mandi.objects.get(id=bundle.data['mandi']['id'])
-            attempt = LoopUserAssignedVillage.objects.get(loopuser=loopuser ,mandi=mandi)
+            loop_user = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
+            mandi = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
+            attempt = LoopUserAssignedMandi.objects.filter(loop_user=loop_user ,mandi=mandi)
             send_duplicate_message(int(attempt[0].id))
         return bundle        
