@@ -73,7 +73,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     print raw_query
     query_result = run_query(raw_query)
     if not query_result:
-        price_info_list.append("इस मंडी और फसल के लिए पिछले तीन दिनो के रेट उपलब्ध नही है.")
+        price_info_list.append("इस मंडी और फसल के लिए पिछले तीन दिन के रेट उपलब्ध नही है.")
     else:
         crop_mandi_comb = []
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
