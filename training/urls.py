@@ -29,6 +29,6 @@ urlpatterns = patterns('',
     url(r'^dashboard/', dashboard),
     url(r'^graph_data', graph_data),
     url(r'^get_log/', send_updated_log),
-    url(r'^getData/', get_overall_data),
+    url(r'^getData', get_overall_data),
     url(r'^get_filter_data',get_filter_data),
     )
