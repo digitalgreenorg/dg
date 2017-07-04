@@ -4,12 +4,12 @@ __author__ = 'Vikas Saini'
 import requests
 import time
 import itertools
+import MySQLdb
 from datetime import datetime, timedelta
 
-from django.db import connection
 from django.db.models import get_model
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES
 
 from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
@@ -40,7 +40,13 @@ def get_valid_list(app_name, model_name, requested_item):
     return tuple(map(int,requested_list.intersection(id_list))),0
 
 def run_query(query):
-    cursor = connection.cursor()
+    mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'], 
+        user=DATABASES['default']['USER'] ,
+        passwd=DATABASES['default']['PASSWORD'],
+        db=DATABASES['default']['NAME'],
+        charset = 'utf8',
+        use_unicode = True)
+    cursor = mysql_cn.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute(query)
     rows = cursor.fetchall()
     return rows
@@ -76,7 +82,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         crop_mandi_comb = []
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
         for row in query_result:
-            crop, mandi, date, min_price, max_price, mean = row[0], row[1], row[2], int(row[3]), int(row[4]), int(row[5])
+            crop, mandi, date, min_price, max_price, mean = row['crop'], row['mandi'], row['date'], int(row['minp']), int(row['maxp']), int(row['mean'])
             if crop != prev_crop or mandi != prev_mandi:
                 if not all_crop_flag and not all_mandi_flag:
                     crop_mandi_comb.append((crop,mandi))

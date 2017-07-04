@@ -1,9 +1,9 @@
 last_three_trans = '''SELECT 
-    lc.crop_id 'crop',
-    lc.mandi_id 'mandi',
-    lc.date,
-    MIN(lc.price) 'minp',
-    MAX(lc.price) 'maxp',
+    lc.crop_id AS 'crop',
+    lc.mandi_id AS 'mandi',
+    lc.date AS 'date',
+    MIN(lc.price) AS 'minp',
+    MAX(lc.price) AS 'maxp',
     SUM(lc.price * lc.quantity) / SUM(lc.quantity) AS 'mean'
 FROM
     loop_combinedtransaction lc
