@@ -68,9 +68,12 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     all_crop = Crop.objects.filter(id__in=crop_list).values('id', 'crop_name')
     all_mandi = Mandi.objects.filter(id__in=mandi_list).values('id', 'mandi_name')
     crop_in_hindi = CropLanguage.objects.filter(language_id=1, crop_id__in=crop_list).values('crop_id', 'crop_name')
-    map(lambda crop: crop_map[crop['id']] = crop['crop_name'], all_crop)
-    map(lambda mandi: mandi_map[mandi['id']] = mandi['mandi_name'], all_mandi)
-    map(lambda crop: crop_in_hindi_map[crop['crop_id']] = crop['crop_name'], crop_in_hindi)
+    for crop in all_crop:
+       crop_map[crop['id']] = crop['crop_name']
+    for mandi in all_mandi:
+       mandi_map[mandi['id']] = mandi['mandi_name']
+    for crop in crop_in_hindi:
+        crop_in_hindi_map[crop['crop_id']] = crop['crop_name']
     # Fetching price from DB
     price_info_list.append(agg_sms_initial_line)
     today_date = datetime.now()
