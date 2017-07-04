@@ -3,6 +3,7 @@ __author__ = 'Vikas Saini'
 
 import requests
 import time
+import itertools
 from datetime import datetime, timedelta
 
 from django.db import connection
@@ -96,17 +97,16 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                 temp_str = ('%s: %s %s\n')%(date.strftime('%d-%m-%Y'),indian_rupee,str(max_price))
             price_info_list.append(temp_str)
         if not all_crop_flag and not all_mandi_flag:
-            for crop in crop_list:
-                for mandi in mandi_list:
-                    if (crop,mandi) not in crop_mandi_comb:
-                        price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
-                                    crop_id=crop, mandi_id=mandi)
-                        price_info_log_list.append(price_info_log_obj)
-                        crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
-                        mandi_name = mandi_map[mandi].encode("utf-8")
-                        temp_str = ('\n%s,%s %s\n')%(crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
-                        price_info_list.append(temp_str)
-                        price_info_list.append(agg_sms_no_price_for_combination)
+            for crop, mandi in itertools.product(crop_list, mandi_list):
+                if (crop,mandi) not in crop_mandi_comb:
+                    price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
+                                crop_id=crop, mandi_id=mandi)
+                    price_info_log_list.append(price_info_log_obj)
+                    crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
+                    mandi_name = mandi_map[mandi].encode("utf-8")
+                    temp_str = ('\n%s,%s %s\n')%(crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                    price_info_list.append(temp_str)
+                    price_info_list.append(agg_sms_no_price_for_combination)
     final_result = ''.join(price_info_list)
     price_info_incoming_obj.price_result = final_result
     if len(final_result) >= 2000:
