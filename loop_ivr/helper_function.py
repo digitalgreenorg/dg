@@ -82,6 +82,9 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             if crop != prev_crop or mandi != prev_mandi:
                 if not all_crop_flag and not all_mandi_flag:
                     crop_mandi_comb.append((crop,mandi))
+                price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
+                                    crop_id=crop, mandi_id=mandi)
+                price_info_log_list.append(price_info_log_obj)
                 prev_crop, prev_mandi = crop, mandi
                 crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                 mandi_name = mandi_map[mandi].encode("utf-8")
@@ -99,6 +102,9 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             for crop in crop_list:
                 for mandi in mandi_list:
                     if (crop,mandi) not in crop_mandi_comb:
+                        price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
+                                    crop_id=crop, mandi_id=mandi)
+                        price_info_log_list.append(price_info_log_obj)
                         crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                         mandi_name = mandi_map[mandi].encode("utf-8")
                         temp_str = ('\n%s,%s %s\n')%(crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
