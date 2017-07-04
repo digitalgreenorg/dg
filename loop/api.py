@@ -28,6 +28,7 @@ def send_duplicate_message(obj_id):
     raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def foreign_key_to_id(bundle, field_name, sub_field_names):
+    #import pdb;pdb.set_trace()
     field = getattr(bundle.obj, field_name)
     if (field == None):
         dict = {}
@@ -242,7 +243,6 @@ class BaseResource(ModelResource):
         A ORM-specific implementation of ``obj_create``.
         """
         bundle.obj = self._meta.object_class()
-
         for key, value in kwargs.items():
             setattr(bundle.obj, key, value)
 
@@ -525,16 +525,20 @@ class LoopUserAssignedVillageResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
+        always_return_data = True
         queryset = LoopUserAssignedVillage.objects.all()
-        allowed_methods = ['post', 'put','delete']
+        allowed_methods = ['get','post', 'put','delete']
         resource_name = 'loopuserassignedvillage'
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
     
+    dehydrate_aggregator = partial(foreign_key_to_id, field_name='loop_user', sub_field_names=['id'])
+    dehydrate_village = partial(foreign_key_to_id,field_name='village',sub_field_names=['id'])
+
     hydrate_aggregator = partial(dict_to_foreign_uri, field_name="aggregator", resource_name="loopuser")
-    hydrate_village = partial(dict_to_foreign_uri,field_name="village")
+    hydrate_village = partial(dict_to_foreign_uri, field_name="village")
 
     def obj_create(self, bundle, **kwargs):
-        import pdb;pdb.set_trace()
         loop_user = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
         village_ = Village.objects.get(id=bundle.data['village']['online_id'])
         attempt = LoopUserAssignedVillage.objects.filter(loop_user=loop_user ,village=village_)
@@ -553,9 +557,10 @@ class LoopUserAssignedVillageResource(BaseResource):
             village_ = Village.objects.get(id=bundle.data['village']['online_id'])
             attempt = LoopUserAssignedVillage.objects.filter(loop_user=loop_user ,village=village_)
             send_duplicate_message(int(attempt[0].id))
-        return bundle        
-
-
+        return bundle
+    def dehydrate(self,bundle):
+        bundle.data['online_id']=bundle.data['id']
+        return bundle
 
 class LanguageResource(BaseResource):
     class Meta:
@@ -585,23 +590,6 @@ class CropLanguageResource(BaseResource):
         include_resource_uri = False
     dehydrate_language = partial(
         foreign_key_to_id, field_name='language', sub_field_names=['id','notation'])
-    hydrate_language = partial(dict_to_foreign_uri,field_name='language')
-    hydrate_crop = partial(dict_to_foreign_uri,field_name='crop')
-
-    def obj_create(self,bundle,request=None,**kwargs):
-        # import pdb;pdb.set_trace()
-        # crop = Crop.objects.get(crop_id=bundle.data['crop']['online_id'])
-        # language = Language.objects.get(language_id=bundle.data['language'])
-        # attempt = CropLanguage.objects.filter(crop=crop,language=language)
-        # if attempt.count() < 1:
-        #     bundle = super(CropLanguageResource,self).obj_create(bundle,**kwargs)
-        # else:
-        #     send_duplicate_message(int(attempt[0].id))
-        # return bundle
-        pass
-
-    def obj_update(self,bundle,request=None,**kwargs):
-        pass
 
 class CropResource(BaseResource):
     crops = fields.ToManyField(CropLanguageResource, 'crops', full=True, null=True, blank=True)
@@ -643,12 +631,9 @@ class CropResource(BaseResource):
         if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
             user = AdminUser.objects.get(user_id=bundle.request.user.id)
             language = user.preferred_language
-        __bundle.data['crop_name']=crop_name_reg
-        __bundle.data['language']=language.id
         if attempt.count() < 1:
             bundle = super(CropResource, self).obj_create(bundle, **kwargs)
-            __bundle.data['crop']=bundle
-            __bundle=super(CropLanguageResource,self).obj_create(__bundle, **kwargs)
+            #CropLanguageResource(language=language,crop=bundle,)
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
@@ -1320,9 +1305,14 @@ class LoopUserAssignedMandiResource(BaseResource):
         max_limit = 0
         queryset = LoopUserAssignedMandi.objects.all()
         allowed_methods = ['post', 'put','delete']
+        always_return_data = True
         resource_name = 'loopuserassignedmandi'
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
     
+    dehydrate_aggregator = partial(foreign_key_to_id, field_name="loop_user", sub_field_names=["id"])
+    dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi", sub_field_names=["id"])
+
     hydrate_aggregator = partial(dict_to_foreign_uri, field_name="aggregator", resource_name="loopuser")
     hydrate_mandi = partial(dict_to_foreign_uri,field_name="mandi")
 
@@ -1345,4 +1335,7 @@ class LoopUserAssignedMandiResource(BaseResource):
             mandi = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
             attempt = LoopUserAssignedMandi.objects.filter(loop_user=loop_user ,mandi=mandi)
             send_duplicate_message(int(attempt[0].id))
-        return bundle        
+        return bundle       
+    def dehydrate(self,bundle):
+        bundle.data['online_id']=bundle.data['id']
+        return bundle
