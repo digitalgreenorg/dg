@@ -14,7 +14,8 @@ from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
 
 from loop_ivr.utils.marketinfo import raw_sql
-from loop_ivr.utils.data import LOG_FILE, AGGREGATOR_SMS_NO, agg_sms_initial_line
+from loop_ivr.utils.data import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
+    agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available
 from loop_ivr.models import PriceInfoLog
 
 
