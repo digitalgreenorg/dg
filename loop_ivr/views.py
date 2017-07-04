@@ -30,6 +30,7 @@ def crop_price_query(request):
             module = 'crop_info'
             log = "Call Id: %s Error: %s"%(str(call_id),str(e))
             write_log(LOG_FILE,module,log)
+            return HttpResponse(status=404)
         query_code = query_code.split('**')
         # If query code is not in correct format
         if len(query_code) != 2:
