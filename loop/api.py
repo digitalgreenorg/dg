@@ -633,7 +633,7 @@ class CropResource(BaseResource):
             language = user.preferred_language
         if attempt.count() < 1:
             bundle = super(CropResource, self).obj_create(bundle, **kwargs)
-            #CropLanguageResource(language=language,crop=bundle,)
+            CropLanguage(language=language,crop=bundle.obj,crop_name=crop_name_reg).save()
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
@@ -814,6 +814,28 @@ class VehicleResource(BaseResource):
         else:
             result = super(VehicleResource,self).get_object_list(request).filter(vehicles__language__id=1)
         return result
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        attempt = Vehicle.objects.filter(vehicle_name=bundle.data['vehicle_name_en'])
+        vehicle_name_reg = bundle.data['vehicle_name']
+        bundle.data['vehicle_name']=bundle.data['vehicle_name_en']
+        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
+            user = AdminUser.objects.get(user_id=bundle.request.user.id)
+            language = user.preferred_language
+        if attempt.count() < 1:
+            bundle = super(VehicleResource, self).obj_create(bundle, **kwargs)
+            VehicleLanguage(language=language,vehicle=bundle.obj,vehicle_name=vehicle_name_reg).save()
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(VehicleResource, self).obj_update(bundle, **kwargs)
+        except Exception, e:
+            attempt = Vehicle.objects.filter(vehicle_name=bundle.data['vehicle_name_en'])
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
 
     def dehydrate(self, bundle):
         if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
