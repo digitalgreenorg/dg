@@ -83,6 +83,7 @@ function initialize() {
   set_filterlistener();
   $('#aggregator_payment_tab').hide();
   $("#download_payment_sheets").hide();
+  hideLoader();
 }
 
 function showLoader() {
@@ -170,7 +171,7 @@ function hide_nav(tab) {
         }
       });
       $('#goto_home').click(function() {
-        hide_nav(HOME);
+        hide_nav('payments');
       });
     }
   }
