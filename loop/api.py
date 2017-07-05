@@ -443,9 +443,9 @@ class LoopUserResource(BaseResource):
 
     hydrate_user = partial(dict_to_foreign_uri, field_name='user')
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
-    hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages',
-                                        resource_name='village')
-    hydrate_assigned_mandis = partial(dict_to_foreign_uri_m2m, field_name='assigned_mandis', resource_name='mandi')
+    # hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages',
+    #                                     resource_name='village')
+    # hydrate_assigned_mandis = partial(dict_to_foreign_uri_m2m, field_name='assigned_mandis', resource_name='mandi')
 
     dehydrate_user = partial(
         foreign_key_to_id, field_name='user', sub_field_names=['id', 'username'])
@@ -453,10 +453,15 @@ class LoopUserResource(BaseResource):
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
 
     def obj_create(self, bundle, **kwargs):
-        attempt = LoopUser.objects.filter(name=bundle.data['aggregator_name'],phone=bundle.data['phone'])
-        if attempt < 1:
-            user = User.objects.create_user(username=bundle.data['user'],password=bundle.data['password'],first_name=bundle.data['aggregator_name_en'])
+        bundle.data['phone_number'] = bundle.data['contact']
+        import pdb;pdb.set_trace()
+        attempt = LoopUser.objects.filter(name=bundle.data['aggregator_name'],phone_number=bundle.data['phone_number'])
+        user = User.objects.filter(username = bundle.data['user'])
+        if attempt.count() < 1:
+            if user.count() < 1:
+                user = User.objects.create_user(username=bundle.data['user'],password=bundle.data['password'],first_name=bundle.data['aggregator_name_en'])
             bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
+        
         else:
             send_duplicate_message(int(attempt[0].id))
         # assigned_mandi_list = bundle.data.get('assigned_mandis')
@@ -613,7 +618,7 @@ class CropResource(BaseResource):
         limit = 0
         max_limit = 0
         queryset = Crop.objects.all()
-        allowed_methods = ['post', 'get']
+        allowed_methods = ['post', 'get', 'put']
         resource_name = 'crop'
         authorization = Authorization()
         authentication = ApiKeyAuthentication()
@@ -758,9 +763,9 @@ class GaddidarResource(BaseResource):
         hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def obj_create(self, bundle, request=None, **kwargs):
-        mandi_id = bundle.data['mandi']['id']
+        mandi_id = bundle.data['mandi']['online_id']
         mandi = Mandi.objects.get(id=mandi_id)
-        attempt = Gaddidar.objects.filter(gaddidar_phone=bundle.data['gaddidar_phone'],gadddiar_name=bundle.data['gaddidar_name'],mandi=mandi)
+        attempt = Gaddidar.objects.filter(gaddidar_phone=bundle.data['gaddidar_phone'],gaddidar_name=bundle.data['gaddidar_name'],mandi=mandi)
         if attempt.count() < 1:
             bundle = super(GaddidarResource, self).obj_create(
                 bundle, **kwargs)
@@ -778,6 +783,8 @@ class GaddidarResource(BaseResource):
             attempt = Gaddidar.objects.filter(gaddidar_phone=bundle.data['gaddidar_phone'],gadddiar_name=bundle.data['gaddidar_name'],mandi=mandi)
             send_duplicate_message(int(attempt[0].id))
         return bundle
+
+    hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
