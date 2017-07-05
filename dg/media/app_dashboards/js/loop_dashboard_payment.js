@@ -77,7 +77,7 @@ function initialize() {
 
   time_series_frequency = 1;
 
-  //get_filter_data(language, country_id);
+  get_filter_data(language, country_id);
   initialLoadComplete = true;
   hide_nav('payments');
   set_filterlistener();
@@ -171,7 +171,8 @@ function hide_nav(tab) {
         }
       });
       $('#goto_home').click(function() {
-        hide_nav('payments');
+        console.log("Do nothing");
+        //hide_nav('payments');
       });
     }
   }
@@ -946,8 +947,8 @@ function get_data(location, country_id) {
     start_date = $('#from_date_drawer').val();
     end_date = $('#to_date_drawer').val();
   } else {
-    start_date = $('#from_date').val();
-    end_date = $('#to_date').val();
+    start_date = $('#payments_from_date').val();
+    end_date = $('#payments_to_date').val();
   }
   // Get rest of the filters
   if (Date.parse(start_date) > Date.parse(end_date)) {
