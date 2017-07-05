@@ -45,7 +45,7 @@
 
 <div *ngFor="let graph of getDictKeys(filterGraphs);">
   <div class="row justify-content-center" *ngIf="filterGraphs[graph].displayContent">
-    <div id="dropDownGraph" class="container-box col-sm-11" *ngFor="let option of getDictKeys(filterGraphs[graph]['DropDownGraph']);">
+    <div id="graph" class="container-box col-sm-11" *ngFor="let option of getDictKeys(filterGraphs[graph]['DropDownGraph']);">
       <tabset [justified]="true" *ngIf="filterGraphs[graph]['DropDownGraph'][option]['addTab']">
         <tab *ngFor="let tab of getDictKeys(filterGraphs[graph]['DropDownGraph'][option]);" [heading]="tab">
           <br><br>
