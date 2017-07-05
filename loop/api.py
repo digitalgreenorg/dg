@@ -455,11 +455,17 @@ class LoopUserResource(BaseResource):
     def obj_create(self, bundle, **kwargs):
         bundle.data['phone_number'] = bundle.data['contact']
         import pdb;pdb.set_trace()
-        attempt = LoopUser.objects.filter(name=bundle.data['aggregator_name'],phone_number=bundle.data['phone_number'])
-        user = User.objects.filter(username = bundle.data['user'])
+        attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
+        user = None
+        try:
+            user = User.objects.get(username=bundle.data['username'])
+        except:
+            pass
         if attempt.count() < 1:
-            if user.count() < 1:
-                user = User.objects.create_user(username=bundle.data['user'],password=bundle.data['password'],first_name=bundle.data['aggregator_name_en'])
+            if user is None:
+                user = User.objects.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name_en'])
+            bundle.data['user']={}
+            bundle.data['user']['online_id']=user.id  
             bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
         
         else:
