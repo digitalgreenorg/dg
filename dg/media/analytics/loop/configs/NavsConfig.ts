@@ -1,7 +1,7 @@
 export const navsConfig = {
   'navs': {
     'Home': {
-      'active': true,
+      // 'active': true,
       'import': {
         'overall': false,
         'recent': false,
@@ -92,6 +92,7 @@ export const navsConfig = {
       }
     },
     'Time Series': {
+      'active': true,
       'DropDownGraph': {
         'container1': {
           'addTab': false,

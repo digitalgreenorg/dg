@@ -59,9 +59,11 @@
       </tabset>
       <div class="row" *ngIf="!filterGraphs[graph]['DropDownGraph'][option]['addTab']">
         <div *ngFor="let tab of getDictKeys(filterGraphs[graph]['DropDownGraph'][option])">
-          <div *ngFor="let div of filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
-            <div [id]="div"></div>
-            <br><br>
+          <div *ngIf="filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
+            <div *ngFor="let div of filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
+              <div [id]="div"></div>
+              <br><br>
+            </div>
           </div>
         </div>
       </div>

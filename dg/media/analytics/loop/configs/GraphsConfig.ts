@@ -3,10 +3,6 @@ export const chartsConfig = {
     chart: {
       type: 'column',
       renderTo: 'cummulativeCount',
-      tab: {
-        'id': 'tab1',
-        'class': 'col-sm-12'
-      },
       drillDown: true
     },
     credits: { enabled: false },
@@ -45,6 +41,58 @@ export const chartsConfig = {
       }, {
         name: 'Other',
         data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+      }],
+    drilldown: {}
+  },
+  'volFarmerTS': {
+    chart: {
+      type: 'areaspline',
+      renderTo: 'volFarmerTS',
+      drilldown: false,
+    },
+    title: {
+      text: 'Average fruit consumption during one week'
+    },
+    legend: { enabled: false },
+    xAxis: {
+      categories: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+      ],
+      plotBands: [{ // visualize the weekend
+        from: 4.5,
+        to: 6.5,
+        color: 'rgba(68, 170, 213, .2)'
+      }]
+    },
+    yAxis: {
+      title: {
+        text: 'Fruit units'
+      }
+    },
+    tooltip: {
+      shared: true,
+      valueSuffix: ' units'
+    },
+    credits: {
+      enabled: false
+    },
+    plotOptions: {
+      areaspline: {
+        fillOpacity: 0.5
+      }
+    },
+    series: [{
+      name: 'John',
+      data: [3, 4, 3, 5, 4, 10, 12]
+    }, {
+        name: 'Jane',
+        data: [1, 3, 4, 3, 3, 5, 4]
       }],
     drilldown: {}
   },
@@ -510,61 +558,4 @@ export const chartsConfig = {
                           series: [],
                           drilldown: {}
   },*/
-  'volFarmerTS': {
-    chart: {
-      type: 'areaspline'
-    },
-    title: {
-      text: 'Average fruit consumption during one week'
-    },
-    legend: {
-      layout: 'vertical',
-      align: 'left',
-      verticalAlign: 'top',
-      x: 150,
-      y: 100,
-      floating: true,
-      borderWidth: 1,
-    },
-    xAxis: {
-      categories: [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday'
-      ],
-      plotBands: [{ // visualize the weekend
-        from: 4.5,
-        to: 6.5,
-        color: 'rgba(68, 170, 213, .2)'
-      }]
-    },
-    yAxis: {
-      title: {
-        text: 'Fruit units'
-      }
-    },
-    tooltip: {
-      shared: true,
-      valueSuffix: ' units'
-    },
-    credits: {
-      enabled: false
-    },
-    plotOptions: {
-      areaspline: {
-        fillOpacity: 0.5
-      }
-    },
-    series: [{
-      name: 'John',
-      data: [3, 4, 3, 5, 4, 10, 12]
-    }, {
-        name: 'Jane',
-        data: [1, 3, 4, 3, 3, 5, 4]
-      }]
-  }
 }

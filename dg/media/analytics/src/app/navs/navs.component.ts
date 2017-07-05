@@ -31,16 +31,18 @@ export class NavsComponent implements OnInit {
   charts = [];
   //Display drop down type graphs
   // showDropDownGraphs: boolean = false;
+  initialLoad: boolean = true;
+  chartname:string = "";
 
   constructor(private graphService: GraphsService, private _sharedService: SharedService) {
     this._sharedService.argsList$.subscribe(filters => {
       this.getGraphsData(filters);
     });
-    setInterval(() => {
-      this.charts.forEach(chart => {
-        chart.nativeChart.reflow();
-      });
-    }, 0);
+    // setInterval(() => {
+    //   this.charts.forEach(chart => {
+    //     chart.nativeChart.reflow();
+    //   });
+    // }, 0);
   }
 
   ngOnInit(): void {
@@ -63,41 +65,45 @@ export class NavsComponent implements OnInit {
         Object.keys(this.navsConfig.navs[nav].subNavs).forEach(subNav => {
           if (this.navsConfig.navs[nav].subNavs[subNav].containers != undefined) {
             this.containers[subNav] = this.navsConfig.navs[nav].subNavs[subNav];
-            this.containers[subNav]['displayContent'] = false;
+            this.containers[subNav]['displayContent'] = true;
           } else if (this.navsConfig.navs[nav].subNavs[subNav].DropDownGraph != undefined) {
             this.filterGraphs[subNav] = this.navsConfig.navs[nav].subNavs[subNav];
-            this.filterGraphs[subNav]['displayContent'] = false;
+            this.filterGraphs[subNav]['displayContent'] = true;
           }
         });
       }
       else if (this.navsConfig.navs[nav].containers != undefined) {
         this.containers[nav] = this.navsConfig.navs[nav];
-        this.containers[nav]['displayContent'] = false;
+        this.containers[nav]['displayContent'] = true;
       }
       else if (this.navsConfig.navs[nav].DropDownGraph != undefined) {
         this.filterGraphs[nav] = this.navsConfig.navs[nav];
-        this.filterGraphs[nav]['displayContent'] = false;
+        this.filterGraphs[nav]['displayContent'] = true;
       }
       this.toggleNav[nav] = tempDict;
 
       //check for active link on nav bar and set status as true
       if (this.navsConfig.navs[nav].hasOwnProperty('active')) {
         this.toggleNav[nav].status = true;
+        this.chartname = this.navsConfig.navs[nav];
         this.showContent(nav);
       }
     });
+    console.log(this.filterGraphs);
   }
 
   renderGraphs() {
     Object.keys(this.chartsConfig).forEach(chart => {
       //assign key as chart name
       this.chartsConfig[chart].chartName = chart;
+      // console.log(this.chartsConfig);
       //Add empty charts to DOM
       this.charts.push({
         options: this.chartsConfig[chart],
         nativeChart: null // To be obtained with saveInstance
       });
     });
+    console.log(this.charts);
   }
 
   //function to access underlying chart
@@ -169,11 +175,20 @@ export class NavsComponent implements OnInit {
 
   //function to set containers on view based on nav clicked(applicable for both manin nav and subNav)
   showContent(selectedNav): void {
+    let xyz;
+    if (this.initialLoad) {
+      xyz = true;
+      this.initialLoad = false;
+    }
+    else {
+      xyz = false;
+    }
+
     Object.keys(this.containers).forEach(container => {
-      this.containers[container].displayContent = false;
+      this.containers[container].displayContent = xyz;
     });
     Object.keys(this.filterGraphs).forEach(graph => {
-      this.filterGraphs[graph].displayContent = false;
+      this.filterGraphs[graph].displayContent = xyz;
     });
     if (this.containers[selectedNav] != undefined) {
       this.containers[selectedNav].displayContent = true;
@@ -181,5 +196,6 @@ export class NavsComponent implements OnInit {
     else if (this.filterGraphs[selectedNav] != undefined) {
       this.filterGraphs[selectedNav].displayContent = true;
     }
+    // console.log(selectedNav);
   }
 }
