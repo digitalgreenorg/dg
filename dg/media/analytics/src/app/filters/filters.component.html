@@ -3,7 +3,7 @@
     <div #sideNavContent class="container">
       <div class="row">
         <div class="col-md-8">
-          <h6 class="text-left text-uppercase">Filters</h6>
+          <h6 class="text-left text-uppercase no-margin">Filters</h6>
         </div>
         <div class="col-md-4">
           <button type="button" class="close" aria-label="Close" (click)="closeNav()"><span aria-hidden="true">&times;</span></button>
@@ -31,16 +31,21 @@
             </form>
           </div>
         </div>
-        <div *ngIf="invalidDate" class="alert">
-          <h6>{{invalidDateMessage}}</h6></div>
+        <div *ngIf="invalidDate" class="alert red-text">
+          <h6>{{ invalidDateMessage }}</h6></div>
       </div>
       <div class="row">
-        <div class="col-md-12 col-sm-12">
+        <div class="col-sm-12">
           <a *ngFor='let filter_name of filter_list'>
-          <label (click)="filter_name.expand=!filter_name.expand">{{filter_name.heading}}</label>
+          <label (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand">{{ filter_name.heading }}</label>
           <div class="container" *ngIf="filter_name.expand">
             <div class="form-group row" [id]="filter_name.heading">
-              <div class="col-md-12 col-sm-12">
+              <h6 class="col-sm-12">
+                <span class="checkbox">
+                  <label><input id={{filter_name.heading}} type="checkbox" checked="checked" [(ngModel)]="filter_name.select_all" (change)="select_all(filter_name)"> Select All</label>
+                </span>
+              </h6>
+              <div class="col-sm-12">
                 <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
               </div>
             </div>
@@ -48,7 +53,7 @@
               <perfect-scrollbar class="scrollBar">
                 <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm">
                   <span class="checkbox">
-                    <label><input id={{data.id}} type="checkbox" checked="checked" [(ngModel)]="data.checked"> {{data.value}}</label>
+                    <label><input id={{data.id}} type="checkbox" [(ngModel)]="data.checked" (change)="filter_name.changed = true"> {{data.value}}</label>
                   </span>
                 </h6>
               </perfect-scrollbar>
@@ -58,7 +63,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12 col-sm-12">
+        <div class="col-sm-12">
           <div class="text-center">
             <button class="btn btn-success btn-sx btn-submit" (click)="applyFilters()">Apply Filters</button>
           </div>

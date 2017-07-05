@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment.training';
 @Injectable()
 export class GraphsService {
 
-  private graphURL = environment.url+"graph_data";
+  private graphURL = environment.url + "graph_data";
 
   constructor(private http: Http) { }
 
