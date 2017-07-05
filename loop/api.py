@@ -453,7 +453,6 @@ class LoopUserResource(BaseResource):
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
 
     def obj_create(self, bundle, **kwargs):
-        bundle.data['phone_number'] = bundle.data['contact']
         import pdb;pdb.set_trace()
         attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
         user = None
@@ -505,9 +504,12 @@ class LoopUserResource(BaseResource):
     def obj_update(self, bundle, **kwargs):
         # Edit case many to many handling. First clear out the previous related objects and create new objects
         try:
+            user = User.objects.get(username=bundle.data['username'])
+            bundle.data['user']={}
+            bundle.data['user']['online_id']=user.id
             bundle = super(LoopUserResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = LoopUser.objects.filter(name=bundle.data['aggregator_name'],phone=bundle.data['phone'])
+            attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
             send_duplicate_message(int(attempt[0].id))
         return bundle
         # bundle = super(LoopUserResource, self).obj_update(bundle, **kwargs)
