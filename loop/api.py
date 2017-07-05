@@ -440,6 +440,8 @@ class LoopUserResource(BaseResource):
             'assigned_villages', 'assigned_mandis','user').all()
         resource_name = 'loopuser'
         authorization = LoopUserAuthorization('id__in')
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
 
     hydrate_user = partial(dict_to_foreign_uri, field_name='user')
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
@@ -447,13 +449,12 @@ class LoopUserResource(BaseResource):
     #                                     resource_name='village')
     # hydrate_assigned_mandis = partial(dict_to_foreign_uri_m2m, field_name='assigned_mandis', resource_name='mandi')
 
-    dehydrate_user = partial(
-        foreign_key_to_id, field_name='user', sub_field_names=['id', 'username'])
+    # dehydrate_user = partial(
+    #     foreign_key_to_id, field_name='user', sub_field_names=['id', 'username'])
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
 
     def obj_create(self, bundle, **kwargs):
-        import pdb;pdb.set_trace()
         attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
         user = None
         try:
@@ -541,6 +542,11 @@ class LoopUserResource(BaseResource):
 
         return [{'row_id': assigned_village_obj.id,'id': assigned_village_obj.village.id,'village_name':assigned_village_obj.village.village_name} for assigned_village_obj in
                 set(LoopUserAssignedVillage.objects.select_related('village').filter(loop_user=bundle.obj))]
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+
 
 class LoopUserAssignedVillageResource(BaseResource):
     aggregator = fields.ForeignKey(LoopUserResource, 'loop_user')
