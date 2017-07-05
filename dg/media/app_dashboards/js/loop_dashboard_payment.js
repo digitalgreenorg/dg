@@ -78,6 +78,7 @@ function initialize() {
   time_series_frequency = 1;
 
   //get_filter_data(language, country_id);
+  initialLoadComplete = true;
   hide_nav('payments');
   set_filterlistener();
   $('#aggregator_payment_tab').hide();
@@ -620,7 +621,7 @@ function change_payment(parameter) {
 }
 //To check for any items data change (textview, drop downs, button click)
 function set_filterlistener() {
-  $("#recent_cards_data_frequency").change(function() {
+/*  $("#recent_cards_data_frequency").change(function() {
     days_to_average = $('#recent_cards_data_frequency :selected').val();
     plot_cards_data();
   });
@@ -644,9 +645,9 @@ function set_filterlistener() {
         aggregators_all.checked = false;
       });
     }
-  });
+  });*/
 
-  $('#crop_all').on('change', function(e) {
+  /*$('#crop_all').on('change', function(e) {
     if (this.checked) {
       $('#crops').children().each(function() {
         var crops_all = $(this).children()[1].firstChild;
@@ -691,7 +692,7 @@ function set_filterlistener() {
   $("#crop_max_min_avg").change(function() {
     var crop_id = $('#crop_max_min_avg :selected').val();
     crop_prices_graph(crop_id);
-  });
+  });*/
 
   $("#download-payment-sheet").click(function() {
     if (superEditMode == 1) {
