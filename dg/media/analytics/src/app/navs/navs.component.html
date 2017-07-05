@@ -12,7 +12,7 @@
   </div>
 </nav>
 <div *ngFor="let nav of getDictKeys(toggleNav);">
-  <div *ngIf = "toggleNav[nav].hasOwnProperty('subNavs')">
+  <div *ngIf="toggleNav[nav].hasOwnProperty('subNavs')">
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
       <div class="collapse navbar-collapse" [collapse]="isCollapsed">
         <ul class="navbar-nav">
@@ -26,9 +26,9 @@
 </div>
 <br>
 <div *ngFor="let container of getDictKeys(containers);">
-<div class="row justify-content-center"  *ngIf="containers[container].displayContent">
-  <div id="container" class="container-box col-sm-11" *ngFor="let option of getDictKeys(containers[container]['containers']);">
-    <tabset [justified]="true">
+  <div class="row justify-content-center" *ngIf="containers[container].displayContent">
+    <div id="container" class="container-box col-sm-11" *ngFor="let option of getDictKeys(containers[container]['containers']);">
+      <tabset [justified]="true">
         <tab *ngFor="let tab of getDictKeys(containers[container]['containers'][option]);" [heading]="tab">
           <br><br>
           <div class="row">
@@ -38,9 +38,37 @@
             </div>
           </div>
         </tab>
-    </tabset>
+      </tabset>
+    </div>
   </div>
-</div> 
+</div>
+
+<div *ngFor="let graph of getDictKeys(filterGraphs);">
+  <div class="row justify-content-center" *ngIf="filterGraphs[graph].displayContent">
+    <div id="dropDownGraph" class="container-box col-sm-11" *ngFor="let option of getDictKeys(filterGraphs[graph]['DropDownGraph']);">
+      <tabset [justified]="true" *ngIf="filterGraphs[graph]['DropDownGraph'][option]['addTab']">
+        <tab *ngFor="let tab of getDictKeys(filterGraphs[graph]['DropDownGraph'][option]);" [heading]="tab">
+          <br><br>
+          <div class="row">
+            <div *ngFor="let div of filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
+              <div [id]="div"></div>
+              <br><br>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+      <div class="row" *ngIf="!filterGraphs[graph]['DropDownGraph'][option]['addTab']">
+        <div *ngFor="let tab of getDictKeys(filterGraphs[graph]['DropDownGraph'][option])">
+          <div *ngFor="let div of filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
+            <div [id]="div"></div>
+            <br><br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container-fluid">
   <div *ngFor="let chart of charts">
     <chart [options]="chart.options" (load)="saveInstance($event.context, chart)"></chart>
