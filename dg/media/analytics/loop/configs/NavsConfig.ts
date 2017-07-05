@@ -94,12 +94,10 @@ export const navsConfig = {
     'Time Series': {
       'DropDownGraph': {
         'container1': {
+          'addTab': false,
           'Volume Farmer': {
-            'addDivs': ['volFarmerTS']
+            'addDivs': ['volFarmerTS', 'spkcpkTS']
           },
-          'SPK CPK': {
-            'addDivs': ['spkcpkTS']
-          }
         },
       }
     }
