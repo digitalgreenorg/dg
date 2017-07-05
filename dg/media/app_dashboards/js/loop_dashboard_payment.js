@@ -944,8 +944,8 @@ function create_filter(tbody_obj, id, name, checked) {
 //To get data after filters are aplied
 function get_data(location, country_id) {
   if (location == 'drawer') {
-    start_date = $('#from_date_drawer').val();
-    end_date = $('#to_date_drawer').val();
+    start_date = $('#payments_from_date').val();
+    end_date = $('#payments_to_date').val();
   } else {
     start_date = $('#payments_from_date').val();
     end_date = $('#payments_to_date').val();
