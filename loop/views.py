@@ -586,6 +586,14 @@ def payments(request):
     return HttpResponse(data)
 
 
+def dashboard_payments(request):
+    if request.method == 'GET':
+        context = RequestContext(request)
+        return render_to_response('app_dashboards/loop_broadcast_payment.html', context_instance=context)
+    else:
+        return HttpResponse(status=404)
+
+
 def helpline_incoming(request):
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
