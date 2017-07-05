@@ -589,7 +589,7 @@ def payments(request):
 def dashboard_payments(request):
     if request.method == 'GET':
         context = RequestContext(request)
-        return render_to_response('app_dashboards/loop_broadcast_payment.html', context_instance=context)
+        return render_to_response('app_dashboards/loop_dashboard_payment.html', context_instance=context)
     else:
         return HttpResponse(status=404)
 
