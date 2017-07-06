@@ -38,16 +38,16 @@ export class NavsComponent implements OnInit {
     this._sharedService.argsList$.subscribe(filters => {
       this.getGraphsData(filters);
     });
-    // setInterval(() => {
-    //   this.charts.forEach(chart => {
-    //     chart.nativeChart.reflow();
-    //   });
-    // }, 0);
+/*    setInterval(() => {
+      this.charts.forEach(chart => {
+        chart.nativeChart.reflow();
+      });
+    }, 0);*/
   }
 
   ngOnInit(): void {
+    //this.renderGraphs();
     this.renderNavs();
-    this.renderGraphs();
   }
 
   ngAfterViewInit(): void {
@@ -89,12 +89,26 @@ export class NavsComponent implements OnInit {
         this.showContent(nav);
       }
     });
-    console.log(this.filterGraphs);
+  }
+
+  addCharts(containers) {
+    let charts = []
+    Object.keys(containers).forEach(container => {
+      Object.keys(containers[container]).forEach(tab => {
+        containers[container][tab]['addDivs'].forEach(chart => {
+          
+          charts.push(this.chartsConfig[chart]);
+        })
+      })
+    })
+    return charts
   }
 
   //set container view based on clicked nav link
   setContainer(nav, container) {
+    //console.log(nav, container)
     this.containers[nav] = container;
+    this.containers[nav]['charts'] = this.addCharts(container.containers)
     this.containers[nav]['displayContent'] = false;
   }
 
@@ -115,7 +129,6 @@ export class NavsComponent implements OnInit {
         nativeChart: null
       });
     });
-    console.log(this.charts);
   }
 
   //access underlying chart
@@ -201,6 +214,8 @@ export class NavsComponent implements OnInit {
     else if (this.filterGraphs[selectedNav] != undefined) {
       this.filterGraphs[selectedNav].displayContent = true;
     }
-    // console.log(selectedNav);
+/*    this.charts.forEach(chart => {
+      delete chart.options.chart.renderTo;
+    });*/
   }
 }
