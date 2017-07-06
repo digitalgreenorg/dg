@@ -31,18 +31,16 @@ export class NavsComponent implements OnInit {
   charts = [];
   //Display drop down type graphs
   // showDropDownGraphs: boolean = false;
-  initialLoad: boolean = true;
-  chartname: string = "";
 
   constructor(private graphService: GraphsService, private _sharedService: SharedService) {
     this._sharedService.argsList$.subscribe(filters => {
       this.getGraphsData(filters);
     });
-/*    setInterval(() => {
+    setInterval(() => {
       this.charts.forEach(chart => {
         chart.nativeChart.reflow();
       });
-    }, 0);*/
+    }, 0);
   }
 
   ngOnInit(): void {
@@ -85,20 +83,20 @@ export class NavsComponent implements OnInit {
       //check for active link on nav bar and set status as true
       if (this.navsConfig.navs[nav].hasOwnProperty('active')) {
         this.toggleNav[nav].status = true;
-        this.chartname = this.navsConfig.navs[nav];
         this.showContent(nav);
       }
     });
   }
 
-  addCharts(containers) {
+  addChartsToDict(containers) {
     let charts = []
     Object.keys(containers).forEach(container => {
       Object.keys(containers[container]).forEach(tab => {
-        containers[container][tab]['addDivs'].forEach(chart => {
-          
-          charts.push(this.chartsConfig[chart]);
-        })
+        if(containers[container][tab].hasOwnProperty('addDivs')){
+          containers[container][tab]['addDivs'].forEach(chart => {
+            charts.push(this.chartsConfig[chart]);
+          })
+        }
       })
     })
     return charts
@@ -106,33 +104,21 @@ export class NavsComponent implements OnInit {
 
   //set container view based on clicked nav link
   setContainer(nav, container) {
-    //console.log(nav, container)
     this.containers[nav] = container;
-    this.containers[nav]['charts'] = this.addCharts(container.containers)
+    this.containers[nav]['charts'] = this.addChartsToDict(container.containers)
     this.containers[nav]['displayContent'] = false;
   }
 
   //set container for navs with interdependent filter and graph
   setFilterContainer(nav, container) {
     this.filterGraphs[nav] = container
+    this.filterGraphs[nav]['charts'] = this.addChartsToDict(container.DropDownGraph)
     this.filterGraphs[nav]['displayContent'] = false;
-  }
-
-  //render empty graphs to DOM
-  renderGraphs() {
-    Object.keys(this.chartsConfig).forEach(chart => {
-      //assign key as chart name
-      this.chartsConfig[chart].chartName = chart;
-      this.charts.push({
-        options: this.chartsConfig[chart],
-        // nativeChart will assigned with saveInstance
-        nativeChart: null
-      });
-    });
   }
 
   //access underlying chart
   saveInstance(chartInstance, chart) {
+    console.log("called")
     chart.nativeChart = chartInstance;
   }
 
@@ -204,18 +190,28 @@ export class NavsComponent implements OnInit {
     }
   }
 
+  //render charts to container
+  renderCharts(container) {
+    container.displayContent = true;
+    container.charts.forEach(chart => {
+        this.charts.push({
+        options: chart,
+        // nativeChart will assigned with saveInstance
+        nativeChart: null
+      });
+    })
+  }
+
   //display respective containers based on clicked nav
   showContent(selectedNav): void {
     this.resetDict(this.containers, 'displayContent', false);
     this.resetDict(this.filterGraphs, 'displayContent', false);
+    this.charts = []
     if (this.containers[selectedNav] != undefined) {
-      this.containers[selectedNav].displayContent = true;
+      this.renderCharts(this.containers[selectedNav]);
     }
     else if (this.filterGraphs[selectedNav] != undefined) {
-      this.filterGraphs[selectedNav].displayContent = true;
+      this.renderCharts(this.filterGraphs[selectedNav]);
     }
-/*    this.charts.forEach(chart => {
-      delete chart.options.chart.renderTo;
-    });*/
   }
 }
