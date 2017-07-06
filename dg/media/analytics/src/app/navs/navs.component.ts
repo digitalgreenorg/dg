@@ -61,22 +61,22 @@ export class NavsComponent implements OnInit {
       if (this.navsConfig.navs[nav].subNavs != undefined) {
         tempDict['subNavs'] = this.getDictKeys(this.navsConfig.navs[nav].subNavs);
         Object.keys(this.navsConfig.navs[nav].subNavs).forEach(subNav => {
+          let container = this.navsConfig.navs[nav].subNavs[subNav];
           if (this.navsConfig.navs[nav].subNavs[subNav].containers != undefined) {
-            this.containers[subNav] = this.navsConfig.navs[nav].subNavs[subNav];
-            this.containers[subNav]['displayContent'] = false;
-          } else if (this.navsConfig.navs[nav].subNavs[subNav].DropDownGraph != undefined) {
-            this.filterGraphs[subNav] = this.navsConfig.navs[nav].subNavs[subNav];
-            this.filterGraphs[subNav]['displayContent'] = false;
+            this.setContainer(subNav, container);
+          } 
+          else if (this.navsConfig.navs[nav].subNavs[subNav].DropDownGraph != undefined) {
+            this.setFilterContainer(subNav, container);
           }
         });
       }
       else if (this.navsConfig.navs[nav].containers != undefined) {
-        this.containers[nav] = this.navsConfig.navs[nav];
-        this.containers[nav]['displayContent'] = false;
+        let container = this.navsConfig.navs[nav];
+        this.setContainer(nav, container);
       }
       else if (this.navsConfig.navs[nav].DropDownGraph != undefined) {
-        this.filterGraphs[nav] = this.navsConfig.navs[nav];
-        this.filterGraphs[nav]['displayContent'] = false;
+        let container = this.navsConfig.navs[nav];
+        this.setFilterContainer(nav, container);
       }
       this.toggleNav[nav] = tempDict;
 
@@ -86,6 +86,16 @@ export class NavsComponent implements OnInit {
         this.showContent(nav);
       }
     });
+  }
+
+  setContainer(nav, container) {
+    this.containers[nav] = container;
+    this.containers[nav]['displayContent'] = false;
+  }
+
+  setFilterContainer(nav, container) {
+    this.filterGraphs[nav] = container
+    this.filterGraphs[nav]['displayContent'] = false;   
   }
 
   renderGraphs() {
@@ -148,11 +158,16 @@ export class NavsComponent implements OnInit {
     return Object.keys(dict);
   }
 
+  //function to reset values in a dict, used for navigation and setting containers
+  resetDict(dict, flag, value) {
+    Object.keys(dict).forEach(key => {
+      dict[key][flag] = value;
+    });
+  }
+
   //function to set status as true for clicked nav item and rest as false
   setNav(selectedItem: string): void {
-    Object.keys(this.toggleNav).forEach(nav => {
-      this.toggleNav[nav].status = false;
-    });
+    this.resetDict(this.toggleNav, 'status', false);
     this.toggleNav[selectedItem].status = true;
     //set show content for navs with subNavs
     if ((this.toggleNav[selectedItem].hasOwnProperty('subNavs'))) {
@@ -169,12 +184,8 @@ export class NavsComponent implements OnInit {
 
   //function to set containers on view based on nav clicked(applicable for both manin nav and subNav)
   showContent(selectedNav): void {
-    Object.keys(this.containers).forEach(container => {
-      this.containers[container].displayContent = false;
-    });
-    Object.keys(this.filterGraphs).forEach(graph => {
-      this.filterGraphs[graph].displayContent = false;
-    });
+    this.resetDict(this.containers, 'displayContent', false);
+    this.resetDict(this.filterGraphs,'displayContent', false);
     if (this.containers[selectedNav] != undefined) {
       this.containers[selectedNav].displayContent = true;
     }
