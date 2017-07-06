@@ -52,8 +52,8 @@ export class NavsComponent implements OnInit {
     // this.getGraphsData({ 'params': {} });
   }
 
+  //render navs and subnavs and create respective containers based on selected nav
   renderNavs(): void {
-    //render nav links to respective navBars
     Object.keys(this.navsConfig.navs).forEach(nav => {
       let tempDict = {};
       tempDict['status'] = false;
@@ -88,33 +88,37 @@ export class NavsComponent implements OnInit {
     });
   }
 
+  //set container view based on clicked nav link
   setContainer(nav, container) {
     this.containers[nav] = container;
     this.containers[nav]['displayContent'] = false;
   }
 
+  //set container for navs with interdependent filter and graph
   setFilterContainer(nav, container) {
     this.filterGraphs[nav] = container
     this.filterGraphs[nav]['displayContent'] = false;   
   }
 
+  //render empty graphs to DOM
   renderGraphs() {
     Object.keys(this.chartsConfig).forEach(chart => {
       //assign key as chart name
       this.chartsConfig[chart].chartName = chart;
-      //Add empty charts to DOM
       this.charts.push({
         options: this.chartsConfig[chart],
-        nativeChart: null // To be obtained with saveInstance
+        // nativeChart will assigned with saveInstance
+        nativeChart: null 
       });
     });
   }
 
-  //function to access underlying chart
+  //access underlying chart
   saveInstance(chartInstance, chart) {
     chart.nativeChart = chartInstance;
   }
 
+  //get data for graphs from service
   getGraphsData(filters): void {
     this.charts.forEach(chart => {
       chart.nativeChart.showLoading();
@@ -145,7 +149,7 @@ export class NavsComponent implements OnInit {
   }
 
   //Empty exting data and then fill in updated data
-  private clearSeriesFromGraph(chart) {
+  clearSeriesFromGraph(chart) {
     if (chart.nativeChart.series.length > 0) {
       for (var i = chart.nativeChart.series.length - 1; i >= 0; i--) {
         chart.nativeChart.series[i].remove();
@@ -158,14 +162,14 @@ export class NavsComponent implements OnInit {
     return Object.keys(dict);
   }
 
-  //function to reset values in a dict, used for navigation and setting containers
+  //reset values in a dict, used for navigation and setting containers
   resetDict(dict, flag, value) {
     Object.keys(dict).forEach(key => {
       dict[key][flag] = value;
     });
   }
 
-  //function to set status as true for clicked nav item and rest as false
+  //set status as true for clicked nav item and rest as false
   setNav(selectedItem: string): void {
     this.resetDict(this.toggleNav, 'status', false);
     this.toggleNav[selectedItem].status = true;
@@ -182,7 +186,7 @@ export class NavsComponent implements OnInit {
     }
   }
 
-  //function to set containers on view based on nav clicked(applicable for both manin nav and subNav)
+  //display respective containers based on clicked nav
   showContent(selectedNav): void {
     this.resetDict(this.containers, 'displayContent', false);
     this.resetDict(this.filterGraphs,'displayContent', false);
