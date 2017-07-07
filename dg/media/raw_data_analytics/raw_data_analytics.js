@@ -246,7 +246,7 @@ function validation_check() {
                 count_partition_restrict++;
             }
         }
-        if (count_partition_restrict > 1) {
+        if (count_partition_restrict > 2) {
             alert("Along with list please select either Animator/Group/Registered Viewers/Video from Partitions");
             error = 1;
             event.preventDefault();
@@ -268,8 +268,7 @@ function validation_check() {
         ((video.checked) && (video_screened_no.checked)) ||
         ((video.checked) && (video_produced_no.checked))
         ||((village.checked)&&(villagenum.checked))||
-        ((block.checked)&&(blocknum.checked)) ||
-        ((video.checked)&&(group.checked))) {
+        ((block.checked)&&(blocknum.checked)) ) {
         alert("Invalid combination of 'Value' and 'Partition' fields!! Please check");
         error = 1;
         event.preventDefault();
