@@ -8,7 +8,8 @@ from django.utils.timezone import now
 from django.db.models import Count, Sum
 
 import dg.settings
-from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, HelplineCallLog
+from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, HelplineCallLog, \
+    Farmer, LoopUserAssignedVillage
 
 from loop.utils.ivr_helpline.helpline_data import helpline_data
 from loop.management.commands.helpline_summary import Command
@@ -61,7 +62,7 @@ class Command(BaseCommand):
                     '</table>',
                     '<br/>'] + \
                     cluster_wise_call_detail_list + \
-                    ['<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>',
+                    ['<br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>',
                     'Disclaimer: Please note that it\'s a automated system generated mail intended to provide notification for approximate number of OFF hours calls. ',
                     'You are requested to login to Exotel platform daily in the morning to plan your day accordingly.<br/><br/>',
                     'Thank you.<br/>',
