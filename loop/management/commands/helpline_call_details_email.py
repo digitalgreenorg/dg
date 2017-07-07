@@ -11,6 +11,7 @@ import dg.settings
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, HelplineCallLog
 
 from loop.utils.ivr_helpline.helpline_data import helpline_data
+from loop.management.commands.helpline_summary import cluster_wise_bifurcation
 
 class Command(BaseCommand):
 
@@ -19,7 +20,13 @@ class Command(BaseCommand):
             yesterday_declined_call_count,
             yesterday_off_hours_incoming_call_count,
             yesterday_received_call_count,
-            yesterday_resolved_call_count):
+            yesterday_resolved_call_count,
+            total_calls_received,
+            total_unique_caller,
+            total_repeat_caller,
+            total_calls_from_repeat_caller,
+            repeat_caller_contribute_percentage,
+            cluster_wise_call_detail_list):
 
         working_hours_start = helpline_data['working_hours_start']
         working_hours_end = helpline_data['working_hours_end']
@@ -40,6 +47,11 @@ class Command(BaseCommand):
                     'Dear Team,<br/><br/>This is the status of calls received on LOOP IVR Helpline number:<br/><br/>',
                     '<table>',
                     '<tr><th>Parameters</th><th>Count</th></tr>',
+                    '<tr><td>Total Calls Received</td><td> %s</td></tr>'%(total_calls_received,),
+                    '<tr><td>Total Unique Callers</td><td> %s</td></tr>'%(total_unique_caller,),
+                    '<tr><td>Total number of repeat caller</td><td> %s</td></tr>'%(total_repeat_caller,),
+                    '<tr><td>Total Calls from repeat callers</td><td> %s</td></tr>'%(total_calls_from_repeat_caller,),
+                    '<tr><td>%% of calls contributed by repeat callers</td><td> %s</td></tr>'%(repeat_caller_contribute_percentage,),
                     '<tr><td>Total Pending Calls Till Now</td><td> %s</td></tr>'%(total_pending_call_count,),
                     '<tr><td>Total Received Calls on %s from %s:00 AM to %s:00 PM</td><td> %s</td></tr>'%(yesterday_date,working_hours_start,working_hours_end%12,yesterday_received_call_count),
                     '<tr><td>Total Attended Calls on %s from %s:00 AM to %s:00 PM</td><td> %s</td></tr>'%(yesterday_date,working_hours_start,working_hours_end%12,yesterday_resolved_call_count),
@@ -47,7 +59,9 @@ class Command(BaseCommand):
                     '<tr><td>Total Declined Calls on %s</td><td> %s</td></tr>'%(yesterday_date,yesterday_declined_call_count),
                     '<tr><td>Total Received Calls During Off Hours i.e. %s:00 PM, %s to %s:00 AM, %s</td><td> %s</td></tr>'%(working_hours_end%12,yesterday_date,working_hours_start,today_date,yesterday_off_hours_incoming_call_count),
                     '</table>',
-                    '<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>',
+                    '<br/>'] +
+                    cluster_wise_call_detail_list +
+                    ['<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>',
                     'Disclaimer: Please note that it\'s a automated system generated mail intended to provide notification for approximate number of OFF hours calls. ',
                     'You are requested to login to Exotel platform daily in the morning to plan your day accordingly.<br/><br/>',
                     'Thank you.<br/>',
@@ -97,9 +111,36 @@ class Command(BaseCommand):
         #total_declined_call_count = self.during_working_hour(total_declined_call)
         #yesterday_declined_call_count = self.during_working_hour(yesterday_declined_call)
 
+        # Extra Information
+        from_date = datetime.datetime.now().date()-timedelta(days=int(last_n_days))
+        to_date = datetime.datetime.now().date()
+        total_calls_received = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).count()
+        total_unique_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values_list('from_number').distinct().count()
+        total_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).count()
+        total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
+        if total_calls_from_repeat_caller == None:
+            total_calls_from_repeat_caller = 0
+        if total_calls_received > 0:
+            repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
+        else:
+            repeat_caller_contribute_percentage = 0
+        cluster_wise_call_detail = cluster_wise_bifurcation(from_date,to_date)
+        cluster_wise_call_detail_list = ['<br/><br/>Cluster-wise bifurcation of calls received:<br/><br/>',
+                                        '<table><tr><th>Cluster Name</th><th>Farmer Count</th><th>No of calls</th></tr>']
+        for cluster in cluster_wise_call_detail:
+            if cluster_wise_call_detail[cluster]['total_calls'] != 0:
+                cluster_wise_call_detail_list.append('<tr><td>%s</td><td>%s</td><td>%s</td></tr>'%(cluster_wise_call_detail[cluster]['cluster_name'],cluster_wise_call_detail[cluster]['farmer_count'],cluster_wise_call_detail[cluster]['total_calls']))
+        cluster_wise_call_detail_list.append('</table>')
+
         self.send_mail(total_pending_call_count,
             total_declined_call_count,
             yesterday_declined_call_count,
             yesterday_off_hours_incoming_call_count,
             yesterday_received_call_count,
-            yesterday_resolved_call_count)
+            yesterday_resolved_call_count,
+            total_calls_received,
+            total_unique_caller,
+            total_repeat_caller,
+            total_calls_from_repeat_caller,
+            repeat_caller_contribute_percentage,
+            cluster_wise_call_detail_list)
