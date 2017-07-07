@@ -5,13 +5,13 @@ from pytz import timezone
 from django.core.management.base import BaseCommand
 from django.core.mail import EmailMultiAlternatives
 from django.utils.timezone import now
-from django.db.models import Count
+from django.db.models import Count, Sum
 
 import dg.settings
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, HelplineCallLog
 
 from loop.utils.ivr_helpline.helpline_data import helpline_data
-from loop.management.commands.helpline_summary import cluster_wise_bifurcation
+from loop.management.commands.helpline_summary import Command
 
 class Command(BaseCommand):
 
@@ -59,8 +59,8 @@ class Command(BaseCommand):
                     '<tr><td>Total Declined Calls on %s</td><td> %s</td></tr>'%(yesterday_date,yesterday_declined_call_count),
                     '<tr><td>Total Received Calls During Off Hours i.e. %s:00 PM, %s to %s:00 AM, %s</td><td> %s</td></tr>'%(working_hours_end%12,yesterday_date,working_hours_start,today_date,yesterday_off_hours_incoming_call_count),
                     '</table>',
-                    '<br/>'] +
-                    cluster_wise_call_detail_list +
+                    '<br/>'] + \
+                    cluster_wise_call_detail_list + \
                     ['<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>',
                     'Disclaimer: Please note that it\'s a automated system generated mail intended to provide notification for approximate number of OFF hours calls. ',
                     'You are requested to login to Exotel platform daily in the morning to plan your day accordingly.<br/><br/>',
@@ -71,6 +71,39 @@ class Command(BaseCommand):
         msg = EmailMultiAlternatives(subject, body, from_email, to_email)
         msg.content_subtype = "html"
         msg.send()
+
+
+    def cluster_wise_bifurcation(self,from_date,to_date):
+        phone_to_village_map = dict()
+        village_to_call_detail_map = dict()
+        cluster_wise_call_detail = dict()
+        farmer_detail = Farmer.objects.values('phone','village_id')
+        call_count_per_no = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number'))
+        for farmer in farmer_detail:
+            phone_to_village_map[farmer['phone']] = farmer['village_id']
+        for call in call_count_per_no:
+            farmer_number = call['from_number']
+            farmer_number_possibilities = [farmer_number.lstrip('0'), farmer_number, '0'+farmer_number, '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
+            for number in farmer_number_possibilities:
+                if number in phone_to_village_map:
+                    if phone_to_village_map[number] not in village_to_call_detail_map:
+                        village_to_call_detail_map[phone_to_village_map[number]] = {'farmer_count':1,'total_calls':call['call_count']}
+                    else:
+                        village_to_call_detail_map[phone_to_village_map[number]]['farmer_count'] += 1
+                        village_to_call_detail_map[phone_to_village_map[number]]['total_calls'] += call['call_count']
+                    break
+        loopuser_assigned_village = LoopUserAssignedVillage.objects.values('loop_user_id','loop_user__name','village_id')
+        for user in loopuser_assigned_village:
+            if user['loop_user_id'] not in cluster_wise_call_detail:
+                cluster_wise_call_detail[user['loop_user_id']] = dict()
+                cluster_wise_call_detail[user['loop_user_id']]['cluster_name'] = user['loop_user__name']
+                cluster_wise_call_detail[user['loop_user_id']]['farmer_count'] = 0
+                cluster_wise_call_detail[user['loop_user_id']]['total_calls'] = 0
+            if user['village_id'] in village_to_call_detail_map:
+                cluster_wise_call_detail[user['loop_user_id']]['farmer_count'] += village_to_call_detail_map[user['village_id']]['farmer_count']
+                cluster_wise_call_detail[user['loop_user_id']]['total_calls'] += village_to_call_detail_map[user['village_id']]['total_calls']
+        return cluster_wise_call_detail
+
 
     def during_working_hour(self,call_obj):
         working_hours_start = helpline_data['working_hours_start']
@@ -112,7 +145,7 @@ class Command(BaseCommand):
         #yesterday_declined_call_count = self.during_working_hour(yesterday_declined_call)
 
         # Extra Information
-        from_date = datetime.datetime.now().date()-timedelta(days=int(last_n_days))
+        from_date = datetime.datetime.now().date()-timedelta(days=1)
         to_date = datetime.datetime.now().date()
         total_calls_received = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).count()
         total_unique_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values_list('from_number').distinct().count()
@@ -124,7 +157,7 @@ class Command(BaseCommand):
             repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
         else:
             repeat_caller_contribute_percentage = 0
-        cluster_wise_call_detail = cluster_wise_bifurcation(from_date,to_date)
+        cluster_wise_call_detail = self.cluster_wise_bifurcation(from_date,to_date)
         cluster_wise_call_detail_list = ['<br/><br/>Cluster-wise bifurcation of calls received:<br/><br/>',
                                         '<table><tr><th>Cluster Name</th><th>Farmer Count</th><th>No of calls</th></tr>']
         for cluster in cluster_wise_call_detail:
