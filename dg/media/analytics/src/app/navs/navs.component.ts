@@ -202,7 +202,7 @@ export class NavsComponent implements OnInit {
   }
 
   //display respective containers based on clicked nav
-  showContent(selectedNav): void {
+  showContent(selectedNav: string): void {
     this.resetDict(this.containers, 'displayContent', false);
     this.resetDict(this.filterGraphs, 'displayContent', false);
     this.charts = []
