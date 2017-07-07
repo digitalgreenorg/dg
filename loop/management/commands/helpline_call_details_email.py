@@ -40,7 +40,7 @@ class Command(BaseCommand):
                     'Dear Team,<br/><br/>This is the status of calls received on LOOP IVR Helpline number:<br/><br/>',
                     '<table>',
                     '<tr><th>Parameters</th><th>Count</th></tr>',
-                    '<tr><td>Total Pending Calls Till Now (Received during Operational Hours)</td><td> %s</td></tr>'%(total_pending_call_count,),
+                    '<tr><td>Total Pending Calls Till Now</td><td> %s</td></tr>'%(total_pending_call_count,),
                     '<tr><td>Total Received Calls on %s from %s:00 AM to %s:00 PM</td><td> %s</td></tr>'%(yesterday_date,working_hours_start,working_hours_end%12,yesterday_received_call_count),
                     '<tr><td>Total Attended Calls on %s from %s:00 AM to %s:00 PM</td><td> %s</td></tr>'%(yesterday_date,working_hours_start,working_hours_end%12,yesterday_resolved_call_count),
                     '<tr><td>Total Declined Calls Till now</td><td> %s</td></tr>'%(total_declined_call_count,),
@@ -80,7 +80,7 @@ class Command(BaseCommand):
         yesterday_date_morning = yesterday_date.replace(hour=working_hours_start,minute=0,second=0)
         yesterday_date_evening = yesterday_date.replace(hour=working_hours_end,minute=0,second=0)
         # Total Calls received during operational hours only and got declined Till now from beginning.
-        total_declined_call = HelplineIncoming.objects.filter(call_status=2).values('id','incoming_time','last_incoming_time')
+        total_declined_call_count = HelplineIncoming.objects.filter(call_status=2).count()#.values('id','incoming_time','last_incoming_time')
         # Total Calls received by unique callers in working hours of previous day (i.e. x AM to y PM).
         yesterday_received_call_count = HelplineIncoming.objects.filter(incoming_time__gte=yesterday_date_morning,incoming_time__lte=yesterday_date_evening).count()
         # Total Calls received by unique callers and resolved within working hours of previous day (i.e. x AM to y PM).
@@ -90,12 +90,12 @@ class Command(BaseCommand):
         today_date = datetime.datetime.now().date()
         yesterday_date = today_date-timedelta(days=1)
         # Total pending Calls received in operation hours that were not addressed for last two days, hence turned into declined previous day.
-        yesterday_declined_call = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date,time_modified__lte=today_date).values('id','incoming_time','last_incoming_time')
-        pending_call = HelplineIncoming.objects.filter(call_status=0).values('id','incoming_time','last_incoming_time')
+        yesterday_declined_call_count = HelplineIncoming.objects.filter(call_status=2,time_modified__gte=yesterday_date,time_modified__lte=today_date).count()#.values('id','incoming_time','last_incoming_time')
+        total_pending_call_count = HelplineIncoming.objects.filter(call_status=0).count()#.values('id','incoming_time','last_incoming_time')
 
-        total_pending_call_count = self.during_working_hour(pending_call)
-        total_declined_call_count = self.during_working_hour(total_declined_call)
-        yesterday_declined_call_count = self.during_working_hour(yesterday_declined_call)
+        #total_pending_call_count = self.during_working_hour(pending_call)
+        #total_declined_call_count = self.during_working_hour(total_declined_call)
+        #yesterday_declined_call_count = self.during_working_hour(yesterday_declined_call)
 
         self.send_mail(total_pending_call_count,
             total_declined_call_count,
