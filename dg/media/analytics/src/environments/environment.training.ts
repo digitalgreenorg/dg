@@ -1,7 +1,7 @@
 import { chartsConfig } from '../../training/configs/GraphsConfig';
 import { tabsConfig } from '../../training/configs/TabsConfig';
 import { cardConfig } from '../../training/configs/CardsConfig';
-import { filterConfig } from '../../training/configs/FiltersConfig';
+import { filtersConfig } from '../../training/configs/FiltersConfig';
 
 export const environment = {
   production: true,
@@ -10,5 +10,5 @@ export const environment = {
   chartsConfig: chartsConfig,
   tabsConfig: tabsConfig,
   cardsConfig: cardConfig,
-  filtersConfig: filterConfig,
+  filtersConfig: filtersConfig,
 };
