@@ -15,6 +15,8 @@ export class CardsComponent implements OnInit, AfterViewInit {
     cardsOverall = [];
     cardsRecent = [];
     charts = [];
+    overallcharts = [];
+    recentcharts = [];
     cardGraphConfig = environment.cardGraphConfig;
 
     // DatePicker
@@ -52,53 +54,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
     }
     cardsConfigs = environment.cardsConfig;
     
-    public optionsNew : any;
     ngOnInit(): void {
-        this.optionsNew = {
-            title: {
-                align:'left',
-                x:40,
-                style: {
-                    fontSize:'12px'
-                }
-            },
-            legend: { enabled: false },
-            plotOptions: {
-                line: {
-                    lineWidth:2,
-                    color:'rgba(0,51,96,.75)',
-                    marker: { enabled: false },
-                },
-                column: {
-                    color:'rgba(24,90,169,.75)',
-                    groupPadding:0
-                }
-            },
-            xAxis: {
-                title: { text: '' },
-                lineWidth:.5,
-                lineColor:'#000',
-                tickWidth:.5,
-                tickLength:3,
-                tickColor:'#000'
-            },
-            yAxis: {
-                gridLineColor:'#eee',
-                gridLineWidth:.5,
-                lineWidth:.5,
-                lineColor:'#000',
-                tickWidth:.5,
-                tickLength:3,
-                tickColor:'#000',
-                title: { text: '' }
-            },
-            series:[{
-                name: 'Chart 1',
-                data:[10, 23, 34, 56, 1, 78, 34, 78],
-            }]
-        }
-
-        // End of code
         Object.keys(this.cardsConfigs).forEach(key => {
             if(this.cardsConfigs[key].overall.cards){
                 this.cardsOverall.push({
@@ -106,7 +62,8 @@ export class CardsComponent implements OnInit, AfterViewInit {
                     'text':this.cardsConfigs[key].text
                 });
             } else if(this.cardsConfigs[key].overall.graph) {
-                this.charts.push({
+                this.overallcharts.push({
+                    placeHolder : 'overall',
                     options:this.cardsConfigs[key].overall.graph.options,
                     nativeChart:null,
                 })
@@ -119,7 +76,8 @@ export class CardsComponent implements OnInit, AfterViewInit {
                 });
             }
             else if(this.cardsConfigs[key].recent.graph) {
-                this.charts.push({
+                this.recentcharts.push({
+                    placeHolder:'recent',
                     options:this.cardsConfigs[key].recent.graph.options,
                     nativeChart:null,
                 })
@@ -132,6 +90,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
             }
         }
         this.getData(options);
+        console.log(this.charts);
         
     }
 
@@ -169,9 +128,14 @@ export class CardsComponent implements OnInit, AfterViewInit {
                                 });
                             }
                             if(cardData.placeHolder == "cardGraphs") {
-                                this.charts.forEach(chart=> {
+                                this.overallcharts.forEach(chart=> {
                                     if(cardData.tagName === chart.options.title) {
                                         chart.nativeChart.series[0].update({'data':[cardData.value]})
+                                    }
+                                })
+                                this.recentcharts.forEach(chart=> {
+                                    if(cardData.tagName === chart.options.title) {
+                                        chart.nativeChart.series[0].update({'data':cardData.value})
                                     }
                                 })
                             }

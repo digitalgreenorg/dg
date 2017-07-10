@@ -49,10 +49,10 @@
 <br>
 <br>
 
-<div *ngIf="charts.length > 0" class="container-fluid">
+<div *ngIf="overallcharts.length" class="container-fluid">
   <h5 class="text-muted">Overall</h5>
   <div class="row">
-    <div class="col" *ngFor="let chart of charts">
+    <div class="col" *ngFor="let chart of overallcharts">
       <div class="card">
         <div class="card-block">
           <h6 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.options.title}}</h6>
@@ -63,5 +63,18 @@
   </div>  
 </div>
 
-
-<chart [options]="optionsNew"></chart>
+<br>
+<br>
+<div *ngIf="recentcharts.length" class="container-fluid">
+  <h5 class="text-muted">Recent</h5>
+  <div class="row">
+    <div class="col" *ngFor="let chart of recentcharts">
+      <div class="card">
+        <div class="card-block">
+          <h6 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.options.title}}</h6>
+          <chart [options]="chart.options" (load)="saveInstance($event.context, chart)" ></chart>    
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>

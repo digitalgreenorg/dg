@@ -1009,27 +1009,13 @@ def get_card_graph_data(request):
 
     if filter_args['cardName'] in ['No_of_clusters']:
         data_to_send = get_cluster_related_data(filter_args)
+        
+    data_to_send.append({
+        'placeHolder':'cardGraphs',
+        'tagName':'#Clusters_spark',
+        'value':[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 12, 34, 72, 23, 83]
+    })
 
-    results = [{
-        'placeHolder' : 'cardGraphs',
-        'tagName' : '#Clusters',
-        'value' : 70,
-    },
-    {
-        'placeHolder' : 'cardGraphs',
-        'tagName' : '#Farmers',
-        'value' : 80,
-    },
-    {
-        'placeHolder' : 'cardGraphs',
-        'tagName' : 'Volume(Kg)',
-        'value' : 1000,
-    },
-    {
-        'placeHolder' : 'cardGraphs',
-        'tagName' : 'Payments(Rs)',
-        'value' : 12030,
-    },]
     data = json.dumps({'data' : data_to_send})
     return HttpResponse(data);
 

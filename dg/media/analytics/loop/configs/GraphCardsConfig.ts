@@ -455,5 +455,59 @@ export const cardGraphConfig = {
                 valueSuffix: null
             },
         }]
+    },
+    'No_of_clusters_spark' : {
+        chart: {
+            margin:[40,12,45,60],
+            height:200,
+            width:200,
+            type: 'area',
+        },
+        title : '#Clusters_spark',
+        legend: { enabled: false },
+        credits: {
+            enabled: false
+        },
+        plotOptions: {
+            line: {
+                lineWidth:2,
+                color:'rgba(0,51,96,.75)',
+                marker: { enabled: false },
+            },
+            column: {
+                color:'rgba(24,90,169,.75)',
+                groupPadding:0
+            }
+        },
+        xAxis: {
+            title: { text: '' },
+            lineWidth:.1,
+            lineColor:'#000',
+            tickWidth:.5,
+            tickLength:3,
+            tickColor:'#000'
+        },
+        yAxis: {
+            gridLineColor:'#eee',
+            gridLineWidth:.5,
+            lineWidth:.1,
+            lineColor:'#000',
+            tickWidth:.5,
+            tickLength:3,
+            tickColor:'#000',
+            title: { text: '' }
+        },
+        series:[{
+            name: 'Chart 1',
+            marker: {
+                radius: 1,
+                states: {
+                    hover: {
+                        radius: 2
+                    }
+                }
+            },
+            fillOpacity: 0.25,
+        }]
     }
 }

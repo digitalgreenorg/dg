@@ -15,7 +15,10 @@ export const cardConfig = {
                             borrowData:false,
                             dateRange:60, // In days
                             filter:true,
-                            cards:true,
+                            graph : {
+                                show : true,
+                                options : cardGraphConfig.No_of_clusters_spark,
+                            }
                         },
                    },
 
@@ -33,7 +36,10 @@ export const cardConfig = {
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,
-                            cards:true,
+                            graph : {
+                                show : true,
+                                options : cardGraphConfig.No_of_clusters_spark,
+                            },
                         },
                    
                     },
@@ -51,7 +57,10 @@ export const cardConfig = {
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,
-                            cards:true,
+                            graph : {
+                                show : true,
+                                options : cardGraphConfig.No_of_clusters_spark,
+                            },
                         },
                    },
 
@@ -69,7 +78,10 @@ export const cardConfig = {
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,
-                            cards:true,
+                            graph : {
+                                show : true,
+                                options : cardGraphConfig.No_of_clusters_spark,
+                            },
                         },
                   },
     
@@ -87,7 +99,10 @@ export const cardConfig = {
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,
-                            cards:true,
+                            graph : {
+                                show : true,
+                                options : cardGraphConfig.No_of_clusters_spark,
+                            },
                         },
                   },
 
@@ -105,7 +120,10 @@ export const cardConfig = {
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,
-                            cards:true,
+                            graph : {
+                                show : true,
+                                options : cardGraphConfig.No_of_clusters_spark,
+                            },
                         },
                   },
                   
