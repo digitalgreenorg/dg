@@ -33,7 +33,7 @@ export class CardsComponent implements OnInit {
           'text': this.cardsConfigs[key].text
         });
       }
-    })
+    });
     let options = {
       webUrl: environment.url + "getData",
       params: {
