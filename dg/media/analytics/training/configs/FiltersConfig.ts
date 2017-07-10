@@ -1,4 +1,4 @@
-export const filterConfig = {
+export const filtersConfig = {
   'filter0': {
     name: 'Assessment',
     show: false,
