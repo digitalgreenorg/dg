@@ -947,8 +947,59 @@ def broadcast_audio_request(request):
     else:
         return HttpResponse(status=200)
 
-def get_cluster_related_data(result) :
-    pass
+def get_cluster_related_data(filter_args) :
+    country_id = filter_args['country_id'] #To be fetched from request
+    total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('farmer').distinct().count()
+    total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).count()
+
+    aggregated_result, cum_vol_farmer = get_data_from_myisam(1, country_id)
+    volume = round(aggregated_result['quantity'][0], 2)
+    amount = round(aggregated_result['amount'][0], 2)
+    aggregator_incentive = aggregated_result['aggregator_incentive'][0]
+    transportation_cost = aggregated_result['transportation_cost'][0]
+    farmer_share = aggregated_result['farmer_share'][0]
+    gaddidar_share = aggregated_result['gaddidar_share'][0]
+    cpk = round((aggregator_incentive + transportation_cost) / volume, 2)
+    spk = round((farmer_share + gaddidar_share) * 100 / volume, 2)
+
+    data = []
+    data.append({
+        'placeHolder':'cardGraphs',
+        'tagName':'#Clusters',
+        'value': total_cluster_reached
+    })
+
+    data.append({
+        'placeHolder':'cardGraphs',
+        'tagName':'#Farmers',
+        'value': total_farmers_reached
+    })
+
+    data.append({
+        'placeHolder':'cardGraphs',
+        'tagName':'Volume',
+        'value': volume
+    })
+
+    data.append({
+        'placeHolder':'cardGraphs',
+        'tagName':'Payments',
+        'value': amount
+    })
+
+    data.append({
+        'placeHolder':'cardGraphs',
+        'tagName':'Cost per Kg',
+        'value':-cpk
+    })
+    
+    data.append({
+        'placeHolder':'cardGraphs',
+        'tagName':'Sustainability',
+        'value':spk
+    })
+ 
+    return data
 
 def get_card_graph_data(request):
 
@@ -957,11 +1008,7 @@ def get_card_graph_data(request):
 
 
     if filter_args['cardName'] in ['No_of_clusters']:
-        cluster_related_query = get_cluster_related_sql()
-        result = get_pandas_dataframe(cluster_related_query)
-        data_to_send = get_cluster_related_data(result)
-
-    
+        data_to_send = get_cluster_related_data(filter_args)
 
     results = [{
         'placeHolder' : 'cardGraphs',
@@ -983,7 +1030,7 @@ def get_card_graph_data(request):
         'tagName' : 'Payments(Rs)',
         'value' : 12030,
     },]
-    data = json.dumps({'data' : results})
+    data = json.dumps({'data' : data_to_send})
     return HttpResponse(data);
 
 
@@ -993,8 +1040,15 @@ def extract_filters_request(request):
         cardName = str(request.GET.get('cardName'))
     else:
         cardName = ''
+
+    if 'country_id' in request.GET:
+        country_id = str(request.GET.get('country_id'))
+    else:
+        country_id = 1
+
     filter_args = {}
     filter_args['cardName'] = cardName
+    filter_args['country_id'] = country_id
     return filter_args
 
 def get_pandas_dataframe(sql_query):

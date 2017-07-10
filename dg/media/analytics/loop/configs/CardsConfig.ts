@@ -38,7 +38,7 @@ export const cardConfig = {
                    
                     },
     'Volume':      {
-                        text:'Volume()%',
+                        text:'Volume',
                         overall : {
                             borrowData:true,
                             filter:false,
@@ -56,13 +56,49 @@ export const cardConfig = {
                    },
 
     'Total_payment':   {    
-                        text:'Payment',
+                        text:'Payments',
                         overall : {
                             borrowData:true,
                             filter:false,
                             graph : {
                                 show: true,
                                 options : cardGraphConfig.Total_payment,
+                            },
+                        },
+                        recent : {
+                            borrowData:true,
+                            dateRange:60, // In days
+                            filter:true,
+                            cards:true,
+                        },
+                  },
+    
+    'Cost_per_kg':   {    
+                        text:'Cost per Kg',
+                        overall : {
+                            borrowData:true,
+                            filter:false,
+                            graph : {
+                                show: true,
+                                options : cardGraphConfig.Cost_per_kg,
+                            },
+                        },
+                        recent : {
+                            borrowData:true,
+                            dateRange:60, // In days
+                            filter:true,
+                            cards:true,
+                        },
+                  },
+
+    'Sustainability_perc':   {    
+                        text:'Sustainability',
+                        overall : {
+                            borrowData:true,
+                            filter:false,
+                            graph : {
+                                show: true,
+                                options : cardGraphConfig.Sustainability,
                             },
                         },
                         recent : {
