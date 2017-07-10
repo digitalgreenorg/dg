@@ -88,30 +88,30 @@ export class NavsComponent implements OnInit {
   }
 
   addChartsToDict(containers) {
-    let charts = []
+    let charts = [];
     Object.keys(containers).forEach(container => {
       Object.keys(containers[container]).forEach(tab => {
-        if(containers[container][tab].hasOwnProperty('addDivs')){
+        if (containers[container][tab].hasOwnProperty('addDivs')) {
           containers[container][tab]['addDivs'].forEach(chart => {
             charts.push(this.chartsConfig[chart]);
-          })
+          });
         }
-      })
-    })
-    return charts
+      });
+    });
+    return charts;
   }
 
   //set container view based on clicked nav link
   setContainer(nav, container) {
     this.containers[nav] = container;
-    this.containers[nav]['charts'] = this.addChartsToDict(container.containers)
+    this.containers[nav]['charts'] = this.addChartsToDict(container.containers);
     this.containers[nav]['displayContent'] = false;
   }
 
   //set container for navs with interdependent filter and graph
   setFilterContainer(nav, container) {
-    this.filterGraphs[nav] = container
-    this.filterGraphs[nav]['charts'] = this.addChartsToDict(container.DropDownGraph)
+    this.filterGraphs[nav] = container;
+    this.filterGraphs[nav]['charts'] = this.addChartsToDict(container.DropDownGraph);
     this.filterGraphs[nav]['displayContent'] = false;
   }
 
@@ -151,7 +151,7 @@ export class NavsComponent implements OnInit {
   }
 
   //Empty exting data and then fill in updated data
-  clearSeriesFromGraph(chart) {
+  private clearSeriesFromGraph(chart): void {
     if (chart.nativeChart.series.length > 0) {
       for (var i = chart.nativeChart.series.length - 1; i >= 0; i--) {
         chart.nativeChart.series[i].remove();
@@ -165,7 +165,7 @@ export class NavsComponent implements OnInit {
   }
 
   //reset values in a dict, used for navigation and setting containers
-  resetDict(dict, flag, value) {
+  private resetDict(dict, flag, value): void {
     Object.keys(dict).forEach(key => {
       dict[key][flag] = value;
     });
@@ -189,19 +189,19 @@ export class NavsComponent implements OnInit {
   }
 
   //render charts to container
-  renderCharts(container) {
+  private renderCharts(container): void {
     container.displayContent = true;
     container.charts.forEach(chart => {
-        this.charts.push({
+      this.charts.push({
         options: chart,
         // nativeChart will be assigned with saveInstance
         nativeChart: null
       });
-    })
+    });
   }
 
   //display respective containers based on clicked nav
-  showContent(selectedNav): void {
+  showContent(selectedNav: string): void {
     this.resetDict(this.containers, 'displayContent', false);
     this.resetDict(this.filterGraphs, 'displayContent', false);
     this.charts = []

@@ -36,8 +36,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
-
-def get_data_from_myisam(get_total, country_id):
+def query_myisam(country_id):
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -46,6 +45,11 @@ def get_data_from_myisam(get_total, country_id):
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
     df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id), con=mysql_cn)
+    return df_result
+
+def get_data_from_myisam(get_total, country_id):
+    df_result = query_myisam(country_id)
+
     aggregations = {
         'quantity':{
             'quantity__sum':'sum'
@@ -103,3 +107,27 @@ def get_data_from_myisam(get_total, country_id):
         df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
         dictionary = df.to_dict(orient='index')
     return dictionary, cumm_vol_farmer
+
+def get_volume_aggregator(country_id):
+    df_result = query_myisam(country_id)
+    aggregation = {
+        'quantity':{
+            'quantity__sum':'sum'
+        },
+        # 'mandi_id':{
+        #     'mandi_id_count':'count'
+        # }
+    }
+    df_result = df_result.groupby(['aggregator_id','aggregator_name','mandi_id','mandi_name']).agg(aggregation).reset_index()
+    df_result.columns = df_result.columns.droplevel(1)
+    try:
+        df_agg_quantity = df_result.groupby(['aggregator_id','aggregator_name']).agg(aggregation).reset_index()
+        df_agg_quantity.columns = df_agg_quantity.columns.droplevel(1)
+        df_agg_quantity.drop(['aggregator_id'],axis=1,inplace=True)
+        df_agg_quantity.rename(columns={"aggregator_name":"name","quantity":"y"},inplace=True)
+        df_agg_quantity['drilldown'] = df_agg_quantity['name'] + " volume"
+        outer_data = {'outerData':{'series':[{"data":df_agg_quantity.to_dict(orient="record")}],'catergories':df_agg_quantity['name'].tolist()}}
+    except Exception as e:
+        print e
+
+    return outer_data

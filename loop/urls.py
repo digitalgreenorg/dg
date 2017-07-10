@@ -7,7 +7,7 @@ from tastypie.api import Api
 from api import FarmerResource, VillageResource, LoopUserResource, CropResource, MandiResource, CombinedTransactionResource, TransporterResource, VehicleResource,TransportationVehicleResource, DayTransportationResource,GaddidarResource,BlockResource,DistrictResource,StateResource,GaddidarShareOutliersResource,AggregatorShareOutliersResource,GaddidarCommissionResource
 
 from loop.views import *
-
+from loop.dashboard_views import *
 from loop.utils.send_log.loop_data_log import send_updated_log
 
 api = Api(api_name = "v1")
@@ -25,11 +25,9 @@ api.register(GaddidarResource())
 api.register(BlockResource())
 api.register(DistrictResource())
 api.register(StateResource())
-
 api.register(GaddidarCommissionResource())
 api.register(GaddidarShareOutliersResource())
 api.register(AggregatorShareOutliersResource())
-
 
 
 urlpatterns = patterns('',
@@ -53,4 +51,5 @@ urlpatterns = patterns('',
     url(r'^broadcast/',broadcast),
     url(r'^broadcast_call_response/',broadcast_call_response),
     url(r'^broadcast_audio_request/',broadcast_audio_request),
+    url(r'^volume_aggregator/',volume_aggregator),
     )
