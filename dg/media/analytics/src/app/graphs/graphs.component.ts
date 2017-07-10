@@ -68,6 +68,9 @@ export class GraphsComponent implements OnInit, AfterViewInit {
   private getGraphsData(filters): void {
     this.charts.forEach(chart => {
       chart.nativeChart.showLoading();
+      try {
+        chart.nativeChart.drillUp();
+      } catch (e) { }
       filters.params['chartType'] = chart.options.chart.type;
       filters.params['chartName'] = chart.options.chartName;
       this.graphService.getData(filters).subscribe(dataList => {
@@ -89,17 +92,17 @@ export class GraphsComponent implements OnInit, AfterViewInit {
             this.clearSeriesFromGraph(chart);
             chart.nativeChart.showLoading(dataList['error']);
           }
+          chart.nativeChart.redraw();
         });
       });
     });
-
   }
 
   //Empty exting data and then fill in updated data
   private clearSeriesFromGraph(chart) {
     if (chart.nativeChart.series.length > 0) {
       for (var i = chart.nativeChart.series.length - 1; i >= 0; i--) {
-        chart.nativeChart.series[i].remove();
+        chart.nativeChart.series[i].remove(false);
       }
     }
   }
