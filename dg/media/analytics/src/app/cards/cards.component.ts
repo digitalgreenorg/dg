@@ -63,7 +63,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
                 });
             } else if(this.cardsConfigs[key].overall.graph) {
                 this.overallcharts.push({
-                    placeHolder : 'overall',
+                    title : this.cardsConfigs[key].text,
                     options:this.cardsConfigs[key].overall.graph.options,
                     nativeChart:null,
                 })
@@ -77,7 +77,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
             }
             else if(this.cardsConfigs[key].recent.graph) {
                 this.recentcharts.push({
-                    placeHolder:'recent',
+                    title : this.cardsConfigs[key].text,
                     options:this.cardsConfigs[key].recent.graph.options,
                     nativeChart:null,
                 })
@@ -90,7 +90,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
             }
         }
         this.getData(options);
-        console.log(this.charts);
         
     }
 
@@ -129,7 +128,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
                             }
                             if(cardData.placeHolder == "cardGraphs") {
                                 this.overallcharts.forEach(chart=> {
-                                    if(cardData.tagName === chart.options.title) {
+                                    if(cardData.tagName === chart.title) {
                                         chart.nativeChart.series[0].update({'data':[cardData.value]})
                                     }
                                 })
