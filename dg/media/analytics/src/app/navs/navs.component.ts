@@ -44,12 +44,11 @@ export class NavsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.renderGraphs();
     this.renderNavs();
   }
 
   ngAfterViewInit(): void {
-    // this.getGraphsData({ 'params': {} });
+    this.getGraphsData({ 'params': {} });
   }
 
   //render navs and subnavs and create respective containers based on selected nav
@@ -118,7 +117,6 @@ export class NavsComponent implements OnInit {
 
   //access underlying chart
   saveInstance(chartInstance, chart) {
-    console.log("called")
     chart.nativeChart = chartInstance;
   }
 
@@ -128,7 +126,7 @@ export class NavsComponent implements OnInit {
       chart.nativeChart.showLoading();
       filters.params['chartType'] = chart.options.chart.type;
       filters.params['chartName'] = chart.options.chartName;
-      this.graphService.getData(filters).subscribe(dataList => {
+      /*this.graphService.getData(filters).subscribe(dataList => {
         Object.keys(dataList).forEach(key => {
           //Find already displayed chart to enter data
           if (key === chart.options.chartName) {
@@ -148,7 +146,7 @@ export class NavsComponent implements OnInit {
             chart.nativeChart.showLoading(dataList['error']);
           }
         });
-      });
+      });*/
     });
   }
 
@@ -196,7 +194,7 @@ export class NavsComponent implements OnInit {
     container.charts.forEach(chart => {
         this.charts.push({
         options: chart,
-        // nativeChart will assigned with saveInstance
+        // nativeChart will be assigned with saveInstance
         nativeChart: null
       });
     })
