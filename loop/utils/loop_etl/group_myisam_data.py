@@ -109,6 +109,7 @@ def get_data_from_myisam(get_total, country_id):
     return dictionary, cumm_vol_farmer
 
 def get_volume_aggregator(country_id):
+    result_data = {}
     df_result = query_myisam(country_id)
     aggregation = {
         'quantity':{
@@ -127,7 +128,19 @@ def get_volume_aggregator(country_id):
         df_agg_quantity.rename(columns={"aggregator_name":"name","quantity":"y"},inplace=True)
         df_agg_quantity['drilldown'] = df_agg_quantity['name'] + " volume"
         outer_data = {'outerData':{'series':[{"data":df_agg_quantity.to_dict(orient="record")}],'catergories':df_agg_quantity['name'].tolist()}}
+        inner_data = {'innerData': []}
+        vol_agg_mandi_dict = {name:dict(zip(g['mandi_name'],g['quantity'])) for name,g in result.groupby('aggregator_name')}
+        print vol_agg_mandi_dict
+        for key,value in vol_agg_mandi_dict.iteritems():
+            temp_dict_inner = {'data':[]}
+            temp_dict_inner['name'] = key
+            temp_dict_inner['id'] = key + ' volume'
+            for k, v in value.iteritems():
+                temp_dict_inner['data'].append([k,v])
+            inner_data['innerData'].append(temp_dict_inner)
+        result_data['volume_per_aggregator'] = outer_data
+        result_data['volume_per_aggregator'].update(inner_data)
     except Exception as e:
         print e
 
-    return outer_data
+    return result_data

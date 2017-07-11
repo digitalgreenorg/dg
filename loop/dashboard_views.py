@@ -9,5 +9,4 @@ from loop.utils.loop_etl.group_myisam_data import *
 
 def volume_aggregator(request):
     volume_per_aggregator = get_volume_aggregator(1)
-    chart_dict = { "volume_per_aggregator": volume_per_aggregator }
-    return JsonResponse(chart_dict)
+    return JsonResponse(volume_per_aggregator)
