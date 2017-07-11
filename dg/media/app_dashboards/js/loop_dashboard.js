@@ -498,8 +498,8 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
 
   var total_days = all_dates.length;
 
-  var cumm_volume = new Array(total_days).fill(0.0);
-  var cumm_farmers = new Array(total_days).fill(0.0);
+  var cumm_volume = new Array(total_days).fill(0);
+  var cumm_farmers = new Array(total_days).fill(0);
   var temp_volume = {};
   temp_volume['name'] = "Volume";
   temp_volume['data'] = [];
