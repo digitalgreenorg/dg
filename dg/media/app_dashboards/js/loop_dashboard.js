@@ -492,9 +492,12 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
   var first_date = new Date(cum_vol_farmer[0]['date']);
   var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']);
   while (first_date <= last_date) {
-    all_dates.push(Math.floor(first_date.getTime()/1000));
+    all_dates.push(first_date.getTime());
     first_date.setDate(first_date.getDate() + 1);
   }
+  console.log(last_date.getTime());
+
+  console.log(all_dates);
 
   var total_days = all_dates.length;
 
@@ -516,8 +519,9 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
   temp_farmers['showInLegend'] = true;
 
   for (var i = 0; i < vol_farmer_length; i++) {
-    var index = all_dates.indexOf(Math.floor(new Date(cum_vol_farmer[i]['date']).getTime()/1000));
-    console.log(index);
+    var date_to_find = new Date(cum_vol_farmer[i]['date']);
+    var index = all_dates.indexOf(date_to_find.getTime());
+    // console.log(index);
     cumm_farmers[index] = cum_vol_farmer[i]['cum_distinct_farmer'];
     cumm_volume[index] = cum_vol_farmer[i]['cum_vol'];
   }
