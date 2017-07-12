@@ -29,6 +29,7 @@ export class NavsComponent implements OnInit {
   filterGraphs = {};
   //list of charts in DOM
   charts = [];
+  containerCharts = [];
   //Display drop down type graphs
   // showDropDownGraphs: boolean = false;
 
@@ -45,12 +46,22 @@ export class NavsComponent implements OnInit {
 
   ngOnInit(): void {
     this.renderNavs();
+    this.renderCharts();
   }
 
   ngAfterViewInit(): void {
     this.getGraphsData({ 'params': {} });
   }
 
+  renderCharts() : void {
+    Object.keys(this.chartsConfig).forEach(chart => {
+      this.charts.push({
+        options: chart,
+        // nativeChart will be assigned with saveInstance
+        nativeChart: null
+      });
+    })
+  }
   //render navs and subnavs and create respective containers based on selected nav
   renderNavs(): void {
     Object.keys(this.navsConfig.navs).forEach(nav => {
@@ -189,27 +200,28 @@ export class NavsComponent implements OnInit {
   }
 
   //render charts to container
-  private renderCharts(container): void {
+  private renderContainerCharts(container): void {
     container.displayContent = true;
-    container.charts.forEach(chart => {
+/*    container.charts.forEach(chart => {
       this.charts.push({
         options: chart,
         // nativeChart will be assigned with saveInstance
         nativeChart: null
       });
-    });
+    });*/
+    
   }
 
   //display respective containers based on clicked nav
   showContent(selectedNav: string): void {
     this.resetDict(this.containers, 'displayContent', false);
     this.resetDict(this.filterGraphs, 'displayContent', false);
-    this.charts = []
+    this.containerCharts = []
     if (this.containers[selectedNav] != undefined) {
-      this.renderCharts(this.containers[selectedNav]);
+      this.renderContainerCharts(this.containers[selectedNav]);
     }
     else if (this.filterGraphs[selectedNav] != undefined) {
-      this.renderCharts(this.filterGraphs[selectedNav]);
+      this.renderContainerCharts(this.filterGraphs[selectedNav]);
     }
   }
 }
