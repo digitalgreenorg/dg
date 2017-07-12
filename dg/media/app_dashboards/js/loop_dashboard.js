@@ -2045,7 +2045,6 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
     });
     myDict.push(temp);
   });
-  console.log(myDict);
 
   // create a detail chart referenced by a global variable
   var width = detail_container.width();
