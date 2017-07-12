@@ -139,7 +139,9 @@ function hide_nav(tab) {
       $("#payments_tab").addClass('active');
     } else {
       window.localStorage.clear();
-      $('#login_modal').openModal({
+      $("#payments_div").show();
+      $("#payments_tab").addClass('active');
+      /*$('#login_modal').openModal({
         dismissible: false
       });
       $('#loginbtn').click(function() {
@@ -173,7 +175,7 @@ function hide_nav(tab) {
       $('#goto_home').click(function() {
         console.log("Do nothing");
         //hide_nav('payments');
-      });
+      });*/
     }
   }
 }
