@@ -95,7 +95,7 @@ def get_data_from_myisam(get_total, country_id):
         # Calcualting cummulative volume and farmer count
         df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
         df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
-        df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum()
+        df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
         df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
         cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
     else:
