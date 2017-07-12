@@ -517,6 +517,7 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
 
   for (var i = 0; i < vol_farmer_length; i++) {
     var index = all_dates.indexOf(new Date(cum_vol_farmer[i]['date']).getTime());
+    console.log(index);
     cumm_farmers[index] = cum_vol_farmer[i]['cum_distinct_farmer'];
     cumm_volume[index] = cum_vol_farmer[i]['cum_vol'];
   }
@@ -533,7 +534,6 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
   var series = [];
   series.push(temp_volume);
   series.push(temp_farmers);
-  console.log(series);
 
   createMasterForTimeSeries($('#detail_container'), $('#master_container'), series, MASTER_HOME);
 }
