@@ -489,8 +489,8 @@ function plot_cards_data() {
 function cummulative_farmer_and_volume(cum_vol_farmer) {
   var all_dates = [];
   var vol_farmer_length = Object.keys(cum_vol_farmer).length;
-  var first_date = new Date(cum_vol_farmer[0]['date']);
-  var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']);
+  var first_date = new Date(cum_vol_farmer[0]['date']+"T23:59:00");
+  var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']+"T23:59:00");
   while (first_date <= last_date) {
     all_dates.push(first_date.getTime());
     first_date.setDate(first_date.getDate() + 1);
@@ -519,7 +519,8 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
   temp_farmers['showInLegend'] = true;
 
   for (var i = 0; i < vol_farmer_length; i++) {
-    var date_to_find = new Date(cum_vol_farmer[i]['date']);
+    console.log(cum_vol_farmer[i]['date']);
+    var date_to_find = new Date(cum_vol_farmer[i]['date']+"T23:59:00");
     var index = all_dates.indexOf(date_to_find.getTime());
     // console.log(index);
     cumm_farmers[index] = cum_vol_farmer[i]['cum_distinct_farmer'];
