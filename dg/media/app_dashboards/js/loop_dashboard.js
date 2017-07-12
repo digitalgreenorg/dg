@@ -505,14 +505,14 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
   temp_volume['data'] = [];
   temp_volume['type'] = 'spline';
   temp_volume['pointInterval'] = 24 * 3600 * 1000;
-  temp_volume['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
+  temp_volume['pointStart'] = all_dates[0]; // Pointing to the starting date
   temp_volume['showInLegend'] = true;
   var temp_farmers = {};
   temp_farmers['name'] = "Farmers";
   temp_farmers['data'] = [];
   temp_farmers['type'] = 'spline';
   temp_farmers['pointInterval'] = 24 * 3600 * 1000;
-  temp_farmers['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
+  temp_farmers['pointStart'] = all_dates[0]; // Pointing to the starting date
   temp_farmers['showInLegend'] = true;
 
   for (var i = 0; i < vol_farmer_length; i++) {
@@ -533,6 +533,7 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
   var series = [];
   series.push(temp_volume);
   series.push(temp_farmers);
+  console.log(series);
 
   createMasterForTimeSeries($('#detail_container'), $('#master_container'), series, MASTER_HOME);
 }
@@ -2044,6 +2045,7 @@ function createDetailForCummulativeVolumeAndFarmer(detail_container, masterChart
     });
     myDict.push(temp);
   });
+  console.log(myDict);
 
   // create a detail chart referenced by a global variable
   var width = detail_container.width();
