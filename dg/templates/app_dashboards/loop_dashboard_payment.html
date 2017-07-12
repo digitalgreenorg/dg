@@ -22,8 +22,14 @@
                <li class="active" id="home_tab"><a class="white-text" href="/loop/dashboard/" target="_blank">LOOP Dashboard</a></li>
             </ul>
          </div>
+         <div id="user" class="col s2 initialized" style="float:right;">
+            <ul class="hide-on-med-and-down grey lighten-2">
+               <li class="active" id="logout_tab"><a class="white-text" href="{% url 'logout' %}">SIGN OUT</a></li>
+            </ul>
+         </div>
          <ul class="side-nav" id="page-navigation">
             <li><a href="/loop/dashboard/" target="_blank">LOOP Dashboard</a></li>
+            <li><a href="{% url 'logout' %}">SIGN OUT</a></li>
          </ul>
       </div>
    </nav>
