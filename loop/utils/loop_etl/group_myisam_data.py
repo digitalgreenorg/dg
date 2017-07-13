@@ -36,7 +36,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
-def query_myisam(country_id):
+def query_myisam(country_id, from_date=None, to_date=None):
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -44,7 +44,11 @@ def query_myisam(country_id):
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
-    df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id), con=mysql_cn)
+    query = "SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id)
+    if from_date:
+        query = query + " and date between " + str(from_date) + " and " + str(to_date)
+
+    df_result = pd.read_sql(query, con=mysql_cn)
     return df_result
 
 def get_data_from_myisam(get_total, country_id):
@@ -141,5 +145,18 @@ def get_volume_aggregator(country_id):
         result_data['volume_per_aggregator'].update(inner_data)
     except Exception as e:
         print e
+    return result_data
 
+def volume_amount_farmers_ts(country_id, from_date, to_date):
+    result_data = []
+    df_result = query_myisam(country_id, from_date, to_date)
+    df_result = df_result.groupby(['date'])['quantity','amount'].sum().reset_index()
+    df_result['date'] = df_result['date'].astype('datetime64[ns]')
+    df_result['date_time'] = df_result['date'].astype('int64')//10**9
+    data_vol = []
+    data_amount = []
+    for index, row in df_result.iterrows():
+        data_vol.append([row['date_time'],row['quantity']])
+        data_amount.append([row['date_time'],row['amount']])
+    result_data = [data_vol,data_amount]
     return result_data

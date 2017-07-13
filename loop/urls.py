@@ -52,4 +52,5 @@ urlpatterns = patterns('',
     url(r'^broadcast_call_response/',broadcast_call_response),
     url(r'^broadcast_audio_request/',broadcast_audio_request),
     url(r'^volume_aggregator/',volume_aggregator),
+    url(r'^vol_amount_farmer/',vol_amount_farmer),
     )
