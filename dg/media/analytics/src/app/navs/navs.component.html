@@ -72,7 +72,7 @@
 </div>
 
 <div class="container-fluid">
-  <div *ngFor="let chart of charts">
-    <chart [options]="chart.options" (load)="saveInstance($event.context, chart)"></chart>
+  <div *ngFor="let chart of containerCharts">
+    <chart [options]="chart.chart" (load)="saveInstance($event.context, chart.chart)"></chart>
   </div>
 </div>
