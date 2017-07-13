@@ -37,26 +37,35 @@ export class NavsComponent implements OnInit {
     this._sharedService.argsList$.subscribe(filters => {
       this.getGraphsData(filters);
     });
-    setInterval(() => {
+    /*setInterval(() => {
       this.charts.forEach(chart => {
         chart.nativeChart.reflow();
       });
-    }, 0);
+    }, 0);*/
   }
 
   ngOnInit(): void {
+    Object.keys(this.chartsConfig).forEach(chart => {
+      this.charts.push({
+        name: chart,
+        options: this.chartsConfig[chart],
+        // nativeChart will be assigned with saveInstance
+        nativeChart: null
+      });
+    })
     this.renderNavs();
-    this.renderCharts();
+    //this.renderCharts();
   }
 
   ngAfterViewInit(): void {
-    this.getGraphsData({ 'params': {} });
+    //this.getGraphsData({ 'params': {} });
   }
 
   renderCharts() : void {
     Object.keys(this.chartsConfig).forEach(chart => {
       this.charts.push({
-        options: chart,
+        name: chart,
+        options: this.chartsConfig[chart],
         // nativeChart will be assigned with saveInstance
         nativeChart: null
       });
@@ -104,7 +113,7 @@ export class NavsComponent implements OnInit {
       Object.keys(containers[container]).forEach(tab => {
         if (containers[container][tab].hasOwnProperty('addDivs')) {
           containers[container][tab]['addDivs'].forEach(chart => {
-            charts.push(this.chartsConfig[chart]);
+            charts.push({name:chart, chart : this.chartsConfig[chart]});
           });
         }
       });
@@ -209,6 +218,13 @@ export class NavsComponent implements OnInit {
         nativeChart: null
       });
     });*/
+    container.charts.forEach(containerChart => {
+      this.charts.forEach(chart => {
+        if(chart.name == containerChart.name){
+          this.containerCharts.push(containerChart)
+        }
+      });
+    });
     
   }
 
