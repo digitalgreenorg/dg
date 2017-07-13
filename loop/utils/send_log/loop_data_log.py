@@ -252,7 +252,7 @@ def send_updated_log(request):
                             if objectData is not None:
                                 data_list.append(objectData)
                     except TypeError:
-                        data_list.append(get_log_object(row))
+                        data_list.append(get_log_object(row, preferred_language))
             if list_rows:
                 data = json.dumps(data_list, cls=DatetimeEncoder)
                 return HttpResponse(data, content_type="application/json")
