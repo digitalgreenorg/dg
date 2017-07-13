@@ -129,8 +129,7 @@ def get_volume_aggregator(country_id):
         df_agg_quantity['drilldown'] = df_agg_quantity['name'] + " volume"
         outer_data = {'outerData':{'series':[{"data":df_agg_quantity.to_dict(orient="record")}],'catergories':df_agg_quantity['name'].tolist()}}
         inner_data = {'innerData': []}
-        vol_agg_mandi_dict = {name:dict(zip(g['mandi_name'],g['quantity'])) for name,g in result.groupby('aggregator_name')}
-        print vol_agg_mandi_dict
+        vol_agg_mandi_dict = {name:dict(zip(g['mandi_name'],g['quantity'])) for name,g in df_result.groupby('aggregator_name')}
         for key,value in vol_agg_mandi_dict.iteritems():
             temp_dict_inner = {'data':[]}
             temp_dict_inner['name'] = key
