@@ -46,10 +46,11 @@ export const chartsConfig = {
   },
   'volFarmerTS': {
     chart: {
-      type: 'areaspline',
+      //type: "StockChart",
       renderTo: 'volFarmerTS',
       drilldown: false,
     },
+    type: "StockChart",
     title: {
       text: 'Average fruit consumption during one week'
     },
