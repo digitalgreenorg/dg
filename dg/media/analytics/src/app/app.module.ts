@@ -29,11 +29,11 @@ import { SearchPipe } from './filters/search.pipe';
 
 declare var require: any;
 export function highchartsFactory() {
-  const highChart = require('highcharts');
+  const highChart = require('highcharts/highstock');
   const drillDown = require('highcharts/modules/drilldown');
   const exp = require('highcharts/modules/exporting');
   drillDown(highChart);
-  exp(highChart)
+  exp(highChart);
   return highChart;
 }
 
