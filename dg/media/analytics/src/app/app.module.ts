@@ -32,10 +32,8 @@ export function highchartsFactory() {
   const highChart = require('highcharts/highstock');
   const drillDown = require('highcharts/modules/drilldown');
   const exp = require('highcharts/modules/exporting');
-  //const highstock = require('highcharts/highstock');
   drillDown(highChart);
   exp(highChart);
-  //highstock(highChart);
   return highChart;
 }
 
@@ -65,7 +63,6 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     InfiniteScrollModule,
     PerfectScrollbarModule.forRoot(PERFECT_SCROLLBAR_CONFIG),
     CollapseModule.forRoot(),
-    //ChartModule.forRoot(require('highcharts/highstock')),
   ],
   providers: [{
     provide: HighchartsStatic,
