@@ -52,7 +52,7 @@ class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
-    search_fields = ['name', 'village__village_name', 'village__block__district__state__country']
+    search_fields = ['name', 'village__village_name', 'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country']
 
 # class LoopUserInline(admin.TabularInline):
