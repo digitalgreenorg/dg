@@ -148,15 +148,26 @@ def get_volume_aggregator(country_id):
     return result_data
 
 def volume_amount_farmers_ts(country_id, from_date, to_date):
-    result_data = []
+    result_data = {}
     df_result = query_myisam(country_id, from_date, to_date)
     df_result = df_result.groupby(['date'])['quantity','amount'].sum().reset_index()
     df_result['date'] = df_result['date'].astype('datetime64[ns]')
-    df_result['date_time'] = df_result['date'].astype('int64')//10**9
+    df_result['date_time'] = df_result['date'].astype('int64')//10**6
     data_vol = []
     data_amount = []
     for index, row in df_result.iterrows():
         data_vol.append([row['date_time'],row['quantity']])
         data_amount.append([row['date_time'],row['amount']])
-    result_data = [data_vol,data_amount]
+    result_data['chartName'] = "volFarmerTS"
+    result_data['chartType'] = "StockChart"
+    result_data['data'] = []
+    volume = {}
+    volume['data'] = data_vol
+    volume['name'] = 'Volume'
+    amount = {}
+    amount['data'] = data_amount
+    amount['name'] = 'Amount'
+    result_data['data'].append(volume)
+    result_data['data'].append(amount)
+    # result_data = [data_vol,data_amount]
     return result_data

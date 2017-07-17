@@ -58,10 +58,10 @@ export class NavsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    //this.getGraphsData({ 'params': {} });
+    this.getGraphsData({ 'params': {} });
   }
 
-  renderCharts() : void {
+  renderCharts(): void {
     Object.keys(this.chartsConfig).forEach(chart => {
       this.charts.push({
         name: chart,
@@ -113,7 +113,7 @@ export class NavsComponent implements OnInit {
       Object.keys(containers[container]).forEach(tab => {
         if (containers[container][tab].hasOwnProperty('addDivs')) {
           containers[container][tab]['addDivs'].forEach(chart => {
-            charts.push({name:chart, chart : this.chartsConfig[chart]});
+            charts.push({ name: chart, chart: this.chartsConfig[chart] });
           });
         }
       });
@@ -137,36 +137,52 @@ export class NavsComponent implements OnInit {
 
   //access underlying chart
   saveInstance(chartInstance, chart) {
+    console.log("REached here in saveInstance");
     chart.nativeChart = chartInstance;
   }
 
   //get data for graphs from service
   getGraphsData(filters): void {
-    this.charts.forEach(chart => {
+    console.log("REached here in service method");
+    this.containerCharts.forEach(chart => {
       chart.nativeChart.showLoading();
-      filters.params['chartType'] = chart.options.chart.type;
-      filters.params['chartName'] = chart.options.chartName;
-      /*this.graphService.getData(filters).subscribe(dataList => {
-        Object.keys(dataList).forEach(key => {
-          //Find already displayed chart to enter data
-          if (key === chart.options.chartName) {
-            chart.nativeChart.hideLoading();
-            this.clearSeriesFromGraph(chart);
-            dataList[key]['outerData']['series'].forEach(entry => {
-              chart.nativeChart.addSeries(entry);
-            });
-            if (chart.options.chart.drillDown) {
-              dataList[key]['innerData'].forEach(drilldownEntry => {
-                chart.options.drilldown.series.push(drilldownEntry);
+      filters.params['chartType'] = chart.chart.type;
+      filters.params['chartName'] = chart.name;
+      this.graphService.getData(filters).subscribe(dataList => {
+        if (dataList['chartType'] != undefined && dataList['chartType'] === 'StockChart') {
+          this.parseDataForStockChart(chart, dataList.data);
+        }
+        else {
+          Object.keys(dataList).forEach(key => {
+            //Find already displayed chart to enter data
+            if (key === chart.name) {
+              chart.nativeChart.hideLoading();
+              this.clearSeriesFromGraph(chart);
+              dataList[key]['outerData']['series'].forEach(entry => {
+                chart.nativeChart.addSeries(entry);
               });
+              if (chart.chart.drillDown) {
+                dataList[key]['innerData'].forEach(drilldownEntry => {
+                  chart.drilldown.series.push(drilldownEntry);
+                });
+              }
             }
-          }
-          else {
-            this.clearSeriesFromGraph(chart);
-            chart.nativeChart.showLoading(dataList['error']);
-          }
-        });
-      });*/
+            else {
+              this.clearSeriesFromGraph(chart);
+              chart.nativeChart.showLoading(dataList['error']);
+            }
+          });
+        }
+      });
+    });
+  }
+
+  private parseDataForStockChart(chart, data) {
+    this.clearSeriesFromGraph(chart);
+    Object.keys(data).forEach(series => {
+      chart.nativeChart.hideLoading();
+      chart.nativeChart.addSeries(data[series]);
+      chart.chart.series[series] = data[series];
     });
   }
 
@@ -211,28 +227,28 @@ export class NavsComponent implements OnInit {
   //render charts to container
   private renderContainerCharts(container): void {
     container.displayContent = true;
-/*    container.charts.forEach(chart => {
-      this.charts.push({
-        options: chart,
-        // nativeChart will be assigned with saveInstance
-        nativeChart: null
-      });
-    });*/
+    /*    container.charts.forEach(chart => {
+          this.charts.push({
+            options: chart,
+            // nativeChart will be assigned with saveInstance
+            nativeChart: null
+          });
+        });*/
     container.charts.forEach(containerChart => {
       this.charts.forEach(chart => {
-        if(chart.name == containerChart.name){
-          this.containerCharts.push(containerChart)
+        if (chart.name === containerChart.name) {
+          this.containerCharts.push(containerChart);
         }
       });
     });
-    
+
   }
 
   //display respective containers based on clicked nav
   showContent(selectedNav: string): void {
     this.resetDict(this.containers, 'displayContent', false);
     this.resetDict(this.filterGraphs, 'displayContent', false);
-    this.containerCharts = []
+    this.containerCharts = [];
     if (this.containers[selectedNav] != undefined) {
       this.renderContainerCharts(this.containers[selectedNav]);
     }

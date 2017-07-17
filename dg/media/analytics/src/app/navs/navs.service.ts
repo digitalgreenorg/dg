@@ -27,7 +27,6 @@ export class GraphsService {
       .catch(this.handleError);
   }
   private handleError(error: any): any {
-    console.error('An error occurred', error);
     return Observable.throw(error.json().error || 'Server error');
   }
 }
