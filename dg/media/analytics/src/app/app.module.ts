@@ -20,7 +20,7 @@ import { GraphsComponent } from './graphs/graphs.component';
 
 import { GraphsService } from './graphs/graphs.service';
 import { CardsService } from './cards/cards.service';
-import { GetFilterDataService } from './get-filter-data.service';
+import { GetFilterDataService } from './filters/get-filter-data.service';
 import { SharedService } from './shared.service';
 
 import { SearchPipe } from './filters/search.pipe';
