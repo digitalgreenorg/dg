@@ -171,3 +171,54 @@ def volume_amount_farmers_ts(country_id, from_date, to_date):
     result_data['data'].append(amount)
     # result_data = [data_vol,data_amount]
     return result_data
+
+def cpk_spk_ts(country_id, from_date, to_date):
+    result_data = {}
+    aggregation = {
+        'transportation_cost':{
+            'transportation_cost__sum':'mean'
+        },
+        'farmer_share':{
+            'farmer_share__sum':'mean'
+        },
+        'aggregator_incentive':{
+            'aggregator_incentive__sum':'mean'
+        },
+        'gaddidar_share':{
+            'gaddidar_share__sum':'sum'
+        },
+        'quantity':{
+            'quantity__sum':'sum'
+        }
+    }
+    df_result = query_myisam(country_id, from_date, to_date)
+    df_result = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregation).reset_index()
+    df_result.columns = df_result.columns.droplevel(1)
+    df_result.drop(['aggregator_id','mandi_id'], axis=1,inplace=True)
+    df_result = df_result.groupby(['date']).sum().reset_index()
+    df_result['cpk'] = (df_result['aggregator_incentive'] + df_result['transportation_cost'])/df_result['quantity']
+    df_result['spk'] = (df_result['farmer_share'] + df_result['gaddidar_share'])/df_result['quantity']
+    df_result['date'] = df_result['date'].astype('datetime64[ns]')
+    df_result['date_time'] = df_result['date'].astype('int64')//10**6
+
+    data_cpk = []
+    data_spk = []
+    for index, row in df_result.iterrows():
+        data_cpk.append([row['date_time'],row['cpk']])
+        data_spk.append([row['date_time'],row['spk']])
+
+    result_data['chartName'] = "cpkSpkTS"
+    result_data['chartType'] = "StockChart"
+    result_data['data'] = []
+    cpk = {}
+    cpk['data'] = data_cpk
+    cpk['name'] = 'CPK'
+    spk = {}
+    spk['data'] = data_spk
+    spk['name'] = 'SPK'
+    result_data['data'].append(cpk)
+    result_data['data'].append(spk)
+
+    print df_result.head()
+    return result_data
+    # df_result = df_result.groupby(['date'])

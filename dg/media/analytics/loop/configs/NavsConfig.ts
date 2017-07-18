@@ -98,7 +98,7 @@ export const navsConfig = {
         'container1': {
           'addTab': false,
           'Volume Farmer': {
-            'addDivs': ['volFarmerTS']
+            'addDivs': ['volFarmerTS','cpkSpkTS']
           },
         },
       }

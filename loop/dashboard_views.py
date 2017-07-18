@@ -9,12 +9,18 @@ from loop.utils.loop_etl.group_myisam_data import *
 
 def graph_data(request):
     chart_name = request.GET['chartName']
-    print chart_name
     if chart_name == 'volFarmerTS':
         result = vol_amount_farmer()
         return JsonResponse(result)
+    if chart_name == 'cpkSpkTS':
+        result = cpk_spk_timeseries()
+        return JsonResponse(result)
     else:
         return JsonResponse({"result":"success"})
+
+def cpk_spk_timeseries():
+    cpk_spk = cpk_spk_ts(1,'20170401','20170601')
+    return cpk_spk
 
 def volume_aggregator(request):
     volume_per_aggregator = get_volume_aggregator(1)

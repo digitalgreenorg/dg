@@ -74,6 +74,36 @@ export const chartsConfig = {
     series: [],
     drilldown: {}
   },
+  'cpkSpkTS': {
+    chart: {
+      type: "areaspline",
+      renderTo: 'cpkSpkTS',
+      drilldown: false,
+    },
+    rangeSelector: {
+      selected: 0
+    },
+    type: "StockChart",
+    title: {
+      text: 'CPK SPK'
+    },
+    legend: { enabled: false },
+    tooltip: {
+      shared: true,
+      valueDecimals: 2,
+      // valueSuffix: ' units'
+    },
+    credits: {
+      enabled: false
+    },
+    plotOptions: {
+      areaspline: {
+        fillOpacity: 0.5
+      }
+    },
+    series: [],
+    drilldown: {}
+  },
   /*'aggrvol' : {
                           chart: {
                                   type: 'column',
