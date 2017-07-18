@@ -72,4 +72,18 @@ class BroadcastForm(forms.Form):
             raise forms.ValidationError("Please select atleast one Cluster or .csv file")
         return farmer_file
 
+class MergeEntityForm(forms.Form):
 
+    choice_set = [ ('', '---------'),
+        ('Farmer', 'Farmer'), 
+        ('Gaddidar', 'Gaddidar')]   
+    model = forms.ChoiceField(required=True,widget= forms.Select, label='Select Model:', choices=choice_set)
+    merge_file = forms.FileField(required=True, label='Select a .csv file:',)
+
+
+    def __init__(self, *args, **kwargs):
+        super(MergeEntityForm, self).__init__(*args, **kwargs)
+        self.fields['merge_file'].error_messages = {'required':'Merge file is required'}
+        self.fields['model'].error_messages = {'required':'Select model name'}
+        self.fields['model'].choices.insert(0, ('','---------' ) )
+        self.fields['merge_file'].help_text = ""

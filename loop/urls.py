@@ -8,7 +8,7 @@ from api import FarmerResource, VillageResource, LoopUserResource, CropResource,
 
 from loop.views import *
 
-from loop.utils.send_log.loop_data_log import send_updated_log
+from loop_data_log import send_updated_log
 
 api = Api(api_name = "v1")
 api.register(VillageResource())
@@ -53,4 +53,5 @@ urlpatterns = patterns('',
     url(r'^broadcast/',broadcast),
     url(r'^broadcast_call_response/',broadcast_call_response),
     url(r'^broadcast_audio_request/',broadcast_audio_request),
+    url(r'^merge_entity/', merge_entity),
     )

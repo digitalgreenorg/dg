@@ -1,0 +1,45 @@
+{% include "includes/header.html" %}
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<div id="merge_entity">
+	<br/>
+	<p style="border: 1px solid #EEEEEE;background: #f3f2eb;color: #047D0A;font-weight: bold; font-size: 15px; margin: 0;padding: .2em 1.2em 0;">
+        <span>Merge Entity</span>
+    </p>
+	<div id="merge_div">
+        <form id="merge_entity_form" class="form-box" method="POST" action="." enctype="multipart/form-data" >
+            <div style="padding-left: 15px; content: '\a'; white-space: pre;">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ merge_entity_form.model.errors }}
+                    <span style="font-weight: bold">{{ merge_entity_form.model.label }}</span> &nbsp;&nbsp; <span id="model">{{ merge_entity_form.model}}</span>
+                </div>
+                <div class="form-group">
+                    {{ merge_entity_form.merge_file.errors }}
+                    <span style="font-weight: bold">{{ merge_entity_form.merge_file.label }}</span> &nbsp;&nbsp; {{ merge_entity_form.merge_file }} &nbsp;&nbsp;<a id="help_url" style="color:blue" href="" download><span style="font-style: italic"> Download Sample File </span></a>
+                </div>
+            </div>
+            <div style="padding-left: 80px;">
+                <input type="submit" class="btn" name="submit" value="Submit" />
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="reset" class="btn" value="Reset"/>
+            </div>
+            <br/>
+            <br/>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#help_url').hide();
+    $('#model').on('change', function() {
+            if($(this).find(":selected").text() == "---------") { 
+                $('#help_url').hide();
+            } else {
+                $('#help_url').show();
+                $('#help_url').attr("href", "/media/social_website/uploads/loop/merge_entity/Sample_Merge_" + ($(this).find(":selected").text()) + "_List.csv");
+            }
+    });
+</script>
+
+{% include "includes/footer.html" %}
