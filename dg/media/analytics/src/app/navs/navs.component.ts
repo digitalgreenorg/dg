@@ -61,16 +61,16 @@ export class NavsComponent implements OnInit {
     this.getGraphsData({ 'params': {} });
   }
 
-  renderCharts(): void {
-    Object.keys(this.chartsConfig).forEach(chart => {
-      this.charts.push({
-        name: chart,
-        options: this.chartsConfig[chart],
-        // nativeChart will be assigned with saveInstance
-        nativeChart: null
-      });
-    })
-  }
+  // renderCharts(): void {
+  //   Object.keys(this.chartsConfig).forEach(chart => {
+  //     this.charts.push({
+  //       name: chart,
+  //       options: this.chartsConfig[chart],
+  //       // nativeChart will be assigned with saveInstance
+  //       nativeChart: null
+  //     });
+  //   })
+  // }
   //render navs and subnavs and create respective containers based on selected nav
   renderNavs(): void {
     Object.keys(this.navsConfig.navs).forEach(nav => {

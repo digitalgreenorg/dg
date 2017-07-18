@@ -8,6 +8,7 @@ export const navsConfig = {
       },
       'containers': {
         'container1': {
+          'addTab': true,
           'Volume and Famers Cummulative Count': {
             'addDivs': ['cummulativeCount']
           },
@@ -93,7 +94,7 @@ export const navsConfig = {
     },
     'Time Series': {
       'active': true,
-      'DropDownGraph': {
+      'containers': {
         'container1': {
           'addTab': false,
           'Volume Farmer': {
