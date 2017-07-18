@@ -33,7 +33,7 @@ export function highchartsFactory() {
   const drillDown = require('highcharts/modules/drilldown');
   const exp = require('highcharts/modules/exporting');
   drillDown(highChart);
-  exp(highChart)
+  exp(highChart);
   return highChart;
 }
 
