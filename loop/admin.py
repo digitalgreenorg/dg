@@ -103,7 +103,7 @@ class DayTransportationAdmin(admin.ModelAdmin):
 
 
 class GaddidarAdmin(admin.ModelAdmin):
-    fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','is_visible')
+    fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','is_visible','is_prime')
     list_display = ('id', 'gaddidar_name',
                     'gaddidar_phone', 'mandi','discount_criteria', 'gaddidar_name_en')
     search_fields = ['gaddidar_name', 'mandi__mandi_name']
