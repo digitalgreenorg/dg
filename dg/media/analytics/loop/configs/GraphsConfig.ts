@@ -1,20 +1,125 @@
 export const chartsConfig = {
-  'state_trainer_#trainings' : {
+  'cummulativeCount': {
+    chart: {
+      type: 'column',
+      renderTo: 'cummulativeCount',
+      drillDown: true
+    },
+    credits: { enabled: false },
+    title: { text: '' },
+    xAxis: { type: 'category' },
+    yAxis: {
+      tickInterval: 10,
+      title: { text: 'Volume' }
+    },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    },
+    series: [{
+      name: 'Installation',
+      data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+    }, {
+      name: 'Manufacturing',
+      data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+    }, {
+      name: 'Sales & Distribution',
+      data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
+    }, {
+      name: 'Project Development',
+      data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
+    }, {
+      name: 'Other',
+      data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+    }],
+    drilldown: {}
+  },
+  'volFarmerTS': {
+    chart: {
+      type: "areaspline",
+      renderTo: 'volFarmerTS',
+      drilldown: false,
+    },
+    rangeSelector: {
+      selected: 0
+    },
+    type: "StockChart",
+    title: {
+      text: 'Volume Amount'
+    },
+    legend: { enabled: false },
+    tooltip: {
+      shared: true,
+      valueDecimals: 2,
+      // valueSuffix: ' units'
+    },
+    credits: {
+      enabled: false
+    },
+    plotOptions: {
+      areaspline: {
+        fillOpacity: 0.5
+      }
+    },
+    series: [],
+    drilldown: {}
+  },
+  'cpkSpkTS': {
+    chart: {
+      type: "areaspline",
+      renderTo: 'cpkSpkTS',
+      drilldown: false,
+    },
+    rangeSelector: {
+      selected: 0
+    },
+    type: "StockChart",
+    title: {
+      text: 'CPK SPK'
+    },
+    legend: { enabled: false },
+    tooltip: {
+      shared: true,
+      valueDecimals: 2,
+      // valueSuffix: ' units'
+    },
+    credits: {
+      enabled: false
+    },
+    plotOptions: {
+      areaspline: {
+        fillOpacity: 0.5
+      }
+    },
+    series: [],
+    drilldown: {}
+  },
+  /*'aggrvol' : {
                           chart: {
                                   type: 'column',
-                                  renderTo: 'graph_1',
+                                  renderTo: 'aggrvol',
                                   tab: {
                                         'id': 'tab1',
-                                        'class':'col-sm-6'
+                                        'class':'col-sm-12'
                                   },
                                   drillDown: true
                           },
                           credits:{ enabled: false },
-                          title: { text: 'Trainings Conducted'},
+                          title: { text: ''},
                           xAxis: { type: 'category' },
                           yAxis: {
-                                  tickInterval: 10, 
-                                  title: { text: 'Number of Trainings' } },
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
                           legend: { enabled: false },
                           plotOptions: {
                                         column: {
@@ -30,127 +135,31 @@ export const chartsConfig = {
                                     pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
                           },
                           series: [],
-                          drilldown: {
-                                      allowPointDrilldown: false,
-                                       drillUpButton: {
-                                                       relativeTo: 'spacingBox',
-                                                       position: {
-                                                                y: 0,
-                                                                x: -30
-                                                        },
-                                        },
-                                      series: []
-                          },
-                          lang: {
-                                drillUpText: '<< Back'
-                          },
+                          drilldown: {}
   },
-  
-  'state_trainer_#mediators':{
-                                chart: {
-                                        type: 'column',
-                                        renderTo: 'graph_2',
-                                        tab: {
-                                            'id': 'tab1',
-                                            'class':'col-sm-6'
-                                        },
-                                        drillDown: true
-                                },
-                                credits: { enabled: false },
-                                title: { text: 'Mediators trained'},
-                                subtitle: { text: 'Click the columns to view state wise trainer figures.'},
-                                xAxis: { type: 'category' },
-                                yAxis: { title: { text: 'Number of Mediators' } },
-                                legend: { enabled: false },
-                                plotOptions: {
-                                              column: {
-                                                      grouping: false,
-                                                      borderWidth: 0,
-                                                      dataLabels: {
-                                                        enabled: true
-                                                      }
-                                              }
-                                },
-                                tooltip: {
-                                          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                                },
-                                series: [],
-                                drilldown: {
-                                            drillUpButton: {
-                                                       relativeTo: 'spacingBox',
-                                                       position: {
-                                                                y: 0,
-                                                                x: -30
-                                                        },
-                                            },
-                                            allowPointDrilldown: false,
-                                            series: []
-                                },
-                                lang: {
-                                        drillUpText: '<< Back'
-                                },
-  },
-
-  'question_wise_data':{
-                        chart: {
-                                type: 'column',
-                                renderTo: 'graph_3',
-                                tab: {
-                                    'id': 'tab2',
-                                    'class':'col-sm-12'
-                                },
-                                drillDown: false
-                        },
-                        credits: { enabled: false },
-                        title: {
-                                text: 'Questions Answered Correctly'
-                        },
-                        xAxis: { type: 'category' },
-                        yAxis: {
-                                min : 0,
-                                max : 100,
-                                title: { text: 'Percentage Answered'} },
-                        legend: { enabled: false },
-                        plotOptions: {
-                                      column: {
-                                              grouping: false,
-                                              borderWidth: 0,
-                                              dataLabels: {
-                                                enabled: true,
-                                                format: '{point.y}%'
-                                              }
-                                      }
-                        },
-                        tooltip: {
-                                  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                  pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                        },
-                        series: [],
-                        drilldown: {}
-  },
-
-  'year_month_wise_data':{
+  'aggrvisit' : {
                           chart: {
                                   type: 'column',
-                                  renderTo: 'graph_4',
+                                  renderTo: 'aggrvisit',
                                   tab: {
-                                      'id': 'tab3',
-                                      'class':'col-sm-12'
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
                                   },
                                   drillDown: true
                           },
-                          credits: { enabled: false },
-                          title: { text: 'Periodical Trainings Conducted' },
+                          credits:{ enabled: false },
+                          title: { text: ''},
                           xAxis: { type: 'category' },
-                          yAxis: { title: { text: 'Number of Trainings'} },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
                           legend: { enabled: false },
                           plotOptions: {
                                         column: {
                                                 grouping: false,
                                                 borderWidth: 0,
                                                 dataLabels: {
-                                                  enabled: true
+                                                             enabled: true
                                                 }
                                         }
                           },
@@ -159,20 +168,402 @@ export const chartsConfig = {
                                     pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
                           },
                           series: [],
-                          drilldown: {
-                                        drillUpButton: {
-                                                       relativeTo: 'spacingBox',
-                                                       position: {
-                                                                y: 0,
-                                                                x: -30
-                                                        },
-                                        },
-                                        allowPointDrilldown: false,
-                                        series: []
+                          drilldown: {}
+  },
+  'aggrspkcpk' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'aggrspkcpk',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
                           },
-                          lang: {
-                                drillUpText: '<< Back'
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
                           },
-        },
-  
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'aggrrecoveredtotal' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'aggrrecoveredtotal',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'aggrfarmercount' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'aggrfarmercount',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'mandivolume' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'mandivolume',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'mandivisit' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'mandivisit',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'mandispkcp' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'mandispkcp',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'mandirecoveredtotal' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'mandirecoveredtotal',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'mandifarmercount' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'mandifarmercount',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'cropvolume' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'cropvolume',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'cropamount' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'cropamount',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'cropprices' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'cropprices',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },
+  'cropfarmercount' : {
+                          chart: {
+                                  type: 'column',
+                                  renderTo: 'cropfarmercount',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category' },
+                          yAxis: {
+                                  tickInterval: 10,
+                                  title: { text: 'Volume' } },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {}
+  },*/
 }

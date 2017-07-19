@@ -36,8 +36,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
-
-def get_data_from_myisam(get_total, country_id):
+def query_myisam(country_id, from_date=None, to_date=None):
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -45,7 +44,16 @@ def get_data_from_myisam(get_total, country_id):
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
-    df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id), con=mysql_cn)
+    query = "SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id)
+    if from_date:
+        query = query + " and date between " + str(from_date) + " and " + str(to_date)
+
+    df_result = pd.read_sql(query, con=mysql_cn)
+    return df_result
+
+def get_data_from_myisam(get_total, country_id):
+    df_result = query_myisam(country_id)
+
     aggregations = {
         'quantity':{
             'quantity__sum':'sum'
@@ -82,7 +90,8 @@ def get_data_from_myisam(get_total, country_id):
 
     cumm_vol_farmer = {}
     if get_total == 0:
-        df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
+        #df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
+        df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('date','farmer_id').order_by('date')))
         df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
 
         dictionary = {}
@@ -94,7 +103,7 @@ def get_data_from_myisam(get_total, country_id):
         # Calcualting cummulative volume and farmer count
         df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
         df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
-        df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum()
+        df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
         df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
         cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
     else:
@@ -102,3 +111,114 @@ def get_data_from_myisam(get_total, country_id):
         df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
         dictionary = df.to_dict(orient='index')
     return dictionary, cumm_vol_farmer
+
+def get_volume_aggregator(country_id):
+    result_data = {}
+    df_result = query_myisam(country_id)
+    aggregation = {
+        'quantity':{
+            'quantity__sum':'sum'
+        },
+        # 'mandi_id':{
+        #     'mandi_id_count':'count'
+        # }
+    }
+    df_result = df_result.groupby(['aggregator_id','aggregator_name','mandi_id','mandi_name']).agg(aggregation).reset_index()
+    df_result.columns = df_result.columns.droplevel(1)
+    try:
+        df_agg_quantity = df_result.groupby(['aggregator_id','aggregator_name']).agg(aggregation).reset_index()
+        df_agg_quantity.columns = df_agg_quantity.columns.droplevel(1)
+        df_agg_quantity.drop(['aggregator_id'],axis=1,inplace=True)
+        df_agg_quantity.rename(columns={"aggregator_name":"name","quantity":"y"},inplace=True)
+        df_agg_quantity['drilldown'] = df_agg_quantity['name'] + " volume"
+        outer_data = {'outerData':{'series':[{"data":df_agg_quantity.to_dict(orient="record")}],'catergories':df_agg_quantity['name'].tolist()}}
+        inner_data = {'innerData': []}
+        vol_agg_mandi_dict = {name:dict(zip(g['mandi_name'],g['quantity'])) for name,g in df_result.groupby('aggregator_name')}
+        for key,value in vol_agg_mandi_dict.iteritems():
+            temp_dict_inner = {'data':[]}
+            temp_dict_inner['name'] = key
+            temp_dict_inner['id'] = key + ' volume'
+            for k, v in value.iteritems():
+                temp_dict_inner['data'].append([k,v])
+            inner_data['innerData'].append(temp_dict_inner)
+        result_data['volume_per_aggregator'] = outer_data
+        result_data['volume_per_aggregator'].update(inner_data)
+    except Exception as e:
+        print e
+    return result_data
+
+def volume_amount_farmers_ts(country_id, from_date, to_date):
+    result_data = {}
+    df_result = query_myisam(country_id, from_date, to_date)
+    df_result = df_result.groupby(['date'])['quantity','amount'].sum().reset_index()
+    df_result['date'] = df_result['date'].astype('datetime64[ns]')
+    df_result['date_time'] = df_result['date'].astype('int64')//10**6
+    data_vol = []
+    data_amount = []
+    for index, row in df_result.iterrows():
+        data_vol.append([row['date_time'],row['quantity']])
+        data_amount.append([row['date_time'],row['amount']])
+    result_data['chartName'] = "volFarmerTS"
+    result_data['chartType'] = "StockChart"
+    result_data['data'] = []
+    volume = {}
+    volume['data'] = data_vol
+    volume['name'] = 'Volume'
+    amount = {}
+    amount['data'] = data_amount
+    amount['name'] = 'Amount'
+    result_data['data'].append(volume)
+    result_data['data'].append(amount)
+    # result_data = [data_vol,data_amount]
+    return result_data
+
+def cpk_spk_ts(country_id, from_date, to_date):
+    result_data = {}
+    aggregation = {
+        'transportation_cost':{
+            'transportation_cost__sum':'mean'
+        },
+        'farmer_share':{
+            'farmer_share__sum':'mean'
+        },
+        'aggregator_incentive':{
+            'aggregator_incentive__sum':'mean'
+        },
+        'gaddidar_share':{
+            'gaddidar_share__sum':'sum'
+        },
+        'quantity':{
+            'quantity__sum':'sum'
+        }
+    }
+    df_result = query_myisam(country_id, from_date, to_date)
+    df_result = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregation).reset_index()
+    df_result.columns = df_result.columns.droplevel(1)
+    df_result.drop(['aggregator_id','mandi_id'], axis=1,inplace=True)
+    df_result = df_result.groupby(['date']).sum().reset_index()
+    df_result['cpk'] = (df_result['aggregator_incentive'] + df_result['transportation_cost'])/df_result['quantity']
+    df_result['spk'] = (df_result['farmer_share'] + df_result['gaddidar_share'])/df_result['quantity']
+    df_result['date'] = df_result['date'].astype('datetime64[ns]')
+    df_result['date_time'] = df_result['date'].astype('int64')//10**6
+
+    data_cpk = []
+    data_spk = []
+    for index, row in df_result.iterrows():
+        data_cpk.append([row['date_time'],row['cpk']])
+        data_spk.append([row['date_time'],row['spk']])
+
+    result_data['chartName'] = "cpkSpkTS"
+    result_data['chartType'] = "StockChart"
+    result_data['data'] = []
+    cpk = {}
+    cpk['data'] = data_cpk
+    cpk['name'] = 'CPK'
+    spk = {}
+    spk['data'] = data_spk
+    spk['name'] = 'SPK'
+    result_data['data'].append(cpk)
+    result_data['data'].append(spk)
+
+    print df_result.head()
+    return result_data
+    # df_result = df_result.groupby(['date'])

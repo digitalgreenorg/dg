@@ -1,5 +1,5 @@
-<div class="container-fluid">
-  <tabset [justified]="true">
+<!--<div class="container-fluid">-->
+<!--  <tabset [justified]="true">
     <tab *ngFor="let tab of tabs" [heading]="tab.heading" [id]="tab.id">
       <br><br>
       <div class="row">
@@ -9,10 +9,10 @@
         </div>
       </div>
     </tab>
-  </tabset>
+  </tabset>-->
 
   <div *ngFor="let chart of charts">
     <chart [options]="chart.options" (load)="saveInstance($event.context, chart)"></chart>
   </div>
 
-</div>
+<!--</div>-->

@@ -1,0 +1,93 @@
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#">LOOP</a>
+  <div class="collapse navbar-collapse" [collapse]="isCollapsed">
+    <ul class="navbar-nav">
+      <li class="nav-item" *ngFor="let nav of getDictKeys(toggleNav);">
+        <a class="nav-link" data-toggle="collapse" [ngClass]="{'active':toggleNav[nav].status === true}" (click)="setNav(nav)">{{nav}}</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div *ngFor="let nav of getDictKeys(toggleNav);">
+  <div *ngIf="toggleNav[nav].hasOwnProperty('subNavs')">
+    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+      <div class="collapse navbar-collapse" [collapse]="isCollapsed">
+        <ul class="navbar-nav">
+          <li class="nav-item" *ngFor="let subNav of toggleNav[nav].subNavs">
+            <a *ngIf="toggleNav[nav].status" class="nav-link" [ngClass]="{'active':containers[subNav].displayContent === true}" (click)="showContent(subNav)">{{subNav}}</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+<br>
+<div *ngFor="let container of getDictKeys(containers);">
+  <div class="row justify-content-center" *ngIf="containers[container].displayContent">
+    <div id="container" class="container-box col-sm-11" *ngFor="let option of getDictKeys(containers[container]['containers']);">
+      <tabset [justified]="true" *ngIf="containers[container]['containers'][option]['addTab']">
+        <div *ngFor="let tab of getDictKeys(containers[container]['containers'][option]);">
+          <tab *ngIf="containers[container]['containers'][option][tab]['addDivs']" [heading]="tab">
+            <br><br>
+            <div class="row">
+              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']">
+                <div [id]="div"></div>
+                <br><br>
+              </div>
+            </div>
+          </tab>
+        </div>
+      </tabset>
+      <div class="row" *ngIf="!containers[container]['containers'][option]['addTab']">
+        <div *ngFor="let tab of getDictKeys(containers[container]['containers'][option])">
+          <div *ngIf="containers[container]['containers'][option][tab]['addDivs']">
+            <div class="row">
+              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']">
+                <div [id]="div"></div>
+                <br><br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngFor="let graph of getDictKeys(filterGraphs);">
+  <div class="row justify-content-center" *ngIf="filterGraphs[graph].displayContent">
+    <div id="graph" class="container-box col-sm-11" *ngFor="let option of getDictKeys(filterGraphs[graph]['DropDownGraph']);">
+      <tabset [justified]="true" *ngIf="filterGraphs[graph]['DropDownGraph'][option]['addTab']">
+        <tab *ngFor="let tab of getDictKeys(filterGraphs[graph]['DropDownGraph'][option]);" [heading]="tab">
+          <br><br>
+          <div class="row">
+            <div *ngFor="let div of filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
+              <div [id]="div"></div>
+              <br><br>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+      <div class="row" *ngIf="!filterGraphs[graph]['DropDownGraph'][option]['addTab']">
+        <div *ngFor="let tab of getDictKeys(filterGraphs[graph]['DropDownGraph'][option])">
+          <div *ngIf="filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
+            <div *ngFor="let div of filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
+              <div [id]="div"></div>
+              <br><br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div *ngFor="let chart of containerCharts">
+    <chart *ngIf="chart.chart.type" [type]="chart.chart.type" [options]="chart.chart" (load)="saveInstance($event.context, chart)"></chart>
+    <chart *ngIf="!chart.chart.type" [options]="chart.chart" (load)="saveInstance($event.context, chart)"></chart>
+  </div>
+</div>

@@ -10,6 +10,7 @@ import { InfiniteScrollModule } from 'angular2-infinite-scroll';
 
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ButtonsModule } from 'ngx-bootstrap';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { PerfectScrollbarModule, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { MyDatePickerModule } from 'mydatepicker';
 
@@ -17,10 +18,11 @@ import { AppComponent } from './app.component';
 import { CardsComponent } from './cards/cards.component';
 import { FiltersComponent } from './filters/filters.component';
 import { GraphsComponent } from './graphs/graphs.component';
+import { NavsComponent } from './navs/navs.component';
 
-import { GraphsService } from './graphs/graphs.service';
+import { GraphsService } from './navs/navs.service';
 import { CardsService } from './cards/cards.service';
-import { GetFilterDataService } from './get-filter-data.service';
+import { GetFilterDataService } from './filters/get-filter-data.service';
 import { SharedService } from './shared.service';
 
 import { SearchPipe } from './filters/search.pipe';
@@ -29,11 +31,15 @@ import { BsDropdownModule } from 'ngx-bootstrap';
 
 declare var require: any;
 export function highchartsFactory() {
-  const highChart = require('highcharts');
+  const highChart = require('highcharts/highstock');
   const drillDown = require('highcharts/modules/drilldown');
+  const highcharts_more = require('highcharts/highcharts-more');
+  const solid_gauge = require('highcharts/modules/solid-gauge');
   const exp = require('highcharts/modules/exporting');
   drillDown(highChart);
   exp(highChart);
+  highcharts_more(highChart);
+  solid_gauge(highChart);
   return highChart;
 }
 
@@ -51,6 +57,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FiltersComponent,
     SearchPipe,
     CardsComponent,
+    NavsComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,12 +68,8 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ButtonsModule.forRoot(),
     InfiniteScrollModule,
     PerfectScrollbarModule.forRoot(PERFECT_SCROLLBAR_CONFIG),
-    ChartModule.forRoot(
-                        require('highcharts')
-		                    ,require('highcharts/highcharts-more')
-		                    ,require('highcharts/modules/solid-gauge')
-                        ),
     BsDropdownModule.forRoot(),
+    CollapseModule.forRoot(),
   ],
   providers: [{
     provide: HighchartsStatic,

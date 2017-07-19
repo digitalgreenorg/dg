@@ -1,4 +1,4 @@
-import { Component,OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CardsService } from './cards.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.loop';
@@ -6,9 +6,9 @@ import { IMyOptions } from 'mydatepicker';
 import { DatePipe } from '@angular/common';
 
 @Component({
-    selector: 'app-cards',
-    templateUrl: './cards.component.html',
-    styleUrls: ['./cards.component.css']
+  selector: 'app-cards',
+  templateUrl: './cards.component.html',
+  styleUrls: ['./cards.component.css']
 })
 
 export class CardsComponent implements OnInit, AfterViewInit {
@@ -176,5 +176,5 @@ export class CardsComponent implements OnInit, AfterViewInit {
     saveInstance(chartInstance, chart) {
         chart.nativeChart = chartInstance;
     }
-}
 
+  }

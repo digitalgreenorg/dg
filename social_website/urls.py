@@ -2,7 +2,7 @@ from django.conf.urls import include, patterns, url
 from django.views.generic import TemplateView
 
 from communications.views import media_view
-from human_resources.views import job_view, member_view
+from human_resources.views import job_view, member_view, privacy_policy_view
 from events import event_registration
 from views import social_home, collection_view, partner_view, search_view, collection_add_view, collection_edit_view, video_view, resource_view, picoseekho_view, disseminationprep_view, disseminationform_view, adoptionverification_view
 
@@ -43,6 +43,7 @@ urlpatterns = patterns('',
     url(r'^about/reports/1/learning/$', TemplateView.as_view(template_name='learnings-09.html'), name='annualreport09learnings'),
     url(r'^about/resources/$', TemplateView.as_view(template_name='resources.html'), name='resources'),
     url(r'^about/team/$', member_view, name='team'),
+    url(r'^about/privacypolicy', privacy_policy_view, name='privacypolicy'),
     url(r'^about/tools/$', DirectTemplateView.as_view(template_name='tools.html', extra_context={'header': {'currentPage':'Tools'}}), name='tools'),
     url(r'^careers/$', job_view, name='career'),
     url(r'^career/$', job_view),
