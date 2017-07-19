@@ -428,10 +428,22 @@ class FarmerResource(BaseResource):
         bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
         return bundle
 
+class LanguageResource(BaseResource):
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = Language.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'language'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
 
 class LoopUserResource(BaseResource):
     user = fields.ForeignKey(UserResource, 'user')
     village = fields.ForeignKey(VillageResource, 'village')
+    preferred_language = fields.ForeignKey(LanguageResource,'preferred_language')
     assigned_villages = fields.ListField()
     assigned_mandis = fields.ListField()
 
@@ -446,6 +458,7 @@ class LoopUserResource(BaseResource):
 
     hydrate_user = partial(dict_to_foreign_uri, field_name='user')
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+    hydrate_preferred_language = partial(dict_to_foreign_uri,field_name='preferred_language')
     # hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages',
     #                                     resource_name='village')
     # hydrate_assigned_mandis = partial(dict_to_foreign_uri_m2m, field_name='assigned_mandis', resource_name='mandi')
@@ -466,8 +479,12 @@ class LoopUserResource(BaseResource):
             if user is None:
                 user = User.objects.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name_en'])
             bundle.data['user']={}
-            bundle.data['user']['online_id']=user.id  
+            bundle.data['user']['online_id']=user.id
+            adminUser= AdminUser.objects.get(user_id=bundle.request.user.id)
+            bundle.data['preferred_language']={}
+            bundle.data['preferred_language']['online_id']= adminUser.preferred_language.id
             bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
+            adminUser.assigned_loopusers.add(bundle.obj)
         
         else:
             send_duplicate_message(int(attempt[0].id))
@@ -505,7 +522,6 @@ class LoopUserResource(BaseResource):
 
     def obj_update(self, bundle, **kwargs):
         # Edit case many to many handling. First clear out the previous related objects and create new objects
-        import pdb;pdb.set_trace()
         user = User.objects.get(username=bundle.data['username'])
         try:
             bundle.data['user']={}
@@ -596,18 +612,6 @@ class LoopUserAssignedVillageResource(BaseResource):
     def dehydrate(self,bundle):
         bundle.data['online_id']=bundle.data['id']
         return bundle
-
-class LanguageResource(BaseResource):
-    class Meta:
-        limit = 0
-        max_limit = 0
-        queryset = Language.objects.all()
-        allowed_methods = ['post', 'get']
-        resource_name = 'language'
-        authorization = Authorization()
-        always_return_data = True
-        excludes = ('time_created', 'time_modified')
-        include_resource_uri = False
     
         
 class CropLanguageResource(BaseResource):

@@ -58,7 +58,6 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
-        print user
         loop_user = LoopUser.objects.filter(user=user)
         if user is not None and user.is_active and loop_user.count() > 0:
             auth.login(request, user)
@@ -81,7 +80,6 @@ def login(request):
                     'country':loop_user[0].village.block.district.state.country.country_name}))
         else:
             admin_user = AdminUser.objects.filter(user = user)
-            print admin_user
             if user is not None and user.is_active and admin_user.count()>0:
                 auth.login(request,user)
                 try:
