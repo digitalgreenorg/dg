@@ -31,6 +31,7 @@ api.register(GaddidarShareOutliersResource())
 api.register(AggregatorShareOutliersResource())
 api.register(LoopUserAssignedMandiResource())
 api.register(LoopUserAssignedVillageResource())
+api.register(LanguageResource())
 
 
 

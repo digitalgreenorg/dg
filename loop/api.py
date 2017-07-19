@@ -433,12 +433,15 @@ class LanguageResource(BaseResource):
         limit = 0
         max_limit = 0
         queryset = Language.objects.all()
-        allowed_methods = ['post', 'get']
         resource_name = 'language'
         authorization = Authorization()
+        authentication = ApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class LoopUserResource(BaseResource):
     user = fields.ForeignKey(UserResource, 'user')
