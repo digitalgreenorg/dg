@@ -211,7 +211,7 @@ function dropdown_control(src){
 function validation_check() {
     var error = 0;
     var checked_partitions = [partner, country, state, district, block, village]
-    var checked_partitions_restrict = [animator, group, people, video];
+    var checked_partitions_restrict = [animator, group, people];
     var checked_values = [screening, adoption, animator_no, attendance, video_screened_no, video_produced_no,blocknum,villagenum]
     var count_partition_restrict = 0;
     var count_partition = 0;
@@ -246,7 +246,7 @@ function validation_check() {
                 count_partition_restrict++;
             }
         }
-        if (count_partition_restrict > 2) {
+        if (count_partition_restrict > 1) {
             alert("Along with list please select either Animator/Group/Registered Viewers/Video from Partitions");
             error = 1;
             event.preventDefault();
