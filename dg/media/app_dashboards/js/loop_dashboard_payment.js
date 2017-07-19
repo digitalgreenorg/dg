@@ -864,6 +864,12 @@ function get_filter_data(language, country_id) {
       fill_aggregator_filter(aggregators_for_filter, language);
       fill_mandi_filter(mandis_for_filter, language);
       fill_gaddidar_filter(gaddidars_for_filter, language);
+      aggregator_ids = []
+      aggregator_names = []
+      $.each(aggregators_for_filter,function(index,aggregator_data){
+        aggregator_ids.push(aggregator_data.user__id);
+        aggregator_names.push(aggregator_data.name_en);
+      });
       if (language == ENGLISH_LANGUAGE)
         fill_crop_filter(crops_for_filter);
       else
@@ -964,6 +970,12 @@ function get_data(location, country_id) {
     mandi_names = [];
     gaddidar_ids = [];
     gaddidar_names = [];
+
+    $.each(aggregators_for_filter,function(index,aggregator_data){
+        aggregator_ids.push(aggregator_data.user__id);
+        aggregator_names.push(aggregator_data.name_en);
+      });
+
 
     $('#aggregators').children().each(function() {
       var aggregator_div = $(this).children()[1].firstChild;
