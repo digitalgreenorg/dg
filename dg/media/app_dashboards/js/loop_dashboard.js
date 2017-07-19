@@ -67,8 +67,8 @@ function initialize() {
     closeOnClick: true
   });
   $(".button-collapse1").sideNav();
-  $("#totalpaytext").text("Payments("+CURRENCY+")");
-  $("#recentpaytext").text("Payments("+CURRENCY+")");
+  $("#totalpaytext").text("Payments(" + CURRENCY + ")");
+  $("#recentpaytext").text("Payments(" + CURRENCY + ")");
   var today = new Date();
   $("#to_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
   $("#to_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
@@ -457,14 +457,14 @@ function plot_cards_data() {
     var amt = parseFloat(days_by_group[i][AMOUNT__SUM]);
     var cost = parseFloat(days_by_group[i]['transportation_cost__sum']) + parseFloat(days_by_group[i]['aggregator_incentive__sum']);
     var recovered = parseFloat(days_by_group[i]['farmer_share__sum']) + parseFloat(days_by_group[i]['gaddidar_share__sum']);
-    var cpk = parseFloat(cost) / parseFloat(vol);
-    var spk = (parseFloat(recovered) / parseFloat(cost)) * 100;
+    var cpk = vol > 0 ? (parseFloat(cost) / parseFloat(vol)) : 0;
+    var spk = cost > 0 ? ((parseFloat(recovered) / parseFloat(cost)) * 100) : 0;
     c_vol.push(vol);
     c_amt.push(amt);
     c_cpk.push(cpk.toFixed(2));
     c_sustainability.push(spk.toFixed(2));
     c_active_clusters.push(active_cluster);
-    c_active_farmers.push(farmer_count)
+    c_active_farmers.push(farmer_count);
   }
   document.getElementById('recent_cluster_card').innerHTML = '&nbsp;&nbsp;&nbsp;' + c_active_clusters[0];
   $("#recent_cluster_sparkline").sparkline(c_active_clusters.reverse(), sparkline_option);
@@ -489,8 +489,8 @@ function plot_cards_data() {
 function cummulative_farmer_and_volume(cum_vol_farmer) {
   var all_dates = [];
   var vol_farmer_length = Object.keys(cum_vol_farmer).length;
-  var first_date = new Date(cum_vol_farmer[0]['date']);
-  var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']);
+  var first_date = new Date(cum_vol_farmer[0]['date']+"T23:59:00");
+  var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']+"T23:59:00");
   while (first_date <= last_date) {
     all_dates.push(first_date.getTime());
     first_date.setDate(first_date.getDate() + 1);
@@ -498,25 +498,26 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
 
   var total_days = all_dates.length;
 
-  var cumm_volume = new Array(total_days).fill(0.0);
-  var cumm_farmers = new Array(total_days).fill(0.0);
+  var cumm_volume = new Array(total_days).fill(0);
+  var cumm_farmers = new Array(total_days).fill(0);
   var temp_volume = {};
   temp_volume['name'] = "Volume";
   temp_volume['data'] = [];
   temp_volume['type'] = 'spline';
   temp_volume['pointInterval'] = 24 * 3600 * 1000;
-  temp_volume['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
+  temp_volume['pointStart'] = all_dates[0]; // Pointing to the starting date
   temp_volume['showInLegend'] = true;
   var temp_farmers = {};
   temp_farmers['name'] = "Farmers";
   temp_farmers['data'] = [];
   temp_farmers['type'] = 'spline';
   temp_farmers['pointInterval'] = 24 * 3600 * 1000;
-  temp_farmers['pointStart'] = all_dates[total_days - 1]; // Pointing to the starting date
+  temp_farmers['pointStart'] = all_dates[0]; // Pointing to the starting date
   temp_farmers['showInLegend'] = true;
 
   for (var i = 0; i < vol_farmer_length; i++) {
-    var index = all_dates.indexOf(new Date(cum_vol_farmer[i]['date']).getTime());
+    var date_to_find = new Date(cum_vol_farmer[i]['date']+"T23:59:00");
+    var index = all_dates.indexOf(date_to_find.getTime());
     cumm_farmers[index] = cum_vol_farmer[i]['cum_distinct_farmer'];
     cumm_volume[index] = cum_vol_farmer[i]['cum_vol'];
   }
@@ -870,8 +871,7 @@ function get_filter_data(language, country_id) {
       fill_gaddidar_filter(gaddidars_for_filter, language);
       if (language == ENGLISH_LANGUAGE)
         fill_crop_filter(crops_for_filter);
-      else
-      {
+      else {
         // If country is India, then Regional Language is Hindi
         if (country_id == 1)
           fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
@@ -1649,8 +1649,7 @@ function farmer_crop_visits(container, json_data) {
   for (var i = 0; i < json_data.length; i++) {
     if (language == ENGLISH_LANGUAGE) {
       series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
-    } 
-    else {
+    } else {
       if (country_id == 1)
         series[0]['data'].push([json_data[i]['crop__crop_name_hi'], json_data[i]['farmer__count']]);
       else if (country_id == 2)
@@ -1689,8 +1688,7 @@ function fill_crop_drop_down() {
   var crops_names_time_series;
   if (language == ENGLISH_LANGUAGE)
     crops_names_time_series = crops_for_filter;
-  else
-  {
+  else {
     // If country is India, then Regional Language is Hindi
     if (country_id == 1)
       crops_names_time_series = croplanguage_for_filter[HINDI_ID];
@@ -4050,8 +4048,7 @@ function change_language(lang) {
   fill_gaddidar_filter(gaddidars_for_filter, language);
   if (language == ENGLISH_LANGUAGE)
     fill_crop_filter(crops_for_filter);
-  else
-  {
+  else {
     // If country is India, then Regional Language is Hindi
     if (country_id == 1)
       fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
@@ -4068,16 +4065,15 @@ function change_language(lang) {
 function change_country(country) {
 
   country_id = country;
-  if (country_id == 1){
+  if (country_id == 1) {
     CURRENCY = RUPEE;
-    $("#totalpaytext").text("Payments("+CURRENCY+")");
-    $("#recentpaytext").text("Payments("+CURRENCY+")");
+    $("#totalpaytext").text("Payments(" + CURRENCY + ")");
+    $("#recentpaytext").text("Payments(" + CURRENCY + ")");
 
-  }
-  else{
+  } else {
     CURRENCY = TAKA;
-    $("#totalpaytext").text("Payments("+CURRENCY+")");
-    $("#recentpaytext").text("Payments("+CURRENCY+")");
+    $("#totalpaytext").text("Payments(" + CURRENCY + ")");
+    $("#recentpaytext").text("Payments(" + CURRENCY + ")");
 
   }
   total_static_data(country);
