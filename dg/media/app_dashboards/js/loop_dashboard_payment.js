@@ -3749,7 +3749,7 @@ function getFormattedDate(aggregator_id) {
   var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
     "July", "Aug", "Sept", "Oct", "Nov", "Dec"
   ];
-  var aggregator_index = aggregator_ids.indexOf(aggregator_id);
+  var aggregator_index = aggregator_ids.indexOf(parseInt(aggregator_id));
   var name = aggregator_names[aggregator_index];
   var fromDate = new Date(payments_start_date);
   var toDate = new Date(payments_to_date);
