@@ -154,7 +154,7 @@ class SubCategory(CocoModel):
 class VideoPractice(CocoModel):
     id = models.AutoField(primary_key=True)
     subcategory = models.ForeignKey(SubCategory)
-    videopractice_name = models.CharField(max_length = 100)
+    videopractice_name = models.CharField(max_length = 1024)
 
     def get_village(self):
         return None
