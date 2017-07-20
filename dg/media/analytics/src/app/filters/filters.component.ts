@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { IMyOptions } from 'mydatepicker';
 import { Filter } from './filter';
 import { FilterElement } from './filter-element';
-import { GetFilterDataService } from '../get-filter-data.service';
+import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.training';
 
@@ -18,9 +18,9 @@ import { environment } from '../../environments/environment.training';
 export class FiltersComponent implements OnInit {
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
-  @ViewChild('sideNavContent') sideNavContent : ElementRef;
+  @ViewChild('sideNavContent') sideNavContent: ElementRef;
+  filterConfig = environment.filtersConfig;
   filter_list: Filter[] = new Array<Filter>();
-  filter: Filter;
   showDateFilter: boolean = false;
   invalidDate: boolean = false;
   invalidDateMessage: string;
@@ -53,45 +53,104 @@ export class FiltersComponent implements OnInit {
   };
 
   constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, private datepipe: DatePipe) {
-  }
-
-  ngOnInit() {
-
-    this.getFilterData.getData().subscribe(val => {
-      for (let data of val) {
-        if (data['name'] === 'date' && data['visible'] == true) {
+    Object.keys(this.filterConfig).forEach(key => {
+      if (this.filterConfig[key].show) {
+        if (this.filterConfig[key].name == 'date') {
           this.showDateFilter = true;
         }
         else {
-          this.filter = new Filter();
-          this.filter.heading = data['name'];
-          this.filter.expand = false;
-          this.filter.element = new Array<FilterElement>();
-          for (let val of data['data']) {
-            let filterElement = new FilterElement();
-            filterElement.id = val['id'];
-            filterElement.value = val['value'];
-            filterElement.checked = false;
+          let filter = new Filter();
+          filter.heading = this.filterConfig[key].name;
+          filter.expand = this.filterConfig[key].expand;
+          filter.parent = this.filterConfig[key].parent;
+          filter.initialLoad = this.filterConfig[key].initialLoad;
+          filter.element = new Array<FilterElement>();
+          this.filter_list.push(filter);
+        }
+      }
+    });
 
-            this.filter.element.push(filterElement);
-          }
-          this.filter_list.push(this.filter);
+    this.getFilterData.getData().subscribe(response => {
+      for (let res_obj of response) {
+        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
+        let data = res_obj;
+        for (let val of data['data']) {
+          let filterElement = new FilterElement();
+          filterElement.id = val['id'];
+          filterElement.value = val['value'];
+          filter[0].element.push(filterElement);
         }
       }
     });
   }
 
-  closeNav() {
+  select_all(filter): void {
+    for (let element of filter['element']) {
+      element.checked = filter.select_all;
+    }
+    filter.changed = true;
+  }
+
+  onFilterClick(filter_clicked): void {
+    if (!filter_clicked.expand && !filter_clicked.initialLoad) {
+      if (filter_clicked.element.length == 0) {
+        filter_clicked.expand = true;
+      }
+      let options = {
+        filter: filter_clicked.heading
+      }
+      let parent_list = this.filter_list.filter(f_obj => {
+        return f_obj.heading === filter_clicked.parent;
+      });
+      let parent_changed: boolean = false;
+      if (parent_list.length > 0) {
+        let parent = parent_list[0];
+        let parent_name = parent.heading;
+        parent_changed = parent.changed;
+        let list = parent.element.filter(data => { return data.checked }).map(data => {
+          return data.id;
+        });
+        if (list.length > 0) {
+          options['parent'] = parent_name;
+          options[parent_name] = list;
+        }
+      }
+      if (parent_changed) {
+        filter_clicked.element = [];
+        filter_clicked.expand = true;
+        this.getFilterData.getDataForParentFilter(options).subscribe(response => {
+          parent_list[0].changed = false;
+          // let filter = this.filter_list.filter(f_obj => { return f_obj.heading === response[0]['name']; });
+          try {
+            let data = response[0];
+            for (let val of data['data']) {
+              let filterElement = new FilterElement();
+              filterElement.id = val['id'];
+              filterElement.value = val['value'];
+              filter_clicked.element.push(filterElement);
+            }
+            filter_clicked.expand = true;
+          }
+          catch (e) { }
+        });
+      }
+    }
+  }
+
+  ngOnInit() {
+  }
+
+  closeNav(): void {
     this.mySidenav.nativeElement.style.width = '0px';
     this.sideNavContent.nativeElement.style.display = 'none';
   }
 
-  openNav() {
+  openNav(): void {
     this.mySidenav.nativeElement.style.width = '320px';
     this.sideNavContent.nativeElement.style.display = 'block';
   }
 
-  applyFilters() {
+  applyFilters(): void {
     this.f_list = {};
     for (let f of this.filter_list) {
       let list = f.element.filter(data => { return data.checked }).map(data => {
@@ -114,7 +173,7 @@ export class FiltersComponent implements OnInit {
           this.f_list['end_date'] = endDate;
         } else {
           this.invalidDate = true;
-          this.invalidDateMessage = "* End date cannot be smaller than start date."
+          this.invalidDateMessage = "*'From' date should be less than 'To' date."
         }
       } catch (err) {
         this.invalidDate = true;
@@ -122,12 +181,12 @@ export class FiltersComponent implements OnInit {
       }
     }
     if (!this.invalidDate) {
-      this.getDatatest();
+      this.getDataForFilters();
       this.closeNav();
     }
   }
 
-  getDatatest(): any {
+  private getDataForFilters(): any {
     let argstest = {
       webUrl: environment.url + "getData",
       params: this.f_list

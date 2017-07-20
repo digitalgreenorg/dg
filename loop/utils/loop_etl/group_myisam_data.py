@@ -82,7 +82,8 @@ def get_data_from_myisam(get_total, country_id):
 
     cumm_vol_farmer = {}
     if get_total == 0:
-        df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
+        #df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
+        df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('date','farmer_id').order_by('date')))
         df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
 
         dictionary = {}
@@ -94,7 +95,7 @@ def get_data_from_myisam(get_total, country_id):
         # Calcualting cummulative volume and farmer count
         df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
         df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
-        df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum()
+        df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
         df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
         cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
     else:
