@@ -591,7 +591,17 @@ def payments(request):
 def dashboard_payments(request):
     if request.method == 'GET':
         context = RequestContext(request)
-        return render_to_response('app_dashboards/loop_dashboard_payment.html', context_instance=context)
+        user = request.user
+        try:
+            api_key = ApiKey.objects.get(user=user)
+        except ApiKey.DoesNotExist:
+            api_key = ApiKey.objects.create(user=user)
+            api_key.save()
+        login_data = dict()
+        login_data['user_name'] = user.username
+        login_data['user_id'] = user.id
+        login_data['key'] = api_key
+        return render_to_response('app_dashboards/loop_dashboard_payment.html', login_data, context_instance=context)
     else:
         return HttpResponse(status=404)
 
