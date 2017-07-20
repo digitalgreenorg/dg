@@ -13,7 +13,7 @@ from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max, F
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 
 from tastypie.models import ApiKey, create_api_key
@@ -794,6 +794,8 @@ def helpline_offline(request):
 
 
 @login_required
+@user_passes_test(lambda u: u.groups.filter(name='Broadcast').count() > 0,
+                  login_url=PERMISSION_DENIED_URL)
 def broadcast(request):
     context = RequestContext(request)
     template_data = dict()
