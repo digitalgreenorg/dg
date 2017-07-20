@@ -253,6 +253,7 @@ function() {
         'dependent_element_div_hide': 'label_direct_beneficiaries',
         'parent_element_to_hide': 'direct_beneficiaries',
         'parent_element_label_to_hide': 'label_direct_beneficiaries',
+        'health_element_show_hide': {'#remove-table': '#remove-table', '#srf-1': '#srf-1', '#srf-2': '#srf-2', '#label_direct_beneficiaries': '#label_direct_beneficiaries'},
         'unique_together_fields': ['title', 'production_date', 'village.id'],
         'sort_field': 'title',
         'foreign_entities': {
@@ -1339,7 +1340,8 @@ function() {
         agg_variable: '2',
         upavan_variable: '3',
         menu_options_to_hide: {'.ahnn': 'ahnn', '.hnn': '.hnn', 'li.hnn': 'li.hnn'},
-        upavan_user_fields: ["#type_of_venue", "#type_of_video", "#frontlineworkerpresent", "#end_time", "#remove-table", "#srf-1", "#srf-2"],
+        srb_fields: ["#srf-1", "#srf-2", "#remove-table"],
+        upavan_user_fields: ["#type_of_venue", "#type_of_video", "#frontlineworkerpresent", "#end_time"],
         label_upavan_dict: {'#id_label_animator': 'CSP name', '#id_label_videos_screened': 'Video Name',
                               '#id_category': 'Beneficiary', '#id_dob': 'Date of Home Visit',
                              '.non': 'Beneficiary recalled the knowledge recall point?',
