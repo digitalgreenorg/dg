@@ -5,7 +5,6 @@ import requests
 from django.http import JsonResponse, HttpResponseBadRequest
 from io import BytesIO
 from threading import Thread
-import xml.etree.ElementTree as xml_parse
 
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -13,7 +12,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
-from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
+from django.db.models import Count, Min, Sum, Avg, Max, F
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 
@@ -23,7 +22,7 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
     HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, AdminUser
 
-from loop_data_log import get_latest_timestamp
+from loop.utils.send_log.loop_data_log import get_latest_timestamp
 from loop.payment_template import *
 from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME, \
     HELPLINE_LOG_FILE
@@ -315,66 +314,6 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
         pass
     return result
 
-
-def calculate_gaddidar_share(start_date, end_date, mandi_list, aggregator_list):
-    parameters_dictionary = {'mandi__in': mandi_list}
-    parameters_dictionary_for_outliers = {'aggregator__user__in': aggregator_list, 'mandi__in': mandi_list}
-    parameters_dictionary_for_ct = {'user_created__id__in': aggregator_list, 'mandi__in': mandi_list,
-                                    'date__gte': start_date, 'date__lte': end_date}
-
-    arguments_for_ct = {}
-    arguments_for_gaddidar_commision = {}
-    arguments_for_gaddidar_outliers = {}
-
-    for k, v in parameters_dictionary.items():
-        if v:
-            arguments_for_gaddidar_commision[k] = v
-
-    for k, v in parameters_dictionary_for_ct.items():
-        if v:
-            arguments_for_ct[k] = v
-
-    for k, v in parameters_dictionary_for_outliers.items():
-        if v:
-            arguments_for_gaddidar_outliers[k] = v
-
-    gc_queryset = GaddidarCommission.objects.filter(
-        **arguments_for_gaddidar_commision)
-    gso_queryset = GaddidarShareOutliers.objects.filter(
-        **arguments_for_gaddidar_outliers)
-    combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
-        'date', 'user_created_id', 'gaddidar', 'mandi', 'gaddidar__discount_criteria').order_by('-date').annotate(
-        Sum('quantity'), Sum('amount'))
-    result = []
-    # gso_list = [gso.date for gso in gso_queryset.filter(gaddidar=CT['gaddidar'], aggregator=user.id)]
-    for CT in combined_ct_queryset:
-        amount_sum = 0
-        user = LoopUser.objects.get(user_id=CT['user_created_id'])
-        if CT['date'] not in [gso.date for gso in gso_queryset.filter(gaddidar=CT['gaddidar'], aggregator=user.id)]:
-            try:
-                gc_list_set = gc_queryset.filter(start_date__lte=CT['date'], gaddidar=CT[
-                    'gaddidar']).order_by('-start_date')
-                if CT['gaddidar__discount_criteria'] == DISCOUNT_CRITERIA_VOLUME and gc_list_set.count() > 0:
-                    amount_sum += CT['quantity__sum'] * \
-                                  gc_list_set[0].discount_percent
-                elif gc_list_set.count() > 0:
-                    amount_sum += CT['amount__sum'] * gc_list_set[0].discount_percent
-            except GaddidarCommission.DoesNotExist:
-                pass
-        else:
-            try:
-                gso_gaddidar_date_aggregator = gso_queryset.filter(
-                    date=CT['date'], aggregator=user.id, gaddidar=CT['gaddidar']).values_list('amount', flat=True)
-                if gso_gaddidar_date_aggregator.count():
-                    amount_sum += gso_gaddidar_date_aggregator[0]
-            except GaddidarShareOutliers.DoesNotExist:
-                pass
-        result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__id': CT[
-            'gaddidar'], 'mandi__id': CT['mandi'], 'amount': round(amount_sum, 2),
-                       'quantity__sum': round(CT['quantity__sum'], 2)})
-    return result
-
-
 def crop_language_data(request):
     crops = CropLanguage.objects.filter(language=request.GET.get('language'))
     data = json.dumps(crops)
@@ -468,7 +407,7 @@ def data_for_drilldown_graphs(request):
     mandi_crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'mandi__id').annotate(Min('price'), Max('price'))
 
-    gaddidar_contribution = calculate_gaddidar_share(
+    gaddidar_contribution = calculate_gaddidar_share_payments(
         start_date, end_date, mandi_ids, aggregator_ids)
 
     aggregator_incentive_cost = calculate_aggregator_incentive(start_date, end_date, mandi_ids, aggregator_ids)
@@ -527,31 +466,44 @@ def data_for_line_graph(request):
     crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'date').annotate(Min('price'), Max('price'), Sum('quantity'), Sum('amount'))
 
-    aggregator_incentive_cost = calculate_aggregator_incentive(start_date, end_date, mandi_ids, aggregator_ids)
+    # aggregator_incentive_cost = calculate_aggregator_incentive(start_date, end_date, mandi_ids, aggregator_ids)
 
     chart_dict = {'transport_data': list(transport_data), 'crop_prices': list(
-        crop_prices), 'dates': list(dates), 'aggregator_data': list(aggregator_data),
-                  'aggregator_incentive_cost': aggregator_incentive_cost}
+        crop_prices), 'dates': list(dates), 'aggregator_data': list(aggregator_data)}
 
     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
 
     return HttpResponse(data)
 
 
-def calculate_gaddidar_share_payments(start_date, end_date):
-    parameters_dictionary_for_ct = {
-        'date__gte': start_date, 'date__lte': end_date}
+def calculate_gaddidar_share_payments(start_date, end_date, mandi_list=None, aggregator_list=None):
+    parameters_dictionary = {'mandi__in': mandi_list}
+    parameters_dictionary_for_outliers = {'aggregator__user__in': aggregator_list, 'mandi__in': mandi_list}
+    parameters_dictionary_for_ct = {'user_created__id__in': aggregator_list, 'mandi__in': mandi_list, 'date__gte': start_date, 'date__lte': end_date}
+
     arguments_for_ct = {}
+    arguments_for_gaddidar_commision = {}
+    arguments_for_gaddidar_outliers = {}
+
+    for k, v in parameters_dictionary.items():
+        if v:
+            arguments_for_gaddidar_commision[k] = v
+
     for k, v in parameters_dictionary_for_ct.items():
         if v:
             arguments_for_ct[k] = v
 
-    gc_queryset = GaddidarCommission.objects.all()
-    gso_queryset = GaddidarShareOutliers.objects.all()
+    for k, v in parameters_dictionary_for_outliers.items():
+        if v:
+            arguments_for_gaddidar_outliers[k] = v
+
+    gc_queryset = GaddidarCommission.objects.filter(**arguments_for_gaddidar_commision)
+    gso_queryset = GaddidarShareOutliers.objects.filter(**arguments_for_gaddidar_outliers)
     combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
         'date', 'user_created_id', 'gaddidar', 'gaddidar__gaddidar_name_en', 'mandi', 'mandi__mandi_name_en',
         'gaddidar__discount_criteria').order_by('-date').annotate(Sum('quantity'), Sum('amount'))
     result = []
+
     # gso_list = [gso.date for gso in gso_queryset]
     for CT in combined_ct_queryset:
         amount_sum = 0
@@ -585,9 +537,10 @@ def calculate_gaddidar_share_payments(start_date, end_date):
                         gc_discount = amount_sum / CT['amount__sum']
             except GaddidarShareOutliers.DoesNotExist:
                 pass
-        result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__name': CT[
-            'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': round(amount_sum, 2),
-                       'gaddidar_discount': round(gc_discount, 3), 'comment': comment})
+        result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'],'gaddidar__id': CT[
+            'gaddidar'], 'mandi__id': CT['mandi'], 'gaddidar__name': CT[
+            'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': round(amount_sum,2),
+                       'gaddidar_discount': round(gc_discount,3), 'comment': comment,'quantity__sum': round(CT['quantity__sum'],2)})
     return result
 
 

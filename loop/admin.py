@@ -51,7 +51,7 @@ class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
-    search_fields = ['name', 'village__village_name', 'village__block__district__state__country']
+    search_fields = ['name', 'village__village_name', 'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country']
 
 class AdminAssignedDistricts(admin.StackedInline):
@@ -154,7 +154,7 @@ class AggregatorIncentiveAdmin(admin.ModelAdmin):
     list_display = ('start_date','__unicode__','__incentive_model__' ,'model_type')
 
 class IncentiveModelAdmin(admin.ModelAdmin):
-    list_display = ['calculation_method']
+    list_display = ['calculation_method','description']
 
 class AggregatorShareOutlierAdmin(admin.ModelAdmin):
     list_display = ('date','__mandi__', '__aggregator__' , 'amount', 'comment')
@@ -186,6 +186,18 @@ class HelplineCallLogAdmin(admin.ModelAdmin):
 class HelplineSmsLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'sms_id', 'from_number', 'to_number', 'sent_time')
     search_fields = ['from_number', 'to_number', 'sent_time']
+
+class LogAdmin(admin.ModelAdmin):
+    actions = None
+    list_display = ('id', 'timestamp', 'entry_table','model_id','action','village','loop_user','user')
+    list_filter = ['entry_table', 'action']
+    list_display_link = None
+
+class LogDeletedAdmin(admin.ModelAdmin):
+    actions = None
+    list_display_link = None
+    list_display = ('id', 'entry_table','table_object')
+    list_filter = ['entry_table']
 
 class BroadcastAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'audio_url', 'from_number', 'start_time', 'end_time')
@@ -228,6 +240,8 @@ loop_admin.register(HelplineIncoming,HelplineIncomingAdmin)
 loop_admin.register(HelplineOutgoing,HelplineOutgoingAdmin)
 loop_admin.register(HelplineCallLog,HelplineCallLogAdmin)
 loop_admin.register(HelplineSmsLog,HelplineSmsLogAdmin)
+loop_admin.register(Log,LogAdmin)
+loop_admin.register(LogDeleted, LogDeletedAdmin)
 loop_admin.register(Broadcast,BroadcastAdmin)
 loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
 loop_admin.register(VehicleLanguage)

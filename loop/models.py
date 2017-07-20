@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
-from loop_data_log import save_log, delete_log
+from loop.utils.send_log.loop_data_log import save_log#, delete_log
 from smart_selects.db_fields import ChainedForeignKey
 from constants.constants import *
 
@@ -67,7 +67,7 @@ class State(LoopModel):
         unique_together = ("state_name",)
 
 post_save.connect(save_log,sender=State)
-pre_delete.connect(delete_log,sender=State)
+pre_delete.connect(save_log,sender=State)
 
 class District(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -114,7 +114,7 @@ class Village(LoopModel):
 
 
 post_save.connect(save_log, sender=Village)
-pre_delete.connect(delete_log, sender=Village)
+pre_delete.connect(save_log, sender=Village)
 
 
 class Mandi(LoopModel):
@@ -133,7 +133,7 @@ class Mandi(LoopModel):
         unique_together = ("mandi_name", "district",)
 
 post_save.connect(save_log, sender=Mandi)
-pre_delete.connect(delete_log, sender=Mandi)
+pre_delete.connect(save_log, sender=Mandi)
 
 
 
@@ -168,7 +168,7 @@ class LoopUser(LoopModel):
         return "%s" % self.user.id
 
 post_save.connect(save_log,sender=LoopUser)
-pre_delete.connect(delete_log,sender=LoopUser)
+pre_delete.connect(save_log,sender=LoopUser)
 
 class LoopUserAssignedMandi(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -177,7 +177,7 @@ class LoopUserAssignedMandi(LoopModel):
     is_visible = models.BooleanField(default=True)
 
 post_save.connect(save_log, sender=LoopUserAssignedMandi)
-pre_delete.connect(delete_log, sender=LoopUserAssignedMandi)
+pre_delete.connect(save_log, sender=LoopUserAssignedMandi)
 
 
 class LoopUserAssignedVillage(LoopModel):
@@ -187,7 +187,7 @@ class LoopUserAssignedVillage(LoopModel):
     is_visible = models.BooleanField(default=True)
 
 post_save.connect(save_log, sender=LoopUserAssignedVillage)
-pre_delete.connect(delete_log, sender=LoopUserAssignedVillage)
+pre_delete.connect(save_log, sender=LoopUserAssignedVillage)
 
 class AdminUser(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -245,7 +245,7 @@ class Gaddidar(LoopModel):
         unique_together = ("gaddidar_phone", "gaddidar_name","mandi")
 
 post_save.connect(save_log, sender=Gaddidar)
-pre_delete.connect(delete_log, sender=Gaddidar)
+pre_delete.connect(save_log, sender=Gaddidar)
 
 
 class Farmer(LoopModel):
@@ -268,7 +268,7 @@ class Farmer(LoopModel):
         unique_together = ("phone", "name", "village")
 
 post_save.connect(save_log, sender=Farmer)
-pre_delete.connect(delete_log, sender=Farmer)
+pre_delete.connect(save_log, sender=Farmer)
 
 
 class Crop(LoopModel):
@@ -286,7 +286,7 @@ class Crop(LoopModel):
         unique_together = ("crop_name",)
 
 post_save.connect(save_log, sender=Crop)
-pre_delete.connect(delete_log, sender=Crop)
+pre_delete.connect(save_log, sender=Crop)
 
 #############Crop name in multiple languages###############
 
@@ -303,7 +303,7 @@ class CropLanguage(models.Model):
         return "%s" % (self.crop.crop_name)
 
 post_save.connect(save_log,sender=CropLanguage)
-pre_delete.connect(delete_log,sender=CropLanguage)
+pre_delete.connect(save_log,sender=CropLanguage)
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -322,7 +322,7 @@ class Transporter(LoopModel):
         unique_together = ("transporter_name", "transporter_phone",)
 
 post_save.connect(save_log, sender=Transporter)
-pre_delete.connect(delete_log, sender=Transporter)
+pre_delete.connect(save_log, sender=Transporter)
 
 
 class Vehicle(LoopModel):
@@ -338,7 +338,7 @@ class Vehicle(LoopModel):
         unique_together = ("vehicle_name",)
 
 post_save.connect(save_log, sender=Vehicle)
-pre_delete.connect(delete_log, sender=Vehicle)
+pre_delete.connect(save_log, sender=Vehicle)
 
 class VehicleLanguage(models.Model):
     id = models.AutoField(primary_key=True)
@@ -348,12 +348,11 @@ class VehicleLanguage(models.Model):
 
     def __unicode__(self):
         return self.vehicle_name
-    def __crop__(self):
+    def __vehicle__(self):
         return "%s" % (self.vehicle.vehicle_name)
 
 post_save.connect(save_log,sender=VehicleLanguage)
-pre_delete.connect(delete_log,sender=VehicleLanguage)
-
+pre_delete.connect(save_log,sender=VehicleLanguage)
 
 class TransportationVehicle(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -375,7 +374,7 @@ class TransportationVehicle(LoopModel):
         unique_together = ("transporter", "vehicle", "vehicle_number",)
 
 post_save.connect(save_log, sender=TransportationVehicle)
-pre_delete.connect(delete_log, sender=TransportationVehicle)
+pre_delete.connect(save_log, sender=TransportationVehicle)
 
 
 class DayTransportation(LoopModel):
@@ -411,7 +410,7 @@ class DayTransportation(LoopModel):
         unique_together = ("date", "user_created", "timestamp")
 
 post_save.connect(save_log, sender=DayTransportation)
-pre_delete.connect(delete_log, sender=DayTransportation)
+pre_delete.connect(save_log, sender=DayTransportation)
 
 
 class CombinedTransaction(LoopModel):
@@ -454,7 +453,7 @@ class CombinedTransaction(LoopModel):
 
 
 post_save.connect(save_log, sender=CombinedTransaction)
-pre_delete.connect(delete_log, sender=CombinedTransaction)
+pre_delete.connect(save_log, sender=CombinedTransaction)
 
 class GaddidarCommission(LoopModel):
     mandi = models.ForeignKey(Mandi)
@@ -469,7 +468,7 @@ class GaddidarCommission(LoopModel):
     class Meta:
         unique_together = ("start_date", "gaddidar", "mandi")
 post_save.connect(save_log, sender=GaddidarCommission)
-pre_delete.connect(delete_log, sender=GaddidarCommission)
+pre_delete.connect(save_log, sender=GaddidarCommission)
 
 class GaddidarShareOutliers(LoopModel):
     mandi = ChainedForeignKey(Mandi, chained_field="aggregator", chained_model_field="assigned_mandis")
@@ -499,10 +498,11 @@ class IncentiveParameter(models.Model):
         unique_together = ("notation", "parameter_name", "notation_equivalent")
 
 class IncentiveModel(models.Model):
-    calculation_method = models.TextField(null=True, blank=True)
+    calculation_method = models.TextField()
+    description = models.CharField(max_length=100, null=True, blank=True)
 
     def __unicode__(self):
-        return "%s" % (self.calculation_method)
+        return "%s" % (self.description)
 
 class AggregatorIncentive(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
@@ -517,7 +517,7 @@ class AggregatorIncentive(LoopModel):
         return "%s" % (self.aggregator.name)
 
     def __incentive_model__(self):
-        return "%s" % (self.incentive_model.calculation_method)
+        return "%s" % (self.incentive_model.description)
 
 class AggregatorShareOutliers(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
@@ -617,6 +617,11 @@ class HelplineSmsLog(LoopModel):
     def __unicode__(self):
         return "%s (%s) (%s)" % (self.from_number, self.to_number, self.sent_time)
 
+class LogDeleted(models.Model):
+    id = models.AutoField(primary_key=True)
+    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.datetime.now)
+    entry_table = models.CharField(max_length=100)
+    table_object = models.CharField(max_length=500)
 
 class Broadcast(LoopModel):
     id = models.AutoField(primary_key=True)

@@ -5,5 +5,9 @@ export class Filter {
   searchTerm: string;
   visible: boolean;
   element: FilterElement[];
-  expand : boolean;
+  expand: boolean;
+  parent: string;
+  initialLoad: boolean;
+  changed: boolean = false;
+  select_all: boolean = false;
 }
