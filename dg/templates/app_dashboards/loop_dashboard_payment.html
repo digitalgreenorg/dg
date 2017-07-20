@@ -495,4 +495,11 @@
 {% endblock %} {% block script %}
 <!-- ?1 after js represents js version for refreshing cached version of javascript-->
 <script src="{% static 'app_dashboards/js/loop_dashboard_payment.js?2' %}"></script>
+<script>
+   window.localStorage.name = '{{user_name}}';
+   window.localStorage.akey = '{{key}}';
+   window.localStorage.user_id = '{{user_id}}';
+   globalApi = '{{key}}';
+   window.localStorage.login_timestamp = new Date().getTime();
+</script>
 {% endblock %}

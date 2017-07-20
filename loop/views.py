@@ -600,7 +600,7 @@ def dashboard_payments(request):
         login_data = dict()
         login_data['user_name'] = user.username
         login_data['user_id'] = user.id
-        login_data['key'] = api_key
+        login_data['key'] = api_key.key
         return render_to_response('app_dashboards/loop_dashboard_payment.html', login_data, context_instance=context)
     else:
         return HttpResponse(status=404)
