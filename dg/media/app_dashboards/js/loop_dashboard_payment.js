@@ -3248,7 +3248,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 }
                 rows_table3 = [];
                 get_payments_data();
-                delay = 6000;
+                delay = 8000;
                 setTimeout(function() {
                   $("#aggregator_payments").val(aggregator).change();
                   $("#aggregator_payment_tab :input").val(aggregator_name_input);
@@ -3521,7 +3521,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 }
                 rows_table4 = [];
                 get_payments_data();
-                delay = 6000;
+                delay = 8000;
                 setTimeout(function() {
                   $("#aggregator_payments").val(aggregator).change();
                   $("#aggregator_payment_tab :input").val(aggregator_name_input);
