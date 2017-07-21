@@ -211,7 +211,7 @@ function dropdown_control(src){
 function validation_check() {
     var error = 0;
     var checked_partitions = [partner, country, state, district, block, village]
-    var checked_partitions_restrict = [animator, group, people, video];
+    var checked_partitions_restrict = [animator, group, people];
     var checked_values = [screening, adoption, animator_no, attendance, video_screened_no, video_produced_no,blocknum,villagenum]
     var count_partition_restrict = 0;
     var count_partition = 0;
@@ -268,8 +268,7 @@ function validation_check() {
         ((video.checked) && (video_screened_no.checked)) ||
         ((video.checked) && (video_produced_no.checked))
         ||((village.checked)&&(villagenum.checked))||
-        ((block.checked)&&(blocknum.checked)) ||
-        ((video.checked)&&(group.checked))) {
+        ((block.checked)&&(blocknum.checked)) ) {
         alert("Invalid combination of 'Value' and 'Partition' fields!! Please check");
         error = 1;
         event.preventDefault();
