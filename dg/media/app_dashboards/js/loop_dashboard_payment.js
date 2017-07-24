@@ -2475,7 +2475,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
       gaddidar_data_set_clone[i][4] = parseFloat(gaddidar_data_set_clone[i][4]) * 100 + '%';
   }
   $(window).on('beforeunload', function() {
-    if (!$('#ToolTables_table2_1').hasClass('disable-button') || !$('#ToolTables_table3_1').hasClass('disable-button'))
+    if (!$('#ToolTables_table2_1').hasClass('disable-button') || !$('#ToolTables_table3_1').hasClass('disable-button') || !$('#ToolTables_table4_1').hasClass('disable-button'))
       return "You have Unsaved Changes";
   });
 
