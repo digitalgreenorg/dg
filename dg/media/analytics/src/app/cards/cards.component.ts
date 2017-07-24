@@ -112,7 +112,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
             }
             if(this.cardsConfigs[key].recent.borrowData == false) {
                 options.params.cardName = this.cardsConfigs[key].recent.text;
-                console.log(key);
                 this.saveData(options);
             }
         });
@@ -125,7 +124,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
     public saveData(options) :any {
         this.cardsService.getApiData(options)
             .subscribe(dataList => {
-                // console.log(dataList);
                 dataList['data'].forEach( cardData => {
                     if(cardData.placeHolder == "overall") {
                         this.cardsOverall.forEach(card => {
@@ -148,8 +146,9 @@ export class CardsComponent implements OnInit, AfterViewInit {
                             }
                         })
                         this.recentcharts.forEach(chart=> {
+                            console.log(cardData.tagName, cardData.value, chart.options.title);
                             if(cardData.tagName === chart.options.title) {
-                                chart.nativeChart.series[0].update({'data':cardData.value})
+                                chart.nativeChart.series[0].update({'data':cardData.value['7']})
                             }
                         })
                     }

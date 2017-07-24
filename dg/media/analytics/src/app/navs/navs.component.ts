@@ -137,13 +137,11 @@ export class NavsComponent implements OnInit {
 
   //access underlying chart
   saveInstance(chartInstance, chart) {
-    console.log("REached here in saveInstance");
     chart.nativeChart = chartInstance;
   }
 
   //get data for graphs from service
   getGraphsData(filters): void {
-    console.log("REached here in service method");
     this.containerCharts.forEach(chart => {
       chart.nativeChart.showLoading();
       filters.params['chartType'] = chart.chart.type;

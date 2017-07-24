@@ -13,7 +13,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
-                            text : 'No_of_clusters_spark_recent',
+                            text : 'active_cluster',
                             borrowData:false,
                             dateRange:60, // In days
                             filter:false,
@@ -27,6 +27,7 @@ export const cardConfig = {
     'No_of_Farmers':{
                         text:'#Farmers',
                         overall : {
+                            text : 'No_of_farmers_overall',
                             borrowData:true,
                             filter:false,
                             graph : {
@@ -35,6 +36,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            text : 'distinct_farmer_count',
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,
@@ -48,6 +50,7 @@ export const cardConfig = {
     'Volume':      {
                         text:'Volume',
                         overall : {
+                            text : 'Volume_overall',
                             borrowData:true,
                             filter:false,
                             graph : {
@@ -56,6 +59,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            text : 'quantity__sum',
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,
@@ -69,6 +73,7 @@ export const cardConfig = {
     'Total_payment':   {    
                         text:'Payments',
                         overall : {
+                            text : 'Payments_overall',
                             borrowData:true,
                             filter:false,
                             graph : {
@@ -77,6 +82,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            text : 'amount__sum',
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,
@@ -90,6 +96,7 @@ export const cardConfig = {
     'Cost_per_kg':   {    
                         text:'Cost per Kg',
                         overall : {
+                            text : 'Cost_per_kg_overall',
                             borrowData:true,
                             filter:false,
                             graph : {
@@ -98,6 +105,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            text : 'cpk',
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,
@@ -111,6 +119,7 @@ export const cardConfig = {
     'Sustainability_perc':   {    
                         text:'Sustainability',
                         overall : {
+                            text : 'Sustainability_overall',
                             borrowData:true,
                             filter:false,
                             graph : {
@@ -119,6 +128,7 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            text : 'spk',
                             borrowData:true,
                             dateRange:60, // In days
                             filter:true,

@@ -9,6 +9,7 @@ from loop.utils.loop_etl.group_myisam_data import *
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from constants.constants import ROLE_CHOICE_AGGREGATOR
+import math
 
 def graph_data(request):
     chart_name = request.GET['chartName']
@@ -39,21 +40,23 @@ def recent_graphs_data(request):
     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id)
 
     chart_dict = {'aggregated_result': aggregated_result}
-    # 'cummulative_vol_farmer': cummulative_vol_farmer}
-    # data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+
     # algorithm to store column wise grouped data
-    # print '*******************   ' + str(type(aggregated_result)) + '  ************************'
+
     res = {}
     for key, aggregated_value in aggregated_result.iteritems():
         for data in aggregated_value:
             for k, v in data.iteritems():
                 if k not in res:
                     res[k] = {}
-                    res[k]['placeHolder'] = 'cardData'
+                    res[k]['placeHolder'] = 'cardGraphs'
                     res[k]['tagName'] = k
                     res[k]['value'] = {}
                 if key not in res[k]['value']:
                         res[k]['value'][key] = []
+                if type(v) is float:
+                    if(math.isnan(float(v))) :
+                        v = 0
                 res[k]['value'][key].append(v)
 
     data = []
@@ -128,14 +131,8 @@ def get_card_graph_data(request):
     if filter_args['cardName'] in ['No_of_clusters_overall']:
         data_to_send = get_cluster_related_data(filter_args)
     
-    if filter_args['cardName'] in ['No_of_clusters_spark_recent']:
+    if filter_args['cardName'] in ['active_cluster']:
         data_to_send = recent_graphs_data(filter_args)
-        # data_to_send = []
-        # data_to_send.append({
-        #     'placeHolder':'cardGraphs',
-        #     'tagName':'#Clusters_spark',
-        #     'value':[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 12, 34, 72, 23, 83]
-        # })
 
     data = json.dumps({'data' : data_to_send}, cls=DjangoJSONEncoder)
     return HttpResponse(data)
