@@ -117,6 +117,40 @@ class VillageAuthorization(Authorization):
         else:
             raise NotFound("Not allowed to download Village")
 
+class DistrictAuthorization(Authorization):
+    def __init__(self, field):
+        self.district_field = field
+
+    def read_list(self, object_list, bundle):
+        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
+            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+            kwargs = {}
+            kwargs[self.district_field] = districts
+        else:
+            districts = []
+            districts.append(LoopUser.objects.filter(
+                user_id=bundle.request.user.id).village.block.district.id)
+            kwargs = {}
+            kwargs[self.district_field] = districts
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        kwargs = {}
+        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
+            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+            kwargs = {}
+            kwargs[self.district_field] = districts
+            obj=object_list.filter(**kwargs).distinct()
+        else:
+            kwargs[self.district_field] = LoopUser.objects.get(
+                user_id=bundle.request.user.id).village.block.district
+            obj = object_list.filter(**kwargs).distinct()
+            userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
+        if obj:
+            return True
+        else:
+            raise NotFound("Not allowed to download District")
 
 class BlockAuthorization(Authorization):
     def __init__(self, field):
@@ -130,7 +164,7 @@ class BlockAuthorization(Authorization):
         else:
             block = []
             block.append(LoopUser.objects.get(
-                user_id=bundle.request.user.id).village.block.id)
+                user_id=bundle.request.user.id).village.block)
             kwargs = {}
             kwargs[self.block_field] = block
         return object_list.filter(**kwargs).distinct()
@@ -138,11 +172,17 @@ class BlockAuthorization(Authorization):
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
         kwargs = {}
-        kwargs[self.block_field] = LoopUser.objects.get(
-            user_id=bundle.request.user.id).village.block
-        obj = object_list.filter(**kwargs).distinct()
-        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
-        if obj or userObject.role == 1:
+        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
+            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+            kwargs = {}
+            kwargs[self.block_field] = Block.objects.filter(district__in=districts)
+            obj=object_list.filter(**kwargs).distinct()
+        else:
+            kwargs[self.block_field] = LoopUser.objects.get(
+                user_id=bundle.request.user.id).village.block
+            obj = object_list.filter(**kwargs).distinct()
+            userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
+        if obj:
             return True
         else:
             raise NotFound("Not allowed to download Block")
@@ -305,7 +345,7 @@ class DistrictResource(BaseResource):
     class Meta:
         queryset = District.objects.all()
         resource_name = 'district'
-        authorization = Authorization()
+        authorization = DistrictAuthorization('id__in')
         authentication = ApiKeyAuthentication()
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -324,7 +364,7 @@ class BlockResource(BaseResource):
     class Meta:
         queryset = Block.objects.all()
         resource_name = 'block'
-        authorization = Authorization()
+        authorization = BlockAuthorization('id__in')
         authentication = ApiKeyAuthentication()
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -380,6 +420,7 @@ class VillageResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        bundle.data['farmer_count'] = Farmer.objects.filter(village=bundle.data['id']).count()
         return bundle
 
 
@@ -681,8 +722,19 @@ class CropResource(BaseResource):
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
+        crop_name_reg = bundle.data['crop_name']
+        bundle.data['crop_name']=bundle.data['crop_name_en']
+        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
+            user = AdminUser.objects.get(user_id=bundle.request.user.id)
+            language = user.preferred_language
         try:
             bundle = super(CropResource, self).obj_update(bundle, **kwargs)
+            cropLanguage = CropLanguage.objects.filter(language=language,crop_id=bundle.data['online_id'])
+            if cropLanguage.count()<1:
+                CropLanguage(language=language,crop_id=bundle.data['online_id'],crop_name=crop_name_reg).save()
+            else:
+                cropLanguage[0].crop_name = crop_name_reg
+                cropLanguage[0].save()
         except Exception, e:
             attempt = Crop.objects.filter(crop_name=bundle.data['crop_name_en'])
             send_duplicate_message(int(attempt[0].id))
@@ -1164,10 +1216,12 @@ class GaddidarCommissionResource(BaseResource):
     dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi",sub_field_names=['id'])
     dehydrate_gaddidar = partial(foreign_key_to_id,field_name="gaddidar",sub_field_names=['id'])
 
+    hydrate_mandi = partial(dict_to_foreign_uri,field_name='mandi')
+    hydrate_gaddidar = partial(dict_to_foreign_uri,field_name='gaddidar')
     def obj_create(self, bundle, request=None, **kwargs):
-        mandi_id = bundle.data['mandi']['id']
+        mandi_id = bundle.data['mandi']['online_id']
         mandi = Mandi.objects.get(id=mandi_id)
-        gaddidar_id = bundle.data['gaddidar']['id']
+        gaddidar_id = bundle.data['gaddidar']['online_id']
         gaddidar = Gaddidar.objects.get(id=gaddidar_id)
         attempt = GaddidarCommission.objects.filter(start_date=bundle.data['start_date'],gaddidar=gaddidar,mandi=mandi)
         if attempt.count() < 1:
@@ -1182,9 +1236,9 @@ class GaddidarCommissionResource(BaseResource):
             bundle = super(GaddidarCommissionResource, self).obj_update(
                 bundle, **kwargs)
         except Exception, e:
-            mandi_id = bundle.data['mandi']['id']
+            mandi_id = bundle.data['mandi']['online_id']
             mandi = Mandi.objects.get(id=mandi_id)
-            gaddidar_id = bundle.data['gaddidar']['id']
+            gaddidar_id = bundle.data['gaddidar']['online_id']
             gaddidar = Gaddidar.objects.get(id=gaddidar_id)
             attempt = GaddidarCommission.objects.filter(start_date=bundle.data['start_date'],gaddidar=gaddidar,mandi=mandi)
             send_duplicate_message(int(attempt[0].id))

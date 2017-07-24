@@ -194,9 +194,15 @@ def send_updated_log(request):
                             list_rows.append(entry)
                     except:
                         pass
-
             mandi_list_queryset = Log.objects.filter(
-                timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Mandi'])
+                timestamp__gt=timestamp, entry_table__in=['Mandi'])
+            for mrow in mandi_list_queryset:
+                try:
+                    if(Mandi.objects.get(id=mrow.model_id)).mandi in mandis:
+                        list_rows.append(mrow)
+                except :
+                    pass
+                
             list_rows.append(mandi_list_queryset)
 
             gaddidar_rows = Log.objects.filter(
