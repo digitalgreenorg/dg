@@ -4,6 +4,7 @@ export const cardConfig = {
     'No_of_clusters':{    
                         text:'#Clusters',
                         overall : {
+                            text : 'No_of_clusters_overall',
                             borrowData:false,
                             filter:false,
                             graph : {
@@ -12,9 +13,10 @@ export const cardConfig = {
                             },
                         },
                         recent : {
+                            text : 'No_of_clusters_spark_recent',
                             borrowData:false,
                             dateRange:60, // In days
-                            filter:true,
+                            filter:false,
                             graph : {
                                 show : true,
                                 options : cardGraphConfig.No_of_clusters_spark,
