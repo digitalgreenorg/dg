@@ -40,18 +40,30 @@ def recent_graphs_data(request):
 
     chart_dict = {'aggregated_result': aggregated_result}
     # 'cummulative_vol_farmer': cummulative_vol_farmer}
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+    # data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
     # algorithm to store column wise grouped data
     # print '*******************   ' + str(type(aggregated_result)) + '  ************************'
-    for key, value in aggregated_result.iteritems():
-        # print key, str(len(value))
-        for d in value:
-            print d
-        
-        break
+    res = {}
+    for key, aggregated_value in aggregated_result.iteritems():
+        for data in aggregated_value:
+            for k, v in data.iteritems():
+                if k not in res:
+                    res[k] = {}
+                    res[k]['placeHolder'] = 'cardData'
+                    res[k]['tagName'] = k
+                    res[k]['value'] = {}
+                if key not in res[k]['value']:
+                        res[k]['value'][key] = []
+                res[k]['value'][key].append(v)
 
-    
-    return aggregated_result
+    data = []
+    data.append(res['cpk']);
+    data.append(res['quantity__sum'])
+    data.append(res['amount__sum'])
+    data.append(res['distinct_farmer_count'])
+    data.append(res['spk'])
+    data.append(res['active_cluster'])
+    return data
 
 
 def get_cluster_related_data(filter_args) :
@@ -117,13 +129,13 @@ def get_card_graph_data(request):
         data_to_send = get_cluster_related_data(filter_args)
     
     if filter_args['cardName'] in ['No_of_clusters_spark_recent']:
-        data_to= recent_graphs_data(filter_args)
-        data_to_send = []
-        data_to_send.append({
-            'placeHolder':'cardGraphs',
-            'tagName':'#Clusters_spark',
-            'value':[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 12, 34, 72, 23, 83]
-        })
+        data_to_send = recent_graphs_data(filter_args)
+        # data_to_send = []
+        # data_to_send.append({
+        #     'placeHolder':'cardGraphs',
+        #     'tagName':'#Clusters_spark',
+        #     'value':[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 12, 34, 72, 23, 83]
+        # })
 
     data = json.dumps({'data' : data_to_send}, cls=DjangoJSONEncoder)
     return HttpResponse(data)
