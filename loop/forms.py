@@ -1,6 +1,8 @@
 from django import forms
 from django.utils.safestring import mark_safe
 from loop.models import Broadcast, LoopUser
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 class BroadcastTestForm(forms.Form):
     to_number = forms.CharField(label='User Number', max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Enter a Phone Number'}))
@@ -79,11 +81,21 @@ class MergeEntityForm(forms.Form):
         ('Gaddidar', 'Gaddidar')]   
     model = forms.ChoiceField(required=True,widget= forms.Select, label='Select Model:', choices=choice_set)
     merge_file = forms.FileField(required=True, label='Select a .csv file:',)
+    email = forms.EmailField(required=True, label='Enter email address to receive status of merge request:')
 
 
     def __init__(self, *args, **kwargs):
         super(MergeEntityForm, self).__init__(*args, **kwargs)
         self.fields['merge_file'].error_messages = {'required':'Merge file is required'}
         self.fields['model'].error_messages = {'required':'Select model name'}
+        self.fields['email'].error_messages = {'required': 'Enter email address'}
         self.fields['model'].choices.insert(0, ('','---------' ) )
         self.fields['merge_file'].help_text = ""
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        try:
+            validate_email(email)
+            return email
+        except ValidationError:
+            print "Enter a valid email address"

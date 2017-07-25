@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import auth
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, redirect
 from django.db.models import Count, Min, Sum, Avg, Max, F, IntegerField
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
@@ -973,10 +973,12 @@ def merge_entity(request):
                 print "valid"
                 model = merge_entity_form.cleaned_data.get('model')
                 merge_file = merge_entity_form.cleaned_data.get('merge_file')
+                email_to = merge_entity_form.cleaned_data.get('email')
                 merge_file_path = save_file(merge_file)
-                merge(model, merge_file_path)
+                merge(model, merge_file_path, email_to)
                 os.remove(merge_file_path)
                 print "removed"
+                return redirect('/loop/merge_entity')
             else:
                 print "invalid form"
                 template_data['merge_entity_form'] = merge_entity_form

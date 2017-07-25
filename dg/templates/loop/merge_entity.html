@@ -13,10 +13,12 @@
                 <div class="form-group">
                     {{ merge_entity_form.model.errors }}
                     <span style="font-weight: bold">{{ merge_entity_form.model.label }}</span> &nbsp;&nbsp; <span id="model">{{ merge_entity_form.model}}</span>
-                </div>
-                <div class="form-group">
+                </div><div class="form-group">
                     {{ merge_entity_form.merge_file.errors }}
                     <span style="font-weight: bold">{{ merge_entity_form.merge_file.label }}</span> &nbsp;&nbsp; {{ merge_entity_form.merge_file }} &nbsp;&nbsp;<a id="help_url" style="color:blue" href="" download><span style="font-style: italic"> Download Sample File </span></a>
+                </div><div class="form-group">
+                    {{ merge_entity_form.email.errors }}
+                    <span style="font-weight: bold">{{ merge_entity_form.email.label }}</span> &nbsp;&nbsp; {{ merge_entity_form.email }}
                 </div>
             </div>
             <div style="padding-left: 80px;">
