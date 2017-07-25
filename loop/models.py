@@ -141,7 +141,7 @@ class Mandi(LoopModel):
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
     mandi_name_en = models.CharField(max_length=100, null=True)
-    mandi_type = models.
+    mandi_type = models.ForeignKey(MandiType, default=None, null=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.mandi_name, self.district.district_name)
