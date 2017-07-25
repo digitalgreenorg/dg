@@ -40,7 +40,7 @@ def onrun_query(query):
                                     charset = 'utf8',
                                      use_unicode = True)
     cursor = mysql_cn.cursor()
-    cursor.execute(query, params)
+    cursor.execute(query)
     result = cursor.fetchall()
     mysql_cn.close()
     return result

@@ -77,7 +77,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
             }
             else if(this.cardsConfigs[key].recent.graph) {
                 this.recentcharts.push({
-                    title : this.cardsConfigs[key].text,
+                    title : this.cardsConfigs[key].recent.text,
                     options:this.cardsConfigs[key].recent.graph.options,
                     nativeChart:null,
                 })
@@ -146,9 +146,9 @@ export class CardsComponent implements OnInit, AfterViewInit {
                             }
                         })
                         this.recentcharts.forEach(chart=> {
-                            console.log(cardData.tagName, cardData.value, chart.options.title);
-                            if(cardData.tagName === chart.options.title) {
-                                chart.nativeChart.series[0].update({'data':cardData.value['7']})
+                            if(cardData.tagName === chart.title) {
+                                console.log(cardData.tagName, cardData.value, chart.title);
+                                chart.nativeChart.series[0].update({'data':cardData.value['15']})
                             }
                         })
                     }
