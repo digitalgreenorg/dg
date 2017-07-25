@@ -105,6 +105,8 @@ export class NavsComponent implements OnInit {
         this.showContent(nav);
       }
     });
+    // console.log(this.containers);
+    // console.log(this.charts);
   }
 
   addChartsToDict(containers) {
@@ -144,36 +146,39 @@ export class NavsComponent implements OnInit {
   //get data for graphs from service
   getGraphsData(filters): void {
     console.log("REached here in service method");
+    console.log(this.containerCharts);
     this.containerCharts.forEach(chart => {
-      chart.nativeChart.showLoading();
-      filters.params['chartType'] = chart.chart.type;
-      filters.params['chartName'] = chart.name;
-      this.graphService.getData(filters).subscribe(dataList => {
-        if (dataList['chartType'] != undefined && dataList['chartType'] === 'StockChart') {
-          this.parseDataForStockChart(chart, dataList.data);
-        }
-        else {
-          Object.keys(dataList).forEach(key => {
-            //Find already displayed chart to enter data
-            if (key === chart.name) {
-              chart.nativeChart.hideLoading();
-              this.clearSeriesFromGraph(chart);
-              dataList[key]['outerData']['series'].forEach(entry => {
-                chart.nativeChart.addSeries(entry);
-              });
-              if (chart.chart.drillDown) {
-                dataList[key]['innerData'].forEach(drilldownEntry => {
-                  chart.drilldown.series.push(drilldownEntry);
+      if (chart.nativeChart && chart.nativeChart.series.length == 0) {
+        chart.nativeChart.showLoading();
+        filters.params['chartType'] = chart.chart.type;
+        filters.params['chartName'] = chart.name;
+        this.graphService.getData(filters).subscribe(dataList => {
+          if (dataList['chartType'] != undefined && dataList['chartType'] === 'StockChart') {
+            this.parseDataForStockChart(chart, dataList.data);
+          }
+          else {
+            Object.keys(dataList).forEach(key => {
+              //Find already displayed chart to enter data
+              if (key === chart.name) {
+                chart.nativeChart.hideLoading();
+                this.clearSeriesFromGraph(chart);
+                dataList[key]['outerData']['series'].forEach(entry => {
+                  chart.nativeChart.addSeries(entry);
                 });
+                if (chart.chart.drillDown) {
+                  dataList[key]['innerData'].forEach(drilldownEntry => {
+                    chart.drilldown.series.push(drilldownEntry);
+                  });
+                }
               }
-            }
-            else {
-              this.clearSeriesFromGraph(chart);
-              chart.nativeChart.showLoading(dataList['error']);
-            }
-          });
-        }
-      });
+              else {
+                this.clearSeriesFromGraph(chart);
+                chart.nativeChart.showLoading(dataList['error']);
+              }
+            });
+          }
+        });
+      }
     });
   }
 
@@ -255,5 +260,6 @@ export class NavsComponent implements OnInit {
     else if (this.filterGraphs[selectedNav] != undefined) {
       this.renderContainerCharts(this.filterGraphs[selectedNav]);
     }
+    this.getGraphsData({ 'params': {} });
   }
 }
