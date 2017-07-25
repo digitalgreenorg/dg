@@ -16,6 +16,7 @@ CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
 CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
 BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
+MANDI_CATEGORY = ((0,"Wholesale Market"), (1,"Retail Market"), (2,"Individual Entity"))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -116,6 +117,21 @@ class Village(LoopModel):
 post_save.connect(save_log, sender=Village)
 pre_delete.connect(save_log, sender=Village)
 
+class MandiType(LoopModel):
+    id = models.AutoField(primary_key=True)
+    mandi_type_name = models.CharField(max_length=100)
+    mandi_category = models.IntegerField(choices=MANDI_CATEGORY, default=0)
+    type_description = models.CharField(max_length=300, null=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.mandi_type_name, self.mandi_category)
+
+    class Meta:
+        unique_together = ("mandi_type_name", "mandi_category")
+
+post_save.connect(save_log, sender=MandiType)
+pre_delete.connect(save_log, sender=MandiType)
+
 
 class Mandi(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -125,6 +141,7 @@ class Mandi(LoopModel):
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
     mandi_name_en = models.CharField(max_length=100, null=True)
+    mandi_type = models.
 
     def __unicode__(self):
         return "%s (%s)" % (self.mandi_name, self.district.district_name)
