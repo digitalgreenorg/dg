@@ -566,10 +566,20 @@ class LoopUserResource(BaseResource):
 
     def obj_update(self, bundle, **kwargs):
         # Edit case many to many handling. First clear out the previous related objects and create new objects
-        user = User.objects.get(username=bundle.data['username'])
+        user = None
         try:
+            user = User.objects.get(username=bundle.data['username'])
+        except:
+            pass
+        attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
+        try:
+            if user is None:
+                user = User.objects.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name_en'])
             bundle.data['user']={}
             bundle.data['user']['online_id']=user.id
+            adminUser= AdminUser.objects.get(user_id=bundle.request.user.id)
+            bundle.data['preferred_language']={}
+            bundle.data['preferred_language']['online_id']= adminUser.preferred_language.id
             bundle = super(LoopUserResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             attempt = LoopUser.objects.filter(id=bundle.data['online_id'])
