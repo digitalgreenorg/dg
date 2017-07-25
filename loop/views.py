@@ -166,6 +166,33 @@ def filter_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
+def jsonify(data):
+    if isinstance(data, dict):
+        json_data = dict()
+        for key, value in data.items():
+            if isinstance(value, list): # for lists
+                for i, item in enumerate(value):
+                    value[i] = jsonify(value[i])
+            if isinstance(value, unicode):
+                value = value.encode("utf-8")
+            if isinstance(value, dict): # for nested lists
+                value = jsonify(value)
+            if type(value).__module__=='numpy': # if value is numpy.*: > to python list
+                value = value.tolist()
+            json_data[str(key)] = value
+        return json_data
+
+    elif isinstance(data, list):
+        for i, item in enumerate(data):
+            data[strr(i)] = jsonify(data[i])
+        return data
+    
+    elif type(data).__module__=='numpy':
+        data = data.tolist()
+        return data
+
+    else:
+        return data
 
 def total_static_data(request):
     country_id = request.GET['country_id'] #To be fetched from request
@@ -177,7 +204,7 @@ def total_static_data(request):
     chart_dict = {'total_farmers_reached': total_farmers_reached,
                   'total_cluster_reached': total_cluster_reached,
                   'aggregated_result': aggregated_result}
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+    data = json.dumps(jsonify(chart_dict), cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
 
@@ -308,7 +335,7 @@ def recent_graphs_data(request):
     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id)
 
     chart_dict = {'aggregated_result': aggregated_result, 'cummulative_vol_farmer': cummulative_vol_farmer}
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+    data = json.dumps(jsonify(chart_dict), cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
 
