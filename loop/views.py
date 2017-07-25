@@ -967,20 +967,16 @@ def merge_entity(request):
     template_data['merge_entity_form'] = MergeEntityForm()
     if request.method == 'POST':
         if 'submit' in request.POST:
-            print "submitted"
             merge_entity_form = MergeEntityForm(request.POST, request.FILES)
             if merge_entity_form.is_valid():
-                print "valid"
                 model = merge_entity_form.cleaned_data.get('model')
                 merge_file = merge_entity_form.cleaned_data.get('merge_file')
                 email_to = merge_entity_form.cleaned_data.get('email')
                 merge_file_path = save_file(merge_file)
                 merge(model, merge_file_path, email_to)
                 os.remove(merge_file_path)
-                print "removed"
                 return redirect('/loop/merge_entity')
             else:
-                print "invalid form"
                 template_data['merge_entity_form'] = merge_entity_form
                 return render_to_response('loop/merge_entity.html', template_data, context_instance=context)
 

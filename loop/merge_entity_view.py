@@ -43,7 +43,6 @@ def send_status_email(model_name, email_to):
 	os.remove(status_file_path)
 
 def update_records(related_models, old, new):
-	print "trying update"
 
 	for related_model in related_models:
 		related_model_column = related_models[related_model]
@@ -55,18 +54,13 @@ def update_records(related_models, old, new):
 
 		related_model_obj.objects.filter(**kwargs_old).update(**kwargs_new)
 
-		print "updated", related_model, related_model_column 
-
 def delete_entity(model,model_name, record):
 	print record
 	kwargs = {cnf.models[model_name]['col_name']: record}
 	instance = model.objects.get(**kwargs)
 	instance.delete()
 
-	print "deleted", model_name, record
-
 def merge_bodies(model_name, index, row):
-	print "merging row"
 	global df
 	initial = row['Initial ID']
 	final = row['Final ID']
@@ -77,16 +71,13 @@ def merge_bodies(model_name, index, row):
 
 	try:
 		with transaction.atomic():
-			print "trying merge"
 			final_obj = model.objects.get(**kwargs)
 			update_records(cnf.models[model_name]['dependencies'], initial, final)
 			delete_entity(model, model_name, initial)
 
 			df.set_value(index, 'Status', 'Pass')
-			print index, "success", df
 	except:
 		df.set_value(index, 'Status', 'Fail')
-		print index, "failed", df
 
 def merge(model, merge_file_path, email_to):
 	global df
