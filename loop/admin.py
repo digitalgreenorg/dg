@@ -112,6 +112,12 @@ class MandiAdmin(admin.ModelAdmin):
     search_fields = ['mandi_name', 'district__district_name']
     list_filter = ['district__district_name', 'district__state__country']
 
+class MandiTypeAdmin(admin.ModelAdmin):
+    fields = ('mandi_type_name', 'mandi_category', 'type_description')
+    list_display = ('mandi_type_name', 'mandi_category', 'type_description')
+    search_fields = ['mandi_type_name', 'mandi_category']
+    list_filter = ['mandi_category']
+
 
 class VillageAdmin(admin.ModelAdmin):
     fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
@@ -234,3 +240,4 @@ loop_admin.register(LogDeleted, LogDeletedAdmin)
 loop_admin.register(Broadcast,BroadcastAdmin)
 loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
 loop_admin.register(VehicleLanguage)
+loop_admin.register(MandiType, MandiTypeAdmin)
