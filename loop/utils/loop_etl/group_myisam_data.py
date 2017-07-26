@@ -230,11 +230,35 @@ def get_cummulative_vol_farmer(country_id):
             'cum_vol_farmer':'mean'
         }
     }
+    result_data = {}
     df_result = query_myisam(country_id)
     df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
     df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
     df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
-    df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
-    cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
+    df_cum_vol_farmer.drop('quantity',axis=1,inplace=True)
+    df_cum_vol_farmer['date'] = df_cum_vol_farmer['date'].astype('datetime64[ns]')
+    df_cum_vol_farmer['date_time'] = df_cum_vol_farmer['date'].astype('int64')//10**6
+
+    data_farmers = []
+    data_vol = []
+    for index, row in df_cum_vol_farmer.iterrows():
+        data_vol.append([row['date_time'],row['cum_vol']])
+        data_farmers.append([row['date_time'],row['cum_distinct_farmer']])
+
+    result_data['chartName'] = "cummulativeCount"
+    result_data['chartType'] = "StockChart"
+    result_data['data'] = []
+    vol = {}
+    vol['data'] = data_vol
+    vol['name'] = 'Volume'
+    vol['xAxis'] = 1
+    farmer = {}
+    farmer['data'] = data_farmers
+    farmer['name'] = 'Farmers'
+    farmer['xAxis'] = 0
+    result_data['data'].append(vol)
+    result_data['data'].append(farmer)
+
+    # cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
     # print cumm_vol_farmer
-    return cumm_vol_farmer
+    return result_data

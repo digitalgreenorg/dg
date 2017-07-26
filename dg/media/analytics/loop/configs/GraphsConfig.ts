@@ -1,33 +1,28 @@
 export const chartsConfig = {
   'cummulativeCount': {
     chart: {
-      type: 'column',
+      type: 'spline',
       renderTo: 'cummulativeCount',
       drillDown: true,
       tab: {
         'class': 'col-sm-12'
       },
     },
+    type: "StockChart",
     credits: { enabled: false },
-    title: { text: '' },
-    xAxis: { type: 'category' },
-    yAxis: {
-      tickInterval: 10,
-      title: { text: 'Volume' }
-    },
+    // title: { text: '' },
+    // xAxis: { type: 'category' },
+    // yAxis: {
+    //   tickInterval: 10,
+    //   title: { text: 'Volume' }
+    // },
     legend: { enabled: false },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
-    },
+    // tooltip: {
+    //   headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+    //   pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    // },
     tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      shared: true,
     },
     series: [],
     drilldown: {}
@@ -49,10 +44,15 @@ export const chartsConfig = {
       text: 'Volume Amount'
     },
     legend: { enabled: false },
+    // tooltip: {
+    //   shared: true,
+    //   valueDecimals: 2,
+    //   // valueSuffix: ' units'
+    // },
     tooltip: {
-      shared: true,
+      pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
       valueDecimals: 2,
-      // valueSuffix: ' units'
+      split: true
     },
     credits: {
       enabled: false
