@@ -155,4 +155,8 @@ export class CardsComponent implements OnInit, AfterViewInit {
                 });
         });
     }
+
+    public fillDropDown() : any {
+        
+    }
   }

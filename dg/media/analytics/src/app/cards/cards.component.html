@@ -53,12 +53,12 @@
   <h5 class="text-muted">Overall</h5>
   <div class="row">
     <div class="col" *ngFor="let chart of overallcharts">
-      <div class="card">
-        <div class="card-block">
+      <!--<div class="card">
+        <div class="card-block">-->
           <h6 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</h6>
           <chart [options]="chart.options" (load)="saveInstance($event.context, chart)" ></chart>    
-        </div>
-      </div>
+        <!--</div>
+      </div>-->
     </div>
   </div>  
 </div>
@@ -66,15 +66,25 @@
 <br>
 <br>
 <div *ngIf="recentcharts.length" class="container-fluid">
-  <h5 class="text-muted">Recent</h5>
+
+  <div class="row">
+    <h5 class="text-muted col">Recent</h5>
+    <div class="col">
+      <div class="btn-group float-right" dropdown>
+        <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+          Choose Days <span class="caret"></span>
+        </button>
+        <ul *dropdownMenu class="dropdown-menu" role="menu">
+          <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <br>
   <div class="row">
     <div class="col" *ngFor="let chart of recentcharts">
-      <div class="card">
-        <div class="card-block">
           <h6 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</h6>
           <chart [options]="chart.options" (load)="saveInstance($event.context, chart)" ></chart>
-        </div>
-      </div>
     </div>
   </div>  
 </div>

@@ -2,7 +2,7 @@ export const cardGraphConfig = {
     'No_of_clusters' : {
         chart: {
             type: 'solidgauge',
-            width: 180,
+            width: 160,
             height: 100,
             plotBackgroundColor: null,
             plotBackgroundImage: null,
@@ -67,7 +67,7 @@ export const cardGraphConfig = {
         series: [{
             name:'present',
             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color: black' +
+                format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
                         '">{y}</span><br/>'
             },
             tooltip: {
@@ -459,12 +459,13 @@ export const cardGraphConfig = {
     'No_of_clusters_spark' : {
         chart: {
             margin:[40,12,45,60],
-            height:200,
-            width:200,
+            height:190,
+            width:190,
             type: 'area',
         },
         title : '#Clusters_spark',
         legend: { enabled: false },
+        exporting:{ enabled:false},
         credits: {
             enabled: false
         },
