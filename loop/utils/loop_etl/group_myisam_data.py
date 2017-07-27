@@ -96,7 +96,7 @@ def get_data_from_myisam(get_total, country_id):
         df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
 
         dictionary = {}
-        days = ['7','15','30','60']
+        days = ['15','30','60']
         for day in days:
             data_by_grouped_days = get_grouped_data(df_result_aggregate,day,df_farmers)
             dictionary[day] = list(data_by_grouped_days.values())

@@ -75,7 +75,9 @@
           Choose Days <span class="caret"></span>
         </button>
         <ul *dropdownMenu class="dropdown-menu" role="menu">
-          <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
+          <li *ngFor="let action of Dropdownitems" role="menuitem">
+            <a class="dropdown-item" (click) = "updateDropdown(action)" >{{action}} Days</a>
+          </li>
         </ul>
       </div>
     </div>

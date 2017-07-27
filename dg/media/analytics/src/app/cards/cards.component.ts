@@ -18,6 +18,8 @@ export class CardsComponent implements OnInit, AfterViewInit {
     overallcharts = [];
     recentcharts = [];
     cardGraphConfig = environment.cardGraphConfig;
+    Dropdownitems = [];
+    recentChartsData = {};
 
     // DatePicker
     private date = new Date();
@@ -147,8 +149,9 @@ export class CardsComponent implements OnInit, AfterViewInit {
                         })
                         this.recentcharts.forEach(chart=> {
                             if(cardData.tagName === chart.title) {
-                                console.log(cardData.tagName, cardData.value, chart.title);
-                                chart.nativeChart.series[0].update({'data':cardData.value['15']})
+                                this.Dropdownitems = Object.keys(cardData.value)
+                                this.recentChartsData[cardData.tagName] = cardData.value;
+                                chart.nativeChart.series[0].update({'data':cardData.value['15']});
                             }
                         })
                     }
@@ -156,7 +159,9 @@ export class CardsComponent implements OnInit, AfterViewInit {
         });
     }
 
-    public fillDropDown() : any {
-        
-    }
+    public updateDropdown(day) : any {
+        this.recentcharts.forEach(chart=> {
+            chart.nativeChart.series[0].update({'data':this.recentChartsData[chart.title][day]})
+        })
+    } 
   }
