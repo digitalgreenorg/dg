@@ -236,17 +236,6 @@ function set_filterlistener() {
     outliers_summary(aggregator_id);
   });
 
-  $("#time_series_frequency").change(function() {
-    time_series_frequency = $('#time_series_frequency :selected').val();
-    if (time_series_frequency == 1) {
-      createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), time_series_volume_amount_farmers, MASTER_TIME_SERIES_VOL_AMT);
-      createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), time_series_cpk_spk, MASTER_TIME_SERIES_CPK_SPK);
-    } else {
-      createMasterForTimeSeries($('#detail_container_time_series'), $('#master_container_time_series'), get_frequency_data(start_date, end_date, time_series_volume_amount_farmers, time_series_frequency, false), MASTER_TIME_SERIES_VOL_AMT);
-      createMasterForTimeSeries($('#detail_container_cpk'), $('#master_container_cpk'), get_frequency_cpk(start_date, end_date, time_series_cpk_spk, time_series_frequency, false), MASTER_TIME_SERIES_CPK_SPK);
-    }
-  });
-
   $('#payments_from_date').change(function() {
     var start_date = $('#payments_from_date').val();
     if (start_date != '') {
