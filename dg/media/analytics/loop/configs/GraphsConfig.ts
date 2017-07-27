@@ -3,15 +3,12 @@ export const chartsConfig = {
     chart: {
       type: 'spline',
       renderTo: 'cummulativeCount',
-      // drillDown: true,
       tab: {
         'class': 'col-sm-12'
       },
     },
     type: "StockChart",
     credits: { enabled: false },
-    // title: { text: '' },
-    // xAxis: { type: 'category' },
     yAxis: [{ // Primary yAxis
       title: {
         text: 'Volume',
@@ -100,72 +97,75 @@ export const chartsConfig = {
     series: [],
     drilldown: {}
   },
-  /*'aggrvol' : {
-                          chart: {
-                                  type: 'column',
-                                  renderTo: 'aggrvol',
-                                  tab: {
-                                        'id': 'tab1',
-                                        'class':'col-sm-12'
-                                  },
-                                  drillDown: true
-                          },
-                          credits:{ enabled: false },
-                          title: { text: ''},
-                          xAxis: { type: 'category' },
-                          yAxis: {
-                                  tickInterval: 10,
-                                  title: { text: 'Volume' } },
-                          legend: { enabled: false },
-                          plotOptions: {
-                                        column: {
-                                                grouping: false,
-                                                borderWidth: 0,
-                                                dataLabels: {
-                                                             enabled: true
-                                                }
-                                        }
-                          },
-                          tooltip: {
-                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                          },
-                          series: [],
-                          drilldown: {}
+  'aggrvol': {
+    chart: {
+      type: 'column',
+      renderTo: 'aggrvol',
+      tab: {
+        'id': 'tab1',
+        'class': 'col-sm-6'
+      },
+      drillDown: true
+    },
+    credits: { enabled: false },
+    title: { text: '' },
+    xAxis: { type: 'category' },
+    yAxis: {
+      tickInterval: 10,
+      title: { text: 'Volume' }
+    },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    },
+    series: [],
+    drilldown: {}
   },
-  'aggrvisit' : {
-                          chart: {
-                                  type: 'column',
-                                  renderTo: 'aggrvisit',
-                                  tab: {
-                                        'id': 'tab1',
-                                        'class':'col-sm-12'
-                                  },
-                                  drillDown: true
-                          },
-                          credits:{ enabled: false },
-                          title: { text: ''},
-                          xAxis: { type: 'category' },
-                          yAxis: {
-                                  tickInterval: 10,
-                                  title: { text: 'Volume' } },
-                          legend: { enabled: false },
-                          plotOptions: {
-                                        column: {
-                                                grouping: false,
-                                                borderWidth: 0,
-                                                dataLabels: {
-                                                             enabled: true
-                                                }
-                                        }
-                          },
-                          tooltip: {
-                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                          },
-                          series: [],
-                          drilldown: {}
+  'aggrvisit': {
+    chart: {
+      type: 'column',
+      renderTo: 'aggrvisit',
+      tab: {
+        'id': 'tab1',
+        'class': 'col-sm-6'
+      },
+      drillDown: true
+    },
+    credits: { enabled: false },
+    title: { text: '' },
+    xAxis: { type: 'category' },
+    yAxis: {
+      tickInterval: 10,
+      title: { text: 'Visits' }
+    },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    },
+    series: [],
+    drilldown: {}
   },
+  /*
   'aggrspkcpk' : {
                           chart: {
                                   type: 'column',
