@@ -33,7 +33,7 @@
           <tab *ngIf="containers[container]['containers'][option][tab]['addDivs']" [heading]="tab">
             <br><br>
             <div class="row">
-              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']">
+              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" [class]="containers[container]['charts'][0]['chart']['chart']['tab']['class']">
                 <div [id]="div"></div>
                 <br><br>
               </div>
@@ -41,11 +41,11 @@
           </tab>
         </div>
       </tabset>
-      <div class="row" *ngIf="!containers[container]['containers'][option]['addTab']">
+      <div *ngIf="!containers[container]['containers'][option]['addTab']">
         <div *ngFor="let tab of getDictKeys(containers[container]['containers'][option])">
           <div *ngIf="containers[container]['containers'][option][tab]['addDivs']">
             <div class="row">
-              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']">
+              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" [class]="containers[container]['charts'][0]['chart']['chart']['tab']['class']">
                 <div [id]="div"></div>
                 <br><br>
               </div>
@@ -71,7 +71,7 @@
           </div>
         </tab>
       </tabset>
-      <div class="row" *ngIf="!filterGraphs[graph]['DropDownGraph'][option]['addTab']">
+      <div *ngIf="!filterGraphs[graph]['DropDownGraph'][option]['addTab']">
         <div *ngFor="let tab of getDictKeys(filterGraphs[graph]['DropDownGraph'][option])">
           <div *ngIf="filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
             <div *ngFor="let div of filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">

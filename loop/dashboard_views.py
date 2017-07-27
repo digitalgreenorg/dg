@@ -13,18 +13,28 @@ import math
 
 def graph_data(request):
     chart_name = request.GET['chartName']
+    country_id = 1
+    start_date = 20170401
+    end_date = 20170601
     if chart_name == 'volFarmerTS':
-        result = vol_amount_farmer()
+        result = vol_amount_farmer(country_id, start_date, end_date)
         return JsonResponse(result)
-    if chart_name == 'cpkSpkTS':
-        result = cpk_spk_timeseries()
+    elif chart_name == 'cpkSpkTS':
+        result = cpk_spk_timeseries(country_id, start_date, end_date)
+        return JsonResponse(result)
+    elif chart_name == 'cummulativeCount':
+        result = cumm_vol_farmer(country_id)
         return JsonResponse(result)
     else:
         return JsonResponse({"result":"success"})
 
-def cpk_spk_timeseries():
-    cpk_spk = cpk_spk_ts(1,'20170401','20170601')
+def cpk_spk_timeseries(country_id, start_date, end_date):
+    cpk_spk = cpk_spk_ts(country_id, start_date, end_date)
     return cpk_spk
+
+def vol_amount_farmer(country_id, start_date, end_date):
+    v_a_f_ts = volume_amount_farmers_ts(country_id, start_date, end_date)
+    return v_a_f_ts
 
 def volume_aggregator(request):
     volume_per_aggregator = get_volume_aggregator(1)
@@ -163,3 +173,6 @@ def get_pandas_dataframe(sql_query):
                                         charset='utf8',
                                         use_unicode=True)
     return pd.read_sql_query(sql_query, con=db_connection)
+def cumm_vol_farmer(country_id):
+    c_v_f = get_cummulative_vol_farmer(country_id)
+    return c_v_f
