@@ -67,23 +67,19 @@ function initialize() {
     closeOnClick: true
   });
   $(".button-collapse1").sideNav();
-  //showLoader();
-  hidePaymentDetails();
   get_filter_data(language, country_id);
   initialLoadComplete = true;
   set_filterlistener();
   hidePaymentDetails();
-  //hideLoader();
+  hideLoader();
 }
 
 function showLoader() {
   $("#loader").show();
-  //hide_nav();
 }
 
 function hideLoader() {
   $("#loader").hide();
-  //hide_nav(HOME);
 }
 
 //datepicker
@@ -131,41 +127,6 @@ function hide_nav(tab) {
       window.localStorage.clear();
       $("#payments_div").show();
       $("#payments_tab").addClass('active');
-      /*$('#login_modal').openModal({
-        dismissible: false
-      });
-      $('#loginbtn').click(function() {
-        var username = $('#username').val().trim();
-        var password = $('#password').val().trim();
-        if (username.length == 0 || password.length == 0) {
-          $('#error_div').show();
-          document.getElementById('error_message').innerHTML = "* Username and Password are required fields.";
-        } else {
-          $.post("/loop/login/", {
-            'username': username,
-            'password': password
-          }).done(function(data) {
-            var login_data = JSON.parse(data);
-            window.localStorage.name = login_data['user_name'];
-            window.localStorage.akey = login_data['key'];
-            window.localStorage.user_id = login_data['user_id'];
-            globalApi = login_data['key'];
-            window.localStorage.login_timestamp = new Date().getTime();
-            if (localStorage.akey != null) {
-              $('#login_modal').closeModal();
-              $("#payments_div").show();
-              $("#payments_tab").addClass('active');
-            }
-          }).fail(function() {
-            $('#error_div').show();
-            document.getElementById('error_message').innerHTML = "Incorrect username or password.";
-          });
-        }
-      });
-      $('#goto_home').click(function() {
-        console.log("Do nothing");
-        //hide_nav('payments');
-      });*/
     }
   }
 }
@@ -250,79 +211,6 @@ function change_payment(parameter) {
 }
 //To check for any items data change (textview, drop downs, button click)
 function set_filterlistener() {
-/*  $("#recent_cards_data_frequency").change(function() {
-    days_to_average = $('#recent_cards_data_frequency :selected').val();
-    plot_cards_data();
-  });
-
-  $('#get_data').click(function() {
-    time_series_frequency = 1;
-    $('#time_series_frequency option[value="' + 1 + '"]').prop('selected', true);
-    $('#time_series_frequency').material_select();
-    get_data("", country_id);
-  });
-
-  $('#aggregator_all').on('change', function(e) {
-    if (this.checked) {
-      $('#aggregators').children().each(function() {
-        var aggregators_all = $(this).children()[1].firstChild;
-        aggregators_all.checked = true;
-      });
-    } else {
-      $('#aggregators').children().each(function() {
-        var aggregators_all = $(this).children()[1].firstChild;
-        aggregators_all.checked = false;
-      });
-    }
-  });*/
-
-  /*$('#crop_all').on('change', function(e) {
-    if (this.checked) {
-      $('#crops').children().each(function() {
-        var crops_all = $(this).children()[1].firstChild;
-        crops_all.checked = true;
-      });
-    } else {
-      $('#crops').children().each(function() {
-        var crops_all = $(this).children()[1].firstChild;
-        crops_all.checked = false;
-      });
-    }
-  });
-
-  $('#mandi_all').on('change', function(e) {
-    if (this.checked) {
-      $('#mandis').children().each(function() {
-        var mandis_all = $(this).children()[1].firstChild;
-        mandis_all.checked = true;
-      });
-    } else {
-      $('#mandis').children().each(function() {
-        var mandis_all = $(this).children()[1].firstChild;
-        mandis_all.checked = false;
-      });
-    }
-  });
-  $('#gaddidar_all').on('change', function(e) {
-    if (this.checked) {
-      $('#gaddidars').children().each(function() {
-        var gaddidar_all = $(this).children()[1].firstChild;
-        gaddidar_all.checked = true;
-      });
-    } else {
-      $('#gaddidars').children().each(function() {
-        var gaddidar_all = $(this).children()[1].firstChild;
-        gaddidar_all.checked = false;
-      });
-    }
-  });
-
-  // For graphs in time series
-  $("#crop_max_min_avg").change(function() {
-    var crop_id = $('#crop_max_min_avg :selected').val();
-    crop_prices_graph(crop_id);
-  });*/
-
   $("#download-payment-sheet").click(function() {
     if (superEditMode == 1) {
       window.alert('Please finish editing first');
@@ -459,11 +347,6 @@ function set_filterlistener() {
       $('#payments_to_date').val('');
     }
   });
-
-  /*$('#get_filter_data_button').click(function() {
-    gaddidar = true;
-    get_data("", country_id);
-  });*/
 }
 
 function hidePaymentDetails() {
