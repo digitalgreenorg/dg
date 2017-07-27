@@ -68,18 +68,16 @@ function initialize() {
   });
   $(".button-collapse1").sideNav();
   showLoader();
-  days_to_average = 15;
 
-  gaddidar = true;
-  selected_tab = AGGREGATOR;
-  selected_parameter = VOLUME;
-  selected_page = HOME;
+  //selected_tab = AGGREGATOR;
+  //selected_parameter = VOLUME;
+  //selected_page = HOME;
 
-  time_series_frequency = 1;
+  //time_series_frequency = 1;
 
   get_filter_data(language, country_id);
   initialLoadComplete = true;
-  hide_nav('payments');
+  //hide_nav('payments');
   set_filterlistener();
   $('#aggregator_payment_tab').hide();
   $("#download_payment_sheets").hide();
