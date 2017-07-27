@@ -251,11 +251,11 @@ def get_cummulative_vol_farmer(country_id):
     vol = {}
     vol['data'] = data_vol
     vol['name'] = 'Volume'
-    vol['xAxis'] = 1
+    vol['yAxis'] = 0
     farmer = {}
     farmer['data'] = data_farmers
     farmer['name'] = 'Farmers'
-    farmer['xAxis'] = 0
+    farmer['yAxis'] = 1
     result_data['data'].append(vol)
     result_data['data'].append(farmer)
 

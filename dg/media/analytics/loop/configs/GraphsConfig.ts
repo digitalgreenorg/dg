@@ -3,7 +3,7 @@ export const chartsConfig = {
     chart: {
       type: 'spline',
       renderTo: 'cummulativeCount',
-      drillDown: true,
+      // drillDown: true,
       tab: {
         'class': 'col-sm-12'
       },
@@ -12,15 +12,17 @@ export const chartsConfig = {
     credits: { enabled: false },
     // title: { text: '' },
     // xAxis: { type: 'category' },
-    // yAxis: {
-    //   tickInterval: 10,
-    //   title: { text: 'Volume' }
-    // },
+    yAxis: [{ // Primary yAxis
+      title: {
+        text: 'Volume',
+      },
+      opposite: false
+    }, { // Secondary yAxis
+        title: {
+          text: 'Farmer',
+        }
+      }],
     legend: { enabled: false },
-    // tooltip: {
-    //   headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-    //   pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-    // },
     tooltip: {
       shared: true,
     },
