@@ -868,18 +868,7 @@ function get_filter_data(language, country_id) {
         aggregator_ids.push(aggregator_data.user__id);
         aggregator_names.push(aggregator_data.name_en);
       });
-      if (language == ENGLISH_LANGUAGE)
-        fill_crop_filter(crops_for_filter);
-      else
-      {
-        // If country is India, then Regional Language is Hindi
-        if (country_id == 1)
-          fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
-        // If country is Bangladesh, then Regional Language is Bangla
-        else if (country_id == 2)
-          fill_crop_filter(croplanguage_for_filter[BANGLA_ID]);
-      }
-      get_data("", country_id);
+      //get_data("", country_id);
     });
 }
 
@@ -949,15 +938,10 @@ function create_filter(tbody_obj, id, name, checked) {
 
 //To get data after filters are aplied
 function get_data(location, country_id) {
-  if (location == 'drawer') {
-    start_date = $('#payments_from_date').val();
-    end_date = $('#payments_to_date').val();
-  } else {
-    start_date = $('#payments_from_date').val();
-    end_date = $('#payments_to_date').val();
-  }
+  start_date = $('#payments_from_date').val();
+  end_date = $('#payments_to_date').val();
   // Get rest of the filters
-  if (Date.parse(start_date) > Date.parse(end_date)) {
+  /*if (Date.parse(start_date) > Date.parse(end_date)) {
     $('#modal1').openModal();
   } else {
     aggregator_ids = [];
@@ -973,60 +957,7 @@ function get_data(location, country_id) {
         aggregator_ids.push(aggregator_data.user__id);
         aggregator_names.push(aggregator_data.name_en);
       });
-
-
-    $('#aggregators').children().each(function() {
-      var aggregator_div = $(this).children()[1].firstChild;
-      if (aggregator_div.checked) {
-        aggregator_ids.push(aggregator_div.getAttribute('data'));
-        aggregator_names.push(aggregator_div.getAttribute('value'));
-      }
-    });
-
-    $('#crops').children().each(function() {
-      var crop_div = $(this).children()[1].firstChild;
-      if (crop_div.checked) {
-        crop_ids.push(crop_div.getAttribute('data'));
-        crop_names.push(crop_div.getAttribute('value'));
-      }
-    });
-
-    $('#mandis').children().each(function() {
-      var mandi_div = $(this).children()[1].firstChild;
-      if (mandi_div.checked) {
-        mandi_ids.push(mandi_div.getAttribute('data'));
-        mandi_names.push(mandi_div.getAttribute('value'));
-      }
-    });
-    $('#gaddidars').children().each(function() {
-      var gaddidar_div = $(this).children()[1].firstChild;
-      if (gaddidar_div.checked) {
-        gaddidar_ids.push(gaddidar_div.getAttribute('data'));
-        gaddidar_names.push(gaddidar_div.getAttribute('value'));
-      }
-    });
-    // $(".button-collapse1").sideNav('hide');
-    get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id);
-    get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id);
-  }
-}
-
-function get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id) {
-  $.get("/loop/data_for_drilldown_graphs/", {
-      'start_date': start_date,
-      'end_date': end_date,
-      'country_id': country_id,
-      'a_id[]': aggregator_ids,
-      'c_id[]': crop_ids,
-      'm_id[]': mandi_ids,
-      'g_id[]': gaddidar_ids,
-    })
-    .done(function(data) {
-      bar_graphs_json_data = JSON.parse(data);
-      if (selected_page == ANALYTICS_PAGE) {
-        PlotAnalyticsGraphs();
-      }
-    });
+  }*/
 }
 
 
@@ -1666,25 +1597,6 @@ function farmer_crop_visits(container, json_data) {
 
   // plot_stacked_chart(container, series);
   plot_drilldown(container, series, {}, false, json_data[0]['farmer__count'], 'bar');
-}
-
-//Data for Time series grpahs request is being made here
-function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id) {
-  $.get("/loop/data_for_line_graph/", {
-      'start_date': start_date,
-      'end_date': end_date,
-      'country_id': country_id,
-      'a_id[]': aggregator_ids,
-      'c_id[]': crop_ids,
-      'm_id[]': mandi_ids,
-      'g_id[]': gaddidar_ids
-    })
-    .done(function(data) {
-      line_json_data = JSON.parse(data);
-      if (selected_page == TIME_SERIES_PAGE) {
-        PlotTimeSeriesGraphs();
-      }
-    });
 }
 
 //To fill crops name in drop down on Time series page
