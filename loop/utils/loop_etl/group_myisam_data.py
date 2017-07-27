@@ -263,4 +263,36 @@ def get_cummulative_vol_farmer(country_id):
     return result_data
 
 def aggregator_volume(country_id, start_date, end_date):
+    df_result = query_myisam(country_id, start_date, end_date)
+    final_data_list = {}
+    aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['quantity'].sum().reset_index()
+    print aggregator_groupby_data.columns.values
+    try:
+        outer_data = {'outerData':{'series':[], 'categories':aggregator_groupby_data['aggregator_name'].tolist()}}
+        temp_dict_outer = {'name':'Aggregator Volume', 'data' : []}
+
+        for index, row in aggregator_groupby_data.iterrows():
+            temp_dict_outer['data'].append({'name':row[1],'y':int(row[2]),'drilldown':row[1] + ' Volume'})
+        
+        outer_data['outerData']['series'].append(temp_dict_outer)
+        final_data_list['aggrvol'] = outer_data
+
+        inner_data = {'innerData': []}
+        mandi_groupby_data = {name:dict(zip(g['mandi_name'],g['quantity'])) for name,g in df_result.groupby(['aggregator_name'])}
+        for key,value in mandi_groupby_data.iteritems():
+            temp_dict_inner = {'data':[]}
+            temp_dict_inner['name'] = key
+            temp_dict_inner['id'] = key + ' Volume'
+            for k, v in value.iteritems():
+                temp_dict_inner['data'].append([k,v])
+            inner_data['innerData'].append(temp_dict_inner)
+
+        final_data_list['aggrvol'].update(inner_data)
+
+
+    except:
+        final_data_list["error"] = "No Data Found"
+    
+    return final_data_list
+
     

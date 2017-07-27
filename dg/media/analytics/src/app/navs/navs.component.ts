@@ -176,6 +176,7 @@ export class NavsComponent implements OnInit {
               }
             });
           }
+          console.log(chart);
         });
       }
     });
