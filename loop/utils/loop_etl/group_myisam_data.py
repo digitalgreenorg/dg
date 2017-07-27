@@ -260,6 +260,7 @@ def get_cummulative_vol_farmer(country_id):
     result_data['data'].append(vol)
     result_data['data'].append(farmer)
 
-    # cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
-    # print cumm_vol_farmer
     return result_data
+
+def aggregator_volume(country_id, start_date, end_date):
+    

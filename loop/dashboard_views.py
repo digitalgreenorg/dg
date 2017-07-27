@@ -11,23 +11,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from constants.constants import ROLE_CHOICE_AGGREGATOR
 import math
 
-def graph_data(request):
-    chart_name = request.GET['chartName']
-    country_id = 1
-    start_date = 20170401
-    end_date = 20170601
-    if chart_name == 'volFarmerTS':
-        result = vol_amount_farmer(country_id, start_date, end_date)
-        return JsonResponse(result)
-    elif chart_name == 'cpkSpkTS':
-        result = cpk_spk_timeseries(country_id, start_date, end_date)
-        return JsonResponse(result)
-    elif chart_name == 'cummulativeCount':
-        result = cumm_vol_farmer(country_id)
-        return JsonResponse(result)
-    else:
-        return JsonResponse({"result":"success"})
-
 def cpk_spk_timeseries(country_id, start_date, end_date):
     cpk_spk = cpk_spk_ts(country_id, start_date, end_date)
     return cpk_spk
@@ -172,3 +155,22 @@ def get_pandas_dataframe(sql_query):
 def cumm_vol_farmer(country_id):
     c_v_f = get_cummulative_vol_farmer(country_id)
     return c_v_f
+
+def graph_data(request):
+    chart_name = request.GET['chartName']
+    country_id = 1
+    start_date = 20170401
+    end_date = 20170601
+    if chart_name == 'volFarmerTS':
+        result = vol_amount_farmer(country_id, start_date, end_date)
+    elif chart_name == 'cpkSpkTS':
+        result = cpk_spk_timeseries(country_id, start_date, end_date)
+    elif chart_name == 'cummulativeCount':
+        result = cumm_vol_farmer(country_id)
+    elif chart_name == 'aggrvol':
+        result = aggregator_volume(country_id, start_date, end_date)
+    elif chart_name == 'aggrvisit':
+        result = aggregator_visits(country_id, start_date, end_date)
+    else:
+        result = {"result":"success"}
+    return JsonResponse(result)
