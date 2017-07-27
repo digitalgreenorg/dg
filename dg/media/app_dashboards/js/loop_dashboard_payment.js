@@ -96,7 +96,7 @@ $('.datepicker').pickadate({
 });
 
 //To hide the second navigation bar that comes on analytics and time series page only
-function hide_nav(tab) {
+/*function hide_nav(tab) {
   $("#filters_nav").removeClass('show');
   $("#filters_nav").addClass('hide');
   $("#home_div").hide();
@@ -164,7 +164,7 @@ function show_nav(tab) {
       $("#time_series_tab").addClass('active');
     }
   }
-}
+}*/
 
 function change_payment(parameter) {
   if (parameter == 'summary_payments') {
