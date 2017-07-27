@@ -67,14 +67,13 @@ function initialize() {
     closeOnClick: true
   });
   $(".button-collapse1").sideNav();
-  showLoader();
+  //showLoader();
+  hidePaymentDetails();
   get_filter_data(language, country_id);
   initialLoadComplete = true;
-  //hide_nav('payments');
   set_filterlistener();
-  $('#aggregator_payment_tab').hide();
-  $("#download_payment_sheets").hide();
-  hideLoader();
+  hidePaymentDetails();
+  //hideLoader();
 }
 
 function showLoader() {
