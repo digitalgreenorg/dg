@@ -105,14 +105,18 @@ export const chartsConfig = {
         'id': 'tab1',
         'class': 'col-sm-6'
       },
-      drillDown: true
+      drillDown: true,
+      inverted: true
     },
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category' },
     yAxis: {
-      tickInterval: 10,
+      // tickInterval: 10,
       title: { text: 'Volume' }
+    },
+    scrollbar: {
+      enabled: true
     },
     legend: { enabled: false },
     plotOptions: {
@@ -139,14 +143,18 @@ export const chartsConfig = {
         'id': 'tab1',
         'class': 'col-sm-6'
       },
-      drillDown: true
+      drillDown: true,
+      inverted: true
     },
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category' },
     yAxis: {
-      tickInterval: 10,
+      // tickInterval: 10,
       title: { text: 'Visits' }
+    },
+    scrollbar: {
+      enabled: true
     },
     legend: { enabled: false },
     plotOptions: {
@@ -174,14 +182,21 @@ export const chartsConfig = {
         'id': 'tab1',
         'class': 'col-sm-12'
       },
-      drillDown: true
+      drillDown: true,
+      inverted: true
     },
     credits: { enabled: false },
-    title: { text: '' },
-    xAxis: { type: 'category' },
+    // title: { text: '' },
+    xAxis: {
+      type: 'category',
+      max: 5
+    },
     yAxis: {
-      tickInterval: 10,
-      title: { text: 'Volume' }
+      // tickInterval: 10,
+      title: { text: 'CPK - SPK' }
+    },
+    scrollbar: {
+      enabled: true
     },
     legend: { enabled: false },
     plotOptions: {
@@ -208,14 +223,18 @@ export const chartsConfig = {
         'id': 'tab1',
         'class': 'col-sm-12'
       },
-      drillDown: true
+      drillDown: true,
+      inverted: true
     },
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category' },
     yAxis: {
-      tickInterval: 10,
-      title: { text: 'Volume' }
+      // tickInterval: 10,
+      title: { text: '' }
+    },
+    scrollbar: {
+      enabled: true
     },
     legend: { enabled: false },
     plotOptions: {
