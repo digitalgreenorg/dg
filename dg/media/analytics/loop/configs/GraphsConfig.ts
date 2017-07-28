@@ -129,7 +129,20 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
     },
     series: [],
-    drilldown: {}
+    drilldown: {
+      allowPointDrilldown: false,
+      drillUpButton: {
+        relativeTo: 'spacingBox',
+        position: {
+          y: 0,
+          x: -30
+        },
+      },
+      series: []
+    },
+    lang: {
+      drillUpText: '<< Back'
+    },
   },
   'aggrvisit': {
     chart: {

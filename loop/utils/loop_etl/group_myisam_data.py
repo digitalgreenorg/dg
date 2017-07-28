@@ -269,7 +269,7 @@ def aggregator_volume(country_id, start_date, end_date):
     print aggregator_groupby_data.columns.values
     try:
         outer_data = {'outerData':{'series':[], 'categories':aggregator_groupby_data['aggregator_name'].tolist()}}
-        temp_dict_outer = {'name':'Aggregator Volume', 'data' : []}
+        temp_dict_outer = {'name':'Aggregator Volume','data':[]}
 
         for index, row in aggregator_groupby_data.iterrows():
             temp_dict_outer['data'].append({'name':row[1],'y':int(row[2]),'drilldown':row[1] + ' Volume'})

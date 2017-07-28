@@ -164,9 +164,9 @@ export class NavsComponent implements OnInit {
                 dataList[key]['outerData']['series'].forEach(entry => {
                   chart.nativeChart.addSeries(entry);
                 });
-                if (chart.chart.drillDown) {
+                if (chart.chart.chart.drillDown) {
                   dataList[key]['innerData'].forEach(drilldownEntry => {
-                    chart.drilldown.series.push(drilldownEntry);
+                    chart.chart.drilldown.series.push(drilldownEntry);
                   });
                 }
               }
@@ -176,7 +176,6 @@ export class NavsComponent implements OnInit {
               }
             });
           }
-          console.log(chart);
         });
       }
     });
