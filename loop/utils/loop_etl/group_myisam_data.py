@@ -303,4 +303,51 @@ def agg_spk_cpk(country_id, start_date, end_date):
     return final_data_list
 
 def agg_cost(country_id, start_date, end_date):
-    return
+    final_data_list = {}
+    df_result = query_myisam(country_id, start_date, end_date)
+    df_result = df_result.groupby(['date','aggregator_id','mandi_id','aggregator_name','mandi_name']).agg(cpk_spk_aggregation).reset_index()
+    df_result.columns = df_result.columns.droplevel(1)
+
+    df_result_agg = df_result.groupby(['aggregator_id','aggregator_name']).sum().reset_index()
+    df_result_agg['cost'] = df_result_agg['aggregator_incentive'] + df_result_agg['transportation_cost']
+    df_result_agg['recovered'] = df_result_agg['farmer_share'] + df_result_agg['gaddidar_share']
+
+    outer_data = {'outerData': {'series':[],'categories':df_result_agg['aggregator_name'].tolist()}}
+    temp_dict_outer = {'name':'cost','data':[]}
+    for row in df_result_agg.iterrows():
+        temp_dict_outer['data'].append({'name':row[1].aggregator_name,'y':round(row[1].cost,3),'drilldown':row[1].aggregator_name+' cost'})
+    outer_data['outerData']['series'].append(temp_dict_outer)
+
+    temp_dict_outer = {'name':'recovered','data':[]}
+    for row in df_result_agg.iterrows():
+        temp_dict_outer['data'].append({'name':row[1].aggregator_name,'y':round(row[1].recovered,3),'drilldown':row[1].aggregator_name+' recovered'})
+    outer_data['outerData']['series'].append(temp_dict_outer)
+
+    final_data_list['aggrrecoveredtotal'] = outer_data
+    inner_data = {'innerData': []}
+
+    df_result_mandi = df_result.groupby(['aggregator_id','mandi_id','aggregator_name','mandi_name']).sum().reset_index()
+    df_result_mandi['cost'] = df_result_mandi['aggregator_incentive'] + df_result_mandi['transportation_cost']
+    df_result_mandi['recovered'] = df_result_mandi['farmer_share'] + df_result_mandi['gaddidar_share']
+
+    agg_mandi_cpk_dict = {name[1]: dict(zip(g['mandi_name'],g['cost'])) for name,g in df_result_mandi.groupby(['aggregator_id','aggregator_name'])}
+    agg_mandi_spk_dict = {name[1]: dict(zip(g['mandi_name'],g['recovered'])) for name,g in df_result_mandi.groupby(['aggregator_id','aggregator_name'])}
+    for key, value in agg_mandi_cpk_dict.iteritems():
+        temp_dict_inner = {'data':[]}
+        temp_dict_inner['name'] = key
+        temp_dict_inner['id'] = str(key) + ' cost'
+        for k, v in value.iteritems():
+            temp_dict_inner['data'].append([k,v])
+        inner_data['innerData'].append(temp_dict_inner)
+
+    for key, value in agg_mandi_spk_dict.iteritems():
+        temp_dict_inner = {'data':[]}
+        temp_dict_inner['name'] = key
+        temp_dict_inner['id'] = str(key) + ' recovered'
+        for k, v in value.iteritems():
+            temp_dict_inner['data'].append([k,v])
+        inner_data['innerData'].append(temp_dict_inner)
+
+    final_data_list['aggrrecoveredtotal'].update(inner_data)
+
+    return final_data_list

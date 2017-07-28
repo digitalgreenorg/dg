@@ -180,7 +180,7 @@ export const chartsConfig = {
       renderTo: 'aggrspkcpk',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-12'
+        'class': 'col-sm-6'
       },
       drillDown: true,
       inverted: true
@@ -221,14 +221,14 @@ export const chartsConfig = {
       renderTo: 'aggrrecoveredtotal',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-12'
+        'class': 'col-sm-6'
       },
       drillDown: true,
       inverted: true
     },
     credits: { enabled: false },
     title: { text: '' },
-    xAxis: { type: 'category' },
+    xAxis: { type: 'category', max: 5 },
     yAxis: {
       // tickInterval: 10,
       title: { text: '' }

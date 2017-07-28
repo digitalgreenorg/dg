@@ -32,7 +32,7 @@ export const navsConfig = {
             },
             'container2': {
               'addTab':true,
-              'SPK/CPk': {
+              'SPK/CPK': {
                 'addDivs': ['aggrspkcpk']
               },
               'Recovered/Total': {
