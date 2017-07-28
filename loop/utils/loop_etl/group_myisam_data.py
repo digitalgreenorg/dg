@@ -255,30 +255,33 @@ def aggregator_visits(country_id, start_date, end_date):
 def agg_spk_cpk(country_id, start_date, end_date):
     final_data_list = {}
     df_result = query_myisam(country_id, start_date, end_date)
-    df_result = df_result.groupby(['date','aggregator_id','mandi_id']).agg(cpk_spk_aggregation).reset_index()
+    df_result = df_result.groupby(['date','aggregator_id','mandi_id','aggregator_name','mandi_name']).agg(cpk_spk_aggregation).reset_index()
     df_result.columns = df_result.columns.droplevel(1)
-    print df_result.head()
-    df_result = df_result.groupby(['aggregator_id']).sum().reset_index()
-    df_result['cpk'] = (df_result['aggregator_incentive'] + df_result['transportation_cost'])/df_result['quantity']
-    df_result['spk'] = (df_result['farmer_share'] + df_result['gaddidar_share'])/df_result['quantity']
 
-    print df_result.head()
+    df_result_agg = df_result.groupby(['aggregator_id','aggregator_name']).sum().reset_index()
+    df_result_agg['cpk'] = (df_result_agg['aggregator_incentive'] + df_result_agg['transportation_cost'])/df_result_agg['quantity']
+    df_result_agg['spk'] = (df_result_agg['farmer_share'] + df_result_agg['gaddidar_share'])/df_result_agg['quantity']
 
-    outer_data = {'outerData': {'series':[],'categories':df_result['aggregator_id'].tolist()}}
+    outer_data = {'outerData': {'series':[],'categories':df_result_agg['aggregator_name'].tolist()}}
     temp_dict_outer = {'name':'cpk','data':[]}
-    for row in df_result.iterrows():
-        temp_dict_outer['data'].append({'name':row[1].aggregator_id,'y':round(row[1].cpk,3),'drilldown':str(int(row[1].aggregator_id))+' cpk'})
+    for row in df_result_agg.iterrows():
+        temp_dict_outer['data'].append({'name':row[1].aggregator_name,'y':round(row[1].cpk,3),'drilldown':row[1].aggregator_name+' cpk'})
     outer_data['outerData']['series'].append(temp_dict_outer)
 
     temp_dict_outer = {'name':'spk','data':[]}
-    for row in df_result.iterrows():
-        temp_dict_outer['data'].append({'name':row[1].aggregator_id,'y':round(row[1].spk,3),'drilldown':str(int(row[1].aggregator_id))+' spk'})
+    for row in df_result_agg.iterrows():
+        temp_dict_outer['data'].append({'name':row[1].aggregator_name,'y':round(row[1].spk,3),'drilldown':row[1].aggregator_name+' spk'})
     outer_data['outerData']['series'].append(temp_dict_outer)
 
     final_data_list['aggrspkcpk'] = outer_data
     inner_data = {'innerData': []}
-    agg_mandi_cpk_dict = {name: dict(zip(g['mandi_id'],g['cpk'])) for name,g in df_result.groupby(['aggregator_id'])}
-    agg_mandi_spk_dict = {name: dict(zip(g['mandi_id'],g['spk'])) for name,g in df_result.groupby(['aggregator_id'])}
+
+    df_result_mandi = df_result.groupby(['aggregator_id','mandi_id','aggregator_name','mandi_name']).sum().reset_index()
+    df_result_mandi['cpk'] = (df_result_mandi['aggregator_incentive'] + df_result_mandi['transportation_cost'])/df_result_mandi['quantity']
+    df_result_mandi['spk'] = (df_result_mandi['farmer_share'] + df_result_mandi['gaddidar_share'])/df_result_mandi['quantity']
+
+    agg_mandi_cpk_dict = {name[1]: dict(zip(g['mandi_name'],g['cpk'])) for name,g in df_result_mandi.groupby(['aggregator_id','aggregator_name'])}
+    agg_mandi_spk_dict = {name[1]: dict(zip(g['mandi_name'],g['spk'])) for name,g in df_result_mandi.groupby(['aggregator_id','aggregator_name'])}
     for key, value in agg_mandi_cpk_dict.iteritems():
         temp_dict_inner = {'data':[]}
         temp_dict_inner['name'] = key
