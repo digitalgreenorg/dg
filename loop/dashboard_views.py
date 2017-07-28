@@ -38,6 +38,10 @@ def graph_data(request):
         result = aggregator_volume(country_id, start_date, end_date)
     elif chart_name == 'aggrvisit':
         result = aggregator_visits(country_id, start_date, end_date)
+    elif chart_name == 'aggrspkcpk':
+        result = agg_spk_cpk(country_id, start_date, end_date)
+    elif chart_name == 'aggrrecoveredtotal':
+        result = agg_cost(country_id, start_date, end_date)
     else:
         result = {"result":"success"}
     return JsonResponse(result)

@@ -3,6 +3,7 @@ import MySQLdb
 import datetime, time
 import pandas as pd
 import numpy as np
+from loop.utils.loop_etl.aggregation_methods import *
 from loop.models import CombinedTransaction
 
 def get_grouped_data(df_result_aggregate,day,df_farmers):
@@ -174,25 +175,9 @@ def volume_amount_farmers_ts(country_id, from_date, to_date):
 
 def cpk_spk_ts(country_id, from_date, to_date):
     result_data = {}
-    aggregation = {
-        'transportation_cost':{
-            'transportation_cost__sum':'mean'
-        },
-        'farmer_share':{
-            'farmer_share__sum':'mean'
-        },
-        'aggregator_incentive':{
-            'aggregator_incentive__sum':'mean'
-        },
-        'gaddidar_share':{
-            'gaddidar_share__sum':'sum'
-        },
-        'quantity':{
-            'quantity__sum':'sum'
-        }
-    }
+
     df_result = query_myisam(country_id, from_date, to_date)
-    df_result = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregation).reset_index()
+    df_result = df_result.groupby(['date','aggregator_id','mandi_id']).agg(cpk_spk_aggregation).reset_index()
     df_result.columns = df_result.columns.droplevel(1)
     df_result.drop(['aggregator_id','mandi_id'], axis=1,inplace=True)
     df_result = df_result.groupby(['date']).sum().reset_index()
@@ -262,4 +247,57 @@ def get_cummulative_vol_farmer(country_id):
     return result_data
 
 def aggregator_volume(country_id, start_date, end_date):
-    
+    return
+
+def aggregator_visits(country_id, start_date, end_date):
+    return
+
+def agg_spk_cpk(country_id, start_date, end_date):
+    final_data_list = {}
+    df_result = query_myisam(country_id, start_date, end_date)
+    df_result = df_result.groupby(['date','aggregator_id','mandi_id']).agg(cpk_spk_aggregation).reset_index()
+    df_result.columns = df_result.columns.droplevel(1)
+    print df_result.head()
+    df_result = df_result.groupby(['aggregator_id']).sum().reset_index()
+    df_result['cpk'] = (df_result['aggregator_incentive'] + df_result['transportation_cost'])/df_result['quantity']
+    df_result['spk'] = (df_result['farmer_share'] + df_result['gaddidar_share'])/df_result['quantity']
+
+    print df_result.head()
+
+    outer_data = {'outerData': {'series':[],'categories':df_result['aggregator_id'].tolist()}}
+    temp_dict_outer = {'name':'cpk','data':[]}
+    for row in df_result.iterrows():
+        temp_dict_outer['data'].append({'name':row[1].aggregator_id,'y':round(row[1].cpk,3),'drilldown':str(int(row[1].aggregator_id))+' cpk'})
+    outer_data['outerData']['series'].append(temp_dict_outer)
+
+    temp_dict_outer = {'name':'spk','data':[]}
+    for row in df_result.iterrows():
+        temp_dict_outer['data'].append({'name':row[1].aggregator_id,'y':round(row[1].spk,3),'drilldown':str(int(row[1].aggregator_id))+' spk'})
+    outer_data['outerData']['series'].append(temp_dict_outer)
+
+    final_data_list['aggrspkcpk'] = outer_data
+    inner_data = {'innerData': []}
+    agg_mandi_cpk_dict = {name: dict(zip(g['mandi_id'],g['cpk'])) for name,g in df_result.groupby(['aggregator_id'])}
+    agg_mandi_spk_dict = {name: dict(zip(g['mandi_id'],g['spk'])) for name,g in df_result.groupby(['aggregator_id'])}
+    for key, value in agg_mandi_cpk_dict.iteritems():
+        temp_dict_inner = {'data':[]}
+        temp_dict_inner['name'] = key
+        temp_dict_inner['id'] = str(key) + ' cpk'
+        for k, v in value.iteritems():
+            temp_dict_inner['data'].append([k,v])
+        inner_data['innerData'].append(temp_dict_inner)
+
+    for key, value in agg_mandi_spk_dict.iteritems():
+        temp_dict_inner = {'data':[]}
+        temp_dict_inner['name'] = key
+        temp_dict_inner['id'] = str(key) + ' spk'
+        for k, v in value.iteritems():
+            temp_dict_inner['data'].append([k,v])
+        inner_data['innerData'].append(temp_dict_inner)
+
+    final_data_list['aggrspkcpk'].update(inner_data)
+
+    return final_data_list
+
+def agg_cost(country_id, start_date, end_date):
+    return

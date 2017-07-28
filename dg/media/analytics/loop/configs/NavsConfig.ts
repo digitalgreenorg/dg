@@ -1,7 +1,7 @@
 export const navsConfig = {
   'navs': {
     'Home': {
-      'active': true,
+      // 'active': true,
       'import': {
         'overall': false,
         'recent': false,
@@ -16,11 +16,13 @@ export const navsConfig = {
       }
     },
     'Analytics': {
+      'active': true,
       'subNavs': {
         'Aggregators': {
           'active': true,
           'containers': {
             'container1': {
+              'addTab':true,
               'Volume': {
                 'addDivs': ['aggrvol']
               },
@@ -29,6 +31,7 @@ export const navsConfig = {
               }
             },
             'container2': {
+              'addTab':true,
               'SPK/CPk': {
                 'addDivs': ['aggrspkcpk']
               },
