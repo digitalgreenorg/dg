@@ -9,6 +9,7 @@ from api import *
 from loop.views import *
 
 from loop.utils.send_log.loop_data_log import send_updated_log
+from loop.utils.send_log.loop_admin_log import send_updated_admin_log
 
 api = Api(api_name = "v1")
 api.register(VillageResource())
@@ -40,6 +41,7 @@ urlpatterns = patterns('',
     url(r'^api/', include(api.urls)),
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
+    url(r'^get_admin_log/', send_updated_admin_log),
     url(r'^dashboard/', dashboard),
     url(r'^get_payment_sheet/', download_data_workbook, name="download-data-workbook"),
     url(r'^filter_data/', filter_data),

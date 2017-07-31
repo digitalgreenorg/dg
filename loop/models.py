@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 from loop.utils.send_log.loop_data_log import save_log#, delete_log
+from loop.utils.send_log.loop_admin_log import save_admin_log#, delete_log
 from smart_selects.db_fields import ChainedForeignKey
 from constants.constants import *
 
@@ -115,6 +116,7 @@ class Village(LoopModel):
 
 post_save.connect(save_log, sender=Village)
 pre_delete.connect(save_log, sender=Village)
+post_save.connect(save_admin_log, sender=Village)
 
 
 class Mandi(LoopModel):
@@ -134,7 +136,7 @@ class Mandi(LoopModel):
 
 post_save.connect(save_log, sender=Mandi)
 pre_delete.connect(save_log, sender=Mandi)
-
+post_save.connect(save_admin_log, sender = Mandi)
 
 
 class LoopUser(LoopModel):
@@ -169,6 +171,7 @@ class LoopUser(LoopModel):
 
 post_save.connect(save_log,sender=LoopUser)
 pre_delete.connect(save_log,sender=LoopUser)
+post_save.connect(save_admin_log,sender=LoopUser)
 
 class LoopUserAssignedMandi(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -189,13 +192,15 @@ class LoopUserAssignedVillage(LoopModel):
 post_save.connect(save_log, sender=LoopUserAssignedVillage)
 pre_delete.connect(save_log, sender=LoopUserAssignedVillage)
 
+
+
 class AdminUser(LoopModel):
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, related_name="admin_user")
     name = models.CharField(max_length=100, default="default")
     assigned_districts = models.ManyToManyField(
         District,through='AdminAssignedDistrict', blank=True)
-    assigned_loopusers = models.ManyToManyField(LoopUser,related_name="assigned_loopusers")
+    assigned_loopusers = models.ManyToManyField(LoopUser,through='AdminAssignedLoopUser')
     phone_number = models.CharField(
         max_length=14, null=False, blank=False, default="0")
     name_en = models.CharField(max_length=100, null=True)
@@ -215,8 +220,15 @@ class AdminUser(LoopModel):
     def __user__(self):
         return "%s" % self.user.id
 
-#post_save.connect(save_log, sender=AdminUser)
+post_save.connect(save_admin_log, sender=AdminUser)
 #pre_delete.connect(delete_log, sender=AdminUser)
+class AdminAssignedLoopUser(LoopModel):
+    id = models.AutoField(primary_key=True)
+    admin_user = models.ForeignKey(AdminUser)
+    loop_user = models.ForeignKey(LoopUser)
+    is_visible = models.BooleanField(default=True)
+
+post_save.connect(save_admin_log, sender=AdminAssignedLoopUser)
         
 class AdminAssignedDistrict(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -224,6 +236,8 @@ class AdminAssignedDistrict(LoopModel):
     district = models.ForeignKey(District)
     aggregation_switch = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=True)
+
+
 
 #post_save.connect(save_log, sender=AdminAssignedDistrict)
 #pre_delete.connect(delete_log, sender=AdminAssignedDistrict)
@@ -236,6 +250,7 @@ class Gaddidar(LoopModel):
     is_visible = models.BooleanField(default=True)
     gaddidar_name_en = models.CharField(max_length=100, null=True)
     discount_criteria = models.IntegerField(choices=DISCOUNT_CRITERIA, default=0)
+    commission = models.FloatField("Discount",default=1.0)
     is_prime = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -246,7 +261,7 @@ class Gaddidar(LoopModel):
 
 post_save.connect(save_log, sender=Gaddidar)
 pre_delete.connect(save_log, sender=Gaddidar)
-
+post_save.connect(save_admin_log, sender=Gaddidar)
 
 class Farmer(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -287,7 +302,7 @@ class Crop(LoopModel):
 
 post_save.connect(save_log, sender=Crop)
 pre_delete.connect(save_log, sender=Crop)
-
+post_save.connect(save_admin_log, sender=Crop)
 #############Crop name in multiple languages###############
 
 class CropLanguage(models.Model):
@@ -469,6 +484,7 @@ class GaddidarCommission(LoopModel):
         unique_together = ("start_date", "gaddidar", "mandi")
 post_save.connect(save_log, sender=GaddidarCommission)
 pre_delete.connect(save_log, sender=GaddidarCommission)
+post_save.connect(save_admin_log, sender=GaddidarCommission )
 
 class GaddidarShareOutliers(LoopModel):
     mandi = ChainedForeignKey(Mandi, chained_field="aggregator", chained_model_field="assigned_mandis")
@@ -547,6 +563,15 @@ class Log(models.Model):
     entry_table = models.CharField(max_length=100)
     model_id = models.IntegerField(null=True)
 
+class AdminLog(models.Model):
+    id = models.AutoField(primary_key=True)
+    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.datetime.utcnow)
+    user = models.ForeignKey(User,null=True)
+    admin_user = models.ForeignKey(AdminUser,null=True)
+    district = models.IntegerField(null=True)
+    action = models.IntegerField()
+    entry_table = models.CharField(max_length=100)
+    model_id = models.IntegerField(null=True)
 
 class HelplineExpert(LoopModel):
     id = models.AutoField(primary_key=True)

@@ -60,4 +60,8 @@ class Migration(migrations.Migration):
             name='vehicle',
             field=models.ForeignKey(related_name='vehicles', to='loop.Vehicle'),
         ),
+        migrations.AddField(
+            model_name='gaddidar',
+            name='commission',
+            field= models.FloatField('Discount',default=1.0))
     ]

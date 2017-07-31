@@ -58,17 +58,14 @@ class AdminAssignedDistricts(admin.StackedInline):
     model = AdminAssignedDistrict
     extra = 4
 
-class AdminAssignedDistricts(admin.StackedInline):
-    model = AdminAssignedDistrict
-    extra = 4
+class AdminAssignedLoopUsers(admin.StackedInline):
+    model = AdminAssignedLoopUser
+    extra = 5
+
 
 class AdminUserAdmin(admin.ModelAdmin):
-    inlines = [AdminAssignedDistricts]    
+    inlines = [AdminAssignedDistricts, AdminAssignedLoopUsers]    
     list_display = ('__user__','name')
-# class LoopUserInline(admin.TabularInline):
-#     model = LoopUser
-#     extra = 5
-#     exclude = ('assigned_mandis', 'assigned_villages')
 
 
 class FarmerAdmin(admin.ModelAdmin):
