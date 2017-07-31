@@ -127,7 +127,7 @@ class CropAdmin(admin.ModelAdmin):
 class GaddidarCommisionAdmin(admin.ModelAdmin):
     fields = ('start_date','mandi','gaddidar','discount_percent')
     list_display = ('id', 'start_date', '__unicode__','discount_percent')
-    search_fields = ['gaddidar']
+    search_fields = ['gaddidar__gaddidar_name']
     list_filter = ['mandi','gaddidar', 'mandi__district__state', 'mandi__district__state__country']
 
 class GaddidarShareOutliersAdmin(admin.ModelAdmin):
