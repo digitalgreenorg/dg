@@ -53,7 +53,7 @@ class LoopUserAdmin(admin.ModelAdmin):
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
-    list_filter = ['village__block__district__state__country', 'role']
+    list_filter = ['village__block__district__state__country', 'village__block__district__state', 'role']
 
 # class LoopUserInline(admin.TabularInline):
 #     model = LoopUser
@@ -81,7 +81,7 @@ class TransporterAdmin(admin.ModelAdmin):
     list_display = ('id', 'transporter_name',
                     'transporter_phone', '__block__')
     search_fields = ['transporter_name', 'transporter_phone']
-    list_filter = ['block__district__state__country']
+    list_filter = ['block__district__state__country', 'block__district__state']
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
@@ -109,8 +109,8 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
 class MandiAdmin(admin.ModelAdmin):
     fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible')
     list_display = ('id', 'mandi_name', 'district', 'mandi_name_en')
-    search_fields = ['mandi_name', 'district__district_name']
-    list_filter = ['district__district_name', 'district__state__country']
+    search_fields = ['mandi_name', 'district__district_name', 'mandi_name_en']
+    list_filter = ['district__district_name','district__state_name', 'district__state__country']
 
 
 class VillageAdmin(admin.ModelAdmin):
