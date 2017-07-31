@@ -110,7 +110,7 @@ class MandiAdmin(admin.ModelAdmin):
     fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible')
     list_display = ('id', 'mandi_name', 'district', 'mandi_name_en')
     search_fields = ['mandi_name', 'district__district_name', 'mandi_name_en']
-    list_filter = ['district__district_name','district__state_name', 'district__state__country']
+    list_filter = ['district__district_name','district__state', 'district__state__country']
 
 
 class VillageAdmin(admin.ModelAdmin):
