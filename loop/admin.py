@@ -64,7 +64,7 @@ class LoopUserAdmin(admin.ModelAdmin):
 class FarmerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'phone', '__village__')
     search_fields = ['name', 'phone', 'village__village_name']
-    list_filter = ['village__village_name', 'village__block__district__state__country']
+    list_filter = ['village__village_name', 'village__block__district__state', 'village__block__district__state__country']
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__crop__', 'price',
@@ -96,7 +96,7 @@ class GaddidarAdmin(admin.ModelAdmin):
     fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','commission','is_visible')
     list_display = ('id', 'gaddidar_name',
                     'gaddidar_phone', 'mandi','discount_criteria', 'commission', 'gaddidar_name_en')
-    search_fields = ['gaddidar_name', 'mandi__mandi_name']
+    search_fields = ['gaddidar_name', 'mandi__mandi_name', 'gaddidar_phone', 'gaddidar_name_en']
     list_filter = ['mandi__mandi_name', 'mandi__district__state__country']
 
 
@@ -127,7 +127,8 @@ class CropAdmin(admin.ModelAdmin):
 class GaddidarCommisionAdmin(admin.ModelAdmin):
     fields = ('start_date','mandi','gaddidar','discount_percent')
     list_display = ('id', 'start_date', '__unicode__','discount_percent')
-    list_filter = ['mandi','gaddidar', 'mandi__district__state__country']
+    search_fields = ['gaddidar']
+    list_filter = ['mandi','gaddidar', 'mandi__district__state', 'mandi__district__state__country']
 
 class GaddidarShareOutliersAdmin(admin.ModelAdmin):
     fields = ('date','aggregator','mandi','gaddidar','amount' ,'comment')
