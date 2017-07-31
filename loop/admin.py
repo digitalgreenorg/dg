@@ -52,8 +52,8 @@ class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
-    search_fields = ['name', 'village__village_name', 'village__block__district__state__country__country_name']
-    list_filter = ['village__block__district__state__country']
+    search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
+    list_filter = ['village__block__district__state__country', 'role']
 
 # class LoopUserInline(admin.TabularInline):
 #     model = LoopUser
@@ -136,8 +136,8 @@ class GaddidarShareOutliersAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
 
 class CropLanguageAdmin(admin.ModelAdmin):
-    list_display = ('__crop__','crop_name')
-    search_fields = ['crop_name']
+    list_display = ('__crop__','crop_name', 'language')
+    search_fields = ['crop_name', 'crop__crop_name']
 
 class AggregatorIncentiveAdmin(admin.ModelAdmin):
     fields = ('start_date','aggregator','model_type','incentive_model')
