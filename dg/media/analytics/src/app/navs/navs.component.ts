@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment.loop';
 import { GraphsService } from './navs.service';
@@ -165,9 +166,9 @@ export class NavsComponent implements OnInit {
                 dataList[key]['outerData']['series'].forEach(entry => {
                   chart.nativeChart.addSeries(entry);
                 });
-                if (chart.chart.drillDown) {
+                if (chart.chart.chart.drillDown) {
                   dataList[key]['innerData'].forEach(drilldownEntry => {
-                    chart.drilldown.series.push(drilldownEntry);
+                    chart.chart.drilldown.series.push(drilldownEntry);
                   });
                 }
               }

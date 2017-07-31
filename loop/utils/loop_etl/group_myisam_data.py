@@ -287,7 +287,7 @@ def agg_spk_cpk(country_id, start_date, end_date):
         temp_dict_inner['name'] = key
         temp_dict_inner['id'] = str(key) + ' cpk'
         for k, v in value.iteritems():
-            temp_dict_inner['data'].append([k,v])
+            temp_dict_inner['data'].append([k,round(v,3)])
         inner_data['innerData'].append(temp_dict_inner)
 
     for key, value in agg_mandi_spk_dict.iteritems():
@@ -295,7 +295,7 @@ def agg_spk_cpk(country_id, start_date, end_date):
         temp_dict_inner['name'] = key
         temp_dict_inner['id'] = str(key) + ' spk'
         for k, v in value.iteritems():
-            temp_dict_inner['data'].append([k,v])
+            temp_dict_inner['data'].append([k,round(v,3)])
         inner_data['innerData'].append(temp_dict_inner)
 
     final_data_list['aggrspkcpk'].update(inner_data)
@@ -337,7 +337,7 @@ def agg_cost(country_id, start_date, end_date):
         temp_dict_inner['name'] = key
         temp_dict_inner['id'] = str(key) + ' cost'
         for k, v in value.iteritems():
-            temp_dict_inner['data'].append([k,v])
+            temp_dict_inner['data'].append([k,round(v,3)])
         inner_data['innerData'].append(temp_dict_inner)
 
     for key, value in agg_mandi_spk_dict.iteritems():
@@ -345,7 +345,7 @@ def agg_cost(country_id, start_date, end_date):
         temp_dict_inner['name'] = key
         temp_dict_inner['id'] = str(key) + ' recovered'
         for k, v in value.iteritems():
-            temp_dict_inner['data'].append([k,v])
+            temp_dict_inner['data'].append([k,round(v,3)])
         inner_data['innerData'].append(temp_dict_inner)
 
     final_data_list['aggrrecoveredtotal'].update(inner_data)

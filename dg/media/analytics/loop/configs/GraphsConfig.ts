@@ -210,10 +210,13 @@ export const chartsConfig = {
     },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>',
     },
     series: [],
-    drilldown: {}
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
   },
   'aggrrecoveredtotal': {
     chart: {
@@ -248,10 +251,13 @@ export const chartsConfig = {
     },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>',
     },
     series: [],
-    drilldown: {}
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
   },
   /*
   'aggrfarmercount' : {
