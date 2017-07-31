@@ -459,7 +459,8 @@ function() {
         'dashboard_display': {
             listing: false,
             add: false
-        }
+        },
+        // 'key':2
     };
 
 
@@ -732,7 +733,7 @@ function() {
         'parent_id_for_inline': 'row7',
         'remove_attribute_field': 'select#category_row7',
         'fields_to_hide_arr_for_hnn': ["#label_health_provider_present", "#id_health_provider_present"],
-        'xaxis' : ['Village','Mediator','Video','Group'],
+        'xaxis' : ['Village','Mediator','Video','Group', 'Category', 'Videopractice'],
         'yaxis' : 'Number of screenings',
         'key' : [3,2,5,4],
         'graph_type' : 'column',

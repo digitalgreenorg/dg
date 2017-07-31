@@ -95,9 +95,24 @@ define([
         render_data: function (entity_collection) {
 
             var self = this;
+            var category_id = [];
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
-
                 return [self.get_row(model)];
+            _.each(model.videoes_screened, function(element, index) {
+                // console.log(element.id, index)
+                Offline.fetch_object("video", "id", element.id)
+                    .fail(function(model, error) {
+                        // console.log(model);
+                    })
+                    .done(function(model) {
+                        // console.log(model);
+                        category_id.push(model.category_id);
+                        
+                    });
+                    self.category_id = category_id;
+            })
+                
+                console.log('NIKHIL VERMA', self.category_id)
             });
                 console.log("*****************************");
             var dict = {};
@@ -255,13 +270,13 @@ define([
                 window.person = array_table_values.length
             if(window.village!=undefined&&window.group!=undefined&&window.video!=undefined&&window.screening!=undefined&&window.mediator!=undefined&&window.adoption!=undefined&&window.person!=undefined){
 
-            $(this.el).find('#container11').html('Number of Village'+' : '+window.village);
-            $(this.el).find('#container12').html('Number of Group'+' : '+window.group);
-            $(this.el).find('#container13').html('Number of Video'+' : '+window.video);
-            $(this.el).find('#container14').html('Number of Screening'+' : '+window.screening);
-            $(this.el).find('#container15').html('Number of Mediator'+' : '+window.mediator);
-            $(this.el).find('#container16').html('Number of Adoption'+' : '+window.adoption);
-            $(this.el).find('#container17').html('Number of Person'+' : '+window.person);
+            $('#container11').html('Number of Village'+' : '+window.village);
+            $('#container12').html('Number of Group'+' : '+window.group);
+            $('#container13').html('Number of Video'+' : '+window.video);
+            $('#container14').html('Number of Screening'+' : '+window.screening);
+            $('#container15').html('Number of Mediator'+' : '+window.mediator);
+            $('#container16').html('Number of Adoption'+' : '+window.adoption);
+            $('#container17').html('Number of Person'+' : '+window.person);
             }
         }
        
