@@ -81,8 +81,8 @@ window.onload = date;
         $("#partnerId").find('option').remove();
         $("#partnerId").val('').trigger('chosen:updated');
         $("#blockId").val('').trigger("chosen:updated");
-        $('#videoId').find('option').remove();
-        $("#videoId").val('').trigger("chosen:updated");
+        /*$('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");*/
         $("#villageId").prop('disabled',true);
         $("#villageId").val('').trigger("chosen:updated");
 
@@ -93,8 +93,8 @@ window.onload = date;
         $("#partnerId").find('option').remove();
         $("#partnerId").val('').trigger('chosen:updated');
         $("#villageId").val('').trigger("chosen:updated");
-        $('#videoId').find('option').remove();
-        $("#videoId").val('').trigger("chosen:updated");
+        /*$('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");*/
 
     });
     $('villageId').bind("change",function () {
