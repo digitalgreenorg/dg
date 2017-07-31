@@ -96,25 +96,34 @@ define([
 
             var self = this;
             var category_id = [];
+            var temp_Dict ={}
             var array_table_values = $.map(entity_collection.toJSON(), function (model) {
-                return [self.get_row(model)];
-            _.each(model.videoes_screened, function(element, index) {
-                // console.log(element.id, index)
-                Offline.fetch_object("video", "id", element.id)
-                    .fail(function(model, error) {
-                        // console.log(model);
+                if (model.hasOwnProperty('videoes_screened')){
+                    _.each(model.videoes_screened, function(element, index) {
+                        // console.log(element.id, index)
+                        Offline.fetch_object("video", "id", element.id)
+                            .fail(function(obj, error) {
+                                // console.log(model);
+                            })
+                            .done(function(obj) {
+                                // console.log(model);
+                                if(temp_Dict.hasOwnProperty(obj.attributes.category.category_name)){
+                                    temp_Dict[obj.attributes.category.category_name]++
+                                    // console.log(temp_Dict)
+
+                                }else{
+                                    temp_Dict[obj.attributes.category.category_name]=1
+                                }
+                                window.temp_dict = temp_Dict
+                                // category_id.push(obj.attributes.category.category_name);
+                                
+                            });
                     })
-                    .done(function(model) {
-                        // console.log(model);
-                        category_id.push(model.category_id);
-                        
-                    });
-                    self.category_id = category_id;
-            })
+                }
                 
-                console.log('NIKHIL VERMA', self.category_id)
+                return [self.get_row(model)];
             });
-                console.log("*****************************");
+            console.log("*****************************");
             var dict = {};
             
             if(!this.key[this.k]==0){
@@ -147,7 +156,9 @@ define([
             tempDict[sorted[i]] = dict[sorted[i]];
             }
             dict = tempDict
-
+            if (this.xaxis == "Category"){
+                dict = window.temp_dict
+            }
             if(this.key[this.k]>1){
             var options = {
                 title: {
