@@ -171,6 +171,10 @@ def graph_data(request):
         result = aggregator_volume(country_id, start_date, end_date)
     elif chart_name == 'aggrvisit':
         result = aggregator_visits(country_id, start_date, end_date)
+    elif chart_name == 'mandivolume':
+        result = mandi_volume(country_id, start_date, end_date)
+    elif chart_name == 'mandivisit':
+        result = mandi_visits(country_id, start_date, end_date)
     else:
         result = {"result":"success"}
     return JsonResponse(result)

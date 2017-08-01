@@ -266,22 +266,81 @@ def aggregator_volume(country_id, start_date, end_date):
     df_result = query_myisam(country_id, start_date, end_date)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['quantity'].sum().reset_index()
+
+    return volumedata(df_result, aggregator_groupby_data, 'aggrvol', 'aggregator_name', 'mandi_name')
+    
+def aggregator_visits(country_id, start_date, end_date):
+    df_result = query_myisam(country_id, start_date, end_date)
+    final_data_list = {}
+    aggregator_groupby_data = df_result.groupby(['aggregator_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
+    
+    return visitvolumeData(aggregator_groupby_data, 'aggrvisit', 'aggregator_name', 'mandi_name')
+
+
+def mandi_volume(country_id, start_date, end_date):
+    df_result = query_myisam(country_id, start_date, end_date)
+    final_data_list = {}
+    aggregator_groupby_data = df_result.groupby(['mandi_id', 'mandi_name'])['quantity'].sum().reset_index()
+
+    return volumedata(df_result, aggregator_groupby_data, 'mandivolume', 'mandi_name', 'aggregator_name')
+
+def mandi_visits(country_id, start_date, end_date):
+    df_result = query_myisam(country_id, start_date, end_date)
+    final_data_list = {}
+    aggregator_groupby_data = df_result.groupby(['mandi_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
+    
+    return visitvolumeData(aggregator_groupby_data, 'mandivisit', 'mandi_name', 'aggregator_name')
+
+
+def visitvolumeData(groupby_result, graphname, outer_param, inner_param) :
+    final_data_list = {}
     try:
-        outer_data = {'outerData':{'series':[], 'categories':aggregator_groupby_data['aggregator_name'].tolist()}}
+        outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
+        temp_dict_outer = {'name':'Aggregator Visit','data':[]}
+
+        aggregator_visit_data = groupby_result.groupby(outer_param)['date'].sum().reset_index()
+        
+        for index, row in aggregator_visit_data.iterrows():
+            temp_dict_outer['data'].append({'name':row[outer_param],'y':int(row['date']),'drilldown':row[outer_param] + ' Count'})
+        
+        outer_data['outerData']['series'].append(temp_dict_outer)
+        final_data_list[graphname] = outer_data
+
+        inner_data = {'innerData': []}
+        mandi_groupby_data = {name:dict(zip(g[inner_param],g['date'])) for name,g in groupby_result.groupby([outer_param])}
+
+        for key, value in mandi_groupby_data.iteritems():
+            temp_dict_inner = {'data':[]}
+            temp_dict_inner['name'] = key
+            temp_dict_inner['id'] = key + ' Count'
+            for k, v in value.iteritems():
+                temp_dict_inner['data'].append([k,v])
+            inner_data['innerData'].append(temp_dict_inner)
+
+        final_data_list[graphname].update(inner_data)
+
+    except:
+        final_data_list["error"] = "No Data Found"
+    
+    return final_data_list
+
+def volumedata(df_result, groupby_result, graphname, outer_param, inner_param):
+    final_data_list = {}
+
+    try:
+        outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
         temp_dict_outer = {'name':'Aggregator Volume','data':[]}
 
-        for index, row in aggregator_groupby_data.iterrows():
+        for index, row in groupby_result.iterrows():
             temp_dict_outer['data'].append({'name':row[1],'y':int(row[2]),'drilldown':row[1] + ' Volume'})
         
         outer_data['outerData']['series'].append(temp_dict_outer)
-        final_data_list['aggrvol'] = outer_data
+        final_data_list[graphname] = outer_data
 
         inner_data = {'innerData': []}
-        df_result = df_result.groupby(['aggregator_name', 'mandi_name'])['quantity'].sum().reset_index()
-        mandi_groupby_data = {name:dict(zip(g['mandi_name'],g['quantity'])) for name,g in df_result.groupby(['aggregator_name'])}
-        # test_data = df_result.groupby(['aggregator_name', 'mandi_name'])['quantity'].sum().reset_index()
-        # test_data = df_result.groupby(['aggregator_name'])
-        # print test_data.head()
+        df_result = df_result.groupby([outer_param, inner_param])['quantity'].sum().reset_index()
+        mandi_groupby_data = {name:dict(zip(g[inner_param],g['quantity'])) for name,g in df_result.groupby([outer_param])}
+
         for key,value in mandi_groupby_data.iteritems():
             temp_dict_inner = {'data':[]}
             temp_dict_inner['name'] = key
@@ -290,61 +349,7 @@ def aggregator_volume(country_id, start_date, end_date):
                 temp_dict_inner['data'].append([k,v])
             inner_data['innerData'].append(temp_dict_inner)
 
-        final_data_list['aggrvol'].update(inner_data)
-
-
-    except:
-        final_data_list["error"] = "No Data Found"
-    
-    return final_data_list
-
-    
-def aggregator_visits(country_id, start_date, end_date):
-    df_result = query_myisam(country_id, start_date, end_date)
-    final_data_list = {}
-    aggregator_groupby_data = df_result.groupby(['aggregator_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
-    
-    try:
-        print 'In try statement'
-        outer_data = {'outerData':{'series':[], 'categories':aggregator_groupby_data['aggregator_name'].tolist()}}
-        temp_dict_outer = {'name':'Aggregator Visit','data':[]}
-
-        aggregator_visit_data = aggregator_groupby_data.groupby('aggregator_name')['date'].sum().reset_index()
-        
-        for index, row in aggregator_visit_data.iterrows():
-            temp_dict_outer['data'].append({'name':row['aggregator_name'],'y':int(row['date']),'drilldown':row['aggregator_name'] + ' Count'})
-        
-        outer_data['outerData']['series'].append(temp_dict_outer)
-        final_data_list['aggrvisit'] = outer_data
-
-        inner_data = {'innerData': []}
-        mandi_groupby_data = {name:dict(zip(g['mandi_name'],g['date'])) for name,g in aggregator_groupby_data.groupby(['aggregator_name'])}
-
-        for key, value in mandi_groupby_data.iteritems():
-            temp_dict_inner = {'data':[]}
-            temp_dict_inner['name'] = key
-            temp_dict_inner['id'] = key + ' Count'
-            for k, v in value.iteritems():
-                print k, v
-                temp_dict_inner['data'].append([k,v])
-            inner_data['innerData'].append(temp_dict_inner)
-
-        final_data_list['aggrvisit'].update(inner_data)
-
-        # for key,value in aggregator_groupby_data.groupby(['aggregator_name']):
-        #     print '***********'
-            # print key, type(value)
-            # print '***********'
-        #     temp_dict_inner = {'data':[]}
-        #     temp_dict_inner['name'] = key
-        #     temp_dict_inner['id'] = key + ' Count'
-            # for k, v in value.iterrows():
-            #     print v['mandi_name'], v['date']
-            # print '***********'
-        #         temp_dict_inner['data'].append([k,v])
-        #     inner_data['innerData'].append(temp_dict_inner)
-
-        # final_data_list['aggrvisit'].update(inner_data)
+        final_data_list[graphname].update(inner_data)
 
 
     except:
