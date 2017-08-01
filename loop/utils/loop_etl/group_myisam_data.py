@@ -274,7 +274,7 @@ def aggregator_visits(country_id, start_date, end_date):
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['aggregator_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
     
-    return visitvolumeData(aggregator_groupby_data, 'aggrvisit', 'aggregator_name', 'mandi_name')
+    return visitData(aggregator_groupby_data, 'aggrvisit', 'aggregator_name', 'mandi_name')
 
 
 def mandi_volume(country_id, start_date, end_date):
@@ -289,10 +289,10 @@ def mandi_visits(country_id, start_date, end_date):
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['mandi_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
     
-    return visitvolumeData(aggregator_groupby_data, 'mandivisit', 'mandi_name', 'aggregator_name')
+    return visitData(aggregator_groupby_data, 'mandivisit', 'mandi_name', 'aggregator_name')
 
 
-def visitvolumeData(groupby_result, graphname, outer_param, inner_param) :
+def visitData(groupby_result, graphname, outer_param, inner_param) :
     final_data_list = {}
     try:
         outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
@@ -306,16 +306,8 @@ def visitvolumeData(groupby_result, graphname, outer_param, inner_param) :
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
 
-        inner_data = {'innerData': []}
         mandi_groupby_data = {name:dict(zip(g[inner_param],g['date'])) for name,g in groupby_result.groupby([outer_param])}
-
-        for key, value in mandi_groupby_data.iteritems():
-            temp_dict_inner = {'data':[]}
-            temp_dict_inner['name'] = key
-            temp_dict_inner['id'] = key + ' Count'
-            for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,v])
-            inner_data['innerData'].append(temp_dict_inner)
+        inner_data = createInnerdataDict(mandi_groupby_data, ' Count')
 
         final_data_list[graphname].update(inner_data)
 
@@ -337,22 +329,27 @@ def volumedata(df_result, groupby_result, graphname, outer_param, inner_param):
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
 
-        inner_data = {'innerData': []}
         df_result = df_result.groupby([outer_param, inner_param])['quantity'].sum().reset_index()
         mandi_groupby_data = {name:dict(zip(g[inner_param],g['quantity'])) for name,g in df_result.groupby([outer_param])}
-
-        for key,value in mandi_groupby_data.iteritems():
-            temp_dict_inner = {'data':[]}
-            temp_dict_inner['name'] = key
-            temp_dict_inner['id'] = key + ' Volume'
-            for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,v])
-            inner_data['innerData'].append(temp_dict_inner)
+        inner_data = createInnerdataDict(mandi_groupby_data, ' Volume')
 
         final_data_list[graphname].update(inner_data)
-
 
     except:
         final_data_list["error"] = "No Data Found"
     
     return final_data_list
+
+
+def createInnerdataDict(dictData, keyword):
+    inner_data = {'innerData': []}
+
+    for key,value in dictData.iteritems():
+        temp_dict_inner = {'data':[]}
+        temp_dict_inner['name'] = key
+        temp_dict_inner['id'] = key + keyword
+        for k, v in value.iteritems():
+            temp_dict_inner['data'].append([k,v])
+        inner_data['innerData'].append(temp_dict_inner)
+    
+    return inner_data
