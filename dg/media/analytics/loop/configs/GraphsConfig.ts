@@ -152,15 +152,17 @@ export const chartsConfig = {
         'id': 'tab1',
         'class': 'col-sm-6'
       },
-      drillDown: true
+      drillDown: true,
+      inverted : true,
     },
     credits: { enabled: false },
     title: { text: '' },
-    xAxis: { type: 'category' },
+    xAxis: { type: 'category', max:5 },
     yAxis: {
       tickInterval: 10,
       title: { text: 'Visits' }
     },
+    scrollbar : {enabled:true},
     legend: { enabled: false },
     plotOptions: {
       column: {
@@ -176,7 +178,10 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
     },
     series: [],
-    drilldown: {}
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
   },
   /*
   'aggrspkcpk' : {
