@@ -175,6 +175,10 @@ def graph_data(request):
         result = mandi_volume(country_id, start_date, end_date)
     elif chart_name == 'mandivisit':
         result = mandi_visits(country_id, start_date, end_date)
+    elif chart_name == 'cropvolume':
+        result = crop_volume(country_id, start_date, end_date)
+    elif chart_name == 'cropfarmercount':
+        result = crop_farmer_count(country_id, start_date, end_date)
     else:
         result = {"result":"success"}
     return JsonResponse(result)
