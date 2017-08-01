@@ -37,6 +37,27 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
+def sql_query(country_id, from_date=None, to_date=None):
+    database = DATABASES['default']['NAME']
+    username = DATABASES['default']['USER']
+    password = DATABASES['default']['PASSWORD']
+    host = DATABASES['default']['HOST']
+    port = DATABASES['default']['PORT']
+    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
+
+    query = '''SELECT lct.id id, date, crop_id, crop_name, mandi_id, mandi_name_en mandi_name, quantity, farmer_id, name farmer_name
+                FROM loop_combinedtransaction lct 
+                JOIN loop_mandi lm ON lm.id = lct.mandi_id 
+                JOIN loop_crop lcrp ON lcrp.id = lct.crop_id
+                JOIN loop_farmer lf ON lf.id = lct.farmer_id
+            '''
+
+    if from_date:
+        query = query + " and date between " + str(from_date) + " and " + str(to_date)
+
+    df_result = pd.read_sql(query, con=mysql_cn)
+    return df_result
+
 def query_myisam(country_id, from_date=None, to_date=None):
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
@@ -267,7 +288,7 @@ def aggregator_volume(country_id, start_date, end_date):
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['quantity'].sum().reset_index()
 
-    return volumedata(df_result, aggregator_groupby_data, 'aggrvol', 'aggregator_name', 'mandi_name')
+    return volumedata(df_result, aggregator_groupby_data, 'aggrvol', 'aggregator_name', 'mandi_name', True)
     
 def aggregator_visits(country_id, start_date, end_date):
     df_result = query_myisam(country_id, start_date, end_date)
@@ -282,7 +303,7 @@ def mandi_volume(country_id, start_date, end_date):
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['mandi_id', 'mandi_name'])['quantity'].sum().reset_index()
 
-    return volumedata(df_result, aggregator_groupby_data, 'mandivolume', 'mandi_name', 'aggregator_name')
+    return volumedata(df_result, aggregator_groupby_data, 'mandivolume', 'mandi_name', 'aggregator_name', True)
 
 def mandi_visits(country_id, start_date, end_date):
     df_result = query_myisam(country_id, start_date, end_date)
@@ -297,7 +318,7 @@ def crop_volume(country_id, start_date, end_date):
     df_result = sql_query(country_id, start_date, end_date)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['crop_id', 'crop_name'])['quantity'].sum().reset_index()
-    return volumedata(df_result, aggregator_groupby_data, 'cropvolume', 'crop_name', 'mandi_name')
+    return volumedata(df_result, aggregator_groupby_data, 'cropvolume', 'crop_name', 'mandi_name', True)
 
 def crop_farmer_count(country_id, start_date, end_date):
     df_result = sql_query(country_id, start_date, end_date)
@@ -331,7 +352,7 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
     
     return final_data_list
 
-def volumedata(df_result, groupby_result, graphname, outer_param, inner_param):
+def volumedata(df_result, groupby_result, graphname, outer_param, inner_param, isdrillDown):
     final_data_list = {}
 
     try:
@@ -343,12 +364,12 @@ def volumedata(df_result, groupby_result, graphname, outer_param, inner_param):
         
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
+        if(isdrillDown):
+            df_result = df_result.groupby([outer_param, inner_param])['quantity'].sum().reset_index()
+            mandi_groupby_data = {name:dict(zip(g[inner_param],g['quantity'])) for name,g in df_result.groupby([outer_param])}
+            inner_data = createInnerdataDict(mandi_groupby_data, ' Volume')
 
-        df_result = df_result.groupby([outer_param, inner_param])['quantity'].sum().reset_index()
-        mandi_groupby_data = {name:dict(zip(g[inner_param],g['quantity'])) for name,g in df_result.groupby([outer_param])}
-        inner_data = createInnerdataDict(mandi_groupby_data, ' Volume')
-
-        final_data_list[graphname].update(inner_data)
+            final_data_list[graphname].update(inner_data)
 
     except:
         final_data_list["error"] = "No Data Found"
@@ -368,26 +389,3 @@ def createInnerdataDict(dictData, keyword):
         inner_data['innerData'].append(temp_dict_inner)
     
     return inner_data
-
-
-def sql_query(country_id, from_date=None, to_date=None):
-    database = DATABASES['default']['NAME']
-    username = DATABASES['default']['USER']
-    password = DATABASES['default']['PASSWORD']
-    host = DATABASES['default']['HOST']
-    port = DATABASES['default']['PORT']
-    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
-
-    query = '''SELECT lct.id id, date, crop_id, crop_name, mandi_id, mandi_name_en mandi_name, quantity, farmer_id, name farmer_name
-                FROM loop_combinedtransaction lct 
-                JOIN loop_mandi lm ON lm.id = lct.mandi_id 
-                JOIN loop_crop lcrp ON lcrp.id = lct.crop_id
-                JOIN loop_farmer lf ON lf.id = lct.farmer_id
-            '''
-
-    if from_date:
-        query = query + " and date between " + str(from_date) + " and " + str(to_date)
-
-    df_result = pd.read_sql(query, con=mysql_cn)
-    print df_result
-    return df_result
