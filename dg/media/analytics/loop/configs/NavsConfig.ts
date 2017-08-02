@@ -1,7 +1,7 @@
 export const navsConfig = {
   'navs': {
     'Home': {
-      'active': true,
+      // 'active': true,
       'import': {
         'overall': false,
         'recent': false,
@@ -16,20 +16,23 @@ export const navsConfig = {
       }
     },
     'Analytics': {
+      'active': true,
       'subNavs': {
         'Aggregators': {
           'active': true,
           'containers': {
-            'container1': {
-              'Volume': {
-                'addDivs': ['aggrvol']
-              },
-              'Visits': {
-                'addDivs': ['aggrvisit']
-              }
-            },
+            // 'container1': {
+            //   'addTab':true,
+            //   'Volume': {
+            //     'addDivs': ['aggrvol']
+            //   },
+            //   'Visits': {
+            //     'addDivs': ['aggrvisit']
+            //   }
+            // },
             'container2': {
-              'SPK/CPk': {
+              'addTab':true,
+              'SPK/CPK': {
                 'addDivs': ['aggrspkcpk']
               },
               'Recovered/Total': {

@@ -6,10 +6,13 @@ from django.db.models import Count, Min, Sum, Avg, Max, F
 import pandas as pd
 from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser
 from loop.utils.loop_etl.group_myisam_data import *
+<<<<<<< HEAD
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from constants.constants import ROLE_CHOICE_AGGREGATOR
 import math
+=======
+>>>>>>> origin/timeseries_loop_analytics
 
 def cpk_spk_timeseries(country_id, start_date, end_date):
     cpk_spk = cpk_spk_ts(country_id, start_date, end_date)
@@ -181,6 +184,10 @@ def graph_data(request):
         result = crop_farmer_count(country_id, start_date, end_date)
     elif chart_name == 'cropprices':
         result = crop_prices(country_id, start_date, end_date)
+    elif chart_name == 'aggrspkcpk':
+        result = agg_spk_cpk(country_id, start_date, end_date)
+    elif chart_name == 'aggrrecoveredtotal':
+        result = agg_cost(country_id, start_date, end_date)
     else:
         result = {"result":"success"}
     return JsonResponse(result)

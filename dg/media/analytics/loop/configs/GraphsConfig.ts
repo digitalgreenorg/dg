@@ -105,14 +105,18 @@ export const chartsConfig = {
         'id': 'tab1',
         'class': 'col-sm-6'
       },
-      drillDown: true
+      drillDown: true,
+      inverted: true
     },
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category' },
     yAxis: {
-      tickInterval: 10,
+      // tickInterval: 10,
       title: { text: 'Volume' }
+    },
+    scrollbar: {
+      enabled: true
     },
     legend: { enabled: false },
     plotOptions: {
@@ -439,39 +443,48 @@ export const chartsConfig = {
                           series: [],
                           drilldown: {}
   },
-  'aggrrecoveredtotal' : {
-                          chart: {
-                                  type: 'column',
-                                  renderTo: 'aggrrecoveredtotal',
-                                  tab: {
-                                        'id': 'tab1',
-                                        'class':'col-sm-12'
-                                  },
-                                  drillDown: true
-                          },
-                          credits:{ enabled: false },
-                          title: { text: ''},
-                          xAxis: { type: 'category' },
-                          yAxis: {
-                                  tickInterval: 10,
-                                  title: { text: 'Volume' } },
-                          legend: { enabled: false },
-                          plotOptions: {
-                                        column: {
-                                                grouping: false,
-                                                borderWidth: 0,
-                                                dataLabels: {
-                                                             enabled: true
-                                                }
-                                        }
-                          },
-                          tooltip: {
-                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                          },
-                          series: [],
-                          drilldown: {}
+  'aggrrecoveredtotal': {
+    chart: {
+      type: 'column',
+      renderTo: 'aggrrecoveredtotal',
+      tab: {
+        'id': 'tab1',
+        'class': 'col-sm-6'
+      },
+      drillDown: true,
+      inverted: true
+    },
+    credits: { enabled: false },
+    title: { text: '' },
+    xAxis: { type: 'category', max: 5 },
+    yAxis: {
+      // tickInterval: 10,
+      title: { text: '' }
+    },
+    scrollbar: {
+      enabled: true
+    },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>',
+    },
+    series: [],
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
   },
+  /*
   'aggrfarmercount' : {
                           chart: {
                                   type: 'column',
