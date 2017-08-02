@@ -1732,7 +1732,7 @@ function getFormattedDate(aggregator_id) {
   var name = aggregator_names[aggregator_index];
   var fromDate = new Date(payments_start_date);
   var toDate = new Date(payments_to_date);
-  var str = name + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
+  var str = name + "(" + aggregator_id + ")" + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
   return str;
 }
 
