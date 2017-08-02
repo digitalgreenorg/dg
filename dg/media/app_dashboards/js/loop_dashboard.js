@@ -62,6 +62,8 @@ var superEditMode = 0;
 function initialize() {
   initialLoadComplete = false;
   language = ENGLISH_LANGUAGE;
+  localStorage.language_id = language;
+  localStorage.country_id = country_id;
   $("select").material_select();
   $(".button-collapse").sideNav({
     closeOnClick: true
@@ -4043,6 +4045,7 @@ function plot_solid_guage(container, minimum, present, target) {
 
 function change_language(lang) {
   language = lang;
+  localStorage.language_id = language;
   fill_aggregator_filter(aggregators_for_filter, language);
   fill_mandi_filter(mandis_for_filter, language);
   fill_gaddidar_filter(gaddidars_for_filter, language);
@@ -4065,6 +4068,7 @@ function change_language(lang) {
 function change_country(country) {
 
   country_id = country;
+  localStorage.country_id = country_id;
   if (country_id == 1) {
     CURRENCY = RUPEE;
     $("#totalpaytext").text("Payments(" + CURRENCY + ")");
