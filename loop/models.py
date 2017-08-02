@@ -319,6 +319,7 @@ class CropLanguage(models.Model):
 
 post_save.connect(save_log,sender=CropLanguage)
 pre_delete.connect(save_log,sender=CropLanguage)
+post_save.connect(save_admin_log,sender=CropLanguage)
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -368,6 +369,7 @@ class VehicleLanguage(models.Model):
 
 post_save.connect(save_log,sender=VehicleLanguage)
 pre_delete.connect(save_log,sender=VehicleLanguage)
+post_save.connect(save_admin_log,sender=VehicleLanguage)
 
 class TransportationVehicle(LoopModel):
     id = models.AutoField(primary_key=True)

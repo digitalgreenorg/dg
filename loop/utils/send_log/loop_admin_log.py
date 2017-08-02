@@ -69,6 +69,14 @@ def save_admin_log(sender, **kwargs):
         sender = "LoopUser"
         model_id = instance.loop_user.id
         admin_user = instance.admin_user
+    elif sender == "CropLanguage":
+        sender = "Crop"
+        model_id = instance.crop.id
+        action = 0
+    elif sender == "VehicleLanguage":
+        sender = "Vehicle"
+        model_id = instance.vehicle.id
+        action = 0
     
     # elif sender == "DayTransportation":
     #     admin_user = AdminUser.objects.get(user=instance.user_created)
@@ -97,6 +105,7 @@ def save_admin_log(sender, **kwargs):
 
 
 def get_admin_log_crop_vehicle_object(log_object, preferred_language):
+    import pdb;pdb.set_trace()
     Obj_model = get_model('loop', log_object.entry_table)
     if log_object.entry_table == 'CropLanguage':
         table = 'Crop'
@@ -185,12 +194,9 @@ def send_updated_admin_log(request):
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.id,entry_table__in=['AdminUser']))
             #list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.village.block.id,entry_table__in=['Block']))
             #list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.village.block.id,entry_table__in=['Block']))
-            crop_list_queryset = Log.objects.filter(
-                timestamp__gt=timestamp, entry_table__in=['Crop'])
-            vehicle_list_queryset = Log.objects.filter(
-                timestamp__gt=timestamp, entry_table__in=['Vehicle'])
-            list_rows.append(crop_list_queryset)
-            list_rows.append(vehicle_list_queryset)
+            #list_queryset = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['CropLanguage','VehicleLanguage'])
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
+            
 
             '''
             Village Log

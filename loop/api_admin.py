@@ -78,10 +78,9 @@ class LoopUserAuthorization(Authorization):
 
     def read_list(self,object_list,bundle):
         kwargs = {}
-        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
-            user = AdminUser.objects.get(user_id=bundle.request.user.id)
-            aggregators = user.get_loopusers()
-            kwargs[self.loopuser_field] = aggregators
+        user = AdminUser.objects.get(user_id=bundle.request.user.id)
+        aggregators = user.get_loopusers()
+        kwargs[self.loopuser_field] = aggregators
         return object_list.filter(**kwargs).distinct()
 
 class VillageAuthorization(Authorization):
@@ -89,26 +88,18 @@ class VillageAuthorization(Authorization):
         self.village_field = field
 
     def read_list(self, object_list, bundle):
-        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
-            user = AdminUser.objects.get(user_id=bundle.request.user.id);
-            districts =District.objects.filter(adminassigneddistrict__admin_user_id=user,adminassigneddistrict__aggregation_switch=True)
-            villages = Village.objects.filter(block__district__in=districts)
-        else:
-            villages = LoopUser.objects.get(
-                user_id=bundle.request.user.id).get_villages()
+        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        districts =District.objects.filter(adminassigneddistrict__admin_user_id=user,adminassigneddistrict__aggregation_switch=True)
+        villages = Village.objects.filter(block__district__in=districts)
         kwargs = {}
         kwargs[self.village_field] = villages
         return object_list.filter(**kwargs).distinct()
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
-        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
-            user = AdminUser.objects.get(user_id=bundle.request.user.id);
-            districts =District.objects.filter(adminassigneddistrict__admin_user_id=user,adminassigneddistrict__aggregation_switch=True)
-            villages = Village.objects.filter(block__district__in=districts)
-        else:
-            villages = LoopUser.objects.get(
-                user_id=bundle.request.user.id).get_villages()
+        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        districts =District.objects.filter(adminassigneddistrict__admin_user_id=user,adminassigneddistrict__aggregation_switch=True)
+        villages = Village.objects.filter(block__district__in=districts)
         kwargs = {}
         kwargs[self.village_field] = villages
         obj = object_list.filter(**kwargs).distinct()
@@ -117,36 +108,73 @@ class VillageAuthorization(Authorization):
         else:
             raise NotFound("Not allowed to download Village")
 
+class CropLanguageAuthorization(Authorization):
+    def __init__(self, field):
+        self.croplanguage_field = field
+
+    def read_list(self, object_list, bundle):
+        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        preferred_language = user.preferred_language
+        croplanguage = CropLanguage.objects.filter(language=preferred_language)
+        kwargs = {}
+        kwargs[self.croplanguage_field] = croplanguage
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        preferred_language = user.preferred_language
+        croplanguage = CropLanguage.objects.filter(language=preferred_language)
+        kwargs = {}
+        kwargs[self.croplanguage_field] = croplanguage
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound("Not allowed to download CropLanguage")
+
+class VehicleLanguageAuthorization(Authorization):
+    def __init__(self, field):
+        self.vehiclelanguage_field = field
+
+    def read_list(self, object_list, bundle):
+        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        preferred_language = user.preferred_language
+        vehiclelanguage = VehicleLanguage.objects.filter(language=preferred_language)
+        kwargs = {}
+        kwargs[self.vehiclelanguage_field] = vehiclelanguage
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        preferred_language = user.preferred_language
+        vehiclelanguage = VehicleLanguage.objects.filter(language=preferred_language)
+        kwargs = {}
+        kwargs[self.vehiclelanguage_field] = vehiclelanguage
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound("Not allowed to download CropLanguage")
+
 class DistrictAuthorization(Authorization):
     def __init__(self, field):
         self.district_field = field
 
     def read_list(self, object_list, bundle):
-        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
-            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
-            kwargs = {}
-            kwargs[self.district_field] = districts
-        else:
-            districts = []
-            districts.append(LoopUser.objects.filter(
-                user_id=bundle.request.user.id).village.block.district.id)
-            kwargs = {}
-            kwargs[self.district_field] = districts
+        districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+        kwargs = {}
+        kwargs[self.district_field] = districts
         return object_list.filter(**kwargs).distinct()
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
         kwargs = {}
-        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
-            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
-            kwargs = {}
-            kwargs[self.district_field] = districts
-            obj=object_list.filter(**kwargs).distinct()
-        else:
-            kwargs[self.district_field] = LoopUser.objects.get(
-                user_id=bundle.request.user.id).village.block.district
-            obj = object_list.filter(**kwargs).distinct()
-            userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
+        districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+        kwargs = {}
+        kwargs[self.district_field] = districts
+        obj=object_list.filter(**kwargs).distinct()
         if obj:
             return True
         else:
@@ -157,31 +185,19 @@ class BlockAuthorization(Authorization):
         self.block_field = field
 
     def read_list(self, object_list, bundle):
-        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
-            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
-            kwargs = {}
-            kwargs[self.block_field] = Block.objects.filter(district__in=districts)
-        else:
-            block = []
-            block.append(LoopUser.objects.get(
-                user_id=bundle.request.user.id).village.block)
-            kwargs = {}
-            kwargs[self.block_field] = block
+        districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+        kwargs = {}
+        kwargs[self.block_field] = Block.objects.filter(district__in=districts)
         return object_list.filter(**kwargs).distinct()
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
         kwargs = {}
-        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
-            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
-            kwargs = {}
-            kwargs[self.block_field] = Block.objects.filter(district__in=districts)
-            obj=object_list.filter(**kwargs).distinct()
-        else:
-            kwargs[self.block_field] = LoopUser.objects.get(
-                user_id=bundle.request.user.id).village.block
-            obj = object_list.filter(**kwargs).distinct()
-            userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
+        
+        districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+        kwargs = {}
+        kwargs[self.block_field] = Block.objects.filter(district__in=districts)
+        obj=object_list.filter(**kwargs).distinct()
         if obj:
             return True
         else:
@@ -193,26 +209,15 @@ class MandiAuthorization(Authorization):
         self.mandi_field = field
 
     def read_list(self, object_list, bundle):
-        if (AdminUser.objects.filter(user_id=bundle.request.user.id)).count()>0:
-            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
-            mandis_list = {}
-            mandis_list[self.mandi_field] = Mandi.objects.filter(district__in=districts)
-        else:
-            user = LoopUser.objects.get(user_id=bundle.request.user.id)
-            mandis = user.get_mandis()
-            mandis_list = {}
-            mandis_list[self.mandi_field] = mandis
+        districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+        mandis_list = {}
+        mandis_list[self.mandi_field] = Mandi.objects.filter(district__in=districts)
         return object_list.filter(**mandis_list).distinct()
 
     def read_details(self, object_list, bundle):
-        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
-            districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
-            mandis_list = {}
-            mandi_list[self.mandi_field] = Mandi.objects.filter(district__in=districts)
-        else:            
-            mandis_list = {}
-            mandis_list[self.mandi_field] = LoopUser.objects.get(
-                user_id=bundle.request.user.id).get_mandis()
+        districts  = AdminUser.objects.get(user_id=bundle.request.user.id).get_districts()
+        mandis_list = {}
+        mandi_list[self.mandi_field] = Mandi.objects.filter(district__in=districts)
         obj = object_list.filter(**mandis_list).distinct()
         if obj:
             return True
@@ -667,31 +672,8 @@ class LoopUserAssignedVillageResource(BaseResource):
         bundle.data['online_id']=bundle.data['id']
         return bundle
     
-        
-class CropLanguageResource(BaseResource):
-    language = fields.ForeignKey(LanguageResource,'language')
-    #crop = fields.ForeignKey(CropResource,'crop')
-    class Meta:
-        limit = 0
-        max_limit = 0
-        queryset = CropLanguage.objects.all()
-        allowed_methods = ['post', 'get']
-        resource_name = 'croplanguage'
-        authorization = Authorization()
-        always_return_data = True
-        excludes = ('time_created', 'time_modified')
-        include_resource_uri = False
-    dehydrate_language = partial(
-        foreign_key_to_id, field_name='language', sub_field_names=['id','notation'])
-    def dehydrate(self,bundle):
-         bundle.data['online_id']= bundle.data['id']
-         bundle.data['crop']=CropLanguage.objects.filter(id=bundle.data['id'])[0].crop.id
-         return bundle
-
-
-
 class CropResource(BaseResource):
-    crops = fields.ToManyField(CropLanguageResource, 'crops', full=True, null=True, blank=True)
+    #crops = fields.ToManyField(CropLanguageResource, 'crops', full=True, null=True, blank=True)
 
     class Meta:
         limit = 0
@@ -704,88 +686,84 @@ class CropResource(BaseResource):
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
- 
-    def get_object_list(self, request):
-        # apply filters from url
-        admin = False        
-        if AdminUser.objects.filter(user_id=request.user.id).count()>0:
-            user = AdminUser.objects.get(user_id=request.user.id)
-            admin = True
-        else:
-            user = LoopUser.objects.get(user_id=request.user.id)
-        languageFilter = str(user.preferred_language.notation)
-        # import pdb; pdb.set_trace()
-        if languageFilter is not None and admin:
-            result = super(CropResource, self).get_object_list(request)  
-        elif languageFilter is not None:
-            result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)
-        else:
-            result = super(CropResource,self).get_object_list(request).filter(crops__language_id=1)
-        return result
 
     def obj_create(self, bundle, request=None, **kwargs):
-        attempt = Crop.objects.filter(crop_name=bundle.data['crop_name_en'])
-        crop_name_reg = bundle.data['crop_name']
-        bundle.data['crop_name']=bundle.data['crop_name_en']
-        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
-            user = AdminUser.objects.get(user_id=bundle.request.user.id)
-            language = user.preferred_language
+        attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
         if attempt.count() < 1:
             bundle = super(CropResource, self).obj_create(bundle, **kwargs)
-            CropLanguage(language=language,crop=bundle.obj,crop_name=crop_name_reg).save()
+            # CropLanguage(language=language,crop=bundle.obj,crop_name=crop_name_reg).save()
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
-        crop_name_reg = bundle.data['crop_name']
-        bundle.data['crop_name']=bundle.data['crop_name_en']
-        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
-            user = AdminUser.objects.get(user_id=bundle.request.user.id)
-            language = user.preferred_language
         try:
             bundle = super(CropResource, self).obj_update(bundle, **kwargs)
-            cropLanguage = CropLanguage.objects.filter(language=language,crop_id=bundle.data['online_id'])
-            if cropLanguage.count()<1:
-                CropLanguage(language=language,crop_id=bundle.data['online_id'],crop_name=crop_name_reg).save()
-            else:
-                cropLanguage[0].crop_name = crop_name_reg
-                cropLanguage[0].save()
+            # cropLanguage = CropLanguage.objects.filter(language=language,crop_id=bundle.data['online_id'])
+            # if cropLanguage.count()<1:
+            #     CropLanguage(language=language,crop_id=bundle.data['online_id'],crop_name=crop_name_reg).save()
+            # else:
+            #     cropLanguage[0].crop_name = crop_name_reg
+            #     cropLanguage[0].save()
         except Exception, e:
-            attempt = Crop.objects.filter(crop_name=bundle.data['crop_name_en'])
+            attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
             send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
-        '''
-        For AdminUser sending preferred language crops union crops without preferred language translation
-        '''
-        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
-            user = AdminUser.objects.get(user_id=bundle.request.user.id)
-            bundle.data['online_id'] = bundle.data['id']
-            bundle.data['crop_name_en'] = bundle.data['crop_name']
-            # clearing crop_name for crops which do not have any translations
-            bundle.data['crop_name']=""
-            for d in bundle.data['crops']:
-                if d.data['language']['notation'] is not None and d.data['language']['notation'] == user.preferred_language.notation:
-                    bundle.data['crop_name'] = d.data['crop_name']
-                    bundle.data['measuring_unit'] = d.data['measuring_unit']
-                    break
-                else:
-                    bundle.data['crop_name']=""
-                    bundle.data['measuring_unit']=""
-            del bundle.data['crops']
-            return bundle    
-        else:
-            user = LoopUser.objects.get(user_id=bundle.request.user)
         bundle.data['online_id'] = bundle.data['id']
-        bundle.data['crop_name_en'] = bundle.data['crop_name']
-        for d in bundle.data['crops']:
-            if d.data['language']['notation'] == user.preferred_language.notation:
-                bundle.data['crop_name'] = d.data['crop_name']
-                break
-        del bundle.data['crops']
         return bundle
+
+class CropLanguageResource(BaseResource):
+    language = fields.ForeignKey(LanguageResource,'language')
+    crop = fields.ForeignKey(CropResource,'crop')
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = CropLanguage.objects.all()
+        allowed_methods = ['post', 'get','put']
+        resource_name = 'croplanguage'
+        authorization = CropLanguageAuthorization('id__in')
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+    dehydrate_language = partial(
+        foreign_key_to_id, field_name='language', sub_field_names=['id','notation'])
+    dehydrate_crop = partial(foreign_key_to_id,field_name='crop',sub_field_names=['id'])
+    hydrate_crop = partial(dict_to_foreign_uri, field_name='crop')
+
+    def obj_create(self,bundle,request=None,**kwargs):
+        preferred_language = AdminUser.objects.get(user_id=bundle.request.user.id).preferred_language.id
+        bundle.data['language'] = "/loop/api/v1/language/%s/" % preferred_language 
+        attempt = CropLanguage.objects.filter(crop_id=bundle.data['crop']['online_id'],language=preferred_language)
+        if attempt.count() < 1:
+            bundle = super(CropLanguageResource, self).obj_create(
+                bundle, **kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        user = AdminUser.objects.get(user_id=bundle.request.user.id)
+        preferred_language = user.preferred_language.id
+        bundle.data['language'] = "/loop/api/v1/language/%s/" % preferred_language
+        try:
+            bundle = super(CropLanguageResource, self).obj_update(bundle, **kwargs)
+            # cropLanguage = CropLanguage.objects.filter(language=language,crop_id=bundle.data['online_id'])
+            # if cropLanguage.count()<1:
+            #     CropLanguage(language=language,crop_id=bundle.data['online_id'],crop_name=crop_name_reg).save()
+            # else:
+            #     cropLanguage[0].crop_name = crop_name_reg
+            #     cropLanguage[0].save()
+        except Exception, e:
+            attempt = CropLanguage.objects.filter(crop_id=bundle.data['crop']['online_id'],language=preferred_language)
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def dehydrate(self,bundle):
+         bundle.data['online_id']= bundle.data['id']
+         return bundle
+
 
 
 class MandiResource(BaseResource):
@@ -880,28 +858,9 @@ class GaddidarResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
-class VehicleLanguageResource(BaseResource):
-    language = fields.ForeignKey(LanguageResource,'language')
-    
-    class Meta:
-        limit = 0
-        max_limit = 0
-        queryset = VehicleLanguage.objects.all()
-        allowed_methods = ['post', 'get']
-        resource_name = 'vehiclelanguage'
-        authorization = Authorization()
-        always_return_data = True
-        excludes = ('time_created', 'time_modified')
-        include_resource_uri = False
-    dehydrate_language = partial(
-        foreign_key_to_id, field_name='language', sub_field_names=['id','notation'])
-    def dehydrate(self,bundle):
-        bundle.data['online_id']=bundle.data['id']
-        bundle.data['vehicle']=VehicleLanguage.objects.filter(id=bundle.data['id'])[0].vehicle.id
-        return bundle
+
 
 class VehicleResource(BaseResource):
-    vehicles = fields.ToManyField(VehicleLanguageResource, 'vehicles', full=True, null=True, blank=True)
 
     class Meta:
         limit = 0
@@ -914,33 +873,11 @@ class VehicleResource(BaseResource):
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
-    def get_object_list(self, request):
-        # apply filters from url
-        admin = False
-        if AdminUser.objects.filter(user_id=request.user.id).count()>0:
-            user = AdminUser.objects.get(user_id=request.user.id)
-            admin = True
-        else:
-            user = LoopUser.objects.get(user_id=request.user.id)
-        languageFilter = str(user.preferred_language.notation)
-        if languageFilter and admin:
-            result = super(VehicleResource, self).get_object_list(request)
-        elif languageFilter:
-            result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)
-        else:
-            result = super(VehicleResource,self).get_object_list(request).filter(vehicles__language__id=1)
-        return result
-
     def obj_create(self, bundle, request=None, **kwargs):
-        attempt = Vehicle.objects.filter(vehicle_name=bundle.data['vehicle_name_en'])
-        vehicle_name_reg = bundle.data['vehicle_name']
-        bundle.data['vehicle_name']=bundle.data['vehicle_name_en']
-        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
-            user = AdminUser.objects.get(user_id=bundle.request.user.id)
-            language = user.preferred_language
+        attempt = Vehicle.objects.filter(vehicle_name=bundle.data['vehicle_name'])
+
         if attempt.count() < 1:
             bundle = super(VehicleResource, self).obj_create(bundle, **kwargs)
-            VehicleLanguage(language=language,vehicle=bundle.obj,vehicle_name=vehicle_name_reg).save()
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
@@ -949,34 +886,65 @@ class VehicleResource(BaseResource):
         try:
             bundle = super(VehicleResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
-            attempt = Vehicle.objects.filter(vehicle_name=bundle.data['vehicle_name_en'])
+            attempt = Vehicle.objects.filter(vehicle_name=bundle.data['vehicle_name'])
             send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def dehydrate(self, bundle):
-        if AdminUser.objects.filter(user_id=bundle.request.user.id).count()>0:
-            user = AdminUser.objects.get(user_id=bundle.request.user.id)
-            bundle.data['online_id'] = bundle.data['id']
-            bundle.data['vehicle_name_en'] = bundle.data['vehicle_name']
-            bundle.data['vehicle_name'] =""
-            for d in bundle.data['vehicles']:
-                if d.data['language']['notation'] == user.preferred_language.notation:
-                    bundle.data['vehicle_name'] = d.data['vehicle_name']
-                    break
-                else:
-                    bundle.data['vehicle_name']=""
-            del bundle.data['vehicles']
-            return bundle            
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+
+
+class VehicleLanguageResource(BaseResource):
+    language = fields.ForeignKey(LanguageResource,'language')
+    vehicle = fields.ForeignKey(VehicleResource,'vehicle')
+    
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = VehicleLanguage.objects.all()
+        allowed_methods = ['post', 'get','put']
+        resource_name = 'vehiclelanguage'
+        authorization = VehicleLanguageAuthorization('id__in')
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+    dehydrate_language = partial(
+        foreign_key_to_id, field_name='language', sub_field_names=['id','notation'])
+    dehydrate_vehicle = partial(foreign_key_to_id,field_name='vehicle',sub_field_names=['id'])
+    hydrate_vehicle= partial(dict_to_foreign_uri, field_name='vehicle')
+    def obj_create(self,bundle,request=None,**kwargs):
+        import pdb;pdb.set_trace()
+        preferred_language = AdminUser.objects.get(user_id=bundle.request.user.id).preferred_language.id
+        bundle.data['language'] = "/loop/api/v1/language/%s/" % preferred_language
+        attempt = VehicleLanguage.objects.filter(vehicle_id=bundle.data['vehicle']['online_id'],language=preferred_language)
+        if attempt.count() < 1:
+            bundle = super(VehicleLanguageResource, self).obj_create(
+                bundle, **kwargs)
         else:
-            user = LoopUser.objects.get(user_id=bundle.request.user)
-            bundle.data['online_id'] = bundle.data['id']
-            bundle.data['vehicle_name_en'] = bundle.data['vehicle_name']
-            for d in bundle.data['vehicles']:
-                if d.data['language']['notation'] == user.preferred_language.notation:
-                    bundle.data['vehicle_name'] = d.data['vehicle_name']
-                    break
-            del bundle.data['vehicles']
-            return bundle
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+    def obj_update(self, bundle, request=None, **kwargs):
+        user = AdminUser.objects.get(user_id=bundle.request.user.id)
+        preferred_language = user.preferred_language.id
+        bundle.data['language'] = "/loop/api/v1/language/%s/" % preferred_language
+        try:
+            bundle = super(VehicleLanguageResource, self).obj_update(bundle, **kwargs)
+            # cropLanguage = CropLanguage.objects.filter(language=language,crop_id=bundle.data['online_id'])
+            # if cropLanguage.count()<1:
+            #     CropLanguage(language=language,crop_id=bundle.data['online_id'],crop_name=crop_name_reg).save()
+            # else:
+            #     cropLanguage[0].crop_name = crop_name_reg
+            #     cropLanguage[0].save()
+        except Exception, e:
+            attempt = VehicleLanguage.objects.filter(vehicle_id=bundle.data['vehicle']['online_id'],language=preferred_language)
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def dehydrate(self,bundle):
+        bundle.data['online_id']=bundle.data['id']
+        return bundle
 
 
 class TransporterResource(BaseResource):
