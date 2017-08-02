@@ -390,7 +390,7 @@ export const chartsConfig = {
       enabled: false
     },
     plotOptions: {
-      column: {
+      columnrange: {
         grouping: false,
         borderWidth: 0,
         dataLabels: {

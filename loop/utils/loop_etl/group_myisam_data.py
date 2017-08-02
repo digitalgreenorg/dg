@@ -74,6 +74,27 @@ def query_myisam(country_id, from_date=None, to_date=None):
     df_result = pd.read_sql(query, con=mysql_cn)
     return df_result
 
+def crop_prices_query(country_id, from_date=None, to_date=None):
+    database = DATABASES['default']['NAME']
+    username = DATABASES['default']['USER']
+    password = DATABASES['default']['PASSWORD']
+    host = DATABASES['default']['HOST']
+    port = DATABASES['default']['PORT']
+    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
+
+    query = '''
+                SELECT crop_id, crop_name, mandi_id, mandi_name_en mandi_name, min(price) Min_price, max(price) Max_price
+                FROM loop_combinedtransaction lct
+		        JOIN loop_crop lcr ON lcr.id= lct.crop_id and date between 20170101 and 20170201
+		        JOIN loop_mandi lm ON lm.id = lct.mandi_id
+                GROUP BY crop_id, mandi_id;
+            '''
+    # if from_date:
+    #     query = query + " and date between " + str(from_date) + " and " + str(to_date)
+
+    df_result = pd.read_sql(query, con=mysql_cn)
+    return df_result
+
 def get_data_from_myisam(get_total, country_id):
     df_result = query_myisam(country_id)
 
@@ -312,8 +333,36 @@ def crop_farmer_count(country_id, start_date, end_date):
     print aggregator_groupby_data.head()
     return visitData(aggregator_groupby_data, 'cropfarmercount', 'crop_name', '',  'farmer_id', False)
 
+def crop_prices(country_id, start_date, end_date):
+    df_result = crop_prices_query(country_id, start_date, end_date)
+    final_data_list = {}
+    df_result.columns.values
+    crop_groupby_data = df_result.groupby(['crop_id', 'crop_name']).agg({'Min_price':'min', 'Max_price':'max'}).reset_index()
+    try:
+        outer_data = {'outerData':{'series':[], 'categories':crop_groupby_data['crop_name'].tolist()}}
+        temp_dict_outer = {'name':'Crop price','data':[]}
 
-def visitData(groupby_result, graphname, outer_param, inner_param, count_param, isdrillDown) :
+        for index, row in crop_groupby_data.iterrows():
+            temp_dict_outer['data'].append({'name':row['crop_name'],'high':int(row['Max_price']), 'low':int(row['Min_price']),'drilldown':row['crop_name'] + ' Count'})
+
+        outer_data['outerData']['series'].append(temp_dict_outer)
+        final_data_list['cropprices'] = outer_data
+        # DrillDown
+        inner_data = {'innerData': []}
+        crop_mandi_groupby_data = df_result.groupby(['crop_id', 'crop_name'])
+        for index, row in crop_mandi_groupby_data:
+            temp_dict_inner = {'data': []}
+            temp_dict_inner['id'] = index[1] + ' Count'
+            for k, v in row.iterrows():
+                temp_dict_inner['data'].append({'name':v['mandi_name'], 'high':v['Max_price'], 'low':v['Min_price']})
+            inner_data['innerData'].append(temp_dict_inner)
+        final_data_list['cropprices'].update(inner_data)    
+
+    except:
+        final_data_list["error"] = "No data found"
+    return final_data_list
+
+def visitData(groupby_result, graphname, outer_param, inner_param, count_param, isdrillDown):
     final_data_list = {}
     try:
         outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
@@ -334,7 +383,6 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
 
     except:
         final_data_list["error"] = "No Data Found"
-    
     return final_data_list
 
 def volumedata(df_result, groupby_result, graphname, outer_param, inner_param, isdrillDown):
@@ -370,6 +418,7 @@ def createInnerdataDict(dictData, keyword):
         temp_dict_inner['name'] = key
         temp_dict_inner['id'] = key + keyword
         for k, v in value.iteritems():
+            print k, v
             temp_dict_inner['data'].append([k,v])
         inner_data['innerData'].append(temp_dict_inner)
     

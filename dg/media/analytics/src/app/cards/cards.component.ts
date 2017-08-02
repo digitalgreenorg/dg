@@ -91,7 +91,8 @@ export class CardsComponent implements OnInit, AfterViewInit {
               apply_filter: false,
             }
         }
-        this.getData(options);
+        // Uncomment for filter Request
+        // this.getData(options);
         
     }
 

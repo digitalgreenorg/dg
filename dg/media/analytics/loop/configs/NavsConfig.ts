@@ -21,15 +21,15 @@ export const navsConfig = {
         'Aggregators': {
           'active': true,
           'containers': {
-            // 'container1': {
-            //   'addTab':true,
-            //   'Volume': {
-            //     'addDivs': ['aggrvol']
-            //   },
-            //   'Visits': {
-            //     'addDivs': ['aggrvisit']
-            //   }
-            // },
+            'container1': {
+              'addTab':true,
+              'Volume': {
+                'addDivs': ['aggrvol']
+              },
+              'Visits': {
+                'addDivs': ['aggrvisit']
+              }
+            },
             'container2': {
               'addTab':true,
               'SPK/CPK': {
@@ -77,9 +77,6 @@ export const navsConfig = {
               'Volume': {
                 'addDivs': ['cropvolume']
               },
-              'Amount': {
-                'addDivs': ['cropamount']
-              }
             },
             'container2': {
               'Crop Prices': {

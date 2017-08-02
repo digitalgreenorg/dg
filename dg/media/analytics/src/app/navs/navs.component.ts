@@ -170,6 +170,7 @@ export class NavsComponent implements OnInit {
                     chart.chart.drilldown.series.push(drilldownEntry);
                   });
                 }
+                console.log(chart)
               }
               else {
                 this.clearSeriesFromGraph(chart);
