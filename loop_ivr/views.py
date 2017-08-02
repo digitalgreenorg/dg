@@ -21,11 +21,29 @@ def crop_price_query(request):
     # Serve only Get request
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        # Check if request contain some input combination.
         try:
             query_code = str(request.GET.get('digits')).strip('"')
-            price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
+        except Exception as e:
+            query_code = ''
+        # Check if its retry or first time request.
+        try:
+            # Search if this request generated in second try.
+            price_info_incoming_obj = PriceInfoIncoming.objects.filter(call_id=call_id,from_number=farmer_number,
+                                        to_number=dg_number, incoming_time=incoming_time)
+            # If it is second try, then take this object else create new object.
+            if len(price_info_incoming_obj) > 0:
+                price_info_incoming_obj = price_info_incoming_obj[0]
+            else:
+                price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
                                         to_number=dg_number, incoming_time=incoming_time, query_code=query_code)
-            price_info_incoming_obj.save()
+                price_info_incoming_obj.save()
+            # If this request has no query code then save object as No input.
+            if query_code == '':
+                price_info_incoming_obj.query_code = query_code
+                price_info_incoming_obj.info_status = 3
+                price_info_incoming_obj.save()
+                return HttpResponse(status=200)
         except Exception as e:
             module = 'crop_info'
             log = "Call Id: %s Error: %s"%(str(call_id),str(e))
