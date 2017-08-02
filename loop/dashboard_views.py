@@ -179,6 +179,8 @@ def graph_data(request):
         result = crop_volume(country_id, start_date, end_date)
     elif chart_name == 'cropfarmercount':
         result = crop_farmer_count(country_id, start_date, end_date)
+    elif chart_name == 'cropprices':
+        result = crop_prices(country_id, start_date, end_date)
     else:
         result = {"result":"success"}
     return JsonResponse(result)
