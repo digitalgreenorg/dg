@@ -46,11 +46,13 @@ def sql_query(country_id, from_date=None, to_date=None):
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
-    query = '''SELECT lct.id id, date, crop_id, crop_name, mandi_id, mandi_name_en mandi_name, quantity, farmer_id, name farmer_name
+    query = '''SELECT lct.user_created_id aggregator_id, lu.name_en aggregator_name, date, crop_id, crop_name, mandi_id,
+				mandi_name_en mandi_name, quantity, farmer_id, lf.name farmer_name
                 FROM loop_combinedtransaction lct 
                 JOIN loop_mandi lm ON lm.id = lct.mandi_id 
                 JOIN loop_crop lcrp ON lcrp.id = lct.crop_id
                 JOIN loop_farmer lf ON lf.id = lct.farmer_id
+                JOIN loop_loopuser lu ON lu.user_id = lct.user_created_id
             '''
 
     if from_date:
@@ -330,7 +332,6 @@ def crop_farmer_count(country_id, start_date, end_date):
     df_result = sql_query(country_id, start_date, end_date)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['crop_id', 'crop_name'])['farmer_id'].nunique().to_frame().reset_index()
-    print aggregator_groupby_data.head()
     return visitData(aggregator_groupby_data, 'cropfarmercount', 'crop_name', '',  'farmer_id', False)
 
 def crop_prices(country_id, start_date, end_date):
@@ -360,6 +361,37 @@ def crop_prices(country_id, start_date, end_date):
 
     except:
         final_data_list["error"] = "No data found"
+    return final_data_list
+
+def agg_farmer_count(country_id, start_date, end_date):
+    df_result = sql_query(country_id, start_date, end_date)
+    final_data_list = {}
+    aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name', 'farmer_id', 'farmer_name']).agg({'date':pd.Series.nunique}).reset_index()
+    aggregator_farmer_count = aggregator_groupby_data.groupby(['aggregator_id', 'aggregator_name']).agg({'date':'count'}).reset_index()
+    try:
+        outer_data = {'outerData': {'series':[], 'categories':aggregator_farmer_count['aggregator_name'].tolist()}}
+        temp_dict_outer = {'name': 'Total farmer Count', 'data':[]}
+
+        for index, row in aggregator_farmer_count.iterrows():
+            temp_dict_outer['data'].append({'name':row['aggregator_name'], 'y':int(row['date']), 'drilldown':row['aggregator_name'] + ' Count'})
+        outer_data['outerData']['series'].append(temp_dict_outer)
+
+        temp_dict_outer = {'name':'Repeated Farmer Count', 'data':[]}
+        repeat_farmer_count = aggregator_groupby_data[aggregator_groupby_data['date']>1].groupby(['aggregator_id', 'aggregator_name']).agg({'date':'count'}).reset_index()
+        # print repeat_farmer_count.head()
+        for index, row in repeat_farmer_count.iterrows():
+            temp_dict_outer['data'].append({'name':row['aggregator_name'], 'y':int(row['date']), 'drilldown':row['aggregator_name'] + ' Repeat'})
+        outer_data['outerData']['series'].append(temp_dict_outer)
+
+        final_data_list['aggrfarmercount'] = outer_data
+
+        # DrillDown data
+        
+
+        
+    except:
+        final_data_list["error"] = "No data Found"
+
     return final_data_list
 
 def visitData(groupby_result, graphname, outer_param, inner_param, count_param, isdrillDown):
@@ -418,7 +450,6 @@ def createInnerdataDict(dictData, keyword):
         temp_dict_inner['name'] = key
         temp_dict_inner['id'] = key + keyword
         for k, v in value.iteritems():
-            print k, v
             temp_dict_inner['data'].append([k,v])
         inner_data['innerData'].append(temp_dict_inner)
     

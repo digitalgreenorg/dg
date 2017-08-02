@@ -185,6 +185,8 @@ def graph_data(request):
         result = agg_spk_cpk(country_id, start_date, end_date)
     elif chart_name == 'aggrrecoveredtotal':
         result = agg_cost(country_id, start_date, end_date)
+    elif chart_name == 'aggrfarmercount':
+        result = agg_farmer_count(country_id, start_date, end_date)
     else:
         result = {"result":"success"}
     return JsonResponse(result)
