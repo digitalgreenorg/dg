@@ -37,7 +37,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     return data_by_grouped_days
 
 
-def get_data_from_myisam(get_total, country_id):
+def get_data_from_myisam(get_total, country_id, state_id):
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -45,7 +45,13 @@ def get_data_from_myisam(get_total, country_id):
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
-    df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id), con=mysql_cn)
+    print "get data from myisam: state id", state_id, type(state_id)
+
+    if(int(state_id) < 0):
+        #only country filter
+        df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id), con=mysql_cn)
+    elif(int(state_id) > 0):
+        df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id) + " AND state_id = " + str(state_id), con=mysql_cn)
     aggregations = {
         'quantity':{
             'quantity__sum':'sum'
@@ -83,10 +89,16 @@ def get_data_from_myisam(get_total, country_id):
     cumm_vol_farmer = {}
     if get_total == 0:
         #df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
-        df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('date','farmer_id').order_by('date')))
-        df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
+        if(int(state_id) < 0):
+            df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('date','farmer_id').order_by('date')))
+        elif(int(state_id) > 0):
+            df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state=state_id).values('date','farmer_id').order_by('date')))
 
         dictionary = {}
+
+        print "data from myisam", df_farmers
+        
+        df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
         days = ['7','15','30','60']
         for day in days:
             data_by_grouped_days = get_grouped_data(df_result_aggregate,day,df_farmers)

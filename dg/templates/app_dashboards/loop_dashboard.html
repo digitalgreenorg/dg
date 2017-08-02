@@ -32,11 +32,20 @@
             </select>
          </div>
          <div id="country" class="col s2 initialized" style="float:right;">
-            <select id='countryId' onchange='change_country(this.value)'>
-              <option value='1' selected>India</option>
-               <option value='2'>Bangladesh</option>
+            <select id='countryId'  onchange='change_state(this.value)'>
+               <optgroup label="India">
+                  <option value='-1' selected>India - All States</option>
+                  <option value='1'>Bihar</option>
+                  <option value='7'>Maharashtra</option>
+               </optgroup>
+               <optgroup label="Bangladesh">
+                  <option value='-2'>Bangladesh - All States</option>
+               </optgroup>
             </select>
          </div>
+      </div>   
+      </div>
+      </div>
          <ul class="side-nav" id="page-navigation">
             <li><a onclick="hide_nav()">Home</a></li>
             <li><a onclick="show_nav('analytics')">Analytics</a></li>
