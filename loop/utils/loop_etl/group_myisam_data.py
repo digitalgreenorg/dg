@@ -297,12 +297,12 @@ def aggregator_volume(country_id, start_date, end_date):
     aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['quantity'].sum().reset_index()
 
     return volumedata(df_result, aggregator_groupby_data, 'aggrvol', 'aggregator_name', 'mandi_name', True)
-    
+
 def aggregator_visits(country_id, start_date, end_date):
     df_result = query_myisam(country_id, start_date, end_date)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['aggregator_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
-    
+
     return visitData(aggregator_groupby_data, 'aggrvisit', 'aggregator_name', 'mandi_name', 'date', True)
 
 
@@ -317,7 +317,7 @@ def mandi_visits(country_id, start_date, end_date):
     df_result = query_myisam(country_id, start_date, end_date)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['mandi_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
-    
+
     return visitData(aggregator_groupby_data, 'mandivisit', 'mandi_name', 'aggregator_name', 'date', True)
 
 
@@ -357,7 +357,7 @@ def crop_prices(country_id, start_date, end_date):
             for k, v in row.iterrows():
                 temp_dict_inner['data'].append({'name':v['mandi_name'], 'high':v['Max_price'], 'low':v['Min_price']})
             inner_data['innerData'].append(temp_dict_inner)
-        final_data_list['cropprices'].update(inner_data)    
+        final_data_list['cropprices'].update(inner_data)
 
     except:
         final_data_list["error"] = "No data found"
@@ -401,10 +401,10 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
         temp_dict_outer = {'name':'Aggregator Visit','data':[]}
 
         aggregator_visit_data = groupby_result.groupby(outer_param)[count_param].sum().reset_index()
-        
+
         for index, row in aggregator_visit_data.iterrows():
             temp_dict_outer['data'].append({'name':row[outer_param],'y':int(row[count_param]),'drilldown':row[outer_param] + ' Count'})
-        
+
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
         if(isdrillDown):
@@ -426,7 +426,7 @@ def volumedata(df_result, groupby_result, graphname, outer_param, inner_param, i
 
         for index, row in groupby_result.iterrows():
             temp_dict_outer['data'].append({'name':row[1],'y':int(row[2]),'drilldown':row[1] + ' Volume'})
-        
+
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
         if(isdrillDown):
@@ -438,7 +438,7 @@ def volumedata(df_result, groupby_result, graphname, outer_param, inner_param, i
 
     except:
         final_data_list["error"] = "No Data Found"
-    
+
     return final_data_list
 
 
@@ -450,9 +450,9 @@ def createInnerdataDict(dictData, keyword):
         temp_dict_inner['name'] = key
         temp_dict_inner['id'] = key + keyword
         for k, v in value.iteritems():
-            temp_dict_inner['data'].append([k,v])
+            temp_dict_inner['data'].append([k,round(v,2)])
         inner_data['innerData'].append(temp_dict_inner)
-    
+
     return inner_data
 
 def agg_spk_cpk(country_id, start_date, end_date):
@@ -554,3 +554,61 @@ def agg_cost(country_id, start_date, end_date):
     final_data_list['aggrrecoveredtotal'].update(inner_data)
 
     return final_data_list
+
+def cost_recovered_data(df_result, groupby_result, df_result_mandi, graphname, outer_param, inner_param, isdrillDown, drillDownparam1, drillDownparam2):
+    final_data_list = {}
+    outer_data = {'outerData': {'series':[],'categories':groupby_result[outer_param].tolist()}}
+    temp_dict_outer = {'name':'cost','data':[]}
+    for index, row in groupby_result.iterrows():
+        temp_dict_outer['data'].append({'name':row[1],'y':round(row[8],3),'drilldown':row[1]+' cost'})
+    outer_data['outerData']['series'].append(temp_dict_outer)
+
+    temp_dict_outer = {'name':'recovered','data':[]}
+    for index, row in groupby_result.iterrows():
+        temp_dict_outer['data'].append({'name':row[1],'y':round(row[9],3),'drilldown':row[1]+' recovered'})
+    outer_data['outerData']['series'].append(temp_dict_outer)
+
+    inner_data = {'innerData':[]}
+    final_data_list[graphname] = outer_data
+
+    agg_mandi_cpk_dict = {name: dict(zip(g[inner_param],g[drillDownparam1])) for name,g in df_result_mandi.groupby([outer_param])}
+    agg_mandi_spk_dict = {name: dict(zip(g[inner_param],g[drillDownparam2])) for name,g in df_result_mandi.groupby([outer_param])}
+
+    #Adding all drilldown points to inner Data list
+    inner_data['innerData'].extend(createInnerdataDict(agg_mandi_cpk_dict, ' cost')['innerData'])
+    inner_data['innerData'].extend(createInnerdataDict(agg_mandi_spk_dict, ' recovered')['innerData'])
+
+    final_data_list[graphname].update(inner_data)
+
+    return final_data_list
+
+
+def mandi_cost(country_id, start_date, end_date):
+    df_result = query_myisam(country_id, start_date, end_date)
+    df_result = df_result.groupby(['date','aggregator_id','mandi_id','aggregator_name','mandi_name']).agg(cpk_spk_aggregation).reset_index()
+    df_result.columns = df_result.columns.droplevel(1)
+
+    df_result_agg = df_result.groupby(['mandi_id','mandi_name']).sum().reset_index()
+    df_result_agg['cost'] = df_result_agg['aggregator_incentive'] + df_result_agg['transportation_cost']
+    df_result_agg['recovered'] = df_result_agg['farmer_share'] + df_result_agg['gaddidar_share']
+
+    df_result_mandi = df_result.groupby(['aggregator_id','mandi_id','aggregator_name','mandi_name']).sum().reset_index()
+    df_result_mandi['cost'] = df_result_mandi['aggregator_incentive'] + df_result_mandi['transportation_cost']
+    df_result_mandi['recovered'] = df_result_mandi['farmer_share'] + df_result_mandi['gaddidar_share']
+
+    return cost_recovered_data(df_result, df_result_agg, df_result_mandi, 'mandirecoveredtotal', 'mandi_name', 'aggregator_name', True, 'cost', 'recovered')
+
+def mandi_spk_cpk(country_id, start_date, end_date):
+    df_result = query_myisam(country_id, start_date, end_date)
+    df_result = df_result.groupby(['date','aggregator_id','mandi_id','aggregator_name','mandi_name']).agg(cpk_spk_aggregation).reset_index()
+    df_result.columns = df_result.columns.droplevel(1)
+
+    df_result_agg = df_result.groupby(['mandi_id','mandi_name']).sum().reset_index()
+    df_result_agg['cpk'] = (df_result_agg['aggregator_incentive'] + df_result_agg['transportation_cost'])/df_result_agg['quantity']
+    df_result_agg['spk'] = (df_result_agg['farmer_share'] + df_result_agg['gaddidar_share'])/df_result_agg['quantity']
+
+    df_result_mandi = df_result.groupby(['aggregator_id','mandi_id','aggregator_name','mandi_name']).sum().reset_index()
+    df_result_mandi['cpk'] = (df_result_mandi['aggregator_incentive'] + df_result_mandi['transportation_cost'])/df_result_mandi['quantity']
+    df_result_mandi['spk'] = (df_result_mandi['farmer_share'] + df_result_mandi['gaddidar_share'])/df_result_mandi['quantity']
+
+    return cost_recovered_data(df_result, df_result_agg, df_result_mandi, 'mandispkcpk', 'mandi_name', 'aggregator_name', True, 'cpk','spk')

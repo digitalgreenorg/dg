@@ -103,13 +103,13 @@ def get_cluster_related_data(filter_args) :
         'tagName':'Cost per Kg',
         'value':-cpk
     })
-    
+
     data.append({
         'placeHolder':'cardGraphs',
         'tagName':'Sustainability',
         'value':spk
     })
- 
+
     return data
 
 def get_card_graph_data(request):
@@ -119,7 +119,7 @@ def get_card_graph_data(request):
 
     if filter_args['cardName'] in ['No_of_clusters_overall']:
         data_to_send = get_cluster_related_data(filter_args)
-    
+
     if filter_args['cardName'] in ['active_cluster']:
         data_to_send = recent_graphs_data(filter_args)
 
@@ -187,6 +187,10 @@ def graph_data(request):
         result = agg_cost(country_id, start_date, end_date)
     elif chart_name == 'aggrfarmercount':
         result = agg_farmer_count(country_id, start_date, end_date)
+    elif chart_name == 'mandispkcpk':
+        result = mandi_spk_cpk(country_id, start_date, end_date)
+    elif chart_name == 'mandirecoveredtotal':
+        result = mandi_cost(country_id, start_date, end_date)
     else:
         result = {"result":"success"}
     return JsonResponse(result)
