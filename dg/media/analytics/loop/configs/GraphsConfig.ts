@@ -110,7 +110,7 @@ export const chartsConfig = {
     },
     credits: { enabled: false },
     title: { text: '' },
-    xAxis: { type: 'category' },
+    xAxis: { type: 'category', max: 5 },
     yAxis: {
       // tickInterval: 10,
       title: { text: 'Volume' }
@@ -417,15 +417,16 @@ export const chartsConfig = {
         'id': 'tab1',
         'class': 'col-sm-12'
       },
-      drillDown: true
+      drillDown: true,
+      inverted: true
     },
     credits: { enabled: false },
     title: { text: '' },
-    xAxis: { type: 'category' },
-    yAxis: {
-      tickInterval: 10,
-      title: { text: 'Volume' }
+    xAxis: {
+      type: 'category',
+      max: 5
     },
+    scrollbar: { enabled: true },
     legend: { enabled: false },
     plotOptions: {
       column: {
