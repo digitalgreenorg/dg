@@ -8,7 +8,7 @@ from api import FarmerResource, VillageResource, LoopUserResource, CropResource,
 
 from loop.views import *
 
-from loop_data_log import send_updated_log
+from loop.utils.send_log.loop_data_log import send_updated_log
 
 api = Api(api_name = "v1")
 api.register(VillageResource())
@@ -37,7 +37,7 @@ urlpatterns = patterns('',
     url(r'^api/', include(api.urls)),
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
-    url(r'^dashboard/', dashboard),
+    url(r'^dashboard/$', dashboard),
     url(r'^get_payment_sheet/', download_data_workbook, name="download-data-workbook"),
     url(r'^filter_data/', filter_data),
     url(r'^total_static_data/',total_static_data),
@@ -45,9 +45,13 @@ urlpatterns = patterns('',
     url(r'^data_for_drilldown_graphs/',data_for_drilldown_graphs),
     url(r'^data_for_line_graph/',data_for_line_graph),
     url(r'^payments/',payments),
+    url(r'^dashboard/payment/',dashboard_payments),
     url(r'^farmer_payment_update/',farmer_payments),
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^helpline_incoming/',helpline_incoming),
     url(r'^helpline_call_response/',helpline_call_response),
     url(r'^helpline_offline/',helpline_offline),
+    url(r'^broadcast/',broadcast),
+    url(r'^broadcast_call_response/',broadcast_call_response),
+    url(r'^broadcast_audio_request/',broadcast_audio_request),
     )

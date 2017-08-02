@@ -1,0 +1,1 @@
+[{"fields": {"worker_type": "ANM"}, "model": "activities.frontlineworkerpresent", "pk": 1}, {"fields": {"worker_type": "ASHA"}, "model": "activities.frontlineworkerpresent", "pk": 2}, {"fields": {"worker_type": "AWW"}, "model": "activities.frontlineworkerpresent", "pk": 3}, {"fields": {"worker_type": "Not Present"}, "model": "activities.frontlineworkerpresent", "pk": 4}]

@@ -199,26 +199,23 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
                                     cell_value_from_headers.get('formula_list'),
                                     row_format)
 
-            
     except Exception as e:
         print e
     return workbook
 
 
 def prepare_value_data_generic(data):
-    data = json.loads(data)
+    if isinstance(data,str):
+        data = json.loads(data)
     combined_data = []
     combined_header = {}
     name_of_sheets = []
     heading_of_sheets = []
-
     combined_header = data.get('header')
-
     data_dict = data.get('data')
     cell_format = data.get('cell_format')
     sheet_header = data.get('sheet_header')
     sheet_footer = data.get('sheet_footer')
-    print data_dict
 
     for sheet_index, sheet in enumerate(data_dict.keys()):
         sheet_data = data_dict.get(sheet).get('data')
@@ -238,19 +235,3 @@ def prepare_value_data_generic(data):
                         'sheet_header': sheet_header, 'sheet_footer': sheet_footer}
 
     return combined_dict
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

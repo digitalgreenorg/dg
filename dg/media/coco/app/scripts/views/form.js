@@ -26,7 +26,7 @@ define([
         events: {
             'click #button2': 'button2_clicked',
             // used in inline form
-            'click #add_rows': 'append_new_inlines'
+            'click #add_rows': 'append_new_inlines',
         },
         template: '#form_template',
         options_inner_template: _.template($('#options_template')
@@ -38,6 +38,7 @@ define([
             // already contains the names of the buttons
             var s_passed = this.options.serialize;
             var language = User.get('language');
+            this.type_of_cocouser = User.get('type_of_cocouser');
             this.entity_config = all_configs[this.entity_name];
             // HTML for form 
             //s_passed["form_template"] = this.form_template;
@@ -76,6 +77,8 @@ define([
 //         Reads entity_config and sets basic properties on view object for easy access
         read_form_config: function(params) {
             var language = User.get("language");
+            var cocousertype = User.get('type_of_cocouser')
+            this.cocousertype = cocousertype
             this.entity_name = params.entity_name;
             this.entity_config = all_configs[this.entity_name];
             //default locations - 
@@ -83,6 +86,9 @@ define([
             this.inline = this.entity_config.inline;
             this.bulk = this.entity_config.bulk;
             this.labels = this.entity_config['labels_'+language]
+            this.health_variable = all_configs.misc.variable_dict[Object.keys(all_configs.misc.variable_dict)[1]]
+            this.agg_variable = all_configs.misc.variable_dict[Object.keys(all_configs.misc.variable_dict)[0]]
+            
             if (this.edit_case) {
                 this.form_template = _.template($('#' + this.entity_config.edit_template_name).html());
                 if (this.entity_config.edit) {
@@ -237,11 +243,37 @@ define([
         render_labels: function(){
             $f_el = this.$("#form_template_render");
             $f_el.append(this.form_template(this.labels));
+            var cocousertype = User.get('type_of_cocouser')
             var partner_name = User.get('partner_name');
             var partner_check = jQuery.inArray(partner_name, all_configs.misc.ethiopia_partners)
             if (partner_check < 0){
                 $f_el.find("#is_modelfarmer").addClass('hidden');
             }
+            // force hiding of upavan field
+            _.each(all_configs.misc.element_to_be_hidden_for_upavan, function(val, key){
+                $f_el.find(val).addClass('hidden')
+            })
+            //  for UPAVAN
+            if (cocousertype == 4){
+                //to change labels
+                _.each(all_configs.misc.label_upavan_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+                // to hide fields
+                _.each(all_configs.misc.upavan_user_fields, function(element, index) {
+                    $f_el.find(element).removeClass('hidden')
+                })
+            }else{
+                _.each(all_configs.misc.upavan_user_fields, function(element, index) {
+                    $f_el.find(element).addClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+                
+            }
+
         },
         
         //fetches all foreign collections and renders them when all are fetched
@@ -267,7 +299,38 @@ define([
             _.each(this.element_entity_map, function(entity, element) {
                 if (!this.foreign_entities[entity][element]["dependency"])
                     this.render_foreign_element(element, this.get_collection_of_element(element).toArray());
+                    if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable| this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == null){
+                        if (cocousertype != 4){
+                            // hide the headers and fields
+                            _.each(this.entity_config.hide_dict, function(key, value) {
+                                $(key).addClass('hidden')
+                                $(value).addClass('hidden')
+                            })
+                            this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                        }
+                     }else if(this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.health_variable){
+                        if (cocousertype != 4){
+                            _.each(this.entity_config.hide_dict, function(key, value) {
+                                $(key).removeClass('hidden')
+                                $(value).removeClass('hidden')
+                            })
+                        }
+
+                     }else if (this.entity_config.entity_name == this.entity_config.field_change_entity_name && this.$el.find('#id_' + this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
+                         if (element == this.entity_config.fetch_element_that_manipulate && $("#id_"+this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
+                            if (this.edit_case && this.foreign_elements_rendered[element]){
+                                this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                                if (cocousertype != 4){
+                                    _.each(this.entity_config.hide_dict, function(key, value) {
+                                        $(key).addClass('hidden')
+                                        $(value).addClass('hidden')
+                                    })
+                                }
+                            } 
+                        }   
+                    }
             }, this);
+
         },
 
         // fetch edit object and render it into form
@@ -287,6 +350,28 @@ define([
                         that.model_json = model.toJSON();
                         // normalise json to put into form
                         that.normalize_json(that.model_json);
+                        // fields to hide
+                        if (that.entity_config.show_health_provider_present != that.model_json.parentcategory){
+                            
+                            that.$el.find("#"+that.entity_config.parent_element_label_to_hide).addClass('hidden');
+                            that.$el.find("#id_"+that.entity_config.parent_element_to_hide).addClass('hidden');
+                        }
+                        // text to select 
+                        if (that.entity_config.text_to_select_display_hack){
+                             // for multiple fields
+                            if (that.entity_config.text_to_select_display_hack_field_array){
+                                _.each(that.entity_config.text_to_select_display_hack_field_array, function(element, index) {
+                                    that.$el.find("#id_" + element + " option[value="+ that.model_json[element]+"]").attr('selected', 'selected')
+                                    $("#id_" + element).change().trigger("chosen:updated");
+                                })
+                            }
+                            // for single fields
+                            if(that.entity_config.text_to_select_display_hack_field_id){
+                                var text_to_select_display_var  = that.model_json[that.entity_config.text_to_select_display_hack_field_id]
+                                that.$el.find("#id_" + that.entity_config.text_to_select_display_hack_field_id + " option[value="+ text_to_select_display_var +"]").attr('selected', 'selected')
+                                $("#id_" + that.entity_config.text_to_select_display_hack_field_id).change().trigger("chosen:updated");
+                            }
+                        }
                         // put into form
                         that.fill_form();
                     })
@@ -316,6 +401,26 @@ define([
             var temp = _.template($('#' + this.inline.header).html());
             $f_el = this.$('#inline_header');
             $f_el.append(temp(this.labels));
+            if (that.cocousertype == 4){
+                // force hiding of upavan field
+                _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                    $f_el.find(key).addClass('hidden')
+                    $f_el.find(val).addClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.inline_upavan_label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+            }else{
+                _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                    $f_el.find(key).removeClass('hidden')
+                    $f_el.find(val).removeClass('hidden')
+                })
+                //to change labels
+                _.each(all_configs.misc.inline_label_dict, function(value, key){
+                    $f_el.find(key).text(value)
+                })
+            }
             //if add case put in empty inlines
             if (!this.edit_case)
                 this.append_new_inlines(this.inline.default_num_rows);
@@ -344,6 +449,7 @@ define([
             }
             //not showing the inlines in case of edit_case_json
         },
+
 
         // fills the inline objects in their templates and puts them into form
         fill_inlines: function(model_array) {
@@ -376,6 +482,18 @@ define([
                 }));
                 this.$('#inline_body').append(tr);
                 // switch validation on/off based on whether the inline is empty or not
+                if (this.cocousertype == 4){
+                    // force hiding of upavan field
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                        this.$('#inline_body').find(key).addClass('hidden')
+                       this.$('#inline_body').find(val).addClass('hidden')
+                    })
+                }else{
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(val, key){
+                        this.$('#inline_body').find(key).removeClass('hidden')
+                        this.$('#inline_body').find(val).removeClass('hidden')
+                    })
+                }
                 tr.on('change', this.switch_validation_for_inlines);
             }
 
@@ -504,14 +622,70 @@ define([
             return $('[name=' + element + ']').val();
         },
 
+        action_after_render_foreign_element: function(parent_element, dep_element){
+            if (this.$el.find('#id_' + parent_element).val() == this.agg_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                if (cocousertype != 4){
+                    _.each(this.entity_config.hide_dict, function(key, value) {
+                        console.log(key, value)
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                }
+
+            }
+            if (this.$el.find('#id_' + parent_element).val() == this.health_variable && $("#id_"+ dep_element).val() == ''|$("#id_"+ dep_element) != "") {
+                if (cocousertype != 4){
+                    _.each(this.entity_config.hide_dict, function(key, value) {
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                }else if(cocousertype == 4){
+                    $("#id_health_provider_present").addClass('hidden')
+                }
+            }
+
+        },
+
+        // check if element value inside array is empty
+        checkArrayElementisnotEmpty: function(arr, that){
+           for(var i=0; i < arr.length; i++){
+               if(that.$el.find(arr[i]).val() === "")   
+                  return false;
+           }
+           return true;
+        },
+
         // render dependent foreign elements - executes when a source element changes
         render_dep_for_elements: function(ev) {
             var source = $(ev.target).attr("name"); //source changed
+            // var arr = this.entity_config.combination_display_field_with_value
+            for (var key in this.entity_config.combination_display_dict) {
+               var combination_display_field = key
+               var arr = this.entity_config.combination_display_dict[key];
+            }
             console.log("FILLING DEP ENTITIES OF -" + source);
             // Iterate over its dependents
             _.each(this.source_dependents_map[source], function(dep_el) {
                 var filtered_models = this.filter_dep_for_element(dep_el);
                 this.render_foreign_element(dep_el, filtered_models);
+                // var arr = this.entity_config.combination_display_field_with_value
+                var combination_field_to_display = combination_display_field
+                if (!jQuery.isEmptyObject(arr) && this.checkArrayElementisnotEmpty(arr, this)){
+                    this.$el.find(combination_field_to_display).prop("disabled", false);
+                    this.$el.find(combination_field_to_display).trigger("chosen:updated");
+                }
+                if (!jQuery.isEmptyObject(arr) && !this.checkArrayElementisnotEmpty(arr, this)){
+                   this.$el.find(combination_field_to_display).prop("disabled", true);
+                   this.$el.find(combination_field_to_display).trigger("chosen:updated");
+                }
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length == 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).addClass('hidden');
+                }
+                if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length != 0){
+                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).removeClass('hidden');
+                }
+                this.action_after_render_foreign_element(this.entity_config.fetch_element_that_manipulate, dep_el)
             }, this);
 
             _.each(this.source_filter_dependent_map[source], function(dep_el) {
@@ -561,29 +735,37 @@ define([
                         return exists;
                     });
                 } else {
+
                     filtered_models = dep_collection.filter(function(model) {
+                        var d = dep_desc;
                         var exists = false;
                         var compare = null;
                         if (typeof model.get(dep_desc.dep_attr) == "object")
                             compare = model.get(dep_desc.dep_attr).id;
                         else
-                            compare = model.get(dep_desc.dep_attr)
-
-                        if (dep_desc.src_attr && dep_desc.src_attr != "id") {
-                            var s_collection = that.get_collection_of_element(source_form_element);
-                            var s_model = s_collection.get(parseInt(source_curr_value[0]));
-                            if (s_model.get(dep_desc.src_attr) instanceof Array) {
-                                //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
-                                $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
-                                    if (compare == src_compare.id)
-                                        exists = true;
-                                });
+                            if (dep_desc.parent_attr){
+                                compare = model.get(dep_desc.parent_attr)[dep_desc.dep_attr];
+                            }else{
+                                compare = model.get(dep_desc.dep_attr)
                             }
-                            return exists;
-                        } else {
-                            if (!($.inArray(String(compare), source_curr_value) == -1))
-                                exists = true;
-                            return exists;
+
+                        if (compare != null) {
+                            if (dep_desc.src_attr && dep_desc.src_attr != "id") {
+                                var s_collection = that.get_collection_of_element(source_form_element);
+                                var s_model = s_collection.get(parseInt(source_curr_value[0]));
+                                if (s_model.get(dep_desc.src_attr) instanceof Array) {
+                                    //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                                    $.each(s_model.get(dep_desc.src_attr), function(index, src_compare) {
+                                        if (compare == src_compare.id)
+                                            exists = true;
+                                    });
+                                }
+                                return exists;
+                            } else {
+                                if (!($.inArray(String(compare), source_curr_value) == -1))
+                                    exists = true;
+                                return exists;
+                            }
                         }
                     });
                 }
@@ -600,6 +782,18 @@ define([
             $.each(model_array, function(index, obj) {
                 //LIMIT: assumed to be an object
                 if (obj.get(filter_attr).id == filter_value) {
+                    filtered.push(obj);
+                }
+            });
+            return filtered;
+        },
+
+        // filter an array from attributes rather than array index itself
+        filter_array_with_specific_parameters: function(array, filter_attr, filter_val) {
+            filtered = [];
+            $.each(array, function(index, obj) {
+                
+                if (obj.attributes[filter_attr] == filter_val) {
                     filtered.push(obj);
                 }
             });
@@ -664,6 +858,8 @@ define([
         // renders a foreign element - dropdown or expanded templates - into the form
         render_foreign_element: function(element, model_array) {
             console.log("FILLING FOREIGN ENTITY - " + element);
+            cocousertype = this.type_of_cocouser;
+            inline_var = this.entity_config.inline_var;
             var that = this;
             this.num_sources[element]--;
             var f_entity_desc = this.foreign_entities[this.element_entity_map[element]][element];
@@ -671,6 +867,10 @@ define([
             //if any defined, filter the model array before putting into dom
             if (f_entity_desc.filter)
                 model_array = this.filter_model_array(model_array, f_entity_desc.filter);
+                if (element == this.entity_config.fetch_element_that_manipulate && (cocousertype != 3 && cocousertype != 4)){
+                   model_array = this.filter_array_with_specific_parameters(model_array, this.entity_config.fetch_key_element, cocousertype); 
+                }
+                
             //for filtering based on dependent fields
             if (f_entity_desc.filter_dependency)
                 for(var i=0; i<f_entity_desc.filter_dependency.length; i ++){
@@ -691,6 +891,7 @@ define([
                     if (f_entity_desc.id_field)
                         id_field = f_entity_desc.id_field;
                     var collection = this.get_collection_of_element(element);
+                    var cat = [];
                     $.each(this.model_json[element], function(index, f_json) {
                         model = collection.get(f_json[id_field]);
                         if (!model)
@@ -700,22 +901,106 @@ define([
                         $.each(f_entity_desc.expanded.extra_fields, function(index, field) {
                             t_json[field] = f_json[field];
                         });
-                        console.log(t_json);
                         $f_el.append(expanded_template(t_json));
+                        if (t_json.category && t_json.category.length >= 1){
+                            _.each(t_json.category, function(iterable, idx){   
+                                if (iterable.id != 'undefined'){
+                                    $f_el.find("."+inline_var + index +  " option[value=" + iterable.id + "]").attr('selected', 'selected');
+                                    // $("."+inline_var+index).trigger("chosen:updated");
+                                }
+                            })
+                        }
                     });
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
+
                 } else {
                     $.each(model_array, function(index, f_model) {
                         var t_json = f_model.toJSON();
                         t_json["index"] = index;
+
                         $f_el.append(expanded_template(t_json));
+                        // Offline.fetch_collection("directbeneficiaries")
+                        //     .done(function(collection) {
+                        //         $.each(collection.models, function (i, item) { 
+                        //             $f_el.find("."+inline_var + index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
+                        //             $("."+inline_var+index).trigger("chosen:updated");
+                        //         })
+                                
+                        //     })
+                        //     .fail(function() {
+                        //         console.log("ERROR: EDIT: Inline collection could not be fetched!");
+                        //     });
+                    
+
                     });
+                    
                 }
+                if (cocousertype == 4){
+                    //hiding dropdown options
+                    _.each(all_configs.misc.menu_options_to_hide, function(value, key){
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    //to change labels
+                    _.each(all_configs.misc.inline_upavan_label_dict, function(value, key){
+                        $(key).text(value)
+                    })
+                    // hiding inline fields
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(value, key){
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                }else{
+                    //hiding dropdown options
+                    _.each(all_configs.misc.menu_options_to_hide, function(value, key){
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
+                    // hiding inline fields
+                    _.each(all_configs.misc.inline_var_to_be_hidden, function(value, key){
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
+                    //to change labels
+                    _.each(all_configs.misc.inline_label_dict, function(value, key){
+                        $(key).text(value)
+                    })
+                }
+
                 this.initiate_form_widgets();
                 $('.inline_table').show();
+
+
+                // if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
+                //     _.each(this.entity_config.headers_to_hide, function(element, index) {
+                //         $(element).addClass('hidden');
+                //     })
+                //     _.each(this.entity_config.fields_to_hide, function(element, index) {
+                //         $(element).addClass('hidden');
+                //     })
+                //     this.$el.find(this.entity_config.remove_attribute_field).removeAttr('required');
+                // }
+
+
             } else {
                 console.log("NOT EXPANDED");
+                if (!this.edit_case && !this.foreign_elements_rendered[element]){
+                    $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
+                        if ($(that.entity_config.reset_element).val() != ''){
+                            $('.search-choice-close').click();
+                            $(that.entity_config.reset_element).trigger("chosen:updated");
+                        }
+                    })
+                }
+                if (this.edit_case && this.foreign_elements_rendered[element]){
+                    $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
+                        $('.search-choice-close').click();
+                        $(that.entity_config.reset_element).trigger("chosen:updated");
+
+                    })
+                }
+
                 $f_el = this.$('#' + f_entity_desc.placeholder);
                 if ($f_el.is('select[multiple]'))
                     $f_el.html('');
@@ -758,8 +1043,16 @@ define([
 
                 //select the options selected in edit model
                 if (this.edit_case && !this.foreign_elements_rendered[element]) {
-                    this.$('form [name=' + element + ']').val(this.model_json[element]).change();
-                    this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    if (element == this.entity_config.fetch_element_that_manipulate && isNaN(this.model_json[element])){
+                        this.$('form [name=' + element + ']').val('2').change().trigger("chosen:updated");
+                        $("#id_"+element+" option:not(:selected)").remove();
+                        this.$('form [name=' + element + ']').find("#id_"+element+" option:not(:selected)").remove();
+                        this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    }else{
+                        this.$('form [name=' + element + ']').val(this.model_json[element]).change();
+                        this.$('form [name=' + element + ']').trigger("chosen:updated");
+                    }
+                    
                     if (this.num_sources[element] <= 0)
                         this.foreign_elements_rendered[element] = true;
                 }
@@ -897,12 +1190,16 @@ define([
 
         },
 
+
         // fetch expandeds from the form as a list of objects
         parse_expanded: function(raw_json) {
             console.log("FORM: fetching expandeds");
             var element = this.expanded;
             var entity = this.element_entity_map[element];
             var desc = this.foreign_entities[entity][element]
+            var fetch_element = this.entity_config.fetch_element
+            var fetch_element_key = this.entity_config.fetch_key_element
+            var child_element = this.entity_config.fetch_child_element
             console.log("FORM:expande desc -" + JSON.stringify(desc));
             var placeholder = desc.expanded.placeholder;
             var all_inlines = $('#' + placeholder + ' tr');
@@ -930,7 +1227,41 @@ define([
     						inl_obj[attr_name] = this.checked;
     				}
                 });
+                // checking category from inline and then converting inlines request ids to actual objects
+                if (inl_obj.category && inl_obj.category.length >= 0){
+                    var category = []
+                    _.each(inl_obj.category, function(idx, iter){ 
+                        Offline.fetch_object(child_element, fetch_element_key, parseInt(idx))
+                            .done(function(model_var) {
+                                category.push({'id': model_var.attributes.id, 'category': model_var.attributes.direct_beneficiaries_category})
+                                inl_obj.category = category;
+                            })
+                            .fail(function() {
+                                // edit object could not be fetched from offline db
+                                //TODO: error handling
+                                console.log("ERROR: EDIT: Edit model could not be fetched!");
+                                alert("ERROR: EDIT:");
+                            });
+                    })
+                
+                    
+                }
                 raw_json[element].push(inl_obj);
+                if (fetch_element != null){
+                   // saving in fetch_element offline table
+                   var category = []
+                   Offline.fetch_object(fetch_element, fetch_element_key, parseInt(inl_obj.person_id))
+                    .done(function(model) {
+                        model.save({'age': inl_obj.age, 'category': inl_obj.category, 'gender': inl_obj.gender});
+                    })
+                    .fail(function() {
+                        // edit object could not be fetched from offline db
+                        //TODO: error handling
+                        console.log("ERROR: EDIT: Edit model could not be fetched!");
+                        alert("ERROR: EDIT: Edit model could not be fetched!");
+                    }); 
+                }
+                
             });
 
             //remove inline attrs from raw_json...let them be inside raw_json.inlines only
@@ -982,6 +1313,7 @@ define([
                     o_json.inlines[index] = $.extend(old_json, inl);
                 }, this);
             }
+
             return o_json;
         },
 
