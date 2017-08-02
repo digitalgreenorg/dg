@@ -62,6 +62,7 @@ def send_info(to_number, content):
 def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag):
     price_info_list = []
     price_info_log_list = []
+    crop_mandi_comb = []
     crop_map = dict()
     mandi_map = dict()
     crop_in_hindi_map = dict()
@@ -82,7 +83,6 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     if not query_result:
         price_info_list.append(agg_sms_no_price_available)
     else:
-        crop_mandi_comb = []
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
         for row in query_result:
             crop, mandi, date, min_price, max_price, mean = row['crop'], row['mandi'], row['date'], int(row['minp']), int(row['maxp']), int(row['mean'])
@@ -105,12 +105,14 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             else:
                 temp_str = ('%s: %s %s\n')%(date.strftime('%d-%m-%Y'),indian_rupee,str(max_price))
             price_info_list.append(temp_str)
-        if not all_crop_flag and not all_mandi_flag:
-            for crop, mandi in itertools.product(crop_list, mandi_list):
-                if (crop,mandi) not in crop_mandi_comb:
-                    price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
-                                crop_id=crop, mandi_id=mandi)
-                    price_info_log_list.append(price_info_log_obj)
+    # Save combination of crop and mandi for which data is not present in query on if query not for all mandi and crops.
+    if not all_crop_flag and not all_mandi_flag:
+        for crop, mandi in itertools.product(crop_list, mandi_list):
+            if (crop,mandi) not in crop_mandi_comb:
+                price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
+                            crop_id=crop, mandi_id=mandi)
+                price_info_log_list.append(price_info_log_obj)
+                if query_result:
                     crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                     mandi_name = mandi_map[mandi].encode("utf-8")
                     temp_str = ('\n%s,%s %s\n')%(crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
