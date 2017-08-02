@@ -6,13 +6,10 @@ from django.db.models import Count, Min, Sum, Avg, Max, F
 import pandas as pd
 from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser
 from loop.utils.loop_etl.group_myisam_data import *
-<<<<<<< HEAD
 import json
 from django.core.serializers.json import DjangoJSONEncoder
 from constants.constants import ROLE_CHOICE_AGGREGATOR
 import math
-=======
->>>>>>> origin/timeseries_loop_analytics
 
 def cpk_spk_timeseries(country_id, start_date, end_date):
     cpk_spk = cpk_spk_ts(country_id, start_date, end_date)
