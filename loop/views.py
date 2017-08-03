@@ -23,7 +23,7 @@ from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, 
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
     HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience
 
-from loop_data_log import get_latest_timestamp
+from utils.send_log.loop_data_log import get_latest_timestamp
 from loop.payment_template import *
 from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME, \
     HELPLINE_LOG_FILE
