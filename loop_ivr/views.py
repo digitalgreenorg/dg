@@ -34,8 +34,8 @@ def crop_price_query(request):
             # If it is second try, then take this object else create new object.
             if len(price_info_incoming_obj) > 0:
                 price_info_incoming_obj = price_info_incoming_obj[0]
-                prev_query_code = price_info_incoming_obj.query_code
-                prev_info_status = price_info_incoming_obj.info_status
+                price_info_incoming_obj.prev_query_code = price_info_incoming_obj.query_code
+                price_info_incoming_obj.prev_info_status = price_info_incoming_obj.info_status
                 price_info_incoming_obj.query_code = query_code
                 # If it is retry then set status to pending and remaining code will change this according to input.
                 price_info_incoming_obj.info_status = 0
