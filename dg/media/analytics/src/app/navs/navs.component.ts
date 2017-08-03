@@ -13,7 +13,7 @@ import { SharedService } from '../shared.service';
 export class NavsComponent implements OnInit {
   //used for collapse button
   public isCollapsed: boolean = false;
-
+  public showOverall: boolean = true;
   //read config files from environment created for each app
   navsConfig = environment.navsConfig;
   chartsConfig = environment.chartsConfig;
@@ -145,8 +145,6 @@ export class NavsComponent implements OnInit {
 
   //get data for graphs from service
   getGraphsData(filters): void {
-    console.log("REached here in service method");
-    console.log(this.containerCharts);
     this.containerCharts.forEach(chart => {
       if (chart.nativeChart && chart.nativeChart.series.length == 0) {
         chart.nativeChart.showLoading();
@@ -252,6 +250,12 @@ export class NavsComponent implements OnInit {
 
   //display respective containers based on clicked nav
   showContent(selectedNav: string): void {
+    if(selectedNav == 'Home') {
+      this.showOverall = true;
+    } else {
+      this.showOverall = false;
+    }
+    console.log(this.containers);
     this.resetDict(this.containers, 'displayContent', false);
     this.resetDict(this.filterGraphs, 'displayContent', false);
     this.containerCharts = [];

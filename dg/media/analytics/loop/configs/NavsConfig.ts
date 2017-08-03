@@ -1,7 +1,7 @@
 export const navsConfig = {
   'navs': {
     'Home': {
-      // 'active': true,
+      'active': true,
       'import': {
         'overall': false,
         'recent': false,
@@ -16,7 +16,7 @@ export const navsConfig = {
       }
     },
     'Analytics': {
-      'active': true,
+      // 'active': true,
       'subNavs': {
         'Aggregators': {
           'active': true,

@@ -25,6 +25,17 @@
   </div>
 </div>
 <br>
+
+<!--Show Overall and Recent Cards-->
+<div  *ngIf="showOverall" class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <app-cards></app-cards>
+    </div>
+  </div>
+  <br><br>
+</div>
+
 <div *ngFor="let container of getDictKeys(containers);">
   <div class="row justify-content-center" *ngIf="containers[container].displayContent">
     <div id="container" class="container-box col-sm-11" *ngFor="let option of getDictKeys(containers[container]['containers']);">
