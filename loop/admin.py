@@ -190,6 +190,12 @@ class LogAdmin(admin.ModelAdmin):
     list_filter = ['entry_table', 'action']
     list_display_link = None
 
+class AdminLogAdmin(admin.ModelAdmin):
+    actions = None
+    list_display = ('id', 'timestamp', 'entry_table','model_id','action','district','admin_user','user')
+    list_filter = ['entry_table', 'action']
+    list_display_link = None
+
 class LogDeletedAdmin(admin.ModelAdmin):
     actions = None
     list_display_link = None
@@ -212,8 +218,6 @@ loop_admin.register(District)
 loop_admin.register(State)
 loop_admin.register(Country)
 loop_admin.register(AdminUser,AdminUserAdmin)
-# loop_admin.register(LoopUserAssignedMandi, LoopUserAssignedMandiAdmin)
-# loop_admin.register(LoopUserAssignedVillage, LoopUserAssignedVillageAdmin)
 loop_admin.register(LoopUser, LoopUserAdmin)
 loop_admin.register(Crop,CropAdmin)
 loop_admin.register(Farmer, FarmerAdmin)
@@ -238,6 +242,7 @@ loop_admin.register(HelplineOutgoing,HelplineOutgoingAdmin)
 loop_admin.register(HelplineCallLog,HelplineCallLogAdmin)
 loop_admin.register(HelplineSmsLog,HelplineSmsLogAdmin)
 loop_admin.register(Log,LogAdmin)
+loop_admin.register(AdminLog,AdminLogAdmin)
 loop_admin.register(LogDeleted, LogDeletedAdmin)
 loop_admin.register(Broadcast,BroadcastAdmin)
 loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)

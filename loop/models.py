@@ -181,6 +181,7 @@ class LoopUserAssignedMandi(LoopModel):
 
 post_save.connect(save_log, sender=LoopUserAssignedMandi)
 pre_delete.connect(save_log, sender=LoopUserAssignedMandi)
+post_save.connect(save_admin_log, sender=LoopUserAssignedMandi)
 
 
 class LoopUserAssignedVillage(LoopModel):
@@ -191,6 +192,7 @@ class LoopUserAssignedVillage(LoopModel):
 
 post_save.connect(save_log, sender=LoopUserAssignedVillage)
 pre_delete.connect(save_log, sender=LoopUserAssignedVillage)
+post_save.connect(save_admin_log, sender=LoopUserAssignedVillage)
 
 
 
@@ -239,7 +241,7 @@ class AdminAssignedDistrict(LoopModel):
 
 
 
-#post_save.connect(save_log, sender=AdminAssignedDistrict)
+post_save.connect(save_admin_log, sender=AdminAssignedDistrict)
 #pre_delete.connect(delete_log, sender=AdminAssignedDistrict)
 
 class Gaddidar(LoopModel):
