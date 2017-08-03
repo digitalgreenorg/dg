@@ -362,46 +362,47 @@ def crop_prices(country_id, start_date, end_date):
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
-
+def mandi_farmer_count(country_id, start_date, end_date):
+    final_data_list = repeat_farmer_count(country_id, start_date, end_date, 'mandi_id', 'mandi_name', 'mandifarmercount')
+    return final_data_list
 def agg_farmer_count(country_id, start_date, end_date):
+    final_data_list = repeat_farmer_count(country_id, start_date, end_date, 'aggregator_id', 'aggregator_name', 'aggrfarmercount')
+    return final_data_list
+def repeat_farmer_count(country_id, start_date, end_date, outer_param1, outer_param2, graphname):
     df_result = sql_query(country_id, start_date, end_date)
     final_data_list = {}
-    aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name', 'farmer_id', 'farmer_name']).agg({'date':pd.Series.nunique}).reset_index()
+    aggregator_groupby_data = df_result.groupby([outer_param1, outer_param2, 'farmer_id', 'farmer_name']).agg({'date':pd.Series.nunique}).rename(columns={'date': 'repeat_count'}).reset_index()
 
-    # print aggregator_groupby_data
-    aggregator_farmer_count = aggregator_groupby_data.groupby(['aggregator_id', 'aggregator_name']).agg({'date':'count'}).reset_index()
+    aggregator_farmer_count = aggregator_groupby_data.groupby([outer_param1, outer_param2]).agg({'repeat_count':'count'}).rename(columns={'repeat_count':'farmer_count'}).reset_index()
     try:
-        outer_data = {'outerData': {'series':[], 'categories':aggregator_farmer_count['aggregator_name'].tolist()}}
+        outer_data = {'outerData': {'series':[], 'categories':aggregator_farmer_count[outer_param2].tolist()}}
         temp_dict_outer = {'name': 'Total farmer Count', 'data':[]}
 
         for index, row in aggregator_farmer_count.iterrows():
-            temp_dict_outer['data'].append({'name':row['aggregator_name'], 'y':int(row['date']), 'drilldown':row['aggregator_name'] + ' Count'})
+            temp_dict_outer['data'].append({'name':row[outer_param2], 'y':int(row['farmer_count']), 'drilldown':row[outer_param2] + ' Count'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
         temp_dict_outer = {'name':'Repeated Farmer Count', 'data':[]}
-        repeat_farmer_count = aggregator_groupby_data[aggregator_groupby_data['date']>1].groupby(['aggregator_id', 'aggregator_name']).agg({'date':'count'}).reset_index()
+        repeat_farmer_count = aggregator_groupby_data[aggregator_groupby_data['repeat_count']>1].groupby([outer_param1, outer_param2]).agg({'repeat_count':'count'}).rename(columns={'repeat_count':'repeat_farmer_count'}).reset_index()
         for index, row in repeat_farmer_count.iterrows():
-            temp_dict_outer['data'].append({'name':row['aggregator_name'], 'y':int(row['date']), 'drilldown':row['aggregator_name'] + ' Repeat'})
+            temp_dict_outer['data'].append({'name':row[outer_param2], 'y':int(row['repeat_farmer_count']), 'drilldown':row[outer_param2] + ' Repeat'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
-        final_data_list['aggrfarmercount'] = outer_data
+        final_data_list[graphname] = outer_data
 
         # DrillDown data
-        farmer_count_freq = aggregator_groupby_data.groupby(['date','aggregator_id','aggregator_name']).agg({'farmer_id':'count'}).reset_index()
-        # print farmer_count_freq.head()
+        farmer_count_freq = aggregator_groupby_data.groupby(['repeat_count', outer_param1, outer_param2]).agg({'farmer_id':'count'}).rename(columns={'farmer_id':'farmer_count'}).reset_index()
         inner_data = {'innerData':[]}
+        farmer_count_agg = farmer_count_freq.groupby([outer_param1, outer_param2])
 
-        farmer_count_agg = farmer_count_freq.groupby(['aggregator_name'])
-        print farmer_count_agg.head()
+        for index, row in farmer_count_agg:
+            temp_dict_inner = {'data':[]}
+            temp_dict_inner['id'] = index[1] + ' Count'
+            for k, v in row.iterrows():
+                temp_dict_inner['data'].append([v['repeat_count'], v['farmer_count']])
+            inner_data['innerData'].append(temp_dict_inner)
 
-        # for index, row in farmer_count_freq.iterrows():
-        #     temp_dict_inner = {'data':[]}
-        #     # print index, row
-        #     print row
-        #     temp_dict_inner['id'] = row['aggregator_name'] + ' Count'
-
-
-
+        final_data_list[graphname].update(inner_data)
     except:
         final_data_list["error"] = "No data Found"
 

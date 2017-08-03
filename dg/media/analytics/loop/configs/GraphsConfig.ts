@@ -444,6 +444,41 @@ export const chartsConfig = {
                             series: []
                           }
   },
+  'mandifarmercount': {
+                        chart: {
+                                  type: 'column',
+                                  renderTo: 'mandifarmercount',
+                                  tab: {
+                                        'id': 'tab1',
+                                        'class':'col-sm-12'
+                                  },
+                                  drillDown: true,
+                                  inverted: true
+                          },
+                          credits:{ enabled: false },
+                          title: { text: ''},
+                          xAxis: { type: 'category', max:5 },
+                          legend: { enabled: false },
+                          plotOptions: {
+                                        column: {
+                                                grouping: false,
+                                                borderWidth: 0,
+                                                dataLabels: {
+                                                             enabled: true
+                                                }
+                                        }
+                          },
+                          scrollbar:{enabled:true},
+                          tooltip: {
+                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+                          },
+                          series: [],
+                          drilldown: {
+                            allowPointDrilldown: false,
+                            series: []
+                          }
+  },
   'aggrspkcpk': {
     chart: {
       type: 'column',

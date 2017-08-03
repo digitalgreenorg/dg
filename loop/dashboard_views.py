@@ -191,6 +191,8 @@ def graph_data(request):
         result = mandi_spk_cpk(country_id, start_date, end_date)
     elif chart_name == 'mandirecoveredtotal':
         result = mandi_cost(country_id, start_date, end_date)
+    elif chart_name == 'mandifarmercount':
+        result = mandi_farmer_count(country_id, start_date, end_date)
     else:
         result = {"result":"success"}
     return JsonResponse(result)
