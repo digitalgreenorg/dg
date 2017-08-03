@@ -629,7 +629,16 @@ class ScreeningResource(BaseResource):
         return bundle
     
     def dehydrate_videoes_screened(self, bundle):
-        return [{'id': video.id, 'title': video.title,} for video in bundle.obj.videoes_screened.all()]
+        data = []
+        for video in bundle.obj.videoes_screened.all():
+            # for item in video.videopractice.all():
+            #     practice_obj = VideoPractice.objects.filter(id=item.id).distinct().values('id', 'videopractice_name')[0]
+            #     print practice_obj
+            data.append({'id': video.id,
+                         'title': video.title,
+                         'category_name': video.category.category_name,
+                         'practice_count': video.videopractice.count()})
+        return data
 
     def dehydrate_frontlineworkerpresent(self, bundle):
         return [{'id': item.id, 'frontlineworkerpresent': item.worker_type} for item in bundle.obj.frontlineworkerpresent.all()]
@@ -726,7 +735,7 @@ class PersonAdoptVideoResource(BaseResource):
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
         always_return_data = True
         excludes = ['time_created', 'time_modified', 'verification_status', 'non_negotiable_check', 'verified_by']
-    dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
+    # dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title', 'category_category_name'])
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     #dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
     # dehydrate_parentcategory = partial(foreign_key_to_id, field_name='parentcategory',sub_field_names=['id','parent_category_name'])
@@ -737,6 +746,10 @@ class PersonAdoptVideoResource(BaseResource):
     hydrate_person = partial(dict_to_foreign_uri, field_name='person')
     hydrate_partner = partial(assign_partner)
     hydrate_parentcategory = partial(dict_to_foreign_uri, field_name='parentcategory')
+
+    
+    def dehydrate_video(self, bundle):
+        return {'id': bundle.obj.video.id, 'title': bundle.obj.video.title, 'category_name': bundle.obj.video.category.category_name}
 
     def dehydrate_group(self, bundle):
         return {'id': bundle.obj.person.group.id, 'group_name': bundle.obj.person.group.group_name} if bundle.obj.person.group else {'id': None, 'group_name': None}

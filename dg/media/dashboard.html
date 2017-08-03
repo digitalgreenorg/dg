@@ -414,6 +414,7 @@
     <button style="margin-top: 20px;" disabled type="button" class="coco_export btn btn-default" id="export">
                                 <%=configs['misc']['meta_'+language]['export'] %>
                             </button>
+    <a id="analytics" href="#analytics" style="cursor:pointer" class="btn btn-small btn-primary mrg-top-20" title= "View Analytics"><%= configs['misc']['meta_'+language]['view_analytics'] %></a>
 </script>
 
 <script type="text/template" id="form_template">
@@ -484,51 +485,74 @@
                     <ul class="nav nav-tabs ">
                         <li class="active">
                             <a href="#tab_default_1" data-toggle="tab">
-                            Screening</a>
+                            Overview</a>
                         </li>
                         <li>
                             <a href="#tab_default_2" data-toggle="tab">
-                            Adoption</a>
+                            Screening</a>
                         </li>
                         <li>
                             <a href="#tab_default_3" data-toggle="tab">
-                            Stats </a>
+                            Adoption</a>
                         </li>
                     </ul>
                         <div class="tab-content">
-                        <div class="tab-pane active" id="tab_default_1">
-                            <div class= "col-sm-6 " id="container1" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container2" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container3" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container4" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                            <div class="tab-pane active" id="tab_default_1">
 
-                            <div class= "col-sm-6 " id="container5" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container6" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                            <table class="table table-striped">
+                                <thead>
+                                    
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Total Number of Villages Reached</th>
+                                        <th id="container13"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Groups Reached</th>
+                                        <th id="container14"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Beneficiaries Reached</th>
+                                        <th id="container15"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Video Reached</th>
+                                        <th id="container16"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Screening</th>
+                                        <th id="container17"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Adoptions</th>
+                                        <th id="container18"></th>
+                                    </tr>
 
+                                </tbody>
+                            </table>
+                            <div class= "col-sm-6" id="container11" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                            <div class= "col-sm-6" id="container12" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                            
                         </div>
-                        <div class="tab-pane " id="tab_default_2">
-                            <div class= "col-sm-6 " id="container7" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container8" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container9" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container10" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container11" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container12" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                            <div class="tab-pane" id="tab_default_2">
+                                <div class= "col-sm-6 " id="container1" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container2" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container3" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container4" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
 
-                        </div>
-                        <div class="tab-pane" id="tab_default_3">
-
-                            <div class= "col-s  m-6 " id="container13" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6 " id="container14" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
-                            <div class= "col-sm-6">
-                            <div class= "row-sm-6" id="container15" ></div>
-                            <div class="row-sm-6" id = "container16"></div>
-                            <div class="row-sm-6" id = "container17"></div>
-                            <div class="row-sm-6" id = "container18"></div>
-                            <div class="row-sm-6" id = "container19"></div>
-                            <div class="row-sm-6" id = "container20"></div>
-                            <div class="row-sm-6" id = "container21"></div>
+                                <div class= "col-sm-6 " id="container5" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                
                             </div>
-                        </div>
+                            <div class="tab-pane " id="tab_default_3">
+                                <div class= "col-sm-6 " id="container6" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container7" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container8" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container9" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container10" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+
+                            </div>
+                        
                         </div>
                 </div>
             </div>
@@ -699,7 +723,7 @@
 
 
 
->>>>>>> master
+
                 <div class="form-group"> 
                     <label class="control-label col-sm-2"><%= date %></label>
                 	<div class="col-sm-4">
