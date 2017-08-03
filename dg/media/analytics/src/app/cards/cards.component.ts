@@ -37,7 +37,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
             year: new Date(this.date.setFullYear(this.date.getFullYear() - 1)).getFullYear()
         }
     };
-    
+
     private myDatePickerOptions: IMyOptions = {
         dateFormat: 'dd-mm-yyyy',
         alignSelectorRight: true,
@@ -55,7 +55,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
       });
     }
     cardsConfigs = environment.cardsConfig;
-    
+
     ngOnInit(): void {
         Object.keys(this.cardsConfigs).forEach(key => {
             if(this.cardsConfigs[key].overall.cards){
@@ -93,7 +93,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
         }
         // Uncomment for filter Request
         // this.getData(options);
-        
+
     }
 
     ngAfterViewInit(): void {
@@ -123,7 +123,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
     saveInstance(chartInstance, chart) {
         chart.nativeChart = chartInstance;
     }
-    
+
     public saveData(options) :any {
         this.cardsService.getApiData(options)
             .subscribe(dataList => {
@@ -164,5 +164,5 @@ export class CardsComponent implements OnInit, AfterViewInit {
         this.recentcharts.forEach(chart=> {
             chart.nativeChart.series[0].update({'data':this.recentChartsData[chart.title][day]})
         })
-    } 
+    }
   }

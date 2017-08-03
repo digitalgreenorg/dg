@@ -147,7 +147,7 @@ export class NavsComponent implements OnInit {
   //get data for graphs from service
   getGraphsData(filters): void {
     this.containerCharts.forEach(chart => {
-      if (chart.nativeChart && chart.nativeChart.series.length == 0) {
+      if (chart.nativeChart && (filters.params.length != 0 || chart.nativeChart.series.length == 0)) {
         chart.nativeChart.showLoading();
         filters.params['chartType'] = chart.chart.type;
         filters.params['chartName'] = chart.name;
