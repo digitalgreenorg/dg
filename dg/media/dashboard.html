@@ -18,9 +18,6 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
-    <script src="/media/coco/app/scripts/libs/alasql.min.js"></script>
-    <script src="/media/coco/app/scripts/libs/xlsx.core.min.js"></script>
-    
     <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
@@ -1400,6 +1397,15 @@
                     </select>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><%= tags %></label>
+                <div class="col-sm-4">
+                    <select size="20" class="chosen-select form-control" id = "id_tags" name="tags" multiple>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="dis-block col-sm-2 control-label notbold"><%= youtubeid %></label>
                 <div class="col-sm-4">
@@ -1456,14 +1462,14 @@
             <div class="form-group" id="srf-1">
                 <label class="dis-block col-sm-2 control-label" style="text-align: left;margin-left:8px">1.</label>
                 <div class="col-sm-4">
-                    <input name="self_reported_behaviour1" type="text" class="form-control">
+                    <input name="self_reported_behaviour1" type="text" class="form-control" id="id_self_reported_behaviour1">
                 </div>
             </div>
 
             <div class="form-group" id="srf-2">
                 <label class="dis-block col-sm-2 control-label notbold" style="text-align: left;margin-left:8px">2.</label>
                 <div class="col-sm-4">
-                    <input name="self_reported_behaviour2" type="text" class="form-control">
+                    <input name="self_reported_behaviour2" type="text" class="form-control" id="id_self_reported_behaviour2">
                 </div>
             </div>
 

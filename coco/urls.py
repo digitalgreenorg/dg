@@ -4,13 +4,14 @@ from django.views.generic import TemplateView
 # tastypie imports
 from tastypie.api import Api
 # django imports
-from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource
+from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource, TagResource
 from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data
 
 
 v1_api = Api(api_name='v2')
 v1_api.register(DistrictResource())
 v1_api.register(LanguageResource())
+v1_api.register(TagResource())
 v1_api.register(PartnerResource())
 v1_api.register(VillageResource())
 v1_api.register(MediatorResource())

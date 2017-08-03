@@ -154,7 +154,7 @@ class SubCategory(CocoModel):
 class VideoPractice(CocoModel):
     id = models.AutoField(primary_key=True)
     subcategory = models.ForeignKey(SubCategory)
-    videopractice_name = models.CharField(max_length = 100)
+    videopractice_name = models.CharField(max_length = 1024)
 
     def get_village(self):
         return None
@@ -184,6 +184,12 @@ post_save.connect(enter_to_log, sender=Language)
 pre_delete.connect(enter_to_log,sender=Language)
 
 
+class Tag(CocoModel):
+    tag_name = models.CharField(max_length=100, unique='True')
+
+    def __unicode__(self):
+        return self.tag_name
+
 class Video(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -199,6 +205,7 @@ class Video(CocoModel):
     direct_beneficiaries = models.ManyToManyField(DirectBeneficiaries, blank=True)
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
     videopractice = models.ManyToManyField(VideoPractice, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     youtubeid = models.CharField(max_length=20, blank=True)

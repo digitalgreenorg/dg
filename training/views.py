@@ -11,7 +11,7 @@ import json
 import MySQLdb
 import pandas
 import datetime
-from models import Trainer
+from models import Trainer, Assessment
 from geographies.models import State
 
 from tastypie.models import ApiKey
@@ -91,13 +91,23 @@ def get_pandas_dataframe(sql_query):
 
 @csrf_exempt
 def get_filter_data(request):
-    trainers_list = Trainer.objects.annotate(value=F('name')).values('id','value').order_by('value')
-    states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
+    table_name =  parent_id_list = None
+    try:
+        table_name = request.GET['filter']
+        parent = request.GET['parent']
+        parent_id_list = request.GET.getlist(parent)
+    except:
+        pass
     response_list = []
-    trainer_dict = {'name':'Trainer', 'visible':True, 'data':list(trainers_list)}
-    state_dict = {'name':'State', 'visible':True, 'data':list(states_list)}
-    date_dict = {'name':'date', 'visible':True}
-    response_list.extend([trainer_dict, state_dict, date_dict])
+    if table_name and table_name == 'Trainer' and parent_id_list and len(parent_id_list) > 0:
+        trainers_list = Trainer.objects.filter(training_user__states__in = parent_id_list[0].split(',')).annotate(value=F('name')).values('id','value').distinct().order_by('value')
+        trainer_dict = {'name':'Trainer', 'data':list(trainers_list)}
+        response_list.extend([trainer_dict])
+    elif table_name is None:
+        states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
+        state_dict = {'name':'State', 'data':list(states_list)}
+        response_list.extend([state_dict])
+
     json_data = json.dumps(response_list)
     return HttpResponse(json_data)
 
