@@ -116,9 +116,26 @@ class MandiAdmin(admin.ModelAdmin):
 class VillageAdmin(admin.ModelAdmin):
     fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
     list_display = ('id', 'village_name', 'block', 'village_name_en')
-    search_fields = ['village_name', 'block__block_name']
+    search_fields = ['village_name', 'village_name_en', 'block__block_name']
     list_filter = ['block__block_name', 'block__district__state__country']
 
+class BlockAdmin(admin.ModelAdmin):
+    fields = ('district',('block_name','block_name_en'),'is_visible')
+    list_display = ('id', 'block_name', 'district', 'block_name_en')
+    search_fields = ['block_name', 'block_name_en', 'district__district_name']
+    list_filter = ['district__district_name', 'district__state__country']    
+
+class DistrictAdmin(admin.ModelAdmin):
+    fields = ('state',('district_name','district_name_en'),'is_visible')
+    list_display = ('id', 'district_name', 'state', 'district_name_en')
+    search_fields = ['district_name', 'district_name_en', 'state__state_name']
+    list_filter = ['state__state_name', 'state__country']    
+
+class StateAdmin(admin.ModelAdmin):
+    fields = ('country',('state_name','state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start', 'is_visible')
+    list_display = ('id', 'state_name', 'country', 'state_name_en', 'helpline_number', 'crop_add', 'phone_digit', 'phone_start')
+    search_fields = ['state_name', 'state_name_en', 'country__country_name']
+    list_filter = ['country__country_name']
 
 class CropAdmin(admin.ModelAdmin):
     list_display = ('id', 'crop_name')
@@ -201,10 +218,10 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
-loop_admin.register(Block)
-loop_admin.register(District)
-loop_admin.register(State)
-loop_admin.register(Country)
+loop_admin.register(Block, BlockAdmin)
+#loop_admin.register(District, DistrictAdmin)
+#loop_admin.register(State, StateAdmin)
+#loop_admin.register(Country, CountryAdmin)
 # loop_admin.register(LoopUserAssignedMandi, LoopUserAssignedMandiAdmin)
 # loop_admin.register(LoopUserAssignedVillage, LoopUserAssignedVillageAdmin)
 loop_admin.register(LoopUser, LoopUserAdmin)
