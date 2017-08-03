@@ -14,6 +14,7 @@ export class NavsComponent implements OnInit {
   //used for collapse button
   public isCollapsed: boolean = false;
   public showOverall: boolean = true;
+  public showFilters: boolean = true;
   //read config files from environment created for each app
   navsConfig = environment.navsConfig;
   chartsConfig = environment.chartsConfig;
@@ -168,7 +169,6 @@ export class NavsComponent implements OnInit {
                     chart.chart.drilldown.series.push(drilldownEntry);
                   });
                 }
-                console.log(chart)
               }
               else {
                 this.clearSeriesFromGraph(chart);
@@ -204,9 +204,9 @@ export class NavsComponent implements OnInit {
     return Object.keys(dict);
   }
 
-  ifDictionary(obj){
+  ifDictionary(obj): boolean {
     if (typeof obj !== 'boolean')
-    return true;
+      return true;
     else return false;
   }
 
@@ -256,12 +256,13 @@ export class NavsComponent implements OnInit {
 
   //display respective containers based on clicked nav
   showContent(selectedNav: string): void {
-    if(selectedNav == 'Home') {
+    if (selectedNav == 'Home') {
       this.showOverall = true;
+      this.showFilters = false;
     } else {
       this.showOverall = false;
+      this.showFilters = true;
     }
-    console.log(this.containers);
     this.resetDict(this.containers, 'displayContent', false);
     this.resetDict(this.filterGraphs, 'displayContent', false);
     this.containerCharts = [];

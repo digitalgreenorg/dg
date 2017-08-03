@@ -2,6 +2,7 @@ export const navsConfig = {
   'navs': {
     'Home': {
       'active': true,
+      'filters': false,
       'import': {
         'overall': false,
         'recent': false,
@@ -17,11 +18,12 @@ export const navsConfig = {
     },
     'Analytics': {
       // 'active': true,
+      'filters': true,
       'subNavs': {
         'Aggregators': {
           'active': true,
           'containers': {
-            'addTab':true,
+            'addTab': true,
             'container1': {
               // 'addTab':true,
               'Volume': {
@@ -49,6 +51,7 @@ export const navsConfig = {
         },
         'Mandi': {
           'containers': {
+            'addTab': true,
             'container1': {
               'Volume': {
                 'addDivs': ['mandivolume']
@@ -74,6 +77,7 @@ export const navsConfig = {
         },
         'Crop': {
           'containers': {
+            'addTab': true,
             'container1': {
               'Volume': {
                 'addDivs': ['cropvolume']
@@ -95,11 +99,12 @@ export const navsConfig = {
     },
     'Time Series': {
       // 'active': true,
+      'filters': true,
       'containers': {
+        'addTab': false,
         'container1': {
-          'addTab': false,
           'Volume Farmer': {
-            'addDivs': ['volFarmerTS','cpkSpkTS']
+            'addDivs': ['volFarmerTS', 'cpkSpkTS']
           },
         },
       }
