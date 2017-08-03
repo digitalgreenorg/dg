@@ -10,6 +10,7 @@
       </li>
     </ul>
   </div>
+  <app-filters></app-filters>
 </nav>
 <div *ngFor="let nav of getDictKeys(toggleNav);">
   <div *ngIf="toggleNav[nav].hasOwnProperty('subNavs')">
@@ -39,9 +40,9 @@
 <div *ngFor="let container of getDictKeys(containers);">
   <div *ngIf="containers[container].displayContent">
     <div class="row justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
-      <div class="container-box col-sm-11" *ngIf="ifDictionary(containers[container]['containers'][option])" >
-      <tabset [justified]="true" *ngIf="containers[container]['containers']['addTab']">
-        <!--<div>-->
+      <div class="container-box col-sm-11" *ngIf="ifDictionary(containers[container]['containers'][option])">
+        <tabset [justified]="true" *ngIf="containers[container]['containers']['addTab']">
+          <!--<div>-->
           <tab *ngFor="let tab of getDictKeys(containers[container]['containers'][option])" [heading]="tab">
             <br><br>
             <div class="row">
@@ -51,8 +52,8 @@
               </div>
             </div>
           </tab>
-        <!--</div>-->
-      </tabset>
+          <!--</div>-->
+        </tabset>
       </div>
       <div *ngIf="!containers[container]['containers']['addTab']">
         <div *ngFor="let tab of getDictKeys(containers[container]['containers'][option])">

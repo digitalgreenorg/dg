@@ -196,3 +196,26 @@ def graph_data(request):
     else:
         result = {"result":"success"}
     return JsonResponse(result)
+
+def send_filter_data(request):
+    # language = request.GET.get('language')
+    # country_id = request.GET.get('country_id')
+    country_id = 1
+    response_list = []
+    aggregator_list = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).annotate(value=F('name_en')).values('id', 'value').distinct().order_by('value')
+
+    aggregator_dict = {'name':'Aggregator', 'data':list(aggregator_list)}
+
+    crop_list = Crop.objects.annotate(value=F('crop_name')).values('id', 'value').order_by('value')
+    crop_dict = {'name':'Crops', 'data':list(crop_list)}
+
+    mandi_list = Mandi.objects.filter(district__state__country=country_id).annotate(value=F('mandi_name_en')).values('id', 'value').order_by('value')
+    mandi_dict = {'name':'Mandi', 'data':list(mandi_list)}
+
+    gaddidar_list = Gaddidar.objects.filter(mandi__district__state__country=country_id).annotate(value=F('gaddidar_name_en')).values(
+        'id', 'value').order_by('value')
+    gaddidar_dict = {'name':'Gaddidar','data':list(gaddidar_list)}
+
+    response_list.extend([aggregator_dict, crop_dict, mandi_dict, gaddidar_dict])
+    data = json.dumps(response_list)
+    return HttpResponse(data)
