@@ -7,8 +7,8 @@ export const navsConfig = {
         'recent': false,
       },
       'containers': {
+        'addTab': true,
         'container1': {
-          'addTab': true,
           'Volume and Famers Cummulative Count': {
             'addDivs': ['cummulativeCount']
           },
@@ -21,8 +21,9 @@ export const navsConfig = {
         'Aggregators': {
           'active': true,
           'containers': {
+            'addTab':true,
             'container1': {
-              'addTab':true,
+              // 'addTab':true,
               'Volume': {
                 'addDivs': ['aggrvol']
               },
@@ -31,7 +32,7 @@ export const navsConfig = {
               }
             },
             'container2': {
-              'addTab':true,
+              // 'addTab':true,
               'SPK/CPK': {
                 'addDivs': ['aggrspkcpk']
               },

@@ -204,6 +204,12 @@ export class NavsComponent implements OnInit {
     return Object.keys(dict);
   }
 
+  ifDictionary(obj){
+    if (typeof obj !== 'boolean')
+    return true;
+    else return false;
+  }
+
   //reset values in a dict, used for navigation and setting containers
   private resetDict(dict, flag, value): void {
     Object.keys(dict).forEach(key => {
