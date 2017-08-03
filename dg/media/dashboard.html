@@ -18,6 +18,7 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/bootstrap-timepicker.css">
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
 
+
     <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
@@ -307,6 +308,8 @@
                 <%if(typeof(username)!=undefined){%>
                 <li class="user-dropdown-option">Hi <%=username%>!</li>
                 <li class="user-dropdown-option"><a id="logout" style="cursor:pointer"><%= configs['misc']['meta_'+language]['logout']%></a></li>
+                <li class="user-dropdown-option"><a id="view_analytics" href="#analytics" style="cursor:pointer"><%= configs['misc']['meta_'+language]['view_analytics']%></a></li>
+
                 <%}%>
             </ul>
         </div>
@@ -496,7 +499,7 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="tab_default_1">
 
-                            <table class="table table-striped">
+                            <table class="table table-striped table-bordered">
                                 <thead>
                                     
                                 </thead>

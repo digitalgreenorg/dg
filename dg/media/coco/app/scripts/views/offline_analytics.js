@@ -180,7 +180,7 @@ define([
                 if(this.key[this.k]==1){
                     var arr = array_table_values[i][this.key[this.k]].split('-');
                     var year = arr[0];
-                    var month = arr[1];
+                    var month = arr[1]-1;
                     var date = arr[2];
                     var block = Date.UTC(year,month,date);
                     
@@ -217,15 +217,14 @@ define([
                 
             // }
             
-        else if(this.key[this.k]==1){
-            var groupingUnits = [[
-                'week',                         // unit name
-                    [1]                             // allowed multiples
-                ],[
+        else if(this.key[this.k]==1){dict=tempDict
+            console.log('final', dict)
+            var groupingUnits = [['day',[1]],[
                     'month',
                 [1, 2, 3, 4, 6]
             ]];
             var i=0,dataTime=[];
+            
             for (var key in dict) 
             {
                 if (dict.hasOwnProperty(key)) 
@@ -312,8 +311,8 @@ define([
                             window.videoss = unique_videos_reached
                         }
                     }
-                    if (element.attributes.category){
-                        _.each(element.attributes.category, function(elem, index){
+                    if (element.attributes.farmers_attendance){
+                        _.each(element.attributes.farmers_attendance, function(elem, index){
                             category_reached.push(elem.person_id)
                              
                         })
