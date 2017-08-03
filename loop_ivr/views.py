@@ -35,6 +35,8 @@ def crop_price_query(request):
             if len(price_info_incoming_obj) > 0:
                 price_info_incoming_obj = price_info_incoming_obj[0]
                 price_info_incoming_obj.query_code = query_code
+                # If it is retry then set status to pending and remaining code will change this according to input.
+                price_info_incoming_obj.info_status = 0
                 price_info_incoming_obj.save()
             else:
                 price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
