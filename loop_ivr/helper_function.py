@@ -35,7 +35,7 @@ def get_valid_list(app_name, model_name, requested_item):
     model = get_model(app_name, model_name)
     id_list = set(model.objects.values_list('id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item)
-    if 0 in requested_list:
+    if (0 in requested_list) or (len(requested_list)==0 and model_name == 'mandi'):
         return tuple(map(int,id_list)),1
     return tuple(map(int,requested_list.intersection(id_list))),0
 

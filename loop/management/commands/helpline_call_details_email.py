@@ -158,13 +158,22 @@ class Command(BaseCommand):
             repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
         else:
             repeat_caller_contribute_percentage = 0
-        cluster_wise_call_detail = self.cluster_wise_bifurcation(from_date,to_date)
-        cluster_wise_call_detail_list = ['<br/><br/>Cluster-wise bifurcation of calls received:<br/><br/>',
-                                        '<table><tr><th>Cluster Name</th><th>Farmer Count</th><th>No of calls</th></tr>']
-        for cluster in cluster_wise_call_detail:
-            if cluster_wise_call_detail[cluster]['total_calls'] != 0:
-                cluster_wise_call_detail_list.append('<tr><td>%s</td><td>%s</td><td>%s</td></tr>'%(cluster_wise_call_detail[cluster]['cluster_name'],cluster_wise_call_detail[cluster]['farmer_count'],cluster_wise_call_detail[cluster]['total_calls']))
-        cluster_wise_call_detail_list.append('</table>')
+        if total_calls_received > 0:
+            cluster_wise_call_detail = self.cluster_wise_bifurcation(from_date,to_date)
+            cluster_wise_call_detail_list = ['<br/><br/>Cluster-wise bifurcation of calls received:<br/><br/>',
+                                            '<table><tr><th>Cluster Name</th><th>Farmer Count</th><th>No of calls</th></tr>']
+            other_cluster_farmer_count = total_unique_caller
+            other_cluster_call_count = total_calls_received
+            for cluster in cluster_wise_call_detail:
+                if cluster_wise_call_detail[cluster]['total_calls'] != 0:
+                    other_cluster_farmer_count -= cluster_wise_call_detail[cluster]['farmer_count']
+                    other_cluster_call_count -= cluster_wise_call_detail[cluster]['total_calls']
+                    cluster_wise_call_detail_list.append('<tr><td>%s</td><td>%s</td><td>%s</td></tr>'%(cluster_wise_call_detail[cluster]['cluster_name'],cluster_wise_call_detail[cluster]['farmer_count'],cluster_wise_call_detail[cluster]['total_calls']))
+            if other_cluster_call_count > 0:
+                cluster_wise_call_detail_list.append('<tr><td>Others</td><td>%s</td><td>%s</td></tr>'%(other_cluster_farmer_count,other_cluster_call_count))
+            cluster_wise_call_detail_list.append('</table>')
+        else:
+            cluster_wise_call_detail_list = []
 
         self.send_mail(total_pending_call_count,
             total_declined_call_count,
