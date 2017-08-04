@@ -244,7 +244,7 @@ class VideoPracticeForm(forms.ModelForm):
     model = VideoPractice
 
     class Meta:
-        fields = ['category', 'subcategory', 'videopractice_name']
+        fields = ['subcategory', 'videopractice_name']
 
 
 class VideoPracticeAdmin(admin.ModelAdmin):
