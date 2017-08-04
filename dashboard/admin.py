@@ -237,7 +237,7 @@ class SubCategoryAdmin(admin.ModelAdmin):
 
 
 class VideoPracticeForm(forms.ModelForm):
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), widget=Select2(select2attrs={'width': '600px'}), required=True)
+    # category = forms.ModelChoiceField(queryset=Category.objects.all(), widget=Select2(select2attrs={'width': '600px'}), required=True)
     subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), widget=Select2(select2attrs={'width': '600px'}), required=True)
     videopractice_name = forms.ModelMultipleChoiceField(queryset=VideoPractice.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}), required=True)
 

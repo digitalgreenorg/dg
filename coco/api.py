@@ -642,7 +642,7 @@ class ScreeningResource(BaseResource):
             #     print practice_obj
             data.append({'id': video.id,
                          'title': video.title,
-                         'category_name': video.category.category_name,
+                         'category_name': video.category.category_name if video.category else None,
                          'practice_count': video.videopractice.count()})
         return data
 
