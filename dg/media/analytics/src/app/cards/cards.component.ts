@@ -50,9 +50,9 @@ export class CardsComponent implements OnInit, AfterViewInit {
     };
 
     constructor(private cardsService: CardsService, private sharedService: SharedService, private datepipe: DatePipe) {
-        this.sharedService.argsList$.subscribe(data => {
-        this.getData(data);
-      });
+    //     this.sharedService.argsList$.subscribe(data => {
+    //     this.getData(data);
+    //   });
     }
     cardsConfigs = environment.cardsConfig;
 
