@@ -755,7 +755,7 @@ class PersonAdoptVideoResource(BaseResource):
 
     
     def dehydrate_video(self, bundle):
-        return {'id': bundle.obj.video.id, 'title': bundle.obj.video.title, 'category_name': bundle.obj.video.category.category_name if bundle.obj.video else None}
+        return {'id': bundle.obj.video.id, 'title': bundle.obj.video.title, 'category_name': bundle.obj.video.category.category_name if bundle.obj.video.category else None}
 
     def dehydrate_group(self, bundle):
         return {'id': bundle.obj.person.group.id, 'group_name': bundle.obj.person.group.group_name} if bundle.obj.person.group else {'id': None, 'group_name': None}
