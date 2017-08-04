@@ -53,7 +53,7 @@ class LoopUserAdmin(admin.ModelAdmin):
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
-    list_filter = ['village__block__district__state__country', 'village__block__district__state', 'role']
+    list_filter = ['village__block__district__state__country', 'village__block__district__state', 'village__block__district', 'role']
 
 # class LoopUserInline(admin.TabularInline):
 #     model = LoopUser
@@ -219,9 +219,8 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Block, BlockAdmin)
-#loop_admin.register(District, DistrictAdmin)
-#loop_admin.register(State, StateAdmin)
-#loop_admin.register(Country, CountryAdmin)
+loop_admin.register(District, DistrictAdmin)
+loop_admin.register(State, StateAdmin)
 # loop_admin.register(LoopUserAssignedMandi, LoopUserAssignedMandiAdmin)
 # loop_admin.register(LoopUserAssignedVillage, LoopUserAssignedVillageAdmin)
 loop_admin.register(LoopUser, LoopUserAdmin)
