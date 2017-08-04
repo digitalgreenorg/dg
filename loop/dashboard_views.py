@@ -2,14 +2,14 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Min, Sum, Avg, Max, F
-
+from django.core.serializers.json import DjangoJSONEncoder
+import json
+import math
 import pandas as pd
+
 from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser
 from loop.utils.loop_etl.group_myisam_data import *
-import json
-from django.core.serializers.json import DjangoJSONEncoder
 from constants.constants import ROLE_CHOICE_AGGREGATOR
-import math
 
 def cpk_spk_timeseries(country_id, start_date, end_date):
     cpk_spk = cpk_spk_ts(country_id, start_date, end_date)
@@ -156,7 +156,7 @@ def extract_filters_request(request):
     filter_args['country_id'] = country_id
     filter_args['start_date'] = start_date
     filter_args['end_date'] = end_date
-    # filter_args['apply_filter'] = apply_filter
+    filter_args['country_id'] = country_id
     filter_args['aggregators_list'] = aggregators_list
     filter_args['mandis_list'] = mandis_list
     filter_args['crops_list'] = crops_list
@@ -179,44 +179,40 @@ def cumm_vol_farmer(country_id):
 
 def graph_data(request):
     filter_args = extract_filters_request(request)
-    print filter_args
 
     chart_name = request.GET['chartName']
-    country_id = 1
-    start_date = 20170401
-    end_date = 20170601
     if chart_name == 'volFarmerTS':
-        result = vol_amount_farmer(country_id, start_date, end_date, **filter_args)
+        result = vol_amount_farmer(**filter_args)
     elif chart_name == 'cpkSpkTS':
-        result = cpk_spk_timeseries(country_id, start_date, end_date, **filter_args)
+        result = cpk_spk_timeseries(**filter_args)
     elif chart_name == 'cummulativeCount':
-        result = cumm_vol_farmer(country_id, **filter_args)
+        result = cumm_vol_farmer(**filter_args)
     elif chart_name == 'aggrvol':
-        result = aggregator_volume(country_id, start_date, end_date, **filter_args)
+        result = aggregator_volume(**filter_args)
     elif chart_name == 'aggrvisit':
-        result = aggregator_visits(country_id, start_date, end_date, **filter_args)
+        result = aggregator_visits(**filter_args)
     elif chart_name == 'mandivolume':
-        result = mandi_volume(country_id, start_date, end_date, **filter_args)
+        result = mandi_volume(**filter_args)
     elif chart_name == 'mandivisit':
-        result = mandi_visits(country_id, start_date, end_date, **filter_args)
+        result = mandi_visits(**filter_args)
     elif chart_name == 'cropvolume':
-        result = crop_volume(country_id, start_date, end_date, **filter_args)
+        result = crop_volume(**filter_args)
     elif chart_name == 'cropfarmercount':
-        result = crop_farmer_count(country_id, start_date, end_date, **filter_args)
+        result = crop_farmer_count(**filter_args)
     elif chart_name == 'cropprices':
-        result = crop_prices(country_id, start_date, end_date, **filter_args)
+        result = crop_prices(**filter_args)
     elif chart_name == 'aggrspkcpk':
-        result = agg_spk_cpk(country_id, start_date, end_date, **filter_args)
+        result = agg_spk_cpk(**filter_args)
     elif chart_name == 'aggrrecoveredtotal':
-        result = agg_cost(country_id, start_date, end_date, **filter_args)
+        result = agg_cost(**filter_args)
     elif chart_name == 'aggrfarmercount':
-        result = agg_farmer_count(country_id, start_date, end_date, **filter_args)
+        result = agg_farmer_count(**filter_args)
     elif chart_name == 'mandispkcpk':
-        result = mandi_spk_cpk(country_id, start_date, end_date, **filter_args)
+        result = mandi_spk_cpk(**filter_args)
     elif chart_name == 'mandirecoveredtotal':
-        result = mandi_cost(country_id, start_date, end_date, **filter_args)
+        result = mandi_cost(**filter_args)
     elif chart_name == 'mandifarmercount':
-        result = mandi_farmer_count(country_id, start_date, end_date, **filter_args)
+        result = mandi_farmer_count(**filter_args)
     else:
         result = {"result":"success"}
     return JsonResponse(result)
