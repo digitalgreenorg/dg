@@ -192,7 +192,7 @@ def graph_data(request):
     elif chart_name == 'cummulativeCount':
         result = cumm_vol_farmer(country_id, **filter_args)
     elif chart_name == 'aggrvol':
-        result = aggregator_volume(country_id, start_date, end_date, **filter_args)
+        result = aggregator_volume(**filter_args)
     elif chart_name == 'aggrvisit':
         result = aggregator_visits(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'mandivolume':
