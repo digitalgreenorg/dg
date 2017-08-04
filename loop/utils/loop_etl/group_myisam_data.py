@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from loop.utils.loop_etl.aggregation_methods import *
 from loop.models import CombinedTransaction
+from loop.utils.utility import get_init_sql_ds, join_sql_ds
 
 def get_grouped_data(df_result_aggregate,day,df_farmers):
     start_date = df_result_aggregate['date'].min()
@@ -38,7 +39,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
-def sql_query(country_id, from_date=None, to_date=None, **kwargs):
+def sql_query(country_id=None, from_date=None, to_date=None, **kwargs):
     start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
@@ -47,38 +48,61 @@ def sql_query(country_id, from_date=None, to_date=None, **kwargs):
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
-    query = '''SELECT lct.user_created_id aggregator_id, lu.name_en aggregator_name, date, crop_id, crop_name, mandi_id,
-				mandi_name_en mandi_name, quantity, farmer_id, lf.name farmer_name
-                FROM loop_combinedtransaction lct
-                JOIN loop_mandi lm ON lm.id = lct.mandi_id
-                JOIN loop_crop lcrp ON lcrp.id = lct.crop_id
-                JOIN loop_farmer lf ON lf.id = lct.farmer_id
-                JOIN loop_loopuser lu ON lu.user_id = lct.user_created_id
-            '''
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('lct.user_created_id aggregator_id, lu.name_en aggregator_name, date, crop_id, crop_name, mandi_id,\
+                    mandi_name_en mandi_name, quantity, farmer_id, lf.name farmer_name')
+    sql_ds['from'].append('loop_combinedtransaction lct')
+    sql_ds['join'].append(['loop_mandi lm', 'lm.id = lct.mandi_id'])
+    sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
+    sql_ds['join'].append(['loop_farmer lf', 'lf.id = lct.farmer_id'])
+    sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id'])
 
-    if from_date:
-        query = query + " and date between " + str(from_date) + " and " + str(to_date)
+    if len(aggregators_list) > 0:
+        sql_ds['where'].append('lct.user_created_id in (' + ",".join(aggregators_list) + ")")
+    if len(mandis_list) > 0:
+        sql_ds['where'].append('lm.id in (' + ",".join(mandis_list) + ')')
+    # if len(gaddidars_list) > 0:
+    #     sql_ds['where'].append('gaddidar_id in (' + ",".join(gaddidars_list) + ')')
 
+    if len(crops_list) > 0:
+        sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
+    sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
+
+    query = join_sql_ds(sql_ds)
     df_result = pd.read_sql(query, con=mysql_cn)
     return df_result
 
-def query_myisam(country_id, from_date=None, to_date=None, **kwargs):
-    start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+def query_myisam(**kwargs):
+    
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
     host = DATABASES['default']['HOST']
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
+    
+    # Constructing sql query
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('*')
+    sql_ds['from'].append('loop_aggregated_myisam')
+    sql_q = join_sql_ds(sql_ds)
 
-    query = "SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id)
-    if from_date:
-        query = query + " and date between " + str(from_date) + " and " + str(to_date)
+    if(len(kwargs) > 0):
+        start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+        if len(aggregators_list) > 0:
+            sql_ds['where'].append('aggregator_id in (' + ",".join(aggregators_list) + ")")
+        if len(mandis_list) > 0:
+            sql_ds['where'].append('mandi_id in (' + ",".join(mandis_list) + ')')
+        if len(gaddidars_list) > 0:
+            sql_ds['where'].append('gaddidar_id in (' + ",".join(gaddidars_list) + ')')
+        sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
 
-    df_result = pd.read_sql(query, con=mysql_cn)
+    sql_q = join_sql_ds(sql_ds)
+
+    df_result = pd.read_sql(sql_q, con=mysql_cn)
     return df_result
 
-def crop_prices_query(country_id, from_date=None, to_date=None, **kwargs):
+def crop_prices_query( **kwargs):
     start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
@@ -87,21 +111,32 @@ def crop_prices_query(country_id, from_date=None, to_date=None, **kwargs):
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
-    query = '''
-                SELECT crop_id, crop_name, mandi_id, mandi_name_en mandi_name, min(price) Min_price, max(price) Max_price
-                FROM loop_combinedtransaction lct
-		        JOIN loop_crop lcr ON lcr.id= lct.crop_id and date between 20170101 and 20170201
-		        JOIN loop_mandi lm ON lm.id = lct.mandi_id
-                GROUP BY crop_id, mandi_id;
-            '''
-    # if from_date:
-    #     query = query + " and date between " + str(from_date) + " and " + str(to_date)
+
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('crop_id, crop_name, mandi_id, mandi_name_en mandi_name, min(price) Min_price, max(price) Max_price')
+    sql_ds['from'].append('loop_combinedtransaction lct')
+    sql_ds['join'].append(['loop_mandi lm', 'lm.id = lct.mandi_id'])
+    sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
+    sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id'])
+    sql_ds['group by'].append('crop_id, mandi_id')
+
+    if len(aggregators_list) > 0:
+        sql_ds['where'].append('lct.user_created_id in (' + ",".join(aggregators_list) + ")")
+    if len(mandis_list) > 0:
+        sql_ds['where'].append('lm.id in (' + ",".join(mandis_list) + ')')
+    # if len(gaddidars_list) > 0:
+    #     sql_ds['where'].append('gaddidar_id in (' + ",".join(gaddidars_list) + ')')
+    if len(crops_list) > 0:
+        sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
+    sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
+
+    query = join_sql_ds(sql_ds)
 
     df_result = pd.read_sql(query, con=mysql_cn)
     return df_result
 
 def get_data_from_myisam(get_total, country_id):
-    df_result = query_myisam(country_id)
+    df_result = query_myisam()
 
     aggregations = {
         'quantity':{
@@ -164,9 +199,9 @@ def get_data_from_myisam(get_total, country_id):
 def read_kwargs(Kwargs):
     return Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'], Kwargs['gaddidars_list']
 
-def get_volume_aggregator(country_id, **kwargs):
+def get_volume_aggregator(**kwargs):
     result_data = {}
-    df_result = query_myisam(country_id, kwargs)
+    df_result = query_myisam(**kwargs)
     aggregation = {
         'quantity':{
             'quantity__sum':'sum'
@@ -201,7 +236,7 @@ def get_volume_aggregator(country_id, **kwargs):
 
 def volume_amount_farmers_ts(country_id, from_date, to_date, **kwargs):
     result_data = {}
-    df_result = query_myisam(country_id, from_date, to_date, kwargs)
+    df_result = query_myisam(**kwargs)
     df_result = df_result.groupby(['date'])['quantity','amount'].sum().reset_index()
     df_result['date'] = df_result['date'].astype('datetime64[ns]')
     df_result['date_time'] = df_result['date'].astype('int64')//10**6
@@ -227,7 +262,7 @@ def volume_amount_farmers_ts(country_id, from_date, to_date, **kwargs):
 def cpk_spk_ts(country_id, from_date, to_date, **kwargs):
     result_data = {}
 
-    df_result = query_myisam(country_id, from_date, to_date, kwargs)
+    df_result = query_myisam(**kwargs)
     df_result = df_result.groupby(['date','aggregator_id','mandi_id']).agg(cpk_spk_aggregation).reset_index()
     df_result.columns = df_result.columns.droplevel(1)
     df_result.drop(['aggregator_id','mandi_id'], axis=1,inplace=True)
@@ -257,7 +292,7 @@ def cpk_spk_ts(country_id, from_date, to_date, **kwargs):
 
     return result_data
 
-def get_cummulative_vol_farmer(country_id, **kwargs):
+def get_cummulative_vol_farmer(**kwargs):
     aggregate_cumm_vol_farmer = {
         'quantity':{
             'quantity__sum':'sum'
@@ -267,7 +302,7 @@ def get_cummulative_vol_farmer(country_id, **kwargs):
         }
     }
     result_data = {}
-    df_result = query_myisam(country_id, kwargs)
+    df_result = query_myisam(**kwargs)
     df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
     df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
     df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
@@ -297,30 +332,30 @@ def get_cummulative_vol_farmer(country_id, **kwargs):
 
     return result_data
 
-def aggregator_volume(country_id, start_date, end_date, **kwargs):
-    df_result = query_myisam(country_id, start_date, end_date, kwargs)
+def aggregator_volume(**kwargs):
+    df_result = query_myisam(**kwargs)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['quantity'].sum().reset_index()
 
     return volumedata(df_result, aggregator_groupby_data, 'aggrvol', 'aggregator_name', 'mandi_name', True)
 
-def aggregator_visits(country_id, start_date, end_date, **kwargs):
-    df_result = query_myisam(country_id, start_date, end_date, kwargs)
+def aggregator_visits(**kwargs):
+    df_result = query_myisam(**kwargs)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['aggregator_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
 
     return visitData(aggregator_groupby_data, 'aggrvisit', 'aggregator_name', 'mandi_name', 'date', True)
 
 
-def mandi_volume(country_id, start_date, end_date, **kwargs):
-    df_result = query_myisam(country_id, start_date, end_date, kwargs)
+def mandi_volume(**kwargs):
+    df_result = query_myisam(**kwargs)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['mandi_id', 'mandi_name'])['quantity'].sum().reset_index()
 
     return volumedata(df_result, aggregator_groupby_data, 'mandivolume', 'mandi_name', 'aggregator_name', True)
 
-def mandi_visits(country_id, start_date, end_date, **kwargs):
-    df_result = query_myisam(country_id, start_date, end_date, kwargs)
+def mandi_visits(**kwargs):
+    df_result = query_myisam(**kwargs)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['mandi_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
 
@@ -328,20 +363,20 @@ def mandi_visits(country_id, start_date, end_date, **kwargs):
 
 
 
-def crop_volume(country_id, start_date, end_date, **kwargs):
-    df_result = sql_query(country_id, start_date, end_date, kwargs)
+def crop_volume(**kwargs):
+    df_result = sql_query(**kwargs)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['crop_id', 'crop_name'])['quantity'].sum().reset_index()
     return volumedata(df_result, aggregator_groupby_data, 'cropvolume', 'crop_name', 'mandi_name', True)
 
-def crop_farmer_count(country_id, start_date, end_date, **kwargs):
-    df_result = sql_query(country_id, start_date, end_date, kwargs)
+def crop_farmer_count(**kwargs):
+    df_result = sql_query(**kwargs)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['crop_id', 'crop_name'])['farmer_id'].nunique().to_frame().reset_index()
     return visitData(aggregator_groupby_data, 'cropfarmercount', 'crop_name', '',  'farmer_id', False)
 
-def crop_prices(country_id, start_date, end_date, **kwargs):
-    df_result = crop_prices_query(country_id, start_date, end_date, kwargs)
+def crop_prices(**kwargs):
+    df_result = crop_prices_query(**kwargs)
     final_data_list = {}
     df_result.columns.values
     crop_groupby_data = df_result.groupby(['crop_id', 'crop_name']).agg({'Min_price':'min', 'Max_price':'max'}).reset_index()
@@ -369,16 +404,16 @@ def crop_prices(country_id, start_date, end_date, **kwargs):
         final_data_list["error"] = "No data found"
     return final_data_list
 
-def mandi_farmer_count(country_id, start_date, end_date, **kwargs):
-    final_data_list = repeat_farmer_count(country_id, start_date, end_date, 'mandi_id', 'mandi_name', 'mandifarmercount', kwargs)
+def mandi_farmer_count(**kwargs):
+    final_data_list = repeat_farmer_count('mandi_id', 'mandi_name', 'mandifarmercount', **kwargs)
     return final_data_list
 
-def agg_farmer_count(country_id, start_date, end_date, **kwargs):
-    final_data_list = repeat_farmer_count(country_id, start_date, end_date, 'aggregator_id', 'aggregator_name', 'aggrfarmercount', kwargs)
+def agg_farmer_count(**kwargs):
+    final_data_list = repeat_farmer_count('aggregator_id', 'aggregator_name', 'aggrfarmercount', **kwargs)
     return final_data_list
 
-def repeat_farmer_count(country_id, start_date, end_date, outer_param1, outer_param2, graphname, kwargs):
-    df_result = sql_query(country_id, start_date, end_date, kwargs)
+def repeat_farmer_count(outer_param1, outer_param2, graphname, **kwargs):
+    df_result = sql_query(**kwargs)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby([outer_param1, outer_param2, 'farmer_id', 'farmer_name']).agg({'date':pd.Series.nunique}).rename(columns={'date': 'repeat_count'}).reset_index()
 
@@ -478,9 +513,9 @@ def createInnerdataDict(dictData, keyword):
 
     return inner_data
 
-def agg_spk_cpk(country_id, start_date, end_date, **kwargs):
+def agg_spk_cpk(**kwargs):
     final_data_list = {}
-    df_result = query_myisam(country_id, start_date, end_date, kwargs)
+    df_result = query_myisam(**kwargs)
     df_result = df_result.groupby(['date','aggregator_id','mandi_id','aggregator_name','mandi_name']).agg(cpk_spk_aggregation).reset_index()
     df_result.columns = df_result.columns.droplevel(1)
 
@@ -528,9 +563,9 @@ def agg_spk_cpk(country_id, start_date, end_date, **kwargs):
 
     return final_data_list
 
-def agg_cost(country_id, start_date, end_date, **kwargs):
+def agg_cost(**kwargs):
     final_data_list = {}
-    df_result = query_myisam(country_id, start_date, end_date, kwargs)
+    df_result = query_myisam(**kwargs)
     df_result = df_result.groupby(['date','aggregator_id','mandi_id','aggregator_name','mandi_name']).agg(cpk_spk_aggregation).reset_index()
     df_result.columns = df_result.columns.droplevel(1)
 
@@ -606,8 +641,8 @@ def cost_recovered_data(df_result, groupby_result, df_result_mandi, graphname, o
     return final_data_list
 
 
-def mandi_cost(country_id, start_date, end_date, **kwargs):
-    df_result = query_myisam(country_id, start_date, end_date, kwargs)
+def mandi_cost(**kwargs):
+    df_result = query_myisam(**kwargs)
     df_result = df_result.groupby(['date','aggregator_id','mandi_id','aggregator_name','mandi_name']).agg(cpk_spk_aggregation).reset_index()
     df_result.columns = df_result.columns.droplevel(1)
 
@@ -621,8 +656,8 @@ def mandi_cost(country_id, start_date, end_date, **kwargs):
 
     return cost_recovered_data(df_result, df_result_agg, df_result_mandi, 'mandirecoveredtotal', 'mandi_name', 'aggregator_name', True, 'cost', 'recovered')
 
-def mandi_spk_cpk(country_id, start_date, end_date, **kwargs):
-    df_result = query_myisam(country_id, start_date, end_date, kwargs)
+def mandi_spk_cpk(**kwargs):
+    df_result = query_myisam(**kwargs)
     df_result = df_result.groupby(['date','aggregator_id','mandi_id','aggregator_name','mandi_name']).agg(cpk_spk_aggregation).reset_index()
     df_result.columns = df_result.columns.droplevel(1)
 

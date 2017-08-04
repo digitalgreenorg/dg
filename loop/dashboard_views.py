@@ -173,9 +173,9 @@ def get_pandas_dataframe(sql_query):
                                         use_unicode=True)
     return pd.read_sql_query(sql_query, con=db_connection)
 
-def cumm_vol_farmer(country_id):
-    c_v_f = get_cummulative_vol_farmer(country_id)
-    return c_v_f
+# def cumm_vol_farmer(country_id):
+#     c_v_f = get_cummulative_vol_farmer(country_id)
+#     return c_v_f
 
 def graph_data(request):
     filter_args = extract_filters_request(request)
@@ -186,7 +186,7 @@ def graph_data(request):
     elif chart_name == 'cpkSpkTS':
         result = cpk_spk_timeseries(**filter_args)
     elif chart_name == 'cummulativeCount':
-        result = cumm_vol_farmer(**filter_args)
+        result = get_cummulative_vol_farmer(**filter_args)
     elif chart_name == 'aggrvol':
         result = aggregator_volume(**filter_args)
     elif chart_name == 'aggrvisit':
