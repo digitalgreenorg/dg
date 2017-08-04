@@ -73,14 +73,14 @@ def sql_query(country_id=None, from_date=None, to_date=None, **kwargs):
     return df_result
 
 def query_myisam(**kwargs):
-    
+
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
     host = DATABASES['default']['HOST']
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
-    
+
     # Constructing sql query
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('*')
@@ -234,7 +234,7 @@ def get_volume_aggregator(**kwargs):
         print e
     return result_data
 
-def volume_amount_farmers_ts(country_id, from_date, to_date, **kwargs):
+def volume_amount_farmers_ts(**kwargs):
     result_data = {}
     df_result = query_myisam(**kwargs)
     df_result = df_result.groupby(['date'])['quantity','amount'].sum().reset_index()
@@ -259,7 +259,7 @@ def volume_amount_farmers_ts(country_id, from_date, to_date, **kwargs):
     # result_data = [data_vol,data_amount]
     return result_data
 
-def cpk_spk_ts(country_id, from_date, to_date, **kwargs):
+def cpk_spk_ts(**kwargs):
     result_data = {}
 
     df_result = query_myisam(**kwargs)

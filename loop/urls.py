@@ -54,7 +54,7 @@ urlpatterns = patterns('',
     url(r'^broadcast_audio_request/',broadcast_audio_request),
     url(r'^getCardGraphData/',get_card_graph_data),
     url(r'^volume_aggregator/',volume_aggregator),
-    url(r'^vol_amount_farmer/',vol_amount_farmer),
+    # url(r'^vol_amount_farmer/',vol_amount_farmer),
     url(r'^graph_data', graph_data),
     url(r'^get_filter_data/', send_filter_data),
     )

@@ -11,13 +11,13 @@ from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, Loop
 from loop.utils.loop_etl.group_myisam_data import *
 from constants.constants import ROLE_CHOICE_AGGREGATOR
 
-def cpk_spk_timeseries(country_id, start_date, end_date):
-    cpk_spk = cpk_spk_ts(country_id, start_date, end_date)
-    return cpk_spk
-
-def vol_amount_farmer(country_id, start_date, end_date):
-    v_a_f_ts = volume_amount_farmers_ts(country_id, start_date, end_date)
-    return v_a_f_ts
+# def cpk_spk_timeseries(country_id, start_date, end_date):
+#     cpk_spk = cpk_spk_ts(country_id, start_date, end_date)
+#     return cpk_spk
+#
+# def vol_amount_farmer(country_id, start_date, end_date):
+#     v_a_f_ts = volume_amount_farmers_ts(country_id, start_date, end_date)
+#     return v_a_f_ts
 
 def volume_aggregator(request):
     volume_per_aggregator = get_volume_aggregator(1)
@@ -182,9 +182,9 @@ def graph_data(request):
 
     chart_name = request.GET['chartName']
     if chart_name == 'volFarmerTS':
-        result = vol_amount_farmer(**filter_args)
+        result = volume_amount_farmers_ts(**filter_args)
     elif chart_name == 'cpkSpkTS':
-        result = cpk_spk_timeseries(**filter_args)
+        result = cpk_spk_ts(**filter_args)
     elif chart_name == 'cummulativeCount':
         result = get_cummulative_vol_farmer(**filter_args)
     elif chart_name == 'aggrvol':
