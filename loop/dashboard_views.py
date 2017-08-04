@@ -128,7 +128,6 @@ def get_card_graph_data(request):
 
 
 def extract_filters_request(request):
-
     if 'cardName' in request.GET:
         cardName = str(request.GET.get('cardName'))
     else:
@@ -139,9 +138,30 @@ def extract_filters_request(request):
     else:
         country_id = 1
 
+    if 'start_date' in request.GET and 'end_date' in request.GET:
+        start_date = str(request.GET['start_date'])
+        end_date = str(request.GET['end_date'])
+    else:
+        end_date = datetime.datetime.today().strftime('%Y-%m-%d')
+        delta = datetime.timedelta(days=30)
+        start_date = (datetime.datetime.today() - delta).strftime('%Y-%m-%d')
+
+    aggregators_list = request.GET.getlist('Aggregator')
+    mandis_list = request.GET.getlist('Mandi')
+    crops_list = request.GET.getlist('Crops')
+    gaddidars_list = request.GET.getlist('Gaddidar')
+
     filter_args = {}
     filter_args['cardName'] = cardName
     filter_args['country_id'] = country_id
+    filter_args['start_date'] = start_date
+    filter_args['end_date'] = end_date
+    # filter_args['apply_filter'] = apply_filter
+    filter_args['aggregators_list'] = aggregators_list
+    filter_args['mandis_list'] = mandis_list
+    filter_args['crops_list'] = crops_list
+    filter_args['gaddidars_list'] = gaddidars_list
+
     return filter_args
 
 def get_pandas_dataframe(sql_query):
@@ -152,47 +172,51 @@ def get_pandas_dataframe(sql_query):
                                         charset='utf8',
                                         use_unicode=True)
     return pd.read_sql_query(sql_query, con=db_connection)
+
 def cumm_vol_farmer(country_id):
     c_v_f = get_cummulative_vol_farmer(country_id)
     return c_v_f
 
 def graph_data(request):
+    filter_args = extract_filters_request(request)
+    print filter_args
+
     chart_name = request.GET['chartName']
     country_id = 1
     start_date = 20170401
     end_date = 20170601
     if chart_name == 'volFarmerTS':
-        result = vol_amount_farmer(country_id, start_date, end_date)
+        result = vol_amount_farmer(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'cpkSpkTS':
-        result = cpk_spk_timeseries(country_id, start_date, end_date)
+        result = cpk_spk_timeseries(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'cummulativeCount':
-        result = cumm_vol_farmer(country_id)
+        result = cumm_vol_farmer(country_id, **filter_args)
     elif chart_name == 'aggrvol':
-        result = aggregator_volume(country_id, start_date, end_date)
+        result = aggregator_volume(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'aggrvisit':
-        result = aggregator_visits(country_id, start_date, end_date)
+        result = aggregator_visits(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'mandivolume':
-        result = mandi_volume(country_id, start_date, end_date)
+        result = mandi_volume(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'mandivisit':
-        result = mandi_visits(country_id, start_date, end_date)
+        result = mandi_visits(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'cropvolume':
-        result = crop_volume(country_id, start_date, end_date)
+        result = crop_volume(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'cropfarmercount':
-        result = crop_farmer_count(country_id, start_date, end_date)
+        result = crop_farmer_count(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'cropprices':
-        result = crop_prices(country_id, start_date, end_date)
+        result = crop_prices(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'aggrspkcpk':
-        result = agg_spk_cpk(country_id, start_date, end_date)
+        result = agg_spk_cpk(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'aggrrecoveredtotal':
-        result = agg_cost(country_id, start_date, end_date)
+        result = agg_cost(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'aggrfarmercount':
-        result = agg_farmer_count(country_id, start_date, end_date)
+        result = agg_farmer_count(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'mandispkcpk':
-        result = mandi_spk_cpk(country_id, start_date, end_date)
+        result = mandi_spk_cpk(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'mandirecoveredtotal':
-        result = mandi_cost(country_id, start_date, end_date)
+        result = mandi_cost(country_id, start_date, end_date, **filter_args)
     elif chart_name == 'mandifarmercount':
-        result = mandi_farmer_count(country_id, start_date, end_date)
+        result = mandi_farmer_count(country_id, start_date, end_date, **filter_args)
     else:
         result = {"result":"success"}
     return JsonResponse(result)
