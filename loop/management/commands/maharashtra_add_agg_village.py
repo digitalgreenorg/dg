@@ -28,6 +28,6 @@ class Command(BaseCommand):
 				df.set_value(i, 'Status', 'Fail')
 				df.set_value(i, 'Exception', str(e))
 		print df
-		# excel_writer = pd.ExcelWriter("AggregatorVillageStatus.xlsx")
-		# df.to_excel(excel_writer = excel_writer, sheet_name= 'Sheet1', index = False)
-		# excel_writer.save()
+		excel_writer = pd.ExcelWriter("AggregatorVillageStatus.xlsx")
+		df.to_excel(excel_writer = excel_writer, sheet_name= 'Sheet1', index = False)
+		excel_writer.save()
