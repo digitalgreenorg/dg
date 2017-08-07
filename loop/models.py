@@ -117,6 +117,7 @@ class Village(LoopModel):
 post_save.connect(save_log, sender=Village)
 pre_delete.connect(save_log, sender=Village)
 post_save.connect(save_admin_log, sender=Village)
+pre_delete.connect(save_admin_log, sender=Village)
 
 
 class Mandi(LoopModel):
@@ -137,7 +138,7 @@ class Mandi(LoopModel):
 post_save.connect(save_log, sender=Mandi)
 pre_delete.connect(save_log, sender=Mandi)
 post_save.connect(save_admin_log, sender = Mandi)
-
+pre_delete.connect(save_admin_log, sender = Mandi)
 
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -172,6 +173,7 @@ class LoopUser(LoopModel):
 post_save.connect(save_log,sender=LoopUser)
 pre_delete.connect(save_log,sender=LoopUser)
 post_save.connect(save_admin_log,sender=LoopUser)
+pre_delete.connect(save_admin_log, sender = LoopUser)
 
 class LoopUserAssignedMandi(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -182,6 +184,7 @@ class LoopUserAssignedMandi(LoopModel):
 post_save.connect(save_log, sender=LoopUserAssignedMandi)
 pre_delete.connect(save_log, sender=LoopUserAssignedMandi)
 post_save.connect(save_admin_log, sender=LoopUserAssignedMandi)
+pre_delete.connect(save_admin_log, sender = LoopUserAssignedMandi)
 
 
 class LoopUserAssignedVillage(LoopModel):
@@ -193,6 +196,7 @@ class LoopUserAssignedVillage(LoopModel):
 post_save.connect(save_log, sender=LoopUserAssignedVillage)
 pre_delete.connect(save_log, sender=LoopUserAssignedVillage)
 post_save.connect(save_admin_log, sender=LoopUserAssignedVillage)
+pre_delete.connect(save_admin_log, sender = LoopUserAssignedVillage)
 
 
 
@@ -223,7 +227,7 @@ class AdminUser(LoopModel):
         return "%s" % self.user.id
 
 post_save.connect(save_admin_log, sender=AdminUser)
-#pre_delete.connect(delete_log, sender=AdminUser)
+pre_delete.connect(save_admin_log, sender=AdminUser)
 class AdminAssignedLoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
     admin_user = models.ForeignKey(AdminUser)
@@ -231,6 +235,7 @@ class AdminAssignedLoopUser(LoopModel):
     is_visible = models.BooleanField(default=True)
 
 post_save.connect(save_admin_log, sender=AdminAssignedLoopUser)
+pre_delete.connect(save_admin_log, sender = AdminAssignedLoopUser)
         
 class AdminAssignedDistrict(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -242,7 +247,7 @@ class AdminAssignedDistrict(LoopModel):
 
 
 post_save.connect(save_admin_log, sender=AdminAssignedDistrict)
-#pre_delete.connect(delete_log, sender=AdminAssignedDistrict)
+pre_delete.connect(save_admin_log, sender=AdminAssignedDistrict)
 
 class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -264,6 +269,7 @@ class Gaddidar(LoopModel):
 post_save.connect(save_log, sender=Gaddidar)
 pre_delete.connect(save_log, sender=Gaddidar)
 post_save.connect(save_admin_log, sender=Gaddidar)
+pre_delete.connect(save_admin_log, sender = Gaddidar)
 
 class Farmer(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -305,6 +311,7 @@ class Crop(LoopModel):
 post_save.connect(save_log, sender=Crop)
 pre_delete.connect(save_log, sender=Crop)
 post_save.connect(save_admin_log, sender=Crop)
+pre_delete.connect(save_admin_log, sender = Crop)
 #############Crop name in multiple languages###############
 
 class CropLanguage(models.Model):
@@ -322,6 +329,7 @@ class CropLanguage(models.Model):
 post_save.connect(save_log,sender=CropLanguage)
 pre_delete.connect(save_log,sender=CropLanguage)
 post_save.connect(save_admin_log,sender=CropLanguage)
+pre_delete.connect(save_admin_log, sender = CropLanguage)
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -342,7 +350,6 @@ class Transporter(LoopModel):
 post_save.connect(save_log, sender=Transporter)
 pre_delete.connect(save_log, sender=Transporter)
 
-
 class Vehicle(LoopModel):
     id = models.AutoField(primary_key=True)
     vehicle_name = models.CharField(max_length=30, blank=False, null=False)
@@ -357,6 +364,8 @@ class Vehicle(LoopModel):
 
 post_save.connect(save_log, sender=Vehicle)
 pre_delete.connect(save_log, sender=Vehicle)
+post_save.connect(save_admin_log, sender=Vehicle)
+pre_delete.connect(save_admin_log, sender = Vehicle)
 
 class VehicleLanguage(models.Model):
     id = models.AutoField(primary_key=True)
@@ -372,6 +381,7 @@ class VehicleLanguage(models.Model):
 post_save.connect(save_log,sender=VehicleLanguage)
 pre_delete.connect(save_log,sender=VehicleLanguage)
 post_save.connect(save_admin_log,sender=VehicleLanguage)
+pre_delete.connect(save_admin_log, sender = VehicleLanguage)
 
 class TransportationVehicle(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -488,7 +498,8 @@ class GaddidarCommission(LoopModel):
         unique_together = ("start_date", "gaddidar", "mandi")
 post_save.connect(save_log, sender=GaddidarCommission)
 pre_delete.connect(save_log, sender=GaddidarCommission)
-post_save.connect(save_admin_log, sender=GaddidarCommission )
+post_save.connect(save_admin_log, sender=GaddidarCommission)
+pre_delete.connect(save_admin_log, sender = GaddidarCommission)
 
 class GaddidarShareOutliers(LoopModel):
     mandi = ChainedForeignKey(Mandi, chained_field="aggregator", chained_model_field="assigned_mandis")

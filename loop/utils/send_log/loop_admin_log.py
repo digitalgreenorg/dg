@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from tastypie.models import ApiKey
 
+from itertools import chain
+
 class TimestampException(Exception):
     pass
 
@@ -25,8 +27,8 @@ class DatetimeEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def save_district_log(instance,kwargs):
-    admin_user = None
+def save_district_log(instance,adminUser,kwargs):
+    admin_user = adminUser
     user = None
     sender='District'
     model_id = instance.id
@@ -41,8 +43,8 @@ def save_district_log(instance,kwargs):
               model_id=model_id, admin_user=admin_user)
     log.save()
 
-def save_mandi_log(instance,kwargs):
-    admin_user = None
+def save_mandi_log(instance,adminUser,kwargs):
+    admin_user = adminUser
     user = None
     sender='Mandi'
     model_id = instance.id
@@ -57,8 +59,8 @@ def save_mandi_log(instance,kwargs):
               model_id=model_id, admin_user=admin_user)
     log.save()
 
-def save_gaddidar_log(instance,kwargs):
-    admin_user = None
+def save_gaddidar_log(instance,adminUser,kwargs):
+    admin_user = adminUser
     user = None
     sender='Gaddidar'
     model_id = instance.id
@@ -72,8 +74,8 @@ def save_gaddidar_log(instance,kwargs):
               model_id=model_id, admin_user=admin_user)
     log.save()
 
-def save_gaddidarcommission_log(instance,kwargs):
-    admin_user = None
+def save_gaddidarcommission_log(instance,adminUser,kwargs):
+    admin_user = adminUser
     user = None
     sender='GaddidarCommission'
     model_id = instance.id
@@ -88,8 +90,8 @@ def save_gaddidarcommission_log(instance,kwargs):
               model_id=model_id, admin_user=admin_user)
     log.save()
 
-def save_block_log(instance,kwargs):
-    admin_user = None
+def save_block_log(instance,adminUser,kwargs):
+    admin_user = adminUser
     user = None
     sender='Block'
     model_id = instance.id
@@ -104,8 +106,8 @@ def save_block_log(instance,kwargs):
               model_id=model_id, admin_user=admin_user)
     log.save()
 
-def save_village_log(instance,kwargs):
-    admin_user = None
+def save_village_log(instance,adminUser,kwargs):
+    admin_user = adminUser
     user = None
     sender='Village'
     model_id = instance.id
@@ -127,29 +129,64 @@ def save_district_child_log(instance,kwargs):
     GaddidarCommission = get_model('loop','GaddidarCommission')
     Block = get_model('loop','Block')
     Village = get_model('loop','Village')
-    action = kwargs['created']
-    if action == 1:
-        mandi_queryset = Mandi.objects.filter(district=instance.district)
-        mandis =[]
-        for row in mandi_queryset:
-            save_mandi_log(row,kwargs)
-            mandis.append(row)
+    admin_user = instance.admin_user
+    try:
+        action = kwargs["created"]
+    except Exception as e:
+        action = -1
 
-        gaddidar_queryset = Gaddidar.objects.filter(mandi__district=instance.district)
-        for row in gaddidar_queryset:
-            save_gaddidar_log(row,kwargs)
-        gaddidarcommission_queryset = GaddidarCommission.objects.filter(mandi__district=instance.district)
-        for row in gaddidarcommission_queryset:
-            save_gaddidarcommission_log(row,kwargs)
+    mandi_queryset = Mandi.objects.filter(district=instance.district)
+    mandis =[]
+    for row in mandi_queryset:
+        save_mandi_log(row,admin_user,kwargs)
+        mandis.append(row)
 
-        block_queryset = Block.objects.filter(district=instance.district)
-        for row in block_queryset:
-            save_block_log(row,kwargs)
+    gaddidar_queryset = Gaddidar.objects.filter(mandi__district=instance.district)
+    for row in gaddidar_queryset:
+        save_gaddidar_log(row,admin_user,kwargs)
+    gaddidarcommission_queryset = GaddidarCommission.objects.filter(mandi__district=instance.district)
+    for row in gaddidarcommission_queryset:
+        save_gaddidarcommission_log(row,admin_user,kwargs)
+
+    block_queryset = Block.objects.filter(district=instance.district)
+    for row in block_queryset:
+        save_block_log(row,admin_user,kwargs)
     if instance.aggregation_switch==True:
         village_queryset = Village.objects.filter(block__district=instance.district)
         for row in village_queryset:
-            save_village_log(row,kwargs)
+            save_village_log(row,admin_user,kwargs)
+    
+        
 
+
+
+def save_admin_loopuser_mandi_child_log(instance,kwargs):
+    AdminUser = get_model('loop','AdminUser')
+    Mandi = get_model('loop','Mandi')
+    Gaddidar = get_model('loop','Gaddidar')
+    GaddidarCommission = get_model('loop','GaddidarCommission')
+    District = get_model('loop','District')
+    LoopUser = get_model('loop','LoopUser')
+    #import pdb;pdb.set_trace()
+    admin_user = instance.admin_user
+    mandi_queryset = instance.loop_user.get_mandis()
+    mandis=[]
+    district_set=[]
+    districts = instance.admin_user.get_districts()
+    for row in mandi_queryset and row not in mandis:
+        if row.district not in districts:
+            save_mandi_log(row,admin_user,kwargs)
+            if row.district not in district_set:
+                save_district_log(row.district,admin_user,kwargs)
+                district_set.append(row.district)
+            mandis.append(row)
+
+    gaddidar_queryset = Gaddidar.objects.filter(mandi__in=mandis)
+    for row in gaddidar_queryset:
+        save_gaddidar_log(row,admin_user,kwargs)
+    gaddidarcommission_queryset = GaddidarCommission.objects.filter(mandi__in=mandis)
+    for row in gaddidarcommission_queryset:
+        save_gaddidarcommission_log(row,admin_user,kwargs)
 
 def save_loopuser_mandi_child_log(instance,kwargs):
     AdminUser = get_model('loop','AdminUser')
@@ -157,27 +194,74 @@ def save_loopuser_mandi_child_log(instance,kwargs):
     Gaddidar = get_model('loop','Gaddidar')
     GaddidarCommission = get_model('loop','GaddidarCommission')
     District = get_model('loop','District')
-    
+    LoopUser = get_model('loop','LoopUser')
+    AdminAssignedLoopUser = get_model('loop','AdminAssignedLoopUser')
+    admins_set = AdminUser.objects.filter(adminassignedloopuser__loop_user=instance.loop_user)
+    mandis_set = []
+    district_set = []
+    for admin in admins_set:
+        districts = admin.get_districts()
+        if instance.mandi.district not in districts and instance.mandi not in mandis_set:
+            save_mandi_log(instance.mandi,admin,kwargs)
+            if instance.mandi.district not in district_set:
+                save_district_log(instance.mandi.district,admin,kwargs)
+                district_set.append(instance.mandi.district)
+            mandis_set.append(instance.mandi)
 
-    #mandi_queryset = Mandi.objects.filter(district=instance.mandi.district)
-    #mandis =[]
-    save_mandi_log(instance.mandi,kwargs)
-    save_district_log(instance.mandi.district,kwargs)
-    #mandis.append(row)
+        gaddidar_queryset = Gaddidar.objects.filter(mandi__in=mandis_set)
+        for row in gaddidar_queryset:
+            save_gaddidar_log(row,admin,kwargs)
+        gaddidarcommission_queryset = GaddidarCommission.objects.filter(mandi__in=mandis_set)
+        for row in gaddidarcommission_queryset:
+            save_gaddidarcommission_log(row,admin,kwargs)
 
-    gaddidar_queryset = Gaddidar.objects.filter(mandi=instance.mandi)
-    for row in gaddidar_queryset:
-        save_gaddidar_log(row,kwargs)
-    gaddidarcommission_queryset = GaddidarCommission.objects.filter(mandi=instance.mandi)
-    for row in gaddidarcommission_queryset:
-        save_gaddidarcommission_log(row,kwargs)
+def save_admin_loopuser_village_child_log(instance,kwargs):
+    AdminUser = get_model('loop','AdminUser')
+    District = get_model('loop','District')
+    Block = get_model('loop','Block')
+    District = get_model('loop','District')
+    LoopUser = get_model('loop','LoopUser')
+    AdminAssignedDistrict = get_model('loop','AdminAssignedDistrict')
+    admin_user = instance.admin_user
+    districts = instance.admin_user.get_districts()
+    village_queryset = instance.loop_user.get_villages()
+    district_set =[]
+    block_set =[]
+    for row in village_queryset:
+        if row.block.district not in districts or AdminAssignedDistrict.objects.get(district=row.block.district,admin_user=admin_user).aggregation_switch==False:
+            save_village_log(row,admin_user,kwargs)
+            if row.block.district not in districts and row.block.district not in district_set:
+                save_district_log(row.block.district,admin_user,kwargs)
+                district_set.append(row.block.district)
+            if row.block.district not in districts and row.block not in block_set:
+                save_block_log(row.block,admin_user,kwargs)
+                block_set.append(row.block.district)
+
 def save_loopuser_village_child_log(instance,kwargs):
     AdminUser = get_model('loop','AdminUser')
     District = get_model('loop','District')
     Block = get_model('loop','Block')
-    save_village_log(instance.village,kwargs)
-    save_district_log(instance.village.block.district,kwargs)
-    save_block_log(instance.village.block,kwargs)
+    District = get_model('loop','District')
+    LoopUser = get_model('loop','LoopUser')
+    AdminAssignedLoopUser = get_model('loop','AdminAssignedLoopUser')
+    admins_set = AdminUser.objects.filter(adminassignedloopuser__loop_user=instance.loop_user)
+    village_set =[]
+    district_set = []
+    block_set =[]
+    for admin in admins_set:
+        districts = admin.get_districts()
+        if instance.village.block.district not in districts and instance.village not in village_set:
+            save_village_log(instance.village,admin,kwargs)
+            if instance.village.block.district not in district_set:
+                save_district_log(instance.village.block.district,admin,kwargs)
+                district_set.append(instance.village.block.district)
+            if instance.village.block not in block_set:
+                save_block_log(instance.village.block,admin,kwargs)
+                block_set.append(instance.village.block)
+            village_set.append(instance.village)
+
+
+
 
 
 def save_admin_log(sender, **kwargs):
@@ -218,13 +302,19 @@ def save_admin_log(sender, **kwargs):
     elif sender == "AdminAssignedDistrict":
         sender = "District"
         model_id = instance.district.id
+        admin_user = instance.admin_user
+        district_id = instance.district.id
         save_district_child_log(instance,kwargs)
     elif sender == "AdminAssignedLoopUser":
         sender = "LoopUser"
         model_id = instance.loop_user.id
         admin_user = instance.admin_user
+        save_admin_loopuser_mandi_child_log(instance,kwargs)
+        save_admin_loopuser_village_child_log(instance,kwargs)
     elif sender == "LoopUserAssignedMandi":
-        save_loopuser_child_log(instance,kwargs)
+        save_loopuser_mandi_child_log(instance,kwargs)
+    elif sender == "LoopUserAssignedVillage":
+        save_loopuser_village_child_log(instance,kwargs)
 
     elif sender == "Block":
         district_id = instance.district.id
@@ -242,7 +332,6 @@ def save_admin_log(sender, **kwargs):
 
 
 def get_admin_log_crop_vehicle_object(log_object, preferred_language):
-    import pdb;pdb.set_trace()
     Obj_model = get_model('loop', log_object.entry_table)
     if log_object.entry_table == 'CropLanguage':
         table = 'Crop'
@@ -326,22 +415,30 @@ def send_updated_admin_log(request):
             VehicleLanguage = get_model('loop','VehicleLanguage')
             LoopUserAssignedVillage = get_model('loop','loopuserassignedvillage')
             LoopUserAssignedMandi = get_model('loop','loopuserassignedmandi')
+            District = get_model('loop','District')
+            Block = get_model('loop','Block')
 
             list_rows = []
             #AdminUser Log
-            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.id,entry_table__in=['AdminUser']))
-            #list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.village.block.id,entry_table__in=['Block']))
-            #list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.village.block.id,entry_table__in=['Block']))
-            #list_queryset = Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['CropLanguage','VehicleLanguage'])
-            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
-            
+            #import pdb;pdb.set_trace()
+            district_queryset = Log.objects.filter(timestamp__gt=timestamp,entry_table="District",admin_user=None)
+            for row in district_queryset:
+                if District.objects.get(id=row.model_id) in districts:
+                    list_rows.append(row)
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table="District",admin_user=requesting_admin_user))
 
-            '''
-            Village Log
-            TODO : district switch check for villages
-            '''
-            village_list_queryset = Log.objects.filter(
-                timestamp__gt=timestamp,district__in=districts,entry_table__in=['Village'])
+            block_queryset = Log.objects.filter(timestamp__gt=timestamp,entry_table="Block",admin_user=None)
+            for row in block_queryset:
+                if Block.objects.get(id=row.model_id).district in districts:
+                    list_rows.append(row)
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table="Block",admin_user=requesting_admin_user))
+            village_list_queryset = Log.objects.filter(timestamp__gt=timestamp,district__in=districts,entry_table__in=['Village'],admin_user=None)
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Village'],admin_user=requesting_admin_user))
+            for vrow in village_list_queryset:
+                if AdminAssignedDistrict.objects.get(admin_user=requesting_admin_user,district=vrow.district).aggregation_switch==True:
+                    list_rows.append(vrow)
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.id,entry_table__in=['AdminUser']))
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
             loopuser_querset=Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'])
             for row in loopuser_querset:
                 try:
@@ -349,18 +446,21 @@ def send_updated_admin_log(request):
                         list_rows.append(row)
                 except:
                     pass
-            for vrow in village_list_queryset:
-                if AdminAssignedDistrict.objects.get(admin_user=requesting_admin_user,district=vrow.district).aggregation_switch==True:
-                    list_rows.append(vrow)
 
             #Mandi Log
             list_rows.append(Log.objects.filter(
-                timestamp__gt=timestamp, district__in=districts, entry_table__in=['Mandi']))
+                timestamp__gt=timestamp, district__in=districts, entry_table__in=['Mandi'],admin_user=None))
+            list_rows.append(Log.objects.filter(
+                timestamp__gt=timestamp, entry_table__in=['Mandi'],admin_user=requesting_admin_user))
 
             list_rows.append(Log.objects.filter(
-                timestamp__gt=timestamp, district__in=districts, entry_table__in=['Gaddidar']))
+                timestamp__gt=timestamp, district__in=districts, entry_table__in=['Gaddidar'],admin_user=None))
             list_rows.append(Log.objects.filter(
-                timestamp__gt=timestamp, district__in=districts, entry_table__in=['GaddidarCommission']))
+                timestamp__gt=timestamp, entry_table__in=['Gaddidar'],admin_user=requesting_admin_user))
+            list_rows.append(Log.objects.filter(
+                timestamp__gt=timestamp, district__in=districts, entry_table__in=['GaddidarCommission'],admin_user=None))
+            list_rows.append(Log.objects.filter(
+                timestamp__gt=timestamp, entry_table__in=['GaddidarCommission'],admin_user=requesting_admin_user))
             loopuserassignedvillage_queryset = Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUserAssignedVillage'])
             loopuserassignedmandi_queryset = Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUserAssignedMandi'])
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
@@ -369,7 +469,7 @@ def send_updated_admin_log(request):
                 if CropLanguage.objects.get(id=row.model_id).language == preferred_language:
                     list_rows.append(row)
             vehiclelanguage_query = Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['VehicleLanguage'])
-            for row in croplanguage_query:
+            for row in vehiclelanguage_query:
                 if VehicleLanguage.objects.get(id=row.model_id).language == preferred_language:
                     list_rows.append(row)
             #import pdb;pdb.set_trace()
