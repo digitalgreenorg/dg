@@ -23,13 +23,17 @@ from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
 def make_market_info_call(caller_number, dg_number, incoming_time):
-    app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-    app_id = MARKET_INFO_APP
-    app_url = APP_URL%(app_id,)
-    call_response_url = MARKET_INFO_CALL_RESPONSE_URL
-    parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
-    response = requests.post(app_request_url,data=parameters)
-    module = 'make_market_info_call'
+    try:
+        app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+        app_id = MARKET_INFO_APP
+        app_url = APP_URL%(app_id,)
+        call_response_url = MARKET_INFO_CALL_RESPONSE_URL
+        parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
+        response = requests.post(app_request_url,data=parameters)
+        module = 'make_market_info_call'
+    except Exception as e:
+        print e
+    return
     if response.status_code == 200:
         response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
         call_detail = response_tree.findall('Call')[0]

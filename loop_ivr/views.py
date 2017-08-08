@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from threading import Thread
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog
-from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_sms_market_info_call
+from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call
 from loop_ivr.utils.config import LOG_FILE
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
