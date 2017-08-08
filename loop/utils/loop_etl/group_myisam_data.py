@@ -96,7 +96,7 @@ def query_myisam(**kwargs):
             sql_ds['where'].append('gaddidar_id in (' + ",".join(gaddidars_list) + ')')
         sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
 
-    sql_ds['where'].append('country_id = ' + str(country_id))
+        sql_ds['where'].append('country_id = ' + str(country_id))
 
     sql_q = join_sql_ds(sql_ds)
 
