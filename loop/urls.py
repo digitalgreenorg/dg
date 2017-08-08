@@ -54,4 +54,5 @@ urlpatterns = patterns('',
     url(r'^broadcast_call_response/',broadcast_call_response),
     url(r'^broadcast_audio_request/',broadcast_audio_request),
     url(r'^jharkhand_pilot_call/',jharkhand_pilot_call),
+    url(r'^jharkhand_pilot_call_response/',jharkhand_pilot_call_response),
     )

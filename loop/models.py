@@ -16,6 +16,8 @@ CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
 CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
 BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
+IS_BROADCAST = ((0, 'No'), (1, 'Yes'))
+IS_PICKED = ((0, 'No'), (1, 'Yes'))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -607,13 +609,18 @@ class BroadcastAudience(LoopModel):
 
 class JharkhandIncoming(LoopModel):
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     call_id = models.CharField(max_length=100)
     from_number = models.CharField(max_length=20, db_index=True) #User No.
     to_number = models.CharField(max_length=20)                  #DG Exotel No.
-    incoming_time = models.DateTimeField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField(blank=True, null=True)
+    is_broadcast = models.IntegerField(choices=IS_BROADCAST, default=0)
+    call_type = models.IntegerField(choices=CALL_TYPES, default=0)
+    is_picked = models.IntegerField(choices=IS_PICKED, default=0)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.from_number, self.incoming_time)
+        return "%s (%s)" % (self.from_number, self.start_time)
 
     class Meta:
-        unique_together = ("call_id", "from_number", "incoming_time")
+        unique_together = ("call_id", "from_number", "start_time")

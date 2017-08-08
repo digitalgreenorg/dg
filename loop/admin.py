@@ -185,7 +185,7 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
     search_fields = ['to_number']
 
 class JharkhandIncomingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'call_id', 'from_number', 'to_number', 'incoming_time')
+    list_display = ('id', 'call_id', 'name', 'from_number', 'to_number', 'start_time', 'end_time', 'is_broadcast', 'call_type', 'is_picked')
     search_fields = ['from_number', 'to_number']
 
 

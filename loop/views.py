@@ -939,7 +939,7 @@ def jharkhand_pilot_call(request):
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         call_obj = JharkhandIncoming(call_id=call_id,from_number=farmer_number,
-                                    to_number=dg_number,incoming_time=incoming_time)
+                                    to_number=dg_number,start_time=incoming_time)
         try:
             call_obj.save()
         except Exception as e:
@@ -950,3 +950,22 @@ def jharkhand_pilot_call(request):
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
+
+@csrf_exempt
+def jharkhand_pilot_call_response(request):
+    if request.method == 'POST':
+        status = str(request.POST.getlist('Status')[0])
+        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        outgoing_obj = JharkhandIncoming.objects.filter(call_id=outgoing_call_id).order_by('-id')
+        outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
+
+        if status == 'completed':
+            resolved_time = str(request.POST.getlist('DateUpdated')[0])
+            if outgoing_obj:
+                outgoing_obj.end_time = resolved_time
+                outgoing_obj.is_picked = 1
+                outgoing_obj.save()
+            else:
+                pass
+        else:
+            pass
