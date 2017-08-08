@@ -173,7 +173,7 @@ def save_admin_loopuser_mandi_child_log(instance,kwargs):
     mandis=[]
     district_set=[]
     districts = instance.admin_user.get_districts()
-    for row in mandi_queryset and row not in mandis:
+    for row in mandi_queryset:
         if row.district not in districts:
             save_mandi_log(row,admin_user,kwargs)
             if row.district not in district_set:
