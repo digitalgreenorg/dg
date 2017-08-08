@@ -17,6 +17,12 @@ from loop.helpline_view import fetch_info_of_incoming_call, write_log
 def home(request):
     return HttpResponse(status=403)
 
+def crop_price_incoming(request):
+    if request.method == 'GET':
+        call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+    else:
+        return HttpResponse(status=403)
+
 def crop_price_query(request):
     # Serve only Get request
     if request.method == 'GET':
