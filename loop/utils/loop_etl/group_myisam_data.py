@@ -40,7 +40,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     return data_by_grouped_days
 
 def sql_query(country_id=None, from_date=None, to_date=None, **kwargs):
-    start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+    country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -73,7 +73,6 @@ def sql_query(country_id=None, from_date=None, to_date=None, **kwargs):
     return df_result
 
 def query_myisam(**kwargs):
-
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -88,7 +87,7 @@ def query_myisam(**kwargs):
     sql_q = join_sql_ds(sql_ds)
 
     if(len(kwargs) > 0):
-        start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+        country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
         if len(aggregators_list) > 0:
             sql_ds['where'].append('aggregator_id in (' + ",".join(aggregators_list) + ")")
         if len(mandis_list) > 0:
@@ -97,13 +96,15 @@ def query_myisam(**kwargs):
             sql_ds['where'].append('gaddidar_id in (' + ",".join(gaddidars_list) + ')')
         sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
 
+    sql_ds['where'].append('country_id = ' + str(country_id))
+
     sql_q = join_sql_ds(sql_ds)
 
     df_result = pd.read_sql(sql_q, con=mysql_cn)
     return df_result
 
 def crop_prices_query( **kwargs):
-    start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+    country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -197,7 +198,7 @@ def get_data_from_myisam(get_total, country_id):
     return dictionary, cumm_vol_farmer
 
 def read_kwargs(Kwargs):
-    return Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'], Kwargs['gaddidars_list']
+    return Kwargs['country_id'], Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'], Kwargs['gaddidars_list']
 
 def get_volume_aggregator(**kwargs):
     result_data = {}
@@ -309,6 +310,7 @@ def get_cummulative_vol_farmer(**kwargs):
     df_cum_vol_farmer.drop('quantity',axis=1,inplace=True)
     df_cum_vol_farmer['date'] = df_cum_vol_farmer['date'].astype('datetime64[ns]')
     df_cum_vol_farmer['date_time'] = df_cum_vol_farmer['date'].astype('int64')//10**6
+    print df_cum_vol_farmer
 
     data_farmers = []
     data_vol = []

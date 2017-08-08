@@ -11,14 +11,6 @@ from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, Loop
 from loop.utils.loop_etl.group_myisam_data import *
 from constants.constants import ROLE_CHOICE_AGGREGATOR
 
-# def cpk_spk_timeseries(country_id, start_date, end_date):
-#     cpk_spk = cpk_spk_ts(country_id, start_date, end_date)
-#     return cpk_spk
-#
-# def vol_amount_farmer(country_id, start_date, end_date):
-#     v_a_f_ts = volume_amount_farmers_ts(country_id, start_date, end_date)
-#     return v_a_f_ts
-
 def volume_aggregator(request):
     volume_per_aggregator = get_volume_aggregator(1)
     return JsonResponse(volume_per_aggregator)
@@ -113,7 +105,6 @@ def get_cluster_related_data(filter_args) :
     return data
 
 def get_card_graph_data(request):
-
     query_list = []
     filter_args = extract_filters_request(request)
 
@@ -172,10 +163,6 @@ def get_pandas_dataframe(sql_query):
                                         charset='utf8',
                                         use_unicode=True)
     return pd.read_sql_query(sql_query, con=db_connection)
-
-# def cumm_vol_farmer(country_id):
-#     c_v_f = get_cummulative_vol_farmer(country_id)
-#     return c_v_f
 
 def graph_data(request):
     filter_args = extract_filters_request(request)

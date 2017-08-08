@@ -21,7 +21,9 @@ export const chartsConfig = {
       }],
     legend: { enabled: false },
     tooltip: {
-      shared: true,
+      // shared: true,
+      pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
+      valueDecimals: 2
     },
     series: [],
     drilldown: {}
@@ -49,7 +51,7 @@ export const chartsConfig = {
     //   // valueSuffix: ' units'
     // },
     tooltip: {
-      pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+      pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
       valueDecimals: 2,
       split: true
     },
