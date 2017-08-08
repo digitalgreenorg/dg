@@ -4,11 +4,12 @@ __author__ = 'Vikas Saini'
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from threading import Thread
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog
-from loop_ivr.helper_function import get_valid_list, send_info, get_price_info
+from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_sms_market_info_call
 from loop_ivr.utils.config import LOG_FILE
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
@@ -17,11 +18,17 @@ from loop.helpline_view import fetch_info_of_incoming_call, write_log
 def home(request):
     return HttpResponse(status=403)
 
-def crop_price_incoming(request):
+def market_info_incoming(request):
     if request.method == 'GET':
-        call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        make_market_info_call(to_number, dg_number, incoming_time)
     else:
         return HttpResponse(status=403)
+
+@csrf_exempt
+def market_info_response(request):
+    print request.POST
+    pass
 
 def crop_price_query(request):
     # Serve only Get request

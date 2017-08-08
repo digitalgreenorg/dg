@@ -12,13 +12,40 @@ from django.db.models import get_model
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES
 
 from loop.models import Crop, Mandi, CropLanguage
-from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
+from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL, CALL_REQUEST_URL, APP_REQUEST_URL, \
+    APP_URL
 
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
-    agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available
-from loop_ivr.models import PriceInfoLog
+    agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
+    MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP
+from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
+
+def make_market_info_call(caller_number, dg_number, incoming_time):
+    app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    app_id = MARKET_INFO_APP
+    app_url = APP_URL%(app_id,)
+    call_response_url = MARKET_INFO_CALL_RESPONSE_URL
+    parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
+    response = requests.post(app_request_url,data=parameters)
+    module = 'make_market_info_call'
+    if response.status_code == 200:
+        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
+        call_detail = response_tree.findall('Call')[0]
+        outgoing_call_id = str(call_detail.find('Sid').text)
+        outgoing_call_time = str(call_detail.find('StartTime').text)
+        price_info_incoming_obj = PriceInfoIncoming(call_id=outgoing_call_id, from_number=caller_number,
+                                        to_number=dg_number, incoming_time=outgoing_call_time)
+        try:
+            price_info_incoming_obj.save()    
+        except Exception as e:
+            # Save Errors in Logs
+            write_log(LOG_FILE,module,str(e))
+    else:
+        # Enter in Log
+        log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
+        write_log(LOG_FILE,module,log)
 
 def send_sms(from_number,to_number,sms_body):
     sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)

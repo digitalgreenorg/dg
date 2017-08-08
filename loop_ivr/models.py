@@ -1,7 +1,7 @@
 from django.db import models
 from loop.models import Crop, Mandi, LoopModel
 
-INFO_STATUS = ((0, "Pending"), (1, "Done"), (2, "Wrong Query"), (3, "No Input"))
+INFO_STATUS = ((0, "Pending"), (1, "Done"), (2, "Wrong Query"), (3, "No Input"), (4, 'Not Picked'))
 RETURN_RESULT = ((0, "No"), (1, "Yes"))
 
 class PriceInfoIncoming(LoopModel):
@@ -10,7 +10,7 @@ class PriceInfoIncoming(LoopModel):
     from_number = models.CharField(max_length=20, db_index=True) #User No.
     to_number = models.CharField(max_length=20)                  #DG Exotel No.
     incoming_time = models.DateTimeField()
-    info_status = models.IntegerField(choices=INFO_STATUS, default=0, db_index=True)
+    info_status = models.IntegerField(choices=INFO_STATUS, default=4, db_index=True)
     query_code = models.CharField(max_length=120, null=True, blank=True)
     prev_info_status = models.IntegerField(choices=INFO_STATUS, default=0, db_index=True)
     prev_query_code = models.CharField(max_length=120, null=True, blank=True)
