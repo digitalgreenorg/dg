@@ -83,8 +83,8 @@ def crop_price_query(request):
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()
             return HttpResponse(status=404)
-        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info)
-        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info)
+        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info, farmer_number)
+        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info, farmer_number)
         if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()

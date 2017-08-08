@@ -61,9 +61,16 @@ def send_sms(from_number,to_number,sms_body):
         log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
         write_log(LOG_FILE,module,log)
 
-def get_valid_list(app_name, model_name, requested_item):
+def get_valid_list(app_name, model_name, requested_item, farmer_number):
     model = get_model(app_name, model_name)
-    id_list = set(model.objects.values_list('id', flat=True))
+    if model_name == 'mandi':
+        # If call from Bangladesh then return Mandi of Bangladesh
+        if farmer_number.startswith('01'):
+            id_list = set(model.objects.filter('district__state__country_id'=2).values_list('id', flat=True))
+        else:
+            id_list = set(model.objects.filter('district__state__country_id'=1).values_list('id', flat=True))
+    else:
+        id_list = set(model.objects.values_list('id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item)
     if (0 in requested_list) or (len(requested_list)==0 and model_name == 'mandi'):
         return tuple(map(int,id_list)),1
