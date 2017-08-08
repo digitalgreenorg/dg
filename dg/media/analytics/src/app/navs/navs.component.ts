@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { environment } from '../../environments/environment.loop';
 import { GraphsService } from './navs.service';
 import { SharedService } from '../shared.service';
@@ -10,11 +10,14 @@ import { SharedService } from '../shared.service';
   styleUrls: ['./navs.component.css']
 })
 
-export class NavsComponent implements OnInit {
+export class NavsComponent implements OnInit,
+   AfterViewInit, AfterViewChecked {
   //used for collapse button
   public isCollapsed: boolean = false;
   public showOverall: boolean = true;
   public showFilters: boolean = true;
+  navClicked:boolean=false;
+  
   //read config files from environment created for each app
   navsConfig = environment.navsConfig;
   chartsConfig = environment.chartsConfig;
@@ -34,9 +37,10 @@ export class NavsComponent implements OnInit {
   containerCharts = [];
   //Display drop down type graphs
   // showDropDownGraphs: boolean = false;
-
+  filters = { 'params': {} };
   constructor(private graphService: GraphsService, private _sharedService: SharedService) {
     this._sharedService.argsList$.subscribe(filters => {
+      this.filters = filters;
       this.getGraphsData(filters);
     });
     /*setInterval(() => {
@@ -60,7 +64,15 @@ export class NavsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.getGraphsData({ 'params': {} });
+    this.getGraphsData(this.filters);
+  }
+
+  ngAfterViewChecked() {
+    if(this.navClicked){
+      this.navClicked=false;
+      this.getGraphsData(this.filters);
+    }
+
   }
 
   // renderCharts(): void {
@@ -107,8 +119,6 @@ export class NavsComponent implements OnInit {
         this.showContent(nav);
       }
     });
-    // console.log(this.containers);
-    // console.log(this.charts);
   }
 
   addChartsToDict(containers) {
@@ -146,6 +156,7 @@ export class NavsComponent implements OnInit {
 
   //get data for graphs from service
   getGraphsData(filters): void {
+    
     this.containerCharts.forEach(chart => {
       if (chart.nativeChart && (filters.params.length != 0 || chart.nativeChart.series.length == 0)) {
         chart.nativeChart.showLoading();
@@ -256,6 +267,7 @@ export class NavsComponent implements OnInit {
 
   //display respective containers based on clicked nav
   showContent(selectedNav: string): void {
+    this.navClicked=true;
     if (selectedNav == 'Home') {
       this.showOverall = true;
       this.showFilters = false;
@@ -272,6 +284,5 @@ export class NavsComponent implements OnInit {
     else if (this.filterGraphs[selectedNav] != undefined) {
       this.renderContainerCharts(this.filterGraphs[selectedNav]);
     }
-    this.getGraphsData({ 'params': {} });
   }
 }

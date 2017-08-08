@@ -153,7 +153,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
                     }
                     if(cardData.placeHolder == "recentcardGraphs") {
                         this.recentcharts.forEach(chart=> {
-                            console.log(cardData);
                             if(cardData.tagName === chart.tagName) {
                                 this.Dropdownitems = Object.keys(cardData.value)
                                 this.recentChartsData[cardData.tagName] = cardData.value;
@@ -167,7 +166,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
 
     public updateDropdown(day) : any {
         this.recentcharts.forEach(chart=> {
-            chart.nativeChart.series[0].update({'data':this.recentChartsData[chart.title][day]})
+            chart.nativeChart.series[0].update({'data':this.recentChartsData[chart.tagName][day]})
         })
     }
   }
