@@ -48,7 +48,7 @@ export const cardConfig = {
                    
                     },
     'Volume':      {
-                        text:'Volume',
+                        text:'Volume(Kg)',
                         overall : {
                             text : 'Volume_overall',
                             borrowData:true,
