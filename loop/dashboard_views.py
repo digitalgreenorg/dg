@@ -30,7 +30,7 @@ def recent_graphs_data(request):
             for k, v in data.iteritems():
                 if k not in res:
                     res[k] = {}
-                    res[k]['placeHolder'] = 'cardGraphs'
+                    res[k]['placeHolder'] = 'recentcardGraphs'
                     res[k]['tagName'] = k
                     res[k]['value'] = {}
                 if key not in res[k]['value']:
@@ -67,38 +67,38 @@ def get_cluster_related_data(filter_args) :
 
     data = []
     data.append({
-        'placeHolder':'cardGraphs',
-        'tagName':'#Clusters',
+        'placeHolder':'overallcardGraphs',
+        'tagName':'No_of_clusters_overall',
         'value': total_cluster_reached
     })
 
     data.append({
-        'placeHolder':'cardGraphs',
-        'tagName':'#Farmers',
+        'placeHolder':'overallcardGraphs',
+        'tagName':'No_of_farmers_overall',
         'value': total_farmers_reached
     })
 
     data.append({
-        'placeHolder':'cardGraphs',
-        'tagName':'Volume',
+        'placeHolder':'overallcardGraphs',
+        'tagName':'Volume_overall',
         'value': volume
     })
 
     data.append({
-        'placeHolder':'cardGraphs',
-        'tagName':'Payments',
+        'placeHolder':'overallcardGraphs',
+        'tagName':'Payments_overall',
         'value': amount
     })
 
     data.append({
-        'placeHolder':'cardGraphs',
-        'tagName':'Cost per Kg',
+        'placeHolder':'overallcardGraphs',
+        'tagName':'Cost_per_kg_overall',
         'value':-cpk
     })
 
     data.append({
-        'placeHolder':'cardGraphs',
-        'tagName':'Sustainability',
+        'placeHolder':'overallcardGraphs',
+        'tagName':'Sustainability_overall',
         'value':spk
     })
 
@@ -209,7 +209,8 @@ def send_filter_data(request):
     # country_id = request.GET.get('country_id')
     country_id = 1
     response_list = []
-    aggregator_list = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).annotate(value=F('name_en')).values('id', 'value').distinct().order_by('value')
+    aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
+    aggregator_list = aggregator_data.annotate(id=F('user_id')).values('id', 'value')
 
     aggregator_dict = {'name':'Aggregator', 'data':list(aggregator_list)}
 

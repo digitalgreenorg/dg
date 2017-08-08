@@ -65,6 +65,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
                 });
             } else if(this.cardsConfigs[key].overall.graph) {
                 this.overallcharts.push({
+                    tagName:this.cardsConfigs[key].overall.text,
                     title : this.cardsConfigs[key].text,
                     options:this.cardsConfigs[key].overall.graph.options,
                     nativeChart:null,
@@ -79,7 +80,8 @@ export class CardsComponent implements OnInit, AfterViewInit {
             }
             else if(this.cardsConfigs[key].recent.graph) {
                 this.recentcharts.push({
-                    title : this.cardsConfigs[key].recent.text,
+                    tagName:this.cardsConfigs[key].recent.text,
+                    title : this.cardsConfigs[key].text,
                     options:this.cardsConfigs[key].recent.graph.options,
                     nativeChart:null,
                 })
@@ -142,14 +144,17 @@ export class CardsComponent implements OnInit, AfterViewInit {
                             }
                         });
                     }
-                    if(cardData.placeHolder == "cardGraphs") {
+                    if(cardData.placeHolder == "overallcardGraphs") {
                         this.overallcharts.forEach(chart=> {
-                            if(cardData.tagName === chart.title) {
+                            if(cardData.tagName === chart.tagName) {
                                 chart.nativeChart.series[0].update({'data':[cardData.value]})
                             }
                         })
+                    }
+                    if(cardData.placeHolder == "recentcardGraphs") {
                         this.recentcharts.forEach(chart=> {
-                            if(cardData.tagName === chart.title) {
+                            console.log(cardData);
+                            if(cardData.tagName === chart.tagName) {
                                 this.Dropdownitems = Object.keys(cardData.value)
                                 this.recentChartsData[cardData.tagName] = cardData.value;
                                 chart.nativeChart.series[0].update({'data':cardData.value['15']});
