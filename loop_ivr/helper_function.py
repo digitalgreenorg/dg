@@ -23,7 +23,7 @@ from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
-def make_market_info_call(caller_number, dg_number, incoming_time):
+def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     app_id = MARKET_INFO_APP
     app_url = APP_URL%(app_id,)
@@ -38,15 +38,17 @@ def make_market_info_call(caller_number, dg_number, incoming_time):
         outgoing_call_time = str(call_detail.find('StartTime').text)
         price_info_incoming_obj = PriceInfoIncoming(call_id=outgoing_call_id, from_number=caller_number,
                                         to_number=dg_number, incoming_time=outgoing_call_time)
-        try:
-            price_info_incoming_obj.save()    
-        except Exception as e:
-            # Save Errors in Logs
-            write_log(LOG_FILE,module,str(e))
     else:
         # Enter in Log
+        price_info_incoming_obj = PriceInfoIncoming(call_id=incoming_call_id, from_number=caller_number,
+                                        to_number=dg_number, incoming_time=incoming_time, info_status=5)
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(LOG_FILE,module,log)
+    try:
+        price_info_incoming_obj.save()    
+    except Exception as e:
+        # Save Errors in Logs
+        write_log(LOG_FILE,module,str(e))
 
 def send_sms(from_number,to_number,sms_body):
     sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)

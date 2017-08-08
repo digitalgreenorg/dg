@@ -1,7 +1,7 @@
 from django.db import models
 from loop.models import Crop, Mandi, LoopModel
 
-INFO_STATUS = ((0, "Pending"), (1, "Done"), (2, "Wrong Query"), (3, "No Input"), (4, 'Not Picked'))
+INFO_STATUS = ((0, "Pending"), (1, "Done"), (2, "Wrong Query"), (3, "No Input"), (4, 'Not Picked'),(5,'Declined'))
 RETURN_RESULT = ((0, "No"), (1, "Yes"))
 
 class PriceInfoIncoming(LoopModel):

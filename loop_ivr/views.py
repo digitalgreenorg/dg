@@ -21,14 +21,15 @@ def home(request):
 def market_info_incoming(request):
     if request.method == 'GET':
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-        make_market_info_call(to_number, dg_number, incoming_time)
+        make_market_info_call(to_number, dg_number, incoming_time, call_id)
+        return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
 
 @csrf_exempt
 def market_info_response(request):
     print request.POST
-    pass
+    return HttpResponse(status=200)
 
 def crop_price_query(request):
     # Serve only Get request
