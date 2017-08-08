@@ -66,9 +66,9 @@ def get_valid_list(app_name, model_name, requested_item, farmer_number):
     if model_name == 'mandi':
         # If call from Bangladesh then return Mandi of Bangladesh
         if farmer_number.startswith('01'):
-            id_list = set(model.objects.filter('district__state__country_id'=2).values_list('id', flat=True))
+            id_list = set(model.objects.filter(district__state__country_id=2).values_list('id', flat=True))
         else:
-            id_list = set(model.objects.filter('district__state__country_id'=1).values_list('id', flat=True))
+            id_list = set(model.objects.filter(district__state__country_id=1).values_list('id', flat=True))
     else:
         id_list = set(model.objects.values_list('id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item)
