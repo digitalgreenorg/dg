@@ -12,7 +12,7 @@ class PriceInfoIncoming(LoopModel):
     incoming_time = models.DateTimeField()
     info_status = models.IntegerField(choices=INFO_STATUS, default=4, db_index=True)
     query_code = models.CharField(max_length=120, null=True, blank=True)
-    prev_info_status = models.IntegerField(choices=INFO_STATUS, default=0, db_index=True)
+    prev_info_status = models.IntegerField(choices=INFO_STATUS, default=4, db_index=True)
     prev_query_code = models.CharField(max_length=120, null=True, blank=True)
     price_result = models.TextField(null=True, blank=True)
     return_result_to_app = models.IntegerField(choices=RETURN_RESULT, default=1)
