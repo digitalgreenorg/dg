@@ -12,13 +12,40 @@ from django.db.models import get_model
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES
 
 from loop.models import Crop, Mandi, CropLanguage
-from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
+from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL, CALL_REQUEST_URL, APP_REQUEST_URL, \
+    APP_URL
 
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
-    agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available
-from loop_ivr.models import PriceInfoLog
+    agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
+    MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP
+from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
+
+def make_market_info_call(caller_number, dg_number, incoming_time):
+    app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    app_id = MARKET_INFO_APP
+    app_url = APP_URL%(app_id,)
+    call_response_url = MARKET_INFO_CALL_RESPONSE_URL
+    parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
+    response = requests.post(app_request_url,data=parameters)
+    module = 'make_market_info_call'
+    if response.status_code == 200:
+        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
+        call_detail = response_tree.findall('Call')[0]
+        outgoing_call_id = str(call_detail.find('Sid').text)
+        outgoing_call_time = str(call_detail.find('StartTime').text)
+        price_info_incoming_obj = PriceInfoIncoming(call_id=outgoing_call_id, from_number=caller_number,
+                                        to_number=dg_number, incoming_time=outgoing_call_time)
+        try:
+            price_info_incoming_obj.save()    
+        except Exception as e:
+            # Save Errors in Logs
+            write_log(LOG_FILE,module,str(e))
+    else:
+        # Enter in Log
+        log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
+        write_log(LOG_FILE,module,log)
 
 def send_sms(from_number,to_number,sms_body):
     sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
@@ -62,6 +89,7 @@ def send_info(to_number, content):
 def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag):
     price_info_list = []
     price_info_log_list = []
+    crop_mandi_comb = []
     crop_map = dict()
     mandi_map = dict()
     crop_in_hindi_map = dict()
@@ -82,7 +110,6 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     if not query_result:
         price_info_list.append(agg_sms_no_price_available)
     else:
-        crop_mandi_comb = []
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
         for row in query_result:
             crop, mandi, date, min_price, max_price, mean = row['crop'], row['mandi'], row['date'], int(row['minp']), int(row['maxp']), int(row['mean'])
@@ -105,12 +132,14 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             else:
                 temp_str = ('%s: %s %s\n')%(date.strftime('%d-%m-%Y'),indian_rupee,str(max_price))
             price_info_list.append(temp_str)
-        if not all_crop_flag and not all_mandi_flag:
-            for crop, mandi in itertools.product(crop_list, mandi_list):
-                if (crop,mandi) not in crop_mandi_comb:
-                    price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
-                                crop_id=crop, mandi_id=mandi)
-                    price_info_log_list.append(price_info_log_obj)
+    # Save combination of crop and mandi for which data is not present in query on if query not for all mandi and crops.
+    if not all_crop_flag and not all_mandi_flag:
+        for crop, mandi in itertools.product(crop_list, mandi_list):
+            if (crop,mandi) not in crop_mandi_comb:
+                price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
+                            crop_id=crop, mandi_id=mandi)
+                price_info_log_list.append(price_info_log_obj)
+                if query_result:
                     crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                     mandi_name = mandi_map[mandi].encode("utf-8")
                     temp_str = ('\n%s,%s %s\n')%(crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
