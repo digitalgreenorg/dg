@@ -10,10 +10,10 @@
       </li>
     </ul>
   </div>
-  <div class="float-right col-1">
+  <div class="float-right col-1" *ngIf="showFilters">
     <app-filters></app-filters>
   </div>
-  
+
 </nav>
 <div *ngFor="let nav of getDictKeys(toggleNav);">
   <div *ngIf="toggleNav[nav].hasOwnProperty('subNavs')">
