@@ -129,9 +129,6 @@ class MandiType(LoopModel):
     class Meta:
         unique_together = ("mandi_type_name", "mandi_category")
 
-post_save.connect(save_log, sender=MandiType)
-pre_delete.connect(save_log, sender=MandiType)
-
 
 class Mandi(LoopModel):
     id = models.AutoField(primary_key=True)
