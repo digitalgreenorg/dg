@@ -7,7 +7,7 @@ import json
 import math
 import pandas as pd
 
-from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser
+from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser, Country, State
 from loop.utils.loop_etl.group_myisam_data import *
 from constants.constants import ROLE_CHOICE_AGGREGATOR
 
@@ -239,4 +239,9 @@ def send_filter_data(request):
 
     response_list.extend([aggregator_dict, crop_dict, mandi_dict, gaddidar_dict])
     data = json.dumps(response_list)
+    return HttpResponse(data)
+
+def get_global_filter(request) :
+    country_list = Country.objects.annotate(value=F('country_name'), isSelected=F('is_visible')).values('id', 'value', 'isSelected')
+    data = json.dumps(list(country_list))
     return HttpResponse(data)

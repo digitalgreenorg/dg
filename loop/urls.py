@@ -57,4 +57,5 @@ urlpatterns = patterns('',
     # url(r'^vol_amount_farmer/',vol_amount_farmer),
     url(r'^graph_data', graph_data),
     url(r'^get_filter_data/', send_filter_data),
+    url(r'^get_global_filter_data/', get_global_filter)
     )

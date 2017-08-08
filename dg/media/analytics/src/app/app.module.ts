@@ -24,10 +24,12 @@ import { GraphsService } from './navs/navs.service';
 import { CardsService } from './cards/cards.service';
 import { GetFilterDataService } from './filters/get-filter-data.service';
 import { SharedService } from './shared.service';
+import { GlobalFilterService } from './global-filtter/global-filter.service'
 
 import { SearchPipe } from './filters/search.pipe';
 
 import { BsDropdownModule } from 'ngx-bootstrap';
+import { GlobalFiltterComponent } from './global-filtter/global-filtter.component';
 
 declare var require: any;
 export function highchartsFactory() {
@@ -58,6 +60,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SearchPipe,
     CardsComponent,
     NavsComponent,
+    GlobalFiltterComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,7 +78,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     provide: HighchartsStatic,
     useFactory: highchartsFactory,
   },
-    GraphsService, CardsService, DatePipe, GetFilterDataService, SharedService],
+    GraphsService, CardsService, DatePipe, GetFilterDataService, SharedService, GlobalFilterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

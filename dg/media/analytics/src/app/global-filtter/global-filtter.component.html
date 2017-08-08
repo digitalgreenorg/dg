@@ -1,0 +1,10 @@
+<div class="btn-group float-right" dropdown>
+  <button dropdownToggle type="button" class="btn dropdown-toggle">
+    Country <span class="caret"></span>
+  </button>
+  <ul *dropdownMenu class="dropdown-menu" role="menu">
+    <li *ngFor="let item of Dropdownitems" role="menuitem">
+      <a class="dropdown-item" (click) = "updateDropdown(item.id)" >{{item.value}}</a>
+    </li>
+  </ul>
+</div>
