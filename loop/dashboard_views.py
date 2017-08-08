@@ -11,13 +11,48 @@ from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, Loop
 from loop.utils.loop_etl.group_myisam_data import *
 from constants.constants import ROLE_CHOICE_AGGREGATOR
 
+def extract_filters_request(request):
+    if 'cardName' in request.GET:
+        cardName = str(request.GET.get('cardName'))
+    else:
+        cardName = ''
+
+    if 'country_id' in request.GET:
+        country_id = str(request.GET.get('country_id'))
+    else:
+        country_id = 1
+
+    if 'start_date' in request.GET and 'end_date' in request.GET:
+        start_date = str(request.GET['start_date'])
+        end_date = str(request.GET['end_date'])
+    else:
+        end_date = datetime.datetime.today().strftime('%Y-%m-%d')
+        delta = datetime.timedelta(days=30)
+        start_date = (datetime.datetime.today() - delta).strftime('%Y-%m-%d')
+
+    aggregators_list = request.GET.getlist('Aggregator')
+    mandis_list = request.GET.getlist('Mandi')
+    crops_list = request.GET.getlist('Crops')
+    gaddidars_list = request.GET.getlist('Gaddidar')
+
+    filter_args = {}
+    filter_args['cardName'] = cardName
+    filter_args['country_id'] = country_id
+    filter_args['start_date'] = start_date
+    filter_args['end_date'] = end_date
+    filter_args['aggregators_list'] = aggregators_list
+    filter_args['mandis_list'] = mandis_list
+    filter_args['crops_list'] = crops_list
+    filter_args['gaddidars_list'] = gaddidars_list
+
+    return filter_args
+
 def volume_aggregator(request):
     volume_per_aggregator = get_volume_aggregator(1)
     return JsonResponse(volume_per_aggregator)
 
-def recent_graphs_data(request):
-    # country_id = request.GET['country_id'] #To be fetched from request
-    country_id = 1
+def recent_graphs_data(**kwargs):
+    country_id = kwargs['country_id']
     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id)
 
     chart_dict = {'aggregated_result': aggregated_result}
@@ -50,7 +85,7 @@ def recent_graphs_data(request):
     return data
 
 
-def get_cluster_related_data(filter_args) :
+def get_cluster_related_data(**filter_args):
     country_id = filter_args['country_id'] #To be fetched from request
     total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('farmer').distinct().count()
     total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).count()
@@ -107,53 +142,15 @@ def get_cluster_related_data(filter_args) :
 def get_card_graph_data(request):
     query_list = []
     filter_args = extract_filters_request(request)
+    data_to_send = {}
 
     if filter_args['cardName'] in ['No_of_clusters_overall']:
-        data_to_send = get_cluster_related_data(filter_args)
-
-    if filter_args['cardName'] in ['active_cluster']:
-        data_to_send = recent_graphs_data(filter_args)
+        data_to_send = get_cluster_related_data(**filter_args)
+    elif filter_args['cardName'] in ['active_cluster']:
+        data_to_send = recent_graphs_data(**filter_args)
 
     data = json.dumps({'data' : data_to_send}, cls=DjangoJSONEncoder)
     return HttpResponse(data)
-
-
-def extract_filters_request(request):
-    if 'cardName' in request.GET:
-        cardName = str(request.GET.get('cardName'))
-    else:
-        cardName = ''
-
-    if 'country_id' in request.GET:
-        country_id = str(request.GET.get('country_id'))
-    else:
-        country_id = 1
-
-    if 'start_date' in request.GET and 'end_date' in request.GET:
-        start_date = str(request.GET['start_date'])
-        end_date = str(request.GET['end_date'])
-    else:
-        end_date = datetime.datetime.today().strftime('%Y-%m-%d')
-        delta = datetime.timedelta(days=30)
-        start_date = (datetime.datetime.today() - delta).strftime('%Y-%m-%d')
-
-    aggregators_list = request.GET.getlist('Aggregator')
-    mandis_list = request.GET.getlist('Mandi')
-    crops_list = request.GET.getlist('Crops')
-    gaddidars_list = request.GET.getlist('Gaddidar')
-
-    filter_args = {}
-    filter_args['cardName'] = cardName
-    filter_args['country_id'] = country_id
-    filter_args['start_date'] = start_date
-    filter_args['end_date'] = end_date
-    filter_args['country_id'] = country_id
-    filter_args['aggregators_list'] = aggregators_list
-    filter_args['mandis_list'] = mandis_list
-    filter_args['crops_list'] = crops_list
-    filter_args['gaddidars_list'] = gaddidars_list
-
-    return filter_args
 
 def get_pandas_dataframe(sql_query):
     db_connection = MySQLdb.connect(host=DATABASES['default']['HOST'],
@@ -173,6 +170,8 @@ def graph_data(request):
     elif chart_name == 'cpkSpkTS':
         result = cpk_spk_ts(**filter_args)
     elif chart_name == 'cummulativeCount':
+        filter_args['start_date'] = None
+        filter_args['end_date'] = None
         result = get_cummulative_vol_farmer(**filter_args)
     elif chart_name == 'aggrvol':
         result = aggregator_volume(**filter_args)
@@ -202,11 +201,13 @@ def graph_data(request):
         result = mandi_farmer_count(**filter_args)
     else:
         result = {"result":"success"}
+    # print filter_args
     return JsonResponse(result)
 
 def send_filter_data(request):
     # language = request.GET.get('language')
     # country_id = request.GET.get('country_id')
+    #TODO: apply country filter and language filter
     country_id = 1
     response_list = []
     aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')

@@ -39,7 +39,8 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
-def sql_query(country_id=None, from_date=None, to_date=None, **kwargs):
+def sql_query(**kwargs):
+    #TODO : apply country filter
     country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
@@ -94,7 +95,8 @@ def query_myisam(**kwargs):
             sql_ds['where'].append('mandi_id in (' + ",".join(mandis_list) + ')')
         if len(gaddidars_list) > 0:
             sql_ds['where'].append('gaddidar_id in (' + ",".join(gaddidars_list) + ')')
-        sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
+        if start_date != None:
+            sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
 
         sql_ds['where'].append('country_id = ' + str(country_id))
 
@@ -111,7 +113,6 @@ def crop_prices_query( **kwargs):
     host = DATABASES['default']['HOST']
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
-
 
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('crop_id, crop_name, mandi_id, mandi_name_en mandi_name, min(price) Min_price, max(price) Max_price')
@@ -310,7 +311,7 @@ def get_cummulative_vol_farmer(**kwargs):
     df_cum_vol_farmer.drop('quantity',axis=1,inplace=True)
     df_cum_vol_farmer['date'] = df_cum_vol_farmer['date'].astype('datetime64[ns]')
     df_cum_vol_farmer['date_time'] = df_cum_vol_farmer['date'].astype('int64')//10**6
-    print df_cum_vol_farmer
+    # print df_cum_vol_farmer
 
     data_farmers = []
     data_vol = []
