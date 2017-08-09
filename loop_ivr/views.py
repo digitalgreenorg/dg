@@ -25,11 +25,12 @@ def market_info_incoming(request):
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
-
+'''
 @csrf_exempt
 def market_info_response(request):
     print request.POST
     return HttpResponse(status=200)
+'''
 
 def crop_price_query(request):
     # Serve only Get request
