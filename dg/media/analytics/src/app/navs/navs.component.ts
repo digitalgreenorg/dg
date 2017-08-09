@@ -136,14 +136,14 @@ export class NavsComponent implements OnInit,
   }
 
   //set container view based on clicked nav link
-  setContainer(nav, container) {
+  setContainer(nav, container): void {
     this.containers[nav] = container;
     this.containers[nav]['charts'] = this.addChartsToDict(container.containers);
     this.containers[nav]['displayContent'] = false;
   }
 
   //set container for navs with interdependent filter and graph
-  setFilterContainer(nav, container) {
+  setFilterContainer(nav, container): void {
     this.filterGraphs[nav] = container;
     this.filterGraphs[nav]['charts'] = this.addChartsToDict(container.DropDownGraph);
     this.filterGraphs[nav]['displayContent'] = false;
@@ -156,7 +156,6 @@ export class NavsComponent implements OnInit,
 
   //get data for graphs from service
   getGraphsData(filters): void {
-
     this.containerCharts.forEach(chart => {
       if (chart.nativeChart && (chart.nativeChart.series.length == 0)) {
         chart.nativeChart.showLoading();
@@ -193,7 +192,7 @@ export class NavsComponent implements OnInit,
     });
   }
 
-  private parseDataForStockChart(chart, data) {
+  private parseDataForStockChart(chart, data): void {
     this.clearSeriesFromGraph(chart);
     Object.keys(data).forEach(series => {
       chart.nativeChart.hideLoading();
