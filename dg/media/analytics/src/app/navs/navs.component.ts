@@ -11,13 +11,13 @@ import { SharedService } from '../shared.service';
 })
 
 export class NavsComponent implements OnInit,
-   AfterViewInit, AfterViewChecked {
+  AfterViewChecked {
   //used for collapse button
   public isCollapsed: boolean = false;
   public showOverall: boolean = true;
   public showFilters: boolean = true;
-  navClicked:boolean=false;
-  
+  navClicked: boolean = false;
+
   //read config files from environment created for each app
   navsConfig = environment.navsConfig;
   chartsConfig = environment.chartsConfig;
@@ -63,13 +63,13 @@ export class NavsComponent implements OnInit,
     //this.renderCharts();
   }
 
-  ngAfterViewInit(): void {
-    this.getGraphsData(this.filters);
-  }
+  // ngAfterViewInit(): void {
+  //   this.getGraphsData(this.filters);
+  // }
 
   ngAfterViewChecked() {
-    if(this.navClicked){
-      this.navClicked=false;
+    if (this.navClicked) {
+      this.navClicked = false;
       this.getGraphsData(this.filters);
     }
 
@@ -136,14 +136,14 @@ export class NavsComponent implements OnInit,
   }
 
   //set container view based on clicked nav link
-  setContainer(nav, container) {
+  setContainer(nav, container): void {
     this.containers[nav] = container;
     this.containers[nav]['charts'] = this.addChartsToDict(container.containers);
     this.containers[nav]['displayContent'] = false;
   }
 
   //set container for navs with interdependent filter and graph
-  setFilterContainer(nav, container) {
+  setFilterContainer(nav, container): void {
     this.filterGraphs[nav] = container;
     this.filterGraphs[nav]['charts'] = this.addChartsToDict(container.DropDownGraph);
     this.filterGraphs[nav]['displayContent'] = false;
@@ -156,9 +156,8 @@ export class NavsComponent implements OnInit,
 
   //get data for graphs from service
   getGraphsData(filters): void {
-    
     this.containerCharts.forEach(chart => {
-      if (chart.nativeChart && (filters.params.length != 0 || chart.nativeChart.series.length == 0)) {
+      if (chart.nativeChart && (chart.nativeChart.series.length == 0)) {
         chart.nativeChart.showLoading();
         filters.params['chartType'] = chart.chart.type;
         filters.params['chartName'] = chart.name;
@@ -174,6 +173,7 @@ export class NavsComponent implements OnInit,
                 this.clearSeriesFromGraph(chart);
                 dataList[key]['outerData']['series'].forEach(entry => {
                   chart.nativeChart.addSeries(entry);
+                  chart.chart.series.push(entry);
                 });
                 if (chart.chart.chart.drillDown) {
                   dataList[key]['innerData'].forEach(drilldownEntry => {
@@ -192,7 +192,7 @@ export class NavsComponent implements OnInit,
     });
   }
 
-  private parseDataForStockChart(chart, data) {
+  private parseDataForStockChart(chart, data): void {
     this.clearSeriesFromGraph(chart);
     Object.keys(data).forEach(series => {
       chart.nativeChart.hideLoading();
@@ -262,12 +262,11 @@ export class NavsComponent implements OnInit,
         }
       });
     });
-
   }
 
   //display respective containers based on clicked nav
   showContent(selectedNav: string): void {
-    this.navClicked=true;
+    this.navClicked = true;
     if (selectedNav == 'Home') {
       this.showOverall = true;
       this.showFilters = false;
