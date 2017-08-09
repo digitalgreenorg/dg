@@ -42,6 +42,7 @@ from dashboard.forms import PersonForm
 from dashboard.forms import PersonGroupForm
 from dashboard.forms import ScreeningForm
 from dashboard.forms import VideoForm
+from mezzanine.blog.models import *
 
 class PMANotSaved(Exception):
     pass
@@ -757,6 +758,38 @@ class LanguageResource(ModelResource):
         resource_name = 'language'
         authentication = SessionAuthentication()
         authorization = Authorization()
+
+
+
+class BlogCategoryResource(BaseResource):
+    
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = BlogCategory.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'blogcategory'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
+
+class BlogPostResource(ModelResource):    
+    category = fields.ToManyField(BlogCategoryResource, 'categories', full=True, null=True, blank=True)
+
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = BlogPost.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'blogpost'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
+
 
 class CategoryResource(ModelResource):    
     parent_category = fields.ForeignKey(ParentCategoryResource, 'parent_category', null=True)

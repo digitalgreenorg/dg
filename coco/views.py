@@ -24,11 +24,13 @@ from videos.models import Video,Language,Category,Practice,SubCategory
 from activities.models import Screening
 from activities.models import PersonAdoptPractice
 from coco.prepare_data import *
+from django.views.decorators.csrf import csrf_exempt
 
 
 def coco_v2(request):
     return render(request,'dashboard.html')
-    
+
+@csrf_exempt    
 def login(request):
     partner_name = None
     type_of_cocouser = None
