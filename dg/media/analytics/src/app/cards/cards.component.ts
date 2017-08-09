@@ -4,6 +4,7 @@ import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.loop';
 import { IMyOptions } from 'mydatepicker';
 import { DatePipe } from '@angular/common';
+import { global_filter } from '../app.component'
 
 @Component({
   selector: 'app-cards',
@@ -105,6 +106,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
         apply_filter: false,
       }
     };
+    Object.assign(options.params, global_filter);
     this.getData(options);
   }
 

@@ -137,9 +137,9 @@ def crop_prices_query( **kwargs):
     df_result = pd.read_sql(query, con=mysql_cn)
     return df_result
 
-def get_data_from_myisam(get_total, country_id):
-    df_result = query_myisam()
-
+def get_data_from_myisam(get_total, **kwargs):
+    df_result = query_myisam(**kwargs)
+    country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     aggregations = {
         'quantity':{
             'quantity__sum':'sum'

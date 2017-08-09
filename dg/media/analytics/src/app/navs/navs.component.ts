@@ -3,6 +3,7 @@ import { Component, OnInit, AfterViewInit, AfterViewChecked } from '@angular/cor
 import { environment } from '../../environments/environment.loop';
 import { GraphsService } from './navs.service';
 import { SharedService } from '../shared.service';
+import { global_filter } from '../app.component'
 
 @Component({
   selector: 'app-navs',
@@ -70,6 +71,7 @@ export class NavsComponent implements OnInit,
   ngAfterViewChecked() {
     if (this.navClicked) {
       this.navClicked = false;
+      Object.assign(this.filters.params, global_filter);
       this.getGraphsData(this.filters);
     }
 
