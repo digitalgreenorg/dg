@@ -6,7 +6,7 @@ import { FilterElement } from './filter-element';
 import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.loop';
-
+import { global_filter } from '../app.component'
 @Component({
   selector: 'app-filters',
   host: {
@@ -70,7 +70,7 @@ export class FiltersComponent implements OnInit {
       }
     });
 
-    this.getFilterData.getData().subscribe(response => {
+    this.getFilterData.getData(global_filter).subscribe(response => {
       for (let res_obj of response) {
         let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
         let data = res_obj;

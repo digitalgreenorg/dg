@@ -206,9 +206,9 @@ def graph_data(request):
 
 def send_filter_data(request):
     # language = request.GET.get('language')
-    # country_id = request.GET.get('country_id')
+    country_id = request.GET.get('country_id')
     #TODO: apply country filter and language filter
-    country_id = 1
+    # country_id = 1
     response_list = []
     aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
     aggregator_list = aggregator_data.annotate(id=F('user_id')).values('id', 'value')
