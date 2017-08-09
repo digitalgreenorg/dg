@@ -4,11 +4,12 @@ __author__ = 'Vikas Saini'
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from threading import Thread
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog
-from loop_ivr.helper_function import get_valid_list, send_info, get_price_info
+from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call
 from loop_ivr.utils.config import LOG_FILE
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
@@ -17,15 +18,52 @@ from loop.helpline_view import fetch_info_of_incoming_call, write_log
 def home(request):
     return HttpResponse(status=403)
 
+def market_info_incoming(request):
+    if request.method == 'GET':
+        call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        make_market_info_call(to_number, dg_number, incoming_time, call_id)
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=403)
+'''
+@csrf_exempt
+def market_info_response(request):
+    print request.POST
+    return HttpResponse(status=200)
+'''
+
 def crop_price_query(request):
     # Serve only Get request
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        # Check if request contain some input combination.
         try:
             query_code = str(request.GET.get('digits')).strip('"')
-            price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
+        except Exception as e:
+            query_code = ''
+        # Check if its retry or first time request.
+        try:
+            # Search if this request generated in second try.
+            price_info_incoming_obj = PriceInfoIncoming.objects.filter(call_id=call_id,from_number=farmer_number,
+                                        to_number=dg_number)
+            # If it is second try, then take this object else create new object.
+            if len(price_info_incoming_obj) > 0:
+                price_info_incoming_obj = price_info_incoming_obj[0]
+                price_info_incoming_obj.prev_query_code = price_info_incoming_obj.query_code
+                price_info_incoming_obj.prev_info_status = price_info_incoming_obj.info_status
+                price_info_incoming_obj.query_code = query_code
+                # If it is retry then set status to pending and remaining code will change this according to input.
+                price_info_incoming_obj.info_status = 0
+                price_info_incoming_obj.save()
+            else:
+                price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
                                         to_number=dg_number, incoming_time=incoming_time, query_code=query_code)
-            price_info_incoming_obj.save()
+                price_info_incoming_obj.save()
+            # If this request has no query code then save object as No input.
+            if query_code == '':
+                price_info_incoming_obj.info_status = 3
+                price_info_incoming_obj.save()
+                return HttpResponse(status=200)
         except Exception as e:
             module = 'crop_info'
             log = "Call Id: %s Error: %s"%(str(call_id),str(e))
@@ -46,8 +84,8 @@ def crop_price_query(request):
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()
             return HttpResponse(status=404)
-        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info)
-        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info)
+        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info, farmer_number)
+        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info, farmer_number)
         if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
             price_info_incoming_obj.info_status = 2
             price_info_incoming_obj.save()
