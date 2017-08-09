@@ -42,11 +42,6 @@ class Migration(migrations.Migration):
             name='notation',
             field=models.CharField(max_length=3, null=True, blank=True),
         ),
-        migrations.AlterField(
-            model_name='adminuser',
-            name='assigned_loopusers',
-            field=models.ManyToManyField(to='loop.LoopUser', through='loop.AdminAssignedLoopUser'),
-        ),
         migrations.AddField(
             model_name='adminlog',
             name='admin_user',
@@ -76,5 +71,11 @@ class Migration(migrations.Migration):
             model_name='adminassignedloopuser',
             name='user_modified',
             field=models.ForeignKey(related_name='loop_adminassignedloopuser_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True),
+        ),
+        
+        migrations.AlterField(
+            model_name='adminuser',
+            name='assigned_loopusers',
+            field=models.ManyToManyField(to='loop.LoopUser', through='loop.AdminAssignedLoopUser'),
         ),
     ]

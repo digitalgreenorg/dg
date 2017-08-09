@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+    '''
         migrations.CreateModel(
             name='VehicleLanguage',
             fields=[
@@ -64,4 +65,5 @@ class Migration(migrations.Migration):
             model_name='gaddidar',
             name='commission',
             field= models.FloatField('Discount',default=1.0))
+    '''
     ]

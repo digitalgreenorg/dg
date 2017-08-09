@@ -155,10 +155,6 @@ def save_district_child_log(instance,kwargs):
         village_queryset = Village.objects.filter(block__district=instance.district)
         for row in village_queryset:
             save_village_log(row,admin_user,kwargs)
-    
-        
-
-
 
 def save_admin_loopuser_mandi_child_log(instance,kwargs):
     AdminUser = get_model('loop','AdminUser')
@@ -174,7 +170,7 @@ def save_admin_loopuser_mandi_child_log(instance,kwargs):
     district_set=[]
     districts = instance.admin_user.get_districts()
     for row in mandi_queryset:
-        if row.district not in districts:
+        if row.district not in districts and row not in mandis:
             save_mandi_log(row,admin_user,kwargs)
             if row.district not in district_set:
                 save_district_log(row.district,admin_user,kwargs)
