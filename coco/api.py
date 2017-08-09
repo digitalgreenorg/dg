@@ -43,6 +43,7 @@ from dashboard.forms import PersonGroupForm
 from dashboard.forms import ScreeningForm
 from dashboard.forms import VideoForm
 from mezzanine.blog.models import *
+from communications.models import Article
 
 class PMANotSaved(Exception):
     pass
@@ -784,6 +785,20 @@ class BlogPostResource(ModelResource):
         queryset = BlogPost.objects.all()
         allowed_methods = ['post', 'get']
         resource_name = 'blogpost'
+        authorization = Authorization()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
+
+class ArticleResource(ModelResource):    
+
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = Article.objects.all()
+        allowed_methods = ['post', 'get']
+        resource_name = 'article'
         authorization = Authorization()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
