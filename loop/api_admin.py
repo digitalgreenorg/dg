@@ -533,7 +533,7 @@ class LoopUserResource(BaseResource):
             bundle.data['preferred_language']={}
             bundle.data['preferred_language']['online_id']= adminUser.preferred_language.id
             bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
-            AdminAssignedLoopUser(admin_user=user,loop_user=bundle.obj).save()
+            AdminAssignedLoopUser(admin_user=adminUser,loop_user=bundle.obj).save()
             #adminUser.assigned_loopusers.add(bundle.obj)
         
         else:
