@@ -158,7 +158,7 @@ export class NavsComponent implements OnInit,
   getGraphsData(filters): void {
 
     this.containerCharts.forEach(chart => {
-      if (chart.nativeChart && (filters.params.length != 0 || chart.nativeChart.series.length == 0)) {
+      if (chart.nativeChart && (chart.nativeChart.series.length == 0)) {
         chart.nativeChart.showLoading();
         filters.params['chartType'] = chart.chart.type;
         filters.params['chartName'] = chart.name;
@@ -174,6 +174,7 @@ export class NavsComponent implements OnInit,
                 this.clearSeriesFromGraph(chart);
                 dataList[key]['outerData']['series'].forEach(entry => {
                   chart.nativeChart.addSeries(entry);
+                  chart.chart.series.push(entry);
                 });
                 if (chart.chart.chart.drillDown) {
                   dataList[key]['innerData'].forEach(drilldownEntry => {
@@ -262,7 +263,6 @@ export class NavsComponent implements OnInit,
         }
       });
     });
-
   }
 
   //display respective containers based on clicked nav
