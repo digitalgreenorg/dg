@@ -9,7 +9,7 @@
         <a class="nav-link" data-toggle="collapse" [ngClass]="{'active':toggleNav[nav].status === true}" (click)="setNav(nav)">{{nav}}</a>
       </li>
     </ul>
-    <app-global-filtter></app-global-filtter>
+    <app-global-filter></app-global-filter>
   </div>
   <div class="float-right col-1" *ngIf="showFilters">
     <app-filters></app-filters>

@@ -1,5 +1,5 @@
 export class GlobalFilter {
-    value:string;
-    id:number;
-    isSelected:boolean;
+  value: string;
+  id: number;
+  isSelected: boolean;
 }
