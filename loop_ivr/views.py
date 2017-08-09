@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from threading import Thread
+import time
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call
@@ -21,6 +22,7 @@ def home(request):
 def market_info_incoming(request):
     if request.method == 'GET':
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        time.sleep(.5)
         make_market_info_call(to_number, dg_number, incoming_time, call_id)
         return HttpResponse(status=200)
     else:
