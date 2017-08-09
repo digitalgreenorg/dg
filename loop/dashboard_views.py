@@ -52,6 +52,12 @@ def volume_aggregator(request):
     return JsonResponse(volume_per_aggregator)
 
 def recent_graphs_data(**kwargs):
+    kwargs['start_date'] = None
+    kwargs['end_date'] = None
+    kwargs['aggregator_list'] = []
+    kwargs['gaddidar_list'] = []
+    kwargs['mandi_list'] = []
+    
     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, **kwargs)
 
     chart_dict = {'aggregated_result': aggregated_result}

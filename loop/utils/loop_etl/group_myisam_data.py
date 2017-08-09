@@ -57,6 +57,9 @@ def sql_query(**kwargs):
     sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
     sql_ds['join'].append(['loop_farmer lf', 'lf.id = lct.farmer_id'])
     sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id'])
+    sql_ds['join'].append(['loop_district ld', 'ld.id = lm.district_id'])
+    sql_ds['join'].append(['loop_state ls', 'ls.id = ld.state_id'])
+    sql_ds['join'].append(['loop_country lc', 'lc.id = ls.country_id'])
 
     if len(aggregators_list) > 0:
         sql_ds['where'].append('lct.user_created_id in (' + ",".join(aggregators_list) + ")")
@@ -68,6 +71,7 @@ def sql_query(**kwargs):
     if len(crops_list) > 0:
         sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
     sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
+    sql_ds['where'].append('country_id = ' + str(country_id))
 
     query = join_sql_ds(sql_ds)
     df_result = pd.read_sql(query, con=mysql_cn)
@@ -86,7 +90,7 @@ def query_myisam(**kwargs):
     sql_ds['select'].append('*')
     sql_ds['from'].append('loop_aggregated_myisam')
     sql_q = join_sql_ds(sql_ds)
-
+    print kwargs
     if(len(kwargs) > 0):
         country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
         if len(aggregators_list) > 0:
@@ -120,6 +124,9 @@ def crop_prices_query( **kwargs):
     sql_ds['join'].append(['loop_mandi lm', 'lm.id = lct.mandi_id'])
     sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
     sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id'])
+    sql_ds['join'].append(['loop_district ld', 'ld.id = lm.district_id'])
+    sql_ds['join'].append(['loop_state ls', 'ls.id = ld.state_id'])
+    sql_ds['join'].append(['loop_country lc', 'lc.id = ls.country_id'])
     sql_ds['group by'].append('crop_id, mandi_id')
 
     if len(aggregators_list) > 0:
@@ -131,6 +138,7 @@ def crop_prices_query( **kwargs):
     if len(crops_list) > 0:
         sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
     sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
+    sql_ds['where'].append('country_id = ' + str(country_id))
 
     query = join_sql_ds(sql_ds)
 
