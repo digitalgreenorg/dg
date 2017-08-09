@@ -11,13 +11,13 @@ import { SharedService } from '../shared.service';
 })
 
 export class NavsComponent implements OnInit,
-   AfterViewInit, AfterViewChecked {
+  AfterViewChecked {
   //used for collapse button
   public isCollapsed: boolean = false;
   public showOverall: boolean = true;
   public showFilters: boolean = true;
-  navClicked:boolean=false;
-  
+  navClicked: boolean = false;
+
   //read config files from environment created for each app
   navsConfig = environment.navsConfig;
   chartsConfig = environment.chartsConfig;
@@ -63,13 +63,13 @@ export class NavsComponent implements OnInit,
     //this.renderCharts();
   }
 
-  ngAfterViewInit(): void {
-    this.getGraphsData(this.filters);
-  }
+  // ngAfterViewInit(): void {
+  //   this.getGraphsData(this.filters);
+  // }
 
   ngAfterViewChecked() {
-    if(this.navClicked){
-      this.navClicked=false;
+    if (this.navClicked) {
+      this.navClicked = false;
       this.getGraphsData(this.filters);
     }
 
@@ -156,7 +156,7 @@ export class NavsComponent implements OnInit,
 
   //get data for graphs from service
   getGraphsData(filters): void {
-    
+
     this.containerCharts.forEach(chart => {
       if (chart.nativeChart && (filters.params.length != 0 || chart.nativeChart.series.length == 0)) {
         chart.nativeChart.showLoading();
@@ -267,7 +267,7 @@ export class NavsComponent implements OnInit,
 
   //display respective containers based on clicked nav
   showContent(selectedNav: string): void {
-    this.navClicked=true;
+    this.navClicked = true;
     if (selectedNav == 'Home') {
       this.showOverall = true;
       this.showFilters = false;

@@ -189,6 +189,120 @@ export const chartsConfig = {
       series: []
     }
   },
+  'aggrspkcpk': {
+    chart: {
+      type: 'column',
+      renderTo: 'aggrspkcpk',
+      tab: {
+        'id': 'tab1',
+        'class': 'col-sm-12'
+      },
+      drillDown: true,
+      inverted: true
+    },
+    credits: { enabled: false },
+    title: { text: '' },
+    xAxis: {
+      type: 'category',
+      max: 5
+    },
+    scrollbar: { enabled: true },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    },
+    series: [],
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
+  },
+  'aggrrecoveredtotal': {
+    chart: {
+      type: 'column',
+      renderTo: 'aggrrecoveredtotal',
+      tab: {
+        'id': 'tab1',
+        'class': 'col-sm-6'
+      },
+      drillDown: true,
+      inverted: true
+    },
+    credits: { enabled: false },
+    title: { text: '' },
+    xAxis: { type: 'category', max: 5 },
+    yAxis: {
+      // tickInterval: 10,
+      title: { text: '' }
+    },
+    scrollbar: {
+      enabled: true
+    },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>',
+    },
+    series: [],
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
+  },
+  'aggrfarmercount': {
+    chart: {
+      type: 'column',
+      renderTo: 'aggrfarmercount',
+      tab: {
+        'id': 'tab1',
+        'class': 'col-sm-12'
+      },
+      drillDown: true,
+      inverted: true
+    },
+    credits: { enabled: false },
+    title: { text: '' },
+    xAxis: { type: 'category', max: 5 },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    scrollbar: { enabled: true },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    },
+    series: [],
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
+  },
   'mandivolume': {
     chart: {
       type: 'column',
@@ -277,23 +391,22 @@ export const chartsConfig = {
       series: []
     }
   },
-  'cropvolume': {
+  'mandispkcpk': {
     chart: {
       type: 'column',
-      renderTo: 'cropvolume',
+      renderTo: 'mandispkcpk',
       tab: {
         'id': 'tab1',
         'class': 'col-sm-6'
       },
       drillDown: true,
-      inverted: true,
+      inverted: true
     },
     credits: { enabled: false },
     title: { text: '' },
-    xAxis: { type: 'category', max: 5 },
-    yAxis: {
-      tickInterval: 10,
-      title: { text: 'Volume' }
+    xAxis: {
+      type: 'category',
+      max: 5
     },
     scrollbar: { enabled: true },
     legend: { enabled: false },
@@ -313,23 +426,86 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      drillUpButton: {
-        relativeTo: 'spacingBox',
-        position: {
-          y: 0,
-          x: -30
-        },
-      },
       series: []
-    },
-    lang: {
-      drillUpText: '<< Back'
-    },
+    }
   },
-  'cropfarmercount': {
+  'mandirecoveredtotal': {
     chart: {
       type: 'column',
-      renderTo: 'cropfarmercount',
+      renderTo: 'mandirecoveredtotal',
+      tab: {
+        'id': 'tab1',
+        'class': 'col-sm-16'
+      },
+      drillDown: true,
+      inverted: true
+    },
+    credits: { enabled: false },
+    title: { text: '' },
+    xAxis: {
+      type: 'category',
+      max: 5
+    },
+    scrollbar: { enabled: true },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    },
+    series: [],
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
+  },
+  'mandifarmercount': {
+    chart: {
+      type: 'column',
+      renderTo: 'mandifarmercount',
+      tab: {
+        'id': 'tab1',
+        'class': 'col-sm-12'
+      },
+      drillDown: true,
+      inverted: true
+    },
+    credits: { enabled: false },
+    title: { text: '' },
+    xAxis: { type: 'category', max: 5 },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        grouping: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    scrollbar: { enabled: true },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+    },
+    series: [],
+    drilldown: {
+      allowPointDrilldown: false,
+      series: []
+    }
+  },
+  'cropvolume': {
+    chart: {
+      type: 'column',
+      renderTo: 'cropvolume',
       tab: {
         'id': 'tab1',
         'class': 'col-sm-6'
@@ -411,172 +587,23 @@ export const chartsConfig = {
       series: []
     }
   },
-  'aggrfarmercount': {
+  'cropfarmercount': {
     chart: {
       type: 'column',
-      renderTo: 'aggrfarmercount',
-      tab: {
-        'id': 'tab1',
-        'class': 'col-sm-12'
-      },
-      drillDown: true,
-      inverted: true
-    },
-    credits: { enabled: false },
-    title: { text: '' },
-    xAxis: { type: 'category', max: 5 },
-    legend: { enabled: false },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
-    },
-    scrollbar: { enabled: true },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-    },
-    series: [],
-    drilldown: {
-      allowPointDrilldown: false,
-      series: []
-    }
-  },
-  'mandifarmercount': {
-    chart: {
-      type: 'column',
-      renderTo: 'mandifarmercount',
-      tab: {
-        'id': 'tab1',
-        'class': 'col-sm-12'
-      },
-      drillDown: true,
-      inverted: true
-    },
-    credits: { enabled: false },
-    title: { text: '' },
-    xAxis: { type: 'category', max: 5 },
-    legend: { enabled: false },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
-    },
-    scrollbar: { enabled: true },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-    },
-    series: [],
-    drilldown: {
-      allowPointDrilldown: false,
-      series: []
-    }
-  },
-  'aggrspkcpk': {
-    chart: {
-      type: 'column',
-      renderTo: 'aggrspkcpk',
-      tab: {
-        'id': 'tab1',
-        'class': 'col-sm-12'
-      },
-      drillDown: true,
-      inverted: true
-    },
-    credits: { enabled: false },
-    title: { text: '' },
-    xAxis: {
-      type: 'category',
-      max: 5
-    },
-    scrollbar: { enabled: true },
-    legend: { enabled: false },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
-    },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-    },
-    series: [],
-    drilldown: {
-      allowPointDrilldown: false,
-      series: []
-    }
-  },
-  'aggrrecoveredtotal': {
-    chart: {
-      type: 'column',
-      renderTo: 'aggrrecoveredtotal',
+      renderTo: 'cropfarmercount',
       tab: {
         'id': 'tab1',
         'class': 'col-sm-6'
       },
-      drillDown: true,
-      inverted: true
+      drillDown: false,
+      inverted: true,
     },
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      // tickInterval: 10,
-      title: { text: '' }
-    },
-    scrollbar: {
-      enabled: true
-    },
-    legend: { enabled: false },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
-    },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>',
-    },
-    series: [],
-    drilldown: {
-      allowPointDrilldown: false,
-      series: []
-    }
-  },
-
-  'mandispkcpk': {
-    chart: {
-      type: 'column',
-      renderTo: 'mandispkcpk',
-      tab: {
-        'id': 'tab1',
-        'class': 'col-sm-6'
-      },
-      drillDown: true,
-      inverted: true
-    },
-    credits: { enabled: false },
-    title: { text: '' },
-    xAxis: {
-      type: 'category',
-      max: 5
+      tickInterval: 10,
+      title: { text: 'Volume' }
     },
     scrollbar: { enabled: true },
     legend: { enabled: false },
@@ -593,83 +620,6 @@ export const chartsConfig = {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
     },
-    series: [],
-    drilldown: {
-      allowPointDrilldown: false,
-      series: []
-    }
-  },
-  'mandirecoveredtotal': {
-    chart: {
-      type: 'column',
-      renderTo: 'mandirecoveredtotal',
-      tab: {
-        'id': 'tab1',
-        'class': 'col-sm-16'
-      },
-      drillDown: true,
-      inverted: true
-    },
-    credits: { enabled: false },
-    title: { text: '' },
-    xAxis: {
-      type: 'category',
-      max: 5
-    },
-    scrollbar: { enabled: true },
-    legend: { enabled: false },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
-    },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-    },
-    series: [],
-    drilldown: {
-      allowPointDrilldown: false,
-      series: []
-    }
-  },
-  /*
-  'mandifarmercount' : {
-                          chart: {
-                                  type: 'column',
-                                  renderTo: 'mandifarmercount',
-                                  tab: {
-                                        'id': 'tab1',
-                                        'class':'col-sm-12'
-                                  },
-                                  drillDown: true
-                          },
-                          credits:{ enabled: false },
-                          title: { text: ''},
-                          xAxis: { type: 'category' },
-                          yAxis: {
-                                  tickInterval: 10,
-                                  title: { text: 'Volume' } },
-                          legend: { enabled: false },
-                          plotOptions: {
-                                        column: {
-                                                grouping: false,
-                                                borderWidth: 0,
-                                                dataLabels: {
-                                                             enabled: true
-                                                }
-                                        }
-                          },
-                          tooltip: {
-                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
-                          },
-                          series: [],
-                          drilldown: {}
-  },
-*/
+    series: []
+  }
 }

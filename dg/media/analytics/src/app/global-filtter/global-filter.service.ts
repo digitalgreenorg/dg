@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment.loop';
 @Injectable()
 export class GlobalFilterService {
 
-  private graphURL = environment.url + "get_global_filter_data";
+  private graphURL = environment.url + "get_global_filter_data/";
 
   constructor(private http: Http) { }
 
