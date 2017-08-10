@@ -65,4 +65,5 @@ class SubscriptionLog(LoopModel):
     sms_id = models.CharField(max_length=150, null=True, blank=True)
     status = models.IntegerField(choices=SMS_STATUS, default=0)
 
-
+    def __unicode__(self):
+        return "%s (%s)" % (self.subscription, self.status)
