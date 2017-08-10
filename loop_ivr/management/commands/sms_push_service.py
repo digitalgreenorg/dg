@@ -2,6 +2,8 @@ __author__ = 'Vikas Saini'
 
 import time
 import datetime
+import xml.etree.ElementTree as xml_parse
+
 from datetime import timedelta
 from pytz import timezone
 
@@ -10,11 +12,14 @@ from django.core.management.base import BaseCommand
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN
 
 from loop.models import Crop, Mandi, CropLanguage
+from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
+
 from loop_ivr.models import Subscriber, Subscription, SubscriptionLog
 from loop_ivr.helper_function import get_valid_list, run_query
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
-    agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available
+    agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
+    PUSH_MESSAGE_SMS_RESPONSE_URL
 
 class Command(BaseCommand):
 
@@ -30,6 +35,23 @@ class Command(BaseCommand):
        mandi_map[mandi['id']] = mandi['mandi_name']
     for crop in crop_in_hindi:
         crop_in_hindi_map[crop['crop_id']] = crop['crop_name']
+
+
+    def send_sms(from_number,to_number,sms_body):
+        sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+        parameters = {'From':from_number,'To':to_number,'Body':sms_body,'Priority':'high','EncodingType':'unicode','StatusCallback':PUSH_MESSAGE_SMS_RESPONSE_URL}
+        response = requests.post(sms_request_url,data=parameters)
+        if response.status_code == 200:
+            response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
+            call_detail = response_tree.findall('SMSMessage')[0]
+            outgoing_call_id = str(call_detail.find('Sid').text)
+            outgoing_call_time = str(call_detail.find('StartTime').text)
+            outgoing_status = str(call_detail.find('Status').text)
+        else:
+            module = 'push_message_send_sms'
+            log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
+            write_log(LOG_FILE,module,log)
+
 
     def get_price_info(self, farmer_number, crop_list, mandi_list, all_crop_flag, all_mandi_flag):
         price_info_list = []

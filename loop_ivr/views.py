@@ -117,3 +117,8 @@ def crop_price_sms_content(request):
             response = HttpResponse(status=200, content_type='text/plain')
         return response
     return HttpResponse(status=403)
+
+@csrf_exempt
+def push_message_sms_response(request):
+    print request.POST
+    return HttpResponse(status=200)
