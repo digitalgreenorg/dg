@@ -44,6 +44,7 @@ class Command(BaseCommand):
         sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
         parameters = {'From':from_number,'To':user_no,'Body':sms_body,'Priority':'high','EncodingType':'unicode','StatusCallback':PUSH_MESSAGE_SMS_RESPONSE_URL}
         response = requests.post(sms_request_url,data=parameters)
+        outgoing_sms_time = (datetime.datetime.now(timezone('Asia/Kolkata'))).replace(tzinfo=None)
         if response.status_code == 200:
             response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
             call_detail = response_tree.findall('SMSMessage')[0]
@@ -64,7 +65,7 @@ class Command(BaseCommand):
                 subscription_log_obj.save()
             except Exception as e:
                 module = 'push_message_send_sms'
-                log = "Status Code: %s (SMS ID: %s)"%(str(response.status_code),outgoing_sms_id)
+                log = "Status Code: %s (SMS ID: %s) (Exception: %s)"%(str(response.status_code),outgoing_sms_id,str(e))
                 write_log(LOG_FILE,module,log)
         else:
             module = 'push_message_send_sms'
