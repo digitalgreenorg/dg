@@ -49,7 +49,6 @@ class Command(BaseCommand):
             response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
             call_detail = response_tree.findall('SMSMessage')[0]
             outgoing_sms_id = str(call_detail.find('Sid').text)
-            outgoing_sms_time = str(call_detail.find('DateSent').text)
             outgoing_status = str(call_detail.find('Status').text)
             if outgoing_status == 'failed-dnd':
                 status = 3
