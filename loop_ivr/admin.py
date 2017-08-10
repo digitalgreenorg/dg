@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.admin import SimpleListFilter
 
-from loop_ivr.models import PriceInfoIncoming, PriceInfoLog
+from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, Subscriber, Subscription, \
+	SubscriptionLog
 
 class LoopIVRAdmin(AdminSite):
 
@@ -19,3 +20,6 @@ class PriceInfoLogAdmin(admin.ModelAdmin):
 loop_ivr_admin = LoopIVRAdmin(name='loop_ivr_admin')
 loop_ivr_admin.register(PriceInfoIncoming, PriceInfoIncomingAdmin)
 loop_ivr_admin.register(PriceInfoLog, PriceInfoLogAdmin)
+loop_ivr_admin.register(Subscriber)
+loop_ivr_admin.register(Subscription)
+loop_ivr_admin.register(SubscriptionLog)
