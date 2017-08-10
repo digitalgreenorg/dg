@@ -916,7 +916,6 @@ class VehicleLanguageResource(BaseResource):
     dehydrate_vehicle = partial(foreign_key_to_id,field_name='vehicle',sub_field_names=['id'])
     hydrate_vehicle= partial(dict_to_foreign_uri, field_name='vehicle')
     def obj_create(self,bundle,request=None,**kwargs):
-        import pdb;pdb.set_trace()
         preferred_language = AdminUser.objects.get(user_id=bundle.request.user.id).preferred_language.id
         bundle.data['language'] = "/loop/api/v1/language/%s/" % preferred_language
         attempt = VehicleLanguage.objects.filter(vehicle_id=bundle.data['vehicle']['online_id'],language=preferred_language)
