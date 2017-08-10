@@ -50,7 +50,7 @@ class Command(BaseCommand):
             call_detail = response_tree.findall('SMSMessage')[0]
             outgoing_sms_id = str(call_detail.find('Sid').text)
             outgoing_status = str(call_detail.find('Status').text)
-            if outgoing_status == 'failed-dnd':
+            if outgoing_status == 'failed_dnd':
                 status = 3
             elif outgoing_status == 'failed':
                 status = 2
