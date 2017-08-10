@@ -37,23 +37,47 @@ class Command(BaseCommand):
         crop_in_hindi_map[crop['crop_id']] = crop['crop_name']
 
 
-    def send_sms(from_number,to_number,sms_body):
+    def send_sms(self,subscription_id, from_number,user_no,sms_body):
         sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-        parameters = {'From':from_number,'To':to_number,'Body':sms_body,'Priority':'high','EncodingType':'unicode','StatusCallback':PUSH_MESSAGE_SMS_RESPONSE_URL}
+        parameters = {'From':from_number,'To':user_no,'Body':sms_body,'Priority':'high','EncodingType':'unicode','StatusCallback':PUSH_MESSAGE_SMS_RESPONSE_URL}
         response = requests.post(sms_request_url,data=parameters)
         if response.status_code == 200:
             response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
             call_detail = response_tree.findall('SMSMessage')[0]
-            outgoing_call_id = str(call_detail.find('Sid').text)
-            outgoing_call_time = str(call_detail.find('StartTime').text)
+            outgoing_sms_id = str(call_detail.find('Sid').text)
+            outgoing_sms_time = str(call_detail.find('DateSent').text)
             outgoing_status = str(call_detail.find('Status').text)
+            if outgoing_status == 'failed-dnd':
+                status = 3
+            elif outgoing_status == 'failed':
+                status = 2
+            elif outgoing_status == 'sent':
+                status = 1
+            else status = 0
+            subscription_log_obj = SubscriptionLog(subscription_id=subscription_id,
+                                                    sms_id=outgoing_sms_id,date=outgoing_sms_time,status=status)
+            try:
+                subscription_log_obj.save()
+            except Exception as e:
+                module = 'push_message_send_sms'
+                log = "Status Code: %s (SMS ID: %s)"%(str(response.status_code),outgoing_sms_id)
+                write_log(LOG_FILE,module,log)
         else:
             module = 'push_message_send_sms'
             log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
             write_log(LOG_FILE,module,log)
 
 
-    def get_price_info(self, farmer_number, crop_list, mandi_list, all_crop_flag, all_mandi_flag):
+    def send_info(self,subscription_id, user_no, content):
+        index = 0
+        from_number = AGGREGATOR_SMS_NO
+        while index < len(content):
+            self.send_sms(subscription_id, from_number, user_no, content[index:index+1998])
+            index += 1998
+            time.sleep(1)
+
+
+    def get_price_info(self,subscription_id, user_no, crop_list, mandi_list, all_crop_flag, all_mandi_flag):
         price_info_list = []
         crop_mandi_comb = []
         price_info_list.append(agg_sms_initial_line)
@@ -92,6 +116,7 @@ class Command(BaseCommand):
                         price_info_list.append(agg_sms_no_price_for_combination)
         final_result = ''.join(price_info_list)
         print final_result
+        self.send_info(subscription_id, user_no, final_result)
 
 
     def handle(self, *args, **options):
@@ -108,9 +133,8 @@ class Command(BaseCommand):
                 mandi_info = ''
             else:
                 continue
-            crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info, farmer_number)
-            mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info, farmer_number)
+            crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info, user_no)
+            mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info, user_no)
             if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
                 continue
-            self.get_price_info(user_no, crop_list, mandi_list, all_crop_flag, all_mandi_flag)
-            time.sleep(1)
+            self.get_price_info(subscription_id, user_no, crop_list, mandi_list, all_crop_flag, all_mandi_flag)
