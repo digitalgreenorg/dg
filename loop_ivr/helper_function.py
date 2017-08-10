@@ -15,6 +15,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES
 from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL, CALL_REQUEST_URL, APP_REQUEST_URL, \
     APP_URL
+from loop.helpline_view import write_log
 
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \

@@ -10,4 +10,5 @@ urlpatterns = patterns('',
     #url(r'^market_info_response/',market_info_response),
     url(r'^crop_price_query/',crop_price_query),
     url(r'^crop_price_sms_content/',crop_price_sms_content),
+    url(r'^push_message_sms_response/',push_message_sms_response),
     )
