@@ -2,6 +2,8 @@ __author__ = 'Vikas Saini'
 
 import time
 import datetime
+import requests
+import itertools
 import xml.etree.ElementTree as xml_parse
 
 from datetime import timedelta
@@ -13,6 +15,7 @@ from dg.settings import EXOTEL_ID, EXOTEL_TOKEN
 
 from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
+from loop.helpline_view import write_log
 
 from loop_ivr.models import Subscriber, Subscription, SubscriptionLog
 from loop_ivr.helper_function import get_valid_list, run_query
@@ -28,7 +31,7 @@ class Command(BaseCommand):
     crop_in_hindi_map = dict()
     all_crop = Crop.objects.values('id', 'crop_name')
     all_mandi = Mandi.objects.values('id', 'mandi_name')
-    crop_in_hindi = CropLanguage.objects.filter(language_id=1, crop_id__in=crop_list).values('crop_id', 'crop_name')
+    crop_in_hindi = CropLanguage.objects.filter(language_id=1).values('crop_id', 'crop_name')
     for crop in all_crop:
        crop_map[crop['id']] = crop['crop_name']
     for mandi in all_mandi:
@@ -53,7 +56,8 @@ class Command(BaseCommand):
                 status = 2
             elif outgoing_status == 'sent':
                 status = 1
-            else status = 0
+            else: 
+                status = 0
             subscription_log_obj = SubscriptionLog(subscription_id=subscription_id,
                                                     sms_id=outgoing_sms_id,date=outgoing_sms_time,status=status)
             try:
@@ -120,9 +124,9 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
-        all_subscriptions = Subscription.objects.filter(status=1).values('id', 'subscription_code', 'subscription__subscriber__phone_no')
+        all_subscriptions = Subscription.objects.filter(status=1).values('id', 'subscription_code', 'subscriber__phone_no')
         for subscription in all_subscriptions:
-            subscription_id, subscription_code, user_no = subscription['id'], subscription['subscription_code'], subscription['subscription__subscriber__phone_no']
+            subscription_id, subscription_code, user_no = subscription['id'], subscription['subscription_code'], subscription['subscriber__phone_no']
             if not subscription_code:
                 continue
             query_code = subscription_code.split('**')
