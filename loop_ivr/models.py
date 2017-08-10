@@ -37,7 +37,7 @@ class PriceInfoLog(LoopModel):
 class Subscriber(LoopModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, null=True, blank=True)
-    phone_no = models.CharField(max_length=14)
+    phone_no = models.CharField(max_length=14, unique=True)
     type_of_subscriber = models.IntegerField(choices=TYPE_OF_SUBSCRIBER, default=2)
     status = models.IntegerField(choices=STATUS, default=1)
 
@@ -54,6 +54,9 @@ class Subscription(LoopModel):
 
     def __unicode__(self):
         return "%s" % (self.subscription_code,)
+
+    class Meta:
+        unique_together = ("subscriber", "subscription_code")
 
 
 class SubscriptionLog(LoopModel):
