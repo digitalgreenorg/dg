@@ -119,7 +119,6 @@ class Command(BaseCommand):
                         price_info_list.append(temp_str)
                         price_info_list.append(agg_sms_no_price_for_combination)
         final_result = ''.join(price_info_list)
-        print final_result
         self.send_info(subscription_id, user_no, final_result)
 
 
