@@ -11,15 +11,24 @@ class LoopIVRAdmin(AdminSite):
         return request.user.is_active
 
 class PriceInfoIncomingAdmin(admin.ModelAdmin):
-    list_filter = ['info_status']
+    list_filter = ['info_status', 'from_number']
     list_display = ('id' ,'call_id', 'from_number', 'to_number', 'incoming_time', 'info_status', 'query_code', 'prev_info_status', 'prev_query_code')
 
 class PriceInfoLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'price_info_incoming', 'crop', 'mandi')
 
+class SubscriberAdmin(admin.ModelAdmin):
+	list_display = ('id', 'name', 'phone_no', 'farmer', 'aggregator', 'type_of_subscriber', 'status')
+
+class SubscriptionAdmin(admin.ModelAdmin):
+	list_display = ('id', 'subscriber', 'start_date', 'subscription_code', 'status')
+
+class SubscriptionLogAdmin(admin.ModelAdmin):
+	list_display = ('id', 'subscription', 'date', 'sms_id', 'status')
+
 loop_ivr_admin = LoopIVRAdmin(name='loop_ivr_admin')
 loop_ivr_admin.register(PriceInfoIncoming, PriceInfoIncomingAdmin)
 loop_ivr_admin.register(PriceInfoLog, PriceInfoLogAdmin)
-loop_ivr_admin.register(Subscriber)
-loop_ivr_admin.register(Subscription)
-loop_ivr_admin.register(SubscriptionLog)
+loop_ivr_admin.register(Subscriber, SubscriberAdmin)
+loop_ivr_admin.register(Subscription, SubscriptionAdmin)
+loop_ivr_admin.register(SubscriptionLog, SubscriptionLogAdmin)
