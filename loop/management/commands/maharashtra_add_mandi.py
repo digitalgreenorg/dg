@@ -28,11 +28,14 @@ class Command(BaseCommand):
                 district_name = row['District'].strip()
                 mandi_name = row['Market Name (Regional)'].strip()
                 mandi_name_en = row['Market Name (English)'].strip()
-                district_id = 0
-                district_id = dict_districts[district_name]
+                if dict_districts.get(district_name):
+                    district_id = dict_districts[district_name]
+                else:
+                    df.set_value(i, 'Status', 'Fail')
+                    df.set_value(i, 'Exception', "district not found")
+                    continue
                 mandi = Mandi(mandi_name=mandi_name, mandi_name_en=mandi_name_en, district_id=district_id, is_visible=1)
                 mandi.save()
-
                 df.set_value(i, 'Status', 'Pass')
             except Exception as e:
                 df.set_value(i, 'Status', 'Fail')
