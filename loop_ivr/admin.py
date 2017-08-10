@@ -18,7 +18,7 @@ class PriceInfoLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'price_info_incoming', 'crop', 'mandi')
 
 class SubscriberAdmin(admin.ModelAdmin):
-	list_display = ('id', 'name', 'phone_no', 'farmer', 'aggregator', 'type_of_subscriber', 'status')
+	list_display = ('id', 'name', 'phone_no', 'type_of_subscriber', 'status')
 
 class SubscriptionAdmin(admin.ModelAdmin):
 	list_display = ('id', 'subscriber', 'start_date', 'subscription_code', 'status')

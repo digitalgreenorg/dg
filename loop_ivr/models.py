@@ -1,5 +1,5 @@
 from django.db import models
-from loop.models import Crop, Mandi, LoopModel, Farmer, LoopUser
+from loop.models import Crop, Mandi, LoopModel
 
 INFO_STATUS = ((0, "Pending"), (1, "Done"), (2, "Wrong Query"), (3, "No Input"), (4, 'Not Picked'),(5,'Declined'))
 RETURN_RESULT = ((0, "No"), (1, "Yes"))
@@ -38,8 +38,6 @@ class Subscriber(LoopModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     phone_no = models.CharField(max_length=14)
-    farmer = models.ForeignKey(Farmer, null=True, blank=True)
-    aggregator = models.ForeignKey(LoopUser, null=True, blank=True)
     type_of_subscriber = models.IntegerField(choices=TYPE_OF_SUBSCRIBER, default=2)
     status = models.IntegerField(choices=STATUS, default=1)
 
