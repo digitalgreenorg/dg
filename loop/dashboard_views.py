@@ -212,6 +212,7 @@ def send_filter_data(request):
     # language = request.GET.get('language')
     filter_args = extract_filters_request(request)
     country_id = filter_args['country_id']
+    print country_id
     #TODO: apply country filter and language filter
     # country_id = 1
     response_list = []

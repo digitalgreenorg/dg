@@ -22,6 +22,7 @@ export class GlobalFilterComponent implements OnInit {
 
   updateDropdown(item) {
     global_filter['country_id'] = item;
+    this._sharedService.publishData(null);
     // this._sharedService.publishData(global_filter);
   }
 

@@ -13,6 +13,7 @@ export class SharedService {
     if(data) {
       this.argsList.next(data);
     } else {
+      console.log('Country-Filter changed');
       this.argsList.next();
     }
   }

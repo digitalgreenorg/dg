@@ -21,6 +21,7 @@ export class GetFilterDataService {
     for (let key in filters) {
       params.set(key.toString(), filters[key]);
     }
+    console.log('in service Bc', params);
     let requestOptions: RequestOptions = new RequestOptions();
     requestOptions.search = params;
 

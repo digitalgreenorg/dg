@@ -42,6 +42,12 @@ export class NavsComponent implements OnInit,
   filters = { 'params': {} };
   constructor(private graphService: GraphsService, private _sharedService: SharedService) {
     this._sharedService.argsList$.subscribe(filters => {
+      if(filters) {
+        Object.assign(filters.params, global_filter);
+      } else {
+        filters = {}
+        filters['params'] = global_filter;
+      }
       this.filters = filters;
       Object.keys(this.containers).forEach(container => {
           this.containers[container].applyFilter = false;
@@ -166,6 +172,7 @@ export class NavsComponent implements OnInit,
 
   //get data for graphs from service
   getGraphsData(filters): void {
+    console.log(filters);
     this.containerCharts.forEach(chart => {
       console.log(this.containers[this.selectedNav].applyFilter, chart.nativeChart.series.length);
       if (chart.nativeChart && (chart.nativeChart.series.length == 0 ||  (!this.containers[this.selectedNav].applyFilter))) {

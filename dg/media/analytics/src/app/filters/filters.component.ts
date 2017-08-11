@@ -70,17 +70,11 @@ export class FiltersComponent implements OnInit {
       }
     });
 
-    this.getFilterData.getData(global_filter).subscribe(response => {
-      for (let res_obj of response) {
-        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
-        let data = res_obj;
-        for (let val of data['data']) {
-          let filterElement = new FilterElement();
-          filterElement.id = val['id'];
-          filterElement.value = val['value'];
-          filter[0].element.push(filterElement);
-        }
-      }
+    this.getfiltersData(global_filter);
+
+    this._sharedService.argsList$.subscribe(filters => {
+      console.log('got here MF');
+      this.getfiltersData(global_filter);
     });
   }
 
@@ -209,5 +203,26 @@ export class FiltersComponent implements OnInit {
     } else {
       this.closeNav();
     }
+  }
+
+  getfiltersData(filters) :any {
+    console.log('filters', filters);
+    this.getFilterData.getData(filters).subscribe(response => {
+      for (let res_obj of response) {
+        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
+        filter[0].element = [];
+        let data = res_obj;
+        for (let val of data['data']) {
+          let filterElement = new FilterElement();
+          filterElement.id = val['id'];
+          filterElement.value = val['value'];
+          filter[0].element.push(filterElement);
+        }
+      }
+    });
+  }
+
+  clearFilterElement(): any {
+
   }
 }
