@@ -10,7 +10,7 @@ import xml.etree.ElementTree as xml_parse
 
 from django.db.models import get_model
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES, EXOTEL_HELPLINE_NUMBER
 
 from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL, CALL_REQUEST_URL, APP_REQUEST_URL, \
@@ -20,7 +20,7 @@ from loop.helpline_view import write_log
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
-    agg_sms_crop_line, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES
+    agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -166,6 +166,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                         temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     price_info_list.append(temp_str)
                     price_info_list.append(agg_sms_no_price_for_combination)
+    price_info_list.append(('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER))
     final_result = ''.join(price_info_list)
     price_info_incoming_obj.price_result = final_result
     if len(final_result) >= 2000:
