@@ -20,7 +20,7 @@ from loop.helpline_view import write_log
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
-    MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP
+    agg_sms_crop_line, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -131,11 +131,14 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                 price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
                                     crop_id=crop, mandi_id=mandi)
                 price_info_log_list.append(price_info_log_obj)
-                prev_crop, prev_mandi = crop, mandi
                 crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                 mandi_name = mandi_map[mandi].encode("utf-8")
-                temp_str = ('\n%s,%s %s\n')%(crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                if crop != prev_crop:
+                    temp_str = ('\n%s: %s\n\n%s %s\n')%(agg_sms_crop_line,crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                else:
+                    temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                 price_info_list.append(temp_str)
+                prev_crop, prev_mandi = crop, mandi
             if max_price-min_price >= 2:
                 min_price = mean-1
                 max_price = mean+1
