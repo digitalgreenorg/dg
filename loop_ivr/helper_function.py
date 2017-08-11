@@ -149,6 +149,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             price_info_list.append(temp_str)
     # Save combination of crop and mandi for which data is not present in query on if query not for all mandi and crops.
     if not all_crop_flag and not all_mandi_flag:
+        prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
         for crop, mandi in itertools.product(crop_list, mandi_list):
             if (crop,mandi) not in crop_mandi_comb:
                 price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
@@ -157,7 +158,12 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                 if query_result:
                     crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                     mandi_name = mandi_map[mandi].encode("utf-8")
-                    temp_str = ('\n%s,%s %s\n')%(crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                    if crop != prev_crop:
+                        prev_crop = crop
+                        temp_str = ('\n%s: %s\n%s %s\n')%(agg_sms_crop_line,crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                    else:
+                        prev_mandi = mandi
+                        temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     price_info_list.append(temp_str)
                     price_info_list.append(agg_sms_no_price_for_combination)
     final_result = ''.join(price_info_list)
