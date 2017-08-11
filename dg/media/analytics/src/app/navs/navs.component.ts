@@ -18,6 +18,7 @@ export class NavsComponent implements OnInit,
   public showOverall: boolean = true;
   public showFilters: boolean = true;
   navClicked: boolean = false;
+  public selectedNav : string = '';
 
   //read config files from environment created for each app
   navsConfig = environment.navsConfig;
@@ -42,7 +43,11 @@ export class NavsComponent implements OnInit,
   constructor(private graphService: GraphsService, private _sharedService: SharedService) {
     this._sharedService.argsList$.subscribe(filters => {
       this.filters = filters;
+      Object.keys(this.containers).forEach(container => {
+          this.containers[container].applyFilter = false;
+      });
       this.getGraphsData(filters);
+      this.containers[this.selectedNav].applyFilter = true;
     });
     /*setInterval(() => {
       this.charts.forEach(chart => {
@@ -68,11 +73,13 @@ export class NavsComponent implements OnInit,
   //   this.getGraphsData(this.filters);
   // }
 
-  ngAfterViewChecked() {
+  ngAfterViewChecked() {    
     if (this.navClicked) {
+      // console.log('Inside ngAFterviewChecked');
       this.navClicked = false;
       Object.assign(this.filters.params, global_filter);
       this.getGraphsData(this.filters);
+      this.containers[this.selectedNav].applyFilter = true;
     }
 
   }
@@ -142,6 +149,7 @@ export class NavsComponent implements OnInit,
     this.containers[nav] = container;
     this.containers[nav]['charts'] = this.addChartsToDict(container.containers);
     this.containers[nav]['displayContent'] = false;
+    this.containers[nav]['applyFilter'] = true;
   }
 
   //set container for navs with interdependent filter and graph
@@ -159,7 +167,8 @@ export class NavsComponent implements OnInit,
   //get data for graphs from service
   getGraphsData(filters): void {
     this.containerCharts.forEach(chart => {
-      if (chart.nativeChart && (chart.nativeChart.series.length == 0)) {
+      console.log(this.containers[this.selectedNav].applyFilter, chart.nativeChart.series.length);
+      if (chart.nativeChart && (chart.nativeChart.series.length == 0 ||  (!this.containers[this.selectedNav].applyFilter))) {
         chart.nativeChart.showLoading();
         filters.params['chartType'] = chart.chart.type;
         filters.params['chartName'] = chart.name;
@@ -191,7 +200,7 @@ export class NavsComponent implements OnInit,
           }
         });
       }
-    });
+    });    
   }
 
   private parseDataForStockChart(chart, data): void {
@@ -210,6 +219,7 @@ export class NavsComponent implements OnInit,
         chart.nativeChart.series[i].remove();
       }
     }
+    chart.chart.series = [];
   }
 
   //function to return list of keys from a dictionary
@@ -268,6 +278,7 @@ export class NavsComponent implements OnInit,
 
   //display respective containers based on clicked nav
   showContent(selectedNav: string): void {
+    this.selectedNav = selectedNav;
     this.navClicked = true;
     if (selectedNav == 'Home') {
       this.showOverall = true;

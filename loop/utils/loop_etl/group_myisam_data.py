@@ -90,7 +90,6 @@ def query_myisam(**kwargs):
     sql_ds['select'].append('*')
     sql_ds['from'].append('loop_aggregated_myisam')
     sql_q = join_sql_ds(sql_ds)
-    print kwargs
     if(len(kwargs) > 0):
         country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
         if len(aggregators_list) > 0:
@@ -105,7 +104,7 @@ def query_myisam(**kwargs):
         sql_ds['where'].append('country_id = ' + str(country_id))
 
     sql_q = join_sql_ds(sql_ds)
-
+    print sql_q
     df_result = pd.read_sql(sql_q, con=mysql_cn)
     return df_result
 
@@ -352,6 +351,7 @@ def aggregator_volume(**kwargs):
 
 def aggregator_visits(**kwargs):
     df_result = query_myisam(**kwargs)
+    print df_result.head(n=5)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['aggregator_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
 
@@ -369,7 +369,6 @@ def mandi_visits(**kwargs):
     df_result = query_myisam(**kwargs)
     final_data_list = {}
     aggregator_groupby_data = df_result.groupby(['mandi_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
-
     return visitData(aggregator_groupby_data, 'mandivisit', 'mandi_name', 'aggregator_name', 'date', True)
 
 

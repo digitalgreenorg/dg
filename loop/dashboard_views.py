@@ -206,7 +206,6 @@ def graph_data(request):
         result = mandi_farmer_count(**filter_args)
     else:
         result = {"result":"success"}
-    # print filter_args
     return JsonResponse(result)
 
 def send_filter_data(request):

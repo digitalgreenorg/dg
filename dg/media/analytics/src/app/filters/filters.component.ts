@@ -191,6 +191,7 @@ export class FiltersComponent implements OnInit {
       webUrl: environment.url + "getData",
       params: this.f_list
     }
+    Object.assign(argstest.params, global_filter);
     this._sharedService.publishData(argstest);
   }
 
