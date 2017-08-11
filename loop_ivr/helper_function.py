@@ -20,7 +20,7 @@ from loop.helpline_view import write_log
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
-    agg_sms_crop_line, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP
+    agg_sms_crop_line, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -134,7 +134,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                 crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                 mandi_name = mandi_map[mandi].encode("utf-8")
                 if crop != prev_crop:
-                    temp_str = ('\n%s: %s\n\n%s %s\n')%(agg_sms_crop_line,crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                    temp_str = ('\n%s: %s\n%s %s\n')%(agg_sms_crop_line,crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                 else:
                     temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                 price_info_list.append(temp_str)
@@ -143,9 +143,9 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                 min_price = mean-1
                 max_price = mean+1
             if min_price != max_price:
-                temp_str = ('%s: %s %s-%s\n')%(date.strftime('%d-%m-%Y'),indian_rupee,str(min_price),str(max_price))
+                temp_str = ('%s %s: %s %s-%s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(min_price),str(max_price))
             else:
-                temp_str = ('%s: %s %s\n')%(date.strftime('%d-%m-%Y'),indian_rupee,str(max_price))
+                temp_str = ('%s %s: %s %s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(max_price))
             price_info_list.append(temp_str)
     # Save combination of crop and mandi for which data is not present in query on if query not for all mandi and crops.
     if not all_crop_flag and not all_mandi_flag:
