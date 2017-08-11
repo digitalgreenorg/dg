@@ -10,6 +10,10 @@ export class SharedService {
 
   // Service message commands
   public publishData(data: any) {
-    this.argsList.next(data);
+    if(data) {
+      this.argsList.next(data);
+    } else {
+      this.argsList.next();
+    }
   }
 }
