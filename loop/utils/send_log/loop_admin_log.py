@@ -193,9 +193,10 @@ def save_loopuser_mandi_child_log(instance,kwargs):
     LoopUser = get_model('loop','LoopUser')
     AdminAssignedLoopUser = get_model('loop','AdminAssignedLoopUser')
     admins_set = AdminUser.objects.filter(adminassignedloopuser__loop_user=instance.loop_user)
-    mandis_set = []
-    district_set = []
+
     for admin in admins_set:
+        mandis_set = []
+        district_set = []
         districts = admin.get_districts()
         if instance.mandi.district not in districts and instance.mandi not in mandis_set:
             save_mandi_log(instance.mandi,admin,kwargs)
@@ -241,10 +242,11 @@ def save_loopuser_village_child_log(instance,kwargs):
     LoopUser = get_model('loop','LoopUser')
     AdminAssignedLoopUser = get_model('loop','AdminAssignedLoopUser')
     admins_set = AdminUser.objects.filter(adminassignedloopuser__loop_user=instance.loop_user)
-    village_set =[]
-    district_set = []
-    block_set =[]
+    
     for admin in admins_set:
+        village_set =[]
+        district_set = []
+        block_set =[]
         districts = admin.get_districts()
         if instance.village.block.district not in districts and instance.village not in village_set:
             save_village_log(instance.village,admin,kwargs)
@@ -281,20 +283,13 @@ def save_admin_log(sender, **kwargs):
     
     if sender == "Village":
         district_id = instance.block.district.id
-        if instance.user_created is not None:
-            admin_user = AdminUser.objects.get(user=instance.user_created)
     elif sender == "Mandi":
         district_id = instance.district.id
-        if instance.user_created is not None:
-            admin_user = AdminUser.objects.get(user=instance.user_created)
     elif sender == "Gaddidar":
         district_id = instance.mandi.district.id
         if instance.user_created is not None:
-            admin_user = AdminUser.objects.get(user=instance.user_created)
     elif sender == "GaddidarCommission":
         district_id = instance.mandi.district.id
-        if instance.user_created is not None:
-            admin_user = AdminUser.objects.get(user=instance.user_created)
     elif sender == "AdminAssignedDistrict":
         sender = "District"
         model_id = instance.district.id
