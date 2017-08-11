@@ -73,7 +73,6 @@ export class FiltersComponent implements OnInit {
     this.getfiltersData(global_filter);
 
     this._sharedService.argsList$.subscribe(filters => {
-      console.log('got here MF');
       this.getfiltersData(global_filter);
     });
   }
@@ -206,7 +205,6 @@ export class FiltersComponent implements OnInit {
   }
 
   getfiltersData(filters) :any {
-    console.log('filters', filters);
     this.getFilterData.getData(filters).subscribe(response => {
       for (let res_obj of response) {
         let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });

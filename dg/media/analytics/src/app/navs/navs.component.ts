@@ -172,9 +172,7 @@ export class NavsComponent implements OnInit,
 
   //get data for graphs from service
   getGraphsData(filters): void {
-    console.log(filters);
     this.containerCharts.forEach(chart => {
-      console.log(this.containers[this.selectedNav].applyFilter, chart.nativeChart.series.length);
       if (chart.nativeChart && (chart.nativeChart.series.length == 0 ||  (!this.containers[this.selectedNav].applyFilter))) {
         chart.nativeChart.showLoading();
         filters.params['chartType'] = chart.chart.type;

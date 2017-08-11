@@ -27,7 +27,6 @@ export class AppComponent {
                 res[splitArray[0]] = splitArray[1]
             }
         }
-        console.log(res);
         return res;
     }
 }
