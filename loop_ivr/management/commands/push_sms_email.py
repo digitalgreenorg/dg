@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 '%% Calls with Market Rate: %s <br/><b>Non-Subscription Callers: %s <br/>'%(percent_calls_with_market_rate,yeseterday_non_subscriber_caller),
                 '<br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thanks you.']
         body = ''.join(body_content)
-        msg = EmailMultiAlternatives(subject, body, from_email, to_email)
+        msg = EmailMultiAlternatives(email_subject, body, from_email, to_email)
         msg.content_subtype = "html"
         msg.send()
 
