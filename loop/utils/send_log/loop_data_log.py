@@ -151,6 +151,7 @@ def send_updated_log(request):
             mandis = requesting_loop_user.get_mandis()
             Log = get_model('loop', 'Log')
             Farmer = get_model('loop', 'Farmer')
+            Mandi = get_model('loop','Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')
             Transporter = get_model('loop', 'Transporter')
             TransportationVehicle = get_model('loop', 'TransportationVehicle')
@@ -198,7 +199,7 @@ def send_updated_log(request):
                 timestamp__gt=timestamp, entry_table__in=['Mandi'])
             for mrow in mandi_list_queryset:
                 try:
-                    if(Mandi.objects.get(id=mrow.model_id)).mandi in mandis:
+                    if(Mandi.objects.get(id=mrow.model_id)) in mandis:
                         list_rows.append(mrow)
                 except :
                     pass
