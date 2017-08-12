@@ -231,7 +231,7 @@ def save_loopuser_mandi_child_log(instance,kwargs):
         districts = admin.get_districts()
         if instance.mandi.district not in districts and instance.mandi not in mandis_set:
             save_mandi_log(instance.mandi,admin,kwargs)
-            save_loopuserassignedmandi_log(instance,admin.kwargs)
+            save_loopuserassignedmandi_log(instance,admin,kwargs)
             if instance.mandi.district not in district_set:
                 save_district_log(instance.mandi.district,admin,kwargs)
                 district_set.append(instance.mandi.district)
@@ -284,7 +284,7 @@ def save_loopuser_village_child_log(instance,kwargs):
             save_village_log(instance.village,admin,kwargs)
             if instance.village.block.district not in district_set:
                 save_district_log(instance.village.block.district,admin,kwargs)
-                save_loopuserassignedvillage_log(instance,admin.kwargs)
+                save_loopuserassignedvillage_log(instance,admin,kwargs)
                 district_set.append(instance.village.block.district)
             if instance.village.block not in block_set:
                 save_block_log(instance.village.block,admin,kwargs)
