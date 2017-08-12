@@ -203,8 +203,6 @@ def send_updated_log(request):
                 except :
                     pass
                 
-            list_rows.append(mandi_list_queryset)
-
             gaddidar_rows = Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
             for grow in gaddidar_rows:
