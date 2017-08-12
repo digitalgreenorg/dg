@@ -459,7 +459,7 @@ def send_updated_admin_log(request):
             village_list_queryset = Log.objects.filter(timestamp__gt=timestamp,district__in=districts,entry_table__in=['Village'],admin_user=None)
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Village'],admin_user=requesting_admin_user))
             for vrow in village_list_queryset:
-                if AdminAssignedDistrict.objects.get(admin_user=requesting_admin_user,district=vrow.district).aggregation_switch==True:
+                if AdminAssignedDistrict.objects.get(admin_user=requesting_admin_user,district=vrow.block.district).aggregation_switch==True:
                     list_rows.append(vrow)
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.id,entry_table__in=['AdminUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
