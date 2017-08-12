@@ -89,7 +89,7 @@ class Command(BaseCommand):
         raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],) if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
         query_result = run_query(raw_query)
         if not query_result:
-            price_info_list.append(agg_sms_no_price_available)
+            return
         else:
             prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
             for row in query_result:
@@ -110,14 +110,6 @@ class Command(BaseCommand):
                 else:
                     temp_str = ('%s: %s %s\n')%(date.strftime('%d-%m-%Y'),indian_rupee,str(max_price))
                 price_info_list.append(temp_str)
-            if not all_crop_flag and not all_mandi_flag:
-                for crop, mandi in itertools.product(crop_list, mandi_list):
-                    if (crop,mandi) not in crop_mandi_comb:
-                        crop_name = self.crop_in_hindi_map.get(crop).encode("utf-8") if self.crop_in_hindi_map.get(crop) else self.crop_map[crop].encode("utf-8")
-                        mandi_name = self.mandi_map[mandi].encode("utf-8")
-                        temp_str = ('\n%s,%s %s\n')%(crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
-                        price_info_list.append(temp_str)
-                        price_info_list.append(agg_sms_no_price_for_combination)
         final_result = ''.join(price_info_list)
         self.send_info(subscription_id, user_no, final_result)
 
