@@ -18,7 +18,9 @@ class Command(BaseCommand):
     def send_mail(self, email_subject, yesterday_call_count, active_caller_count,
                         percent_calls_with_market_rate, yeseterday_non_subscriber_caller):
         from_email = EMAIL_HOST_USER
-        to_email = ['vikas@digitalgreen.org']
+        to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
+                    'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
+                    'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'vikas@digitalgreen.org']
         body_content = ['Dear Team,<br/><br/>This is the status of calls on Loop Market Information:<br/><br/>',
                 'Total Callers: %s <br/> Active Caller Count (Called in last 15 days): %s <br/>'%(yesterday_call_count,active_caller_count),
                 '%% Calls with Market Rate: %s %%<br/><b>Non-Subscription Callers: %s </b><br/>'%(percent_calls_with_market_rate,yeseterday_non_subscriber_caller),
