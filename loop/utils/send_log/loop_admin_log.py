@@ -319,7 +319,6 @@ def save_admin_log(sender, **kwargs):
         district_id = instance.district.id
     elif sender == "Gaddidar":
         district_id = instance.mandi.district.id
-        if instance.user_created is not None:
     elif sender == "GaddidarCommission":
         district_id = instance.mandi.district.id
     elif sender == "AdminAssignedDistrict":
