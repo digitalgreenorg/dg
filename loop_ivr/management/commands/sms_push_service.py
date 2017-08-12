@@ -22,7 +22,7 @@ from loop_ivr.helper_function import get_valid_list, run_query
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
-    helpline_hi, PUSH_MESSAGE_SMS_RESPONSE_URL, MONTH_NAMES
+    agg_sms_crop_line, helpline_hi, PUSH_MESSAGE_SMS_RESPONSE_URL, MONTH_NAMES
 
 class Command(BaseCommand):
 
