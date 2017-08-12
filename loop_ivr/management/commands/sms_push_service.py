@@ -11,7 +11,7 @@ from pytz import timezone
 
 from django.core.management.base import BaseCommand
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER
 
 from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
@@ -22,7 +22,7 @@ from loop_ivr.helper_function import get_valid_list, run_query
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
-    PUSH_MESSAGE_SMS_RESPONSE_URL
+    helpline_hi, PUSH_MESSAGE_SMS_RESPONSE_URL
 
 class Command(BaseCommand):
 
@@ -83,7 +83,6 @@ class Command(BaseCommand):
 
     def get_price_info(self,subscription_id, user_no, crop_list, mandi_list, all_crop_flag, all_mandi_flag):
         price_info_list = []
-        crop_mandi_comb = []
         price_info_list.append(agg_sms_initial_line)
         today_date = (datetime.datetime.now(timezone('Asia/Kolkata'))).replace(tzinfo=None)
         raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],) if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
@@ -95,8 +94,6 @@ class Command(BaseCommand):
             for row in query_result:
                 crop, mandi, date, min_price, max_price, mean = row['crop'], row['mandi'], row['date'], int(row['minp']), int(row['maxp']), int(row['mean'])
                 if crop != prev_crop or mandi != prev_mandi:
-                    if not all_crop_flag and not all_mandi_flag:
-                        crop_mandi_comb.append((crop,mandi))
                     prev_crop, prev_mandi = crop, mandi
                     crop_name = self.crop_in_hindi_map.get(crop).encode("utf-8") if self.crop_in_hindi_map.get(crop) else self.crop_map[crop].encode("utf-8")
                     mandi_name = self.mandi_map[mandi].encode("utf-8")
@@ -110,8 +107,9 @@ class Command(BaseCommand):
                 else:
                     temp_str = ('%s: %s %s\n')%(date.strftime('%d-%m-%Y'),indian_rupee,str(max_price))
                 price_info_list.append(temp_str)
-        final_result = ''.join(price_info_list)
-        self.send_info(subscription_id, user_no, final_result)
+            price_info_list.append(('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER))
+            final_result = ''.join(price_info_list)
+            self.send_info(subscription_id, user_no, final_result)
 
 
     def handle(self, *args, **options):
