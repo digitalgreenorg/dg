@@ -53,7 +53,7 @@ class Subscription(LoopModel):
     status = models.IntegerField(choices=STATUS, default=1)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.subscriber,self.subscription_code)
+        return "%s (%s)" % (self.subscriber, self.subscription_code)
 
     class Meta:
         unique_together = ("subscriber", "subscription_code")
