@@ -94,8 +94,8 @@ class Command(BaseCommand):
             for row in query_result:
                 crop, mandi, date, min_price, max_price, mean = row['crop'], row['mandi'], row['date'], int(row['minp']), int(row['maxp']), int(row['mean'])
                 if crop != prev_crop or mandi != prev_mandi:
-                    crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
-                    mandi_name = mandi_map[mandi].encode("utf-8")
+                    crop_name = self.crop_in_hindi_map.get(crop).encode("utf-8") if self.crop_in_hindi_map.get(crop) else self.crop_map[crop].encode("utf-8")
+                    mandi_name = self.mandi_map[mandi].encode("utf-8")
                     if crop != prev_crop:
                         temp_str = ('\n%s: %s\n%s %s\n')%(agg_sms_crop_line,crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     else:
