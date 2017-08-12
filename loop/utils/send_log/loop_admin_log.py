@@ -64,6 +64,7 @@ def save_loopuserassignedmandi_log(instance,adminUser,kwargs):
     user = instance.user_created
     sender='LoopUserAssignedMandi'
     model_id = instance.id
+    district_id=None
     try:
         action = kwargs["created"]
     except Exception:
@@ -142,6 +143,7 @@ def save_loopuserassignedvillage_log(instance,adminUser,kwargs):
     user = instance.user_created
     sender='LoopUserAssignedVillage'
     model_id = instance.id
+    district_id=None
     try:
         action = kwargs["created"]
     except Exception:
