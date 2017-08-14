@@ -230,19 +230,13 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
 
 loop_admin = LoopAdmin(name='loop_admin')
 loop_admin.register(Village, VillageAdmin)
-<<<<<<< HEAD
-loop_admin.register(Block)
-loop_admin.register(District)
-loop_admin.register(State)
 loop_admin.register(Country)
 loop_admin.register(AdminUser,AdminUserAdmin)
-=======
 loop_admin.register(Block, BlockAdmin)
 loop_admin.register(District, DistrictAdmin)
 loop_admin.register(State, StateAdmin)
 # loop_admin.register(LoopUserAssignedMandi, LoopUserAssignedMandiAdmin)
 # loop_admin.register(LoopUserAssignedVillage, LoopUserAssignedVillageAdmin)
->>>>>>> origin/master
 loop_admin.register(LoopUser, LoopUserAdmin)
 loop_admin.register(Crop,CropAdmin)
 loop_admin.register(Farmer, FarmerAdmin)
