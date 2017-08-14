@@ -79,7 +79,6 @@ def sendData(request):
 				user = apikey_object.user
 			except Exception:
 				return HttpResponse("-1", status=401)
-			AdminUser = get_model('loop', 'AdminUser')
 			try:
 				requesting_admin_user = AdminUser.objects.get(user_id=user.id)
 				preferred_language = requesting_admin_user.preferred_language.notation
