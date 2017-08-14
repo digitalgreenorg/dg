@@ -23,13 +23,15 @@ class Command(BaseCommand):
         '''
         to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
                     'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
-                    'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'vikas@digitalgreen.org']
+                    'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'vikas@digitalgreen.org',
+                    'melbin@digitalgreen.org']
         '''
         to_email = ['vikas@digitalgreen.org']
-        body_content = ['Dear Team,<br/><br/>This is the status of calls on Loop Market Information:<br/><br/>',
+        body_content = ['Dear Team,<br/><br/>This is the status of calls on Loop Market Information Line:<br/><br/>',
                 'Total Callers on Market Information Line: %s <br/> Active Caller Count (Called in last 15 days): %s <br/>'%(yesterday_call_count,active_caller_count),
                 '%% Calls with Market Rate: %s %%<br/><br/>'%(percent_calls_with_market_rate,),
-                '<b>Call by Subscribed callers (We are pushing messages to these callers): %s<br/>Non-Subscription Callers: %s<br/>'%(yeseterday_subscriber_caller, yeseterday_non_subscriber_caller),
+                '<b>Push Message Service Stats (We are pushing rates to some farmers once in a day):<br/><br/>',
+                'Total Call by Subscribed callers (We are pushing rates to these callers on daily basis): %s<br/>Total Call by Non-Subscribed Callers: %s<br/><br/>'%(yeseterday_subscriber_caller, yeseterday_non_subscriber_caller),
                 'Total Push Messages: %s<br/>Successfully Pushed Rates: %s<br/>Failed Pushed Rates: %s<br/></b>'%(total_subscription,successfully_sent_subscription,failed_sent_subscription),
                 '<br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thanks you.']
         body = ''.join(body_content)
