@@ -1,7 +1,6 @@
 
 import json
 import datetime
-from django.db.models import get_model
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
@@ -94,7 +93,6 @@ def sendData(request):
 	extraDistrict = list(set(extraDistrict+extraVillageDistrict))
 	data_list = []
 	data_list = list(chain(createJsonObject(extraDistrict,timestamp,"District"),createJsonObject(extraBlock,timestamp,"Block"),createJsonObject(extraVillage,timestamp,'Village'),createJsonObject(extraMandi,timestamp,'Mandi'),createJsonObject(extraGaddidar,timestamp,'Gaddidar'),createJsonObject(extraGaddidarCommission,timestamp,'GaddidarCommission')))
-	import pdb;pdb.set_trace()
 	if data_list:
 	    data = json.dumps(data_list, cls=DatetimeEncoder)
 	    return HttpResponse(data, content_type="application/json")
