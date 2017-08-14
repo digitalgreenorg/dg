@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef, AfterViewInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IMyOptions } from 'mydatepicker';
 import { Filter } from './filter';
@@ -16,7 +16,7 @@ import { GlobalFilterSharedService } from '../global-filter/global-filter-shared
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css']
 })
-export class FiltersComponent implements OnInit {
+export class FiltersComponent implements OnInit, AfterViewInit {
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
   @ViewChild('sideNavContent') sideNavContent: ElementRef;
@@ -71,8 +71,6 @@ export class FiltersComponent implements OnInit {
         }
       }
     });
-
-    this.getfiltersData(global_filter);
 
     // this._sharedService.argsList$.subscribe(filters => {
     //   this.getfiltersData(global_filter);
@@ -138,8 +136,11 @@ export class FiltersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getfiltersData(global_filter);
   }
-
+  
+  ngAfterViewInit(): void {
+  }
   closeNav(): void {
     this.mySidenav.nativeElement.style.width = '0px';
     this.sideNavContent.nativeElement.style.display = 'none';
