@@ -58,10 +58,10 @@ def send_admin_loopuser_village_child(admin_user,loopusers,districts):
 
 def createLogObject():
 	pass
-def createJsonObject(extradata,timestamp,entry_table):
+def createJsonObject(extradata,timestamp,entry_table,admin_user):
 	data_list =[]
 	for data in extradata:
-		log={"action":1,"timestamp":timestamp,"entry_table":entry_table,"model_id":data.id}
+		log={"action":1,"timestamp":timestamp,"entry_table":entry_table,"model_id":data.id,"admin_user":admin_user.id}
 		obj = model_to_dict(data)
 		data_row = {'log': log, 'data':obj, 'online_id': obj['id']}
 		data_list.append(data_row)
@@ -92,7 +92,7 @@ def sendData(request):
 	extraVillageDistrict,extraBlock,extraVillage = send_admin_loopuser_village_child(requesting_admin_user,loopusers,districts)
 	extraDistrict = list(set(extraDistrict+extraVillageDistrict))
 	data_list = []
-	data_list = list(chain(createJsonObject(extraDistrict,timestamp,"District"),createJsonObject(extraBlock,timestamp,"Block"),createJsonObject(extraVillage,timestamp,'Village'),createJsonObject(extraMandi,timestamp,'Mandi'),createJsonObject(extraGaddidar,timestamp,'Gaddidar'),createJsonObject(extraGaddidarCommission,timestamp,'GaddidarCommission')))
+	data_list = list(chain(createJsonObject(extraDistrict,timestamp,"District",requesting_admin_user),createJsonObject(extraBlock,timestamp,"Block",requesting_admin_user),createJsonObject(extraVillage,timestamp,'Village',requesting_admin_user),createJsonObject(extraMandi,timestamp,'Mandi',requesting_admin_user),createJsonObject(extraGaddidar,timestamp,'Gaddidar',requesting_admin_user),createJsonObject(extraGaddidarCommission,timestamp,'GaddidarCommission',requesting_admin_user)))
 	if data_list:
 	    data = json.dumps(data_list, cls=DatetimeEncoder)
 	    return HttpResponse(data, content_type="application/json")
