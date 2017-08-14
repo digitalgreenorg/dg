@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 
-from loop_ivr.models import PriceInfoIncoming, SubscriptionLog
+from loop_ivr.models import PriceInfoIncoming, SubscriptionLog, Subscription
 
 from loop_ivr.utils.config import agg_sms_no_price_available
 
@@ -16,14 +16,21 @@ from dg.settings import EMAIL_HOST_USER, team_contact
 class Command(BaseCommand):
 
     def send_mail(self, email_subject, yesterday_call_count, active_caller_count,
-                        percent_calls_with_market_rate, yeseterday_non_subscriber_caller):
+                        percent_calls_with_market_rate, yeseterday_non_subscriber_caller,
+                        yeseterday_subscriber_caller, total_subscription,
+                        successfully_sent_subscription, failed_sent_subscription):
         from_email = EMAIL_HOST_USER
+        '''
         to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
                     'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
                     'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'vikas@digitalgreen.org']
+        '''
+        to_email = ['vikas@digitalgreen.org']
         body_content = ['Dear Team,<br/><br/>This is the status of calls on Loop Market Information:<br/><br/>',
-                'Total Callers: %s <br/> Active Caller Count (Called in last 15 days): %s <br/>'%(yesterday_call_count,active_caller_count),
-                '%% Calls with Market Rate: %s %%<br/><b>Non-Subscription Callers: %s </b><br/>'%(percent_calls_with_market_rate,yeseterday_non_subscriber_caller),
+                'Total Callers on Market Information Line: %s <br/> Active Caller Count (Called in last 15 days): %s <br/>'%(yesterday_call_count,active_caller_count),
+                '%% Calls with Market Rate: %s %%<br/><br/>'%(percent_calls_with_market_rate,),
+                '<b>Call by Subscribed callers (We are pushing messages to these callers): %s<br/>Non-Subscription Callers: %s<br/>'%(yeseterday_subscriber_caller, yeseterday_non_subscriber_caller),
+                'Total Push Messages: %s<br/>Successfully Pushed Rates: %s<br/>Failed Pushed Rates: %s<br/></b>'%(total_subscription,successfully_sent_subscription,failed_sent_subscription),
                 '<br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thanks you.']
         body = ''.join(body_content)
         msg = EmailMultiAlternatives(email_subject, body, from_email, to_email)
@@ -50,8 +57,14 @@ class Command(BaseCommand):
         subscriber_no = list(SubscriptionLog.objects.filter(status=1).values_list('subscription__subscriber__phone_no',flat=True))
         yeseterday_non_subscriber_caller = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,
                                             incoming_time__lt=today_date).exclude(from_number__in=subscriber_no).exclude(from_number__in=team_contact).count()
+        yeseterday_subscriber_caller = yesterday_call_count - yeseterday_non_subscriber_caller
         email_subject = 'Loop Market Information Summary for %s'%(yesterday_date.strftime("%Y-%m-%d"),)
+        total_subscription = Subscription.objects.filter(status=1).exclude(subscriber__phone_no__in=team_contact).count()
+        successfully_sent_subscription = SubscriptionLog.objects.filter(status=1,date__gte=yesterday_date,date__lt=today_date).exclude(subscription__subscriber__phone_no__in=team_contact).count()
+        failed_sent_subscription = total_subscription - successfully_sent_subscription
         self.send_mail(email_subject, yesterday_call_count, active_caller_count,
-                        percent_calls_with_market_rate, yeseterday_non_subscriber_caller)
+                        percent_calls_with_market_rate, yeseterday_non_subscriber_caller,
+                        yeseterday_subscriber_caller,total_subscription,
+                        successfully_sent_subscription, failed_sent_subscription)
 
         
