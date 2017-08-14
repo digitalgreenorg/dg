@@ -355,7 +355,7 @@ def aggregator_volume(**kwargs):
     df_result = query_myisam(**kwargs)
     final_data_list = {}
     try:
-        aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['quantity'].sum().reset_index()
+        aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['quantity'].sum().reset_index().sort('quantity', ascending=False)
         final_data_list = volumedata(df_result, aggregator_groupby_data, 'aggrvol', 'aggregator_name', 'mandi_name', True)
     except:
         final_data_list["error"] = "No data found"
@@ -365,8 +365,8 @@ def aggregator_visits(**kwargs):
     df_result = query_myisam(**kwargs)
     final_data_list = {}
     try:
-        aggregator_groupby_data = df_result.groupby(['aggregator_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
-        final_data_list = visitData(aggregator_groupby_data, 'aggrvisit', 'aggregator_name', 'mandi_name', 'date', True)
+        aggregator_groupby_data = df_result.groupby(['aggregator_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index().sort('date', ascending=False)
+        final_data_list = visitData(aggregator_groupby_data, 'aggrvisit', 'aggregator_name', 'mandi_name', 'date', True, 'date')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
@@ -375,7 +375,7 @@ def mandi_volume(**kwargs):
     df_result = query_myisam(**kwargs)
     final_data_list = {}
     try:
-        aggregator_groupby_data = df_result.groupby(['mandi_id', 'mandi_name'])['quantity'].sum().reset_index()
+        aggregator_groupby_data = df_result.groupby(['mandi_id', 'mandi_name'])['quantity'].sum().reset_index().sort('quantity', ascending=False)
         final_data_list = volumedata(df_result, aggregator_groupby_data, 'mandivolume', 'mandi_name', 'aggregator_name', True)
     except:
         final_data_list["error"] = "No data found"
@@ -386,7 +386,7 @@ def mandi_visits(**kwargs):
     final_data_list = {}
     try:
         aggregator_groupby_data = df_result.groupby(['mandi_id','aggregator_name', 'mandi_name'])['date'].nunique().to_frame().reset_index()
-        final_data_list = visitData(aggregator_groupby_data, 'mandivisit', 'mandi_name', 'aggregator_name', 'date', True)
+        final_data_list = visitData(aggregator_groupby_data, 'mandivisit', 'mandi_name', 'aggregator_name', 'date', True, 'date')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
@@ -395,7 +395,7 @@ def crop_volume(**kwargs):
     df_result = sql_query(**kwargs)
     final_data_list = {}
     try:
-        aggregator_groupby_data = df_result.groupby(['crop_id', 'crop_name'])['quantity'].sum().reset_index()
+        aggregator_groupby_data = df_result.groupby(['crop_id', 'crop_name'])['quantity'].sum().reset_index().sort('quantity', ascending=False)
         final_data_list = volumedata(df_result, aggregator_groupby_data, 'cropvolume', 'crop_name', 'mandi_name', True)
     except:
         final_data_list["error"] = "No data found"
@@ -406,7 +406,7 @@ def crop_farmer_count(**kwargs):
     final_data_list = {}
     try:
         aggregator_groupby_data = df_result.groupby(['crop_id', 'crop_name'])['farmer_id'].nunique().to_frame().reset_index()
-        final_data_list = visitData(aggregator_groupby_data, 'cropfarmercount', 'crop_name', '',  'farmer_id', False)
+        final_data_list = visitData(aggregator_groupby_data, 'cropfarmercount', 'crop_name', '',  'farmer_id', False, 'farmer_id')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list  
@@ -415,7 +415,7 @@ def crop_prices(**kwargs):
     df_result = crop_prices_query(**kwargs)
     final_data_list = {}
     try:
-        crop_groupby_data = df_result.groupby(['crop_id', 'crop_name']).agg({'Min_price':'min', 'Max_price':'max'}).reset_index()
+        crop_groupby_data = df_result.groupby(['crop_id', 'crop_name']).agg({'Min_price':'min', 'Max_price':'max'}).reset_index().sort('Max_price', ascending=False)
         outer_data = {'outerData':{'series':[], 'categories':crop_groupby_data['crop_name'].tolist()}}
         temp_dict_outer = {'name':'Crop price','data':[]}
 
@@ -452,7 +452,7 @@ def repeat_farmer_count(outer_param1, outer_param2, graphname, **kwargs):
     final_data_list = {}
     try:
         aggregator_groupby_data = df_result.groupby([outer_param1, outer_param2, 'farmer_id', 'farmer_name']).agg({'date':pd.Series.nunique}).rename(columns={'date': 'repeat_count'}).reset_index()
-        aggregator_farmer_count = aggregator_groupby_data.groupby([outer_param1, outer_param2]).agg({'repeat_count':'count'}).rename(columns={'repeat_count':'farmer_count'}).reset_index()
+        aggregator_farmer_count = aggregator_groupby_data.groupby([outer_param1, outer_param2]).agg({'repeat_count':'count'}).rename(columns={'repeat_count':'farmer_count'}).reset_index().sort('farmer_count', ascending=False)
         outer_data = {'outerData': {'series':[], 'categories':aggregator_farmer_count[outer_param2].tolist()}}
         temp_dict_outer = {'name': 'Total farmer Count', 'data':[]}
 
@@ -486,14 +486,13 @@ def repeat_farmer_count(outer_param1, outer_param2, graphname, **kwargs):
 
     return final_data_list
 
-def visitData(groupby_result, graphname, outer_param, inner_param, count_param, isdrillDown):
+def visitData(groupby_result, graphname, outer_param, inner_param, count_param, isdrillDown, sortParam):
     final_data_list = {}
     try:
         outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
         temp_dict_outer = {'name':'Aggregator Visit','data':[]}
 
-        aggregator_visit_data = groupby_result.groupby(outer_param)[count_param].sum().reset_index()
-
+        aggregator_visit_data = groupby_result.groupby(outer_param)[count_param].sum().reset_index().sort(sortParam, ascending=False)
         for index, row in aggregator_visit_data.iterrows():
             temp_dict_outer['data'].append({'name':row[outer_param],'y':int(row[count_param]),'drilldown':row[outer_param] + ' Count'})
 
@@ -555,6 +554,7 @@ def agg_spk_cpk(**kwargs):
         df_result.columns = df_result.columns.droplevel(1)
 
         df_result_agg = df_result.groupby(['aggregator_id','aggregator_name']).sum().reset_index()
+        print df_result_agg.head(n = 5)
         df_result_agg['cpk'] = (df_result_agg['aggregator_incentive'] + df_result_agg['transportation_cost'])/df_result_agg['quantity']
         df_result_agg['spk'] = (df_result_agg['farmer_share'] + df_result_agg['gaddidar_share'])/df_result_agg['quantity']
 
