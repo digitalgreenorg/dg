@@ -162,6 +162,7 @@ def save_district_child_log(instance,kwargs):
     Block = get_model('loop','Block')
     Village = get_model('loop','Village')
     admin_user = instance.admin_user
+    user = instance.user_created
     try:
         action = kwargs["created"]
     except Exception as e:
@@ -328,6 +329,7 @@ def save_admin_log(sender, **kwargs):
         model_id = instance.district.id
         admin_user = instance.admin_user
         district_id = instance.district.id
+        user = instance.user_created
         save_district_child_log(instance,kwargs)
     elif sender == "AdminAssignedLoopUser":
         sender = "LoopUser"
@@ -393,7 +395,7 @@ def get_admin_log_object(log_object, preferred_language):
         data = {'log': model_to_dict(log_object, exclude=['admin_user', 'user', 'village', 'id']), 'data':obj, 'online_id': obj['id']}
     except Exception, e:
         data = {'log': model_to_dict(
-            log_object, exclude=['user', 'village', 'id']), 'data': None, 'online_id': log_object.model_id}
+            log_object, exclude=['village', 'id']), 'data': None, 'online_id': log_object.model_id}
     return data
 
 def get_latest_timestamp():
