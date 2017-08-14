@@ -13,7 +13,7 @@ from django.contrib import auth
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response
 from django.db.models import Count, Min, Sum, Avg, Max, F
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 
 from tastypie.models import ApiKey, create_api_key
@@ -36,7 +36,7 @@ import inspect
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, NO_EXPERT_GREETING_APP_ID, \
     OFF_HOURS_GREETING_APP_ID, \
-    OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT, BROADCAST_APP_ID
+    OFF_HOURS_VOICEMAIL_APP_ID, MEDIA_ROOT, BROADCAST_APP_ID, PERMISSION_DENIED_URL
 
 from loop.helpline_view import write_log, save_call_log, save_sms_log, get_status, get_info_through_api, \
     update_incoming_acknowledge_user, make_helpline_call, send_helpline_sms, connect_to_app, \
@@ -603,6 +603,26 @@ def payments(request):
 
     return HttpResponse(data)
 
+@login_required()
+@user_passes_test(lambda u: u.groups.filter(name='Loop Payment').count() > 0,
+                  login_url=PERMISSION_DENIED_URL)
+def dashboard_payments(request):
+    if request.method == 'GET':
+        context = RequestContext(request)
+        user = request.user
+        try:
+            api_key = ApiKey.objects.get(user=user)
+        except ApiKey.DoesNotExist:
+            api_key = ApiKey.objects.create(user=user)
+            api_key.save()
+        login_data = dict()
+        login_data['user_name'] = user.username
+        login_data['user_id'] = user.id
+        login_data['key'] = api_key.key
+        return render_to_response('app_dashboards/loop_dashboard_payment.html', login_data, context_instance=context)
+    else:
+        return HttpResponse(status=404)
+
 
 def helpline_incoming(request):
     if request.method == 'GET':
@@ -812,6 +832,8 @@ def helpline_offline(request):
 
 
 @login_required
+@user_passes_test(lambda u: u.groups.filter(name='Broadcast').count() > 0,
+                  login_url=PERMISSION_DENIED_URL)
 def broadcast(request):
     context = RequestContext(request)
     template_data = dict()
