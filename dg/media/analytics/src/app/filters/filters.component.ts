@@ -6,7 +6,8 @@ import { FilterElement } from './filter-element';
 import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.loop';
-import { global_filter } from '../app.component'
+import { global_filter } from '../app.component';
+import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 @Component({
   selector: 'app-filters',
   host: {
@@ -52,7 +53,8 @@ export class FiltersComponent implements OnInit {
     selectionTxtFontSize: '16px',
   };
 
-  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, private datepipe: DatePipe) {
+  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, 
+    private datepipe: DatePipe, private _globalfiltersharedService:GlobalFilterSharedService) {
     Object.keys(this.filterConfig).forEach(key => {
       if (this.filterConfig[key].show) {
         if (this.filterConfig[key].name == 'date') {
@@ -72,9 +74,14 @@ export class FiltersComponent implements OnInit {
 
     this.getfiltersData(global_filter);
 
-    this._sharedService.argsList$.subscribe(filters => {
+    // this._sharedService.argsList$.subscribe(filters => {
+    //   this.getfiltersData(global_filter);
+    // });
+
+    this._globalfiltersharedService.argsList$.subscribe(filters => {
+      console.log('bhai country badal raha hai in fitlters');
       this.getfiltersData(global_filter);
-    });
+    })
   }
 
   select_all(filter): void {

@@ -3,7 +3,8 @@ import { Component, OnInit, AfterViewInit, AfterViewChecked } from '@angular/cor
 import { environment } from '../../environments/environment.loop';
 import { GraphsService } from './navs.service';
 import { SharedService } from '../shared.service';
-import { global_filter } from '../app.component'
+import { global_filter } from '../app.component';
+import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 
 @Component({
   selector: 'app-navs',
@@ -40,7 +41,8 @@ export class NavsComponent implements OnInit,
   //Display drop down type graphs
   // showDropDownGraphs: boolean = false;
   filters = { 'params': {} };
-  constructor(private graphService: GraphsService, private _sharedService: SharedService) {
+  constructor(private graphService: GraphsService, private _sharedService: SharedService, 
+    private _globalfiltersharedService: GlobalFilterSharedService) {
     this._sharedService.argsList$.subscribe(filters => {
       if(filters) {
         Object.assign(filters.params, global_filter);
@@ -51,6 +53,17 @@ export class NavsComponent implements OnInit,
       this.filters = filters;
       Object.keys(this.containers).forEach(container => {
           this.containers[container].applyFilter = false;
+      });
+      this.getGraphsData(filters);
+      this.containers[this.selectedNav].applyFilter = true;
+    });
+    this._globalfiltersharedService.argsList$.subscribe(filters => {
+      console.log('bhai country badal raha hai');
+      filters = {}
+      filters['params'] = global_filter;
+      this.filters = filters;
+      Object.keys(this.containers).forEach(container => {
+        this.containers[container].applyFilter = false;
       });
       this.getGraphsData(filters);
       this.containers[this.selectedNav].applyFilter = true;
