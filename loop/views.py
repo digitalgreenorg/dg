@@ -994,9 +994,13 @@ def merge_entity(request):
                 model = merge_entity_form.cleaned_data.get('model')
                 merge_file = merge_entity_form.cleaned_data.get('merge_file')
                 email_to = merge_entity_form.cleaned_data.get('email')
-                merge_file_path = save_file(merge_file)
-                merge(model, merge_file_path, email_to)
-                os.remove(merge_file_path)
+                try:
+                    merge_file_path = save_file(merge_file)
+                    merge(model, merge_file_path, email_to)
+                    os.remove(merge_file_path)
+                except:
+                    #Contact system page?
+                    pass
                 return redirect('/loop/merge_entity')
             else:
                 template_data['merge_entity_form'] = merge_entity_form
