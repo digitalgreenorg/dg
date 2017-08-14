@@ -11,6 +11,7 @@ from loop.views import *
 
 from loop.utils.send_log.loop_data_log import send_updated_log
 from loop.utils.send_log.loop_admin_log import send_updated_admin_log
+from loop.utils.send_log.send_extra_data import sendData
 
 api1 = Api(api_name = "v1")
 api1.register(api.VillageResource())
@@ -31,8 +32,6 @@ api1.register(api.StateResource())
 api1.register(api.GaddidarCommissionResource())
 api1.register(api.GaddidarShareOutliersResource())
 api1.register(api.AggregatorShareOutliersResource())
-api1.register(api.LoopUserAssignedMandiResource())
-api1.register(api.LoopUserAssignedVillageResource())
 api1.register(api.LanguageResource())
 api1.register(api.CropLanguageResource())
 api1.register(api.VehicleLanguageResource())
@@ -71,6 +70,7 @@ urlpatterns = patterns('',
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
     url(r'^get_admin_log/', send_updated_admin_log),
+    url(r'^get_extra_data/',sendData),
     url(r'^dashboard/', dashboard),
     url(r'^get_payment_sheet/', download_data_workbook, name="download-data-workbook"),
     url(r'^filter_data/', filter_data),
