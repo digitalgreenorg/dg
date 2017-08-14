@@ -53,7 +53,7 @@ def send_admin_loopuser_village_child(admin_user,loopusers,districts):
 			if row.block.district not in districts and row.block.district not in district_set:
 				district_set.append(row.block.district)
 			if row.block.district not in districts and row.block not in block_set:
-				block_set.append(row.block.district)
+				block_set.append(row.block)
 	return district_set,block_set,village_set
 
 def createLogObject():
