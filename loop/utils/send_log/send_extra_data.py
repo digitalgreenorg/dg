@@ -61,7 +61,7 @@ def createLogObject():
 def createJsonObject(extradata,timestamp,entry_table,admin_user):
 	data_list =[]
 	for data in extradata:
-		log={"action":1,"timestamp":timestamp,"entry_table":entry_table,"model_id":data.id,"admin_user":admin_user.id,"user":None}
+		log={"action":1,"timestamp":timestamp,"entry_table":entry_table,"model_id":data.id,"admin_user":admin_user.id,"user":admin_user.user.id}
 		obj = model_to_dict(data)
 		data_row = {'log': log, 'data':obj, 'online_id': obj['id']}
 		data_list.append(data_row)
@@ -75,7 +75,7 @@ def sendData(request):
 		if timestamp:
 			try:
 				apikey_object = ApiKey.objects.get(key=apikey)
-				user = apikey_object.user
+				user.id = apikey_object.user.id
 			except Exception:
 				return HttpResponse("-1", status=401)
 			try:
