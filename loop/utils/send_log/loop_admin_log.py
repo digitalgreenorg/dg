@@ -338,13 +338,15 @@ def save_admin_log(sender, **kwargs):
         admin_user = instance.admin_user
         district_id = instance.district.id
         user = instance.user_created
-        save_district_child_log(instance,kwargs)
+        if action > -1:
+            save_district_child_log(instance,kwargs)
     elif sender == "AdminAssignedLoopUser":
         sender = "LoopUser"
         model_id = instance.loop_user.id
         admin_user = instance.admin_user
-        save_admin_loopuser_mandi_child_log(instance,kwargs)
-        save_admin_loopuser_village_child_log(instance,kwargs)
+        if action > -1:
+            save_admin_loopuser_mandi_child_log(instance,kwargs)
+            save_admin_loopuser_village_child_log(instance,kwargs)
     elif sender == "LoopUserAssignedMandi":
         save_loopuser_mandi_child_log(instance,kwargs)
     elif sender == "LoopUserAssignedVillage":
