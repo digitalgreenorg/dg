@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IMyOptions } from 'mydatepicker';
-import { Filter } from './filter';
-import { FilterElement } from './filter-element';
+import { Filter } from './filter.model';
+import { FilterElement } from './filter-element.model';
 import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.loop';

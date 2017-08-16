@@ -55,7 +55,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
   constructor(private cardsService: CardsService, private _sharedService: SharedService, private datepipe: DatePipe
   , private _globalfiltersharedService:GlobalFilterSharedService) {
         this._globalfiltersharedService.argsList$.subscribe(data => {
-          console.log('hey man, you have to change cards data');
           let options = this.createParams();
           this.getData(options);
         });
