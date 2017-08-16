@@ -17,6 +17,13 @@ agg_sms_no_price_crop_mandi = '%s का %s मंडी मे पिछले 
 string_for_no_rate_query = 'पिछले तीन दिनो के रेट उपलब्ध नही है'
 MONTH_NAMES = {1:'जनवरी', 2:'फरवरी', 3:'मार्च', 4:'अप्रैल', 5:'मई', 6:'जून', 7:'जुलाई', 8:'अगस्त',
 				9:'सितंबर', 10:'अक्टूबर', 11:'नवंबर', 12:'दिसंबर'}
+crop_and_code = 'फसल और उनके कोड:\n\
+बोड़ा - 1\n\
+बैंगन - 2\n\
+करेला - 16\n\
+परवल - 17\n\
+नेनुआ - 20\n\
+भिंडी - 22\n'
 
 MARKET_INFO_CALL_RESPONSE_URL = 'http://www.digitalgreen.org/loopivr/market_info_response/'
 PUSH_MESSAGE_SMS_RESPONSE_URL = 'http://www.digitalgreen.org/loopivr/push_message_sms_response/'

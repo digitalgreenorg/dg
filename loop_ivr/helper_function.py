@@ -133,6 +133,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         else:
             no_price_message = agg_sms_no_price_available
         price_info_list.append(no_price_message)
+        price_info_list.append(('\n%s')%(crop_and_code,))
     else:
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
         for row in query_result:
