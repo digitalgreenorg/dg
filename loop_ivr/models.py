@@ -3,6 +3,9 @@ from loop.models import Crop, Mandi, LoopModel
 
 INFO_STATUS = ((0, "Pending"), (1, "Done"), (2, "Wrong Query"), (3, "No Input"), (4, 'Not Picked'),(5,'Declined'))
 RETURN_RESULT = ((0, "No"), (1, "Yes"))
+TYPE_OF_SUBSCRIBER = ((0, "Farmer"), (1, "Aggregator"), (2, "Other"))
+STATUS = ((0, "Inactive"), (1, "Active"))
+SMS_STATUS = ((0, "Pending"), (1, "Sent"), (2, "Failed"), (3, "Failed-DND"))
 
 class PriceInfoIncoming(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -29,3 +32,39 @@ class PriceInfoLog(LoopModel):
     price_info_incoming = models.ForeignKey(PriceInfoIncoming)
     crop = models.ForeignKey(Crop)
     mandi = models.ForeignKey(Mandi)
+
+
+class Subscriber(LoopModel):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    phone_no = models.CharField(max_length=14, unique=True)
+    type_of_subscriber = models.IntegerField(choices=TYPE_OF_SUBSCRIBER, default=2)
+    status = models.IntegerField(choices=STATUS, default=1)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.name, self.phone_no)
+
+
+class Subscription(LoopModel):
+    id = models.AutoField(primary_key=True)
+    subscriber = models.ForeignKey(Subscriber)
+    start_date = models.DateTimeField()
+    subscription_code = models.CharField(max_length=150)
+    status = models.IntegerField(choices=STATUS, default=1)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.subscriber, self.subscription_code)
+
+    class Meta:
+        unique_together = ("subscriber", "subscription_code")
+
+
+class SubscriptionLog(LoopModel):
+    id = models.AutoField(primary_key=True)
+    subscription = models.ForeignKey(Subscription)
+    date = models.DateTimeField()
+    sms_id = models.CharField(max_length=150, null=True, blank=True)
+    status = models.IntegerField(choices=SMS_STATUS, default=0)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.subscription, self.status)
