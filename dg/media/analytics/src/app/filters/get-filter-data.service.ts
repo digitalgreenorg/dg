@@ -16,8 +16,15 @@ export class GetFilterDataService {
 
   constructor(private http: Http) { }
 
-  getData(): Observable<any> {
-    return this.http.get(this._baseUrl)
+  getData(filters): Observable<any> {
+    let params: URLSearchParams = new URLSearchParams();
+    for (let key in filters) {
+      params.set(key.toString(), filters[key]);
+    }
+    let requestOptions: RequestOptions = new RequestOptions();
+    requestOptions.search = params;
+
+    return this.http.get(this._baseUrl, requestOptions)
       .map(response => response.json())
       .catch(this.handleError);
   }

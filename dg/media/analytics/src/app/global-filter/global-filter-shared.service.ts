@@ -2,19 +2,16 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable()
-export class SharedService {
+export class GlobalFilterSharedService {
+
+  constructor() { }
   // Observable argument list source
   private argsList = new Subject<any>();
   // Observable argument streams
   argsList$ = this.argsList.asObservable();
 
   // Service message commands
-  public publishData(data: any) {
-    if(data) {
-      this.argsList.next(data);
-    } else {
-      console.log('Country-Filter changed');
+  public publishData() {
       this.argsList.next();
-    }
   }
 }

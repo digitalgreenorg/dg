@@ -4,6 +4,8 @@ import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.loop';
 import { IMyOptions } from 'mydatepicker';
 import { DatePipe } from '@angular/common';
+import { global_filter } from '../app.component';
+import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 
 @Component({
   selector: 'app-cards',
@@ -20,6 +22,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
   cardGraphConfig = environment.cardGraphConfig;
   Dropdownitems = [];
   recentChartsData = {};
+  private chooseDateRange:string = 'Choose Days';
 
   // DatePicker
   private date = new Date();
@@ -49,10 +52,13 @@ export class CardsComponent implements OnInit, AfterViewInit {
     selectionTxtFontSize: '16px',
   };
 
-  constructor(private cardsService: CardsService, private sharedService: SharedService, private datepipe: DatePipe) {
-    //     this.sharedService.argsList$.subscribe(data => {
-    //     this.getData(data);
-    //   });
+  constructor(private cardsService: CardsService, private _sharedService: SharedService, private datepipe: DatePipe
+  , private _globalfiltersharedService:GlobalFilterSharedService) {
+        this._globalfiltersharedService.argsList$.subscribe(data => {
+          console.log('hey man, you have to change cards data');
+          let options = this.createParams();
+          this.getData(options);
+        });
   }
   cardsConfigs = environment.cardsConfig;
 
@@ -99,12 +105,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    let options = {
-      webUrl: "getCardGraphData/",
-      params: {
-        apply_filter: false,
-      }
-    };
+    let options = this.createParams();
     this.getData(options);
   }
 
@@ -165,8 +166,20 @@ export class CardsComponent implements OnInit, AfterViewInit {
   }
 
   public updateDropdown(day): any {
+    this.chooseDateRange = day + ' Days';
     this.recentcharts.forEach(chart => {
       chart.nativeChart.series[0].update({ 'data': this.recentChartsData[chart.tagName][day] });
     });
+  }
+
+  createParams() : any {
+    let options = {
+      webUrl: "getCardGraphData/",
+      params: {
+        apply_filter: false,
+      }
+    };
+    Object.assign(options.params, global_filter);
+    return options;
   }
 }

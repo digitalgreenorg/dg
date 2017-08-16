@@ -1,4 +1,6 @@
-import { Component, OnInit, Pipe } from '@angular/core';
+import { Component, OnInit, Pipe, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
+export var global_filter:any;
 
 @Component({
     selector: 'app-root',
@@ -7,4 +9,25 @@ import { Component, OnInit, Pipe } from '@angular/core';
     providers: []
 })
 
-export class AppComponent {}
+export class AppComponent {
+    
+    constructor(@Inject(DOCUMENT) private document: any) { 
+        console.log(this.document.location.href);
+        global_filter = this.parseUrl(this.document.location.href);
+    }
+
+    parseUrl(url):any{
+        let param = url.split('?');
+        let res = {}
+        let splitArray : any;
+        if(param[1]) {
+            let params = param[1].split('&');
+            for (let obj of params) {
+                splitArray = obj.split('=');
+                res[splitArray[0]] = splitArray[1]
+            }
+        }
+        return res;
+    }
+}
+

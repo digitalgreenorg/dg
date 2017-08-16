@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef, AfterViewInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IMyOptions } from 'mydatepicker';
 import { Filter } from './filter';
@@ -6,7 +6,8 @@ import { FilterElement } from './filter-element';
 import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.loop';
-
+import { global_filter } from '../app.component';
+import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 @Component({
   selector: 'app-filters',
   host: {
@@ -15,7 +16,7 @@ import { environment } from '../../environments/environment.loop';
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css']
 })
-export class FiltersComponent implements OnInit {
+export class FiltersComponent implements OnInit, AfterViewInit {
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
   @ViewChild('sideNavContent') sideNavContent: ElementRef;
@@ -36,8 +37,8 @@ export class FiltersComponent implements OnInit {
   public startModel = {
     date: {
       day: new Date(this.date.setDate(this.date.getDate() + 1)).getDate(),
-      month: new Date(this.date.setMonth(this.date.getMonth() + 1)).getMonth(),
-      year: new Date(this.date.setFullYear(this.date.getFullYear() - 1)).getFullYear()
+      month: new Date(this.date.setMonth(this.date.getMonth())).getMonth(),
+      year: new Date(this.date.setFullYear(this.date.getFullYear())).getFullYear()
     }
   };
 
@@ -52,7 +53,8 @@ export class FiltersComponent implements OnInit {
     selectionTxtFontSize: '16px',
   };
 
-  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, private datepipe: DatePipe) {
+  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, 
+    private datepipe: DatePipe, private _globalfiltersharedService:GlobalFilterSharedService) {
     Object.keys(this.filterConfig).forEach(key => {
       if (this.filterConfig[key].show) {
         if (this.filterConfig[key].name == 'date') {
@@ -70,18 +72,14 @@ export class FiltersComponent implements OnInit {
       }
     });
 
-    this.getFilterData.getData().subscribe(response => {
-      for (let res_obj of response) {
-        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
-        let data = res_obj;
-        for (let val of data['data']) {
-          let filterElement = new FilterElement();
-          filterElement.id = val['id'];
-          filterElement.value = val['value'];
-          filter[0].element.push(filterElement);
-        }
-      }
-    });
+    // this._sharedService.argsList$.subscribe(filters => {
+    //   this.getfiltersData(global_filter);
+    // });
+
+    this._globalfiltersharedService.argsList$.subscribe(filters => {
+      console.log('bhai country badal raha hai in fitlters');
+      this.getfiltersData(global_filter);
+    })
   }
 
   select_all(filter): void {
@@ -138,8 +136,11 @@ export class FiltersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getfiltersData(global_filter);
   }
-
+  
+  ngAfterViewInit(): void {
+  }
   closeNav(): void {
     this.mySidenav.nativeElement.style.width = '0px';
     this.sideNavContent.nativeElement.style.display = 'none';
@@ -191,6 +192,7 @@ export class FiltersComponent implements OnInit {
       webUrl: environment.url + "getData",
       params: this.f_list
     }
+    Object.assign(argstest.params, global_filter);
     this._sharedService.publishData(argstest);
   }
 
@@ -208,5 +210,25 @@ export class FiltersComponent implements OnInit {
     } else {
       this.closeNav();
     }
+  }
+
+  getfiltersData(filters) :any {
+    this.getFilterData.getData(filters).subscribe(response => {
+      for (let res_obj of response) {
+        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
+        filter[0].element = [];
+        let data = res_obj;
+        for (let val of data['data']) {
+          let filterElement = new FilterElement();
+          filterElement.id = val['id'];
+          filterElement.value = val['value'];
+          filter[0].element.push(filterElement);
+        }
+      }
+    });
+  }
+
+  clearFilterElement(): any {
+
   }
 }

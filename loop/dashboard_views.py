@@ -52,8 +52,13 @@ def volume_aggregator(request):
     return JsonResponse(volume_per_aggregator)
 
 def recent_graphs_data(**kwargs):
-    country_id = kwargs['country_id']
-    aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id)
+    kwargs['start_date'] = None
+    kwargs['end_date'] = None
+    kwargs['aggregator_list'] = []
+    kwargs['gaddidar_list'] = []
+    kwargs['mandi_list'] = []
+    
+    aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, **kwargs)
 
     chart_dict = {'aggregated_result': aggregated_result}
 
@@ -90,7 +95,7 @@ def get_cluster_related_data(**filter_args):
     total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('farmer').distinct().count()
     total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).count()
 
-    aggregated_result, cum_vol_farmer = get_data_from_myisam(1, country_id)
+    aggregated_result, cum_vol_farmer = get_data_from_myisam(1, **filter_args)
     volume = round(aggregated_result['quantity'][0], 2)
     amount = round(aggregated_result['amount'][0], 2)
     aggregator_incentive = aggregated_result['aggregator_incentive'][0]
@@ -201,14 +206,15 @@ def graph_data(request):
         result = mandi_farmer_count(**filter_args)
     else:
         result = {"result":"success"}
-    # print filter_args
     return JsonResponse(result)
 
 def send_filter_data(request):
     # language = request.GET.get('language')
-    # country_id = request.GET.get('country_id')
+    filter_args = extract_filters_request(request)
+    country_id = filter_args['country_id']
+    print country_id
     #TODO: apply country filter and language filter
-    country_id = 1
+    # country_id = 1
     response_list = []
     aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
     aggregator_list = aggregator_data.annotate(id=F('user_id')).values('id', 'value')
