@@ -212,7 +212,7 @@ def save_admin_loopuser_mandi_child_log(instance,kwargs):
             mandis.append(row)
     assignedMandi_queryset = LoopUserAssignedMandi.objects.filter(loop_user=instance.loop_user)
     for row in assignedMandi_queryset:
-        save_loopuserassignedmandi_log(row,admin,kwargs)
+        save_loopuserassignedmandi_log(row,admin_user,kwargs)
 
     gaddidar_queryset = Gaddidar.objects.filter(mandi__in=mandis)
     for row in gaddidar_queryset:
