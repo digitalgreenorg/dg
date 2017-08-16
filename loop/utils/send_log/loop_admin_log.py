@@ -400,7 +400,7 @@ def get_admin_log_object(log_object, preferred_language):
             obj['farmer_count']=Obj_model_temp.objects.filter(village=obj['id']).count()
         else:
             obj = model_to_dict(obj)
-        data = {'log': model_to_dict(log_object, exclude=['admin_user', 'user', 'village', 'id']), 'data':obj, 'online_id': obj['id']}
+        data = {'log': model_to_dict(log_object, exclude=['village', 'id']), 'data':obj, 'online_id': obj['id']}
     except Exception, e:
         data = {'log': model_to_dict(
             log_object, exclude=['village', 'id']), 'data': None, 'online_id': log_object.model_id}
