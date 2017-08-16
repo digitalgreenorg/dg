@@ -475,14 +475,14 @@ def send_updated_admin_log(request):
                     list_rows.append(vrow)
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.id,entry_table__in=['AdminUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
-            loopuser_querset=Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'])
+            loopuser_querset=Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'],admin_user=None)
             for row in loopuser_querset:
                 try:
                     if LoopUser.objects.get(id=row.model_id) in loopusers:
                         list_rows.append(row)
                 except:
                     pass
-
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'],admin_user=requesting_admin_user))        
             #Mandi Log
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, district__in=districts, entry_table__in=['Mandi'],admin_user=None))
