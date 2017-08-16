@@ -266,7 +266,7 @@ def save_admin_loopuser_village_child_log(instance,kwargs):
     block_set =[]
     assignedVillage_queryset = LoopUserAssignedVillage.objects.filter(loop_user=instance.loop_user)
     for row in assignedVillage_queryset:
-        save_loopuserassignedvillage_log(row,admin,kwargs)
+        save_loopuserassignedvillage_log(row,admin_user,kwargs)
     for row in village_queryset:
         if row.block.district not in districts or AdminAssignedDistrict.objects.get(district=row.block.district,admin_user=admin_user).aggregation_switch==False:
             save_village_log(row,admin_user,kwargs)
