@@ -554,10 +554,9 @@ def agg_spk_cpk(**kwargs):
         df_result.columns = df_result.columns.droplevel(1)
 
         df_result_agg = df_result.groupby(['aggregator_id','aggregator_name']).sum().reset_index()
-        print df_result_agg.head(n = 5)
         df_result_agg['cpk'] = (df_result_agg['aggregator_incentive'] + df_result_agg['transportation_cost'])/df_result_agg['quantity']
         df_result_agg['spk'] = (df_result_agg['farmer_share'] + df_result_agg['gaddidar_share'])/df_result_agg['quantity']
-
+        df_result_agg = df_result_agg.sort('cpk', ascending=False)
         outer_data = {'outerData': {'series':[],'categories':df_result_agg['aggregator_name'].tolist()}}
         temp_dict_outer = {'name':'cpk','data':[]}
         for row in df_result_agg.iterrows():
@@ -609,7 +608,7 @@ def agg_cost(**kwargs):
         df_result_agg = df_result.groupby(['aggregator_id','aggregator_name']).sum().reset_index()
         df_result_agg['cost'] = df_result_agg['aggregator_incentive'] + df_result_agg['transportation_cost']
         df_result_agg['recovered'] = df_result_agg['farmer_share'] + df_result_agg['gaddidar_share']
-
+        df_result_agg = df_result_agg.sort('cost', ascending=False)
         outer_data = {'outerData': {'series':[],'categories':df_result_agg['aggregator_name'].tolist()}}
         temp_dict_outer = {'name':'cost','data':[]}
         for row in df_result_agg.iterrows():
@@ -659,7 +658,6 @@ def cost_recovered_data(df_result, groupby_result, df_result_mandi, graphname, o
         for index, row in groupby_result.iterrows():
             temp_dict_outer['data'].append({'name':row[1],'y':round(row[8],3),'drilldown':row[1]+' cost'})
         outer_data['outerData']['series'].append(temp_dict_outer)
-
         temp_dict_outer = {'name':'recovered','data':[]}
         for index, row in groupby_result.iterrows():
             temp_dict_outer['data'].append({'name':row[1],'y':round(row[9],3),'drilldown':row[1]+' recovered'})
@@ -696,7 +694,7 @@ def mandi_cost(**kwargs):
         df_result_mandi = df_result.groupby(['aggregator_id','mandi_id','aggregator_name','mandi_name']).sum().reset_index()
         df_result_mandi['cost'] = df_result_mandi['aggregator_incentive'] + df_result_mandi['transportation_cost']
         df_result_mandi['recovered'] = df_result_mandi['farmer_share'] + df_result_mandi['gaddidar_share']
-
+        df_result_agg = df_result_agg.sort('cost', ascending=False)
         final_data_list = cost_recovered_data(df_result, df_result_agg, df_result_mandi, 'mandirecoveredtotal', 'mandi_name', 'aggregator_name', True, 'cost', 'recovered')
     except:
         final_data_list["error"] = "No data found"
@@ -711,10 +709,10 @@ def mandi_spk_cpk(**kwargs):
         df_result_agg = df_result.groupby(['mandi_id','mandi_name']).sum().reset_index()
         df_result_agg['cpk'] = (df_result_agg['aggregator_incentive'] + df_result_agg['transportation_cost'])/df_result_agg['quantity']
         df_result_agg['spk'] = (df_result_agg['farmer_share'] + df_result_agg['gaddidar_share'])/df_result_agg['quantity']
-
         df_result_mandi = df_result.groupby(['aggregator_id','mandi_id','aggregator_name','mandi_name']).sum().reset_index()
         df_result_mandi['cpk'] = (df_result_mandi['aggregator_incentive'] + df_result_mandi['transportation_cost'])/df_result_mandi['quantity']
         df_result_mandi['spk'] = (df_result_mandi['farmer_share'] + df_result_mandi['gaddidar_share'])/df_result_mandi['quantity']
+        df_result_agg = df_result_agg.sort('cpk', ascending=False)
         final_data_list = cost_recovered_data(df_result, df_result_agg, df_result_mandi, 'mandispkcpk', 'mandi_name', 'aggregator_name', True, 'cpk','spk')
     except:
         final_data_list["error"] = "No data found"
