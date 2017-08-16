@@ -244,8 +244,6 @@ class AdminAssignedDistrict(LoopModel):
     aggregation_switch = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=True)
 
-
-
 post_save.connect(save_admin_log, sender=AdminAssignedDistrict)
 pre_delete.connect(save_admin_log, sender=AdminAssignedDistrict)
 

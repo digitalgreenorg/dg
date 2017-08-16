@@ -29,7 +29,8 @@ class DatetimeEncoder(json.JSONEncoder):
 
 def save_district_log(instance,adminUser,kwargs):
     admin_user = adminUser
-    user = instance.user_created
+    User = get_model('auth','user')
+    user = User.objects.get(user=adminUser.user)
     sender='District'
     model_id = instance.id
     district_id = instance.id
@@ -108,7 +109,8 @@ def save_gaddidarcommission_log(instance,adminUser,kwargs):
 
 def save_block_log(instance,adminUser,kwargs):
     admin_user = adminUser
-    user = instance.user_created
+    User = get_model('auth','user')
+    user = User.objects.get(user=adminUser.user)
     sender='Block'
     model_id = instance.id
     district_id = instance.district.id
