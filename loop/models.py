@@ -569,8 +569,7 @@ class AggregatorShareOutliers(LoopModel):
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)
-    timestamp = models.DateTimeField(
-        auto_now_add=False, default=datetime.datetime.utcnow)
+    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.datetime.utcnow)
     user = models.ForeignKey(User, null=True)
     loop_user = models.ForeignKey(LoopUser, null=True)
     village = models.IntegerField(null=True)
