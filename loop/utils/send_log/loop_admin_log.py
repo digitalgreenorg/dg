@@ -213,7 +213,7 @@ def save_admin_loopuser_mandi_child_log(instance,kwargs):
     assignedMandi_queryset = LoopUserAssignedMandi.objects.filter(loop_user=instance.loop_user)
     for row in assignedMandi_queryset:
         save_loopuserassignedmandi_log(row,admin,kwargs)
-        
+
     gaddidar_queryset = Gaddidar.objects.filter(mandi__in=mandis)
     for row in gaddidar_queryset:
         save_gaddidar_log(row,admin_user,kwargs)
@@ -258,11 +258,15 @@ def save_admin_loopuser_village_child_log(instance,kwargs):
     District = get_model('loop','District')
     LoopUser = get_model('loop','LoopUser')
     AdminAssignedDistrict = get_model('loop','AdminAssignedDistrict')
+    LoopUserAssignedVillage = get_model('loop','LoopUserAssignedVillage')
     admin_user = instance.admin_user
     districts = instance.admin_user.get_districts()
     village_queryset = instance.loop_user.get_villages()
     district_set =[]
     block_set =[]
+    assignedVillage_queryset = LoopUserAssignedVillage.objects.filter(loop_user=instance.loop_user)
+    for row in assignedVillage_queryset:
+        save_loopuserassignedvillage_log(row,admin,kwargs)
     for row in village_queryset:
         if row.block.district not in districts or AdminAssignedDistrict.objects.get(district=row.block.district,admin_user=admin_user).aggregation_switch==False:
             save_village_log(row,admin_user,kwargs)
