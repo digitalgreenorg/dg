@@ -37,8 +37,8 @@ export class FiltersComponent implements OnInit, AfterViewInit {
   public startModel = {
     date: {
       day: new Date(this.date.setDate(this.date.getDate() + 1)).getDate(),
-      month: new Date(this.date.setMonth(this.date.getMonth() + 1)).getMonth(),
-      year: new Date(this.date.setFullYear(this.date.getFullYear() - 1)).getFullYear()
+      month: new Date(this.date.setMonth(this.date.getMonth())).getMonth(),
+      year: new Date(this.date.setFullYear(this.date.getFullYear())).getFullYear()
     }
   };
 
