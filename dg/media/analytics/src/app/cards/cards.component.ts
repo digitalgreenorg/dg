@@ -22,6 +22,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
   cardGraphConfig = environment.cardGraphConfig;
   Dropdownitems = [];
   recentChartsData = {};
+  private chooseDateRange:string = 'Choose Days';
 
   // DatePicker
   private date = new Date();
@@ -165,6 +166,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
   }
 
   public updateDropdown(day): any {
+    this.chooseDateRange = day + ' Days';
     this.recentcharts.forEach(chart => {
       chart.nativeChart.series[0].update({ 'data': this.recentChartsData[chart.tagName][day] });
     });
