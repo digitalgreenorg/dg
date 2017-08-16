@@ -237,5 +237,10 @@ def send_filter_data(request):
 
 def get_global_filter(request) :
     country_list = Country.objects.annotate(value=F('country_name'), isSelected=F('is_visible')).values('id', 'value', 'isSelected')
+
+    for obj in country_list:
+        obj['dropDown'] = True
+        state_list = State.objects.filter(country_id = obj['id']).annotate(value=F('state_name_en'), isSelected=F('is_visible')).values('id', 'value', 'isSelected')
+        obj['dropDownData'] = list(state_list)
     data = json.dumps(list(country_list))
     return HttpResponse(data)
