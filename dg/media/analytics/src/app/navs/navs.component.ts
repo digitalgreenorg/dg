@@ -58,7 +58,6 @@ export class NavsComponent implements OnInit,
       this.containers[this.selectedNav].applyFilter = true;
     });
     this._globalfiltersharedService.argsList$.subscribe(filters => {
-      console.log('bhai country badal raha hai');
       filters = {}
       filters['params'] = global_filter;
       this.filters = filters;

@@ -11,7 +11,7 @@
     </ul>
     <app-global-filter></app-global-filter>
   </div>
-  <div class="float-right col-1" *ngIf="showFilters">
+  <div class="float-right col-1" [hidden]="!showFilters">
     <app-filters></app-filters>
   </div>
 
