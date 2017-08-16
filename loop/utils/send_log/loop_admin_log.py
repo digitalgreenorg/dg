@@ -196,6 +196,7 @@ def save_admin_loopuser_mandi_child_log(instance,kwargs):
     GaddidarCommission = get_model('loop','GaddidarCommission')
     District = get_model('loop','District')
     LoopUser = get_model('loop','LoopUser')
+    LoopUserAssignedMandi = get_model('loop','LoopUserAssignedMandi')
     #import pdb;pdb.set_trace()
     admin_user = instance.admin_user
     mandi_queryset = instance.loop_user.get_mandis()
@@ -209,7 +210,10 @@ def save_admin_loopuser_mandi_child_log(instance,kwargs):
                 save_district_log(row.district,admin_user,kwargs)
                 district_set.append(row.district)
             mandis.append(row)
-
+    assignedMandi_queryset = LoopUserAssignedMandi.objects.filter(loop_user=instance.loop_user)
+    for row in assignedMandi_queryset:
+        save_loopuserassignedmandi_log(row,admin,kwargs)
+        
     gaddidar_queryset = Gaddidar.objects.filter(mandi__in=mandis)
     for row in gaddidar_queryset:
         save_gaddidar_log(row,admin_user,kwargs)
