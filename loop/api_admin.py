@@ -526,7 +526,10 @@ class LoopUserResource(BaseResource):
             pass
         if attempt.count() < 1:
             if user is None:
-                user = User.objects.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name_en'])
+                try:
+                    user = User.objects.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name_en'])
+                except:
+                    pass
             bundle.data['user']={}
             bundle.data['user']['online_id']=user.id
             adminUser= AdminUser.objects.get(user_id=bundle.request.user.id)
