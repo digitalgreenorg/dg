@@ -54,6 +54,7 @@ class Command(BaseCommand):
         else:
             percent_calls_with_market_rate = 0
         subscriber_no = list(SubscriptionLog.objects.filter(status=1).values_list('subscription__subscriber__phone_no',flat=True))
+        subscriber_no = map(lambda no: str(no) if no.startswith('0') else str('0'+no),subscriber_no)
         yeseterday_non_subscriber_caller = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,
                                             incoming_time__lt=today_date).exclude(from_number__in=subscriber_no).exclude(from_number__in=team_contact).count()
         yeseterday_subscriber_caller = yesterday_call_count - yeseterday_non_subscriber_caller
