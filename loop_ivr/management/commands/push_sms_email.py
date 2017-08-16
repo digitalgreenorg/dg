@@ -9,7 +9,7 @@ from django.db.models import Q
 
 from loop_ivr.models import PriceInfoIncoming, SubscriptionLog, Subscription
 
-from loop_ivr.utils.config import agg_sms_no_price_available
+from loop_ivr.utils.config import string_for_no_rate_query
 
 from dg.settings import EMAIL_HOST_USER, team_contact
 
@@ -46,7 +46,7 @@ class Command(BaseCommand):
         last_fifteen_day_caller_no = list(PriceInfoIncoming.objects.filter(incoming_time__gte=fifteen_day_back_date,incoming_time__lt=yesterday_date).exclude(from_number__in=team_contact).values_list('from_number',flat=True))
         # Active callers are who called in last fifteen days.
         active_caller_count = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,incoming_time__lt=today_date,from_number__in=last_fifteen_day_caller_no).exclude(from_number__in=team_contact).count()
-        yesterday_call_count_with_market_rate = PriceInfoIncoming.objects.filter(~Q(price_result__contains=agg_sms_no_price_available),incoming_time__gte=yesterday_date,
+        yesterday_call_count_with_market_rate = PriceInfoIncoming.objects.filter(~Q(price_result__contains=string_for_no_rate_query),incoming_time__gte=yesterday_date,
                                         incoming_time__lt=today_date,info_status=1).exclude(from_number__in=team_contact).count()
 
         if yesterday_call_count > 0:
