@@ -8,6 +8,9 @@ export const chartsConfig = {
       },
     },
     type: "StockChart",
+    rangeSelector: {
+      selected: 2
+    },
     credits: { enabled: false },
     yAxis: [{ // Primary yAxis
       title: {
