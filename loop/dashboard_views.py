@@ -1,8 +1,9 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Min, Sum, Avg, Max, F
+from django.db.models import Count, Min, Sum, Avg, Max, F, Value
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models.fields import CharField
 import json
 import math
 import pandas as pd
@@ -21,6 +22,10 @@ def extract_filters_request(request):
         country_id = str(request.GET.get('country_id'))
     else:
         country_id = 1
+    if 'state_id' in request.GET:
+        state_id = str(request.GET.get('state_id'))
+    else :
+        state_id = None
 
     if 'start_date' in request.GET and 'end_date' in request.GET:
         start_date = str(request.GET['start_date'])
@@ -44,6 +49,7 @@ def extract_filters_request(request):
     filter_args['mandis_list'] = mandis_list
     filter_args['crops_list'] = crops_list
     filter_args['gaddidars_list'] = gaddidars_list
+    filter_args['state_id'] = state_id
 
     return filter_args
 
@@ -59,12 +65,13 @@ def recent_graphs_data(**kwargs):
     kwargs['mandi_list'] = []
     
     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, **kwargs)
-
+    print aggregated_result
     chart_dict = {'aggregated_result': aggregated_result}
 
     # algorithm to store column wise grouped data
 
     res = {}
+    print aggregated_result
     for key, aggregated_value in aggregated_result.iteritems():
         for data in aggregated_value:
             for k, v in data.iteritems():
@@ -89,13 +96,28 @@ def recent_graphs_data(**kwargs):
     data.append(res['active_cluster'])
     return data
 
+def generate_res_recent(res, key, placeHolder, tagName, value):
+    res[key]['placeHolder'] = placeHolder
+    res[key]['tagName'] = tagName
+    res[key]['value'] = value
+    return res
+
 
 def get_cluster_related_data(**filter_args):
     country_id = filter_args['country_id'] #To be fetched from request
-    total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('farmer').distinct().count()
-    total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).count()
+    state_id = filter_args['state_id']
+    combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
+    loopUserData = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
+
+    if(state_id) :
+        combinedTransactionData = combinedTransactionData.filter(mandi__district__state=state_id)
+        loopUserData = loopUserData.filter(village__block__district__state=state_id)
+    
+    total_farmers_reached = combinedTransactionData.values('farmer').distinct().count()
+    total_cluster_reached = loopUserData.count()
 
     aggregated_result, cum_vol_farmer = get_data_from_myisam(1, **filter_args)
+    # if((len(aggregated_result) > 0) and (len(cum_vol_farmer) > 0)):
     volume = round(aggregated_result['quantity'][0], 2)
     amount = round(aggregated_result['amount'][0], 2)
     aggregator_incentive = aggregated_result['aggregator_incentive'][0]
@@ -236,11 +258,12 @@ def send_filter_data(request):
     return HttpResponse(data)
 
 def get_global_filter(request) :
-    country_list = Country.objects.annotate(value=F('country_name'), isSelected=F('is_visible')).values('id', 'value', 'isSelected')
+    country_list = Country.objects.annotate(value=F('country_name'), isSelected=F('is_visible'), tagName=Value('country_id', output_field=CharField())).values('id', 'value', 'isSelected', 'tagName')
 
     for obj in country_list:
         obj['dropDown'] = True
-        state_list = State.objects.filter(country_id = obj['id']).annotate(value=F('state_name_en'), isSelected=F('is_visible')).values('id', 'value', 'isSelected')
+        state_list = State.objects.filter(country_id = obj['id']).annotate(value=F('state_name_en'), isSelected=F('is_visible'), parentId=F('country_id'), parentTag=Value('country_id', output_field=CharField()),\
+         tagName=Value('state_id', output_field=CharField())).values('id', 'value', 'isSelected', 'parentId', 'parentTag', 'tagName')
         obj['dropDownData'] = list(state_list)
     data = json.dumps(list(country_list))
     return HttpResponse(data)

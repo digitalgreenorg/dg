@@ -41,7 +41,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
 
 def sql_query(**kwargs):
     #TODO : apply country filter
-    country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+    country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -72,6 +72,8 @@ def sql_query(**kwargs):
         sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
     sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
     sql_ds['where'].append('country_id = ' + str(country_id))
+    if(state_id) :
+        sql_ds['where'].append('state_id = ' + str(state_id))
 
     query = join_sql_ds(sql_ds)
     df_result = pd.read_sql(query, con=mysql_cn)
@@ -91,7 +93,7 @@ def query_myisam(**kwargs):
     sql_ds['from'].append('loop_aggregated_myisam')
     sql_q = join_sql_ds(sql_ds)
     if(len(kwargs) > 0):
-        country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+        country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
         if len(aggregators_list) > 0:
             sql_ds['where'].append('aggregator_id in (' + ",".join(aggregators_list) + ")")
         if len(mandis_list) > 0:
@@ -102,13 +104,14 @@ def query_myisam(**kwargs):
             sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
 
         sql_ds['where'].append('country_id = ' + str(country_id))
-
+        if(state_id) :
+            sql_ds['where'].append('state_id = ' + str(state_id))
     sql_q = join_sql_ds(sql_ds)
     df_result = pd.read_sql(sql_q, con=mysql_cn)
     return df_result
 
 def crop_prices_query( **kwargs):
-    country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+    country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
     password = DATABASES['default']['PASSWORD']
@@ -137,6 +140,8 @@ def crop_prices_query( **kwargs):
         sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
     sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
     sql_ds['where'].append('country_id = ' + str(country_id))
+    if(state_id) :
+        sql_ds['where'].append('state_id = ' + str(state_id))
 
     query = join_sql_ds(sql_ds)
 
@@ -145,7 +150,7 @@ def crop_prices_query( **kwargs):
 
 def get_data_from_myisam(get_total, **kwargs):
     df_result = query_myisam(**kwargs)
-    country_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+    country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     aggregations = {
         'quantity':{
             'quantity__sum':'sum'
@@ -178,14 +183,23 @@ def get_data_from_myisam(get_total, **kwargs):
     cumm_vol_farmer = {}
     dictionary = {}
     try:
+        if( len(df_result) > 0) :
         # MyISAM table contains CT, DT, Gaddidar, AggregatorIncentive.
-        df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
-        df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
-
+            df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
+            df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
+        else :
+            print 'inside empty case'
+            df_result_aggregate = df_result.astype(int).groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
+            df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
+            print df_result_aggregate.columns.values
         
         if get_total == 0:
             #df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
-            df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('date','farmer_id').order_by('date')))
+            combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
+
+            if(state_id) :
+                combinedTransactionData = combinedTransactionData.filter(mandi__district__state=state_id)
+            df_farmers = pd.DataFrame(list(combinedTransactionData.values('date','farmer_id').order_by('date')))
             df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
 
             days = ['15','30','60']
@@ -203,12 +217,14 @@ def get_data_from_myisam(get_total, **kwargs):
             df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
             df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
             dictionary = df.to_dict(orient='index')
-    except:
-        pass
+
+    except Exception as e:
+        print 'exception', e
+    # print dictionary, cumm_vol_farmer
     return dictionary, cumm_vol_farmer
 
 def read_kwargs(Kwargs):
-    return Kwargs['country_id'], Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'], Kwargs['gaddidars_list']
+    return Kwargs['country_id'], Kwargs['state_id'], Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'], Kwargs['gaddidars_list']
 
 def get_volume_aggregator(**kwargs):
     result_data = {}
