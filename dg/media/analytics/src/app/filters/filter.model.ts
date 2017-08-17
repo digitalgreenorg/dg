@@ -1,4 +1,4 @@
-import { FilterElement } from './filter-element';
+import { FilterElement } from './filter-element.model';
 
 export class Filter {
   heading: string;

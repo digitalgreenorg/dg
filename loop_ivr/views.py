@@ -7,8 +7,9 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from threading import Thread
+import time
 
-from loop_ivr.models import PriceInfoIncoming, PriceInfoLog
+from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, SubscriptionLog
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call
 from loop_ivr.utils.config import LOG_FILE
 
@@ -21,6 +22,7 @@ def home(request):
 def market_info_incoming(request):
     if request.method == 'GET':
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        time.sleep(.5)
         make_market_info_call(to_number, dg_number, incoming_time, call_id)
         return HttpResponse(status=200)
     else:
@@ -115,3 +117,21 @@ def crop_price_sms_content(request):
             response = HttpResponse(status=200, content_type='text/plain')
         return response
     return HttpResponse(status=403)
+
+@csrf_exempt
+def push_message_sms_response(request):
+    if request.method == 'POST':
+        status = str(request.POST.getlist('Status')[0])
+        outgoing_sms_id = str(request.POST.getlist('SmsSid')[0])
+        outgoing_obj = SubscriptionLog.objects.filter(sms_id=outgoing_sms_id)
+        outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
+        # If call Successfully completed then mark call as resolved
+        if outgoing_obj:
+            if status == 'sent':
+                outgoing_obj.status = 1
+            elif status == 'failed':
+                outgoing_obj.status = 2
+            elif status == 'failed_dnd':
+                outgoing_obj.status = 3
+            outgoing_obj.save()
+    return HttpResponse(status=200)

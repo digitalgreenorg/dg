@@ -11,7 +11,7 @@
     </ul>
     <app-global-filter></app-global-filter>
   </div>
-  <div class="float-right col-1" *ngIf="showFilters">
+  <div class="float-right col-1" [hidden]="!showFilters">
     <app-filters></app-filters>
   </div>
 
@@ -32,7 +32,7 @@
 <!--<br>-->
 
 <!--Show Overall and Recent Cards-->
-<div *ngIf="showOverall" class="container-fluid">
+<div [hidden]="!showOverall" class="container-fluid">
   <div class="row">
     <div class="col-md-12">
       <app-cards></app-cards>

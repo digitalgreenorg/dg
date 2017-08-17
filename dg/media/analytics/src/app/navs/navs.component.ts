@@ -19,7 +19,7 @@ export class NavsComponent implements OnInit,
   public showOverall: boolean = true;
   public showFilters: boolean = true;
   navClicked: boolean = false;
-  public selectedNav : string = '';
+  public selectedNav: string = '';
 
   //read config files from environment created for each app
   navsConfig = environment.navsConfig;
@@ -41,31 +41,31 @@ export class NavsComponent implements OnInit,
   //Display drop down type graphs
   // showDropDownGraphs: boolean = false;
   filters = { 'params': {} };
-  constructor(private graphService: GraphsService, private _sharedService: SharedService, 
+  constructor(private graphService: GraphsService, private _sharedService: SharedService,
     private _globalfiltersharedService: GlobalFilterSharedService) {
     this._sharedService.argsList$.subscribe(filters => {
-      if(filters) {
+      if (filters) {
         Object.assign(filters.params, global_filter);
       } else {
-        filters = {}
+        filters = {};
         filters['params'] = global_filter;
       }
-      this.filters = filters;
-      Object.keys(this.containers).forEach(container => {
-          this.containers[container].applyFilter = false;
-      });
-      this.getGraphsData(filters);
-      this.containers[this.selectedNav].applyFilter = true;
-    });
-    this._globalfiltersharedService.argsList$.subscribe(filters => {
-      console.log('bhai country badal raha hai');
-      filters = {}
-      filters['params'] = global_filter;
       this.filters = filters;
       Object.keys(this.containers).forEach(container => {
         this.containers[container].applyFilter = false;
       });
       this.getGraphsData(filters);
+      this.containers[this.selectedNav].applyFilter = true;
+    });
+    this._globalfiltersharedService.argsList$.subscribe(filters => {
+      filters = {};
+      filters['params'] = global_filter;
+      this.filters = filters;
+
+      Object.keys(this.containers).forEach(container => {
+        this.containers[container].applyFilter = false;
+      });
+      this.getGraphsData(this.filters);
       this.containers[this.selectedNav].applyFilter = true;
     });
     /*setInterval(() => {
@@ -88,19 +88,13 @@ export class NavsComponent implements OnInit,
     //this.renderCharts();
   }
 
-  // ngAfterViewInit(): void {
-  //   this.getGraphsData(this.filters);
-  // }
-
-  ngAfterViewChecked() {    
+  ngAfterViewChecked() {
     if (this.navClicked) {
-      // console.log('Inside ngAFterviewChecked');
       this.navClicked = false;
       Object.assign(this.filters.params, global_filter);
       this.getGraphsData(this.filters);
       this.containers[this.selectedNav].applyFilter = true;
     }
-
   }
 
   // renderCharts(): void {
@@ -186,7 +180,7 @@ export class NavsComponent implements OnInit,
   //get data for graphs from service
   getGraphsData(filters): void {
     this.containerCharts.forEach(chart => {
-      if (chart.nativeChart && (chart.nativeChart.series.length == 0 ||  (!this.containers[this.selectedNav].applyFilter))) {
+      if (chart.nativeChart && (chart.nativeChart.series.length == 0 || (!this.containers[this.selectedNav].applyFilter))) {
         chart.nativeChart.showLoading();
         filters.params['chartType'] = chart.chart.type;
         filters.params['chartName'] = chart.name;
@@ -218,7 +212,7 @@ export class NavsComponent implements OnInit,
           }
         });
       }
-    });    
+    });
   }
 
   private parseDataForStockChart(chart, data): void {

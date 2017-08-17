@@ -55,7 +55,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
   constructor(private cardsService: CardsService, private _sharedService: SharedService, private datepipe: DatePipe
   , private _globalfiltersharedService:GlobalFilterSharedService) {
         this._globalfiltersharedService.argsList$.subscribe(data => {
-          console.log('hey man, you have to change cards data');
           let options = this.createParams();
           this.getData(options);
         });
@@ -92,13 +91,13 @@ export class CardsComponent implements OnInit, AfterViewInit {
           nativeChart: null,
         });
       }
-    })
-    let options = {
-      webUrl: "getData/",
-      params: {
-        apply_filter: false,
-      }
-    }
+    });
+    // let options = {
+    //   webUrl: "getData/",
+    //   params: {
+    //     apply_filter: false,
+    //   }
+    // }
     // Uncomment for filter Request
     // this.getData(options);
 
@@ -110,7 +109,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
   }
 
   public getData(options): any {
-
     Object.keys(this.cardsConfigs).forEach(key => {
       if (this.cardsConfigs[key].overall.borrowData == false) {
         options.params.cardName = this.cardsConfigs[key].overall.text;
@@ -180,6 +178,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
         apply_filter: false,
       }
     };
+    console.log("Global Filter: " , global_filter);
     Object.assign(options.params, global_filter);
     return options;
   }

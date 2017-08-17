@@ -12,18 +12,21 @@ import { GlobalFilterSharedService } from '../global-filter/global-filter-shared
 export class GlobalFilterComponent implements OnInit {
   Dropdownitems: GlobalFilter[] = [];
   constructor(private _globalfilter: GlobalFilterService, private _sharedService: SharedService,
-  private _globalfiltersharedService : GlobalFilterSharedService) { }
-  private country:string = '';
+    private _globalfiltersharedService: GlobalFilterSharedService) { }
+  private country: string = '';
 
   ngOnInit() {
     this._globalfilter.getData().subscribe(data => {
       data.forEach(element => {
         this.Dropdownitems.push(element);
+<<<<<<< HEAD
         console.log(element);
         // console.log('global filter', Object.keys(global_filter).length);
+=======
+>>>>>>> bdb8ebe9bfef184573398f46e4b62cb4ff1a8d80
 
-        if('country_id' in global_filter) {
-          if(element.id == global_filter['country_id']) {
+        if ('country_id' in global_filter) {
+          if (element.id == global_filter['country_id']) {
             this.country = element.value;
           }
         } else {

@@ -8,6 +8,9 @@ export const chartsConfig = {
       },
     },
     type: "StockChart",
+    rangeSelector: {
+      selected: 2
+    },
     credits: { enabled: false },
     yAxis: [{ // Primary yAxis
       title: {
@@ -25,6 +28,10 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
       valueDecimals: 2
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     series: [],
     drilldown: {}
   },
@@ -63,6 +70,10 @@ export const chartsConfig = {
         fillOpacity: 0.5
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     series: [],
     drilldown: {}
   },
@@ -96,6 +107,10 @@ export const chartsConfig = {
         fillOpacity: 0.5
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     series: [],
     drilldown: {}
   },
@@ -114,7 +129,7 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      // tickInterval: 10,
+      tickInterval: 10000,
       title: { text: 'Volume' }
     },
     scrollbar: {
@@ -130,6 +145,10 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
@@ -137,17 +156,7 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      drillUpButton: {
-        relativeTo: 'spacingBox',
-        position: {
-          y: 0,
-          x: -30
-        },
-      },
       series: []
-    },
-    lang: {
-      drillUpText: '<< Back'
     },
   },
   'aggrvisit': {
@@ -179,6 +188,10 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
@@ -206,6 +219,10 @@ export const chartsConfig = {
       type: 'category',
       max: 5
     },
+    yAxis: {
+      tickInterval: 1,
+      title: { text: 'SPK CPK' }
+    },
     scrollbar: { enabled: true },
     legend: { enabled: false },
     plotOptions: {
@@ -217,6 +234,10 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#00ff00',
+      '#0000ff'
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
@@ -242,8 +263,8 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      // tickInterval: 10,
-      title: { text: '' }
+      tickInterval: 1000,
+      title: { text: 'Recovered / Total Cost' }
     },
     scrollbar: {
       enabled: true
@@ -258,6 +279,10 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>',
@@ -282,6 +307,10 @@ export const chartsConfig = {
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
+    yAxis: {
+      tickInterval: 10,
+      title: { text: 'Farmer count' }
+    },
     legend: { enabled: false },
     plotOptions: {
       column: {
@@ -292,6 +321,10 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     scrollbar: { enabled: true },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -318,7 +351,7 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10,
+      tickInterval: 10000,
       title: { text: 'Volume' }
     },
     scrollbar: { enabled: true },
@@ -332,25 +365,19 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
     },
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      drillUpButton: {
-        relativeTo: 'spacingBox',
-        position: {
-          y: 0,
-          x: -30
-        },
-      },
       series: []
-    },
-    lang: {
-      drillUpText: '<< Back'
-    },
+    }
   },
   'mandivisit': {
     chart: {
@@ -381,9 +408,13 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
     },
     series: [],
     drilldown: {
@@ -408,6 +439,10 @@ export const chartsConfig = {
       type: 'category',
       max: 5
     },
+    yAxis: {
+      tickInterval: 1,
+      title: { text: 'SPK CPK' }
+    },
     scrollbar: { enabled: true },
     legend: { enabled: false },
     plotOptions: {
@@ -419,9 +454,13 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
     },
     series: [],
     drilldown: {
@@ -446,6 +485,10 @@ export const chartsConfig = {
       type: 'category',
       max: 5
     },
+    yAxis: {
+      tickInterval: 10000,
+      title: { text: 'Recovered / Total cost' }
+    },
     scrollbar: { enabled: true },
     legend: { enabled: false },
     plotOptions: {
@@ -457,9 +500,13 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
     },
     series: [],
     drilldown: {
@@ -481,6 +528,10 @@ export const chartsConfig = {
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
+    yAxis: {
+      tickInterval: 10,
+      title: { text: 'Farmer count' }
+    },
     legend: { enabled: false },
     plotOptions: {
       column: {
@@ -491,10 +542,14 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     scrollbar: { enabled: true },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
     },
     series: [],
     drilldown: {
@@ -517,7 +572,7 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10,
+      tickInterval: 10000,
       title: { text: 'Volume' }
     },
     scrollbar: { enabled: true },
@@ -531,24 +586,18 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
     },
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      drillUpButton: {
-        relativeTo: 'spacingBox',
-        position: {
-          y: 0,
-          x: -30
-        },
-      },
       series: []
-    },
-    lang: {
-      drillUpText: '<< Back'
     },
   },
   'cropprices': {
@@ -563,7 +612,14 @@ export const chartsConfig = {
       inverted: true
     },
     scrollbar: { enabled: true },
-    xAxis: { type: 'category', max: 5 },
+    xAxis: {
+      type: 'category',
+      max: 5
+    },
+    yAxis: {
+      tickInterval: 10,
+      title: { text: 'Price range' }
+    },
     legend: {
       enabled: false
     },
@@ -576,9 +632,13 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
     },
     credits: { enabled: false },
     series: [],
@@ -603,7 +663,7 @@ export const chartsConfig = {
     xAxis: { type: 'category', max: 5 },
     yAxis: {
       tickInterval: 10,
-      title: { text: 'Volume' }
+      title: { text: 'Farmer count' }
     },
     scrollbar: { enabled: true },
     legend: { enabled: false },
@@ -616,9 +676,13 @@ export const chartsConfig = {
         }
       }
     },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
     },
     series: []
   }

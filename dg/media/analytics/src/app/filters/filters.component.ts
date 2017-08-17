@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IMyOptions } from 'mydatepicker';
-import { Filter } from './filter';
-import { FilterElement } from './filter-element';
+import { Filter } from './filter.model';
+import { FilterElement } from './filter-element.model';
 import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.loop';
@@ -16,7 +16,7 @@ import { GlobalFilterSharedService } from '../global-filter/global-filter-shared
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css']
 })
-export class FiltersComponent implements OnInit, AfterViewInit {
+export class FiltersComponent implements OnInit {
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
   @ViewChild('sideNavContent') sideNavContent: ElementRef;
@@ -53,8 +53,8 @@ export class FiltersComponent implements OnInit, AfterViewInit {
     selectionTxtFontSize: '16px',
   };
 
-  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, 
-    private datepipe: DatePipe, private _globalfiltersharedService:GlobalFilterSharedService) {
+  constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService,
+    private datepipe: DatePipe, private _globalfiltersharedService: GlobalFilterSharedService) {
     Object.keys(this.filterConfig).forEach(key => {
       if (this.filterConfig[key].show) {
         if (this.filterConfig[key].name == 'date') {
@@ -72,14 +72,9 @@ export class FiltersComponent implements OnInit, AfterViewInit {
       }
     });
 
-    // this._sharedService.argsList$.subscribe(filters => {
-    //   this.getfiltersData(global_filter);
-    // });
-
     this._globalfiltersharedService.argsList$.subscribe(filters => {
-      console.log('bhai country badal raha hai in fitlters');
       this.getfiltersData(global_filter);
-    })
+    });
   }
 
   select_all(filter): void {
@@ -138,9 +133,7 @@ export class FiltersComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.getfiltersData(global_filter);
   }
-  
-  ngAfterViewInit(): void {
-  }
+
   closeNav(): void {
     this.mySidenav.nativeElement.style.width = '0px';
     this.sideNavContent.nativeElement.style.display = 'none';
@@ -212,7 +205,7 @@ export class FiltersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getfiltersData(filters) :any {
+  getfiltersData(filters): any {
     this.getFilterData.getData(filters).subscribe(response => {
       for (let res_obj of response) {
         let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
@@ -226,9 +219,5 @@ export class FiltersComponent implements OnInit, AfterViewInit {
         }
       }
     });
-  }
-
-  clearFilterElement(): any {
-
   }
 }

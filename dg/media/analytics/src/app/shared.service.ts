@@ -10,11 +10,6 @@ export class SharedService {
 
   // Service message commands
   public publishData(data: any) {
-    if(data) {
-      this.argsList.next(data);
-    } else {
-      console.log('Country-Filter changed');
-      this.argsList.next();
-    }
+    this.argsList.next(data);
   }
 }

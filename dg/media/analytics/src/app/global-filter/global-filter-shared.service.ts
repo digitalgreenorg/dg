@@ -12,6 +12,6 @@ export class GlobalFilterSharedService {
 
   // Service message commands
   public publishData() {
-      this.argsList.next();
+    this.argsList.next();
   }
 }
