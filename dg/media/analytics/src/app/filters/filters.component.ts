@@ -26,7 +26,6 @@ export class FiltersComponent implements OnInit {
   invalidDate: boolean = false;
   invalidDateMessage: string;
   private f_list = {};
-  makeRequestForFilters: boolean = true;
   private date = new Date();
   public endModel = {
     date: {
@@ -74,7 +73,6 @@ export class FiltersComponent implements OnInit {
     });
 
     this._globalfiltersharedService.argsList$.subscribe(filters => {
-      this.makeRequestForFilters = true;
       this.getfiltersData(global_filter);
     });
   }
@@ -208,21 +206,18 @@ export class FiltersComponent implements OnInit {
   }
 
   getfiltersData(filters): any {
-    if (this.makeRequestForFilters) {
-      this.makeRequestForFilters = false;
-      this.getFilterData.getData(filters).subscribe(response => {
-        for (let res_obj of response) {
-          let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
-          filter[0].element = [];
-          let data = res_obj;
-          for (let val of data['data']) {
-            let filterElement = new FilterElement();
-            filterElement.id = val['id'];
-            filterElement.value = val['value'];
-            filter[0].element.push(filterElement);
-          }
+    this.getFilterData.getData(filters).subscribe(response => {
+      for (let res_obj of response) {
+        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
+        filter[0].element = [];
+        let data = res_obj;
+        for (let val of data['data']) {
+          let filterElement = new FilterElement();
+          filterElement.id = val['id'];
+          filterElement.value = val['value'];
+          filter[0].element.push(filterElement);
         }
-      });
-    }
+      }
+    });
   }
 }

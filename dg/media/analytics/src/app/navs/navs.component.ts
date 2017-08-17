@@ -93,7 +93,6 @@ export class NavsComponent implements OnInit,
 
   ngAfterViewChecked() {
     if (this.navClicked) {
-      // console.log('Inside ngAFterviewChecked');
       this.navClicked = false;
       Object.assign(this.filters.params, global_filter);
       this.getGraphsData(this.filters);
