@@ -1,5 +1,6 @@
 import { Component, OnInit, Pipe, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
+
 export var global_filter: any;
 
 @Component({
@@ -15,7 +16,7 @@ export class AppComponent {
     global_filter = this.parseUrl(this.document.location.href);
   }
 
-  parseUrl(url): any {
+  private parseUrl(url): any {
     let param = url.split('?');
     let res = {}
     let splitArray: any;

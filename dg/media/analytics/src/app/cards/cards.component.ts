@@ -171,14 +171,13 @@ export class CardsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  createParams() : any {
+  private createParams() : any {
     let options = {
       webUrl: "getCardGraphData/",
       params: {
         apply_filter: false,
       }
     };
-    console.log("Global Filter: " , global_filter);
     Object.assign(options.params, global_filter);
     return options;
   }

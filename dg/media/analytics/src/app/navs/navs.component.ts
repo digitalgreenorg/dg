@@ -58,9 +58,7 @@ export class NavsComponent implements OnInit,
       this.containers[this.selectedNav].applyFilter = true;
     });
     this._globalfiltersharedService.argsList$.subscribe(filters => {
-      filters = {};
-      filters['params'] = global_filter;
-      this.filters = filters;
+      this.filters.params = global_filter;
 
       Object.keys(this.containers).forEach(container => {
         this.containers[container].applyFilter = false;
@@ -170,6 +168,7 @@ export class NavsComponent implements OnInit,
     this.filterGraphs[nav] = container;
     this.filterGraphs[nav]['charts'] = this.addChartsToDict(container.DropDownGraph);
     this.filterGraphs[nav]['displayContent'] = false;
+    this.filterGraphs[nav]['applyFilter'] = true;
   }
 
   //access underlying chart
@@ -226,8 +225,13 @@ export class NavsComponent implements OnInit,
 
   //Empty exting data and then fill in updated data
   private clearSeriesFromGraph(chart): void {
+    let size = chart.nativeChart.series.length;
+    //TODO: Patch applied for stcockchart as it creates 1 additional series for naigator.
+    if (chart.chart.type && chart.chart.type === 'StockChart') {
+      size = chart.nativeChart.series.length - 1;
+    }
     if (chart.nativeChart.series.length > 0) {
-      for (var i = chart.nativeChart.series.length - 1; i >= 0; i--) {
+      for (var i = size - 1; i >= 0; i--) {
         chart.nativeChart.series[i].remove();
       }
     }
