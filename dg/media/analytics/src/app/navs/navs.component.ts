@@ -47,7 +47,7 @@ export class NavsComponent implements OnInit,
       if (filters) {
         Object.assign(filters.params, global_filter);
       } else {
-        filters = {}
+        filters = {};
         filters['params'] = global_filter;
       }
       this.filters = filters;
@@ -58,13 +58,14 @@ export class NavsComponent implements OnInit,
       this.containers[this.selectedNav].applyFilter = true;
     });
     this._globalfiltersharedService.argsList$.subscribe(filters => {
-      filters = {}
+      filters = {};
       filters['params'] = global_filter;
       this.filters = filters;
+
       Object.keys(this.containers).forEach(container => {
         this.containers[container].applyFilter = false;
       });
-      this.getGraphsData(filters);
+      this.getGraphsData(this.filters);
       this.containers[this.selectedNav].applyFilter = true;
     });
     /*setInterval(() => {
@@ -86,10 +87,6 @@ export class NavsComponent implements OnInit,
     this.renderNavs();
     //this.renderCharts();
   }
-
-  // ngAfterViewInit(): void {
-  //   this.getGraphsData(this.filters);
-  // }
 
   ngAfterViewChecked() {
     if (this.navClicked) {
