@@ -107,6 +107,7 @@ def query_myisam(**kwargs):
         if(state_id) :
             sql_ds['where'].append('state_id = ' + str(state_id))
     sql_q = join_sql_ds(sql_ds)
+    print sql_q
     df_result = pd.read_sql(sql_q, con=mysql_cn)
     return df_result
 
@@ -192,7 +193,7 @@ def get_data_from_myisam(get_total, **kwargs):
             df_result_aggregate = df_result.astype(int).groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
             df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
             print df_result_aggregate.columns.values
-        
+
         if get_total == 0:
             #df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
             combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
@@ -364,7 +365,7 @@ def get_cummulative_vol_farmer(**kwargs):
         result_data['data'].append(farmer)
     except:
         result_data["error"] = "No data found"
-        
+
     return result_data
 
 def aggregator_volume(**kwargs):
@@ -425,7 +426,7 @@ def crop_farmer_count(**kwargs):
         final_data_list = visitData(aggregator_groupby_data, 'cropfarmercount', 'crop_name', '',  'farmer_id', False, 'farmer_id')
     except:
         final_data_list["error"] = "No data found"
-    return final_data_list  
+    return final_data_list
 
 def crop_prices(**kwargs):
     df_result = crop_prices_query(**kwargs)

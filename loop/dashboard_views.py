@@ -63,15 +63,13 @@ def recent_graphs_data(**kwargs):
     kwargs['aggregator_list'] = []
     kwargs['gaddidar_list'] = []
     kwargs['mandi_list'] = []
-    
+
     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, **kwargs)
-    print aggregated_result
     chart_dict = {'aggregated_result': aggregated_result}
 
     # algorithm to store column wise grouped data
 
     res = {}
-    print aggregated_result
     for key, aggregated_value in aggregated_result.iteritems():
         for data in aggregated_value:
             for k, v in data.iteritems():
@@ -112,7 +110,7 @@ def get_cluster_related_data(**filter_args):
     if(state_id) :
         combinedTransactionData = combinedTransactionData.filter(mandi__district__state=state_id)
         loopUserData = loopUserData.filter(village__block__district__state=state_id)
-    
+
     total_farmers_reached = combinedTransactionData.values('farmer').distinct().count()
     total_cluster_reached = loopUserData.count()
 

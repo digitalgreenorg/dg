@@ -19,11 +19,6 @@ export class GlobalFilterComponent implements OnInit {
     this._globalfilter.getData().subscribe(data => {
       data.forEach(element => {
         this.Dropdownitems.push(element);
-<<<<<<< HEAD
-        console.log(element);
-        // console.log('global filter', Object.keys(global_filter).length);
-=======
->>>>>>> bdb8ebe9bfef184573398f46e4b62cb4ff1a8d80
 
         if ('country_id' in global_filter) {
           if (element.id == global_filter['country_id']) {
