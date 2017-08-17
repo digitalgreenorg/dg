@@ -154,6 +154,23 @@ def save_loopuserassignedvillage_log(instance,adminUser,kwargs):
               model_id=model_id, admin_user=admin_user)
     log.save()
 
+def save_district_block(instance,kwargs):
+    AdminUser = get_model('loop','AdminUser')
+    Mandi = get_model('loop','Mandi')
+    Gaddidar = get_model('loop','Gaddidar')
+    GaddidarCommission = get_model('loop','GaddidarCommission')
+    Block = get_model('loop','Block')
+    Village = get_model('loop','Village')
+    admin_user = instance.admin_user
+    user = instance.user_created
+    try:
+        action = kwargs["created"]
+    except Exception as e:
+        action = -1
+    block_queryset = Block.objects.filter(district=instance.district)
+    for row in block_queryset:
+        save_block_log(row,admin_user,kwargs)
+
 def save_district_child_log(instance,kwargs):
     AdminUser = get_model('loop','AdminUser')
     Mandi = get_model('loop','Mandi')
@@ -181,9 +198,6 @@ def save_district_child_log(instance,kwargs):
     for row in gaddidarcommission_queryset:
         save_gaddidarcommission_log(row,admin_user,kwargs)
 
-    block_queryset = Block.objects.filter(district=instance.district)
-    for row in block_queryset:
-        save_block_log(row,admin_user,kwargs)
     if instance.aggregation_switch==True:
         village_queryset = Village.objects.filter(block__district=instance.district)
         for row in village_queryset:
@@ -340,6 +354,7 @@ def save_admin_log(sender, **kwargs):
         user = instance.user_created
         if action > -1:
             save_district_child_log(instance,kwargs)
+        save_district_block(instance,kwargs)
     elif sender == "AdminAssignedLoopUser":
         sender = "LoopUser"
         model_id = instance.loop_user.id
