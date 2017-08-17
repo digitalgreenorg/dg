@@ -409,7 +409,7 @@ def get_admin_log_object(log_object, preferred_language):
     return data
 
 def get_latest_timestamp():
-    Log = get_model('loop', 'Log')
+    Log = get_model('loop', 'AdminLog')
     try:
         timestamp = Log.objects.latest('id')
     except Exception:
