@@ -1,10 +1,30 @@
-<div class="btn-group float-right" dropdown>
+<!-- <div class="btn-group float-right" dropdown>
   <button dropdownToggle type="button" class="btn dropdown-toggle">
   {{country}} <span class="caret"></span>
   </button>
   <ul *dropdownMenu class="dropdown-menu" role="menu">
     <li *ngFor="let item of Dropdownitems" role="menuitem">
       <button class="dropdown-item" (click)="updateDropdown(item)">{{item.value}}</button>
+    </li>
+  </ul>
+</div> -->
+
+
+<div class="btn-group" dropdown [autoClose]="false">
+  <button dropdownToggle type="button" class="btn dropdown-toggle">
+    {{country}} <span class="caret"></span>
+  </button>
+  <ul *dropdownMenu class="dropdown-menu" role="menu">
+    <li *ngFor="let item of Dropdownitems"  role="menuitem" dropdown placement="right" container="body">
+      <button class= "btn" (click)="updateDropdown(item)"> {{item.value}}</button>
+      <button type="button" dropdownToggle class="btn dropdown-toggle dropdown-toggle-split">
+        <span class="caret"></span>
+        <span class="sr-only">Split button!</span>
+      </button>
+      <ul *dropdownMenu class="dropdown-menu" role="menu">
+        <li *ngFor="let subItem of item.dropDownData" role="menuitem">
+          <button class="dropdown-item" (click) = "updateDropdown(subItem)">{{subItem.value}}</button></li>
+      </ul>
     </li>
   </ul>
 </div>

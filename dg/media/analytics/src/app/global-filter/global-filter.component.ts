@@ -19,6 +19,11 @@ export class GlobalFilterComponent implements OnInit {
     this._globalfilter.getData().subscribe(data => {
       data.forEach(element => {
         this.Dropdownitems.push(element);
+<<<<<<< HEAD
+        console.log(element);
+        // console.log('global filter', Object.keys(global_filter).length);
+=======
+>>>>>>> bdb8ebe9bfef184573398f46e4b62cb4ff1a8d80
 
         if ('country_id' in global_filter) {
           if (element.id == global_filter['country_id']) {
@@ -33,7 +38,13 @@ export class GlobalFilterComponent implements OnInit {
 
   updateDropdown(item) {
     this.country = item.value;
-    global_filter['country_id'] = item.id;
+    console.log(item);
+    global_filter[item.tagName] = item.id;
+    // TODO : if Dropdown level more than 2 => handling
+    if(item.parentTag) {
+      global_filter[item.parentTag] = item.parentId;
+    }
+    console.log(global_filter);
     this._globalfiltersharedService.publishData();
     // this._sharedService.publishData(global_filter);
   }
