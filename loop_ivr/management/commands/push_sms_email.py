@@ -17,7 +17,8 @@ class Command(BaseCommand):
 
     def send_mail(self, email_subject, yesterday_call_count, active_caller_count,
                         yeseterday_subscriber_caller, total_subscription,
-                        successfully_sent_subscription):
+                        successfully_sent_subscription, yesterday_unique_call_count,
+                        yeseterday_unique_subscriber_caller):
         from_email = EMAIL_HOST_USER
         to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
                     'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
@@ -27,8 +28,8 @@ class Command(BaseCommand):
                 '<b>Push Messaging Market Information Line:<br/><br/></b>',
                 'Total subscribers: %s<br/>Subscribers who received SMS: %s<br/><br/>'%(total_subscription, successfully_sent_subscription),
                 '<b>Pull-based Market Information Line:<br/><br/></b>',
-                'Daily callers: %s <br/> Repeat Callers (in last 15 days): %s <br/>'%(yesterday_call_count, active_caller_count),
-                'Callers subscribed to push messaging: %s <br/><br/>'%(yeseterday_subscriber_caller,),
+                'Daily callers: %s <br/>Daily Unique callers: %s <br/> Repeat Callers (in last 15 days): %s <br/>'%(yesterday_call_count, yesterday_unique_call_count, active_caller_count),
+                'Callers subscribed to push messaging: %s <br/> Unique Callers subscribed to push messaging: %s <br/><br/>'%(yeseterday_subscriber_caller,yeseterday_unique_subscriber_caller),
                 'Please contact system@digitalgreen.org for any clarification.<br/><br/>Thanks you.']
         body = ''.join(body_content)
         msg = EmailMultiAlternatives(email_subject, body, from_email, to_email)
@@ -42,6 +43,8 @@ class Command(BaseCommand):
         fifteen_day_back_date = datetime.now().date()-timedelta(days=16)
         # Daily Callers
         yesterday_call_count = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,incoming_time__lt=today_date).exclude(from_number__in=team_contact).count()
+        # Daily unique callers
+        yesterday_unique_call_count = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,incoming_time__lt=today_date).exclude(from_number__in=team_contact).values_list('from_number', flat=True).distinct().count()
         # excluding yesterday, because we are counting matrices for yeseterday.
         last_fifteen_day_caller_no = list(PriceInfoIncoming.objects.filter(incoming_time__gte=fifteen_day_back_date,incoming_time__lt=yesterday_date).exclude(from_number__in=team_contact).values_list('from_number',flat=True))
         # Active callers are who called in last fifteen days.
@@ -58,9 +61,14 @@ class Command(BaseCommand):
         yeseterday_non_subscriber_caller = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,
                                             incoming_time__lt=today_date).exclude(from_number__in=subscriber_no).exclude(from_number__in=team_contact).count()
         yeseterday_subscriber_caller = yesterday_call_count - yeseterday_non_subscriber_caller
+        # unique subscriber
+        yeseterday_unique_non_subscriber_caller = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,
+                                            incoming_time__lt=today_date).exclude(from_number__in=subscriber_no).exclude(from_number__in=team_contact).values_list('from_number', flat=True).distinct().count()
+        yeseterday_unique_subscriber_caller = yesterday_unique_call_count - yeseterday_unique_non_subscriber_caller
         total_subscription = Subscription.objects.filter(status=1).exclude(subscriber__phone_no__in=team_contact).values('subscriber__phone_no').distinct().count()
         successfully_sent_subscription = SubscriptionLog.objects.filter(status=1,date__gte=yesterday_date,date__lt=today_date).exclude(subscription__subscriber__phone_no__in=team_contact).values('subscription__subscriber__phone_no').distinct().count()
         email_subject = 'Loop Market Information Summary for %s'%(yesterday_date.strftime("%Y-%m-%d"),)
         self.send_mail(email_subject, yesterday_call_count, active_caller_count,
                         yeseterday_subscriber_caller,total_subscription,
-                        successfully_sent_subscription)
+                        successfully_sent_subscription,yesterday_unique_call_count,
+                        yeseterday_unique_subscriber_caller)
