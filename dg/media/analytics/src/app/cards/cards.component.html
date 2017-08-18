@@ -84,7 +84,7 @@
   <div class="row">
     <div class="col" *ngFor="let chart of recentcharts">
           <h6 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</h6>
-          <chart [options]="chart.options" (load)="saveInstance($event.context, chart)" ></chart>
+          <chart style="margin:0%;" [options]="chart.options" (load)="saveInstance($event.context, chart)" ></chart>
     </div>
   </div>  
 </div>

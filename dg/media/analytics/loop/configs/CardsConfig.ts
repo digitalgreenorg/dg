@@ -32,7 +32,7 @@ export const cardConfig = {
                             filter:false,
                             graph : {
                                 show: true,
-                                options : cardGraphConfig.No_of_clusters,
+                                options : cardGraphConfig.No_of_Farmers,
                             },
                         },
                         recent : {
@@ -55,7 +55,7 @@ export const cardConfig = {
                             filter:false,
                             graph : {
                                 show: true,
-                                options : cardGraphConfig.No_of_clusters,
+                                options : cardGraphConfig.total_volume,
                             },
                         },
                         recent : {
@@ -78,7 +78,7 @@ export const cardConfig = {
                             filter:false,
                             graph : {
                                 show: true,
-                                options : cardGraphConfig.No_of_clusters,
+                                options : cardGraphConfig.Total_payment,
                             },
                         },
                         recent : {
@@ -101,7 +101,7 @@ export const cardConfig = {
                             filter:false,
                             graph : {
                                 show: true,
-                                options : cardGraphConfig.No_of_clusters,
+                                options : cardGraphConfig.Cost_per_kg,
                             },
                         },
                         recent : {
@@ -124,7 +124,7 @@ export const cardConfig = {
                             filter:false,
                             graph : {
                                 show: true,
-                                options : cardGraphConfig.No_of_clusters,
+                                options : cardGraphConfig.Sustainability,
                             },
                         },
                         recent : {

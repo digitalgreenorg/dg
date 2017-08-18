@@ -79,7 +79,7 @@ export const cardGraphConfig = {
     'No_of_Farmers' : {
         chart: {
             type: 'solidgauge',
-            width: 180,
+            width: 160,
             height: 100,
             plotBackgroundColor: null,
             plotBackgroundImage: null,
@@ -144,7 +144,7 @@ export const cardGraphConfig = {
         series: [{
             name:'present',
             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color: black' +
+                format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
                         '">{y}</span><br/>'
             },
             tooltip: {
@@ -155,7 +155,7 @@ export const cardGraphConfig = {
     'total_volume': {
         chart: {
             type: 'solidgauge',
-            width: 180,
+            width: 160,
             height: 100,
             plotBackgroundColor: null,
             plotBackgroundImage: null,
@@ -220,7 +220,7 @@ export const cardGraphConfig = {
         series: [{
             name:'present',
             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color: black' +
+                format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
                         '">{y}</span><br/>'
             },
             tooltip: {
@@ -231,7 +231,7 @@ export const cardGraphConfig = {
     'Total_payment' : {
         chart: {
             type: 'solidgauge',
-            width: 180,
+            width: 160,
             height: 100,
             plotBackgroundColor: null,
             plotBackgroundImage: null,
@@ -296,7 +296,7 @@ export const cardGraphConfig = {
         series: [{
             name:'present',
             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color: black' +
+                format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
                         '">{y}</span><br/>'
             },
             tooltip: {
@@ -307,7 +307,7 @@ export const cardGraphConfig = {
     'Sustainability' : {
         chart: {
             type: 'solidgauge',
-            width: 180,
+            width: 160,
             height: 100,
             plotBackgroundColor: null,
             plotBackgroundImage: null,
@@ -372,7 +372,7 @@ export const cardGraphConfig = {
         series: [{
             name:'present',
             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color: black' +
+                format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
                         '">{y}</span><br/>'
             },
             tooltip: {
@@ -383,7 +383,7 @@ export const cardGraphConfig = {
     'Cost_per_kg' : {
         chart: {
             type: 'solidgauge',
-            width: 180,
+            width: 160,
             height: 100,
             plotBackgroundColor: null,
             plotBackgroundImage: null,
@@ -448,7 +448,7 @@ export const cardGraphConfig = {
         series: [{
             name:'present',
             dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color: black' +
+                format: '<div style="text-align:center"><span style="font-size:20px;color: black' +
                         '">{y}</span><br/>'
             },
             tooltip: {
@@ -459,8 +459,8 @@ export const cardGraphConfig = {
     'No_of_clusters_spark' : {
         chart: {
             margin:[40,12,45,60],
-            height:190,
-            width:190,
+            height:130,
+            width:160,
             type: 'area',
         },
         title : '#Clusters_spark',
