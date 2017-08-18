@@ -44,7 +44,7 @@
 <div *ngFor="let container of getDictKeys(containers);">
   <div *ngIf="containers[container].displayContent">
     <div class="row justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
-      <div class="container-box col-sm-11" *ngIf="ifDictionary(containers[container]['containers'][option])">
+      <div [ngClass]="containers[container]['containers']['addTab']?'container-box col-sm-11':'col-sm-12'" *ngIf="ifDictionary(containers[container]['containers'][option])">
         <tabset [justified]="true" *ngIf="containers[container]['containers']['addTab']">
           <!--<div>-->
           <tab *ngFor="let tab of getDictKeys(containers[container]['containers'][option])" [heading]="tab">
@@ -61,12 +61,10 @@
       </div>
       <div *ngIf="!containers[container]['containers']['addTab']">
         <div *ngFor="let tab of getDictKeys(containers[container]['containers'][option])">
-          <div *ngIf="containers[container]['containers'][option][tab]['addDivs']">
-            <div class="row">
-              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" [class]="containers[container]['charts'][0]['chart']['chart']['tab']['class']">
-                <div [id]="div"></div>
-                <br><br>
-              </div>
+          <div class="row" *ngIf="containers[container]['containers'][option][tab]['addDivs']">
+            <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" class="container-box">
+              <div [id]="div"></div>
+              <br><br>
             </div>
           </div>
         </div>
@@ -75,7 +73,7 @@
   </div>
 </div>
 
-<div *ngFor="let graph of getDictKeys(filterGraphs);">
+<!-- <div *ngFor="let graph of getDictKeys(filterGraphs);">
   <div class="row justify-content-center" *ngIf="filterGraphs[graph].displayContent">
     <div id="graph" class="container-box col-sm-11" *ngFor="let option of getDictKeys(filterGraphs[graph]['DropDownGraph']);">
       <tabset [justified]="true" *ngIf="filterGraphs[graph]['DropDownGraph'][option]['addTab']">
@@ -101,7 +99,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="container-fluid">
   <div *ngFor="let chart of containerCharts">

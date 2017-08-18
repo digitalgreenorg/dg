@@ -51,23 +51,28 @@ export const chartsConfig = {
     title: {
       text: 'Volume Amount'
     },
+    yAxis: [{ // Primary yAxis
+      title: {
+        text: 'Volume',
+      },
+      opposite: false
+    }, { // Secondary yAxis
+        title: {
+          text: 'Amount',
+        }
+      }],
     legend: { enabled: false },
-    // tooltip: {
-    //   shared: true,
-    //   valueDecimals: 2,
-    //   // valueSuffix: ' units'
-    // },
     tooltip: {
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
       valueDecimals: 2,
-      split: true
+      // split: true
     },
     credits: {
       enabled: false
     },
     plotOptions: {
       areaspline: {
-        fillOpacity: 0.5
+        fillOpacity: 0.3
       }
     },
     colors: [
@@ -75,7 +80,7 @@ export const chartsConfig = {
       '#0000ff',
     ],
     series: [],
-    drilldown: {}
+    // drilldown: {}
   },
   'cpkSpkTS': {
     chart: {
@@ -93,6 +98,16 @@ export const chartsConfig = {
     title: {
       text: 'CPK SPK'
     },
+    yAxis: [{ // Primary yAxis
+      title: {
+        text: 'CPK',
+      },
+      opposite: false
+    }, { // Secondary yAxis
+        title: {
+          text: 'SPK',
+        }
+      }],
     legend: { enabled: false },
     tooltip: {
       shared: true,
@@ -104,15 +119,14 @@ export const chartsConfig = {
     },
     plotOptions: {
       areaspline: {
-        fillOpacity: 0.5
+        fillOpacity: 0.3
       }
     },
     colors: [
       '#ff0000',
       '#0000ff',
     ],
-    series: [],
-    drilldown: {}
+    series: []
   },
   'aggrvol': {
     chart: {
@@ -136,22 +150,13 @@ export const chartsConfig = {
       enabled: true
     },
     legend: { enabled: false },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
-    },
     colors: [
       '#ff0000',
       '#0000ff',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
     },
     series: [],
     drilldown: {
@@ -194,7 +199,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
     },
     series: [],
     drilldown: {
@@ -240,7 +245,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
     },
     series: [],
     drilldown: {
@@ -285,7 +290,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>',
     },
     series: [],
     drilldown: {
@@ -328,7 +333,7 @@ export const chartsConfig = {
     scrollbar: { enabled: true },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
     },
     series: [],
     drilldown: {
@@ -371,7 +376,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
     },
     series: [],
     drilldown: {
@@ -414,7 +419,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
     },
     series: [],
     drilldown: {
@@ -460,7 +465,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
     },
     series: [],
     drilldown: {
@@ -506,7 +511,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
     },
     series: [],
     drilldown: {
@@ -549,7 +554,7 @@ export const chartsConfig = {
     scrollbar: { enabled: true },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
     },
     series: [],
     drilldown: {
@@ -592,7 +597,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
     },
     series: [],
     drilldown: {
@@ -612,6 +617,7 @@ export const chartsConfig = {
       inverted: true
     },
     scrollbar: { enabled: true },
+    title: { text: '' },
     xAxis: {
       type: 'category',
       max: 5
@@ -638,7 +644,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
     },
     credits: { enabled: false },
     series: [],
@@ -682,7 +688,7 @@ export const chartsConfig = {
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
     },
     series: []
   }
