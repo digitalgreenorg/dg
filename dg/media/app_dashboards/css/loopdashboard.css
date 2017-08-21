@@ -1,3 +1,7 @@
+a, h1, h2, h3, h4, h5, h6, span {
+  color: #3D3D3F;
+}
+
 .filter-table th, .filter-table td {
   padding: 0px;
   margin-top: 0px;
@@ -28,6 +32,10 @@
 
 .secondary_header {
   background: #E1E2E4;
+}
+
+ul.dropdown-content.select-dropdown li span {
+  color: #F15A2A;
 }
 
 
@@ -217,7 +225,7 @@ hr {
 
 .tabs .active {
   font-weight: bold;
-  background-color: aliceblue;
+  background-color: #E1E2E44D;
   margin-left: 20px !important;
   /*margin-right: 20px !important;*/
 }
@@ -242,6 +250,7 @@ hr {
 
 .a-customfont {
   font-size: 12px;
+  color: #D14027;
 }
 
 .row.vdivide [class*='col']:not(:last-child):after {
@@ -286,7 +295,7 @@ hr {
   /* The tooltip */
   display: none;
   text-align: left;
-  background-color: #BCDBEA;
+  background-color: #D1402780;
   color: #fff;
   padding: 10px;
   width: 150px;
