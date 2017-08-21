@@ -851,7 +851,7 @@ function set_filterlistener() {
 
   $('#get_filter_data_button').click(function() {
     gaddidar = true;
-    get_data("", country_id);
+    get_data("", country_id, state_id);
   });
 }
 
