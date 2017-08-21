@@ -45,8 +45,6 @@ def get_data_from_myisam(get_total, country_id, state_id):
     port = DATABASES['default']['PORT']
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
-    print "get data from myisam: state id", state_id, type(state_id)
-
     if(int(state_id) < 0):
         #only country filter
         df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id), con=mysql_cn)
@@ -95,8 +93,6 @@ def get_data_from_myisam(get_total, country_id, state_id):
             df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state=state_id).values('date','farmer_id').order_by('date')))
 
         dictionary = {}
-
-        print "data from myisam", df_farmers
         
         df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
         days = ['7','15','30','60']

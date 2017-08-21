@@ -209,7 +209,6 @@ def jsonify(data):
 def total_static_data(request):
     country_id = request.GET['country_id'] #To be fetched from request
     state_id = request.GET['state_id']
-    print "total static data: state id", state_id, type(state_id)
     if(int(state_id) < 0):
         #Only country filter
         total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('farmer').distinct().count()
@@ -357,7 +356,6 @@ def recent_graphs_data(request):
     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id, state_id)
 
     chart_dict = {'aggregated_result': aggregated_result, 'cummulative_vol_farmer': cummulative_vol_farmer}
-    print "************** recent graph data", chart_dict
     data = json.dumps(jsonify(chart_dict), cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
@@ -399,7 +397,6 @@ def data_for_drilldown_graphs(request):
     filter_transportation["mandi__district__state__country"] = country_id
     if (int(state_id) > 0):
         #set state filter also
-        print "data for drill down", state_id
         filter_args["mandi__district__state"] = state_id
         filter_args_no_crops["mandi__district__state"] = state_id
         filter_transportation["mandi__district__state"] = state_id
@@ -496,7 +493,6 @@ def data_for_line_graph(request):
     filter_transportation["mandi__district__state__country"] = country_id
 
     if(int(state_id) > 0):
-        print "data for line graph", state_id
         filter_args["mandi__district__state"] = state_id
         filter_transportation["mandi__district__state"] = state_id
 
