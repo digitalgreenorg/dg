@@ -20,7 +20,8 @@ from loop.helpline_view import write_log
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
-    agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES
+    agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
+    agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -120,7 +121,19 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],) if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
     query_result = run_query(raw_query)
     if not query_result:
-        price_info_list.append(agg_sms_no_price_available)
+        if not all_crop_flag and not all_mandi_flag:
+            crop_name_list = ','.join(map(lambda crop_id: crop_in_hindi_map.get(crop_id).encode("utf-8") if crop_in_hindi_map.get(crop_id) else crop_map[crop_id].encode("utf-8"), crop_list))
+            mandi_name_list = ','.join(map(lambda mandi_id: mandi_map[mandi_id].encode("utf-8").rstrip(mandi_hi).rstrip(), mandi_list))
+            no_price_message = (agg_sms_no_price_crop_mandi)%(crop_name_list, mandi_name_list)
+        # If query for all Mandi
+        elif all_mandi_flag:
+            crop_name_list = ','.join(map(lambda crop_id: crop_in_hindi_map.get(crop_id).encode("utf-8") if crop_in_hindi_map.get(crop_id) else crop_map[crop_id].encode("utf-8"), crop_list))
+            no_price_message = (agg_sms_no_price_all_mandi)%(crop_name_list,)
+        # If query for all crops
+        else:
+            no_price_message = agg_sms_no_price_available
+        price_info_list.append(no_price_message)
+        price_info_list.append(('\n\n%s')%(crop_and_code,))
     else:
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
         for row in query_result:

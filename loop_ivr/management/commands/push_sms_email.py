@@ -9,7 +9,7 @@ from django.db.models import Q
 
 from loop_ivr.models import PriceInfoIncoming, SubscriptionLog, Subscription
 
-from loop_ivr.utils.config import agg_sms_no_price_available
+from loop_ivr.utils.config import string_for_no_rate_query
 
 from dg.settings import EMAIL_HOST_USER, team_contact
 
@@ -50,7 +50,7 @@ class Command(BaseCommand):
         # Active callers are who called in last fifteen days.
         active_caller_count = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,incoming_time__lt=today_date,from_number__in=last_fifteen_day_caller_no).exclude(from_number__in=team_contact).count()
         # Responses with market rate.
-        yesterday_call_count_with_market_rate = PriceInfoIncoming.objects.filter(~Q(price_result__contains=agg_sms_no_price_available),incoming_time__gte=yesterday_date,
+        yesterday_call_count_with_market_rate = PriceInfoIncoming.objects.filter(~Q(price_result__contains=string_for_no_rate_query),incoming_time__gte=yesterday_date,
                                         incoming_time__lt=today_date,info_status=1).exclude(from_number__in=team_contact).count()
         if yesterday_call_count > 0:
             percent_calls_with_market_rate = round((yesterday_call_count_with_market_rate*100.0) / yesterday_call_count,2)
