@@ -239,7 +239,7 @@ var bullet_options = {
   type: "bullet",
   width: "100",
   height: "30",
-  performanceColor: '#00bfbf',
+  performanceColor: '#EF5928',
   rangeColors: ['#a2d6d6'],
   targetColor: '#ffffff'
 }
@@ -248,8 +248,8 @@ var sparkline_option = {
   type: 'line',
   width: '150',
   height: '60',
-  lineColor: '#00bfbf',
-  fillColor: '#dde1df',
+  lineColor: '#EF5928',
+  fillColor: '#4D9BA0A7',
   lineWidth: 2
 }
 
@@ -268,7 +268,11 @@ var generalOptions = {
   },
   exporting: {
     enabled: false
-  }
+  },
+  colors: [
+    '#EF5928',
+    '#3D3D3F',
+  ],
 }
 
 var timeSeriesMasterOptions = {
@@ -388,7 +392,12 @@ var drilldownGraphOptions = {
       text: null
     },
     min: 0,
-    gridLineColor: 'transparent'
+    gridLineColor: 'transparent',
+    labels: {
+      style: {
+        color: '#9AA0A7'
+      }
+    }
   },
   scrollbar: {
     enabled: true
@@ -491,8 +500,8 @@ function plot_cards_data() {
 function cummulative_farmer_and_volume(cum_vol_farmer) {
   var all_dates = [];
   var vol_farmer_length = Object.keys(cum_vol_farmer).length;
-  var first_date = new Date(cum_vol_farmer[0]['date']+"T23:59:00");
-  var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']+"T23:59:00");
+  var first_date = new Date(cum_vol_farmer[0]['date'] + "T23:59:00");
+  var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date'] + "T23:59:00");
   while (first_date <= last_date) {
     all_dates.push(first_date.getTime());
     first_date.setDate(first_date.getDate() + 1);
@@ -518,7 +527,7 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
   temp_farmers['showInLegend'] = true;
 
   for (var i = 0; i < vol_farmer_length; i++) {
-    var date_to_find = new Date(cum_vol_farmer[i]['date']+"T23:59:00");
+    var date_to_find = new Date(cum_vol_farmer[i]['date'] + "T23:59:00");
     var index = all_dates.indexOf(date_to_find.getTime());
     cumm_farmers[index] = cum_vol_farmer[i]['cum_distinct_farmer'];
     cumm_volume[index] = cum_vol_farmer[i]['cum_vol'];
@@ -1986,6 +1995,13 @@ function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart
     format = '{point.y:.0f}';
   }
 
+  drilldown['activeAxisLabelStyle'] = {
+    color: "#9AA0A7"
+  };
+  drilldown['activeDataLabelStyle'] = {
+    color: "#9AA0A7"
+  };
+
   var chart1 = container_obj.highcharts(Highcharts.merge(generalOptions, drilldownGraphOptions, {
     chart: {
       type: chart_type,
@@ -1994,12 +2010,27 @@ function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart
     xAxis: [{
       type: 'category',
       max: max,
+      labels: {
+        style: {
+          color: '#9AA0A7'
+        }
+      }
     }, {
       type: 'category',
-      max: null
+      max: null,
+      labels: {
+        style: {
+          color: '#9AA0A7'
+        }
+      }
     }],
     yAxis: {
       max: max_scale
+    },
+    labels: {
+      style: {
+        color: '#9AA0A7'
+      }
     },
     plotOptions: {
       series: {

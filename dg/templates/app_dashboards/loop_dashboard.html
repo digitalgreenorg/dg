@@ -14,11 +14,11 @@
 {% endblock %} {% block navbar %}
 <div class="navbar-fixed">
    <nav class="top-nav" id="analytics_page_nav_bar">
-      <div class="nav-wrapper grey darken-3 row nav_row">
+      <div class="nav-wrapper nav_row">
          <a class="brand-logo center white-text">LOOP</a>
          <a data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
          <div class="left col s5">
-            <ul class="hide-on-med-and-down grey lighten-2">
+            <ul class="hide-on-med-and-down">
                <li class="active" id="home_tab"><a class="white-text" onclick="hide_nav('home')">Home</a></li>
                <li id="analytics_tab"><a class="white-text" onclick="show_nav('analytics')">Analytics</a></li>
                <li id="time_series_tab"><a class="white-text" onclick="show_nav('time_series')">Time Series</a></li>
@@ -44,7 +44,7 @@
             <li><a href="/loop/dashboard/payment/">Payments</a></li>
          </ul>
       </div>
-      <div class="nav-wrapper grey lighten-2 hide" id="filters_nav">
+      <div class="nav-wrapper hide secondary_header" id="filters_nav">
          <a data-activates="mobile-demo1" class="button-collapse"><i class="material-icons">menu</i></a>
          <ul class="hide-on-med-and-down">
             <ul class="left">
