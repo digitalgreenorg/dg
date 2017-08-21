@@ -2189,7 +2189,6 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
             temp['pointStart'] = this.pointStart;
             temp['pointInterval'] = this.pointInterval;
             temp['color'] = this.color;
-            console.log(this.color);
             $.each(this.data, function() {
               if (this.x > min && this.x < max) {
                 temp['data'].push([this.x, this.y]);
@@ -4067,8 +4066,7 @@ function plot_solid_guage(container, minimum, present, target) {
       name: 'Present',
       data: [present],
       dataLabels: {
-        format: '<div style="text-align:center"><span style="font-size:16px;color:' +
-          ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">' + present.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</span><br/>' +
+        format: '<div style="text-align:center"><span style="font-size:16px;color:#3D3D3F">' + present.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</span><br/>' +
           '</div>'
       },
       tooltip: {

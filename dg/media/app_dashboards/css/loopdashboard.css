@@ -1,5 +1,9 @@
-a, h1, h2, h3, h4, h5, h6, span {
+a, h1, h2, h3, h4, h5, h6, span, input {
   color: #3D3D3F;
+}
+
+#country .select-wrapper input.select-dropdown, #language .select-wrapper input.select-dropdown {
+  color: #fff;
 }
 
 .filter-table th, .filter-table td {
@@ -131,6 +135,10 @@ ul.side-nav.fixed ul.collapsible-accordion {
 
 ul.side-nav.fixed:hover {
   overflow-y: auto;
+}
+
+.side-nav a {
+  color: #3D3D3F;
 }
 
 #nav-mobile li.search {
