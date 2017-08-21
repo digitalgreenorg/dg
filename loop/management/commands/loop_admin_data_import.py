@@ -7,6 +7,12 @@ import sys
 import pandas as pd
 
 class Command(BaseCommand):
+    def add_arguments(self, parser):
+        parser.add_argument('-m', dest='mandi', default=None, type=str)
+        parser.add_argument('-g', dest='gaddidar', default=None, type=str)
+        parser.add_argument('-am', dest='aggregator_mandi', default=None, type=str)
+        parser.add_argument('-av', dest='aggregator_village', default=None, type=str)
+
     def set_status(self, df, index, stat, excep):
         df.set_value(index, 'Status', stat)
         df.set_value(index, 'Exception', excep)
@@ -146,10 +152,10 @@ class Command(BaseCommand):
             except Exception as e:
                 self.set_status(df, i, 'Fail', str(e))
 
-    def import_data(self, input_file, output_filename, sheetname):
+    def import_data(self, input_file, output_filename, sheetname, option):
         df = input_file.parse(sheetname)
 
-        self.functions[sheetname](self, df)
+        self.functions[option](self, df)
 
         book = load_workbook(output_filename)
         writer = pd.ExcelWriter(output_filename, engine='openpyxl')
@@ -158,7 +164,7 @@ class Command(BaseCommand):
         df.to_excel(writer, sheet_name=sheetname)
         writer.save()
 
-    functions = {'Markets': import_mandi, 'Traders': import_gaddidar, 'Aggregator - Markets': import_user_assigned_mandi, 'Aggregator - Villages': import_user_assigned_village}
+    functions = {'mandi': import_mandi, 'gaddidar': import_gaddidar, 'aggregator_mandi': import_user_assigned_mandi, 'aggregator_village': import_user_assigned_village}
     
     def handle(self, *args, **options):
         input_filename = 'Maharashtra Admin Data Sheet.xlsx'
@@ -169,7 +175,16 @@ class Command(BaseCommand):
             output_file.save()
         except Exception  as e:
             sys.exit()
-        self.import_data(input_file, output_filename, 'Markets')
-        self.import_data(input_file, output_filename, 'Traders')
-        self.import_data(input_file, output_filename, 'Aggregator - Markets')
-        self.import_data(input_file, output_filename, 'Aggregator - Villages')
+
+        if options.get('mandi') != None:
+            sheetname = options.get('mandi')
+            self.import_data(input_file, output_filename, sheetname, 'mandi')
+        if options.get('gaddidar') != None:
+            sheetname = options.get('gaddidar')
+            self.import_data(input_file, output_filename, sheetname, 'gaddidar')
+        if options.get('aggregator_mandi') != None:
+            sheetname = options.get('aggregator_mandi')
+            self.import_data(input_file, output_filename, sheetname, 'aggregator_mandi')
+        if options.get('aggregator_village') != None:
+            sheetname = options.get('aggregator_village')
+            self.import_data(input_file, output_filename, sheetname, 'aggregator_village')
