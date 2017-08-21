@@ -5,7 +5,7 @@
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #424242;
+  background-color: #3E3E40;
   transition: 0.4s;
   padding-top: 20px;
   overflow-x: hidden;
@@ -61,7 +61,7 @@ input {
 }
 
 .btn-success {
-  background-color: #009688;
+  background-color: #902B8C;
   border-color: #009688;
 }
 

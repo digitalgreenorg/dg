@@ -10,6 +10,7 @@ export const chartsConfig = {
                                   drillDown: true
                           },
                           credits:{ enabled: false },
+                          colors : ['#7C287D', ' #9AA0A7'],
                           title: { text: 'Trainings Conducted'},
                           xAxis: { type: 'category' },
                           yAxis: {
@@ -31,15 +32,14 @@ export const chartsConfig = {
                           },
                           series: [],
                           drilldown: {
-                                      allowPointDrilldown: false,
-                                       drillUpButton: {
-                                                       relativeTo: 'spacingBox',
-                                                       position: {
-                                                                y: 0,
-                                                                x: -30
-                                                        },
-                                        },
-                                      series: []
+                                activeAxisLabelStyle: {
+                                        color:'#9AA0AA7'
+                                },
+                                activeDataLabelStyle: {
+                                        color:'#9AA0AA7'
+                                },
+                                allowPointDrilldown: false,
+                                series: []
                           },
                           lang: {
                                 drillUpText: '<< Back'
@@ -58,7 +58,7 @@ export const chartsConfig = {
                                 },
                                 credits: { enabled: false },
                                 title: { text: 'Mediators trained'},
-                                subtitle: { text: 'Click the columns to view state wise trainer figures.'},
+                                colors : ['#7C287D', ' #9AA0A7'],
                                 xAxis: { type: 'category' },
                                 yAxis: { title: { text: 'Number of Mediators' } },
                                 legend: { enabled: false },
@@ -76,16 +76,16 @@ export const chartsConfig = {
                                           pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
                                 },
                                 series: [],
+
                                 drilldown: {
-                                            drillUpButton: {
-                                                       relativeTo: 'spacingBox',
-                                                       position: {
-                                                                y: 0,
-                                                                x: -30
-                                                        },
-                                            },
-                                            allowPointDrilldown: false,
-                                            series: []
+                                        activeAxisLabelStyle: {
+                                                color:'#9AA0AA7'
+                                        },
+                                        activeDataLabelStyle: {
+                                                color:'#9AA0AA7'
+                                        },
+                                        allowPointDrilldown: false,
+                                        series: []
                                 },
                                 lang: {
                                         drillUpText: '<< Back'
@@ -103,6 +103,7 @@ export const chartsConfig = {
                                 drillDown: false
                         },
                         credits: { enabled: false },
+                        colors : ['#7C287D', ' #9AA0A7'],
                         title: {
                                 text: 'Questions Answered Correctly'
                         },
@@ -145,6 +146,7 @@ export const chartsConfig = {
                           xAxis: { type: 'category' },
                           yAxis: { title: { text: 'Number of Trainings'} },
                           legend: { enabled: false },
+                          colors : ['#7C287D', ' #9AA0A7'],
                           plotOptions: {
                                         column: {
                                                 grouping: false,
@@ -160,15 +162,14 @@ export const chartsConfig = {
                           },
                           series: [],
                           drilldown: {
-                                        drillUpButton: {
-                                                       relativeTo: 'spacingBox',
-                                                       position: {
-                                                                y: 0,
-                                                                x: -30
-                                                        },
-                                        },
-                                        allowPointDrilldown: false,
-                                        series: []
+                                activeAxisLabelStyle: {
+                                        color:'#9AA0AA7'
+                                },
+                                activeDataLabelStyle: {
+                                        color:'#9AA0AA7'
+                                },
+                                allowPointDrilldown: false,
+                                series: []
                           },
                           lang: {
                                 drillUpText: '<< Back'
