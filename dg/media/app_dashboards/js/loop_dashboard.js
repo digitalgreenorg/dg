@@ -255,7 +255,10 @@ var sparkline_option = {
 
 var generalOptions = {
   title: {
-    text: null
+    text: null,
+    style: {
+      color: '#3D3D3F'
+    }
   },
   subtitle: {
     text: null
@@ -1735,21 +1738,21 @@ function show_line_graphs() {
       'name': "Volume",
       'type': 'areaspline',
       'data': [],
-      'color': 'rgba(0,0,0,0.3)',
+      // 'color': 'rgba(0,0,0,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }, {
       'name': "Amount",
       'type': 'areaspline',
       'data': [],
-      'color': 'rgba(0,0,255,0.3)',
+      // 'color': 'rgba(0,0,255,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }, {
       'name': "Farmers",
       'type': 'column',
       'data': [],
-      'color': 'rgba(0,255,0,0.3)',
+      // 'color': 'rgba(0,255,0,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }];
@@ -1758,14 +1761,14 @@ function show_line_graphs() {
       'name': "Cost per Kg",
       'type': 'areaspline',
       'data': [],
-      'color': 'rgba(0,0,255,0.3)',
+      // 'color': 'rgba(0,0,255,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }, {
       'name': "Sustainability per Kg",
       'type': 'areaspline',
       'data': [],
-      'color': 'rgba(0,255,0,0.3)',
+      // 'color': 'rgba(0,255,0,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }];
@@ -2186,6 +2189,7 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
             temp['pointStart'] = this.pointStart;
             temp['pointInterval'] = this.pointInterval;
             temp['color'] = this.color;
+            console.log(this.color);
             $.each(this.data, function() {
               if (this.x > min && this.x < max) {
                 temp['data'].push([this.x, this.y]);
@@ -2234,7 +2238,7 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
         id: 'mask-before',
         from: dict[0]['data'][0][0],
         to: dict[0]['data'][dict[0]['data'].length - 1][0],
-        color: 'rgba(0, 0, 0, 0.2)'
+        color: 'rgba(0, 0, 0, 0.1)'
       }],
       title: {
         text: null
@@ -2245,7 +2249,7 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
       series: {
         fillColor: {
           stops: [
-            [0, Highcharts.getOptions().colors[0]],
+            [0, 'rgba(240,90,41,0.5)'], //Highcharts.getOptions().colors[0]
             [1, 'rgba(255,255,255,0)']
           ]
         }
