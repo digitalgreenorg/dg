@@ -10,6 +10,7 @@ class Command(BaseCommand):
     def set_status(self, df, index, stat, excep):
         df.set_value(index, 'Status', stat)
         df.set_value(index, 'Exception', excep)
+
     def create_entry(self, model, kwargs):
         try:
             model_obj = get_model('loop', model)
@@ -17,6 +18,7 @@ class Command(BaseCommand):
             self.set_status(df, i, 'Pass', None)
         except Exception as e:
             self.set_status(df, i, 'Fail', str(e))
+
     def import_mandi(self, df):
         all_districts = District.objects.values('id', 'district_name')
         dict_districts = {}
@@ -33,7 +35,6 @@ class Command(BaseCommand):
                 else:
                     self.set_status(df, i, 'Fail', 'District not found')
                     continue
-                kwargs = {mandi_name: mandi_name, mandi_name_en: mandi_name_en, district_id: district_id}
                 mandi = Mandi(mandi_name=mandi_name, mandi_name_en=mandi_name_en, district_id=district_id, is_visible=1)
                 mandi.save()
                 self.set_status(df, i, 'Pass', None)
@@ -61,6 +62,7 @@ class Command(BaseCommand):
                 self.set_status(df, i, 'Pass', '')
             except Exception as e:
                 self.set_status(df, i, 'Fail', str(e))
+                
     def import_user_assigned_mandi(self, df):
         all_aggregators = LoopUser.objects.values('id', 'name')
         dict_aggregators = {}
