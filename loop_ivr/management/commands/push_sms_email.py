@@ -23,7 +23,7 @@ class Command(BaseCommand):
         to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
                     'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
                     'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'vikas@digitalgreen.org',
-                    'melbin@digitalgreen.org']
+                    'melbin@digitalgreen.org', 'erica@digitalgreen.org']
         body_content = ['Dear Team,<br/><br/>Here are daily stats for market information line:<br/><br/>',
                 '<b>Push Messaging Market Information Line:<br/><br/></b>',
                 'Total subscribers: %s<br/>Subscribers who received SMS: %s<br/><br/>'%(total_subscription, successfully_sent_subscription),
