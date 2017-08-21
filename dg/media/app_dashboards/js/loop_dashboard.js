@@ -404,7 +404,6 @@ var drilldownGraphOptions = {
 
 //To compute data for home page overall cards
 function total_static_data(country_id, state_id) {
-  console.log("total static data: state" +state_id)
   $.get("/loop/total_static_data/", {
     'country_id': country_id,
     'state_id': state_id
@@ -441,7 +440,6 @@ function recent_graphs_data(language, country_id, state_id) {
     'state_id': state_id
   }).done(function(data) {
     var json_data = JSON.parse(data.replace(/\bNaN\b/g, 0));
-    console.log("recent graphs data", json_data);
     aggregated_result = json_data['aggregated_result'];
     plot_cards_data();
     cummulative_farmer_and_volume(json_data['cummulative_vol_farmer']);
@@ -802,7 +800,6 @@ function set_filterlistener() {
       $('#outliers_data').html("");
     }
     aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id, agg_id, aggregator_name_input);
-    //      console.log(payments_data.aggregator_data);
     $("#download_payment_sheets").show();
     $('#aggregator_payment_details').show();
     outliers_summary(aggregator_id);
@@ -870,7 +867,6 @@ function get_filter_data(language, country_id, state_id) {
     })
     .done(function(data) {
       var data_json = JSON.parse(data);
-      console.log("filter data:", data_json);
       aggregators_for_filter = data_json.aggregators;
       mandis_for_filter = data_json.mandis;
       gaddidars_for_filter = data_json.gaddidars;
@@ -1175,7 +1171,7 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
   var series = [];
   var drilldown = {};
   drilldown['series'] = [];
-
+  
   var temp = {};
   temp['name'] = "Total";
   temp['type'] = "bar";
@@ -4104,7 +4100,6 @@ function change_language(lang) {
 function change_state(state) {
 
   state_id = state;
-  console.log("state_id:" + state_id)
   if(state_id < 0){
     //apply only country filter
     if(state_id == -1) {
@@ -4150,19 +4145,4 @@ function change_state(state) {
 
     }
   }
-
-  /*if (location_id == 1) {
-    CURRENCY = RUPEE;
-    $("#totalpaytext").text("Payments(" + CURRENCY + ")");
-    $("#recentpaytext").text("Payments(" + CURRENCY + ")");
-
-  } else {
-    CURRENCY = TAKA;
-    $("#totalpaytext").text("Payments(" + CURRENCY + ")");
-    $("#recentpaytext").text("Payments(" + CURRENCY + ")");
-
-  }
-  total_static_data(country);
-  recent_graphs_data(language, country);
-  get_filter_data(language, country);*/
 }
