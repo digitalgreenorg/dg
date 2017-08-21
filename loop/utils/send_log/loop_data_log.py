@@ -238,7 +238,7 @@ def send_updated_log(request):
 
             mandi_gaddidar_list = []
             for mandi in mandi_list_queryset:
-                if mandi.action == 1:
+                if mandi.action == 1 and mandi in mandis:
                     mandi_wise_gaddidar_list = Gaddidar.objects.filter(
                         mandi__id=mandi.model_id)
                     for gaddidar in mandi_wise_gaddidar_list:
