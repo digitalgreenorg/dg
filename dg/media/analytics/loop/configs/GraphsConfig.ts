@@ -134,7 +134,7 @@ export const chartsConfig = {
       renderTo: 'aggrvol',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true

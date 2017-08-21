@@ -7,9 +7,10 @@ export const navsConfig = {
         'overall': false,
         'recent': false,
       },
-      'class':'col-sm-11',
+      'class':'col-11',
+      'addTab': true,
       'containers': {
-        'addTab': true,
+        // 'addTab': true,
         'container1': {
           'Volume and Famers Cummulative Count': {
             'addDivs': ['cummulativeCount']
@@ -23,9 +24,10 @@ export const navsConfig = {
       'subNavs': {
         'Aggregators': {
           'active': true,
-          'class': 'col-sm-6',
+          'class': 'col-6',
+          'addTab': true,
           'containers': {
-            'addTab': true,
+            // 'addTab': true,
             'container1': {
               // 'addTab':true,
               'Volume': {
@@ -53,8 +55,9 @@ export const navsConfig = {
         },
         'Mandi': {
           'class': 'col-sm-6',
+          'addTab': true,
           'containers': {
-            'addTab': true,
+            // 'addTab': true,
             'container1': {
               'Volume': {
                 'addDivs': ['mandivolume']
@@ -80,8 +83,9 @@ export const navsConfig = {
         },
         'Crop': {
           'class': 'col-sm-6',
+          'addTab': true,
           'containers': {
-            'addTab': true,
+            // 'addTab': true,
             'container1': {
               'Volume': {
                 'addDivs': ['cropvolume']
@@ -105,8 +109,9 @@ export const navsConfig = {
       // 'active': true,
       'filters': true,
       'class': 'col-sm-11',
+      'addTab': false,
       'containers': {
-        'addTab': false,
+        // 'addTab': false,
         'container1': {
           'Volume Farmer': {
             'addDivs': ['volFarmerTS', 'cpkSpkTS']

@@ -42,10 +42,10 @@
 </div>
 
 <div *ngFor="let container of getDictKeys(containers);">
-  <div *ngIf="containers[container].displayContent">
-    <div class="row justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
-      <div [ngClass]="containers[container]['containers']['addTab']?'container-box col-sm-11':'col-sm-12'" *ngIf="ifDictionary(containers[container]['containers'][option])">
-        <tabset [justified]="true" *ngIf="containers[container]['containers']['addTab']">
+  <div class="row" *ngIf="containers[container].displayContent && containers[container]['addTab']">
+    <div [class] = "containers[container]['class']" class="justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
+      <div [ngClass]="containers[container]['addTab']?'container-box col-sm-11':'col-sm-12'" *ngIf="ifDictionary(containers[container]['containers'][option])">
+        <tabset [justified]="true">
           <!--<div>-->
           <tab *ngFor="let tab of getDictKeys(containers[container]['containers'][option])" [heading]="tab">
             <br><br>
@@ -58,20 +58,29 @@
           </tab>
           <!--</div>-->
         </tabset>
-      </div>
-      <div *ngIf="!containers[container]['containers']['addTab']">
-        <div *ngFor="let tab of getDictKeys(containers[container]['containers'][option])">
-          <div class="row" *ngIf="containers[container]['containers'][option][tab]['addDivs']">
-            <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" class="container-box">
-              <div [id]="div"></div>
-              <br><br>
-            </div>
-          </div>
-        </div>
-      </div>
+      </div>      
     </div>
   </div>
 </div>
+
+<div *ngFor="let container of getDictKeys(containers);">
+  <div class="row" *ngIf="containers[container].displayContent && !containers[container]['addTab']">
+    <div class="col justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
+      <div *ngIf="!containers[container]['addTab']">
+          <div *ngFor="let tab of getDictKeys(containers[container]['containers'][option])">
+            <div class="row" *ngIf="containers[container]['containers'][option][tab]['addDivs']">
+              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" class="container-box col">
+                <div [id]="div">
+                </div>
+                <br><br>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- <div *ngFor="let graph of getDictKeys(filterGraphs);">
   <div class="row justify-content-center" *ngIf="filterGraphs[graph].displayContent">
