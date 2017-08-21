@@ -280,9 +280,11 @@ def volume_amount_farmers_ts(**kwargs):
         volume = {}
         volume['data'] = data_vol
         volume['name'] = 'Volume'
+        volume['yAxis'] = 0
         amount = {}
         amount['data'] = data_amount
         amount['name'] = 'Amount'
+        amount['yAxis'] = 1
         result_data['data'].append(volume)
         result_data['data'].append(amount)
     # result_data = [data_vol,data_amount]
@@ -316,9 +318,11 @@ def cpk_spk_ts(**kwargs):
         cpk = {}
         cpk['data'] = data_cpk
         cpk['name'] = 'CPK'
+        cpk['yAxis'] = 0
         spk = {}
         spk['data'] = data_spk
         spk['name'] = 'SPK'
+        spk['yAxis'] = 1
         result_data['data'].append(cpk)
         result_data['data'].append(spk)
     except:

@@ -7,6 +7,7 @@ export const navsConfig = {
         'overall': false,
         'recent': false,
       },
+      'class':'col-sm-11',
       'containers': {
         'addTab': true,
         'container1': {
@@ -22,6 +23,7 @@ export const navsConfig = {
       'subNavs': {
         'Aggregators': {
           'active': true,
+          'class': 'col-sm-6',
           'containers': {
             'addTab': true,
             'container1': {
@@ -50,6 +52,7 @@ export const navsConfig = {
           }
         },
         'Mandi': {
+          'class': 'col-sm-6',
           'containers': {
             'addTab': true,
             'container1': {
@@ -76,6 +79,7 @@ export const navsConfig = {
           }
         },
         'Crop': {
+          'class': 'col-sm-6',
           'containers': {
             'addTab': true,
             'container1': {
@@ -100,6 +104,7 @@ export const navsConfig = {
     'Time Series': {
       // 'active': true,
       'filters': true,
+      'class': 'col-sm-11',
       'containers': {
         'addTab': false,
         'container1': {
