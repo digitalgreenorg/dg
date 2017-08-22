@@ -379,6 +379,8 @@ class VehicleLanguage(models.Model):
     def __vehicle__(self):
         return "%s" % (self.vehicle.vehicle_name)
 
+    class Meta:
+        unique_together = ("vehicle","language")
 post_save.connect(save_log,sender=VehicleLanguage)
 pre_delete.connect(save_log,sender=VehicleLanguage)
 post_save.connect(save_admin_log,sender=VehicleLanguage)
