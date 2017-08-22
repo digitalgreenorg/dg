@@ -11,7 +11,12 @@ export const chartsConfig = {
                           },
                           credits:{ enabled: false },
                           colors : ['#7C287D', ' #9AA0A7'],
-                          title: { text: 'Trainings Conducted'},
+                          title: { 
+                                  text: 'Trainings Conducted',
+                                  style : {
+                                        "color" : "#656566",
+                                }
+                        },
                           xAxis: { type: 'category' },
                           yAxis: {
                                   tickInterval: 10, 
@@ -57,7 +62,12 @@ export const chartsConfig = {
                                         drillDown: true
                                 },
                                 credits: { enabled: false },
-                                title: { text: 'Mediators trained'},
+                                title: { 
+                                        text: 'Mediators trained',
+                                        style : {
+                                                "color" : "#656566",
+                                        }
+                                },
                                 colors : ['#7C287D', ' #9AA0A7'],
                                 xAxis: { type: 'category' },
                                 yAxis: { title: { text: 'Number of Mediators' } },
@@ -105,7 +115,10 @@ export const chartsConfig = {
                         credits: { enabled: false },
                         colors : ['#7C287D', ' #9AA0A7'],
                         title: {
-                                text: 'Questions Answered Correctly'
+                                text: 'Questions Answered Correctly',
+                                style : {
+                                        "color" : "#656566",
+                                }
                         },
                         xAxis: { type: 'category' },
                         yAxis: {
@@ -142,7 +155,12 @@ export const chartsConfig = {
                                   drillDown: true
                           },
                           credits: { enabled: false },
-                          title: { text: 'Periodical Trainings Conducted' },
+                          title: { 
+                                  text: 'Periodical Trainings Conducted', 
+                                  style : {
+                                          "color" : "#656566",
+                                  } 
+                                },
                           xAxis: { type: 'category' },
                           yAxis: { title: { text: 'Number of Trainings'} },
                           legend: { enabled: false },

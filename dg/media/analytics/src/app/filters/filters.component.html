@@ -2,31 +2,30 @@
   <perfect-scrollbar class="parent-scrollbar">
     <div #sideNavContent class="container">
       <div class="row">
-        <div class="col-md-8">
-          <h6 class="text-left text-uppercase no-margin">Filters</h6>
+        <div class="col-8">
+          <label class="text-left no-margin sideNav-font">Filters</label>
         </div>
-        <div class="col-md-4">
+        <div class="col-4">
           <button type="button" class="close" aria-label="Close" (click)="closeNav()"><span aria-hidden="true">&times;</span></button>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
           <hr class="bg-white" style="margin-top:4%">
         </div>
       </div>
       <div *ngIf="showDateFilter">
         <div class="row">
-          <label class="col-md-3 col-sm-3 text-white sideNav-font">From</label>
-          <div class="col-md-8 col-sm-8">
+          <label class="col-3 text-white sideNav-font">From</label>
+          <div class="col-7">
             <form #myForm="ngForm" novalidate>
-              <my-date-picker class="datepicker 
-              .datepicker-dimens" name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
+              <my-date-picker class="datepicker" name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
             </form>
           </div>
         </div>
         <div class="row">
           <label class="col-3 text-white sideNav-font">To</label>
-          <div class="col-8">
+          <div class="col-7">
             <form #myForm="ngForm" novalidate>
               <my-date-picker class="datepicker " name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
             </form>

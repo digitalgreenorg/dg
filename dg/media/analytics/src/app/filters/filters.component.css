@@ -76,3 +76,7 @@ input {
 .datepicker-dimens {
   height: 20px;
 }
+
+.margin-left {
+  margin-left: 10px;
+}
