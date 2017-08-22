@@ -582,8 +582,8 @@ class LoopUserResource(BaseResource):
             pass
         #attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
         try:
+            bundle.data['password'] = bundle.data['username']
             if user is None:
-                bundle.data['password'] = bundle.data['username']
                 user = User.objects.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name_en'])
             bundle.data['user']={}
             bundle.data['user']['online_id']=user.id
