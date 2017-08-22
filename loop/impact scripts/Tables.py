@@ -1,4 +1,4 @@
-gvimport MySQLdb
+import MySQLdb
 
 mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
                            passwd='root',
