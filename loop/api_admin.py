@@ -541,36 +541,6 @@ class LoopUserResource(BaseResource):
         
         else:
             send_duplicate_message(int(attempt[0].id))
-        # assigned_mandi_list = bundle.data.get('assigned_mandis')
-        # assigned_village_list = bundle.data.get('assigned_villages')
-        # if assigned_mandi_list or assigned_village_list:
-        #     user_id = None
-        #     if bundle.request.user:
-        #         user_id = bundle.request.user.id
-
-        #     loop_user_id = getattr(bundle.obj, 'id')
-
-        #     for mandi in assigned_mandi_list:
-        #         try:
-        #             assigned_mandi_obj = LoopUserAssignedMandi(loop_user_id=loop_user_id, mandi_id=mandi['mandi_id'],
-        #                                                        user_created_id=user_id)
-        #             assigned_mandi_obj.save()
-        #         except Exception, e:
-        #             raise AssignedMandiNotSaved('For Loop User with id: ' + str(
-        #                 loop_user_id) + ' mandi is not getting saved. Mandi details: ' + str(e))
-
-        #     for village in assigned_village_list:
-        #         try:
-        #             assigned_village_obj = LoopUserAssignedVillage(loop_user_id=loop_user_id, village_id=village['village_id'],
-        #                                                        user_created_id=user_id)
-        #             assigned_village_obj.save()
-        #         except Exception, e:
-        #             raise AssignedVillageNotSaved('For Loop User with id: ' + str(
-        #                 loop_user_id) + ' village is not getting saved. Village details: ' + str(e))
-        
-        # else:
-        #     raise AssignedMandiNotSaved(
-        #         'Loop User with details: ' + str(bundle.data) + ' can not be saved because mandi list is not available')
         return bundle
 
     def obj_update(self, bundle, **kwargs):
@@ -582,7 +552,6 @@ class LoopUserResource(BaseResource):
             pass
         #attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
         try:
-            bundle.data['password'] = bundle.data['username']
             if user is None:
                 user = User.objects.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name_en'])
             bundle.data['user']={}
@@ -595,25 +564,6 @@ class LoopUserResource(BaseResource):
             attempt = LoopUser.objects.filter(id=bundle.data['online_id'])
             send_duplicate_message(int(attempt[0].id))
         return bundle
-        # bundle = super(LoopUserResource, self).obj_update(bundle, **kwargs)
-        # user_id = None
-        # if bundle.request.user:
-        #     user_id = bundle.request.user.id
-        # loop_user_id = bundle.data.get('id')
-        # del_mandi_objs = LoopUserAssignedMandi.objects.filter(
-        #     loop_user_id=loop_user_id).delete()
-        # del_village_objs = LoopUserAssignedVillage.objects.filter(
-        #     loop_user_id=loop_user_id).delete()
-        # assigned_mandi_list = bundle.data.get('assigned_mandis')
-        # for mandi in assigned_mandi_list:
-        #     assigned_mandi_obj = LoopUserAssignedMandi(loop_user_id=loop_user_id, mandi_id=mandi['mandi_id'],
-        #                                                user_created_id=user_id)
-        #     assigned_mandi_obj.save()
-        # assigned_village_list = bundle.data.get('assigned_villages')
-        # for village in assigned_village_list:
-        #     assigned_village_obj = LoopUserAssignedVillage(loop_user_id=loop_user_id, village_id=village['village_id'],
-        #                                                user_created_id=user_id)
-        #     assigned_village_obj.save()
 
     def dehydrate_assigned_mandis(self, bundle):
         return [{'row_id':assigned_mandi_obj.id, 'id': assigned_mandi_obj.mandi.id ,'mandi_name':assigned_mandi_obj.mandi.mandi_name} for assigned_mandi_obj in
