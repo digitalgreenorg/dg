@@ -273,8 +273,8 @@ var generalOptions = {
     enabled: false
   },
   colors: [
-    '#F15A2A',
-    '#3D3D3F',
+    '#F37B55',
+    '#656566',
   ],
 }
 
@@ -4029,9 +4029,9 @@ function plot_solid_guage(container, minimum, present, target) {
     // the value axis
     yAxis: {
       stops: [
-        [0.1, '#DF5353'],
-        [0.5, '#DDDF0D'],
-        [0.9, '#55BF3B']
+        [0.1, '#D14027'],
+        [0.5, '#D3E7B6'],
+        [0.9, '#7AC143']
       ],
       lineWidth: 0,
       minorTickInterval: null,
