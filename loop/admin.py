@@ -161,6 +161,7 @@ class GaddidarShareOutliersAdmin(admin.ModelAdmin):
 
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name', 'language')
+    list_filter = ['language','crop__crop_name']
     search_fields = ['crop_name', 'crop__crop_name']
 
 class AggregatorIncentiveAdmin(admin.ModelAdmin):

@@ -324,6 +324,9 @@ class CropLanguage(models.Model):
     def __crop__(self):
         return "%s" % (self.crop.crop_name)
 
+    class Meta:
+        unique_together = ("crop","language")
+
 post_save.connect(save_log,sender=CropLanguage)
 pre_delete.connect(save_log,sender=CropLanguage)
 post_save.connect(save_admin_log,sender=CropLanguage)
