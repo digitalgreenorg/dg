@@ -202,28 +202,30 @@ def graph_data(request):
         result = aggregator_volume(**filter_args)
     elif chart_name == 'aggrvisit':
         result = aggregator_visits(**filter_args)
-    elif chart_name == 'mandivolume':
-        result = mandi_volume(**filter_args)
-    elif chart_name == 'mandivisit':
-        result = mandi_visits(**filter_args)
-    elif chart_name == 'cropvolume':
-        result = crop_volume(**filter_args)
-    elif chart_name == 'cropfarmercount':
-        result = crop_farmer_count(**filter_args)
-    elif chart_name == 'cropprices':
-        result = crop_prices(**filter_args)
     elif chart_name == 'aggrspkcpk':
         result = agg_spk_cpk(**filter_args)
     elif chart_name == 'aggrrecoveredtotal':
         result = agg_cost(**filter_args)
     elif chart_name == 'aggrfarmercount':
         result = agg_farmer_count(**filter_args)
+    elif chart_name == 'mandivolume':
+        result = mandi_volume(**filter_args)
+    elif chart_name == 'mandivisit':
+        result = mandi_visits(**filter_args)
     elif chart_name == 'mandispkcpk':
         result = mandi_spk_cpk(**filter_args)
     elif chart_name == 'mandirecoveredtotal':
         result = mandi_cost(**filter_args)
     elif chart_name == 'mandifarmercount':
         result = mandi_farmer_count(**filter_args)
+    elif chart_name == 'cropvolume':
+        result = crop_volume(**filter_args)
+    elif chart_name == 'cropfarmercount':
+        result = crop_farmer_count(**filter_args)
+    elif chart_name == 'cropprices':
+        result = crop_prices(**filter_args)
+    elif chart_name == 'crop_price_range_ts':
+        result = crop_price_range_ts(**filter_args)
     else:
         result = {"result":"success"}
     return JsonResponse(result)

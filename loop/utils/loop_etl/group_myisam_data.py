@@ -107,11 +107,10 @@ def query_myisam(**kwargs):
         if(state_id) :
             sql_ds['where'].append('state_id = ' + str(state_id))
     sql_q = join_sql_ds(sql_ds)
-    print sql_q
     df_result = pd.read_sql(sql_q, con=mysql_cn)
     return df_result
 
-def crop_prices_query( **kwargs):
+def crop_prices_query(from_timeseries, **kwargs):
     country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
@@ -121,7 +120,13 @@ def crop_prices_query( **kwargs):
     mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('crop_id, crop_name, mandi_id, mandi_name_en mandi_name, min(price) Min_price, max(price) Max_price')
+    if from_timeseries:
+        sql_ds['select'].append('crop_id, crop_name, date, min(price) Min_price, max(price) Max_price, avg(price) Avg_price, sum(quantity) Quantity')
+        sql_ds['group by'].append('crop_id, date')
+    else:
+        sql_ds['select'].append('crop_id, crop_name, mandi_id, mandi_name_en mandi_name, min(price) Min_price, max(price) Max_price')
+        sql_ds['group by'].append('crop_id, mandi_id')
+
     sql_ds['from'].append('loop_combinedtransaction lct')
     sql_ds['join'].append(['loop_mandi lm', 'lm.id = lct.mandi_id'])
     sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
@@ -129,7 +134,6 @@ def crop_prices_query( **kwargs):
     sql_ds['join'].append(['loop_district ld', 'ld.id = lm.district_id'])
     sql_ds['join'].append(['loop_state ls', 'ls.id = ld.state_id'])
     sql_ds['join'].append(['loop_country lc', 'lc.id = ls.country_id'])
-    sql_ds['group by'].append('crop_id, mandi_id')
 
     if len(aggregators_list) > 0:
         sql_ds['where'].append('lct.user_created_id in (' + ",".join(aggregators_list) + ")")
@@ -189,10 +193,8 @@ def get_data_from_myisam(get_total, **kwargs):
             df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
             df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
         else :
-            print 'inside empty case'
             df_result_aggregate = df_result.astype(int).groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
             df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
-            print df_result_aggregate.columns.values
 
         if get_total == 0:
             #df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
@@ -221,7 +223,6 @@ def get_data_from_myisam(get_total, **kwargs):
 
     except Exception as e:
         print 'exception', e
-    # print dictionary, cumm_vol_farmer
     return dictionary, cumm_vol_farmer
 
 def read_kwargs(Kwargs):
@@ -433,7 +434,7 @@ def crop_farmer_count(**kwargs):
     return final_data_list
 
 def crop_prices(**kwargs):
-    df_result = crop_prices_query(**kwargs)
+    df_result = crop_prices_query(from_timeseries=0, **kwargs)
     final_data_list = {}
     try:
         crop_groupby_data = df_result.groupby(['crop_id', 'crop_name']).agg({'Min_price':'min', 'Max_price':'max'}).reset_index().sort('Max_price', ascending=False)
@@ -737,4 +738,23 @@ def mandi_spk_cpk(**kwargs):
         final_data_list = cost_recovered_data(df_result, df_result_agg, df_result_mandi, 'mandispkcpk', 'mandi_name', 'aggregator_name', True, 'cpk','spk')
     except:
         final_data_list["error"] = "No data found"
+    return final_data_list
+
+def crop_price_range_ts(**kwargs):
+    df_result = crop_prices_query(from_timeseries=1,**kwargs)
+    final_data_list = {}
+    df_result['date'] = df_result['date'].astype('datetime64[ns]')
+    df_result['date'] = df_result['date'].astype('int64')//10**6
+    df_result = df_result.set_index('crop_id')
+
+    max_min_price=[]
+    for index, row in df_result.iterrows():
+        # print final_data_list
+        if str(index) not in final_data_list:
+            final_data_list[str(index)]=[]
+        # max_min_price.append([row['date'],row['Max_price'],row['Min_price'],row['Avg_price']])
+        final_data_list[str(index)].extend([[row['date'],row['Max_price'],row['Min_price'],row['Avg_price']]])
+
+    # final_data_list = df_result.to_dict(orient='index')
+
     return final_data_list
