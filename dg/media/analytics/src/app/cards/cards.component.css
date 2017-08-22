@@ -4,8 +4,8 @@
 }
 .container-fluid {
   width: 90%;
-  box-shadow: 0 0 8px grey;
-  padding: 15px 15px 15px 15px;
+  /* box-shadow: 0 0 8px grey; */
+  padding: 0px 15px 40px 15px;
 }
 
 .overall-bg {
@@ -13,5 +13,5 @@
 }
 
 .recent-bg {
-  background-color: #9AA0A7;
+  background-color: #656566;
 }

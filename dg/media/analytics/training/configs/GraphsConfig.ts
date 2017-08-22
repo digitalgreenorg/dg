@@ -33,10 +33,10 @@ export const chartsConfig = {
                           series: [],
                           drilldown: {
                                 activeAxisLabelStyle: {
-                                        color:'#9AA0AA7'
+                                        color:'#656566'
                                 },
                                 activeDataLabelStyle: {
-                                        color:'#9AA0AA7'
+                                        color:'#656566'
                                 },
                                 allowPointDrilldown: false,
                                 series: []
@@ -79,10 +79,10 @@ export const chartsConfig = {
 
                                 drilldown: {
                                         activeAxisLabelStyle: {
-                                                color:'#9AA0AA7'
+                                                color:'#656566'
                                         },
                                         activeDataLabelStyle: {
-                                                color:'#9AA0AA7'
+                                                color:'#656566'
                                         },
                                         allowPointDrilldown: false,
                                         series: []
@@ -163,10 +163,10 @@ export const chartsConfig = {
                           series: [],
                           drilldown: {
                                 activeAxisLabelStyle: {
-                                        color:'#9AA0AA7'
+                                        color:'#656566'
                                 },
                                 activeDataLabelStyle: {
-                                        color:'#9AA0AA7'
+                                        color:'#656566'
                                 },
                                 allowPointDrilldown: false,
                                 series: []

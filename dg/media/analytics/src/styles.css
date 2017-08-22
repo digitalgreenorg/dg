@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 .customClass.active > a {
-    background-color: #7C287D !important;
+    background-color: #656566 !important;
 }
 
 .customClass > a {
@@ -15,9 +15,10 @@ a {
 }
 
 .customClass > a:hover {
-    background-color: #C9CACD !important;
+    background-color: #9e9e9f !important;
 }
 
 .customClass.active > a:hover {
-    background-color: #717171 !important;
+    background-color: #656566 !important;
+
 }
