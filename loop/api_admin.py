@@ -580,7 +580,7 @@ class LoopUserResource(BaseResource):
             user = User.objects.get(username=bundle.data['username'])
         except:
             pass
-        attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
+        #attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
         try:
             if user is None:
                 user = User.objects.create_user(username=bundle.data['username'],password=bundle.data['password'],first_name=bundle.data['name_en'])
