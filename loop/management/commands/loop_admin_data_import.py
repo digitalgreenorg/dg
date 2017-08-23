@@ -1,8 +1,9 @@
 from django.core.management.base import BaseCommand
 from loop.models import LoopUser, Mandi, LoopUserAssignedMandi, District, Mandi, Village, LoopUserAssignedVillage, Gaddidar
-from openpyxl import load_workbook      #openpyxl==2.4.8
+from openpyxl import load_workbook
 from django.db.models import get_model
 import sys
+import math
 
 import pandas as pd
 
@@ -49,6 +50,7 @@ class Command(BaseCommand):
 
     def import_gaddidar(self, df):
         all_mandis = Mandi.objects.values('id', 'mandi_name')
+        default_gaddidar_phone = '0000000000'
         dict_mandis = {}
         for mandi in all_mandis:
             dict_mandis[mandi['mandi_name']] = mandi['id']
@@ -63,7 +65,14 @@ class Command(BaseCommand):
                 else:
                     self.set_status(df, i, 'Fail', 'Mandi not found')
                     continue
-                gaddidar = Gaddidar(gaddidar_name=trader_name, gaddidar_name_en=trader_name_en, gaddidar_phone='0000000000',mandi_id=mandi_id, is_visible=1)
+                if "Phone Number" in df.columns.values:
+                    if math.isnan(row['Phone Number']):
+                        gaddidar_phone = default_gaddidar_phone
+                    else:
+                        gaddidar_phone = int(row['Phone Number'])
+                else:
+                    gaddidar_phone = default_gaddidar_phone
+                gaddidar = Gaddidar(gaddidar_name=trader_name, gaddidar_name_en=trader_name_en, gaddidar_phone=gaddidar_phone,mandi_id=mandi_id, is_visible=1)
                 gaddidar.save()
                 self.set_status(df, i, 'Pass', '')
             except Exception as e:
