@@ -113,11 +113,16 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
 
 
 class MandiAdmin(admin.ModelAdmin):
-    fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible')
-    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en')
-    search_fields = ['mandi_name', 'district__district_name', 'mandi_name_en']
-    list_filter = ['district__district_name','district__state', 'district__state__country']
+    fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible', 'mandi_type')
+    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type')
+    search_fields = ['mandi_name', 'district__district_name', 'mandi_type__mandi_type_name', 'mandi_name_en']
+    list_filter = ['district__district_name', 'district__state__country', 'mandi_type', 'district__state']
 
+class MandiTypeAdmin(admin.ModelAdmin):
+    fields = ('mandi_type_name', 'mandi_category', 'type_description')
+    list_display = ('mandi_type_name', 'mandi_category', 'type_description')
+    search_fields = ['mandi_type_name', 'mandi_category']
+    list_filter = ['mandi_category']
 
 class VillageAdmin(admin.ModelAdmin):
     fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
@@ -267,3 +272,4 @@ loop_admin.register(LogDeleted, LogDeletedAdmin)
 loop_admin.register(Broadcast,BroadcastAdmin)
 loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
 loop_admin.register(VehicleLanguage)
+loop_admin.register(MandiType, MandiTypeAdmin)
