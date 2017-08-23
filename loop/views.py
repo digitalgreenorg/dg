@@ -440,6 +440,11 @@ def data_for_drilldown_graphs(request):
             crop_obj['crop__crop_name_bn'] = language_wise_crop_name[3][crop_obj['crop__id']]
         else:
             crop_obj['crop__crop_name_bn'] = crop_obj['crop__crop_name']
+        # For Marathi Language
+        if crop_obj['crop__id'] in language_wise_crop_name[4]:
+            crop_obj['crop__crop_name_mr'] = language_wise_crop_name[4][crop_obj['crop__id']]
+        else:
+            crop_obj['crop__crop_name_mr'] = crop_obj['crop__crop_name']
 
     mandi_crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'mandi__id').annotate(Min('price'), Max('price'))

@@ -646,7 +646,7 @@ function set_filterlistener() {
     time_series_frequency = 1;
     $('#time_series_frequency option[value="' + 1 + '"]').prop('selected', true);
     $('#time_series_frequency').material_select();
-    get_data("", country_id);
+    get_data("", country_id, state_id);
   });
 
   $('#aggregator_all').on('change', function(e) {
@@ -1171,7 +1171,7 @@ function aggregator_graph(container, axis, axis_names, axis_parameter, values, v
   var series = [];
   var drilldown = {};
   drilldown['series'] = [];
-  
+
   var temp = {};
   temp['name'] = "Total";
   temp['type'] = "bar";
@@ -1669,10 +1669,14 @@ function farmer_crop_visits(container, json_data) {
       series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
     } else {
       if (country_id == 1){
-        if (state_id == 1)
+        if (state_id == 1){
           series[0]['data'].push([json_data[i]['crop__crop_name_hi'], json_data[i]['farmer__count']]);
+        }
         else if (state_id == 7){
-          //series[0]['data'].push([json_data[i]['crop__crop_name_ma'], json_data[i]['farmer__count']]);
+          series[0]['data'].push([json_data[i]['crop__crop_name_mr'], json_data[i]['farmer__count']]);
+        }else{
+          //For data of all states in India, regional language is Hindi
+          series[0]['data'].push([json_data[i]['crop__crop_name_hi'], json_data[i]['farmer__count']]);
         }
       } else if (country_id == 2){
         series[0]['data'].push([json_data[i]['crop__crop_name_bn'], json_data[i]['farmer__count']]);
@@ -1713,9 +1717,19 @@ function fill_crop_drop_down() {
   if (language == ENGLISH_LANGUAGE)
     crops_names_time_series = crops_for_filter;
   else {
-    // If country is India, then Regional Language is Hindi
-    if (country_id == 1)
-      crops_names_time_series = croplanguage_for_filter[HINDI_ID];
+    // If country is India, then Regional Language is Hindi/Marathi
+    if (country_id == 1){
+      if(state_id == 1){
+        crops_names_time_series = croplanguage_for_filter[HINDI_ID];
+      }
+      else if(state_id == 7){
+        crops_names_time_series = croplanguage_for_filter[MARATHI_ID];
+      }
+      else{
+        //For data of all states in India, regional language is Hindi
+        crops_names_time_series = croplanguage_for_filter[HINDI_ID];
+      }
+    }
     // If country is Bangladesh, then Regional Language is Bangla
     else if (country_id == 2)
       crops_names_time_series = croplanguage_for_filter[BANGLA_ID];
@@ -4098,12 +4112,12 @@ function change_language(lang) {
 }
 
 function change_state(state) {
-
   state_id = state;
   if(state_id < 0){
     //apply only country filter
     if(state_id == -1) {
       //India
+      country_id = 1;
       CURRENCY = RUPEE;
       $("#totalpaytext").text("Payments(" + CURRENCY + ")");
       $("#recentpaytext").text("Payments(" + CURRENCY + ")");
@@ -4113,11 +4127,12 @@ function change_state(state) {
       get_filter_data(language, INDIA_ID, state_id);
     } else if(state_id == -2) {
       //Bangladesh
+      country_id = 2;
       CURRENCY = TAKA;
       $("#totalpaytext").text("Payments(" + CURRENCY + ")");
       $("#recentpaytext").text("Payments(" + CURRENCY + ")");
 
-      total_static_data(BANGLADESH_ID, -2);
+      total_static_data(BANGLADESH_ID, state_id);
       recent_graphs_data(language, BANGLADESH_ID, state_id);
       get_filter_data(language, BANGLADESH_ID, state_id);
     }
@@ -4125,24 +4140,24 @@ function change_state(state) {
     //apply country+state filter
     if(state_id == 1) {
       //Bihar
-      CURRENCY = RUPEE
+      country_id = 1;
+      CURRENCY = RUPEE;
       $("#totalpaytext").text("Payments(" + CURRENCY + ")");
       $("#recentpaytext").text("Payments(" + CURRENCY + ")");
 
       total_static_data(INDIA_ID, state_id);
       recent_graphs_data(language, INDIA_ID, state_id);
       get_filter_data(language, INDIA_ID, state_id);
-
     } else if(state_id == 7) {
       //Maharshtra
-      CURRENCY = RUPEE
+      country_id = 1;
+      CURRENCY = RUPEE;
       $("#totalpaytext").text("Payments(" + CURRENCY + ")");
       $("#recentpaytext").text("Payments(" + CURRENCY + ")");
 
       total_static_data(INDIA_ID, state_id);
       recent_graphs_data(language, INDIA_ID, state_id);
       get_filter_data(language, INDIA_ID, state_id);
-
     }
   }
 }
