@@ -96,8 +96,7 @@ def login(request):
                  'helpline': admin_user[0].village.block.district.state.helpline_number,
                  'phone_digits':admin_user[0].village.block.district.state.phone_digit,
                  'phone_start':admin_user[0].village.block.district.state.phone_start,
-                 'preferred_language':admin_user[0].preferred_language.notation,
-                 'country':admin_user[0].village.block.district.state.country.country_name}))
+                 'preferred_language':admin_user[0].preferred_language.notation}))
                 
             #return HttpResponse("0", status=401)
     else:

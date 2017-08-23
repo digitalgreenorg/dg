@@ -56,7 +56,7 @@ class State(LoopModel):
     state_name = models.CharField(max_length=50)
     country = models.ForeignKey(Country)
     is_visible = models.BooleanField(default=True)
-    state_name_en = models.CharField(max_length=100, null=True)
+    state_name_en = models.CharField(max_length=100)
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
     crop_add = models.BooleanField(default=False)
     phone_digit = models.CharField(default=10, max_length=2, blank=True, null=True)
@@ -65,7 +65,7 @@ class State(LoopModel):
         return self.state_name
 
     class Meta:
-        unique_together = ("state_name",)
+        unique_together = ("state_name","country")
 
 post_save.connect(save_log,sender=State)
 pre_delete.connect(save_log,sender=State)
@@ -75,7 +75,7 @@ class District(LoopModel):
     district_name = models.CharField(max_length=50)
     state = models.ForeignKey(State)
     is_visible = models.BooleanField(default=True)
-    district_name_en = models.CharField(max_length=100, null=True)
+    district_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "%s (%s)" % (self.district_name, self.state.state_name)
@@ -89,7 +89,7 @@ class Block(LoopModel):
     block_name = models.CharField(max_length=50)
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
-    block_name_en = models.CharField(max_length=100, null=True)
+    block_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "%s (%s)" % (self.block_name, self.district.district_name)
@@ -105,7 +105,7 @@ class Village(LoopModel):
     longitude = models.FloatField(null=True, blank=True)
     block = models.ForeignKey(Block)
     is_visible = models.BooleanField(default=True)
-    village_name_en = models.CharField(max_length=100, null=True)
+    village_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "%s (%s)" % (self.village_name, self.block.block_name)
@@ -127,7 +127,7 @@ class Mandi(LoopModel):
     longitude = models.FloatField(null=True)
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
-    mandi_name_en = models.CharField(max_length=100, null=True)
+    mandi_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "%s (%s)" % (self.mandi_name, self.district.district_name)
@@ -153,7 +153,7 @@ class LoopUser(LoopModel):
     phone_number = models.CharField(
         max_length=14, null=False, blank=False, default="0")
     village = models.ForeignKey(Village, default=None, null=True)
-    name_en = models.CharField(max_length=100, null=True)
+    name_en = models.CharField(max_length=100)
     preferred_language = models.ForeignKey(Language, null=True)
     days_count = models.IntegerField(default=3)
     is_visible = models.BooleanField(default=True)
@@ -209,8 +209,7 @@ class AdminUser(LoopModel):
     assigned_loopusers = models.ManyToManyField(LoopUser,through='AdminAssignedLoopUser')
     phone_number = models.CharField(
         max_length=14, null=False, blank=False, default="0")
-    name_en = models.CharField(max_length=100, null=True)
-    village = models.ForeignKey(Village, default=None, null=True)
+    name_en = models.CharField(max_length=100)
     preferred_language = models.ForeignKey(Language, null=True)
     is_visible = models.BooleanField(default=True)
 
@@ -253,7 +252,7 @@ class Gaddidar(LoopModel):
     gaddidar_phone = models.CharField(max_length=13)
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
-    gaddidar_name_en = models.CharField(max_length=100, null=True)
+    gaddidar_name_en = models.CharField(max_length=100)
     discount_criteria = models.IntegerField(choices=DISCOUNT_CRITERIA, default=0)
     commission = models.FloatField("Discount",default=1.0)
     is_prime = models.BooleanField(default=False)
@@ -262,7 +261,7 @@ class Gaddidar(LoopModel):
         return self.gaddidar_name
 
     class Meta:
-        unique_together = ("gaddidar_phone", "gaddidar_name","mandi")
+        unique_together = ("gaddidar_phone", "gaddidar_name")
 
 post_save.connect(save_log, sender=Gaddidar)
 pre_delete.connect(save_log, sender=Gaddidar)
@@ -318,6 +317,7 @@ class CropLanguage(models.Model):
     crop = models.ForeignKey(Crop, related_name="crops")
     crop_name = models.CharField(max_length=30)
     measuring_unit = models.CharField(max_length=20, default="kg")
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.crop_name
@@ -373,6 +373,7 @@ class VehicleLanguage(models.Model):
     language = models.ForeignKey(Language,null=True)
     vehicle = models.ForeignKey(Vehicle, related_name="vehicles")
     vehicle_name = models.CharField(max_length=30)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.vehicle_name
