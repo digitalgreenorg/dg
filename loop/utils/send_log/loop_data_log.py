@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from tastypie.models import ApiKey
 
+
+
 class TimestampException(Exception):
     pass
 
@@ -156,6 +158,7 @@ def send_updated_log(request):
             Transporter = get_model('loop', 'Transporter')
             TransportationVehicle = get_model('loop', 'TransportationVehicle')
 
+
             list_rows = []
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.village.block.district.state.id,entry_table__in=['State']))
@@ -199,11 +202,10 @@ def send_updated_log(request):
                 timestamp__gt=timestamp, entry_table__in=['Mandi'])
             for mrow in mandi_list_queryset:
                 try:
-                    if(Mandi.objects.get(id=mrow.model_id)) in mandis:
+                    if Mandi.objects.get(id=mrow.model_id).mandi in mandis:
                         list_rows.append(mrow)
-                except :
+                except:
                     pass
-                
             gaddidar_rows = Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
             for grow in gaddidar_rows:
