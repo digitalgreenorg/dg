@@ -24,6 +24,7 @@ import { GetFilterDataService } from './filters/get-filter-data.service';
 import { SharedService } from './shared.service';
 
 import { SearchPipe } from './filters/search.pipe';
+import { NgxMyDatePickerModule } from 'ngx-mydatepicker';
 
 declare var require: any;
 export function highchartsFactory() {
@@ -59,6 +60,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ButtonsModule.forRoot(),
     InfiniteScrollModule,
     PerfectScrollbarModule.forRoot(PERFECT_SCROLLBAR_CONFIG),
+    NgxMyDatePickerModule,
   ],
   providers: [{
     provide: HighchartsStatic,

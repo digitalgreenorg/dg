@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IMyOptions } from 'mydatepicker';
+import {INgxMyDpOptions, IMyDateModel} from 'ngx-mydatepicker';
 import { Filter } from './filter';
 import { FilterElement } from './filter-element';
 import { GetFilterDataService } from './get-filter-data.service';
@@ -41,15 +42,19 @@ export class FiltersComponent implements OnInit {
     }
   };
 
-  private myDatePickerOptions: IMyOptions = {
+  private myDatePickerOptions: INgxMyDpOptions = {
     dateFormat: 'dd-mm-yyyy',
     alignSelectorRight: true,
-    showClearDateBtn: false,
+    // showClearDateBtn: false,
     // editableDateField: false,
-    indicateInvalidDate: true,
-    inline: false,
+    // indicateInvalidDate: true,
+    // inline: false,
     maxYear: this.date.getFullYear() + 1,
-    selectionTxtFontSize: '16px',
+    // selectionTxtFontSize: '14px',
+    // height: '22px',
+    // width : '80%',
+    selectorHeight:'280px',
+    selectorWidth:'180px',
   };
 
   constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService, private datepipe: DatePipe) {
@@ -92,6 +97,12 @@ export class FiltersComponent implements OnInit {
   }
 
   onFilterClick(filter_clicked): void {
+    console.log(filter_clicked.expand, filter_clicked.element.length);
+    if(!filter_clicked.expand && filter_clicked.element.length != 0) {
+      filter_clicked.show_icon = '-';
+    } else {
+      filter_clicked.show_icon = '+';  
+    }
     if (!filter_clicked.expand && !filter_clicked.initialLoad) {
       if (filter_clicked.element.length == 0) {
         filter_clicked.expand = true;

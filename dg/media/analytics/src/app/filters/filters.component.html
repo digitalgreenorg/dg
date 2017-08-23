@@ -18,7 +18,7 @@
         <div class="row">
           <label class="col-3 text-white sideNav-font">From</label>
           <div class="col-7">
-            <form #myForm="ngForm" novalidate>
+            <form #myForm="ngForm" novalidate style="margin-top:5%;">
               <my-date-picker class="datepicker" name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
             </form>
           </div>
@@ -26,7 +26,7 @@
         <div class="row">
           <label class="col-3 text-white sideNav-font">To</label>
           <div class="col-7">
-            <form #myForm="ngForm" novalidate>
+            <form #myForm="ngForm" novalidate style="margin-top:5%;">
               <my-date-picker class="datepicker " name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
             </form>
           </div>
@@ -37,7 +37,16 @@
       <div class="row">
         <div class="col-sm-12">
           <a *ngFor='let filter_name of filter_list'>
-          <label (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand">{{ filter_name.heading }}</label>
+          <div class="row">
+            <div class="col-3">
+                <label >{{ filter_name.heading }}</label>
+            </div>
+            <div class="col-7" >
+                <label class="float-right" (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand">
+                  <strong>{{filter_name.show_icon}}</strong>
+                </label>
+            </div>
+          </div>
           <div class="container" *ngIf="filter_name.expand">
             <div class="form-group row" [id]="filter_name.heading">
               <h6 class="col-sm-12">
