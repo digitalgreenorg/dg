@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 from loop.models import Broadcast, LoopUser
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from loop import mergeentityconfig as cnf
+from loop.configs import mergeentityconfig as merge_cnf
 
 class BroadcastTestForm(forms.Form):
     to_number = forms.CharField(label='User Number', max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Enter a Phone Number'}))
@@ -78,10 +78,10 @@ class BroadcastForm(forms.Form):
 class MergeEntityForm(forms.Form):
 
     choice_set = [('', '----------')]   
-    for key in cnf.models:
-        choice_set.append((key, cnf.models[key]['display_value']))
+    for key in merge_cnf.models:
+        choice_set.append((key, merge_cnf.models[key]['display_value']))
     model = forms.ChoiceField(required=True,widget= forms.Select, label='Select Model:', choices=choice_set)
-    merge_file = forms.FileField(required=True, label='Select a .csv file:',)
+    merge_file = forms.FileField(required=True, label='Select a .xlsx file:',)
     email = forms.EmailField(required=True, label='Enter email address to receive status of merge request:')
 
 
@@ -97,12 +97,12 @@ class MergeEntityForm(forms.Form):
         try:
             validate_email(email)
             return email
-        except ValidationError:
-            print "Enter a valid email address"
+        except validate_email.ValidationError:
+            raise forms.ValidationError("Enter a valid email address")
 
     def clean_merge_file(self):
         file = self.cleaned_data.get('merge_file')
         if file.name.endswith('.xlsx'):
             return file
         else:
-            raise ValidationError('Incorrect file type')
+            raise forms.ValidationError('Incorrect file type. Upload only .xlsx file')

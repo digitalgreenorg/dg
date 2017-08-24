@@ -12,7 +12,7 @@ from dg.settings import MEDIA_ROOT, EMAIL_HOST_USER
 from pytz import timezone
 
 from loop.models import Farmer, CombinedTransaction, Gaddidar, GaddidarCommission, GaddidarShareOutliers
-from loop import mergeentityconfig as cnf
+from loop.configs import mergeentityconfig as merge_cnf
 
 def save_file(merge_file):
 	merge_file_name = "MergeEntities_" + str(datetime.datetime.now(timezone('Asia/Kolkata')).strftime('%Y_%m_%d_%H_%M_%S_%f')) + '.xlsx'
@@ -47,11 +47,10 @@ def update_records(related_models, old, new):
 		kwargs_old = {related_model_column: old}
 		kwargs_new = {related_model_column: new}
 
-
 		related_model_obj.objects.filter(**kwargs_old).update(**kwargs_new)
 
 def delete_entity(model,model_name, record):
-	kwargs = {cnf.models[model_name]['col_name']: record}
+	kwargs = {merge_cnf.models[model_name]['col_name']: record}
 	instance = model.objects.get(**kwargs)
 	instance.delete()
 
@@ -59,14 +58,14 @@ def merge_bodies(df, model_name, index, row):
 	initial = row['Initial ID']
 	final = row['Final ID']
 
-	kwargs = {cnf.models[model_name]['col_name']: final}
+	kwargs = {merge_cnf.models[model_name]['col_name']: final}
 
 	model = get_model('loop', model_name)
 
 	try:
 		with transaction.atomic():
 			final_obj = model.objects.get(**kwargs)
-			update_records(cnf.models[model_name]['dependencies'], initial, final)
+			update_records(merge_cnf.models[model_name]['dependencies'], initial, final)
 			delete_entity(model, model_name, initial)
 
 			df.set_value(index, 'Status', 'Pass')

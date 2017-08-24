@@ -45,6 +45,7 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
     update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio, \
     redirect_to_broadcast, save_farmer_file
 from loop.merge_entity_view import merge, save_file
+from loop.configs.mergeentityconfig import MERGE_LOG_FILE
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
@@ -982,8 +983,10 @@ def broadcast_audio_request(request):
     else:
         return HttpResponse(status=200)
 
+# @login_required
+# @user_passes_test(lambda u: u.groups.filter(name='loop_admin').count() > 0,
+#                   login_url=PERMISSION_DENIED_URL)
 def merge_entity(request):
-
     context = RequestContext(request)
     template_data = dict()
     template_data['merge_entity_form'] = MergeEntityForm()
@@ -998,9 +1001,10 @@ def merge_entity(request):
                     merge_file_path = save_file(merge_file)
                     merge(model, merge_file_path, email_to)
                     os.remove(merge_file_path)
-                except:
-                    #Contact system page?
-                    pass
+                except Exception as e:
+                    module = 'Merge Entity'
+                    write_log(MERGE_LOG_FILE, module, str(e))
+                    return HttpResponse(status=501)
                 return redirect('/loop/merge_entity')
             else:
                 template_data['merge_entity_form'] = merge_entity_form
