@@ -6,6 +6,8 @@ export const chartsConfig = {
       tab: {
         'class': 'col'
       },
+      width:500,
+      height: 230,
     },
     type: "StockChart",
     rangeSelector: {
@@ -137,7 +139,10 @@ export const chartsConfig = {
         'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      width: 530,
+      height: 230,
+
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -174,6 +179,8 @@ export const chartsConfig = {
       },
       drillDown: true,
       inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -216,7 +223,9 @@ export const chartsConfig = {
         'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -262,7 +271,9 @@ export const chartsConfig = {
         'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -307,7 +318,9 @@ export const chartsConfig = {
         'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -351,6 +364,8 @@ export const chartsConfig = {
       },
       drillDown: true,
       inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -394,6 +409,8 @@ export const chartsConfig = {
       },
       drillDown: true,
       inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -436,7 +453,9 @@ export const chartsConfig = {
         'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -482,7 +501,9 @@ export const chartsConfig = {
         'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -528,7 +549,9 @@ export const chartsConfig = {
         'class': 'col-sm-12'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -572,6 +595,8 @@ export const chartsConfig = {
       },
       drillDown: true,
       inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -614,7 +639,9 @@ export const chartsConfig = {
         'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      width: 530,
+      height: 230,
     },
     scrollbar: { enabled: true },
     title: { text: '' },
@@ -663,6 +690,8 @@ export const chartsConfig = {
       },
       drillDown: false,
       inverted: true,
+      width: 530,
+      height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
