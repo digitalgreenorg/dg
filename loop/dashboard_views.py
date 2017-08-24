@@ -68,8 +68,13 @@ def recent_graphs_data(**kwargs):
     chart_dict = {'aggregated_result': aggregated_result}
 
     # algorithm to store column wise grouped data
-
     res = {}
+    res['cpk'] = generate_res_recent('cpk', 'recentcardGraphs', 'cpk' , {})
+    res['quantity__sum'] = generate_res_recent('quantity__sum', 'recentcardGraphs', 'quantity__sum' , {}) 
+    res['amount__sum'] = generate_res_recent('amount__sum','recentcardGraphs', 'amount__sum' , {})
+    res['distinct_farmer_count'] = generate_res_recent('distinct_farmer_count', 'recentcardGraphs', 'distinct_farmer_count' , {})
+    res['spk'] = generate_res_recent('spk', 'recentcardGraphs', 'spk' , {})
+    res['active_cluster'] = generate_res_recent( 'active_cluster','recentcardGraphs', 'active_cluster' , {})
     for key, aggregated_value in aggregated_result.iteritems():
         for data in aggregated_value:
             for k, v in data.iteritems():
@@ -85,6 +90,7 @@ def recent_graphs_data(**kwargs):
                         v = 0
                 res[k]['value'][key].append(v)
 
+    print res
     data = []
     data.append(res['cpk']);
     data.append(res['quantity__sum'])
@@ -94,10 +100,14 @@ def recent_graphs_data(**kwargs):
     data.append(res['active_cluster'])
     return data
 
-def generate_res_recent(res, key, placeHolder, tagName, value):
-    res[key]['placeHolder'] = placeHolder
-    res[key]['tagName'] = tagName
-    res[key]['value'] = value
+def generate_res_recent(key, placeHolder, tagName, value):
+    res = {}
+    res['placeHolder'] = placeHolder
+    res['tagName'] = tagName
+    res['value'] = {}
+    res['value']['15'] = []
+    res['value']['30'] = []
+    res['value']['60'] = []
     return res
 
 
