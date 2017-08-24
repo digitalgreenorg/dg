@@ -37,38 +37,38 @@
       <div class="row">
         <div class="col-sm-12">
           <a *ngFor='let filter_name of filter_list'>
-          <div class="row">
-            <div class="col-3">
-                <label >{{ filter_name.heading }}</label>
-            </div>
-            <div class="col-7" >
-                <label class="float-right" (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand">
-                  <strong>{{filter_name.show_icon}}</strong>
-                </label>
-            </div>
-          </div>
-          <div class="container" *ngIf="filter_name.expand">
-            <div class="form-group row" [id]="filter_name.heading">
-              <h6 class="col-sm-12">
-                <span class="checkbox">
-                  <label><input id={{filter_name.heading}} type="checkbox" checked="checked" [(ngModel)]="filter_name.select_all" (change)="select_all(filter_name)"> Select All</label>
-                </span>
-              </h6>
-              <div class="col-sm-12">
-                <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
+            <div class="row">
+              <div class="col-3">
+                  <label >{{ filter_name.heading }}</label>
+              </div>
+              <div class="col-7" >
+                  <label class="float-right" (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand">
+                    <strong>&#x021FE;</strong>
+                  </label>
               </div>
             </div>
-            <div>
-              <perfect-scrollbar class="scrollBar">
-                <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm">
+            <div class="container" *ngIf="filter_name.expand">
+              <div class="form-group row" [id]="filter_name.heading">
+                <h6 class="col-sm-12">
                   <span class="checkbox">
-                    <label><input id={{data.id}} type="checkbox" [(ngModel)]="data.checked" (change)="filter_name.changed = true"> {{data.value}}</label>
+                    <label><input id={{filter_name.heading}} type="checkbox" checked="checked" [(ngModel)]="filter_name.select_all" (change)="select_all(filter_name)"> Select All</label>
                   </span>
                 </h6>
-              </perfect-scrollbar>
+                <div class="col-sm-12">
+                  <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
+                </div>
+              </div>
+              <div>
+                <perfect-scrollbar class="scrollBar">
+                  <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm">
+                    <span class="checkbox">
+                      <label><input id={{data.id}} type="checkbox" [(ngModel)]="data.checked" (change)="filter_name.changed = true"> {{data.value}}</label>
+                    </span>
+                  </h6>
+                </perfect-scrollbar>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
         </div>
       </div>
       <div class="row">

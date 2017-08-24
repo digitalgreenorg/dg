@@ -97,12 +97,6 @@ export class FiltersComponent implements OnInit {
   }
 
   onFilterClick(filter_clicked): void {
-    console.log(filter_clicked.expand, filter_clicked.element.length);
-    if(!filter_clicked.expand && filter_clicked.element.length != 0) {
-      filter_clicked.show_icon = '-';
-    } else {
-      filter_clicked.show_icon = '+';  
-    }
     if (!filter_clicked.expand && !filter_clicked.initialLoad) {
       if (filter_clicked.element.length == 0) {
         filter_clicked.expand = true;
