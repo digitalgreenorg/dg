@@ -340,7 +340,7 @@ class CropLanguage(models.Model):
         return "%s" % (self.crop.crop_name)
 
     class Meta:
-        unique_together = ("crop","language")
+        unique_together = ("crop","language",)
 
 post_save.connect(save_log,sender=CropLanguage)
 pre_delete.connect(save_log,sender=CropLanguage)
@@ -396,7 +396,7 @@ class VehicleLanguage(models.Model):
         return "%s" % (self.vehicle.vehicle_name)
 
     class Meta:
-        unique_together = ("vehicle","language")
+        unique_together = ("vehicle","language",)
 post_save.connect(save_log,sender=VehicleLanguage)
 pre_delete.connect(save_log,sender=VehicleLanguage)
 post_save.connect(save_admin_log,sender=VehicleLanguage)
