@@ -145,7 +145,7 @@ selectDictionary={
     'animator':{'animator_id':False,'animator_name':True,'gender':False},
     'person':{'id':False,'person_name':True,'gender':False},
     'persongroup':{'id':False,'group_name':True},
-    'video':{'id':False,'title':True,'youtubeid':True},
+    'video':{'id':True,'title':True,'youtubeid':True},
     'language':{'id':False,'language_name':True},
     'sector':{'id':False,'name':True},
     'practice':{'id':False,'practice_name':True},

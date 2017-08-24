@@ -50,6 +50,7 @@ class data_lib():
 
 
     def handle_controller(self, args, options):
+
         final_df = pd.DataFrame()
 
         relevantPartitionDictionary = {}
@@ -96,6 +97,7 @@ class data_lib():
         return resultant_df
 
     def order_data(self, partitionElements, dataframe):
+        
         header = dataframe.columns.tolist()
         arranged_columns = [None] * (len(self.orderDictionary)+40)  # 40 added to handle index out of range
         bumper = 0
@@ -109,7 +111,8 @@ class data_lib():
                     elif self.selectDictionary[items][elements] == True:
                         arranged_columns[bumper + self.orderDictionary[items]] = self.headerDictionary[items][elements]
         arranged_columns = filter(lambda a: a != None, arranged_columns)
-        arranged_columns.append(self.headerDictionary[self.idElementKey][self.groupbyDictionary[self.idElementKey]])
+        if self.headerDictionary[self.idElementKey][self.groupbyDictionary[self.idElementKey]] not in arranged_columns:
+            arranged_columns.append(self.headerDictionary[self.idElementKey][self.groupbyDictionary[self.idElementKey]])
         arranged_columns.extend([item for item in header if item not in arranged_columns])
         dataframe = dataframe[arranged_columns]
         return dataframe
