@@ -22,7 +22,7 @@ def home(request):
 def market_info_incoming(request):
     if request.method == 'GET':
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-        time.sleep(.5)
+        time.sleep(1)
         make_market_info_call(to_number, dg_number, incoming_time, call_id)
         return HttpResponse(status=200)
     else:
