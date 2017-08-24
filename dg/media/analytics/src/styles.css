@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+/* @import url('https://fonts.google.com/selection?selection.family=Montserrat'); */
+
+body, html {
+    font-family: 'Montserrat', sans-serif;
+}
