@@ -1,7 +1,7 @@
 /* This file should contain all the JS for Loop dashboard */
 window.onload = initialize;
 
-var language, selected_tab, selected_parameter, selected_page, country_id = 1;
+var language, selected_tab, selected_parameter, selected_page, country_id = 1, state_id = -1;
 var days_to_average, time_series_frequency;
 //Arrays containing ids and corresponding names as were selected in the filters.
 var aggregator_ids, aggregator_names, crop_ids, crop_names, mandi_ids, mandi_names, gaddidar_ids, gaddidar_names;
@@ -285,7 +285,8 @@ function hidePaymentDetails() {
 function get_filter_data(language, country_id) {
   $.get("/loop/filter_data/", {
       language: language,
-      'country_id': country_id
+      'country_id': country_id,
+      'state_id': state_id
     })
     .done(function(data) {
       var data_json = JSON.parse(data);
