@@ -4,7 +4,7 @@ export const chartsConfig = {
       type: 'spline',
       renderTo: 'cummulativeCount',
       tab: {
-        'class': 'col-sm-12'
+        'class': 'col'
       },
     },
     type: "StockChart",
@@ -41,7 +41,7 @@ export const chartsConfig = {
       renderTo: 'volFarmerTS',
       drilldown: false,
       tab: {
-        'class': 'col-sm-6'
+        'class': 'col'
       },
     },
     rangeSelector: {
@@ -88,7 +88,7 @@ export const chartsConfig = {
       renderTo: 'cpkSpkTS',
       drilldown: false,
       tab: {
-        'class': 'col-sm-6'
+        'class': 'col'
       },
     },
     rangeSelector: {
@@ -143,7 +143,7 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10000,
+      tickInterval: 1000,
       title: { text: 'Volume' }
     },
     scrollbar: {
@@ -170,7 +170,7 @@ export const chartsConfig = {
       renderTo: 'aggrvisit',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true,
@@ -179,7 +179,7 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10,
+      tickInterval: 1,
       title: { text: 'Visits' }
     },
     scrollbar: { enabled: true },
@@ -213,7 +213,7 @@ export const chartsConfig = {
       renderTo: 'aggrspkcpk',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-12'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true
@@ -259,7 +259,7 @@ export const chartsConfig = {
       renderTo: 'aggrrecoveredtotal',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true
@@ -304,7 +304,7 @@ export const chartsConfig = {
       renderTo: 'aggrfarmercount',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-12'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true
@@ -347,7 +347,7 @@ export const chartsConfig = {
       renderTo: 'mandivolume',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true,
@@ -356,7 +356,7 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10000,
+      tickInterval: 1000,
       title: { text: 'Volume' }
     },
     scrollbar: { enabled: true },
@@ -390,7 +390,7 @@ export const chartsConfig = {
       renderTo: 'mandivisit',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true,
@@ -399,7 +399,7 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10,
+      tickInterval: 1,
       title: { text: 'Visits' }
     },
     scrollbar: { enabled: true },
@@ -433,7 +433,7 @@ export const chartsConfig = {
       renderTo: 'mandispkcpk',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true
@@ -479,7 +479,7 @@ export const chartsConfig = {
       renderTo: 'mandirecoveredtotal',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-16'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true
@@ -491,7 +491,7 @@ export const chartsConfig = {
       max: 5
     },
     yAxis: {
-      tickInterval: 10000,
+      tickInterval: 1000,
       title: { text: 'Recovered / Total cost' }
     },
     scrollbar: { enabled: true },
@@ -568,7 +568,7 @@ export const chartsConfig = {
       renderTo: 'cropvolume',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true,
@@ -577,7 +577,7 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10000,
+      tickInterval: 1000,
       title: { text: 'Volume' }
     },
     scrollbar: { enabled: true },
@@ -611,7 +611,7 @@ export const chartsConfig = {
       renderTo: 'cropprices',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true
@@ -659,7 +659,7 @@ export const chartsConfig = {
       renderTo: 'cropfarmercount',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: false,
       inverted: true,
