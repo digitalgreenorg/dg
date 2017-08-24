@@ -328,7 +328,7 @@ pre_delete.connect(save_admin_log, sender = Crop)
 
 class CropLanguage(models.Model):
     id = models.AutoField(primary_key=True)
-    language = models.ForeignKey(Language,null=True)
+    language = models.ForeignKey(Language)
     crop = models.ForeignKey(Crop, related_name="crops")
     crop_name = models.CharField(max_length=30)
     measuring_unit = models.CharField(max_length=20, default="kg")
@@ -385,7 +385,7 @@ pre_delete.connect(save_admin_log, sender = Vehicle)
 
 class VehicleLanguage(models.Model):
     id = models.AutoField(primary_key=True)
-    language = models.ForeignKey(Language,null=True)
+    language = models.ForeignKey(Language)
     vehicle = models.ForeignKey(Vehicle, related_name="vehicles")
     vehicle_name = models.CharField(max_length=30)
     is_visible = models.BooleanField(default=True)

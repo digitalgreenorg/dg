@@ -104,6 +104,11 @@ class Migration(migrations.Migration):
             field=models.CharField(max_length=100),
         ),
         migrations.AlterField(
+            model_name='croplanguage',
+            name='language',
+            field=models.ForeignKey(to='loop.Language'),
+        ),
+        migrations.AlterField(
             model_name='district',
             name='district_name_en',
             field=models.CharField(max_length=100),
@@ -127,6 +132,11 @@ class Migration(migrations.Migration):
             model_name='state',
             name='state_name_en',
             field=models.CharField(max_length=100),
+        ),
+        migrations.AlterField(
+            model_name='vehiclelanguage',
+            name='language',
+            field=models.ForeignKey(to='loop.Language'),
         ),
         migrations.AlterField(
             model_name='village',
