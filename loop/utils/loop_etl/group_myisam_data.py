@@ -747,14 +747,24 @@ def crop_price_range_ts(**kwargs):
     df_result['date'] = df_result['date'].astype('int64')//10**6
     df_result = df_result.set_index('crop_id')
 
-    max_min_price=[]
+    # max_min_price=[]
     for index, row in df_result.iterrows():
-        # print final_data_list
         if str(index) not in final_data_list:
             final_data_list[str(index)]=[]
-        # max_min_price.append([row['date'],row['Max_price'],row['Min_price'],row['Avg_price']])
-        final_data_list[str(index)].extend([[row['date'],row['Max_price'],row['Min_price'],row['Avg_price']]])
+            final_data_list[str(index)].append({})
+            final_data_list[str(index)][0]['data']=[]
+            final_data_list[str(index)][0]['name']='Crop price range'
+            final_data_list[str(index)][0]['yAxis']=0
+        final_data_list[str(index)][0]['data'].append([row['date'],row['Avg_price'],row['Max_price'],row['Min_price'],row['Avg_price']])#,row['Min_price'],row['Avg_price']
 
-    # final_data_list = df_result.to_dict(orient='index')
+    result_data = {}
+    result_data['chartName'] = "crop_price_range_ts"
+    result_data['chartType'] = "StockChart"
+    result_data['data'] = final_data_list
+    # crop_prices = {}
+    # crop_prices['data'] = final_data_list
+    # crop_prices['name'] = 'Volume'
+    # crop_prices['yAxis'] = 0
+    # result_data['data'].append(final_data_list)
 
-    return final_data_list
+    return result_data

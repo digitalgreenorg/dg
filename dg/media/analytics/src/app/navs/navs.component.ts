@@ -185,7 +185,7 @@ export class NavsComponent implements OnInit,
         filters.params['chartName'] = chart.name;
         this.graphService.getData(filters).subscribe(dataList => {
           if (dataList['chartType'] != undefined && dataList['chartType'] === 'StockChart') {
-            this.parseDataForStockChart(chart, dataList.data);
+            this.parseDataForStockChart(chart, dataList);
           }
           else {
             Object.keys(dataList).forEach(key => {
@@ -214,8 +214,16 @@ export class NavsComponent implements OnInit,
     });
   }
 
-  private parseDataForStockChart(chart, data): void {
+  private parseDataForStockChart(chart, dataList): void {
     this.clearSeriesFromGraph(chart);
+    let data;
+    if (dataList.chartName == 'crop_price_range_ts') {
+      data = dataList.data["1"];
+    } else {
+      data = dataList.data;
+    }
+    console.log(dataList.chartName);
+    console.log(data);
     Object.keys(data).forEach(series => {
       chart.nativeChart.hideLoading();
       chart.nativeChart.addSeries(data[series]);

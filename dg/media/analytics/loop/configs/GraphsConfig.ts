@@ -18,10 +18,10 @@ export const chartsConfig = {
       },
       opposite: false
     }, { // Secondary yAxis
-        title: {
-          text: 'Farmer',
-        }
-      }],
+      title: {
+        text: 'Farmer',
+      }
+    }],
     legend: { enabled: false },
     tooltip: {
       // shared: true,
@@ -57,10 +57,10 @@ export const chartsConfig = {
       },
       opposite: false
     }, { // Secondary yAxis
-        title: {
-          text: 'Amount',
-        }
-      }],
+      title: {
+        text: 'Amount',
+      }
+    }],
     legend: { enabled: false },
     tooltip: {
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
@@ -104,10 +104,10 @@ export const chartsConfig = {
       },
       opposite: false
     }, { // Secondary yAxis
-        title: {
-          text: 'SPK',
-        }
-      }],
+      title: {
+        text: 'SPK',
+      }
+    }],
     legend: { enabled: false },
     tooltip: {
       shared: true,
@@ -691,5 +691,40 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
     },
     series: []
-  }
+  },
+  'crop_price_range_ts': {
+    chart: {
+      type: "candlestick",
+      renderTo: 'crop_price_range_ts',
+      drilldown: false,
+      tab: {
+        'class': 'col-sm-11'
+      },
+    },
+    rangeSelector: {
+      selected: 0
+    },
+    type: "StockChart",
+    title: {
+      text: 'Crop Price Range'
+    },
+    yAxis: [{ // Primary yAxis
+      title: {
+        text: 'Crop prices',
+      }
+    }],
+    legend: { enabled: false },
+    tooltip: {
+      // pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
+      valueDecimals: 2,
+    },
+    credits: {
+      enabled: false
+    },
+    colors: [
+      '#ff0000',
+      '#0000ff',
+    ],
+    series: [],
+  },
 }

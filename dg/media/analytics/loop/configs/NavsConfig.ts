@@ -7,7 +7,7 @@ export const navsConfig = {
         'overall': false,
         'recent': false,
       },
-      'class':'col-sm-11',
+      'class': 'col-sm-11',
       'containers': {
         'addTab': true,
         'container1': {
@@ -112,6 +112,11 @@ export const navsConfig = {
             'addDivs': ['volFarmerTS', 'cpkSpkTS']
           },
         },
+        'container2': {
+          'Crop Prices': {
+            'addDivs': ['crop_price_range_ts']
+          }
+        }
       }
     }
   },
