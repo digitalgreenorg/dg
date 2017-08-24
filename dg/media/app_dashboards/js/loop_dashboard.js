@@ -4121,46 +4121,37 @@ function change_state(state) {
     if(state_id == -1) {
       //India
       country_id = 1;
+      localStorage.country_id = country_id;
       CURRENCY = RUPEE;
       $("#totalpaytext").text("Payments(" + CURRENCY + ")");
       $("#recentpaytext").text("Payments(" + CURRENCY + ")");
-
-      total_static_data(INDIA_ID, state_id);
-      recent_graphs_data(language, INDIA_ID, state_id);
-      get_filter_data(language, INDIA_ID, state_id);
     } else if(state_id == -2) {
       //Bangladesh
       country_id = 2;
+      localStorage.country_id = country_id;
       CURRENCY = TAKA;
       $("#totalpaytext").text("Payments(" + CURRENCY + ")");
       $("#recentpaytext").text("Payments(" + CURRENCY + ")");
-
-      total_static_data(BANGLADESH_ID, state_id);
-      recent_graphs_data(language, BANGLADESH_ID, state_id);
-      get_filter_data(language, BANGLADESH_ID, state_id);
     }
   } else {
     //apply country+state filter
     if(state_id == 1) {
       //Bihar
       country_id = 1;
+      localStorage.country_id = country_id;
       CURRENCY = RUPEE;
       $("#totalpaytext").text("Payments(" + CURRENCY + ")");
       $("#recentpaytext").text("Payments(" + CURRENCY + ")");
-
-      total_static_data(INDIA_ID, state_id);
-      recent_graphs_data(language, INDIA_ID, state_id);
-      get_filter_data(language, INDIA_ID, state_id);
     } else if(state_id == 7) {
       //Maharshtra
       country_id = 1;
+      localStorage.country_id = country_id;
       CURRENCY = RUPEE;
       $("#totalpaytext").text("Payments(" + CURRENCY + ")");
       $("#recentpaytext").text("Payments(" + CURRENCY + ")");
-
-      total_static_data(INDIA_ID, state_id);
-      recent_graphs_data(language, INDIA_ID, state_id);
-      get_filter_data(language, INDIA_ID, state_id);
     }
+    total_static_data(country_id, state_id);
+    recent_graphs_data(language, country_id, state_id);
+    get_filter_data(language, country_id, state_id);
   }
 }
