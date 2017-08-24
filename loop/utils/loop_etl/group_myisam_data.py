@@ -222,7 +222,7 @@ def get_data_from_myisam(get_total, **kwargs):
             dictionary = df.to_dict(orient='index')
 
     except Exception as e:
-        print 'exception', e
+        print 'Exception : ', e
     return dictionary, cumm_vol_farmer
 
 def read_kwargs(Kwargs):
@@ -532,7 +532,6 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
 
 def volumedata(df_result, groupby_result, graphname, outer_param, inner_param, isdrillDown):
     final_data_list = {}
-
     try:
         outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
         temp_dict_outer = {'name':'Aggregator Volume','data':[]}
@@ -548,12 +547,9 @@ def volumedata(df_result, groupby_result, graphname, outer_param, inner_param, i
             inner_data = createInnerdataDict(mandi_groupby_data, ' Volume')
 
             final_data_list[graphname].update(inner_data)
-
     except:
         final_data_list["error"] = "No data Found"
-
     return final_data_list
-
 
 def createInnerdataDict(dictData, keyword):
     inner_data = {'innerData': []}
@@ -698,9 +694,7 @@ def cost_recovered_data(df_result, groupby_result, df_result_mandi, graphname, o
         final_data_list[graphname].update(inner_data)
     except:
         final_data_list["error"] = "No data found"
-
     return final_data_list
-
 
 def mandi_cost(**kwargs):
     final_data_list = {}
@@ -721,6 +715,7 @@ def mandi_cost(**kwargs):
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
+
 def mandi_spk_cpk(**kwargs):
     df_result = query_myisam(**kwargs)
     final_data_list = {}
@@ -747,24 +742,17 @@ def crop_price_range_ts(**kwargs):
     df_result['date'] = df_result['date'].astype('int64')//10**6
     df_result = df_result.set_index('crop_id')
 
-    # max_min_price=[]
     for index, row in df_result.iterrows():
         if str(index) not in final_data_list:
-            final_data_list[str(index)]=[]
+            final_data_list[str(index)] = []
             final_data_list[str(index)].append({})
-            final_data_list[str(index)][0]['data']=[]
-            final_data_list[str(index)][0]['name']='Crop price range'
-            final_data_list[str(index)][0]['yAxis']=0
+            final_data_list[str(index)][0]['data'] = []
+            final_data_list[str(index)][0]['name'] = 'Crop price range'
+            final_data_list[str(index)][0]['yAxis'] = 0
         final_data_list[str(index)][0]['data'].append([row['date'],row['Avg_price'],row['Max_price'],row['Min_price'],row['Avg_price']])#,row['Min_price'],row['Avg_price']
 
     result_data = {}
     result_data['chartName'] = "crop_price_range_ts"
     result_data['chartType'] = "StockChart"
     result_data['data'] = final_data_list
-    # crop_prices = {}
-    # crop_prices['data'] = final_data_list
-    # crop_prices['name'] = 'Volume'
-    # crop_prices['yAxis'] = 0
-    # result_data['data'].append(final_data_list)
-
     return result_data
