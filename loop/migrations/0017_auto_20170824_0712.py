@@ -138,10 +138,6 @@ class Migration(migrations.Migration):
             unique_together=set([('crop', 'language')]),
         ),
         migrations.AlterUniqueTogether(
-            name='gaddidar',
-            unique_together=set([('gaddidar_phone', 'gaddidar_name')]),
-        ),
-        migrations.AlterUniqueTogether(
             name='state',
             unique_together=set([('state_name', 'country')]),
         ),
