@@ -2361,7 +2361,7 @@ function fill_drop_down(container, data_json, id_parameter, name_parameter, capt
   tbody_obj.html("");
   tbody_obj.append('<option value="" disabled selected> Choose ' + caption + ' </option>');
   $.each(data_json, function(index, data) {
-    var li_item = '<option value = ' + data[id_parameter] + ' id = ' + data[id] + '>' + data[name_parameter] + '</option>';
+    var li_item = '<option value = ' + data[id_parameter] + ' id = ' + data[id] + '>' + data[name_parameter] + ' (' + data[id_parameter] +')' + '</option>';
     tbody_obj.append(li_item);
   });
   $('select').material_select();
