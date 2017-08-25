@@ -4149,9 +4149,9 @@ function change_state(state) {
       CURRENCY = RUPEE;
       $("#totalpaytext").text("Payments(" + CURRENCY + ")");
       $("#recentpaytext").text("Payments(" + CURRENCY + ")");
-    }
-    total_static_data(country_id, state_id);
-    recent_graphs_data(language, country_id, state_id);
-    get_filter_data(language, country_id, state_id);
+    }    
   }
+  total_static_data(country_id, state_id);
+  recent_graphs_data(language, country_id, state_id);
+  get_filter_data(language, country_id, state_id);
 }
