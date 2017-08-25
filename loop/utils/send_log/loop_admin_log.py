@@ -470,7 +470,6 @@ def send_updated_admin_log(request):
 
             list_rows = []
             #AdminUser Log
-            #import pdb;pdb.set_trace()
             district_queryset = Log.objects.filter(timestamp__gt=timestamp,entry_table="District",admin_user=None)
             for row in district_queryset:
                 if District.objects.get(id=row.model_id) in districts:
@@ -523,7 +522,6 @@ def send_updated_admin_log(request):
             for row in vehiclelanguage_query:
                 if VehicleLanguage.objects.get(id=row.model_id).language == preferred_language:
                     list_rows.append(row)
-            #import pdb;pdb.set_trace()
             for row in loopuserassignedvillage_queryset:
                 try:
                     if LoopUserAssignedVillage.objects.get(id=row.model_id).loop_user in loopusers:

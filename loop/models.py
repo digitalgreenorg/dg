@@ -98,6 +98,8 @@ class Block(LoopModel):
     class Meta:
         unique_together = ("block_name", "district")
 
+post_save.connect(save_admin_log, sender=Block)
+pre_delete.connect(save_admin_log, sender=Block)
 
 class Village(LoopModel):
     id = models.AutoField(primary_key=True)
