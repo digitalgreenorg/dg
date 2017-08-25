@@ -139,40 +139,46 @@ def get_cluster_related_data(**filter_args):
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'No_of_clusters_overall',
-        'value': total_cluster_reached
+        'value': 0 if(isNAN(total_cluster_reached)) else total_cluster_reached
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'No_of_farmers_overall',
-        'value': total_farmers_reached
+        'value': 0 if(isNAN(total_farmers_reached)) else total_farmers_reached
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'Volume_overall',
-        'value': volume
+        'value': 0 if(isNAN(volume)) else  volume
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'Payments_overall',
-        'value': amount
+        'value':  0 if(isNAN(amount)) else amount
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'Cost_per_kg_overall',
-        'value':-cpk
+        'value': -1 if(isNAN(cpk)) else -cpk
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'Sustainability_overall',
-        'value':spk
+        'value': 0 if(isNAN(spk)) else spk
     })
 
     return data
+
+def isNAN(v) :
+    if type(v) is float:
+        if(math.isnan(float(v))) :
+            return True
+    return False
 
 def get_card_graph_data(request):
     query_list = []
