@@ -1,7 +1,7 @@
 /* This file should contain all the JS for Loop dashboard */
 window.onload = initialize;
 
-var language, selected_tab, selected_parameter, selected_page, country_id = 1;
+var language, selected_tab, selected_parameter, selected_page, country_id = 1, state_id = -1;
 var days_to_average, time_series_frequency;
 //Arrays containing ids and corresponding names as were selected in the filters.
 var aggregator_ids, aggregator_names, crop_ids, crop_names, mandi_ids, mandi_names, gaddidar_ids, gaddidar_names;
@@ -285,7 +285,8 @@ function hidePaymentDetails() {
 function get_filter_data(language, country_id) {
   $.get("/loop/filter_data/", {
       language: language,
-      'country_id': country_id
+      'country_id': country_id,
+      'state_id': state_id
     })
     .done(function(data) {
       var data_json = JSON.parse(data);
@@ -310,7 +311,7 @@ function fill_drop_down(container, data_json, id_parameter, name_parameter, capt
   tbody_obj.html("");
   tbody_obj.append('<option value="" disabled selected> Choose ' + caption + ' </option>');
   $.each(data_json, function(index, data) {
-    var li_item = '<option value = ' + data[id_parameter] + ' id = ' + data[id] + '>' + data[name_parameter] + '</option>';
+    var li_item = '<option value = ' + data[id_parameter] + ' id = ' + data[id] + '>' + data[name_parameter] + ' (' + data[id_parameter] + ')' +'</option>';
     tbody_obj.append(li_item);
   });
   $('select').material_select();
