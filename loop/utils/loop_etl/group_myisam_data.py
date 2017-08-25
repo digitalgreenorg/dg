@@ -71,13 +71,14 @@ def get_data_from_myisam(get_total, country_id, state_id):
         }
     }
 
+    aggregate_cumm_vol_farmer_state = {
+        'quantity':'sum',
+        'cum_distinct_farmer':'mean'
+    }
+
     aggregate_cumm_vol_farmer = {
-        'quantity':{
-            'quantity__sum':'sum'
-        },
-        'cum_distinct_farmer':{
-            'cum_vol_farmer':'mean'
-        }
+        'quantity':'sum',
+        'cum_distinct_farmer':'sum'
     }
 
     # MyISAM table contains CT, DT, Gaddidar, AggregatorIncentive.
@@ -86,7 +87,6 @@ def get_data_from_myisam(get_total, country_id, state_id):
 
     cumm_vol_farmer = {}
     if get_total == 0:
-        #df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
         if(int(state_id) < 0):
             df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('date','farmer_id').order_by('date')))
         elif(int(state_id) > 0):
@@ -101,8 +101,7 @@ def get_data_from_myisam(get_total, country_id, state_id):
             dictionary[day] = list(data_by_grouped_days.values())
 
         # Calcualting cummulative volume and farmer count
-        df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
-        df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
+        df_cum_vol_farmer = df_result.groupby(['date', 'state_id']).agg(aggregate_cumm_vol_farmer_state).reset_index().groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
         df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
         df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
         cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
