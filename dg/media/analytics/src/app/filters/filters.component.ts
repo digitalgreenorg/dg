@@ -97,6 +97,7 @@ export class FiltersComponent implements OnInit {
   }
 
   onFilterClick(filter_clicked): void {
+    let change_icon = true;
     if (!filter_clicked.expand && !filter_clicked.initialLoad) {
       if (filter_clicked.element.length == 0) {
         filter_clicked.expand = true;
@@ -115,9 +116,13 @@ export class FiltersComponent implements OnInit {
         let list = parent.element.filter(data => { return data.checked }).map(data => {
           return data.id;
         });
+        
         if (list.length > 0) {
           options['parent'] = parent_name;
           options[parent_name] = list;
+        } else {
+          //whether to change the expand icon in front of filter or not.
+          change_icon = false;
         }
       }
       if (parent_changed) {
@@ -135,9 +140,17 @@ export class FiltersComponent implements OnInit {
               filter_clicked.element.push(filterElement);
             }
             filter_clicked.expand = true;
+            filter_clicked.show_icon = '-';
           }
           catch (e) { }
         });
+      }
+    }
+    if(change_icon) {
+      if(!filter_clicked.expand) {
+        filter_clicked.show_icon = '-';
+      } else {
+        filter_clicked.show_icon = '+';
       }
     }
   }
