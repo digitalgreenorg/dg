@@ -249,7 +249,7 @@ var sparkline_option = {
   width: '150',
   height: '60',
   lineColor: '#EF5928',
-  fillColor: '#9BA0A74D',
+  fillColor: '#e1e2e4',
   lineWidth: 2
 }
 

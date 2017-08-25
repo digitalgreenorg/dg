@@ -42,6 +42,18 @@ ul.dropdown-content.select-dropdown li span {
   color: #F15A2A;
 }
 
+.picker__date-display, .picker__weekday-display {
+  background-color: #F15A2A;
+}
+
+div.picker__day.picker__day--infocus.picker__day--selected.picker__day--highlighted {
+  background-color: #D14027;
+}
+
+button.picker__today, button.picker__close {
+  color: #D14027;
+}
+
 
 /*nav.top-nav {
     height: 122px;
@@ -239,8 +251,9 @@ hr {
 }
 
 .card {
-  box-shadow: 0 0 5px 0 rgba(0,0,0,0.16),0 0 5px 0 rgba(0,0,0,0.12);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.16), 0 0 5px 0 rgba(0, 0, 0, 0.12);
 }
+
 .card .card-title {
   font-size: 18px;
 }
@@ -366,7 +379,7 @@ hr {
 }
 
 #language .select-wrapper span.caret, #country .select-wrapper span.caret {
-  top: 3px !important;
+  top: 5px !important;
   color: #FFF;
 }
 
