@@ -1,3 +1,13 @@
+const colors = [
+  '#F37B55',
+  '#656566',
+];
+
+const tooltip = {
+  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+  pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+};
+
 export const chartsConfig = {
   'cummulativeCount': {
     chart: {
@@ -20,20 +30,17 @@ export const chartsConfig = {
       },
       opposite: false
     }, { // Secondary yAxis
-        title: {
-          text: 'Farmer',
-        }
-      }],
+      title: {
+        text: 'Farmer',
+      }
+    }],
     legend: { enabled: false },
     tooltip: {
       // shared: true,
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
       valueDecimals: 2
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
+    colors: colors,
     series: [],
     drilldown: {}
   },
@@ -59,10 +66,10 @@ export const chartsConfig = {
       },
       opposite: false
     }, { // Secondary yAxis
-        title: {
-          text: 'Amount',
-        }
-      }],
+      title: {
+        text: 'Amount',
+      }
+    }],
     legend: { enabled: false },
     tooltip: {
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
@@ -77,10 +84,7 @@ export const chartsConfig = {
         fillOpacity: 0.3
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
+    colors: colors,
     series: [],
     // drilldown: {}
   },
@@ -106,10 +110,10 @@ export const chartsConfig = {
       },
       opposite: false
     }, { // Secondary yAxis
-        title: {
-          text: 'SPK',
-        }
-      }],
+      title: {
+        text: 'SPK',
+      }
+    }],
     legend: { enabled: false },
     tooltip: {
       shared: true,
@@ -124,10 +128,7 @@ export const chartsConfig = {
         fillOpacity: 0.3
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
+    colors: colors,
     series: []
   },
   'aggrvol': {
@@ -148,21 +149,22 @@ export const chartsConfig = {
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 1000,
+      tickInterval: 10000,
       title: { text: 'Volume' }
     },
     scrollbar: {
       enabled: true
     },
     legend: { enabled: false },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+    plotOptions: {
+      column: {
+        dataLabels: {
+          enabled: true
+        }
+      }
     },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -200,14 +202,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -248,14 +244,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -295,14 +285,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>',
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -339,15 +323,9 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
+    colors: colors,
     scrollbar: { enabled: true },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
-    },
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -385,14 +363,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -430,14 +402,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -478,14 +444,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -526,14 +486,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -560,6 +514,7 @@ export const chartsConfig = {
       tickInterval: 10,
       title: { text: 'Farmer count' }
     },
+    scrollbar: { enabled: true },
     legend: { enabled: false },
     plotOptions: {
       column: {
@@ -570,15 +525,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    scrollbar: { enabled: true },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -616,14 +564,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -665,14 +607,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     credits: { enabled: false },
     series: [],
     drilldown: {
@@ -711,14 +647,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: []
   }
 }

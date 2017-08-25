@@ -2,7 +2,7 @@
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="/">LOOP</a>
+  <a class="navbar-brand" href="/loop/dashboard/"><img src="/media/analytics/dist/loop/assets/loop_logo.png" alt="LOOP" style="height:25px;"></a>
   <div class="collapse navbar-collapse" [collapse]="isCollapsed">
     <ul class="navbar-nav">
       <li class="nav-item" *ngFor="let nav of getDictKeys(toggleNav);">
@@ -14,8 +14,8 @@
   <div class="float-right col-1" [hidden]="!showFilters">
     <app-filters></app-filters>
   </div>
-
 </nav>
+
 <div *ngFor="let nav of getDictKeys(toggleNav);">
   <div *ngIf="toggleNav[nav].hasOwnProperty('subNavs')">
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
@@ -59,7 +59,7 @@
           </tab>
           <!--</div>-->
         </tabset>
-      </div>      
+      </div>
     </div>
   </div>
 </div>
