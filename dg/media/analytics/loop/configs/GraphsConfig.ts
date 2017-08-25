@@ -31,8 +31,8 @@ export const chartsConfig = {
       valueDecimals: 2
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     series: [],
     drilldown: {}
@@ -78,8 +78,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     series: [],
     // drilldown: {}
@@ -125,8 +125,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     series: []
   },
@@ -156,8 +156,8 @@ export const chartsConfig = {
     },
     legend: { enabled: false },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -201,8 +201,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -249,8 +249,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#00ff00',
-      '#0000ff'
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -296,8 +296,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -340,8 +340,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     scrollbar: { enabled: true },
     tooltip: {
@@ -386,8 +386,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -431,8 +431,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -479,8 +479,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -527,8 +527,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -571,8 +571,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     scrollbar: { enabled: true },
     tooltip: {
@@ -617,8 +617,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -666,8 +666,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -712,8 +712,8 @@ export const chartsConfig = {
       }
     },
     colors: [
-      '#ff0000',
-      '#0000ff',
+      '#F37B55',
+      '#656566',
     ],
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
