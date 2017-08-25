@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment.loop'
 export class CardsService {
 
   constructor(private http: Http) { }
-  private cardUrl = 'http://localhost:8000/loop/';
+  private cardUrl = environment.url;
 
   getApiData(args): Observable<any> {
     let webUrl = this.cardUrl + args.webUrl;
