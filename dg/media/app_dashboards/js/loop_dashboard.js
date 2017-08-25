@@ -249,7 +249,7 @@ var sparkline_option = {
   width: '150',
   height: '60',
   lineColor: '#EF5928',
-  fillColor: '#9BA0A74D',
+  fillColor: '#e1e2e4',
   lineWidth: 2
 }
 
@@ -2357,7 +2357,7 @@ function fill_drop_down(container, data_json, id_parameter, name_parameter, capt
   tbody_obj.html("");
   tbody_obj.append('<option value="" disabled selected> Choose ' + caption + ' </option>');
   $.each(data_json, function(index, data) {
-    var li_item = '<option value = ' + data[id_parameter] + ' id = ' + data[id] + '>' + data[name_parameter] + '</option>';
+    var li_item = '<option value = ' + data[id_parameter] + ' id = ' + data[id] + '>' + data[name_parameter] + ' (' + data[id_parameter] +')' + '</option>';
     tbody_obj.append(li_item);
   });
   $('select').material_select();
