@@ -1,6 +1,9 @@
 from django import forms
 from django.utils.safestring import mark_safe
 from loop.models import Broadcast, LoopUser
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from loop.configs import mergeentityconfig as merge_cnf
 
 class BroadcastTestForm(forms.Form):
     to_number = forms.CharField(label='User Number', max_length=20,widget=forms.TextInput(attrs={'placeholder': 'Enter a Phone Number'}))
@@ -72,4 +75,34 @@ class BroadcastForm(forms.Form):
             raise forms.ValidationError("Please select atleast one Cluster or .csv file")
         return farmer_file
 
+class MergeEntityForm(forms.Form):
 
+    choice_set = [('', '----------')]   
+    for key in merge_cnf.models:
+        choice_set.append((key, merge_cnf.models[key]['display_value']))
+    model = forms.ChoiceField(required=True,widget= forms.Select, label='Select Model:', choices=choice_set)
+    merge_file = forms.FileField(required=True, label='Select a .xlsx file:',)
+    email = forms.EmailField(required=True, label='Enter email address to receive status of merge request:')
+
+
+    def __init__(self, *args, **kwargs):
+        super(MergeEntityForm, self).__init__(*args, **kwargs)
+        self.fields['merge_file'].error_messages = {'required':'Merge file is required'}
+        self.fields['model'].error_messages = {'required':'Select model name'}
+        self.fields['email'].error_messages = {'required': 'Enter email address'}
+        self.fields['merge_file'].help_text = ""
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        try:
+            validate_email(email)
+            return email
+        except validate_email.ValidationError:
+            raise forms.ValidationError("Enter a valid email address")
+
+    def clean_merge_file(self):
+        file = self.cleaned_data.get('merge_file')
+        if file.name.endswith('.xlsx'):
+            return file
+        else:
+            raise forms.ValidationError('Incorrect file type. Upload only .xlsx file')
