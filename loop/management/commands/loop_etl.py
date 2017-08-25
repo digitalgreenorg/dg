@@ -92,8 +92,8 @@ class LoopStatistics():
             result = pd.merge(result,df_farmer_count,left_on=['date', 'country_id', 'state_id'],right_on=['date', 'country_id', 'state_id'],how='left')
 
             result['cummulative_distinct_farmer'] = result.groupby(by=['state_id'])['cummulative_distinct_farmer'].apply(lambda group: group.ffill())
-            
-          print "After adding cummulative distinct farmer ", result.shape
+
+            print "After adding cummulative distinct farmer ", result.shape
 
             if not result.empty:
                 values_list = []
