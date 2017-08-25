@@ -94,7 +94,8 @@ def home(request):
 
 
 def dashboard(request):
-    return render(request, 'app_dashboards/loop_dashboard.html')
+    return render(request, 'analytics/dist/loop/index.html')
+    # return render(request, 'app_dashboards/loop_dashboard.html')
 
 
 @csrf_exempt

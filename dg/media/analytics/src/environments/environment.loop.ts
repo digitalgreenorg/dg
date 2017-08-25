@@ -7,8 +7,8 @@ import { filtersConfig } from '../../loop/configs/FiltersConfig';
 
 export const environment = {
   production: true,
-//   url: '/loop/',
-  url: 'http://127.0.0.1:8000/loop/',
+  url: '/loop/',
+  // url: 'http://127.0.0.1:8000/loop/',
   chartsConfig: chartsConfig,
   tabsConfig : tabsConfig,
   cardsConfig : cardConfig,

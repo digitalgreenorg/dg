@@ -13,7 +13,7 @@ export class GlobalFilterComponent implements OnInit {
   Dropdownitems: GlobalFilter[] = [];
   constructor(private _globalfilter: GlobalFilterService, private _sharedService: SharedService,
     private _globalfiltersharedService: GlobalFilterSharedService) { }
-  private country: string = '';
+  country: string = '';
 
   ngOnInit() {
     this._globalfilter.getData().subscribe(data => {
@@ -36,7 +36,7 @@ export class GlobalFilterComponent implements OnInit {
     console.log(item);
     global_filter[item.tagName] = item.id;
     // TODO : if Dropdown level more than 2 => handling
-    if(item.parentTag) {
+    if (item.parentTag) {
       global_filter[item.parentTag] = item.parentId;
     }
     console.log(global_filter);
