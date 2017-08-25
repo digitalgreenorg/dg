@@ -28,7 +28,6 @@ def send_duplicate_message(obj_id):
     raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def foreign_key_to_id(bundle, field_name, sub_field_names):
-    #import pdb;pdb.set_trace()
     field = getattr(bundle.obj, field_name)
     if (field == None):
         dict = {}
@@ -224,29 +223,6 @@ class MandiAuthorization(Authorization):
         else:
             raise NotFound("Not allowed to download Mandi")
 
-            # def read_list(self, object_list, bundle):
-            # villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
-            #     district_list = []
-            #     for village in villages:
-            #         if village.block.district_id not in district_list:
-            #             district_list.append(village.block.district_id)
-            #     return object_list.filter(district_id__in = district_list)
-            #
-            # def read_detail(self, object_list, bundle):
-            #     # Is the requested object owned by the user?
-            #     villages = LoopUser.objects.get(user_id= bundle.request.user.id).get_villages()
-            #     district_list = []
-            #     for village in villages:
-            #         if village.block.district_id not in district_list:
-            #             district_list.append(village.block.district_id)
-            #     kwargs={}
-            #     kwargs['district_id__in'] = district_list
-            #     obj = object_list.filter(**kwargs).distinct()
-            #     if obj:
-            #         return True
-            #     else:
-            #         raise NotFound( "Not allowed to download Village" )
-
 
 class CombinedTransactionAuthorization(Authorization):
     def read_list(self, object_list, bundle):
@@ -310,8 +286,7 @@ class UserResource(ModelResource):
         resource_name = 'user'
         excludes = ['is_active', 'is_staff', 'is_superuser', 'date_joined',
                     'last_login']
-        # filtering = {'username':ALL,
-        # }
+       
 
 
 
@@ -348,6 +323,8 @@ class DistrictResource(BaseResource):
     state = fields.ForeignKey(StateResource, 'state', full=True)
 
     class Meta:
+        limit = 0
+        max_limit = 0
         queryset = District.objects.all()
         resource_name = 'district'
         authorization = DistrictAuthorization('id__in')
@@ -367,6 +344,8 @@ class BlockResource(BaseResource):
     district = fields.ForeignKey(DistrictResource, 'district', full=True)
 
     class Meta:
+        limit = 0
+        max_limit = 0
         queryset = Block.objects.all()
         resource_name = 'block'
         authorization = BlockAuthorization('id__in')
@@ -508,10 +487,7 @@ class LoopUserResource(BaseResource):
     hydrate_user = partial(dict_to_foreign_uri, field_name='user')
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     hydrate_preferred_language = partial(dict_to_foreign_uri,field_name='preferred_language')
-    # hydrate_assigned_villages = partial(dict_to_foreign_uri_m2m, field_name='assigned_villages',
-    #                                     resource_name='village')
-    # hydrate_assigned_mandis = partial(dict_to_foreign_uri_m2m, field_name='assigned_mandis', resource_name='mandi')
-
+  
     dehydrate_user = partial(
          foreign_key_to_id, field_name='user', sub_field_names=['id', 'username'])
     dehydrate_village = partial(
@@ -537,7 +513,6 @@ class LoopUserResource(BaseResource):
             bundle.data['preferred_language']['online_id']= adminUser.preferred_language.id
             bundle = super(LoopUserResource, self).obj_create(bundle, **kwargs)
             AdminAssignedLoopUser(admin_user=adminUser,loop_user=bundle.obj).save()
-            #adminUser.assigned_loopusers.add(bundle.obj)
         
         else:
             send_duplicate_message(int(attempt[0].id))
@@ -628,7 +603,6 @@ class LoopUserAssignedVillageResource(BaseResource):
         return bundle
     
 class CropResource(BaseResource):
-    #crops = fields.ToManyField(CropLanguageResource, 'crops', full=True, null=True, blank=True)
 
     class Meta:
         limit = 0
@@ -654,12 +628,6 @@ class CropResource(BaseResource):
     def obj_update(self, bundle, request=None, **kwargs):
         try:
             bundle = super(CropResource, self).obj_update(bundle, **kwargs)
-            # cropLanguage = CropLanguage.objects.filter(language=language,crop_id=bundle.data['online_id'])
-            # if cropLanguage.count()<1:
-            #     CropLanguage(language=language,crop_id=bundle.data['online_id'],crop_name=crop_name_reg).save()
-            # else:
-            #     cropLanguage[0].crop_name = crop_name_reg
-            #     cropLanguage[0].save()
         except Exception, e:
             attempt = Crop.objects.filter(crop_name=bundle.data['crop_name'])
             send_duplicate_message(int(attempt[0].id))
@@ -704,12 +672,6 @@ class CropLanguageResource(BaseResource):
         bundle.data['language'] = "/loop/api/v1/language/%s/" % preferred_language
         try:
             bundle = super(CropLanguageResource, self).obj_update(bundle, **kwargs)
-            # cropLanguage = CropLanguage.objects.filter(language=language,crop_id=bundle.data['online_id'])
-            # if cropLanguage.count()<1:
-            #     CropLanguage(language=language,crop_id=bundle.data['online_id'],crop_name=crop_name_reg).save()
-            # else:
-            #     cropLanguage[0].crop_name = crop_name_reg
-            #     cropLanguage[0].save()
         except Exception, e:
             attempt = CropLanguage.objects.filter(crop_id=bundle.data['crop']['online_id'],language=preferred_language)
             send_duplicate_message(int(attempt[0].id))
@@ -885,12 +847,6 @@ class VehicleLanguageResource(BaseResource):
         bundle.data['language'] = "/loop/api/v1/language/%s/" % preferred_language
         try:
             bundle = super(VehicleLanguageResource, self).obj_update(bundle, **kwargs)
-            # cropLanguage = CropLanguage.objects.filter(language=language,crop_id=bundle.data['online_id'])
-            # if cropLanguage.count()<1:
-            #     CropLanguage(language=language,crop_id=bundle.data['online_id'],crop_name=crop_name_reg).save()
-            # else:
-            #     cropLanguage[0].crop_name = crop_name_reg
-            #     cropLanguage[0].save()
         except Exception, e:
             attempt = VehicleLanguage.objects.filter(vehicle_id=bundle.data['vehicle']['online_id'],language=preferred_language)
             send_duplicate_message(int(attempt[0].id))
@@ -918,7 +874,6 @@ class TransporterResource(BaseResource):
 
     dehydrate_block = partial(
         foreign_key_to_id, field_name='block', sub_field_names=['id'])
-    # hydrate_block = partial(dict_to_foreign_uri, field_name='village')
 
     def obj_create(self, bundle, request=None, **kwargs):
         attempt = Transporter.objects.filter(transporter_phone=bundle.data['transporter_phone'],

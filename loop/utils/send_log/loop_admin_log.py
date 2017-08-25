@@ -211,7 +211,6 @@ def save_admin_loopuser_mandi_child_log(instance,kwargs):
     District = get_model('loop','District')
     LoopUser = get_model('loop','LoopUser')
     LoopUserAssignedMandi = get_model('loop','LoopUserAssignedMandi')
-    #import pdb;pdb.set_trace()
     admin_user = instance.admin_user
     mandi_queryset = instance.loop_user.get_mandis()
     mandis=[]
