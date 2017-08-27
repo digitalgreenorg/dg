@@ -172,6 +172,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='adminuser',
+            name='state',
+            field=models.ForeignKey(to='loop.State'),
+        ),
+        migrations.AddField(
+            model_name='adminuser',
             name='user',
             field=models.OneToOneField(related_name='admin_user', to=settings.AUTH_USER_MODEL),
         ),

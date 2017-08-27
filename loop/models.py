@@ -229,6 +229,7 @@ class AdminUser(LoopModel):
     name_en = models.CharField(max_length=100)
     preferred_language = models.ForeignKey(Language, null=True)
     is_visible = models.BooleanField(default=True)
+    state = models.ForeignKey(State)
 
     def __unicode__(self):
         return self.name

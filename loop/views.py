@@ -92,10 +92,10 @@ def login(request):
                 {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': admin_user[0].name,
                  'user_id': admin_user[0].user_id,
                  'phone_number': admin_user[0].phone_number, 'user_name': username,
-                 'district': admin_user[0].village.block.district.id,
-                 'helpline': admin_user[0].village.block.district.state.helpline_number,
-                 'phone_digits':admin_user[0].village.block.district.state.phone_digit,
-                 'phone_start':admin_user[0].village.block.district.state.phone_start,
+                 'state': admin_user[0].state,
+                 'helpline': admin_user[0].state.helpline_number,
+                 'phone_digits':admin_user[0].state.phone_digit,
+                 'phone_start':admin_user[0].state.phone_start,
                  'preferred_language':admin_user[0].preferred_language.notation}))
                 
             #return HttpResponse("0", status=401)
