@@ -92,7 +92,7 @@ def login(request):
                 {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': admin_user[0].name,
                  'user_id': admin_user[0].user_id,
                  'phone_number': admin_user[0].phone_number, 'user_name': username,
-                 'state': admin_user[0].state,
+                 'state': admin_user[0].state.id,
                  'helpline': admin_user[0].state.helpline_number,
                  'phone_digits':admin_user[0].state.phone_digit,
                  'phone_start':admin_user[0].state.phone_start,
