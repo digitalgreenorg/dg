@@ -1,5 +1,6 @@
 
-import { Component, OnInit, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
 import { environment } from '../../environments/environment.loop';
 import { GraphsService } from './navs.service';
 import { SharedService } from '../shared.service';
@@ -43,7 +44,7 @@ export class NavsComponent implements OnInit,
   // showDropDownGraphs: boolean = false;
   filters = { 'params': {} };
   constructor(private graphService: GraphsService, private _sharedService: SharedService,
-    private _globalfiltersharedService: GlobalFilterSharedService) {
+    private _globalfiltersharedService: GlobalFilterSharedService, @Inject(DOCUMENT) private document: any) {
     this._sharedService.argsList$.subscribe(filters => {
       if (filters) {
         Object.assign(filters.params, global_filter);
@@ -131,6 +132,9 @@ export class NavsComponent implements OnInit,
       else if (this.navsConfig.navs[nav].DropDownGraph != undefined) {
         let container = this.navsConfig.navs[nav];
         this.setFilterContainer(nav, container);
+      }
+      else if (this.navsConfig.navs[nav].href != undefined) {
+        tempDict['href'] = this.navsConfig.navs[nav].href;
       }
       this.toggleNav[nav] = tempDict;
 
@@ -262,12 +266,15 @@ export class NavsComponent implements OnInit,
     this.resetDict(this.toggleNav, 'status', false);
     this.toggleNav[selectedItem].status = true;
     //set show content for navs with subNavs
-    if ((this.toggleNav[selectedItem].hasOwnProperty('subNavs'))) {
+    if (this.toggleNav[selectedItem].hasOwnProperty('subNavs')) {
       this.toggleNav[selectedItem].subNavs.forEach(subNav => {
         if (this.navsConfig.navs[selectedItem].subNavs[subNav].hasOwnProperty('active')) {
           this.showContent(subNav);
         }
       });
+    }
+    else if (this.toggleNav[selectedItem].hasOwnProperty('href')) {
+      window.open(this.toggleNav[selectedItem].href, "_blank");
     }
     else {
       this.showContent(selectedItem);

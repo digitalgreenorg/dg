@@ -7,7 +7,7 @@ export const navsConfig = {
         'overall': false,
         'recent': false,
       },
-      'class':'col-11',
+      'class': 'col-11',
       'addTab': true,
       'containers': {
         // 'addTab': true,
@@ -118,6 +118,9 @@ export const navsConfig = {
           },
         },
       }
+    },
+    'Payments': {
+      'href': '/loop/dashboard/payment/'
     }
   },
 }
