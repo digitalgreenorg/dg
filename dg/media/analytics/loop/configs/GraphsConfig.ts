@@ -197,7 +197,7 @@ export const chartsConfig = {
       '#F37B55',
       '#656566',
     ],
-     tooltip: {
+    tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
     },
@@ -697,6 +697,7 @@ export const chartsConfig = {
       type: "candlestick",
       renderTo: 'crop_price_range_ts',
       drilldown: false,
+      dropdown: true,
       tab: {
         'class': 'col-sm-11'
       },
@@ -726,5 +727,29 @@ export const chartsConfig = {
       '#656566',
     ],
     series: [],
+    exporting: {
+      buttons: {
+        contextButton: {
+          enabled: false,
+          symbolStrokeWidth: 2
+        },
+        toggle: {
+          text: 'Select Crop',
+          menuItems: [
+          //   {
+          //   text: '0-5',
+          //   onclick: function() {
+          //     this.xAxis[0].setExtremes(0, 5);
+          //   }
+          // }, {
+          //   text: '5-10',
+          //   onclick: function() {
+          //     this.xAxis[0].setExtremes(5, 10);
+          //   }
+          // }
+        ]
+        }
+      }
+    },
   },
 }

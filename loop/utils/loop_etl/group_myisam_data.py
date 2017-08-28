@@ -745,10 +745,11 @@ def crop_price_range_ts(**kwargs):
     for index, row in df_result.iterrows():
         if str(index) not in final_data_list:
             final_data_list[str(index)] = []
-            final_data_list[str(index)].append({})
+            final_data_list[str(index)].extend([{}])
             final_data_list[str(index)][0]['data'] = []
-            final_data_list[str(index)][0]['name'] = 'Crop price range'
+            final_data_list[str(index)][0]['name'] = row['crop_name']
             final_data_list[str(index)][0]['yAxis'] = 0
+
         final_data_list[str(index)][0]['data'].append([row['date'],row['Avg_price'],row['Max_price'],row['Min_price'],row['Avg_price']])#,row['Min_price'],row['Avg_price']
 
     result_data = {}

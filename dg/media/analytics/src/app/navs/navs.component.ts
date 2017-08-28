@@ -5,6 +5,7 @@ import { GraphsService } from './navs.service';
 import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
+import { DropDownItem } from './dropdown.model';
 
 @Component({
   selector: 'app-navs',
@@ -217,17 +218,32 @@ export class NavsComponent implements OnInit,
   private parseDataForStockChart(chart, dataList): void {
     this.clearSeriesFromGraph(chart);
     let data;
-    if (dataList.chartName == 'crop_price_range_ts') {
+    if (chart.chart.chart.dropdown) {
+      this.fillMenuItemForDropDown(chart, dataList);
       data = dataList.data["1"];
     } else {
       data = dataList.data;
     }
-    console.log(dataList.chartName);
-    console.log(data);
+    // console.log(data);
+    // console.log(dataList.chartName);
+    // console.log(chart);
     Object.keys(data).forEach(series => {
       chart.nativeChart.hideLoading();
       chart.nativeChart.addSeries(data[series]);
       chart.chart.series[series] = data[series];
+    });
+  }
+
+  private fillMenuItemForDropDown(chart, dataList): any {
+    // console.log(dataList);
+    // console.log(dataList.data);
+    console.log(chart);
+    Object.keys(dataList.data).forEach(series => {
+      console.log(series);
+      let dropDownItem = new DropDownItem();
+      dropDownItem.text = dataList.data[series][0]['name'];
+      dropDownItem.data = dataList.data[series][0]['data'];
+      chart.chart.exporting.buttons.toggle.menuItems.push(dropDownItem);
     });
   }
 
