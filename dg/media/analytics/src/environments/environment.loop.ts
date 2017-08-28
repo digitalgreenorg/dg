@@ -11,10 +11,10 @@ export const environment = {
   // url: '/loop/',
   url: 'http://127.0.0.1:8000/loop/',
   chartsConfig: chartsConfig,
-  tabsConfig : tabsConfig,
-  cardsConfig : cardConfig,
-  cardGraphConfig : cardGraphConfig,
-  navsConfig : navsConfig,
-  filtersConfig : filtersConfig,
-  generalConfig : generalConfig,
+  tabsConfig: tabsConfig,
+  cardsConfig: cardConfig,
+  cardGraphConfig: cardGraphConfig,
+  navsConfig: navsConfig,
+  filtersConfig: filtersConfig,
+  generalConfig: generalConfig
 };

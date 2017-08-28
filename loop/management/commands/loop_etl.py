@@ -91,6 +91,7 @@ class LoopStatistics():
             df_farmer_count.drop(['distinct_farmer_count'],axis=1,inplace=True)
 
             result = pd.merge(result,df_farmer_count,left_on=['date','country_id'],right_on=['date','country_id'],how='left')
+            result.fillna(value=0,axis=1,inplace=True)
 
             result['cummulative_distinct_farmer'] = result.groupby(by=['country_id'])['cummulative_distinct_farmer'].apply(lambda group: group.ffill())
 
