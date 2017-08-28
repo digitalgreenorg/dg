@@ -1,7 +1,7 @@
 /* This file should contain all the JS for Loop dashboard */
 window.onload = initialize;
 
-var language, selected_tab, selected_parameter, selected_page, country_id = 1;
+var language, selected_tab, selected_parameter, selected_page, country_id = 1, state_id = -1;
 var days_to_average, time_series_frequency;
 //Arrays containing ids and corresponding names as were selected in the filters.
 var aggregator_ids, aggregator_names, crop_ids, crop_names, mandi_ids, mandi_names, gaddidar_ids, gaddidar_names;
@@ -30,6 +30,11 @@ var TAKA = "৳ ";
 var CURRENCY = RUPEE;
 var HINDI_ID = 1;
 var BANGLA_ID = 3;
+var MARATHI_ID = 4;
+var INDIA_ID = 1;
+var BANGLADESH_ID = 2;
+var BIHAR = 1;
+var MAHARASHTRA = 7;
 
 var KG = " Kg";
 
@@ -78,8 +83,8 @@ function initialize() {
   $("#from_date").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
   $("#from_date_drawer").val(today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate());
   showLoader();
-  total_static_data(country_id);
-  recent_graphs_data(language, country_id);
+  total_static_data(country_id, state_id);
+  recent_graphs_data(language, country_id, state_id);
   days_to_average = 15;
 
   gaddidar = true;
@@ -89,7 +94,7 @@ function initialize() {
 
   time_series_frequency = 1;
 
-  get_filter_data(language, country_id);
+  get_filter_data(language, country_id, state_id);
   set_filterlistener();
   $('#aggregator_payment_tab').hide();
   $("#download_payment_sheets").hide();
@@ -412,9 +417,10 @@ var drilldownGraphOptions = {
 
 
 //To compute data for home page overall cards
-function total_static_data(country_id) {
+function total_static_data(country_id, state_id) {
   $.get("/loop/total_static_data/", {
-    'country_id': country_id
+    'country_id': country_id,
+    'state_id': state_id
   }).done(function(data) {
     hideLoader();
     var json_data = JSON.parse(data);
@@ -442,9 +448,10 @@ function total_static_data(country_id) {
 }
 
 //To request data for recent graphs on home page
-function recent_graphs_data(language, country_id) {
+function recent_graphs_data(language, country_id, state_id) {
   $.get("/loop/recent_graphs_data/", {
-    'country_id': country_id
+    'country_id': country_id,
+    'state_id': state_id
   }).done(function(data) {
     var json_data = JSON.parse(data.replace(/\bNaN\b/g, 0));
     aggregated_result = json_data['aggregated_result'];
@@ -653,7 +660,7 @@ function set_filterlistener() {
     time_series_frequency = 1;
     $('#time_series_frequency option[value="' + 1 + '"]').prop('selected', true);
     $('#time_series_frequency').material_select();
-    get_data("", country_id);
+    get_data("", country_id, state_id);
   });
 
   $('#aggregator_all').on('change', function(e) {
@@ -807,7 +814,6 @@ function set_filterlistener() {
       $('#outliers_data').html("");
     }
     aggregator_payment_sheet(payments_data.aggregator_data, aggregator_id, agg_id, aggregator_name_input);
-    //      console.log(payments_data.aggregator_data);
     $("#download_payment_sheets").show();
     $('#aggregator_payment_details').show();
     outliers_summary(aggregator_id);
@@ -856,7 +862,7 @@ function set_filterlistener() {
 
   $('#get_filter_data_button').click(function() {
     gaddidar = true;
-    get_data("", country_id);
+    get_data("", country_id, state_id);
   });
 }
 
@@ -867,10 +873,11 @@ function hidePaymentDetails() {
 }
 
 //To make a call when filters are changed
-function get_filter_data(language, country_id) {
+function get_filter_data(language, country_id, state_id) {
   $.get("/loop/filter_data/", {
       language: language,
-      'country_id': country_id
+      'country_id': country_id,
+      'state_id': state_id
     })
     .done(function(data) {
       var data_json = JSON.parse(data);
@@ -886,14 +893,24 @@ function get_filter_data(language, country_id) {
       if (language == ENGLISH_LANGUAGE)
         fill_crop_filter(crops_for_filter);
       else {
-        // If country is India, then Regional Language is Hindi
-        if (country_id == 1)
-          fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
+        // If country is India, then Regional Language is Hindi/Marathi
+        if (country_id == 1) {
+          if(state_id == 1) {
+            fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
+          }
+          else if (state_id == 7) {
+            fill_crop_filter(croplanguage_for_filter[MARATHI_ID]);
+          }
+          else {
+            //For data of all states in India, regional language is Hindi
+            fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
+          }
+        }
         // If country is Bangladesh, then Regional Language is Bangla
         else if (country_id == 2)
           fill_crop_filter(croplanguage_for_filter[BANGLA_ID]);
       }
-      get_data("", country_id);
+      get_data("", country_id, state_id);
     });
 }
 
@@ -962,7 +979,7 @@ function create_filter(tbody_obj, id, name, checked) {
 }
 
 //To get data after filters are aplied
-function get_data(location, country_id) {
+function get_data(location, country_id, state_id) {
   if (location == 'drawer') {
     start_date = $('#from_date_drawer').val();
     end_date = $('#to_date_drawer').val();
@@ -1014,16 +1031,17 @@ function get_data(location, country_id) {
       }
     });
     // $(".button-collapse1").sideNav('hide');
-    get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id);
-    get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id);
+    get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id, state_id);
+    get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id, state_id);
   }
 }
 
-function get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id) {
+function get_data_for_bar_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id, state_id) {
   $.get("/loop/data_for_drilldown_graphs/", {
       'start_date': start_date,
       'end_date': end_date,
       'country_id': country_id,
+      'state_id': state_id,
       'a_id[]': aggregator_ids,
       'c_id[]': crop_ids,
       'm_id[]': mandi_ids,
@@ -1664,10 +1682,19 @@ function farmer_crop_visits(container, json_data) {
     if (language == ENGLISH_LANGUAGE) {
       series[0]['data'].push([json_data[i]['crop__crop_name'], json_data[i]['farmer__count']]);
     } else {
-      if (country_id == 1)
-        series[0]['data'].push([json_data[i]['crop__crop_name_hi'], json_data[i]['farmer__count']]);
-      else if (country_id == 2)
+      if (country_id == 1){
+        if (state_id == 1){
+          series[0]['data'].push([json_data[i]['crop__crop_name_hi'], json_data[i]['farmer__count']]);
+        }
+        else if (state_id == 7){
+          series[0]['data'].push([json_data[i]['crop__crop_name_mr'], json_data[i]['farmer__count']]);
+        }else{
+          //For data of all states in India, regional language is Hindi
+          series[0]['data'].push([json_data[i]['crop__crop_name_hi'], json_data[i]['farmer__count']]);
+        }
+      } else if (country_id == 2){
         series[0]['data'].push([json_data[i]['crop__crop_name_bn'], json_data[i]['farmer__count']]);
+      }
     }
   }
 
@@ -1676,11 +1703,12 @@ function farmer_crop_visits(container, json_data) {
 }
 
 //Data for Time series grpahs request is being made here
-function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id) {
+function get_data_for_line_graphs(start_date, end_date, aggregator_ids, crop_ids, mandi_ids, gaddidar_ids, country_id, state_id) {
   $.get("/loop/data_for_line_graph/", {
       'start_date': start_date,
       'end_date': end_date,
       'country_id': country_id,
+      'state_id': state_id,
       'a_id[]': aggregator_ids,
       'c_id[]': crop_ids,
       'm_id[]': mandi_ids,
@@ -1703,9 +1731,19 @@ function fill_crop_drop_down() {
   if (language == ENGLISH_LANGUAGE)
     crops_names_time_series = crops_for_filter;
   else {
-    // If country is India, then Regional Language is Hindi
-    if (country_id == 1)
-      crops_names_time_series = croplanguage_for_filter[HINDI_ID];
+    // If country is India, then Regional Language is Hindi/Marathi
+    if (country_id == 1){
+      if(state_id == 1){
+        crops_names_time_series = croplanguage_for_filter[HINDI_ID];
+      }
+      else if(state_id == 7){
+        crops_names_time_series = croplanguage_for_filter[MARATHI_ID];
+      }
+      else{
+        //For data of all states in India, regional language is Hindi
+        crops_names_time_series = croplanguage_for_filter[HINDI_ID];
+      }
+    }
     // If country is Bangladesh, then Regional Language is Bangla
     else if (country_id == 2)
       crops_names_time_series = croplanguage_for_filter[BANGLA_ID];
@@ -4085,35 +4123,68 @@ function change_language(lang) {
   if (language == ENGLISH_LANGUAGE)
     fill_crop_filter(crops_for_filter);
   else {
-    // If country is India, then Regional Language is Hindi
-    if (country_id == 1)
-      fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
+    // If country is India, then Regional Language is Hindi/Marathi
+    if (country_id == 1) {
+      if(state_id == 1) {
+        fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
+      }
+      else if (state_id == 7) {
+        fill_crop_filter(croplanguage_for_filter[MARATHI_ID]);
+      }
+      else {
+        //For data of all states in India, regional language is Hindi
+        fill_crop_filter(croplanguage_for_filter[HINDI_ID]);
+      }
+    }
     // If country is Bangladesh, then Regional Language is Bangla
-    else if (country_id == 2)
+    else if (country_id == 2) {
       fill_crop_filter(croplanguage_for_filter[BANGLA_ID]);
+    }
   }
-  get_data("", country_id);
+  get_data("", country_id, state_id);
   if (selected_page == ANALYTICS_PAGE || selected_page == TIME_SERIES_PAGE) {
     show_nav(selected_page);
   }
 }
 
-function change_country(country) {
-
-  country_id = country;
-  localStorage.country_id = country_id;
-  if (country_id == 1) {
-    CURRENCY = RUPEE;
-    $("#totalpaytext").text("Payments(" + CURRENCY + ")");
-    $("#recentpaytext").text("Payments(" + CURRENCY + ")");
-
+function change_state(state) {
+  state_id = state;
+  if(state_id < 0){
+    //apply only country filter
+    if(state_id == -1) {
+      //India
+      country_id = 1;
+      localStorage.country_id = country_id;
+      CURRENCY = RUPEE;
+      $("#totalpaytext").text("Payments(" + CURRENCY + ")");
+      $("#recentpaytext").text("Payments(" + CURRENCY + ")");
+    } else if(state_id == -2) {
+      //Bangladesh
+      country_id = 2;
+      localStorage.country_id = country_id;
+      CURRENCY = TAKA;
+      $("#totalpaytext").text("Payments(" + CURRENCY + ")");
+      $("#recentpaytext").text("Payments(" + CURRENCY + ")");
+    }
   } else {
-    CURRENCY = TAKA;
-    $("#totalpaytext").text("Payments(" + CURRENCY + ")");
-    $("#recentpaytext").text("Payments(" + CURRENCY + ")");
-
+    //apply country+state filter
+    if(state_id == 1) {
+      //Bihar
+      country_id = 1;
+      localStorage.country_id = country_id;
+      CURRENCY = RUPEE;
+      $("#totalpaytext").text("Payments(" + CURRENCY + ")");
+      $("#recentpaytext").text("Payments(" + CURRENCY + ")");
+    } else if(state_id == 7) {
+      //Maharshtra
+      country_id = 1;
+      localStorage.country_id = country_id;
+      CURRENCY = RUPEE;
+      $("#totalpaytext").text("Payments(" + CURRENCY + ")");
+      $("#recentpaytext").text("Payments(" + CURRENCY + ")");
+    }    
   }
-  total_static_data(country);
-  recent_graphs_data(language, country);
-  get_filter_data(language, country);
+  total_static_data(country_id, state_id);
+  recent_graphs_data(language, country_id, state_id);
+  get_filter_data(language, country_id, state_id);
 }

@@ -165,7 +165,21 @@ def farmer_payments(request):
 def filter_data(request):
     language = request.GET.get('language')
     country_id = request.GET.get('country_id')
-    aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id')
+    state_id = request.GET.get('state_id')
+
+    if(int(state_id) < 0):
+        #country filter
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id')
+        mandis = Mandi.objects.filter(district__state__country=country_id).values('id', 'mandi_name', 'mandi_name_en')
+        gaddidars = Gaddidar.objects.filter(mandi__district__state__country=country_id).values(
+        'id', 'gaddidar_name', 'gaddidar_name_en')
+    elif(int(state_id)>0):
+        #state filter
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id')
+        mandis = Mandi.objects.filter(district__state=state_id).values('id', 'mandi_name', 'mandi_name_en')
+        gaddidars = Gaddidar.objects.filter(mandi__district__state=state_id).values(
+        'id', 'gaddidar_name', 'gaddidar_name_en')
+    
     # villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
     crops_lang = CropLanguage.objects.values('crop_id', 'crop_name', 'language_id')
@@ -175,27 +189,60 @@ def filter_data(request):
             crops_language[obj['language_id']] = list()
         crops_language[obj['language_id']].append({'id': obj['crop_id'],
                                             'crop_name': obj['crop_name']})
-    mandis = Mandi.objects.filter(district__state__country=country_id).values('id', 'mandi_name', 'mandi_name_en')
-    gaddidars = Gaddidar.objects.filter(mandi__district__state__country=country_id).values(
-        'id', 'gaddidar_name', 'gaddidar_name_en')
+    
     # transporters = Transporter.objects.values('id', 'transporter_name')
     data_dict = {'aggregators': list(aggregators), 'crops': list(crops),
                  'mandis': list(mandis), 'gaddidars': list(gaddidars), 'croplanguage': crops_language}
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
+def jsonify(data):
+    if isinstance(data, dict):
+        json_data = dict()
+        for key, value in data.items():
+            if isinstance(value, list): # for lists
+                for i, item in enumerate(value):
+                    value[i] = jsonify(value[i])
+            if isinstance(value, unicode):
+                value = value.encode("utf-8")
+            if isinstance(value, dict): # for nested lists
+                value = jsonify(value)
+            if type(value).__module__=='numpy': # if value is numpy.*: > to python list
+                value = value.tolist()
+            json_data[str(key)] = value
+        return json_data
+
+    elif isinstance(data, list):
+        for i, item in enumerate(data):
+            data[strr(i)] = jsonify(data[i])
+        return data
+    
+    elif type(data).__module__=='numpy':
+        data = data.tolist()
+        return data
+
+    else:
+        return data
 
 def total_static_data(request):
     country_id = request.GET['country_id'] #To be fetched from request
-    total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('farmer').distinct().count()
-    total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).count()
+    state_id = request.GET['state_id']
+    if(int(state_id) < 0):
+        #Only country filter
+        total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('farmer').distinct().count()
+        total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).count()
+    elif(int(state_id) > 0):
+        #state filter
+        total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state=state_id).values('farmer').distinct().count()
+        total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).count()
 
-    aggregated_result, cum_vol_farmer = get_data_from_myisam(1, country_id)
+
+    aggregated_result, cum_vol_farmer = get_data_from_myisam(1, country_id, state_id)
 
     chart_dict = {'total_farmers_reached': total_farmers_reached,
                   'total_cluster_reached': total_cluster_reached,
                   'aggregated_result': aggregated_result}
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+    data = json.dumps(jsonify(chart_dict), cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
 
@@ -323,10 +370,11 @@ def crop_language_data(request):
 
 def recent_graphs_data(request):
     country_id = request.GET['country_id'] #To be fetched from request
-    aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id)
+    state_id = request.GET['state_id']
+    aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id, state_id)
 
     chart_dict = {'aggregated_result': aggregated_result, 'cummulative_vol_farmer': cummulative_vol_farmer}
-    data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+    data = json.dumps(jsonify(chart_dict), cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
 
@@ -338,6 +386,8 @@ def data_for_drilldown_graphs(request):
     mandi_ids = request.GET.getlist('m_id[]')
     gaddidar_ids = request.GET.getlist('g_id[]')
     country_id = request.GET['country_id'] #To be fetched from request
+    state_id = request.GET['state_id']
+
     filter_args = {}
     filter_transportation = {}
     filter_args_no_crops = {}
@@ -363,6 +413,11 @@ def data_for_drilldown_graphs(request):
     filter_transportation["user_created__id__in"] = aggregator_ids
     filter_transportation["mandi__id__in"] = mandi_ids
     filter_transportation["mandi__district__state__country"] = country_id
+    if (int(state_id) > 0):
+        #set state filter also
+        filter_args["mandi__district__state"] = state_id
+        filter_args_no_crops["mandi__district__state"] = state_id
+        filter_transportation["mandi__district__state"] = state_id
 
     total_repeat_farmers = CombinedTransaction.objects.filter(
         **filter_args).values('user_created__id', 'farmer').annotate(farmer_count=Count('farmer'))
@@ -403,6 +458,11 @@ def data_for_drilldown_graphs(request):
             crop_obj['crop__crop_name_bn'] = language_wise_crop_name[3][crop_obj['crop__id']]
         else:
             crop_obj['crop__crop_name_bn'] = crop_obj['crop__crop_name']
+        # For Marathi Language
+        if crop_obj['crop__id'] in language_wise_crop_name[4]:
+            crop_obj['crop__crop_name_mr'] = language_wise_crop_name[4][crop_obj['crop__id']]
+        else:
+            crop_obj['crop__crop_name_mr'] = crop_obj['crop__crop_name']
 
     mandi_crop_prices = CombinedTransaction.objects.filter(
         **filter_args).values('crop__id', 'mandi__id').annotate(Min('price'), Max('price'))
@@ -437,6 +497,7 @@ def data_for_line_graph(request):
     mandi_ids = request.GET.getlist('m_id[]')
     gaddidar_ids = request.GET.getlist('g_id[]')
     country_id = request.GET['country_id'] #To be fetched from request
+    state_id = request.GET['state_id']
     filter_args = {}
     filter_transportation = {}
     if (start_date != ""):
@@ -453,6 +514,10 @@ def data_for_line_graph(request):
     filter_transportation["user_created__id__in"] = aggregator_ids
     filter_transportation["mandi__id__in"] = mandi_ids
     filter_transportation["mandi__district__state__country"] = country_id
+
+    if(int(state_id) > 0):
+        filter_args["mandi__district__state"] = state_id
+        filter_transportation["mandi__district__state"] = state_id
 
     transport_data = DayTransportation.objects.filter(**filter_transportation).values(
         'date').order_by('date').annotate(Sum('transportation_cost'), farmer_share__sum=Avg('farmer_share'))
