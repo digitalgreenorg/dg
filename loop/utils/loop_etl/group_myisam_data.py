@@ -101,9 +101,30 @@ def get_data_from_myisam(get_total, country_id, state_id):
             dictionary[day] = list(data_by_grouped_days.values())
 
         # Calcualting cummulative volume and farmer count
-        df_cum_vol_farmer = df_result.groupby(['date', 'state_id']).agg(aggregate_cumm_vol_farmer_state).reset_index().groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
-        df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
-        df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
+        df_state_cum_vol_farmer = df_result.groupby(['date', 'state_id']).agg(aggregate_cumm_vol_farmer_state).reset_index()#.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
+        # Aggregate Manually
+        df_cum_vol_farmer = pd.DataFrame(columns=('date', 'cum_distinct_farmer', 'cum_vol'))
+        index = 0
+        curr_date = df_state_cum_vol_farmer['date'][0]
+        state_wise_farmer = {}
+        cum_vol = 0
+        for i, row in df_state_cum_vol_farmer.iterrows():
+            if row['date'] == curr_date:
+                cum_vol += row['quantity']
+                state_wise_farmer[row['state_id']] = row['cum_distinct_farmer']
+            else:
+                df_cum_vol_farmer.loc[index, 'date'] = curr_date
+                df_cum_vol_farmer.loc[index, 'cum_distinct_farmer'] = sum(state_wise_farmer.values())
+                df_cum_vol_farmer.loc[index, 'cum_vol'] = cum_vol
+                index += 1
+                curr_date = row['date']
+                cum_vol += row['quantity']
+                state_wise_farmer[row['state_id']] = row['cum_distinct_farmer']
+        df_cum_vol_farmer.loc[index, 'date'] = curr_date
+        df_cum_vol_farmer.loc[index, 'cum_distinct_farmer'] = sum(state_wise_farmer.values())
+        df_cum_vol_farmer.loc[index, 'cum_vol'] = cum_vol
+        # df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
+        # df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
         cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
     else:
         df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
