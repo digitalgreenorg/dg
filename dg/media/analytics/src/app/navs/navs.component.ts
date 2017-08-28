@@ -24,6 +24,7 @@ export class NavsComponent implements OnInit,
   //read config files from environment created for each app
   navsConfig = environment.navsConfig;
   chartsConfig = environment.chartsConfig;
+  generalConfig = environment.generalConfig;
 
   //initialize modules as false and toggle based on user configuration
   overall: false;
