@@ -20,9 +20,10 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, AdminUser
 
-from loop.utils.send_log.loop_data_log import get_latest_timestamp
+import loop.utils.send_log.loop_data_log as loop_log
+import loop.utils.send_log.loop_admin_log as admin_log
 from loop.payment_template import *
 from loop.utils.ivr_helpline.helpline_data import helpline_data, BROADCAST_S3_AUDIO_URL, BROADCAST_PENDING_TIME, \
     HELPLINE_LOG_FILE
@@ -65,22 +66,39 @@ def login(request):
             except ApiKey.DoesNotExist:
                 api_key = ApiKey.objects.create(user=user)
                 api_key.save()
-            log_object = get_latest_timestamp()
+            log_object = loop_log.get_latest_timestamp()
             return HttpResponse(json.dumps(
-                {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name,
-                 'user_id': loop_user[0].user_id,
-                 'mode': loop_user[0].mode, 'phone_number': loop_user[0].phone_number, 'user_name': username,
-                 'district': loop_user[0].village.block.district.id, 'days_count': loop_user[0].days_count,
-                 'helpline': loop_user[0].village.block.district.state.helpline_number,
-                 'crop_add': loop_user[0].village.block.district.state.crop_add,
-                 'phone_digits':loop_user[0].village.block.district.state.phone_digit,
-                 'phone_start':loop_user[0].village.block.district.state.phone_start,
-                 'preferred_language':loop_user[0].preferred_language.notation,
-                 'country':loop_user[0].village.block.district.state.country.country_name}))
-
-
+                    {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name,
+                    'user_id': loop_user[0].user_id,
+                    'mode': loop_user[0].mode, 'phone_number': loop_user[0].phone_number, 'user_name': username,
+                    'district': loop_user[0].village.block.district.id, 'days_count': loop_user[0].days_count,
+                    'helpline': loop_user[0].village.block.district.state.helpline_number,
+                    'crop_add': loop_user[0].village.block.district.state.crop_add,
+                    'phone_digits':loop_user[0].village.block.district.state.phone_digit,
+                    'phone_start':loop_user[0].village.block.district.state.phone_start,
+                    'preferred_language':loop_user[0].preferred_language.notation,
+                    'country':loop_user[0].village.block.district.state.country.country_name}))
         else:
-            return HttpResponse("0", status=401)
+            admin_user = AdminUser.objects.filter(user = user)
+            if user is not None and user.is_active and admin_user.count()>0:
+                auth.login(request,user)
+                try:
+                    api_key = ApiKey.objects.get(user=user)
+                except ApiKey.DoesNotExist:
+                    api_key = ApiKey.objects.create(user=user)
+                    api_key.save()
+                log_object = admin_log.get_latest_timestamp()
+                return HttpResponse(json.dumps(
+                {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': admin_user[0].name,
+                 'user_id': admin_user[0].user_id,
+                 'phone_number': admin_user[0].phone_number, 'user_name': username,
+                 'state': admin_user[0].state.id,
+                 'helpline': admin_user[0].state.helpline_number,
+                 'phone_digits':admin_user[0].state.phone_digit,
+                 'phone_start':admin_user[0].state.phone_start,
+                 'preferred_language':admin_user[0].preferred_language.notation}))
+                
+            #return HttpResponse("0", status=401)
     else:
         return HttpResponse("0", status=403)
     return HttpResponse("0", status=400)

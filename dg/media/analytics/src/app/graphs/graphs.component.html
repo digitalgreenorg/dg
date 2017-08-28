@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <tabset [justified]="true">
-    <tab *ngFor="let tab of tabs" [heading]="tab.heading" [id]="tab.id">
-      <br><br>
+    <tab *ngFor="let tab of tabs" [heading]="tab.heading" [id]="tab.id" customClass="customClass">
+      <br>
       <div class="row">
         <div *ngFor="let div of tab.showDivs" [class]="div.class">
           <div [id]="div.id"></div>

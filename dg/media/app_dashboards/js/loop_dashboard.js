@@ -244,7 +244,7 @@ var bullet_options = {
   type: "bullet",
   width: "100",
   height: "30",
-  performanceColor: '#00bfbf',
+  performanceColor: '#EF5928',
   rangeColors: ['#a2d6d6'],
   targetColor: '#ffffff'
 }
@@ -253,14 +253,17 @@ var sparkline_option = {
   type: 'line',
   width: '150',
   height: '60',
-  lineColor: '#00bfbf',
-  fillColor: '#dde1df',
+  lineColor: '#EF5928',
+  fillColor: '#e1e2e4',
   lineWidth: 2
 }
 
 var generalOptions = {
   title: {
-    text: null
+    text: null,
+    style: {
+      color: '#3D3D3F'
+    }
   },
   subtitle: {
     text: null
@@ -273,7 +276,11 @@ var generalOptions = {
   },
   exporting: {
     enabled: false
-  }
+  },
+  colors: [
+    '#F37B55',
+    '#656566',
+  ],
 }
 
 var timeSeriesMasterOptions = {
@@ -393,7 +400,12 @@ var drilldownGraphOptions = {
       text: null
     },
     min: 0,
-    gridLineColor: 'transparent'
+    gridLineColor: 'transparent',
+    labels: {
+      style: {
+        color: '#9AA0A7'
+      }
+    }
   },
   scrollbar: {
     enabled: true
@@ -498,8 +510,8 @@ function plot_cards_data() {
 function cummulative_farmer_and_volume(cum_vol_farmer) {
   var all_dates = [];
   var vol_farmer_length = Object.keys(cum_vol_farmer).length;
-  var first_date = new Date(cum_vol_farmer[0]['date']+"T23:59:00");
-  var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date']+"T23:59:00");
+  var first_date = new Date(cum_vol_farmer[0]['date'] + "T23:59:00");
+  var last_date = new Date(cum_vol_farmer[vol_farmer_length - 1]['date'] + "T23:59:00");
   while (first_date <= last_date) {
     all_dates.push(first_date.getTime());
     first_date.setDate(first_date.getDate() + 1);
@@ -525,7 +537,7 @@ function cummulative_farmer_and_volume(cum_vol_farmer) {
   temp_farmers['showInLegend'] = true;
 
   for (var i = 0; i < vol_farmer_length; i++) {
-    var date_to_find = new Date(cum_vol_farmer[i]['date']+"T23:59:00");
+    var date_to_find = new Date(cum_vol_farmer[i]['date'] + "T23:59:00");
     var index = all_dates.indexOf(date_to_find.getTime());
     cumm_farmers[index] = cum_vol_farmer[i]['cum_distinct_farmer'];
     cumm_volume[index] = cum_vol_farmer[i]['cum_vol'];
@@ -1764,21 +1776,21 @@ function show_line_graphs() {
       'name': "Volume",
       'type': 'areaspline',
       'data': [],
-      'color': 'rgba(0,0,0,0.3)',
+      // 'color': 'rgba(0,0,0,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }, {
       'name': "Amount",
       'type': 'areaspline',
       'data': [],
-      'color': 'rgba(0,0,255,0.3)',
+      // 'color': 'rgba(0,0,255,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }, {
       'name': "Farmers",
       'type': 'column',
       'data': [],
-      'color': 'rgba(0,255,0,0.3)',
+      // 'color': 'rgba(0,255,0,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }];
@@ -1787,14 +1799,14 @@ function show_line_graphs() {
       'name': "Cost per Kg",
       'type': 'areaspline',
       'data': [],
-      'color': 'rgba(0,0,255,0.3)',
+      // 'color': 'rgba(0,0,255,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }, {
       'name': "Sustainability per Kg",
       'type': 'areaspline',
       'data': [],
-      'color': 'rgba(0,255,0,0.3)',
+      // 'color': 'rgba(0,255,0,0.3)',
       'pointStart': all_dates[0],
       'pointInterval': 24 * 3600 * 1000
     }];
@@ -2024,6 +2036,13 @@ function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart
     format = '{point.y:.0f}';
   }
 
+  drilldown['activeAxisLabelStyle'] = {
+    color: "#9AA0A7"
+  };
+  drilldown['activeDataLabelStyle'] = {
+    color: "#9AA0A7"
+  };
+
   var chart1 = container_obj.highcharts(Highcharts.merge(generalOptions, drilldownGraphOptions, {
     chart: {
       type: chart_type,
@@ -2032,12 +2051,27 @@ function plot_drilldown(container_obj, dict, drilldown, floats, max_scale, chart
     xAxis: [{
       type: 'category',
       max: max,
+      labels: {
+        style: {
+          color: '#9AA0A7'
+        }
+      }
     }, {
       type: 'category',
-      max: null
+      max: null,
+      labels: {
+        style: {
+          color: '#9AA0A7'
+        }
+      }
     }],
     yAxis: {
       max: max_scale
+    },
+    labels: {
+      style: {
+        color: '#9AA0A7'
+      }
     },
     plotOptions: {
       series: {
@@ -2241,7 +2275,7 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
         id: 'mask-before',
         from: dict[0]['data'][0][0],
         to: dict[0]['data'][dict[0]['data'].length - 1][0],
-        color: 'rgba(0, 0, 0, 0.2)'
+        color: 'rgba(0, 0, 0, 0.1)'
       }],
       title: {
         text: null
@@ -2252,7 +2286,7 @@ function createMasterForTimeSeries(detail_container, master_container, dict, cha
       series: {
         fillColor: {
           stops: [
-            [0, Highcharts.getOptions().colors[0]],
+            [0, 'rgba(240,90,41,0.5)'], //Highcharts.getOptions().colors[0]
             [1, 'rgba(255,255,255,0)']
           ]
         }
@@ -4033,9 +4067,9 @@ function plot_solid_guage(container, minimum, present, target) {
     // the value axis
     yAxis: {
       stops: [
-        [0.1, '#DF5353'],
-        [0.5, '#DDDF0D'],
-        [0.9, '#55BF3B']
+        [0.1, '#D14027'],
+        [0.5, '#D3E7B6'],
+        [0.9, '#7AC143']
       ],
       lineWidth: 0,
       minorTickInterval: null,
@@ -4070,8 +4104,7 @@ function plot_solid_guage(container, minimum, present, target) {
       name: 'Present',
       data: [present],
       dataLabels: {
-        format: '<div style="text-align:center"><span style="font-size:16px;color:' +
-          ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">' + present.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</span><br/>' +
+        format: '<div style="text-align:center"><span style="font-size:16px;color:#3D3D3F">' + present.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</span><br/>' +
           '</div>'
       },
       tooltip: {
