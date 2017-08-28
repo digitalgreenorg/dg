@@ -4,3 +4,6 @@
 body, html {
     font-family: 'Montserrat', sans-serif;
 }
+.bg-inverse {
+    background: #3D3D3F !important;
+}
