@@ -1,5 +1,6 @@
 import { Component, OnInit, Pipe, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT,Title } from '@angular/platform-browser';
+import { environment } from '../environments/environment.loop';
 
 export var global_filter: any;
 
@@ -10,12 +11,15 @@ export var global_filter: any;
   providers: []
 })
 
-export class AppComponent {
-
-  constructor( @Inject(DOCUMENT) private document: any) {
+export class AppComponent implements OnInit {
+  generalConfig = environment.generalConfig;
+  constructor( @Inject(DOCUMENT) private document: any, private titleService: Title) {
     global_filter = this.parseUrl(this.document.location.href);
   }
-
+  defaults: any;
+  ngOnInit() :void { 
+    this.setTitle (this.generalConfig.title);
+  }
   private parseUrl(url): any {
     let param = url.split('?');
     let res = {}
@@ -28,5 +32,9 @@ export class AppComponent {
       }
     }
     return res;
+  }
+
+  public setTitle( newTitle: string) {
+    this.titleService.setTitle( 'Loop' );
   }
 }
