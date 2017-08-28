@@ -70,7 +70,7 @@ def recent_graphs_data(**kwargs):
     # algorithm to store column wise grouped data
     res = {}
     res['cpk'] = generate_res_recent('cpk', 'recentcardGraphs', 'cpk' , {})
-    res['quantity__sum'] = generate_res_recent('quantity__sum', 'recentcardGraphs', 'quantity__sum' , {}) 
+    res['quantity__sum'] = generate_res_recent('quantity__sum', 'recentcardGraphs', 'quantity__sum' , {})
     res['amount__sum'] = generate_res_recent('amount__sum','recentcardGraphs', 'amount__sum' , {})
     res['distinct_farmer_count'] = generate_res_recent('distinct_farmer_count', 'recentcardGraphs', 'distinct_farmer_count' , {})
     res['spk'] = generate_res_recent('spk', 'recentcardGraphs', 'spk' , {})
@@ -90,7 +90,6 @@ def recent_graphs_data(**kwargs):
                         v = 0
                 res[k]['value'][key].append(v)
 
-    print res
     data = []
     data.append(res['cpk']);
     data.append(res['quantity__sum'])
@@ -248,9 +247,7 @@ def send_filter_data(request):
     # language = request.GET.get('language')
     filter_args = extract_filters_request(request)
     country_id = filter_args['country_id']
-    print country_id
     #TODO: apply country filter and language filter
-    # country_id = 1
     response_list = []
     aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
     aggregator_list = aggregator_data.annotate(id=F('user_id')).values('id', 'value')

@@ -13,6 +13,7 @@ from django.db.models import Count, Sum, Avg
 import inspect
 from loop.utils.loop_etl.get_gaddidar_share import compute_gaddidar_share
 from loop.utils.loop_etl.get_aggregator_share import compute_aggregator_share
+from loop.constants.constants import *
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -38,7 +39,7 @@ class LoopStatistics():
             self.mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
             # .cursor()
 
-            df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id', 'user__id', 'name_en', 'village__block__district__state__id', 'village__block__district__state__country__id')))
+            df_loopuser = pd.DataFrame(list(LoopUser.objects.filter(role = ROLE_CHOICE_AGGREGATOR).values('id', 'user__id', 'name_en', 'village__block__district__state__id', 'village__block__district__state__country__id')))
             df_loopuser.rename(columns={"user__id":"user_created__id", "name_en":"name", "village__block__district__state__id":"state_id", "village__block__district__state__country__id":"country_id"},inplace=True)
 
             print "Loop User Shape",df_loopuser.shape

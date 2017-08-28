@@ -6,6 +6,7 @@ import numpy as np
 from loop.utils.loop_etl.aggregation_methods import *
 from loop.models import CombinedTransaction
 from loop.utils.utility import get_init_sql_ds, join_sql_ds
+from loop.constants.constants import *
 
 def get_grouped_data(df_result_aggregate,day,df_farmers):
     start_date = df_result_aggregate['date'].min()
@@ -40,7 +41,6 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     return data_by_grouped_days
 
 def sql_query(**kwargs):
-    #TODO : apply country filter
     country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
     username = DATABASES['default']['USER']
@@ -56,7 +56,7 @@ def sql_query(**kwargs):
     sql_ds['join'].append(['loop_mandi lm', 'lm.id = lct.mandi_id'])
     sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
     sql_ds['join'].append(['loop_farmer lf', 'lf.id = lct.farmer_id'])
-    sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id'])
+    sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id and lu.role = ' + str(ROLE_CHOICE_AGGREGATOR)])
     sql_ds['join'].append(['loop_district ld', 'ld.id = lm.district_id'])
     sql_ds['join'].append(['loop_state ls', 'ls.id = ld.state_id'])
     sql_ds['join'].append(['loop_country lc', 'lc.id = ls.country_id'])
@@ -107,7 +107,6 @@ def query_myisam(**kwargs):
         if(state_id) :
             sql_ds['where'].append('state_id = ' + str(state_id))
     sql_q = join_sql_ds(sql_ds)
-    print sql_q
     df_result = pd.read_sql(sql_q, con=mysql_cn)
     return df_result
 
@@ -125,7 +124,7 @@ def crop_prices_query( **kwargs):
     sql_ds['from'].append('loop_combinedtransaction lct')
     sql_ds['join'].append(['loop_mandi lm', 'lm.id = lct.mandi_id'])
     sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
-    sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id'])
+    sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id and lu.role = ' + str(ROLE_CHOICE_AGGREGATOR)])
     sql_ds['join'].append(['loop_district ld', 'ld.id = lm.district_id'])
     sql_ds['join'].append(['loop_state ls', 'ls.id = ld.state_id'])
     sql_ds['join'].append(['loop_country lc', 'lc.id = ls.country_id'])
