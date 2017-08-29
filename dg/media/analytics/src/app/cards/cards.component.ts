@@ -69,7 +69,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
           'text': this.cardsConfigs[key].text
         });
       } else if (this.cardsConfigs[key].overall.graph) {
-        console.log(this.cardsConfigs[key])
         this.overallcharts.push({
           tagName: this.cardsConfigs[key].overall.text,
           title: this.cardsConfigs[key].text,

@@ -460,7 +460,7 @@ export const cardGraphConfig = {
     chart: {
       margin: [40, 10, 40, 40],
       height: 160,
-      width: 200,
+      width: 160,
       type: 'area',
     },
     title: '#Clusters_spark',
