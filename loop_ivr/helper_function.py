@@ -189,4 +189,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         send_info(from_number, final_result)
     else:
         price_info_incoming_obj.save()
+    # If caller is calls first time then send crop code to them.
+    if not PriceInfoIncoming.objects.filter(from_number=from_number).exists():
+        send_sms(AGGREGATOR_SMS_NO, from_number, crop_and_code)
     PriceInfoLog.objects.bulk_create(price_info_log_list)
