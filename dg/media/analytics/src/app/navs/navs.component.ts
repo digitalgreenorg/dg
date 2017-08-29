@@ -1,5 +1,6 @@
 
-import { Component, OnInit, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
 import { environment } from '../../environments/environment.loop';
 import { GraphsService } from './navs.service';
 import { SharedService } from '../shared.service';
@@ -25,6 +26,7 @@ export class NavsComponent implements OnInit,
   //read config files from environment created for each app
   navsConfig = environment.navsConfig;
   chartsConfig = environment.chartsConfig;
+  generalConfig = environment.generalConfig;
 
   //initialize modules as false and toggle based on user configuration
   overall: false;
@@ -43,7 +45,7 @@ export class NavsComponent implements OnInit,
   // showDropDownGraphs: boolean = false;
   filters = { 'params': {} };
   constructor(private graphService: GraphsService, private _sharedService: SharedService,
-    private _globalfiltersharedService: GlobalFilterSharedService) {
+    private _globalfiltersharedService: GlobalFilterSharedService, @Inject(DOCUMENT) private document: any) {
     this._sharedService.argsList$.subscribe(filters => {
       if (filters) {
         Object.assign(filters.params, global_filter);
@@ -131,6 +133,9 @@ export class NavsComponent implements OnInit,
       else if (this.navsConfig.navs[nav].DropDownGraph != undefined) {
         let container = this.navsConfig.navs[nav];
         this.setFilterContainer(nav, container);
+      }
+      else if (this.navsConfig.navs[nav].href != undefined) {
+        tempDict['href'] = this.navsConfig.navs[nav].href;
       }
       this.toggleNav[nav] = tempDict;
 
@@ -237,12 +242,14 @@ export class NavsComponent implements OnInit,
   private fillMenuItemForDropDown(chart, dataList): any {
     // console.log(dataList);
     // console.log(dataList.data);
-    console.log(chart);
     Object.keys(dataList.data).forEach(series => {
-      console.log(series);
+      // console.log(series);
       let dropDownItem = new DropDownItem();
       dropDownItem.text = dataList.data[series][0]['name'];
       dropDownItem.data = dataList.data[series][0]['data'];
+      dropDownItem.onclick = function() {
+        this.series[0].update({ data: dropDownItem.data, name: dropDownItem.text });
+      };
       chart.chart.exporting.buttons.toggle.menuItems.push(dropDownItem);
     });
   }
@@ -285,12 +292,15 @@ export class NavsComponent implements OnInit,
     this.resetDict(this.toggleNav, 'status', false);
     this.toggleNav[selectedItem].status = true;
     //set show content for navs with subNavs
-    if ((this.toggleNav[selectedItem].hasOwnProperty('subNavs'))) {
+    if (this.toggleNav[selectedItem].hasOwnProperty('subNavs')) {
       this.toggleNav[selectedItem].subNavs.forEach(subNav => {
         if (this.navsConfig.navs[selectedItem].subNavs[subNav].hasOwnProperty('active')) {
           this.showContent(subNav);
         }
       });
+    }
+    else if (this.toggleNav[selectedItem].hasOwnProperty('href')) {
+      window.open(this.toggleNav[selectedItem].href, "_blank");
     }
     else {
       this.showContent(selectedItem);

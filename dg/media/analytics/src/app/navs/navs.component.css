@@ -1,5 +1,15 @@
 .container-box {
   box-shadow: 0 0 8px grey;
   padding: 15px 15px 15px 15px;
-  margin: 8px 8px 8px 8px;
+  margin: 8px 0px 8px 25px;
 }
+
+/*.box-size-half {
+  width: 100%;
+  height: 100%;
+}
+
+.box-size-full {
+  width: 90%;
+  height: 50%;
+}*/

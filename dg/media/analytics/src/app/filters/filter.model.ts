@@ -10,4 +10,5 @@ export class Filter {
   initialLoad: boolean;
   changed: boolean = false;
   select_all: boolean = false;
+  show_icon:string = '+';
 }

@@ -68,8 +68,13 @@ def recent_graphs_data(**kwargs):
     chart_dict = {'aggregated_result': aggregated_result}
 
     # algorithm to store column wise grouped data
-
     res = {}
+    res['cpk'] = generate_res_recent('cpk', 'recentcardGraphs', 'cpk' , {})
+    res['quantity__sum'] = generate_res_recent('quantity__sum', 'recentcardGraphs', 'quantity__sum' , {})
+    res['amount__sum'] = generate_res_recent('amount__sum','recentcardGraphs', 'amount__sum' , {})
+    res['distinct_farmer_count'] = generate_res_recent('distinct_farmer_count', 'recentcardGraphs', 'distinct_farmer_count' , {})
+    res['spk'] = generate_res_recent('spk', 'recentcardGraphs', 'spk' , {})
+    res['active_cluster'] = generate_res_recent( 'active_cluster','recentcardGraphs', 'active_cluster' , {})
     for key, aggregated_value in aggregated_result.iteritems():
         for data in aggregated_value:
             for k, v in data.iteritems():
@@ -94,10 +99,14 @@ def recent_graphs_data(**kwargs):
     data.append(res['active_cluster'])
     return data
 
-def generate_res_recent(res, key, placeHolder, tagName, value):
-    res[key]['placeHolder'] = placeHolder
-    res[key]['tagName'] = tagName
-    res[key]['value'] = value
+def generate_res_recent(key, placeHolder, tagName, value):
+    res = {}
+    res['placeHolder'] = placeHolder
+    res['tagName'] = tagName
+    res['value'] = {}
+    res['value']['15'] = []
+    res['value']['30'] = []
+    res['value']['60'] = []
     return res
 
 
@@ -129,40 +138,46 @@ def get_cluster_related_data(**filter_args):
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'No_of_clusters_overall',
-        'value': total_cluster_reached
+        'value': 0 if(isNAN(total_cluster_reached)) else total_cluster_reached
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'No_of_farmers_overall',
-        'value': total_farmers_reached
+        'value': 0 if(isNAN(total_farmers_reached)) else total_farmers_reached
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'Volume_overall',
-        'value': volume
+        'value': 0 if(isNAN(volume)) else  volume
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'Payments_overall',
-        'value': amount
+        'value':  0 if(isNAN(amount)) else amount
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'Cost_per_kg_overall',
-        'value':-cpk
+        'value': -1 if(isNAN(cpk)) else -cpk
     })
 
     data.append({
         'placeHolder':'overallcardGraphs',
         'tagName':'Sustainability_overall',
-        'value':spk
+        'value': 0 if(isNAN(spk)) else spk
     })
 
     return data
+
+def isNAN(v) :
+    if type(v) is float:
+        if(math.isnan(float(v))) :
+            return True
+    return False
 
 def get_card_graph_data(request):
     query_list = []
@@ -234,9 +249,7 @@ def send_filter_data(request):
     # language = request.GET.get('language')
     filter_args = extract_filters_request(request)
     country_id = filter_args['country_id']
-    print country_id
     #TODO: apply country filter and language filter
-    # country_id = 1
     response_list = []
     aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
     aggregator_list = aggregator_data.annotate(id=F('user_id')).values('id', 'value')

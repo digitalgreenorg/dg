@@ -4,6 +4,7 @@ import { GlobalFilterService } from './global-filter.service'
 import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
+
 @Component({
   selector: 'app-global-filter',
   templateUrl: './global-filter.component.html',
@@ -11,9 +12,10 @@ import { GlobalFilterSharedService } from '../global-filter/global-filter-shared
 })
 export class GlobalFilterComponent implements OnInit {
   Dropdownitems: GlobalFilter[] = [];
+  country: string = '';
+
   constructor(private _globalfilter: GlobalFilterService, private _sharedService: SharedService,
     private _globalfiltersharedService: GlobalFilterSharedService) { }
-  private country: string = '';
 
   ngOnInit() {
     this._globalfilter.getData().subscribe(data => {
@@ -33,13 +35,14 @@ export class GlobalFilterComponent implements OnInit {
 
   updateDropdown(item) {
     this.country = item.value;
-    console.log(item);
+    for (const prop of Object.keys(global_filter)) {
+      delete global_filter[prop];
+    }
     global_filter[item.tagName] = item.id;
     // TODO : if Dropdown level more than 2 => handling
-    if(item.parentTag) {
+    if (item.parentTag) {
       global_filter[item.parentTag] = item.parentId;
     }
-    console.log(global_filter);
     this._globalfiltersharedService.publishData();
     // this._sharedService.publishData(global_filter);
   }

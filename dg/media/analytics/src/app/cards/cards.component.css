@@ -2,8 +2,13 @@
   box-shadow: 0 0 8px grey;
   padding: 15px 15px 15px 15px;
 }
+
 .container-fluid {
   width: 100%;
   box-shadow: 0 0 8px grey;
   padding: 15px 15px 15px 15px;
+}
+
+.highcharts-yaxis-grid .highcharts-grid-line {
+  display: none;
 }

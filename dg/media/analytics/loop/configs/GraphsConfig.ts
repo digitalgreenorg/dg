@@ -1,11 +1,23 @@
+const colors = [
+  '#F37B55',
+  '#656566',
+];
+
+const tooltip = {
+  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+  pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+};
+
 export const chartsConfig = {
   'cummulativeCount': {
     chart: {
       type: 'spline',
       renderTo: 'cummulativeCount',
       tab: {
-        'class': 'col-sm-12'
+        'class': 'col'
       },
+      // width:500,
+      // height: 230,
     },
     type: "StockChart",
     rangeSelector: {
@@ -28,10 +40,7 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
       valueDecimals: 2
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
+    colors: colors,
     series: [],
     drilldown: {}
   },
@@ -41,7 +50,7 @@ export const chartsConfig = {
       renderTo: 'volFarmerTS',
       drilldown: false,
       tab: {
-        'class': 'col-sm-6'
+        'class': 'col'
       },
     },
     rangeSelector: {
@@ -75,10 +84,7 @@ export const chartsConfig = {
         fillOpacity: 0.3
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
+    colors: colors,
     series: [],
     // drilldown: {}
   },
@@ -88,7 +94,7 @@ export const chartsConfig = {
       renderTo: 'cpkSpkTS',
       drilldown: false,
       tab: {
-        'class': 'col-sm-6'
+        'class': 'col'
       },
     },
     rangeSelector: {
@@ -122,10 +128,7 @@ export const chartsConfig = {
         fillOpacity: 0.3
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
+    colors: colors,
     series: []
   },
   'aggrvol': {
@@ -134,10 +137,13 @@ export const chartsConfig = {
       renderTo: 'aggrvol',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      // width: 530,
+      // height: 230,
+
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -150,14 +156,15 @@ export const chartsConfig = {
       enabled: true
     },
     legend: { enabled: false },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+    plotOptions: {
+      column: {
+        dataLabels: {
+          enabled: true
+        }
+      }
     },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -170,16 +177,18 @@ export const chartsConfig = {
       renderTo: 'aggrvisit',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10,
+      tickInterval: 1,
       title: { text: 'Visits' }
     },
     scrollbar: { enabled: true },
@@ -193,14 +202,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -213,10 +216,12 @@ export const chartsConfig = {
       renderTo: 'aggrspkcpk',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-12'
+        'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -239,14 +244,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -259,10 +258,12 @@ export const chartsConfig = {
       renderTo: 'aggrrecoveredtotal',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -284,14 +285,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>',
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -304,10 +299,12 @@ export const chartsConfig = {
       renderTo: 'aggrfarmercount',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-12'
+        'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -326,15 +323,9 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
+    colors: colors,
     scrollbar: { enabled: true },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
-    },
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -347,16 +338,18 @@ export const chartsConfig = {
       renderTo: 'mandivolume',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10000,
+      tickInterval: 1000,
       title: { text: 'Volume' }
     },
     scrollbar: { enabled: true },
@@ -370,14 +363,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -390,16 +377,18 @@ export const chartsConfig = {
       renderTo: 'mandivisit',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10,
+      tickInterval: 1,
       title: { text: 'Visits' }
     },
     scrollbar: { enabled: true },
@@ -413,14 +402,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -433,10 +416,12 @@ export const chartsConfig = {
       renderTo: 'mandispkcpk',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -459,14 +444,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -479,10 +458,12 @@ export const chartsConfig = {
       renderTo: 'mandirecoveredtotal',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-16'
+        'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -491,7 +472,7 @@ export const chartsConfig = {
       max: 5
     },
     yAxis: {
-      tickInterval: 10000,
+      tickInterval: 1000,
       title: { text: 'Recovered / Total cost' }
     },
     scrollbar: { enabled: true },
@@ -505,14 +486,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -528,7 +503,9 @@ export const chartsConfig = {
         'class': 'col-sm-12'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -537,6 +514,7 @@ export const chartsConfig = {
       tickInterval: 10,
       title: { text: 'Farmer count' }
     },
+    scrollbar: { enabled: true },
     legend: { enabled: false },
     plotOptions: {
       column: {
@@ -547,15 +525,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    scrollbar: { enabled: true },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -568,16 +539,18 @@ export const chartsConfig = {
       renderTo: 'cropvolume',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
       inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10000,
+      tickInterval: 1000,
       title: { text: 'Volume' }
     },
     scrollbar: { enabled: true },
@@ -591,14 +564,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -611,10 +578,12 @@ export const chartsConfig = {
       renderTo: 'cropprices',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: true,
-      inverted: true
+      inverted: true,
+      // width: 530,
+      // height: 230,
     },
     scrollbar: { enabled: true },
     title: { text: '' },
@@ -638,14 +607,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     credits: { enabled: false },
     series: [],
     drilldown: {
@@ -659,10 +622,12 @@ export const chartsConfig = {
       renderTo: 'cropfarmercount',
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col'
       },
       drillDown: false,
       inverted: true,
+      // width: 530,
+      // height: 230,
     },
     credits: { enabled: false },
     title: { text: '' },
@@ -682,14 +647,8 @@ export const chartsConfig = {
         }
       }
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br>'
-    },
+    colors: colors,
+    tooltip: tooltip,
     series: []
   },
   'crop_price_range_ts': {

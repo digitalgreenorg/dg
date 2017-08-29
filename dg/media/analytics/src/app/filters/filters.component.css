@@ -5,7 +5,7 @@
   z-index: 1;
   top: 0;
   right: 0;
-  background-color: #424242;
+  background-color: #3D3D3F !important;
   transition: 0.4s;
   padding-top: 20px;
   overflow-x: hidden;
@@ -13,7 +13,7 @@
 
 .sidenav a {
   padding: 8px 8px 8px 12px;
-  font-size: 20px;
+  font-size: 14px;
   color: white;
   display: block;
   transition: 0.3s;
@@ -36,7 +36,7 @@ input {
     padding-top: 15px;
   }
   .sidenav a {
-    font-size: 18px;
+    font-size: 14px;
   }
 }
 
@@ -60,12 +60,19 @@ input {
   height: 300px;
 }
 
-.btn-success {
-  background-color: #009688;
-  border-color: #009688;
+.btn {
+  background-color: #D13D14;
 }
 
 .red-text {
   -webkit-text-fill-color: red;
   margin-bottom: 0px;
+}
+
+.sideNav-font {
+  font-size: 14px;
+}
+
+.white-text {
+  -webkit-text-fill-color: white;
 }
