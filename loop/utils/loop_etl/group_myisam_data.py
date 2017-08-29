@@ -319,11 +319,11 @@ def cpk_spk_ts(**kwargs):
         cpk = {}
         cpk['data'] = data_cpk
         cpk['name'] = 'CPK'
-        cpk['yAxis'] = 0
+        # cpk['yAxis'] = 0
         spk = {}
         spk['data'] = data_spk
         spk['name'] = 'SPK'
-        spk['yAxis'] = 1
+        # spk['yAxis'] = 1
         result_data['data'].append(cpk)
         result_data['data'].append(spk)
     except:

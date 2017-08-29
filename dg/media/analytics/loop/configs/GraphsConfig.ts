@@ -104,16 +104,11 @@ export const chartsConfig = {
     title: {
       text: 'CPK SPK'
     },
-    yAxis: [{ // Primary yAxis
+    yAxis: { // Primary yAxis
       title: {
-        text: 'CPK',
-      },
-      opposite: false
-    }, { // Secondary yAxis
-      title: {
-        text: 'SPK',
+        text: 'CPK / SPK',
       }
-    }],
+    },
     legend: { enabled: false },
     tooltip: {
       shared: true,

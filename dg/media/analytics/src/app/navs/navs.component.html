@@ -6,7 +6,7 @@
   <div class="collapse navbar-collapse" [collapse]="isCollapsed">
     <ul class="navbar-nav">
       <li class="nav-item" *ngFor="let nav of getDictKeys(toggleNav);">
-        <a class="nav-link" data-toggle="collapse" [ngClass]="{'active':toggleNav[nav].status === true}" (click)="setNav(nav)">{{nav}}</a>
+        <a class="nav-link" data-toggle="collapse" [ngClass]="{'active':toggleNav[nav].status === true}" (click)="setNav(nav)" style="cursor: pointer; cursor: hand;">{{nav}}</a>
       </li>
     </ul>
     <app-global-filter></app-global-filter>
@@ -22,7 +22,7 @@
       <div class="collapse navbar-collapse" [collapse]="isCollapsed">
         <ul class="navbar-nav">
           <li class="nav-item" *ngFor="let subNav of toggleNav[nav].subNavs">
-            <a *ngIf="toggleNav[nav].status" class="nav-link" [ngClass]="{'active':containers[subNav].displayContent === true}" (click)="showContent(subNav)">{{subNav}}</a>
+            <a *ngIf="toggleNav[nav].status" class="nav-link" [ngClass]="{'active':containers[subNav].displayContent === true}" (click)="showContent(subNav)" style="cursor: pointer; cursor: hand;">{{subNav}}</a>
           </li>
         </ul>
       </div>
@@ -43,7 +43,7 @@
 
 <div *ngFor="let container of getDictKeys(containers);">
   <div class="row justify-content-center" *ngIf="containers[container].displayContent && containers[container]['addTab']">
-    <div [class] = "containers[container]['class']" class="justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
+    <div [class]="containers[container]['class']" class="justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
       <!-- <div [ngClass]="containers[container]['addTab']?'container-box col-sm-11':'col-sm-12'" *ngIf="ifDictionary(containers[container]['containers'][option])"> -->
       <div class="container-box box-size-half col" *ngIf="ifDictionary(containers[container]['containers'][option])">
         <tabset [justified]="true">
@@ -68,16 +68,16 @@
   <div class="row" *ngIf="containers[container].displayContent && !containers[container]['addTab']">
     <div class="col justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
       <div *ngIf="!containers[container]['addTab']">
-          <div *ngFor="let tab of getDictKeys(containers[container]['containers'][option])">
-            <div class="row" *ngIf="containers[container]['containers'][option][tab]['addDivs']">
-              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" class="container-box col box-size-full">
-                <div [id]="div">
-                </div>
-                <br><br>
+        <div *ngFor="let tab of getDictKeys(containers[container]['containers'][option])">
+          <div class="row" *ngIf="containers[container]['containers'][option][tab]['addDivs']">
+            <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" class="container-box col box-size-full">
+              <div [id]="div">
               </div>
+              <br><br>
             </div>
           </div>
         </div>
+      </div>
     </div>
   </div>
 </div>
