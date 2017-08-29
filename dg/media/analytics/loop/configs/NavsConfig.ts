@@ -1,7 +1,7 @@
 export const navsConfig = {
   'navs': {
     'Home': {
-      // 'active': true,
+      'active': true,
       'filters': false,
       'import': {
         'overall': false,
@@ -106,7 +106,7 @@ export const navsConfig = {
       }
     },
     'Time Series': {
-      'active': true,
+      // 'active': true,
       'filters': true,
       'class': 'col-sm-11',
       'addTab': false,

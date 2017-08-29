@@ -681,32 +681,17 @@ export const chartsConfig = {
     credits: {
       enabled: false
     },
-    colors: [
-      '#F37B55',
-      '#656566',
-    ],
+    colors: colors,
     series: [],
     exporting: {
       buttons: {
         contextButton: {
           enabled: false,
-          symbolStrokeWidth: 2
+          symbolStrokeWidth: 10
         },
         toggle: {
           text: 'Select Crop',
-          menuItems: [
-          //   {
-          //   text: '0-5',
-          //   onclick: function() {
-          //     this.xAxis[0].setExtremes(0, 5);
-          //   }
-          // }, {
-          //   text: '5-10',
-          //   onclick: function() {
-          //     this.xAxis[0].setExtremes(5, 10);
-          //   }
-          // }
-        ]
+          menuItems: []
         }
       }
     },

@@ -240,15 +240,13 @@ export class NavsComponent implements OnInit,
   }
 
   private fillMenuItemForDropDown(chart, dataList): any {
-    // console.log(dataList);
-    // console.log(dataList.data);
     Object.keys(dataList.data).forEach(series => {
-      // console.log(series);
       let dropDownItem = new DropDownItem();
       dropDownItem.text = dataList.data[series][0]['name'];
       dropDownItem.data = dataList.data[series][0]['data'];
       dropDownItem.onclick = function() {
         this.series[0].update({ data: dropDownItem.data, name: dropDownItem.text });
+        this.exportSVGElements[0].attr({ text: dropDownItem.text });
       };
       chart.chart.exporting.buttons.toggle.menuItems.push(dropDownItem);
     });
