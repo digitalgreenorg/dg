@@ -24,7 +24,7 @@ export const navsConfig = {
       'subNavs': {
         'Aggregators': {
           'active': true,
-          'class': 'col-6',
+          'class': 'col-md-6',
           'addTab': true,
           'containers': {
             // 'addTab': true,
@@ -54,7 +54,7 @@ export const navsConfig = {
           }
         },
         'Mandi': {
-          'class': 'col-sm-6',
+          'class': 'col-md-6',
           'addTab': true,
           'containers': {
             // 'addTab': true,
@@ -67,7 +67,7 @@ export const navsConfig = {
               }
             },
             'container2': {
-              'SPK/CPk': {
+              'SPK/CPK': {
                 'addDivs': ['mandispkcpk']
               },
               'Recovered/Total': {
@@ -82,7 +82,7 @@ export const navsConfig = {
           }
         },
         'Crop': {
-          'class': 'col-sm-6',
+          'class': 'col-md-6',
           'addTab': true,
           'containers': {
             // 'addTab': true,
@@ -108,17 +108,22 @@ export const navsConfig = {
     'Time Series': {
       // 'active': true,
       'filters': true,
-      'class': 'col-sm-11',
-      'addTab': false,
+      'class': 'col-md-6',
+      'addTab': true,
       'containers': {
         // 'addTab': false,
         'container1': {
           'Volume Farmer': {
-            'addDivs': ['volFarmerTS', 'cpkSpkTS']
-          },
+            'addDivs': ['volFarmerTS']
+          }
         },
         'container2': {
-          'Crop Prices': {
+          'CPK / SPK': {
+            'addDivs': ['cpkSpkTS']
+          }
+        },
+        'container3': {
+          'Crop Price Range': {
             'addDivs': ['crop_price_range_ts']
           }
         }

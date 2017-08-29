@@ -58,7 +58,7 @@ export const chartsConfig = {
     },
     type: "StockChart",
     title: {
-      text: 'Volume Amount'
+      text: ''
     },
     yAxis: [{ // Primary yAxis
       title: {
@@ -102,7 +102,7 @@ export const chartsConfig = {
     },
     type: "StockChart",
     title: {
-      text: 'CPK SPK'
+      text: ''
     },
     yAxis: { // Primary yAxis
       title: {
@@ -653,7 +653,7 @@ export const chartsConfig = {
       drilldown: false,
       dropdown: true,
       tab: {
-        'class': 'col-sm-11'
+        'class': 'col'
       },
     },
     rangeSelector: {
@@ -661,7 +661,7 @@ export const chartsConfig = {
     },
     type: "StockChart",
     title: {
-      text: 'Crop Price Range'
+      text: ''
     },
     yAxis: [{ // Primary yAxis
       title: {
