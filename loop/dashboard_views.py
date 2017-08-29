@@ -110,7 +110,7 @@ def generate_res_recent(key, placeHolder, tagName, value):
     return res
 
 
-def get_cluster_related_data(**filter_args):
+def overall_graph_data(**filter_args):
     country_id = filter_args['country_id'] #To be fetched from request
     state_id = filter_args['state_id']
     combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
@@ -125,8 +125,8 @@ def get_cluster_related_data(**filter_args):
 
     aggregated_result, cum_vol_farmer = get_data_from_myisam(1, **filter_args)
     # if((len(aggregated_result) > 0) and (len(cum_vol_farmer) > 0)):
-    volume = round(aggregated_result['quantity'][0], 2)
-    amount = round(aggregated_result['amount'][0], 2)
+    volume = round(aggregated_result['quantity'][0])
+    amount = round(aggregated_result['amount'][0])
     aggregator_incentive = aggregated_result['aggregator_incentive'][0]
     transportation_cost = aggregated_result['transportation_cost'][0]
     farmer_share = aggregated_result['farmer_share'][0]
@@ -185,7 +185,7 @@ def get_card_graph_data(request):
     data_to_send = {}
 
     if filter_args['cardName'] in ['No_of_clusters_overall']:
-        data_to_send = get_cluster_related_data(**filter_args)
+        data_to_send = overall_graph_data(**filter_args)
     elif filter_args['cardName'] in ['active_cluster']:
         data_to_send = recent_graphs_data(**filter_args)
 

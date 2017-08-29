@@ -39,6 +39,11 @@ export function highchartsFactory() {
   const highcharts_more = require('highcharts/highcharts-more');
   const solid_gauge = require('highcharts/modules/solid-gauge');
   const exp = require('highcharts/modules/exporting');
+  highChart.setOptions({
+    lang: {
+      thousandsSep : ','
+    }
+  });
   drillDown(highChart);
   exp(highChart);
   highcharts_more(highChart);

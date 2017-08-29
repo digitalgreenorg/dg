@@ -3,6 +3,7 @@ export const cardConfig = {
 
   'No_of_clusters': {
     text: '#Clusters',
+    helpTip : 'Group of villages in close proximity served by one Loop aggregator.',
     overall: {
       text: 'No_of_clusters_overall',
       borrowData: false,
@@ -26,6 +27,7 @@ export const cardConfig = {
 
   'No_of_Farmers': {
     text: '#Farmers',
+    helpTip : 'Farmers who have used Loop service at least once.',
     overall: {
       text: 'No_of_farmers_overall',
       borrowData: true,
@@ -49,6 +51,7 @@ export const cardConfig = {
   },
   'Volume': {
     text: 'Volume(Kg)',
+    helpTip : 'Total weight of farmer produce in kg collected and sold at the market.',
     overall: {
       text: 'Volume_overall',
       borrowData: true,
@@ -72,6 +75,7 @@ export const cardConfig = {
 
   'Total_payment': {
     text: 'Payments',
+    helpTip : 'Total amount of payments made to farmers for their produce.',
     overall: {
       text: 'Payments_overall',
       borrowData: true,
@@ -95,6 +99,7 @@ export const cardConfig = {
 
   'Cost_per_kg': {
     text: 'Cost per Kg',
+    helpTip : 'Total CPK of vegetables sold = Transport CPK + Aggregator CPK',
     overall: {
       text: 'Cost_per_kg_overall',
       borrowData: true,
@@ -118,6 +123,7 @@ export const cardConfig = {
 
   'Sustainability_perc': {
     text: 'Sustainability',
+    helpTip : 'Operational cost covered by local players = Sustainability Per Kg (SPK) / CPK where SPK = Trader discount per kg on commision + Farmers transport contribution per kg',
     overall: {
       text: 'Sustainability_overall',
       borrowData: true,

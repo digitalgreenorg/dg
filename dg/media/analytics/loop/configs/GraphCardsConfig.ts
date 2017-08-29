@@ -68,7 +68,7 @@ export const cardGraphConfig = {
       name: 'present',
       dataLabels: {
         format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
-        '">{y}</span><br/></div>'
+        '">' + '{y:,.0f}' +'</span><br/></div>'
       },
       tooltip: {
         valueSuffix: null
@@ -145,7 +145,7 @@ export const cardGraphConfig = {
       name: 'present',
       dataLabels: {
         format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
-        '">{y}</span><br/></div>'
+        '">' + '{y:,.0f}' +'</span><br/></div>'
       },
       tooltip: {
         valueSuffix: null
@@ -221,7 +221,7 @@ export const cardGraphConfig = {
       name: 'present',
       dataLabels: {
         format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
-        '">{y}</span><br/></div>'
+        '">' + '{y:,.0f}' +'</span><br/></div>'
       },
       tooltip: {
         valueSuffix: null
@@ -297,7 +297,7 @@ export const cardGraphConfig = {
       name: 'present',
       dataLabels: {
         format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
-        '">{y}</span><br/></div>'
+        '">' + '{y:,.0f}' +'</span><br/></div>'
       },
       tooltip: {
         valueSuffix: null
