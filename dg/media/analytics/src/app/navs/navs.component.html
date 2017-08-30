@@ -41,9 +41,30 @@
   <br><br>
 </div>
 
-<div *ngFor="let container of getDictKeys(containers);">
+<!-- <div *ngFor="let container of getDictKeys(containers);">
   <div class="row justify-content-center" *ngIf="containers[container].displayContent && containers[container]['addTab']">
-    <div [class]="containers[container]['class']" class="justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
+    <div [class]="containers[container]['class']"  class="justify-content-center" id="container" *ngFor="let option of getDictKeys(containers[container]['containers']);">
+      <div class="container-box col" *ngIf="ifDictionary(containers[container]['containers'][option])">
+        <tabset [justified]="true">
+          <tab *ngFor="let tab of getDictKeys(containers[container]['containers'][option])" [heading]="tab">
+            <br><br>
+            <div class="row">
+              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" [class]="containers[container]['charts'][0]['chart']['chart']['tab']['class']">
+                <div [id]="div"></div>
+                <br><br>
+              </div>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div *ngFor="let container of getDictKeys(containers)">
+  <div class="row justify-content-center" *ngIf="containers[container].displayContent && containers[container]['addTab']">
+    <div *ngFor="let option of getDictKeys(containers[container]['containers']);let i=index;" class="justify-content-center" [class]="containers[container]['classes']['container'+(i+1)]">
       <div class="container-box col" *ngIf="ifDictionary(containers[container]['containers'][option])">
         <tabset [justified]="true">
           <tab *ngFor="let tab of getDictKeys(containers[container]['containers'][option])" [heading]="tab">
@@ -61,34 +82,6 @@
   </div>
 </div>
 
-
-<!-- <div *ngFor="let graph of getDictKeys(filterGraphs);">
-  <div class="row justify-content-center" *ngIf="filterGraphs[graph].displayContent">
-    <div id="graph" class="container-box col-sm-11" *ngFor="let option of getDictKeys(filterGraphs[graph]['DropDownGraph']);">
-      <tabset [justified]="true" *ngIf="filterGraphs[graph]['DropDownGraph'][option]['addTab']">
-        <tab *ngFor="let tab of getDictKeys(filterGraphs[graph]['DropDownGraph'][option]);" [heading]="tab">
-          <br><br>
-          <div class="row">
-            <div *ngFor="let div of filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
-              <div [id]="div"></div>
-              <br><br>
-            </div>
-          </div>
-        </tab>
-      </tabset>
-      <div *ngIf="!filterGraphs[graph]['DropDownGraph'][option]['addTab']">
-        <div *ngFor="let tab of getDictKeys(filterGraphs[graph]['DropDownGraph'][option])">
-          <div *ngIf="filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
-            <div *ngFor="let div of filterGraphs[graph]['DropDownGraph'][option][tab]['addDivs']">
-              <div [id]="div"></div>
-              <br><br>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
 
 <div class="container-fluid">
   <div *ngFor="let chart of containerCharts">

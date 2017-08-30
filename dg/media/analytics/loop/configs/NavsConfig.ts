@@ -7,10 +7,13 @@ export const navsConfig = {
         'overall': false,
         'recent': false,
       },
-      'class': 'col-11',
+      // 'class': 'col-11',
+      'classes': {
+        'container1': 'col-md-11',
+      },
+
       'addTab': true,
       'containers': {
-        // 'addTab': true,
         'container1': {
           'Volume and Famers Cummulative Count': {
             'addDivs': ['cummulativeCount']
@@ -24,12 +27,14 @@ export const navsConfig = {
       'subNavs': {
         'Aggregators': {
           'active': true,
-          'class': 'col-md-6',
+          'classes': {
+            'container1': 'col-md-5',
+            'container2': 'col-md-5',
+            'container3': 'col-md-5'
+          },
           'addTab': true,
           'containers': {
-            // 'addTab': true,
             'container1': {
-              // 'addTab':true,
               'Volume': {
                 'addDivs': ['aggrvol']
               },
@@ -38,7 +43,6 @@ export const navsConfig = {
               }
             },
             'container2': {
-              // 'addTab':true,
               'SPK/CPK': {
                 'addDivs': ['aggrspkcpk']
               },
@@ -54,10 +58,13 @@ export const navsConfig = {
           }
         },
         'Mandi': {
-          'class': 'col-md-6',
+          'classes': {
+            'container1': 'col-md-5',
+            'container2': 'col-md-5',
+            'container3': 'col-md-5'
+          },
           'addTab': true,
           'containers': {
-            // 'addTab': true,
             'container1': {
               'Volume': {
                 'addDivs': ['mandivolume']
@@ -82,10 +89,13 @@ export const navsConfig = {
           }
         },
         'Crop': {
-          'class': 'col-md-6',
+          'classes': {
+            'container1': 'col-md-5',
+            'container2': 'col-md-5',
+            'container3': 'col-md-5'
+          },
           'addTab': true,
           'containers': {
-            // 'addTab': true,
             'container1': {
               'Volume': {
                 'addDivs': ['cropvolume']
@@ -108,10 +118,13 @@ export const navsConfig = {
     'Time Series': {
       // 'active': true,
       'filters': true,
-      'class': 'col-md-6',
+      'classes': {
+        'container1': 'col-md-5',
+        'container2': 'col-md-5',
+        'container3': 'col-md-11',
+      },
       'addTab': true,
       'containers': {
-        // 'addTab': false,
         'container1': {
           'Volume Farmer': {
             'addDivs': ['volFarmerTS']

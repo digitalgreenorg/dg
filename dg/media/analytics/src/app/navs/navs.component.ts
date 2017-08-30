@@ -44,6 +44,8 @@ export class NavsComponent implements OnInit,
   //Display drop down type graphs
   // showDropDownGraphs: boolean = false;
   filters = { 'params': {} };
+
+  test = '';
   constructor(private graphService: GraphsService, private _sharedService: SharedService,
     private _globalfiltersharedService: GlobalFilterSharedService, @Inject(DOCUMENT) private document: any) {
     this._sharedService.argsList$.subscribe(filters => {
@@ -145,6 +147,7 @@ export class NavsComponent implements OnInit,
         this.showContent(nav);
       }
     });
+    console.log(this.test);
   }
 
   addChartsToDict(containers) {
