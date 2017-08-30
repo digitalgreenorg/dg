@@ -116,12 +116,12 @@ export const navsConfig = {
       }
     },
     'Time Series': {
-      // 'active': true,
+      'active': true,
       'filters': true,
       'classes': {
         'container1': 'col-md-5',
         'container2': 'col-md-5',
-        'container3': 'col-md-11',
+        'container3': 'col-md-10',
       },
       'addTab': true,
       'containers': {

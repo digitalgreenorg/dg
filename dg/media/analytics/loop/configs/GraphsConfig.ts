@@ -682,13 +682,27 @@ export const chartsConfig = {
       buttons: {
         contextButton: {
           enabled: false,
-          symbolStrokeWidth: 10
         },
         toggle: {
+          align: 'center',
           text: 'Select Crop',
           menuItems: []
         }
       }
     },
+    navigation: {
+      buttonOptions: {
+        theme: {
+          'stroke-width': 1,
+          stroke: '#656566',
+          r: 0,
+          states: {
+            hover: {
+              fill: '#F37B55'
+            },
+          }
+        }
+      }
+    }
   },
 }
