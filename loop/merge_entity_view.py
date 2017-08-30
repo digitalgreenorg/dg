@@ -11,7 +11,8 @@ from django.db.models import get_model
 from dg.settings import MEDIA_ROOT, EMAIL_HOST_USER
 from pytz import timezone
 
-from loop.models import Farmer, CombinedTransaction, Gaddidar, GaddidarCommission, GaddidarShareOutliers
+from loop.models import Farmer, CombinedTransaction, Gaddidar, GaddidarCommission, GaddidarShareOutliers, CropLanguage
+from loop_ivr.models import PriceInfoLog
 from loop.configs import mergeentityconfig as merge_cnf
 
 def save_file(merge_file):
@@ -41,8 +42,8 @@ def send_status_email(df, model_name, email_to):
 
 def update_records(related_models, old, new):
 	for related_model in related_models:
-		related_model_column = related_models[related_model]
-		related_model_obj = get_model('loop', related_model)
+		related_model_column = related_models[related_model]['column']
+		related_model_obj = get_model(related_models[related_model]['app'], related_model)
 
 		kwargs_old = {related_model_column: old}
 		kwargs_new = {related_model_column: new}
@@ -54,9 +55,22 @@ def delete_entity(model,model_name, record):
 	instance = model.objects.get(**kwargs)
 	instance.delete()
 
-def merge_bodies(df, model_name, index, row):
-	initial = row['Initial ID']
-	final = row['Final ID']
+def check_crop_language(language, crops):
+	print language, crops
+	crop_lang = CropLanguage.objects.filter(crop_id__in=crops)
+	print "crop lang queryset", crop_lang
+	dict_lang_wise_names = {}
+	for entry in crop_lang:
+		if (entry.language_id not in dict_lang_wise_names.keys()):
+			dict_lang_wise_names[entry.language_id] = set()
+		dict_lang_wise_names[entry.language_id].add(entry.crop_name)
+	print "lang wise names", dict_lang_wise_names
+	for lang in dict_lang_wise_names:
+		if lang != language and len(dict_lang_wise_names[lang]) > 1:
+			return False, None
+	return True, crop_lang
+
+def merge_bodies(df, model_name, index, initial, final):
 
 	kwargs = {merge_cnf.models[model_name]['col_name']: final}
 
@@ -64,7 +78,7 @@ def merge_bodies(df, model_name, index, row):
 
 	try:
 		with transaction.atomic():
-			final_obj = model.objects.get(**kwargs)
+			#final_obj = model.objects.get(**kwargs)
 			update_records(merge_cnf.models[model_name]['dependencies'], initial, final)
 			delete_entity(model, model_name, initial)
 
@@ -76,19 +90,70 @@ def merge_bodies(df, model_name, index, row):
 def merge(model, merge_file_path, email_to):
 	df = pd.read_excel(merge_file_path, sheet_name=0)
 
+	# crop_lang = CropLanguage.objects.filter(crop_id__in=[1, 33])
+	# initial_crop = crop_lang.filter(id=2).values_list('crop_id', flat=True)[0]
+	# final_crop = crop_lang.filter(id=76).values_list('crop_id', flat=True)[0]		
+	# crop_lang_initial = crop_lang.filter(crop_id=initial_crop)
+
+	# print "crop_lang", crop_lang
+	# print "initial cop id", initial_crop
+	# print "final cop id", final_crop
+	# print "crop lang initial", crop_lang_initial
+	x, y = check_crop_language(1, [1, 33])
+	
 	common_ids = set(df['Initial ID']) & set(df['Final ID'])
+	ids = ', '.join(str(e) for e in common_ids)
 	duplicate_initial_id = df.duplicated(['Initial ID'], keep=False)	
 
 	for i, row in df.iterrows():
 		if(row['Initial ID'] in common_ids or row['Final ID'] in common_ids):
 			df.set_value(i, 'Status', 'Fail')
-			ids = ', '.join(str(e) for e in common_ids)
 			df.set_value(i, 'Exception', 'IDs:['+ids+'] are presesnt in Final ID column too')
+			continue
 		if(duplicate_initial_id[i] == True):
 			df.set_value(i, 'Status', 'Fail')
 			df.set_value(i, 'Exception', 'Initial ID being changed multiple times')
-		else:
-			merge_bodies(df, model, i, row)
+			continue
+		if model == 'Crop':
+			#initial_obj = CropLanguage.objects.get(id=row['Initial ID'])
+			crop_lang = CropLanguage.objects.filter(id__in=[row['Initial ID'], row['Final ID']]).values('crop_id', 'language_id')
+			languages = set()
+			crops = []
+			for data in crop_lang:
+				crops.append(data['crop_id'])
+				languages.add(data['language_id'])
+			print "languages", languages
+			if len(languages) > 1:
+				df.set_value(i, 'Status', 'Fail')
+				df.set_value(i, 'Exception', 'Merge requested for different languages')
+				continue
+			for lang in languages:
+				break
+			check, crop_lang_queryset = check_crop_language(lang, crops)
+			if check == True:
+				print "crop lang queryset", crop_lang_queryset
+				try:
+					initial_crop = crop_lang_queryset.filter(id=row['Initial ID']).values_list('crop_id', flat=True)[0]
+					final_crop = crop_lang_queryset.filter(id=row['Final ID']).values_list('crop_id', flat=True)[0]				
+					print "initial_crop", initial_crop
+					print "final_crop", final_crop
 
-	send_status_email(df, model, email_to)
+				
+					with transaction.atomic():
+						# delete crop_lang for initial
+						crop_lang_queryset.get(crop_id=initial_crop).delete()
+						# merge bodies(initial_crop, final_crop)
+						print "deleted initial crop lang"
+						merge_bodies(df, model, i, initial_crop, final_crop)
+				except Exception as e:
+					df.set_value(i, 'Status', 'Fail')
+					df.set_value(i, 'Exception', str(e))
+			else:
+				df.set_value(i, 'Status', 'Fail')
+				df.set_value(i, 'Exception', 'There is a conflict in crop names for other languages')
+		else:
+			merge_bodies(df, model, i, row['Initial ID'], row['Final ID'])
+
+	print df
+	#send_status_email(df, model, email_to)
 	
