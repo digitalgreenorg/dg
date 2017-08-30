@@ -116,7 +116,7 @@ export const navsConfig = {
       }
     },
     'Time Series': {
-      'active': true,
+      // 'active': true,
       'filters': true,
       'classes': {
         'container1': 'col-md-5',
