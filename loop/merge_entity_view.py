@@ -56,15 +56,12 @@ def delete_entity(model,model_name, record):
 	instance.delete()
 
 def check_crop_language(language, crops):
-	print language, crops
 	crop_lang = CropLanguage.objects.filter(crop_id__in=crops)
-	print "crop lang queryset", crop_lang
 	dict_lang_wise_names = {}
 	for entry in crop_lang:
 		if (entry.language_id not in dict_lang_wise_names.keys()):
 			dict_lang_wise_names[entry.language_id] = set()
 		dict_lang_wise_names[entry.language_id].add(entry.crop_name)
-	print "lang wise names", dict_lang_wise_names
 	for lang in dict_lang_wise_names:
 		if lang != language and len(dict_lang_wise_names[lang]) > 1:
 			return False, None
@@ -78,7 +75,6 @@ def merge_bodies(df, model_name, index, initial, final):
 
 	try:
 		with transaction.atomic():
-			#final_obj = model.objects.get(**kwargs)
 			update_records(merge_cnf.models[model_name]['dependencies'], initial, final)
 			delete_entity(model, model_name, initial)
 
@@ -88,19 +84,7 @@ def merge_bodies(df, model_name, index, initial, final):
 		df.set_value(index, 'Exception', str(e))
 
 def merge(model, merge_file_path, email_to):
-	df = pd.read_excel(merge_file_path, sheet_name=0)
-
-	# crop_lang = CropLanguage.objects.filter(crop_id__in=[1, 33])
-	# initial_crop = crop_lang.filter(id=2).values_list('crop_id', flat=True)[0]
-	# final_crop = crop_lang.filter(id=76).values_list('crop_id', flat=True)[0]		
-	# crop_lang_initial = crop_lang.filter(crop_id=initial_crop)
-
-	# print "crop_lang", crop_lang
-	# print "initial cop id", initial_crop
-	# print "final cop id", final_crop
-	# print "crop lang initial", crop_lang_initial
-	x, y = check_crop_language(1, [1, 33])
-	
+	df = pd.read_excel(merge_file_path, sheet_name=0)	
 	common_ids = set(df['Initial ID']) & set(df['Final ID'])
 	ids = ', '.join(str(e) for e in common_ids)
 	duplicate_initial_id = df.duplicated(['Initial ID'], keep=False)	
@@ -115,14 +99,12 @@ def merge(model, merge_file_path, email_to):
 			df.set_value(i, 'Exception', 'Initial ID being changed multiple times')
 			continue
 		if model == 'Crop':
-			#initial_obj = CropLanguage.objects.get(id=row['Initial ID'])
 			crop_lang = CropLanguage.objects.filter(id__in=[row['Initial ID'], row['Final ID']]).values('crop_id', 'language_id')
 			languages = set()
 			crops = []
 			for data in crop_lang:
 				crops.append(data['crop_id'])
 				languages.add(data['language_id'])
-			print "languages", languages
 			if len(languages) > 1:
 				df.set_value(i, 'Status', 'Fail')
 				df.set_value(i, 'Exception', 'Merge requested for different languages')
@@ -131,20 +113,15 @@ def merge(model, merge_file_path, email_to):
 				break
 			check, crop_lang_queryset = check_crop_language(lang, crops)
 			if check == True:
-				print "crop lang queryset", crop_lang_queryset
 				try:
-					initial_crop = crop_lang_queryset.filter(id=row['Initial ID']).values_list('crop_id', flat=True)[0]
-					final_crop = crop_lang_queryset.filter(id=row['Final ID']).values_list('crop_id', flat=True)[0]				
-					print "initial_crop", initial_crop
-					print "final_crop", final_crop
-
-				
+					initial_crop_lang = crop_lang_queryset.get(id=row['Initial ID'])#.values_list('crop_id', flat=True)[0]
+					initial_crop_id = initial_crop_lang.crop_id
+					final_crop_lang = crop_lang_queryset.get(id=row['Final ID'])#.values_list('crop_id', flat=True)[0]				
+					final_crop_id = final_crop_lang.crop_id
+					
 					with transaction.atomic():
-						# delete crop_lang for initial
-						crop_lang_queryset.get(crop_id=initial_crop).delete()
-						# merge bodies(initial_crop, final_crop)
-						print "deleted initial crop lang"
-						merge_bodies(df, model, i, initial_crop, final_crop)
+						crop_lang_queryset.get(crop_id=initial_crop_id).delete()
+						merge_bodies(df, model, i, initial_crop_id, final_crop_id)
 				except Exception as e:
 					df.set_value(i, 'Status', 'Fail')
 					df.set_value(i, 'Exception', str(e))
@@ -154,6 +131,5 @@ def merge(model, merge_file_path, email_to):
 		else:
 			merge_bodies(df, model, i, row['Initial ID'], row['Final ID'])
 
-	print df
-	#send_status_email(df, model, email_to)
+	send_status_email(df, model, email_to)
 	
