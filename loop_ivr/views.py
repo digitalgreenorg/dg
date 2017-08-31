@@ -45,6 +45,7 @@ def market_info_response(request):
                 message = [call_failed_sms,'\n\n', crop_and_code, '\n',('%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER)]
                 message = ''.join(message)
                 print message
+                send_info(user_no, message)
     return HttpResponse(status=200)
 
 
