@@ -38,7 +38,7 @@ class Subscriber(LoopModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, null=True, blank=True)
     phone_no = models.CharField(max_length=14, unique=True)
-    type_of_subscriber = models.IntegerField(choices=TYPE_OF_SUBSCRIBER, default=2)
+    type_of_subscriber = models.IntegerField(choices=TYPE_OF_SUBSCRIBER, default=3)
     status = models.IntegerField(choices=STATUS, default=1)
 
     def __unicode__(self):

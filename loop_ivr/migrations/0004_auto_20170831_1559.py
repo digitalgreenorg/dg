@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='subscriber',
             name='type_of_subscriber',
-            field=models.IntegerField(default=2, choices=[(0, b'Farmer'), (1, b'Aggregator'), (2, b'DG'), (3, b'Other')]),
+            field=models.IntegerField(default=3, choices=[(0, b'Farmer'), (1, b'Aggregator'), (2, b'DG'), (3, b'Other')]),
         ),
     ]
