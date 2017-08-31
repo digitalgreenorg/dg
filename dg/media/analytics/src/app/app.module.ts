@@ -39,6 +39,7 @@ export function highchartsFactory() {
   const highcharts_more = require('highcharts/highcharts-more');
   const solid_gauge = require('highcharts/modules/solid-gauge');
   const exp = require('highcharts/modules/exporting');
+  const noData = require('highcharts/modules/no-data-to-display');
   highChart.setOptions({
     lang: {
       thousandsSep : ','
@@ -48,6 +49,7 @@ export function highchartsFactory() {
   exp(highChart);
   highcharts_more(highChart);
   solid_gauge(highChart);
+  noData(highChart);
   return highChart;
 }
 
