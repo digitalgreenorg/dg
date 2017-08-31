@@ -51,8 +51,6 @@ export class FiltersComponent implements OnInit {
     inline: false,
     maxYear: this.date.getFullYear() + 1,
     selectionTxtFontSize: '14px',
-    width: '80%',
-    
   };
 
   constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService,

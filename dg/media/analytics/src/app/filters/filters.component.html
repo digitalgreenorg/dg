@@ -37,13 +37,12 @@
       <div class="row">
         <div class="col-sm-12">
           <a *ngFor='let filter_name of filter_list'>
-            <div class="row">
+            <div class="row" (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand;" style="cursor: pointer; cursor: hand;">
               <div class="col-3">
                   <label >{{ filter_name.heading }}</label>
               </div>
               <div class="col-7" >
-                  <label class="float-right" (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand">
-                    <!-- <strong>&#x021FE;</strong> -->
+                  <label class="float-right">
                     <strong>{{filter_name.show_icon}}</strong>
                   </label>
               </div>
@@ -83,10 +82,10 @@
   </perfect-scrollbar>
 </div>
 
-<div class="container ">
+<div class="container">
   <div class="row" style="-webkit-text-fill-color: white">
     <div class="col-md-1">
-      <span style="font-size:15px;cursor:pointer" (click)="openNav()">&#9776;</span>
+      <span style="cursor:pointer" (click)="openNav()">&#9776;</span>
     </div>
   </div>
 </div>
