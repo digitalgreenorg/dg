@@ -41,7 +41,7 @@ def market_info_response(request):
             price_info_incoming_obj = price_info_incoming_obj[0] if len(price_info_incoming_obj) > 0 else ''
             # if call found in our database, then fetch number of caller and send SMS
             if audience_obj != '':
-                user_no = from_number
+                user_no = price_info_incoming_obj.from_number
                 message = [call_failed_sms,'\n', crop_and_code, '\n',('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER)]
                 message = ''.join(message)
                 print message
