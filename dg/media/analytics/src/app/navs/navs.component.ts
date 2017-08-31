@@ -228,18 +228,20 @@ export class NavsComponent implements OnInit,
     let data;
     if (chart.chart.chart.dropdown) {
       this.fillMenuItemForDropDown(chart, dataList);
-      data = dataList.data["1"];
+      data = dataList.data[Object.keys(dataList.data)[0]];
     } else {
       data = dataList.data;
     }
-    // console.log(data);
-    // console.log(dataList.chartName);
-    // console.log(chart);
-    Object.keys(data).forEach(series => {
-      chart.nativeChart.hideLoading();
-      chart.nativeChart.addSeries(data[series]);
-      chart.chart.series[series] = data[series];
-    });
+    if (data && data.length > 0) {
+      Object.keys(data).forEach(series => {
+        chart.nativeChart.hideLoading();
+        chart.nativeChart.addSeries(data[series]);
+        chart.chart.series[series] = data[series];
+      });
+    }
+    else {
+      chart.nativeChart.showLoading();
+    }
   }
 
   private fillMenuItemForDropDown(chart, dataList): any {

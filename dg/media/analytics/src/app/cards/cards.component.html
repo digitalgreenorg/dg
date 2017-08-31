@@ -14,7 +14,7 @@
 </div>
 <br>
 <br>
-<div  *ngIf="cardsRecent.length > 0" class="container-fluid">
+<div *ngIf="cardsRecent.length > 0" class="container-fluid">
   <div class="row">
     <div class="col">
       <h5 class="text-muted">Recent</h5>
@@ -23,48 +23,44 @@
       <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
         Button dropdown <span class="caret"></span>
       </button>
-        <ul *dropdownMenu class="dropdown-menu" role="menu">
-          <li role="menuitem">
-            <a class="dropdown-item">
-              <form #myForm="ngForm" novalidate>
-                <my-date-picker class="datepicker" name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
-              </form>
-            </a>
-          </li>
-        </ul>
+      <ul *dropdownMenu class="dropdown-menu" role="menu">
+        <li role="menuitem">
+          <a class="dropdown-item">
+            <form #myForm="ngForm" novalidate>
+              <my-date-picker class="datepicker" name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
+            </form>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
   <hr/>
   <div class="row">
     <div class="col" *ngFor="let card of cardsRecent">
-      <div class="card " style="background-color: #009688" >
+      <div class="card " style="background-color: #009688">
         <div #cardTitle id={{card.id}} class="card-block">
           <h6 class="card-title text-white">{{card.text}}</h6>
           <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <div *ngIf="overallcharts.length" class="container-fluid">
   <h5 class="text-muted">Overall</h5>
   <div class="row">
     <div class="col" *ngFor="let chart of overallcharts">
-      <!--<div class="card">
-        <div class="card-block">-->
-          <label data-toggle="tooltip" data-placement="top" title="{{chart.helpTip}}" class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</label>
-          <chart [options]="chart.options" (load)="saveInstance($event.context, chart)" ></chart>    
-        <!--</div>
-      </div>-->
+      <label data-toggle="tooltip" data-placement="top" title="{{chart.helpTip}}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</label>
+      <chart [options]="chart.options" (load)="saveInstance($event.context, chart)"></chart>
     </div>
-  </div>  
+  </div>
 </div>
 
 <br>
 <br>
-<div *ngIf="recentcharts.length" class="container-fluid">
 
+<div *ngIf="recentcharts.length" class="container-fluid">
   <div class="row">
     <h5 class="text-muted col">Recent</h5>
     <div class="col">
@@ -74,7 +70,7 @@
         </button>
         <ul *dropdownMenu class="dropdown-menu" role="menu">
           <li *ngFor="let action of Dropdownitems" role="menuitem">
-            <button class="dropdown-item" (click) = "updateDropdown(action)" >{{action}} Days</button>
+            <button class="dropdown-item" (click)="updateDropdown(action)">{{action}} Days</button>
           </li>
         </ul>
       </div>
@@ -83,8 +79,8 @@
   <br>
   <div class="row">
     <div class="col" *ngFor="let chart of recentcharts">
-          <h6 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</h6>
-          <chart style="margin:0%;" [options]="chart.options" (load)="saveInstance($event.context, chart)" ></chart>
+      <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</label>
+      <chart style="margin:0%;" [options]="chart.options" (load)="saveInstance($event.context, chart)"></chart>
     </div>
-  </div>  
+  </div>
 </div>

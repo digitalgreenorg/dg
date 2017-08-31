@@ -49,7 +49,7 @@ export function highchartsFactory() {
   exp(highChart);
   highcharts_more(highChart);
   solid_gauge(highChart);
-  noData(highChart);
+  // noData(highChart);
   return highChart;
 }
 

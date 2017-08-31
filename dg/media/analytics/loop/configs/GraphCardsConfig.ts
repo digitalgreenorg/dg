@@ -12,7 +12,6 @@ export const cardGraphConfig = {
     },
 
     title: '#Clusters',
-
     pane: {
       center: ['50%', '85%'],
       size: '140%',

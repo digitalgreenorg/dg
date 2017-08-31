@@ -22,7 +22,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
   cardGraphConfig = environment.cardGraphConfig;
   Dropdownitems = [];
   recentChartsData = {};
-  private chooseDateRange:string = '';
+  private chooseDateRange: string = '';
 
   // DatePicker
   private date = new Date();
@@ -53,11 +53,11 @@ export class CardsComponent implements OnInit, AfterViewInit {
   };
 
   constructor(private cardsService: CardsService, private _sharedService: SharedService, private datepipe: DatePipe
-  , private _globalfiltersharedService:GlobalFilterSharedService) {
-        this._globalfiltersharedService.argsList$.subscribe(data => {
-          let options = this.createParams();
-          this.getData(options);
-        });
+    , private _globalfiltersharedService: GlobalFilterSharedService) {
+    this._globalfiltersharedService.argsList$.subscribe(data => {
+      let options = this.createParams();
+      this.getData(options);
+    });
   }
   cardsConfigs = environment.cardsConfig;
 
@@ -73,7 +73,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
           tagName: this.cardsConfigs[key].overall.text,
           title: this.cardsConfigs[key].text,
           options: this.cardsConfigs[key].overall.graph.options,
-          helpTip : this.cardsConfigs[key].helpTip,
+          helpTip: this.cardsConfigs[key].helpTip,
           nativeChart: null,
         });
       }
@@ -93,20 +93,18 @@ export class CardsComponent implements OnInit, AfterViewInit {
         });
       }
     });
-    // let options = {
-    //   webUrl: "getData/",
-    //   params: {
-    //     apply_filter: false,
-    //   }
-    // }
-    // Uncomment for filter Request
-    // this.getData(options);
-
   }
 
   ngAfterViewInit(): void {
+    this.showLoadingMessage();
     let options = this.createParams();
     this.getData(options);
+  }
+
+  showLoadingMessage(): void {
+    this.recentcharts.forEach(chart => {
+      chart.nativeChart.showLoading();
+    });
   }
 
   public getData(options): any {
@@ -152,14 +150,21 @@ export class CardsComponent implements OnInit, AfterViewInit {
             });
           }
           if (cardData.placeHolder == "recentcardGraphs") {
+            let numberOfDays = Object.keys(cardData.value)[0];
+            let dataToDisplay = cardData.value[numberOfDays];
             this.recentcharts.forEach(chart => {
               if (cardData.tagName === chart.tagName) {
                 this.Dropdownitems = Object.keys(cardData.value);
                 this.recentChartsData[cardData.tagName] = cardData.value;
-                chart.nativeChart.series[0].update({ 'data': cardData.value['15'] });
+                chart.nativeChart.series[0].update({ 'data': dataToDisplay });
+                if (dataToDisplay.length > 0) {
+                  chart.nativeChart.hideLoading();
+                } else {
+                  chart.nativeChart.showLoading("No data found");
+                }
               }
             })
-            this.chooseDateRange = '15' + ' Days';
+            this.chooseDateRange = numberOfDays + ' Days';
           }
         });
       });
@@ -172,7 +177,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private createParams() : any {
+  private createParams(): any {
     let options = {
       webUrl: "getCardGraphData/",
       params: {
