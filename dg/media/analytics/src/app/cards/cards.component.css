@@ -1,12 +1,12 @@
 .container {
-  box-shadow: 0 0 8px grey;
+  box-shadow: 0 0 4px grey;
   padding: 15px 15px 15px 15px;
 }
 
 .container-fluid {
   width: 100%;
-  box-shadow: 0 0 8px grey;
-  padding: 15px 15px 15px 15px;
+  box-shadow: 0 0 4px grey;
+  padding: 15px 10px 15px 10px;
 }
 
 .highcharts-yaxis-grid .highcharts-grid-line {

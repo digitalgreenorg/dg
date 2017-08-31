@@ -1,7 +1,7 @@
 .container-box {
-  box-shadow: 0 0 8px grey;
+  box-shadow: 0 0 4px grey;
   padding: 15px 15px 15px 15px;
-  margin: 8px 0px 8px 25px;
+  margin: 8px 0px 8px 0px;
 }
 
 /*.box-size-half {
