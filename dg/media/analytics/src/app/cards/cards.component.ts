@@ -156,7 +156,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
               if (cardData.tagName === chart.tagName) {
                 this.Dropdownitems = Object.keys(cardData.value);
                 this.recentChartsData[cardData.tagName] = cardData.value;
-                chart.nativeChart.series[0].update({ 'data': dataToDisplay });
+                chart.nativeChart.series[0].update({ 'data': dataToDisplay, 'name': cardData.tagName });
                 if (dataToDisplay.length > 0) {
                   chart.nativeChart.hideLoading();
                 } else {

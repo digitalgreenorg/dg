@@ -1,3 +1,8 @@
+const stopsColor = [
+  [0.1, '#D14027'],
+  [0.5, '#D3E7B6'],
+  [0.9, '#7AC143']
+];
 export const cardGraphConfig = {
   'No_of_clusters': {
     chart: {
@@ -34,11 +39,7 @@ export const cardGraphConfig = {
     },
     // the value axis
     yAxis: {
-      stops: [
-        [0.1, '#D14027'],
-        [0.5, '#D3E7B6'],
-        [0.9, '#7AC143']
-      ],
+      stops: stopsColor,
       lineWidth: 0,
       minorTickInterval: null,
       tickAmount: 2,
@@ -67,7 +68,7 @@ export const cardGraphConfig = {
       name: 'present',
       dataLabels: {
         format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
-        '">' + '{y:,.0f}' +'</span><br/></div>'
+        '">' + '{y:,.0f}' + '</span><br/></div>'
       },
       tooltip: {
         valueSuffix: null
@@ -111,11 +112,7 @@ export const cardGraphConfig = {
     },
     // the value axis
     yAxis: {
-      stops: [
-        [0.1, '#DF5353'], // green
-        [0.5, '#DDDF0D'], // yellow
-        [0.9, '#55BF3B'] // red
-      ],
+      stops: stopsColor,
       lineWidth: 0,
       minorTickInterval: null,
       tickAmount: 2,
@@ -144,7 +141,7 @@ export const cardGraphConfig = {
       name: 'present',
       dataLabels: {
         format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
-        '">' + '{y:,.0f}' +'</span><br/></div>'
+        '">' + '{y:,.0f}' + '</span><br/></div>'
       },
       tooltip: {
         valueSuffix: null
@@ -187,11 +184,7 @@ export const cardGraphConfig = {
     },
     // the value axis
     yAxis: {
-      stops: [
-        [0.1, '#DF5353'], // green
-        [0.5, '#DDDF0D'], // yellow
-        [0.9, '#55BF3B'] // red
-      ],
+      stops: stopsColor,
       lineWidth: 0,
       minorTickInterval: null,
       tickAmount: 2,
@@ -220,7 +213,7 @@ export const cardGraphConfig = {
       name: 'present',
       dataLabels: {
         format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
-        '">' + '{y:,.0f}' +'</span><br/></div>'
+        '">' + '{y:,.0f}' + '</span><br/></div>'
       },
       tooltip: {
         valueSuffix: null
@@ -263,11 +256,7 @@ export const cardGraphConfig = {
     },
     // the value axis
     yAxis: {
-      stops: [
-        [0.1, '#DF5353'], // green
-        [0.5, '#DDDF0D'], // yellow
-        [0.9, '#55BF3B'] // red
-      ],
+      stops: stopsColor,
       lineWidth: 0,
       minorTickInterval: null,
       tickAmount: 2,
@@ -296,7 +285,7 @@ export const cardGraphConfig = {
       name: 'present',
       dataLabels: {
         format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
-        '">' + '{y:,.0f}' +'</span><br/></div>'
+        '">' + '{y:,.0f}' + '</span><br/></div>'
       },
       tooltip: {
         valueSuffix: null
@@ -339,11 +328,7 @@ export const cardGraphConfig = {
     },
     // the value axis
     yAxis: {
-      stops: [
-        [0.1, '#DF5353'], // green
-        [0.5, '#DDDF0D'], // yellow
-        [0.9, '#55BF3B'] // red
-      ],
+      stops: stopsColor,
       lineWidth: 0,
       minorTickInterval: null,
       tickAmount: 2,
@@ -415,11 +400,7 @@ export const cardGraphConfig = {
     },
     // the value axis
     yAxis: {
-      stops: [
-        [0.1, '#DF5353'], // green
-        [0.5, '#DDDF0D'], // yellow
-        [0.9, '#55BF3B'] // red
-      ],
+      stops: stopsColor,
       lineWidth: 0,
       minorTickInterval: null,
       tickAmount: 2,
@@ -469,14 +450,10 @@ export const cardGraphConfig = {
       enabled: false
     },
     plotOptions: {
-      line: {
+      area: {
         lineWidth: 2,
-        color: 'rgba(0,51,96,.75)',
-        marker: { enabled: false },
-      },
-      column: {
-        color: 'rgba(24,90,169,.75)',
-        groupPadding: 0
+        color: '#D14027',
+        // marker: { enabled: false },
       }
     },
     xAxis: {

@@ -45,7 +45,6 @@ export class NavsComponent implements OnInit,
   // showDropDownGraphs: boolean = false;
   filters = { 'params': {} };
 
-  test = '';
   constructor(private graphService: GraphsService, private _sharedService: SharedService,
     private _globalfiltersharedService: GlobalFilterSharedService, @Inject(DOCUMENT) private document: any) {
     this._sharedService.argsList$.subscribe(filters => {
@@ -71,11 +70,11 @@ export class NavsComponent implements OnInit,
       this.getGraphsData(this.filters);
       this.containers[this.selectedNav].applyFilter = true;
     });
-    /*setInterval(() => {
-      this.charts.forEach(chart => {
-        chart.nativeChart.reflow();
-      });
-    }, 0);*/
+    // setInterval(() => {
+    //   this.containerCharts.forEach(chart => {
+    //     chart.nativeChart.reflow();
+    //   });
+    // }, 0);
   }
 
   ngOnInit(): void {
@@ -147,7 +146,6 @@ export class NavsComponent implements OnInit,
         this.showContent(nav);
       }
     });
-    console.log(this.test);
   }
 
   addChartsToDict(containers) {
