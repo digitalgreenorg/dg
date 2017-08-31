@@ -11,7 +11,7 @@ import time
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, SubscriptionLog
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call
-from loop_ivr.utils.config import LOG_FILE
+from loop_ivr.utils.config import LOG_FILE, call_failed_sms
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 
@@ -27,12 +27,24 @@ def market_info_incoming(request):
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
-'''
+
 @csrf_exempt
 def market_info_response(request):
-    print request.POST
+    if request.method == 'POST':
+        status = str(request.POST.getlist('Status')[0])
+        outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        if status != 'completed':
+            # If call failed then send acknowledgement to user 
+            price_info_incoming_obj = PriceInfoIncoming.objects.filter(call_id=outgoing_call_id).order_by('-id')
+            price_info_incoming_obj = price_info_incoming_obj[0] if len(price_info_incoming_obj) > 0 else ''
+            # if call found in our database, then fetch number of caller and send SMS
+            if audience_obj != '':
+                user_no = from_number
+                message = [call_failed_sms,'\n', crop_and_code, '\n',('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER)]
+                message = ''.join(message)
+                print message
     return HttpResponse(status=200)
-'''
+
 
 def crop_price_query(request):
     # Serve only Get request

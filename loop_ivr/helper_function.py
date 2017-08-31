@@ -29,9 +29,9 @@ def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     app_id = MARKET_INFO_APP
     app_url = APP_URL%(app_id,)
-    #call_response_url = MARKET_INFO_CALL_RESPONSE_URL
-    #parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
-    parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url}
+    call_response_url = MARKET_INFO_CALL_RESPONSE_URL
+    parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
+    #parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url}
     response = requests.post(app_request_url,data=parameters)
     module = 'make_market_info_call'
     if response.status_code == 200:

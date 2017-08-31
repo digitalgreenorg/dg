@@ -24,6 +24,7 @@ crop_and_code = 'फसल और उनके कोड:\n\
 परवल - 17\n\
 नेनुआ - 20\n\
 भिंडी - 22\n'
+call_failed_sms = 'अभी आपसे संपर्क नही हो रहा है, कृपया थोड़ी देर बाद दोबारा कोशिश करे !'
 
 MARKET_INFO_CALL_RESPONSE_URL = 'http://www.digitalgreen.org/loopivr/market_info_response/'
 PUSH_MESSAGE_SMS_RESPONSE_URL = 'http://www.digitalgreen.org/loopivr/push_message_sms_response/'
