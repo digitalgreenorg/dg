@@ -389,6 +389,15 @@ a {
     width: 178px;
     margin-right: 5px;
 }
+.logonew a {
+    text-indent: -9999px;
+    display: block;
+    background: url(../images/logonew.png) no-repeat 0 0;
+    margin-top: -5px;
+    height: 40px;
+    width: 178px;
+    margin-right: 5px;
+}
 
 .nav .nav-small a {
     font-family: source_sans_prosemibold, arial, helvetica, sans-serif;

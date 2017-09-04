@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-
-        <script  src="/media/social_website/scripts/libs/external/jquery-1.11.1.min.js"></script>
-        <script  src="/media/social_website/scripts/libs/external/jquery.dataTables-1.10.6.min.js"></script>
-        <script  src="/media/social_website/scripts/libs/external/dataTables.tableTools.js"></script>
-        <script  src="/media/raw_data_analytics/table_load.js"></script>
         <meta property="og:title" content="Digital Green"/>
         <meta property="og:type" content="website"/>
         <meta property="og:site_name" content="DigitalGreen"/>
@@ -116,95 +111,5 @@
                 </div>
             </div>
             <div class="header-margin"></div>
-
-
-
-<!-- ######################################################################################################-->
-            <section id="Raw Data Analytics" class="about-bg">
-				<div class="wrapper">
-					<div class="inner-wrapper">
-						<h2 class="hdg-a hdg-source-lt layout-vr-md">Raw Data Analytics - Data Result</h2>
-					    <div class="media layout-vr-xlg">
-							</br>
-								<div class="copy">
-									From:&nbsp;{{ from_date }} &nbsp;&nbsp;&nbsp;&nbsp;
-									To:&nbsp;{{ to_date }}
-								</div>
-								</br></br></br>
-								<div id='tablex' data-val-json="{{dataf}}">
-								</div>
-								<table id="example" class="display" style="text-align:center;">
-							    </table>
-						</div>
-					</div>		
-				</div>
-			</section>
-<!-- ######################################################################################################-->
-			 
-      <footer>
-                <div class="footer" role="contentinfo" style="background-color: #66E214">
-                    <div class="wrapper">
-                        <div class="inner-wrapper">
-                            <nav role="navigation">
-                                <ul class="copy-lt hdg-upper copy footer-links">  
-                                </ul>
-                            </nav>
-                        </div>
-                    </div> <!-- End .inner-wrapper -->
-                </div>  <!-- End .wrapper -->
-            </footer>
-        </div>
-
-        <!-- End Main Wrapper -->
-        <!-- JAVASCRIPT -->
-        
-        <!-- For Debugging -->
-        <!--script data-main="{{STATIC_URL}}social_website/scripts/main" src="{{STATIC_URL}}social_website/scripts/libs/external/requirejs/require.js"></script-->
-        <!-- Also change build to scripts in main.js -->
-        
-        <!-- For Production -->
-        
-        <!-- Enabling Google Analytics -->
-        <script type="text/javascript">
-    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    	</script>
-    	<script type="text/javascript">
-    		try {
-    			var pageTracker = _gat._getTracker("UA-16211208-1");
-    			pageTracker._trackPageview();
-    			} 
-    	catch(err) {}
-    	</script>
-
-        <!-- Quantcast Tag -->
-        <script type="text/javascript">
-            var _qevents = _qevents || [];
-
-            (function () {
-                var elem = document.createElement('script');
-                elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
-                elem.async = true;
-                elem.type = "text/javascript";
-                var scpt = document.getElementsByTagName('script')[0];
-                scpt.parentNode.insertBefore(elem, scpt);
-            })();
-
-            _qevents.push({
-                qacct: "p-v8ZfLRLAahkeW"
-            });
-        </script>
-
-        <noscript>
-            <div style="display:none;">
-                <img src="//pixel.quantserve.com/pixel/p-v8ZfLRLAahkeW.gif" border="0" height="1" width="1"
-                     alt="Quantcast"/>
-            </div>
-        </noscript>
-        <!-- End Quantcast tag -->
-
-    </body>
-</html>
-
 
 
