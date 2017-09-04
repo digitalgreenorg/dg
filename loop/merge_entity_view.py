@@ -40,6 +40,10 @@ def send_status_email(df, model_name, email_to):
 	email.send()
 	os.remove(status_file_path)
 
+def set_status(df, index, status, exception):
+        df.set_value(index, 'Status', status)
+        df.set_value(index, 'Exception', exception)
+
 def update_records(related_models, old, new):
 	for related_model in related_models:
 		related_model_column = related_models[related_model]['column']
@@ -68,20 +72,15 @@ def check_crop_language(language, crops):
 	return True, crop_lang
 
 def merge_bodies(df, model_name, index, initial, final):
-
 	kwargs = {merge_cnf.models[model_name]['col_name']: final}
-
 	model = get_model('loop', model_name)
-
 	try:
 		with transaction.atomic():
 			update_records(merge_cnf.models[model_name]['dependencies'], initial, final)
 			delete_entity(model, model_name, initial)
-
-			df.set_value(index, 'Status', 'Pass')
+			set_status(df, index, 'Pass', None)
 	except Exception as e:
-		df.set_value(index, 'Status', 'Fail')
-		df.set_value(index, 'Exception', str(e))
+		set_status(df, index, 'Fail', str(e))
 
 def merge(model, merge_file_path, email_to):
 	df = pd.read_excel(merge_file_path, sheet_name=0)	
@@ -91,12 +90,10 @@ def merge(model, merge_file_path, email_to):
 
 	for i, row in df.iterrows():
 		if(row['Initial ID'] in common_ids or row['Final ID'] in common_ids):
-			df.set_value(i, 'Status', 'Fail')
-			df.set_value(i, 'Exception', 'IDs:['+ids+'] are presesnt in Final ID column too')
+			set_status(df, index, 'Fail', 'IDs:['+ids+'] are presesnt in Final ID column too')
 			continue
 		if(duplicate_initial_id[i] == True):
-			df.set_value(i, 'Status', 'Fail')
-			df.set_value(i, 'Exception', 'Initial ID being changed multiple times')
+			set_status(df, i, 'Fail', 'Initial ID being changed multiple times')
 			continue
 		if model == 'Crop':
 			crop_lang = CropLanguage.objects.filter(id__in=[row['Initial ID'], row['Final ID']]).values('crop_id', 'language_id')
@@ -106,30 +103,26 @@ def merge(model, merge_file_path, email_to):
 				crops.append(data['crop_id'])
 				languages.add(data['language_id'])
 			if len(languages) > 1:
-				df.set_value(i, 'Status', 'Fail')
-				df.set_value(i, 'Exception', 'Merge requested for different languages')
+				set_status(df, i, 'Fail', 'Merge requested for different languages')
 				continue
 			for lang in languages:
 				break
 			check, crop_lang_queryset = check_crop_language(lang, crops)
 			if check == True:
 				try:
-					initial_crop_lang = crop_lang_queryset.get(id=row['Initial ID'])#.values_list('crop_id', flat=True)[0]
+					initial_crop_lang = crop_lang_queryset.get(id=row['Initial ID'])
 					initial_crop_id = initial_crop_lang.crop_id
-					final_crop_lang = crop_lang_queryset.get(id=row['Final ID'])#.values_list('crop_id', flat=True)[0]				
-					final_crop_id = final_crop_lang.crop_id
-					
+					final_crop_lang = crop_lang_queryset.get(id=row['Final ID'])				
+					final_crop_id = final_crop_lang.crop_id					
 					with transaction.atomic():
 						crop_lang_queryset.get(crop_id=initial_crop_id).delete()
 						merge_bodies(df, model, i, initial_crop_id, final_crop_id)
 				except Exception as e:
-					df.set_value(i, 'Status', 'Fail')
-					df.set_value(i, 'Exception', str(e))
+					set_status(df, i, 'Fail', str(e))
 			else:
-				df.set_value(i, 'Status', 'Fail')
-				df.set_value(i, 'Exception', 'There is a conflict in crop names for other languages')
+				set_status(df, i, 'Fail', 'There is a conflict in crop names for other languages')
 		else:
 			merge_bodies(df, model, i, row['Initial ID'], row['Final ID'])
-
+	
 	send_status_email(df, model, email_to)
 	
