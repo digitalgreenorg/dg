@@ -100,6 +100,14 @@ class LoopStatistics():
                 WHERE
                     llu.role = 2
                 GROUP BY lct.farmer_id , lct.user_created_id) AS T
+            JOIN
+                (SELECT
+                    MIN(date) AS min_date, farmer_id AS f_id
+                FROM
+                    loop_combinedtransaction
+                GROUP BY farmer_id
+                ) AS B ON B.f_id = T.farmer_id
+                    AND B.min_date = T.date
             GROUP BY T.date , T.country_id , T.user_created_id """,con=self.mysql_cn)
 
             # Cummulating sum of farmers that were unique and did any transaction till a particular date

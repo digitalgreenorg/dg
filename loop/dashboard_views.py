@@ -122,7 +122,7 @@ def overall_graph_data(**filter_args):
     combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
     loopUserData = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
 
-    if(state_id) :
+    if state_id:
         combinedTransactionData = combinedTransactionData.filter(mandi__district__state=state_id)
         loopUserData = loopUserData.filter(village__block__district__state=state_id)
 
