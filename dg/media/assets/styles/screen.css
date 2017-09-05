@@ -354,7 +354,6 @@ a {
     margin: 0 auto;
 }
 
-
 .nav-pipe {
     padding-bottom: 14px;
     background: url(../images/nav-border.png) no-repeat 0 0;
@@ -415,13 +414,12 @@ a {
 
 .logovideo a {
     text-indent: -9999px;
-    display: inline-block;
-    background: url(../../social_website/content/CommunityVideos_Horizontal_Reversed.png) no-repeat 0 0;
+    display: block;
+    background: url(../images/CommunityVideos_Horizontal_Reversed.png) no-repeat 0 0;
     height: 50px;
     width: 300px;
     max-height: 70px;
-    margin-top: -10px;
-    margin-right: 5px;
+    margin: 0 auto;
 }
 .nav .nav-small a {
     font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
