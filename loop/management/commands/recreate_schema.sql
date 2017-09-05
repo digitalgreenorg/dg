@@ -15,7 +15,7 @@ CREATE TABLE `loop_aggregated_myisam`(
   `aggregator_name` varchar(50) NOT NULL,
   `mandi_name` varchar(50) NOT NULL,
   `gaddidar_name` varchar(50) NOT NULL,
-  `cum_distinct_farmer` int unsigned NOT NULL,
+  `new_distinct_farmer` int unsigned NOT NULL,
   `country_id` int unsigned NOT NULL,
   `state_id` int unsigned NOT NULL,
   PRIMARY KEY(`id`)

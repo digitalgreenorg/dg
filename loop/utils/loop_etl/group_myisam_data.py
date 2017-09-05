@@ -333,18 +333,26 @@ def cpk_spk_ts(**kwargs):
 def get_cummulative_vol_farmer(**kwargs):
     aggregate_cumm_vol_farmer = {
         'quantity':{
-            'quantity__sum':'sum'
+            'quantity__sum': 'sum'
         },
-        'cum_distinct_farmer':{
-            'cum_vol_farmer':'mean'
+        'new_distinct_farmer':{
+            'cum_vol_farmer': 'mean'
         }
+    }
+    agg_vol_farmer = {
+        'quantity': 'sum',
+        'new_distinct_farmer': 'sum'
     }
     result_data = {}
     df_result = query_myisam(**kwargs)
     try:
-        df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
+        df_cum_vol_farmer = df_result.groupby(['date','aggregator_id']).agg(aggregate_cumm_vol_farmer).reset_index()
         df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
+        df_cum_vol_farmer = df_cum_vol_farmer.groupby('date').agg(agg_vol_farmer).reset_index()
+
         df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
+        df_cum_vol_farmer['cum_distinct_farmer'] = df_cum_vol_farmer['new_distinct_farmer'].cumsum()
+
         df_cum_vol_farmer.drop('quantity',axis=1,inplace=True)
         df_cum_vol_farmer['date'] = df_cum_vol_farmer['date'].astype('datetime64[ns]')
         df_cum_vol_farmer['date_time'] = df_cum_vol_farmer['date'].astype('int64')//10**6
