@@ -312,6 +312,10 @@ a {
     padding-top: 10px;
 }
 
+.global-nav-video {
+    border-bottom: 4px solid #b5086a;
+    padding-top: 10px;
+}
 .inner-nav {
     padding: 0 0 0 23px;
 }
@@ -332,6 +336,24 @@ a {
 .nav > li {
     float: left;
 }
+
+.nav-vid {
+    height: 54px;
+}
+
+.nav-vid:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.nav-vid > li {
+    margin: 0 auto;
+}
+
 
 .nav-pipe {
     padding-bottom: 14px;
@@ -390,6 +412,17 @@ a {
     margin-right: 5px;
 }
 
+
+.logovideo a {
+    text-indent: -9999px;
+    display: inline-block;
+    background: url(../../social_website/content/CommunityVideos_Horizontal_Reversed.png) no-repeat 0 0;
+    height: 50px;
+    width: 300px;
+    max-height: 70px;
+    margin-top: -10px;
+    margin-right: 5px;
+}
 .nav .nav-small a {
     font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
     color: #000000;
@@ -537,6 +570,11 @@ a {
 .footer {
     background: #6bb155;
     border-top: 4px solid #047d0a;
+    padding: 8px 0 14px 0;
+}
+.footervideo {
+    background: #6bb155;
+    border-top: 4px solid #b5086a;
     padding: 8px 0 14px 0;
 }
 
@@ -1714,6 +1752,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 /* ---------------------------------------------------------------------
  Sorting on collections page
 ------------------------------------------------------------------------ */
+/* TODO : to be changed by sourabh*/
 
 .sorting {
     border: 1px solid #eceadc;
@@ -1736,13 +1775,13 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     cursor: pointer;
 }
 
-.sorting-list .open .filter-category-label {
-    background: #047d0a;
+.sorting-list .open .filter-category-label {                 
+    background: #E80A89;
     color: #ffffff;
     -webkit-box-shadow: 0px 1px 1px rgba(35, 31, 32, 0.2);
     -moz-box-shadow: 0px 1px 1px rgba(35, 31, 32, 0.2);
     box-shadow: 0px 1px 1px rgba(35, 31, 32, 0.2);
-    border: 1px solid #047d0a;
+    border: 1px solid #E80A89;
 }
 
 .sorting-list > li.sorting-categories-container {
@@ -1842,13 +1881,18 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     left: 1px;
 }
 
-/* Loading indicator */
+/* Loading indicator */                     /* TODO : to be changed by sourabh*/
 .loading-indicator {
     font-size: 22px;
     color: #6bb155;
 }
 
-/* Filter menu by views, likes, adopt */
+.loading-indicator-video{
+    font-size: 22px;
+    color: #E80A89;
+}
+
+/* Filter menu by views, likes, adopt */       /* TODO : to be changed by sourabh*/
 
 .filterOptions {
     margin-top: 5px;
@@ -1883,19 +1927,19 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .filterOptions .active {
-    background: url(../images/btn-green-lt.png) no-repeat 0 0;
+    background: url(../images/btn-video-back.png) no-repeat 0 0;
     color: #ffffff;
 }
 
 .filterOptions .active > span {
-    background: url(../images/btn-green-rt.png) no-repeat right 0;
+    background: url(../images/btn-video-back.png) no-repeat right 0;
 }
 
 .filterOptions .active:after {
     content: " ";
     left: 40%;
-    background: url(../images/btn-green-carat.png) no-repeat 0 0;
-    height: 8px;
+    background: url(../images/btn-caret.png) no-repeat 0 0;
+    height: 12px;
     width: 16px;
     position: relative;
     top: -1px;
