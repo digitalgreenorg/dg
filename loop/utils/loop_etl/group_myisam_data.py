@@ -177,14 +177,14 @@ def get_data_from_myisam(get_total, **kwargs):
         }
     }
 
-    aggregate_cumm_vol_farmer = {
-        'quantity':{
-            'quantity__sum':'sum'
-        },
-        'cum_distinct_farmer':{
-            'cum_vol_farmer':'mean'
-        }
-    }
+    # aggregate_cumm_vol_farmer = {
+    #     'quantity':{
+    #         'quantity__sum':'sum'
+    #     },
+    #     'cum_distinct_farmer':{
+    #         'cum_vol_farmer':'mean'
+    #     }
+    # }
     cumm_vol_farmer = {}
     dictionary = {}
     try:
@@ -211,11 +211,11 @@ def get_data_from_myisam(get_total, **kwargs):
                 dictionary[day] = list(data_by_grouped_days.values())
 
             # Calcualting cummulative volume and farmer count
-            df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
-            df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
-            df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
-            df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
-            cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
+            # df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
+            # df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
+            # df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
+            # df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
+            # cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
         else:
             df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
             df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
@@ -223,7 +223,7 @@ def get_data_from_myisam(get_total, **kwargs):
 
     except Exception as e:
         print 'Exception : ', e
-    return dictionary, cumm_vol_farmer
+    return dictionary#, cumm_vol_farmer
 
 def read_kwargs(Kwargs):
     return Kwargs['country_id'], Kwargs['state_id'], Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'], Kwargs['gaddidars_list']

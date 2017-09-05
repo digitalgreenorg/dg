@@ -64,7 +64,8 @@ def recent_graphs_data(**kwargs):
     kwargs['gaddidar_list'] = []
     kwargs['mandi_list'] = []
 
-    aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, **kwargs)
+    aggregated_result = get_data_from_myisam(0, **kwargs)
+    # aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, **kwargs)
     chart_dict = {'aggregated_result': aggregated_result}
 
     # algorithm to store column wise grouped data
@@ -113,6 +114,11 @@ def generate_res_recent(key, placeHolder, tagName, value):
 def overall_graph_data(**filter_args):
     country_id = filter_args['country_id'] #To be fetched from request
     state_id = filter_args['state_id']
+    filter_args['start_date'] = None
+    filter_args['end_date'] = None
+    filter_args['aggregator_list'] = []
+    filter_args['gaddidar_list'] = []
+    filter_args['mandi_list'] = []
     combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
     loopUserData = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
 
@@ -123,7 +129,8 @@ def overall_graph_data(**filter_args):
     total_farmers_reached = combinedTransactionData.values('farmer').distinct().count()
     total_cluster_reached = loopUserData.count()
 
-    aggregated_result, cum_vol_farmer = get_data_from_myisam(1, **filter_args)
+    aggregated_result = get_data_from_myisam(1, **filter_args)
+    # aggregated_result, cum_vol_farmer = get_data_from_myisam(1, **filter_args)
     # if((len(aggregated_result) > 0) and (len(cum_vol_farmer) > 0)):
     volume = round(aggregated_result['quantity'][0])
     amount = round(aggregated_result['amount'][0])
