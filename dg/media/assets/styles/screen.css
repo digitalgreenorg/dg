@@ -2061,6 +2061,10 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     background-color: #E80A89;
 }
 
+.featured-collection-li a {
+    color: #E80A89;
+}
+
 .featured-collection-li a:hover {
     color: #ffffff;
 }
