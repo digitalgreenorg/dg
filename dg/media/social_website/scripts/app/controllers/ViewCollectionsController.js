@@ -193,7 +193,7 @@ define(function(require) {
                                     if (next_video.length == 0) {
                                         next_video = now_playing_video.closest('ul').find('li:first');
                                     }
-                                    window.location.href = next_video.find('a-vid').attr('href');
+                                    window.location.href = next_video.find('a').attr('href');
                                 }
                                 else {
                                     now_playing_video = now_playing_video.closest('li');

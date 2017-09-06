@@ -300,11 +300,6 @@ body {
 
 a {
     text-decoration: none;
-    color: #047d0a;
-}
-
-a-vid {
-    text-decoration: none;
     color: #E80A89;
 }
 
@@ -2072,7 +2067,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 .featured-collection-title {
     padding: 15px 20px 15px 20px;
-    border-left: 5px solid #dad7d1;
+    border-left: 5px solid #E80A89;
 }
 
 .featured-collection-indicator {
