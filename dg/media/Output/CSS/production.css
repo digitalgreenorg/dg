@@ -113,13 +113,13 @@
     margin-top: -40px;
     margin-left: -200px;
     text-align: left;
-    background-color: #f2f8d8;
+    background-color: #26a5dd;
     font-size: 0.7em;
     font-family: Arial, Helvetica, Sans-Serif;
-    color: #5b6e1d;
+    color: #FFF;
     border-width: 1px;
     border-style: solid;
-    border-color: Green;
+    border-color: #1489b6;
     display: none
 }
 
@@ -302,9 +302,9 @@
     width: 100%;
     height: 30px;
     border-style: solid;
-    border-color: #59AF04;
+    border-color: rgba(208, 210, 211, 0.8);
     border-width: 1px;
-    background-color: #E8F7BA;
+    background-color: rgba(38, 167, 223, 0.8);
     border-bottom-width: 0px
 }
 
@@ -315,7 +315,7 @@
     margin-right: 0px;
     width: 100%;
     border-style: solid;
-    border-color: #59AF04;
+    border-color: #1489b6;
     border-width: 1px;
     border-top-width: 0px;
     padding-top: 10px;
@@ -328,7 +328,7 @@
     font-family: Arial, Helvetica, Sans-Serif;
     font-weight: bold;
     font-size: 1.2em;
-    color: #5B6E1D;
+    color: white;
     float: left;
     width: 48%
 }
