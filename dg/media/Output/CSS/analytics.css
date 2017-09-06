@@ -3,7 +3,7 @@
   margin-top: 0px;
   margin-left: 0%;
   width: 100%;
-  height: 100px;
+  /*height: 100px;*/
   margin-bottom: 0px;
   background-color: #26A5DD;
   text-align: center;
@@ -12,12 +12,19 @@
 #analyticslogo {
   margin-top: 5px;
   margin-left: 5px;
-  float: left;
+  float: center;
+}
+
+.solution{
+  color: #FFF;
+  margin-top: -5px;
+  font-size: 20px;
 }
 
 #analyticsnav {
   position: relative;
-  margin-top: 20px;
+  /*margin-top: 20px;*/
+  margin-top: -50px;
   margin-right: 0px;
   float: right;
   color: White;
@@ -60,6 +67,7 @@
   top: 20px;
   left: -45px;
   /*border: 2px solid #BBD569;*/
+  border: 2px solid #1489B6;
   /*background-color: #F3FDD5;*/
   background-color: #FFF;
   /*color: Gray;*/
@@ -111,7 +119,7 @@
 #analyticspagetitle a:hover {
   text-decoration: underline;
   /*color: #fbae0c;*/
-  color: #1489B6;
+  color: #FFF;
 }
 
 #content {
@@ -128,14 +136,17 @@
 
 #customize {
   float: left;
-  margin-top: 0px;
+  /*margin-top: 0px;*/
+  margin-top: -30px;
   margin-left: 0px;
   width: 14%;
   min-height: 850px;
-  background-color: none;
+  /*background-color: none;*/
+  background-color: rgba(155, 160, 167, 0.5);
   border-right-width: 1px;
   border-right-style: solid;
-  border-right-color: #bbd569;
+  /*border-right-color: #bbd569;*/
+  border-right-color: #FFF;
 }
 
 #customizetitle {
@@ -206,12 +217,14 @@
   font-size: 0.8em;
   font-family: Arial, Helvetica, Sans-Serif;
   font-weight: bold;
-  color: #5b6e1d;
+  /*color: #5b6e1d;*/
+  color: #3D3D3F;
   background-color: none;
   height: 30px;
   border-bottom-width: 3px;
   border-bottom-style: solid;
-  border-bottom-color: #e8f7ba;
+  /*border-bottom-color: #e8f7ba;*/
+  border-bottom-color: #FFF;
 }
 
 #calenderbody {
@@ -279,9 +292,9 @@
 div.inputdiv {
   padding: 2px;
   height: 15px;
-  width: 78px;
+  /*width: 78px;*/
   border-style: solid;
-  border-color: gray;
+  border-color: #9BA0A7;
   border-width: 1px;
   font-size: 90%;
   font-family: Calibri;
@@ -290,11 +303,12 @@ div.inputdiv {
   -webkit-border-radius: 0px;
   -webkit-appearance: push-button;
   border-radius: 0px;
-  -webkit-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;
-  color: black;
+  /*-webkit-box-shadow: rgba(0, 0, 0, 1) 0 1px 0;*/
+  color: #3D3D3F;
   vertical-align: middle;
   text-align: center;
   margin-left: 18px;
+  margin-top: 5px;
   cursor: default;
 }
 
@@ -321,13 +335,16 @@ select {
   width: 93%;
   border-style: solid;
   size: 1px;
-  border-color: Green;
+  /*border-color: Green;*/
+  border-color: #1489B6;
   border-width: 1px;
   font-size: 90%;
   font-family: Calibri;
   font-weight: normal;
-  color: #5b6e1d;
-  background-color: #f3fdd5
+  /*color: #5b6e1d;*/
+  color: #FFF;
+  /*background-color: #f3fdd5*/
+  background-color: #1489B6;
 }
 
 #submitdiv {
@@ -352,19 +369,25 @@ select {
 }
 
 #Reset1 {
-  min-width: 60%;
-  font-size: 90%;
+  min-width: 100%;
+  padding: 3px;
+  /*font-size: 90%;*/
   font-family: Calibri;
   font-weight: normal;
-  color: Black;
+  /*color: Black;*/
+  color: #FFF;
+  background: #9BA0A7;
 }
 
 #Submit1 {
-  min-width: 50%;
-  font-size: 90%;
+  min-width: 100%;
+  padding: 3px;
+  /*font-size: 90%;*/
   font-family: Calibri;
   font-weight: normal;
-  color: Black;
+  /*color: Black;*/
+  color: #FFF;
+  background: #1489B6;
 }
 
 
@@ -391,7 +414,8 @@ select {
   float: none;
   width: 100%;
   border-bottom-style: solid;
-  border-bottom-color: Green;
+  /*border-bottom-color: Green;*/
+  border-bottom-color: #FFF;
   border-bottom-width: 1px;
   margin-top: 5px;
 }
@@ -400,11 +424,12 @@ select {
   float: left;
   padding: 1px;
   width: 85%;
-  height: 20px;
+  /*height: 20px;*/
   font-size: 90%;
   font-family: Calibri;
   font-weight: normal;
-  color: #5b6e1d;
+  /*color: #5b6e1d;*/
+  color: #3D3D3F;
 }
 
 .partnercheckbox {
@@ -438,7 +463,8 @@ select {
   float: none;
   width: 100%;
   border-bottom-style: solid;
-  border-bottom-color: Green;
+  /*border-bottom-color: Green;*/
+  border-bottom-color: #FFF;
   border-bottom-width: 1px;
   margin-top: 5px;
 }
@@ -451,7 +477,8 @@ select {
   font-size: 90%;
   font-family: Calibri;
   font-weight: normal;
-  color: #5b6e1d;
+  /*color: #5b6e1d;*/
+  color: #3D3D3F;
 }
 
 .projectcheckbox {
@@ -492,7 +519,8 @@ select {
 }
 
 #expandview3 {
-  border-color: Orange;
+  /*border-color: Orange;*/
+  border-color: #1489B6;
   border-style: solid;
   border-width: 2px;
   z-index: 9998;
@@ -518,7 +546,8 @@ select {
   font-family: Calibri;
   font-weight: bold;
   font-size: 26px;
-  color: Green;
+  /*color: Green;*/
+  color: #3D3D3f;
   text-align: center
 }
 

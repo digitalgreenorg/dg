@@ -42,14 +42,14 @@
 						highlighted_match_found = partner_list.filter(function(partner) { return highlight_bucket.indexOf(parseInt(partner)) >= 0 });
 						if(highlighted_match_found.length > 0){
 							$("#projectbodytable input:checkbox[value="+index+"]").parent()
-							.prev().attr('style',  'font-weight:bolder; font-size:100%; color:black; background-color:#f3fdd5;');
+							.prev().attr('style',  'font-weight:bolder; font-size:100%; color:#3D3D3F; background-color:rgba(38,167,223,0.5);');
 						}
 						else{
 							// Add bold style to project if any of its partner exist in simple_bucket of partner
 							bold_match_found = partner_list.filter(function(partner) { return simple_bucket.indexOf(parseInt(partner)) >= 0 });
 							if(bold_match_found.length > 0){
 								$("#projectbodytable input:checkbox[value="+index+"]").parent()
-								.prev().attr('style',  'font-weight:bolder; font-size:100%; color:black;');
+								.prev().attr('style',  'font-weight:bolder; font-size:100%; color:#3D3D3F;');
 							}
 						}
 					});
@@ -170,7 +170,8 @@
 <div id='analyticsheader'>
 
 	<div id='analyticslogo'>
-		<a href="/analytics/overview_module?geog=country&id=1"> <img src="/media/Output/Images/CocoLogo_White.png" style="height:40px;" alt='Analytics Logo'> </a>
+		<a href="/analytics/overview_module?geog=country&id=1"> <img src="/media/Output/Images/CocoLogo_White.png" style="height:40px;" alt='Analytics Logo'></a>
+		<div class="solution">Analytics</div>
 	</div>
 
 	<div id='analyticsnav'>
@@ -185,21 +186,21 @@
 				</ul>
 			</div>
 		</div>
-		<div class='analyticsnavlink'>
+		<!-- <div class='analyticsnavlink'>
 			<a href='/'>Home</a>
-		</div>
+		</div> -->
 
 	</div>
 
 </div>
-<div id='analyticspagetitle'>
+<!-- <div id='analyticspagetitle'>
 	&nbsp;
 	{% block analyticsbreadcrums %}
 		<a href='/'>Home</a> /
 		<a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>
 	{% endblock analyticsbreadcrums %}
 
-</div>
+</div> -->
 <div id='content'>
 	<div id='customize'>
 		<div id='customizetitle'>
@@ -230,11 +231,11 @@
 							<td id='calenderbodytitle' colspan='2'> date: 'yyyy-mm-dd' format  </td>
 						</tr>
 						<tr>
-							<td id='calenderbodytd1' class='custombodytd1'> <div id='calendertodatetitle'> from: </div> 	 </td>
+							<td id='calenderbodytd1' class='custombodytd1'> <div id='calendertodatetitle'> From: </div> 	 </td>
 							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker1' class='inputdiv'>{{search_box_params.from_date}}</div> </td>
 						</tr>
 						<tr>
-							<td id='calenderbodytd1' class='custombodytd1'> <div id='calenderfromdatetitle'> to: </div>  </td>
+							<td id='calenderbodytd1' class='custombodytd1'> <div id='calenderfromdatetitle'> To: </div>  </td>
 							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker2' class='inputdiv'>{{search_box_params.to_date}}</div> </td>
 						</tr>
 					</table>
@@ -358,7 +359,7 @@
 					{% for partner in search_box_params.partners %}
 						<tr>
 							<td id='partnerbodytd2' class='custompartnerbodytd'>
-								<div id='partnername' class='partnerdiv' title='{{partner.FULL_PARTNER_NAME}}' {% if partner.highlight == 1 and not partner.unmarked %} style="font-weight:bolder; font-size:100%; color:black; background-color:#f3fdd5;" {% elif partner.highlight == 1 %} style="font-weight:bolder; font-size: 100%; color:black;" {% endif %}>{{partner.PARTNER_NAME}}</div>
+								<div id='partnername' class='partnerdiv' title='{{partner.FULL_PARTNER_NAME}}' {% if partner.highlight == 1 and not partner.unmarked %} style="font-weight:bolder; font-size:100%; color:#3D3D3F; background-color:rgba(38,167,223,0.5);" {% elif partner.highlight == 1 %} style="font-weight:bolder; font-size: 100%; color:#3D3D3F;" {% endif %}>{{partner.PARTNER_NAME}}</div>
 								<div class='partnercheckbox'>
 									<input type="checkbox" name="partners" value="{{partner.partner_id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
 								</div>
