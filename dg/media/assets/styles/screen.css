@@ -2049,7 +2049,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .featured-collection-li.now-playing {
-    background-color: #047d0a;
+    background-color: #E80A89;
 }
 
 .featured-collection-li.now-playing a{
@@ -2058,7 +2058,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 
 .featured-collection-li:hover {
-    background-color: #047d0a;
+    background-color: #E80A89;
 }
 
 .featured-collection-li a:hover {
@@ -2067,7 +2067,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 .featured-collection-title {
     padding: 15px 20px 15px 20px;
-    border-left: 5px solid #dad7d1;
+    border-left: 5px solid #E80A89;
 }
 
 .featured-collection-indicator {
