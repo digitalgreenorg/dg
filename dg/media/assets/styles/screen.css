@@ -1308,7 +1308,7 @@ a {
 
 .btn:hover,
 .like-btn.liked {
-    background: #047d0a;
+    background: #E80A89;
     color: #ffffff;
 }
 
@@ -2849,7 +2849,7 @@ textarea.comment-text {
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#359123), color-stop(50%,#348f22), color-stop(100%,#266619)); /* Chrome,Safari4+ */
     background: -webkit-linear-gradient(top, #359123 0%,#348f22 50%,#266619 100%); /* Chrome10+,Safari5.1+ */
     background: -o-linear-gradient(top, #359123 0%,#348f22 50%,#266619 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #359123 0%,#348f22 50%,#266619 100%); /* IE10+ */
+    /*background: -ms-linear-gradient(top, #359123 0%,#348f22 50%,#266619 100%); /* IE10+ */*/
     background: linear-gradient(to bottom, #359123 0%,#348f22 50%,#266619 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#359123', endColorstr='#266619',GradientType=0 ); /* IE6-8 */
 
