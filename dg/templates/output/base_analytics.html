@@ -170,7 +170,8 @@
 <div id='analyticsheader'>
 
 	<div id='analyticslogo'>
-		<a href="/analytics/overview_module?geog=country&id=1"> <img src="/media/Output/Images/CocoLogo_White.png" style="height:40px;" alt='Analytics Logo'> </a>
+		<a href="/analytics/overview_module?geog=country&id=1"> <img src="/media/Output/Images/CocoLogo_White.png" style="height:40px;" alt='Analytics Logo'></a>
+		<div class="solution">Analytics</div>
 	</div>
 
 	<div id='analyticsnav'>
@@ -185,21 +186,21 @@
 				</ul>
 			</div>
 		</div>
-		<div class='analyticsnavlink'>
+		<!-- <div class='analyticsnavlink'>
 			<a href='/'>Home</a>
-		</div>
+		</div> -->
 
 	</div>
 
 </div>
-<div id='analyticspagetitle'>
+<!-- <div id='analyticspagetitle'>
 	&nbsp;
 	{% block analyticsbreadcrums %}
 		<a href='/'>Home</a> /
 		<a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>
 	{% endblock analyticsbreadcrums %}
 
-</div>
+</div> -->
 <div id='content'>
 	<div id='customize'>
 		<div id='customizetitle'>
