@@ -87,7 +87,8 @@
   font-size: 0.8em;
   font-family: Arial, Helvetica, Sans-Serif;
   font-weight: normal;
-  color: #5b6e1d;
+  /*color: #5b6e1d;*/
+  color: #3D3D3F;
   text-align: center;
 }
 
@@ -111,14 +112,17 @@
   margin-top: -40px;
   margin-left: -200px;
   text-align: left;
-  background-color: #f2f8d8;
+  /*background-color: #f2f8d8;*/
+  background-color: #26A5DD;
   font-size: 0.7em;
   font-family: Arial, Helvetica, Sans-Serif;
   font-weight: normal;
-  color: #5b6e1d;
+  /*color: #5b6e1d;*/
+  color: #FFF;
   border-width: 1px;
   border-style: solid;
-  border-color: Green;
+  /*border-color: Green;*/
+  border-color: #1489B6;
   display: none
 }
 
@@ -137,7 +141,8 @@
   font-size: 1.6em;
   font-family: Arial, Helvetica, Sans-Serif;
   font-weight: bold;
-  color: #b5b5b5;
+  /*color: #b5b5b5;*/
+  color: #9BA0A7;
   text-align: center
 }
 
@@ -157,7 +162,7 @@
   /*border-color: #59af04;
   background-color: #e8f7ba;*/
   border-color: #1489B6;
-  background-color: #1489B6;
+  background-color: #26A5DD;
 }
 
 .table2statdesc1 {
@@ -194,7 +199,8 @@
   height: 30px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: Green;
+  /*border-bottom-color: Green;*/
+  border-bottom-color: #1489B6;
 }
 
 .table2statdesc2 {
@@ -209,12 +215,15 @@
   text-align: center;
   border-right-width: 1px;
   border-right-style: solid;
-  border-right-color: #59af04;
+  /*border-right-color: #59af04;*/
+  border-right-color: #1489B6;
   height: 30px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: Green;
-  background-color: #f3fdd5
+  /*border-bottom-color: Green;*/
+  border-bottom-color: #1489B6;
+  /*background-color: #f3fdd5;*/
+  background-color: #FFF;
 }
 
 .table2statdesc2 a {
@@ -243,8 +252,10 @@
   height: 30px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: Green;
-  background-color: #f3fdd5;
+  /*border-bottom-color: Green;*/
+  border-bottom-color: #1489B6;
+  /*background-color: #f3fdd5;*/
+  background-color: #FFF;
 }
 
 #table2tddiv {
@@ -328,12 +339,14 @@ th.headerSortDown div#table2tddiv1 {
   width: 98.6%;
   border-width: 1px;
   border-style: solid;
-  border-color: #59af04;
+  /*border-color: #59af04;*/
+  border-color: #1489B6;
 }
 
 #zoomicon {
   width: 100%;
-  background-color: #e8f7ba;
+  /*background-color: #e8f7ba;*/
+  background-color: #26A5DD;
   text-align: right;
   font-size: 2em;
   font-family: Calibri;
@@ -352,7 +365,8 @@ th.headerSortDown div#table2tddiv1 {
   margin-left: 96%;
   border-width: 0px;
   border-style: solid;
-  border-color: #59af04;
+  /*border-color: #59af04;*/
+  border-color: #1489B6;
 }
 
 #zoomiconimg a img {

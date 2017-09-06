@@ -121,6 +121,13 @@
 
 /* Footer div */
 
+#new_footer {
+	clear: both;
+  margin-top: 10px;
+  width: 100%;
+	border-top: 25px solid #26A5DD;
+}
+
 #footertop {
   clear: both;
   margin-top: 20px;
