@@ -1444,6 +1444,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
  Video Category Module
 ------------------------------------------------------------------------ */
 
+
 .vid-cat-selected {
     border: 3px solid transparent;
     width: 219px;
@@ -2203,6 +2204,10 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
    ensure it doesn't cause problems in other areas it's used */
 .vidDrawer-hd {
     max-width: 152px;
+}
+
+.vidDrawer-hd a {
+    color: #E80A89
 }
 
 /* Adjustments for home page view of collections */
