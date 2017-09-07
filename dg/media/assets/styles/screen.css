@@ -1717,7 +1717,6 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 .share-btn:hover .label {
     display: block;
     padding: 5px 8px 4px 24px;
-    color: #FFFFFF;
 }
 
 .share-btn .icon {
