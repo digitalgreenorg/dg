@@ -1610,6 +1610,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 .like-btn .label {
     display: block;
     padding: 5px 8px 4px 24px;
+    color: #E80A89
 }
 
 .like-btn .icon {
@@ -2850,7 +2851,7 @@ textarea.comment-text {
     background: -webkit-linear-gradient(top, #359123 0%,#348f22 50%,#266619 100%); /* Chrome10+,Safari5.1+ */
     background: -o-linear-gradient(top, #359123 0%,#348f22 50%,#266619 100%); /* Opera 11.10+ */
     /*background: -ms-linear-gradient(top, #359123 0%,#348f22 50%,#266619 100%); /* IE10+ */*/
-    background: linear-gradient(to bottom, #359123 0%,#348f22 50%,#266619 100%); /* W3C */
+    /*background: linear-gradient(to bottom, #359123 0%,#348f22 50%,#266619 100%); /* W3C */*/
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#359123', endColorstr='#266619',GradientType=0 ); /* IE6-8 */
 
     cursor: pointer;
