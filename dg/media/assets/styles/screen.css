@@ -415,10 +415,8 @@ a {
     text-indent: -9999px;
     display: block;
     background: url(../images/favicon-white-dg.png) no-repeat 0 0;
+    background-size: contain; 
     height: 50px;
-    width: 300px;
-    max-height: 70px;
-    margin: 0 auto;
 }
 
 .logovideo a {
