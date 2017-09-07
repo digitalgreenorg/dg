@@ -2919,6 +2919,10 @@ textarea.comment-text {
     border-top: 2px solid #ff6000;
 }
 
+.js-show-more {
+    color: #E80A89
+}
+
 /* Container for the videos under the featured video */
 
 .boxWhite {
