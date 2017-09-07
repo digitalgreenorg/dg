@@ -48,9 +48,9 @@
                                     <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
                                 </div>
                                 <div class="bd">
-                                    <h2 class="copy hdg-bold layout-vr-tiny"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
+                                    <h2 class="copy hdg-bold layout-vr-tiny"><a class="hdg-pink" href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
                                     <p class="copy layout-vr-tiny">Member since {{ object.partner.joinDate.year }}</p>
-                                    <a class="hdg-bold copy" href="{% url 'partner' object.partner.name %}">{{ object.partner.collection_count }} Collections</a>
+                                    <a class="hdg-bold copy hdg-pink" href="{% url 'partner' object.partner.name %}">{{ object.partner.collection_count }} Collections</a>
                                 </div>
                             </div> <!-- End .media -->
                             <h3 class="copy hdg-bold layout-vr-tiny">{{ object.state }}</h3>
