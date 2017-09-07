@@ -1724,7 +1724,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     height: 13px;
     top: 7px;
     left: 15px;
-    background: url(../images/share-icon.png) no-repeat 0 0;
+    background: url(../images/share-icon.png);
 }
 
 .share-btn:hover {
