@@ -1635,7 +1635,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 .like-btn:hover .icon,
 .like-btn.liked .icon {
     color: #ffffff;
-    background-position: -87px -112px;
+    background:url(../images/icon-sprite.png) no-repeat -87px -112px;
 }
 
 .share-btn {
