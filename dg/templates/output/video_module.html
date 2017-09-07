@@ -1,7 +1,7 @@
 {% extends "base_analytics.html" %} {% load analytics_extra_tags %} {% block title %} Digital Green - Production Statistics{% endblock %} {% block cssfile %} {{block.super}}
 <link type='text/css' rel='stylesheet' href='/media/Output/CSS/production.css' /> {% endblock cssfile %} {% block jsfile %} {{block.super}}
 <script type="text/javascript" src="/media/Output/JS/Jexpandview.js"></script>
-{% endblock jsfile %} {% block analyticsbreadcrums %} {{block.super}} / <span style='font-size:0.9em; font-weight:bold;'> Production Statistics </span> {% endblock analyticsbreadcrums %} {% block contentbody %} {{block.super}}
+{% endblock jsfile %} {% block analyticsbreadcrums %} {{block.super}} / <span style='font-size:0.80em; font-weight:bold;'> Production Statistics </span> {% endblock analyticsbreadcrums %} {% block contentbody %} {{block.super}}
 <div id='contentstat'>
     <div id='table1'>
         <div id='divstattitle'>
@@ -115,32 +115,32 @@
                     <div id=practice>
                     </div>
 
-                    <div style="width:95px;float:left;">
+                    <div style="width:80px;float:left;">
                         <select class='select sec' id='sec' onChange="ValChange( this.value,document.getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value,radio_value())">
 						<option selected='selected'>Any</option>
 					</select>
                     </div>
-                    <div style="width:95px;float:left;">
+                    <div style="width:80px;float:left;">
                         <select class='select subsec' id='subsec' onChange="ValChange(document.getElementById('sec').value,this.value,getElementById('top').value,getElementById('subtop').value,getElementById('sub').value,radio_value())">
 						<option selected='selected'>Any</option>
 					</select>
                     </div>
-                    <div style="width:95px;float:left;">
+                    <div style="width:80px;float:left;">
                         <select class='select topity' id='top' onChange="ValChange(document.getElementById('sec').value,getElementById('subsec').value,this.value,getElementById('subtop').value,getElementById('sub').value,radio_value())">
 						<option selected='selected'>Any</option>
 					</select>
                     </div>
-                    <div style="width:95px;float:left;">
+                    <div style="width:80px;float:left;">
                         <select class='select subtop' id='subtop' onChange="ValChange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,this.value,getElementById('sub').value,radio_value())">
 						<option selected='selected'>Any</option>
 					</select>
                     </div>
-                    <div style="width:95px;float:left;">
+                    <div style="width:80px;float:left;">
                         <select class='select subject' id='sub' onChange="ValChange(document.getElementById('sec').value,getElementById('subsec').value,getElementById('top').value,getElementById('subtop').value,this.value,radio_value())">
 						<option selected='selected'>Any</option>
 					</select>
                     </div>
-                    <div style="width:80px;margin-left:470px;"> <input id='Reset1' type='reset' onclick="init()" value="Reset"> </div>
+                    <div style="width:80px;margin-left:400px;"> <input id='Reset1' type='reset' onclick="init()" value="Reset"> </div>
 
                     <div class="graphdiv1desc" style="min-height:360px;background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;" id="javascript_practice_bubble"></div>
                 </div>
