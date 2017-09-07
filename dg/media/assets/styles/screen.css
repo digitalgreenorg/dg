@@ -1624,7 +1624,8 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     height: 11px;
     top: 9px;
     left: 19px;
-    background: url(../images/icon-sprite.png) no-repeat 0 -51px;
+    background: url(../images/like-icon.png) no-repeat 0 0;
+    background-size: contain; 
 }
 
 .like-btn.liked {
@@ -1724,7 +1725,8 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     height: 13px;
     top: 7px;
     left: 15px;
-    background: url(../images/share-icon.png);
+    background: url(../images/share-icon.png) no-repeat 0 0;
+    background-size: contain;: 
 }
 
 .share-btn:hover {
