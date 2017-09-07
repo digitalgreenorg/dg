@@ -62,6 +62,7 @@ LOGOUT_URL = '/'
 PERMISSION_DENIED_URL = '/denied/'
 
 MIDDLEWARE_CLASSES = (
+    'django_hosts.middleware.HostsRequestMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'mezzanine.core.middleware.UpdateCacheMiddleware',
@@ -84,6 +85,7 @@ MIDDLEWARE_CLASSES = (
     'mezzanine.core.middleware.FetchFromCacheMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 )
 
 ROOT_URLCONF = 'dg.urls'
@@ -181,7 +183,8 @@ INSTALLED_APPS = (
     'qacoco',
     'mrppayment',
     'smart_selects',
-    'loop_ivr'
+    'loop_ivr',
+    'django_hosts'
 )
 
 # Store these package names here as they may change in the future since
