@@ -33,7 +33,7 @@
   margin-top: 0px;
   padding-left: 5px;
   font-size: 1.4em;
-  font-family: Georgia, 'Times New Roman', Serif;
+  /*font-family: Georgia, 'Times New Roman', Serif;*/
   font-weight: normal;
   /*color: #5b6e1d;*/
   color: #9BA0A7;
@@ -85,7 +85,7 @@
   margin-left: 0px;
   padding-top: 2px;
   font-size: 0.8em;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: normal;
   /*color: #5b6e1d;*/
   color: #3D3D3F;
@@ -94,7 +94,7 @@
 
 #statdescimg {
   float: left;
-  width: 12%;
+  width: 10%;
   height: 20px;
   margin-top: 3px;
   text-align: center;
@@ -115,7 +115,7 @@
   /*background-color: #f2f8d8;*/
   background-color: #26A5DD;
   font-size: 0.7em;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: normal;
   /*color: #5b6e1d;*/
   color: #FFF;
@@ -139,7 +139,7 @@
 .statdesnumber {
   margin-left: 2px;
   font-size: 1.6em;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: bold;
   /*color: #b5b5b5;*/
   color: #9BA0A7;
@@ -162,7 +162,7 @@
   /*border-color: #59af04;
   background-color: #e8f7ba;*/
   border-color: #1489B6;
-  background-color: #26A5DD;
+  background-color: rgba(38, 167, 223, 0.8);
 }
 
 .table2statdesc1 {
@@ -170,10 +170,10 @@
   padding-left: 5px;
   z-index: 500;
   font-size: 0.80em;
-  font-family: Arial, Helvetica, Sans-Serif;
-  font-weight: normal;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
+  font-weight: bold;
   /*color: #5b6e1d;*/
-  color: #3D3D3F;
+  color: #FFF;
   text-align: center;
   border-right-width: 1px;
   border-right-style: solid;
@@ -191,10 +191,10 @@
   padding-left: 5px;
   z-index: 500;
   font-size: 0.80em;
-  font-family: Arial, Helvetica, Sans-Serif;
-  font-weight: normal;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
+  font-weight: bold;
   /*color: #5b6e1d;*/
-	color: #3D3D3F;
+	color: #000;
   text-align: center;
   height: 30px;
   border-bottom-width: 1px;
@@ -208,7 +208,7 @@
   padding-left: 5px;
   z-index: 500;
   font-size: 0.9em;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: normal;
   /*color: #5b6e1d;*/
 	color: #3D3D3F;
@@ -244,7 +244,7 @@
   padding-left: 5px;
   z-index: 500;
   font-size: 1em;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: normal;
   /*color: #5b6e1d;*/
 	color: #3D3D3F;
@@ -321,9 +321,9 @@ th.headerSortDown div#table2tddiv1 {
   margin-left: 0px;
   margin-top: 5px;
   font-size: 1.2em;
-  font-family: Arial, Helvetica, Sans-Serif;
-  font-weight: normal;
-  color: Black;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
+  font-weight: bold;
+  color: #FFF;
 }
 
 
@@ -346,10 +346,10 @@ th.headerSortDown div#table2tddiv1 {
 #zoomicon {
   width: 100%;
   /*background-color: #e8f7ba;*/
-  background-color: #26A5DD;
+  background-color: rgba(38, 167, 223, 0.8);
   text-align: right;
   font-size: 2em;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: bold;
   /*color: #5b6e1d;*/
 	color: #3D3D3F;
@@ -372,7 +372,7 @@ th.headerSortDown div#table2tddiv1 {
 #zoomiconimg a img {
   margin-top: 0px;
   width: 30px;
-  height: 20px;
+  /*height: 20px;*/
 }
 
 #flashcontent {

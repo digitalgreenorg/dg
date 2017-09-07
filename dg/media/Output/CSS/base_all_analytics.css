@@ -1,5 +1,9 @@
 /* main content */
 
+body {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
 #maintitlediv {
   clear: both;
   margin-top: 0px;
@@ -13,7 +17,7 @@
   text-align: left;
   padding-left: 0px;
   color: #5B6E1D;
-  font-family: Georgia, 'Times New Roman', Serif;
+  /*font-family: Georgia, 'Times New Roman', Serif;*/
   font-size: 1.4em;
   font-weight: normal;
 }
@@ -31,7 +35,7 @@
   padding-left: 18px;
   text-align: left;
   color: Gray;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-size: 0.8em;
   font-weight: normal;
 }
@@ -39,7 +43,7 @@
 #breadcrums a {
   text-decoration: none;
   color: Gray;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-size: 0.9em;
   font-weight: normal;
 }
@@ -113,7 +117,7 @@
   margin-bottom: 5px;
   text-align: left;
   color: #5B6E1D;
-  font-family: Georgia, 'Times New Roman', Serif;
+  /*font-family: Georgia, 'Times New Roman', Serif;*/
   font-size: 1.4em;
   font-weight: normal;
 }
@@ -122,10 +126,10 @@
 /* Footer div */
 
 #new_footer {
-	clear: both;
+  clear: both;
   margin-top: 10px;
   width: 100%;
-	border-top: 25px solid #26A5DD;
+  border-top: 25px solid #26A5DD;
 }
 
 #footertop {
@@ -158,7 +162,7 @@
 #footerdivlicence a {
   text-decoration: none;
   font-size: 12px;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: normal;
   color: Gray;
 }
@@ -180,7 +184,7 @@
   float: left;
   list-style: none;
   font-size: 12px;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: normal;
   color: Gray;
 }
@@ -199,7 +203,7 @@
   margin-left: 5px;
   text-decoration: none;
   font-size: 12px;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: normal;
   color: Gray;
 }
@@ -230,7 +234,7 @@
 .maillinks {
   text-decoration: none;
   font-size: 13px;
-  font-family: Sans-Serif;
+  /*font-family: Sans-Serif;*/
   font-weight: normal;
   color: Gray;
 }
@@ -256,7 +260,7 @@
   height: 8px;
   border-bottom: 0px solid #abd268;
   font-size: 1em;
-  font-family: Serif;
+  /*font-family: Serif;*/
   font-weight: bold;
   color: #cdbf5e;
 }
@@ -269,7 +273,7 @@
   margin-top: 0px;
   width: 238px;
   font-size: 1.2em;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: bold;
   color: #cdbf5e;
   border-bottom: 2px solid #e2d39a;
@@ -284,7 +288,7 @@
 .exploredesctitle {
   width: 100%;
   font-size: 1.2em;
-  font-family: Arial, Helvetica, Sanserif;
+  /*font-family: Arial, Helvetica, Sanserif;*/
   font-weight: normal;
   color: #E7F7CF;
   background-color: #62980C;
@@ -302,7 +306,7 @@ a.exploredescmainlink1 {
   margin-right: 11px;
   text-decoration: none;
   font-size: 13px;
-  font-family: Sans-Serif;
+  /*font-family: Sans-Serif;*/
   font-weight: normal;
   color: Gray;
 }
@@ -334,7 +338,7 @@ a.exploredescmainlink1 img {
   display: block;
   text-decoration: none;
   font-size: 13px;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: normal;
   color: Gray;
 }

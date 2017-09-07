@@ -10,7 +10,7 @@
 
 #analyticstitle {
     font-size: 24px;
-    font-family: calibri;
+    /*font-family: calibri;*/
     font-weight: bold;
     color: #465420;
     text-align: center;
@@ -54,7 +54,7 @@
     padding-top: 5px;
     padding-left: 10px;
     color: White;
-    font-family: Calibri;
+    /*font-family: Calibri;*/
     font-size: 14px;
     font-weight: bold;
     display: block;
@@ -110,7 +110,7 @@
 #table1desc {
     padding-left: 5px;
     color: #465420;
-    font-family: Calibri;
+    /*font-family: Calibri;*/
     font-size: 15px;
     font-weight: normal;
 }
@@ -118,7 +118,7 @@
 #table1val {
     padding-left: 5px;
     color: #efb11c;
-    font-family: Times New Roman;
+    /*font-family: Times New Roman;*/
     font-size: 25px;
     font-weight: bold;
 }
@@ -172,7 +172,7 @@
 #graphdiv0titledesc1 {
     margin-top: 10px;
     text-align: center;
-    font-family: Calibri;
+    /*font-family: Calibri;*/
     font-weight: bold;
     font-size: 18px;
     color: Black;
@@ -191,7 +191,7 @@
 #graphdiv0titledesc3 {
     margin-top: 10px;
     text-align: center;
-    font-family: Calibri;
+    /*font-family: Calibri;*/
     font-weight: bold;
     font-size: 18px;
     color: Black;
@@ -271,7 +271,7 @@
 #graphdiv1titledesc {
     margin-top: 10px;
     text-align: center;
-    font-family: Calibri;
+    /*font-family: Calibri;*/
     font-weight: bold;
     font-size: 18px;
     color: Black
@@ -282,7 +282,7 @@
     margin-top: 0px;
     margin-left: 10px;
     text-align: center;
-    font-family: Calibri;
+    /*font-family: Calibri;*/
     font-weight: bold;
     font-size: 18px;
     color: Black;
@@ -325,7 +325,7 @@
 
 .number {
     font-size: 18px;
-    font-family: calibri;
+    /*font-family: calibri;*/
     font-weight: bold;
     color: #465420;
 }
@@ -337,7 +337,7 @@
     border-right-color: #339900;
     color: #586835;
     font-size: 20px;
-    font-family: calibra;
+    /*font-family: calibra;*/
     font-weight: 500;
     font-stretch: expanded;
     color: #666666;
@@ -381,7 +381,7 @@
     margin-left: 10px;
     width: 95%;
     height: 30px;
-    font-family: Calibri;
+    /*font-family: Calibri;*/
     font-weight: bold;
     font-size: 26px;
     color: Green;

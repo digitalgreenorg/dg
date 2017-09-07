@@ -15,10 +15,17 @@
   float: center;
 }
 
-.solution{
+.digitalgreen_logo {
+  float: left;
+  height: 44px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.solution {
   color: #FFF;
   margin-top: -5px;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 #analyticsnav {
@@ -44,7 +51,7 @@
 .analyticsnavlink a {
   text-decoration: none;
   font-size: 1.0em;
-  font-family: Sans-Serif;
+  /*font-family: Sans-Serif;*/
   font-weight: normal;
   color: White;
 }
@@ -83,7 +90,7 @@
 #analyticsnav1 ul li a {
   text-decoration: none;
   font-size: 13px;
-  font-family: Sans-Serif;
+  /*font-family: Sans-Serif;*/
   font-weight: normal;
   /*color: Gray;*/
   color: #3D3D3F;
@@ -102,7 +109,7 @@
   background-color: #1489B6;
   text-align: left;
   font-size: 0.8em;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   /*color: Gray;*/
   color: #3D3D3F;
 }
@@ -110,7 +117,7 @@
 #analyticspagetitle a {
   text-decoration: none;
   font-size: 0.9em;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: normal;
   /*color: Gray;*/
   color: #3D3D3F;
@@ -142,7 +149,7 @@
   width: 14%;
   min-height: 850px;
   /*background-color: none;*/
-  background-color: rgba(155, 160, 167, 0.5);
+  background-color: rgba(155, 160, 167, 0.3);
   border-right-width: 1px;
   border-right-style: solid;
   /*border-right-color: #bbd569;*/
@@ -155,7 +162,7 @@
   margin-left: 0px;
   width: 100%;
   font-size: 0.9em;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: bold;
   color: #c9caca;
   background-color: none;
@@ -172,7 +179,7 @@
 .contentheadertitle {
   padding-top: 0px;
   font-size: 1.6em;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: bold;
   color: #b5b5b5;
 }
@@ -190,7 +197,7 @@
 .custombodytd1 {
   width: 20%;
   font-size: 90%;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: normal;
   color: #5b6e1d;
   margin-left: 5px;
@@ -215,7 +222,7 @@
   margin-left: 0px;
   width: 100%;
   font-size: 0.8em;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-weight: bold;
   /*color: #5b6e1d;*/
   color: #3D3D3F;
@@ -253,7 +260,7 @@
 #calenderbodytitle {
   text-align: left;
   font-size: 78%;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: normal;
   color: Gray;
 }
@@ -297,7 +304,7 @@ div.inputdiv {
   border-color: #9BA0A7;
   border-width: 1px;
   font-size: 90%;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: normal;
   background-color: buttonface;
   -webkit-border-radius: 0px;
@@ -339,7 +346,7 @@ select {
   border-color: #1489B6;
   border-width: 1px;
   font-size: 90%;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: normal;
   /*color: #5b6e1d;*/
   color: #FFF;
@@ -372,7 +379,7 @@ select {
   min-width: 100%;
   padding: 3px;
   /*font-size: 90%;*/
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: normal;
   /*color: Black;*/
   color: #FFF;
@@ -383,7 +390,7 @@ select {
   min-width: 100%;
   padding: 3px;
   /*font-size: 90%;*/
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: normal;
   /*color: Black;*/
   color: #FFF;
@@ -426,7 +433,7 @@ select {
   width: 85%;
   /*height: 20px;*/
   font-size: 90%;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: normal;
   /*color: #5b6e1d;*/
   color: #3D3D3F;
@@ -475,7 +482,7 @@ select {
   width: 85%;
   height: 20px;
   font-size: 90%;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: normal;
   /*color: #5b6e1d;*/
   color: #3D3D3F;
@@ -543,7 +550,7 @@ select {
   margin-left: 10px;
   width: 95%;
   height: 30px;
-  font-family: Calibri;
+  /*font-family: Calibri;*/
   font-weight: bold;
   font-size: 26px;
   /*color: Green;*/
@@ -577,7 +584,7 @@ select {
   border: 1px solid #59AF04;
   margin-bottom: 5px;
   width: 100%;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
 }
 
 #targettableheader {
@@ -594,7 +601,7 @@ select {
   border-bottom: 1px solid #59AF04;
   border-right: 1px solid #59AF04;
   color: #5B6E1D;
-  font-family: Arial, Helvetica, Sans-Serif;
+  /*font-family: Arial, Helvetica, Sans-Serif;*/
   font-size: 1em;
   font-weight: normal;
   height: 30px;
