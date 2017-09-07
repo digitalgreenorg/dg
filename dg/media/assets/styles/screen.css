@@ -355,7 +355,7 @@ a {
 }
 
 .nav-vid > .logovideo {
-    float: left;
+    margin: 0 auto;
 }
 
 .nav-pipe {
