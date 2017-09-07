@@ -22,7 +22,7 @@
             <div class="media">
                 <div id="player-section" class="img img-size-sq-small">
                     <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
-                    <h2 class="copy hdg-bold"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
+                    <h2 class="copy hdg-bold hdg-pink"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
                 </div>
                 <div class="hdg-source-reg hdg-f">{{object.description|safe}}</div>
             </div> <!-- End .media -->
