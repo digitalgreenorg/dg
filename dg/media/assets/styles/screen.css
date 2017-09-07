@@ -1613,7 +1613,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     color: #E80A89
 }
 
-.like-btn .label {
+.like-btn:hover .label {
     display: block;
     padding: 5px 8px 4px 24px;
     color: #FFFFFF
