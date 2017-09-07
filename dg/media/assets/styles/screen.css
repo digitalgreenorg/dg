@@ -1613,12 +1613,19 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     color: #E80A89
 }
 
+.like-btn .label {
+    display: block;
+    padding: 5px 8px 4px 24px;
+    color: #FFFFFF
+}
+
 .like-btn .icon {
     width: 13px;
     height: 11px;
     top: 9px;
     left: 19px;
     background: url(../images/icon-sprite.png) no-repeat 0 -51px;
+    color: #E80A89
 }
 
 .like-btn.liked {
@@ -1707,12 +1714,19 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     color: #E80A89
 }
 
+.share-btn:hover .label {
+    display: block;
+    padding: 5px 8px 4px 24px;
+    color: #FFFFFF
+}
+
 .share-btn .icon {
     width: 13px;
     height: 13px;
     top: 7px;
     left: 15px;
     background: url(../images/icon-sprite.png) no-repeat 0 0;
+    color: #E80A89
 }
 
 .share-btn:hover {
