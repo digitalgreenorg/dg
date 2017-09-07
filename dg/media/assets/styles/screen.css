@@ -350,8 +350,12 @@ a {
     height: 0;
 }
 
+.nav-vid > .logodg {
+    float: left;
+}
+
 .nav-vid > .logovideo {
-    margin: 0 auto;
+    float: left;
 }
 
 .nav-pipe {
