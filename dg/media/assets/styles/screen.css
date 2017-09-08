@@ -593,6 +593,11 @@ a {
     background-color: #3D3D3F;
 }
 
+.footer-nav-vid {
+    height: 50px;
+    align-items: center;
+}
+
 .footer-links {
     overflow: hidden;
     padding-top: 5px;
