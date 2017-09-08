@@ -3639,6 +3639,10 @@ body {
     margin-left: 37px;
 }
 
+.web-login-btn{
+    background: #65E214;
+}
+
 .auth-btn-lg {
     margin-top : 200px;
     margin-left: 37px;
