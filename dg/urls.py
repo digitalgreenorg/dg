@@ -25,7 +25,7 @@ from coco.data_log import send_updated_log
 from qacoco.qa_data_log import qa_send_updated_log
 from coco_admin import coco_admin
 from qacoco_admin import qacoco_admin
-from training.admin import training_admin
+#from training.admin import training_admin
 from loop.admin import loop_admin
 from farmerbook import farmer_book_views
 from output.views import video_analytics
@@ -43,9 +43,9 @@ coco_admin.logout_template = 'social_website/home.html'
 qacoco_admin.index_template = 'social_website/index.html'
 qacoco_admin.login_template = 'social_website/login.html'
 qacoco_admin.logout_template = 'social_website/home.html'
-training_admin.index_template = 'social_website/index.html'
-training_admin.login_template = 'social_website/login.html'
-training_admin.logout_template = 'social_website/home.html'
+#training_admin.index_template = 'social_website/index.html'
+#training_admin.login_template = 'social_website/login.html'
+#training_admin.logout_template = 'social_website/home.html'
 loop_admin.index_template = 'social_website/index.html'
 loop_admin.login_template = 'social_website/login.html'
 loop_admin.logout_template = 'social_website/home.html'
@@ -86,7 +86,7 @@ urlpatterns = patterns('',
     (r'^qacoco_admin/', include(qacoco_admin.urls)),
     (r'^adminwebsite/', include(website_admin.urls)),
     (r'^mcocoadmin/', include(mcoco_admin.urls)),
-    (r'^trainingadmin/', include(training_admin.urls)),
+    #(r'^trainingadmin/', include(training_admin.urls)),
     (r'^loopadmin/', include(loop_admin.urls)),
     (r'^loopivradmin/', include(loop_ivr_admin.urls)),
     (r'^adminblog/', include(admin.site.urls)),

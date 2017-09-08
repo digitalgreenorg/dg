@@ -60,3 +60,7 @@ training_admin.register(Question, QuestionAdmin)
 training_admin.register(LogData, LogDataAdmin)
 training_admin.register(DeleteLog, DeleteLogAdmin)
 training_admin.register(Training, TrainingListAdmin)
+
+training_admin.index_template = 'social_website/index.html'
+training_admin.login_template = 'social_website/login.html'
+training_admin.logout_template = 'social_website/home.html'
