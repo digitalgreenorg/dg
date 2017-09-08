@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.views.generic.base import RedirectView
 
 from tastypie.api import Api
 import api,api_admin
@@ -64,7 +65,7 @@ api2.register(api_admin.VehicleLanguageResource())
 
 
 urlpatterns = patterns('',
-    url(r'^$', home, name='loop'),
+    url(r'^$', RedirectView.as_view(url='http://alpha.digitalgreen.org/loop/'), name='loop'),
     url(r'^api/', include(api1.urls)),
     url(r'^api/', include(api2.urls)),
     url(r'^login/', login),
