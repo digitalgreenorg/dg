@@ -37,4 +37,5 @@ urlpatterns = patterns('',
     (r'^record_full_download_time/', record_full_download_time),
     (r'^reset_database_check/', reset_database_check),
     (r'^upload/data/', upload_data),
+    (r'^rda/',include(raw_data_analytics.urls))
 )
