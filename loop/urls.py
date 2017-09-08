@@ -3,6 +3,8 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.views.generic.base import RedirectView
 
+from dg.base_settings import LOOP_PAGE
+
 from tastypie.api import Api
 import api,api_admin
 # from api import *
@@ -65,7 +67,7 @@ api2.register(api_admin.VehicleLanguageResource())
 
 
 urlpatterns = patterns('',
-    url(r'^$', RedirectView.as_view(url='http://alpha.digitalgreen.org/loop/'), name='loop'),
+    url(r'^$', RedirectView.as_view(url=LOOP_PAGE)),
     url(r'^api/', include(api1.urls)),
     url(r'^api/', include(api2.urls)),
     url(r'^login/', login),
