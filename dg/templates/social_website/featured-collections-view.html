@@ -1,4 +1,4 @@
-{% include "includes/header.html" %}
+{% include "rebranding_header_footer/header_community_video.html" %}
 {% include "includes/partials/search.html" %}
 {% load app_tags %}
 
@@ -22,7 +22,7 @@
             <div class="media">
                 <div id="player-section" class="img img-size-sq-small">
                     <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
-                    <h2 class="copy hdg-bold"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
+                    <h2 class="copy hdg-bold"><a class="hdg-pink" href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
                 </div>
                 <div class="hdg-source-reg hdg-f">{{object.description|safe}}</div>
             </div> <!-- End .media -->
@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">{{related.title}}</h3>
+                                            <h3 class="hdg-pink hdg-f hdg-bold">{{related.title}}</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">{{related.state}} | {{related.language}}</p>
@@ -238,4 +238,4 @@
     </div>                         
 </section>
 
-{% include "includes/footer.html" %}
+{% include "rebranding_header_footer/footer_community_video.html" %}
