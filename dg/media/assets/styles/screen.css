@@ -606,18 +606,20 @@ a {
     margin-left: 20%;
 }
 
-.copyright {
+.footer_copyright {
     float: left;
 }
 
 .privacy_policy {
     float: left;
     font-weight: bold;
+    color: #FFFFFF;
 }
 
 .terms_of_service {
     float: left;
     font-weight: bold;
+    color: #FFFFFF;
 }
 
 .footer-links {
