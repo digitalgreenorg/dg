@@ -594,8 +594,30 @@ a {
 }
 
 .footer-nav-vid {
+    width: inherit;
     height: 50px;
-    align-items: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.footer-nav-vid > ul {
+    display: inline-block;
+    text-align: center;
+    margin-left: 20%;
+}
+
+.copyright {
+    float: left;
+}
+
+.privacy_policy {
+    float: left;
+    font-weight: bold;
+}
+
+.terms_of_service {
+    float: left;
+    font-weight: bold;
 }
 
 .footer-links {
