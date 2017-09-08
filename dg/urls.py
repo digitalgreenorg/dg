@@ -23,7 +23,7 @@ admin.autodiscover()
 
 from coco.data_log import send_updated_log
 from qacoco.qa_data_log import qa_send_updated_log
-from coco_admin import coco_admin
+#from coco_admin import coco_admin
 from qacoco_admin import qacoco_admin
 #from training.admin import training_admin
 #from loop.admin import loop_admin
@@ -37,9 +37,9 @@ from loop_ivr.admin import loop_ivr_admin
 import website_archive_urls
 import deoanalytics.urls
 
-coco_admin.index_template = 'social_website/index.html'
-coco_admin.login_template = 'social_website/login.html'
-coco_admin.logout_template = 'social_website/home.html'
+#coco_admin.index_template = 'social_website/index.html'
+#coco_admin.login_template = 'social_website/login.html'
+#coco_admin.logout_template = 'social_website/home.html'
 qacoco_admin.index_template = 'social_website/index.html'
 qacoco_admin.login_template = 'social_website/login.html'
 qacoco_admin.logout_template = 'social_website/home.html'
@@ -77,12 +77,12 @@ urlpatterns = patterns('',
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
-    (r'^admin/coco/cocouser/add/state_wise_district', 'coco.admin_views.state_wise_district'),
-    (r'^admin/coco/cocouser/add/district_wise_village', 'coco.admin_views.district_wise_village'),
-    (r'^admin/coco/cocouser/add/partner_wise_video', 'coco.admin_views.partner_wise_video'),
-    (r'^admin/coco/cocouser/add', 'coco.admin_views.add_cocouser'),
-    (r'^admin/coco/cocouser/[0-9]', 'coco.admin_views.add_cocouser'),
-    (r'^admin/', include(coco_admin.urls)),
+    #(r'^admin/coco/cocouser/add/state_wise_district', 'coco.admin_views.state_wise_district'),
+    #(r'^admin/coco/cocouser/add/district_wise_village', 'coco.admin_views.district_wise_village'),
+    #(r'^admin/coco/cocouser/add/partner_wise_video', 'coco.admin_views.partner_wise_video'),
+    #(r'^admin/coco/cocouser/add', 'coco.admin_views.add_cocouser'),
+    #(r'^admin/coco/cocouser/[0-9]', 'coco.admin_views.add_cocouser'),
+    #(r'^admin/', include(coco_admin.urls)),
     (r'^qacoco_admin/', include(qacoco_admin.urls)),
     (r'^adminwebsite/', include(website_admin.urls)),
     (r'^mcocoadmin/', include(mcoco_admin.urls)),
@@ -94,7 +94,7 @@ urlpatterns = patterns('',
     (r'^coco/', include(coco.urls)),
     (r'^qacoco/', include(qacoco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
-    (r'^analytics/', include('output.urls')),
+    #(r'^analytics/', include('output.urls')),
     url(r'^video/?$',video_analytics.video, name='video'),
     (r'^ivrsadmin/', include(ivr_admin.urls)),
     (r'^training/', include(training.urls)),
