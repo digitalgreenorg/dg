@@ -613,12 +613,16 @@ a {
 .privacy_policy {
     float: left;
     font-weight: bold;
-    color: #FFFFFF;
+    padding-left: 10px;
 }
 
 .terms_of_service {
     float: left;
     font-weight: bold;
+    padding-left: 10px;
+}
+
+.footer-nav-vid > a {
     color: #FFFFFF;
 }
 
