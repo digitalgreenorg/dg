@@ -64,7 +64,7 @@ loop_ivr_admin.logout_template = 'social_website/home.html'
 
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
-    #(r'^', include(website_archive_urls)),
+    (r'^', include(website_archive_urls)),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
     url(r'^login/$', 'social_website.views.login_view', {'template_name': 'social_website/login.html'}, name='signin'),
     url(r'^signup/$', 'social_website.views.signup_view', {'template_name': 'social_website/signup.html'}, name='signup'),
