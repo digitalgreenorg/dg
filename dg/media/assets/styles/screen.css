@@ -584,10 +584,13 @@ a {
     border-top: 4px solid #047d0a;
     padding: 8px 0 14px 0;
 }
-.footervideo {
-    background: #6bb155;
-    border-top: 4px solid #b5086a;
-    padding: 8px 0 14px 0;
+.footer-video {
+    clear: both;
+    color: white;
+    margin: auto;
+    width: 100%;
+    height: 50px;
+    background-color: #3D3D3F;
 }
 
 .footer-links {
