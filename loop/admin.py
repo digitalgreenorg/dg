@@ -60,7 +60,7 @@ class AdminAssignedDistricts(admin.StackedInline):
 
 class AdminAssignedLoopUsers(admin.StackedInline):
     model = AdminAssignedLoopUser
-    extra = 5
+    extra = 10
 
 
 class AdminUserAdmin(admin.ModelAdmin):

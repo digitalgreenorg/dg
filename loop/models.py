@@ -176,7 +176,7 @@ class LoopUser(LoopModel):
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.name
+        return """%s (%s)"""  % (self.name, self.phone_number)
 
     def get_villages(self):
         return self.assigned_villages.all()
