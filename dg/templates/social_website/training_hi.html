@@ -1,14 +1,14 @@
 {% include "rebranding_header_footer/header_training_courseware.html" %}
 
-<div class="grid" id="tabs">                                 
+<div class="grid" id="tabs" style="background: #f3f2eb;padding-top: 10px">                                 
     <div style="width: 600px;float: left">
-      <ul class="nav" style="border: 1px solid #EEEEEE;background: #f3f2eb;color: #047D0A;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
+      <ul class="nav-training-courseware" style="border: 1px solid #EEEEEE;background: #f3f2eb;color: #8F288C;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
         <li><a href="#tabs-1" class="selected"><span>Production</span></span></a></li>
         <li><a href="#tabs-2"><span><span>Dissemination</span></span></a></li>
       </ul>
     </div>
     <div style="margin-left:200px;margin-top:4px;background: #f3f2eb" class="nav">
-    <select style="border: 1px solid #ffffff;background: #ffffff; height: 32px; width: 400px; color: #047D0A;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
+    <select style="border: 1px solid #ffffff;background: #ffffff; height: 32px; width: 400px; color: #8F288C;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
       <option value="/about/training/hi/" {% if request.get_full_path == "/about/training/hi/" %} selected="true"{% endif %}>Hindi</option>
       <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/"  or  request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
       <option value="/about/training/fr/" {% if request.get_full_path == "/about/training/fr/" %} selected="true"{% endif %}>French</option>
@@ -26,46 +26,46 @@
             
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon Tent Activity Sheet A5 Size.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/moontent.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Activity Sheet</div>
+                <div class="centered hdg-purple">Moon Tent - Activity Sheet</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Written Instructions</div>
+                <div class="centered hdg-purple">Moon Tent - Written Instructions</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon-Tent-with-Illustrations-and-Instructions-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/Moon-Tent-with-Illustrations-and-Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Illustration</div>
+                <div class="centered hdg-purple">Moon Tent - Illustration</div>
               </a>
             </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
                   <a href="{{STATIC_URL}}docs/training/Digital-Green-photo-story-(Hindi).pdf" target="_blank">
-                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Digital-Green-photo-story-(Hindi).png" height="260" width="190" alt=""/>
                     </div>
-                    <div class="centered">DG photo story</div>
+                    <div class="centered hdg-purple">DG photo story</div>
                   </a>
               </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Video-Production-Assessment-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Video Production Assessment</div>
+                <div class="centered hdg-purple">Video Production Assessment</div>
               </a>
             </div>
 
@@ -84,7 +84,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Moon Tent - Video</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Moon Tent - Video</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -108,7 +108,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">DG Production team's work</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">DG Production team's work</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -151,7 +151,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Types of Shots</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Types of Shots</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -176,7 +176,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">How to construct a scene</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">How to construct a scene</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -202,7 +202,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Camera Angels and Movem..</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Camera Angels and Movem..</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -224,7 +224,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Composition and Framing</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Composition and Framing</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -252,7 +252,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Basic Lighting</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Basic Lighting</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -277,7 +277,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Rules of maintaining visual ..</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Rules of maintaining visual ..</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -308,10 +308,10 @@
           <div class="hdg-f hdg-source-reg grid">
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Video-production-Technical-tips-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/handout.png" height="260" width="190" alt=""/>
                 </div>
-                <div class="centered">Video Review Form</div>
+                <div class="centered hdg-purple">Video Review Form</div>
               </a>
             </div>
           </div>
@@ -333,37 +333,37 @@
               
               <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon Tent Activity Sheet A5 Size.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/moontent.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Activity Sheet</div>
+                <div class="centered hdg-purple">Moon Tent - Activity Sheet</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Written Instructions</div>
+                <div class="centered hdg-purple">Moon Tent - Written Instructions</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon-Tent-with-Illustrations-and-Instructions-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/Moon-Tent-with-Illustrations-and-Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Illustration</div>
+                <div class="centered hdg-purple">Moon Tent - Illustration</div>
               </a>
             </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
                   <a href="{{STATIC_URL}}docs/training/Digital-Green-photo-story-(Hindi).pdf" target="_blank">
-                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Digital-Green-photo-story-(Hindi).png" height="260" width="190" alt=""/>
                     </div>
-                    <div class="centered">DG photo story</div>
+                    <div class="centered hdg-purple">DG photo story</div>
                   </a>
               </div>
 
@@ -381,7 +381,7 @@
                         </div>
                           <div class="vid-cat-inner">
                             <div class="vid-cat-hd">
-                              <h3 class="hdg-green hdg-f hdg-bold">Dharmendra's Story</h3>
+                              <h3 class="hdg-purple hdg-f hdg-bold">Dharmendra's Story</h3>
                             </div>
                             <div class="vid-cat-bd">
                               <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -399,36 +399,36 @@
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
                 <a href="{{STATIC_URL}}docs/traning/Pico-Scoresheet-Hindi-2015-05-07.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Pico-Scoresheet-Hindi-2015-05-07.png" height="260" width="190" alt=""/> 
                   </div>
-                  <div class="centered">Pico Scoresheet</div>
+                  <div class="centered hdg-purple">Pico Scoresheet</div>
                 </a>
               </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
                 <a href="{{STATIC_URL}}docs/traning/Dissemination-Process-cards.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Dissemination-Process-cards.png" height="260" width="190" alt=""/> 
                   </div>
-                  <div class="centered">Dissemination Process Card</div>
+                  <div class="centered hdg-purple">Dissemination Process Card</div>
                 </a>
               </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
                 <a href="{{STATIC_URL}}docs/training/Non-negotiable-card.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Non-negotiable-card.png" height="260" width="190" alt=""/> 
                   </div>
-                  <div class="centered">Non-negotiable card</div>
+                  <div class="centered hdg-purple">Non-negotiable card</div>
                 </a>
               </div>
               <div class="grid-col grid-size1of4 layout-vr-lg">
                 <a href="{{STATIC_URL}}docs/traning/Training-Feedback-Hindi-2015-05-14.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/training_hindi.png" height="260" width="190" alt=""/> 
                   </div>
-                  <div class="centered">Training Feedback</div>
+                  <div class="centered hdg-purple">Training Feedback</div>
                 </a>
               </div>
 
@@ -446,7 +446,7 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Moon Tent - Video</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Moon Tent - Video</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -490,7 +490,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">Pico Seekho</h3>
+                                            <h3 class="hdg-purple hdg-f hdg-bold">Pico Seekho</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -516,7 +516,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">Preparing for Dissemi ...</h3>
+                                            <h3 class="hdg-purple hdg-f hdg-bold">Preparing for Dissemi ...</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -542,7 +542,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">Dissemination process ...</h3>
+                                            <h3 class="hdg-purple hdg-f hdg-bold">Dissemination process ...</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -568,7 +568,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">Adoption Verification ...</h3>
+                                            <h3 class="hdg-purple hdg-f hdg-bold">Adoption Verification ...</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -596,7 +596,7 @@
                           </div>
                             <div class="vid-cat-inner">
                               <div class="vid-cat-hd">
-                                <h3 class="hdg-green hdg-f hdg-bold">Environment Building</h3>
+                                <h3 class="hdg-purple hdg-f hdg-bold">Environment Building</h3>
                               </div>
                               <div class="vid-cat-bd">
                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -621,7 +621,7 @@
                           </div>
                             <div class="vid-cat-inner">
                               <div class="vid-cat-hd">
-                                <h3 class="hdg-green hdg-f hdg-bold">Engaging audience</h3>
+                                <h3 class="hdg-purple hdg-f hdg-bold">Engaging audience</h3>
                               </div>
                               <div class="vid-cat-bd">
                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -647,7 +647,7 @@
                           </div>
                             <div class="vid-cat-inner">
                               <div class="vid-cat-hd">
-                                <h3 class="hdg-green hdg-f hdg-bold">Summarzing</h3>
+                                <h3 class="hdg-purple hdg-f hdg-bold">Summarzing</h3>
                               </div>
                               <div class="vid-cat-bd">
                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
