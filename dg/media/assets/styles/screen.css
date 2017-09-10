@@ -316,6 +316,11 @@ a {
     border-bottom: 4px solid #b5086a;
     padding-top: 10px;
 }
+
+.global-nav-training-courseware {
+    border-bottom: 4px solid #7C1C7C;
+    padding-top: 10px;
+}
 .inner-nav {
     padding: 0 0 0 23px;
 }
@@ -334,6 +339,10 @@ a {
 }
 
 .nav > li {
+    float: left;
+}
+
+.nav-training-courseware > li {
     float: left;
 }
 
@@ -374,6 +383,16 @@ a {
 
 .nav li a {
     color: #047d0a;
+    font-family: source_sans_probold, arial, helvetica, sans-serif;
+    padding-left: 10px;
+    display: block;
+    padding-top: 6px;
+    text-transform: uppercase;
+    /* text-shadow: 1px 1px 1px rgba(49, 29, 33, 0.2); */
+}
+
+.nav-training-courseware li a {
+    color: #8F288C;
     font-family: source_sans_probold, arial, helvetica, sans-serif;
     padding-left: 10px;
     display: block;
@@ -429,6 +448,17 @@ a {
     text-indent: -9999px;
     display: block;
     background: url(../images/CommunityVideos_Horizontal_Reversed.png) no-repeat 0 0;
+    background-size: contain; 
+    height: 54px;
+    width: 300px;
+    max-height: 70px;
+    margin: 0 auto;
+}
+
+.logo-training-courseware a {
+    text-indent: -9999px;
+    display: block;
+    background: url(../images/logo-training-courseware.png) no-repeat 0 0;
     background-size: contain; 
     height: 54px;
     width: 300px;
