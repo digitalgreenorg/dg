@@ -4395,14 +4395,14 @@ Modal for Survey
   background: #d2e7be;
 }
 
-.nav-training-courseware > .ui-state-hover a,
-.nav-training-courseware > .ui-state-hover a:hover,
-.nav-training-courseware > .ui-state-hover a:link,
+.nav-training-courseware > .ui-state-hover > a,
+.nav-training-courseware > .ui-state-hover > a:hover,
+.nav-training-courseware > .ui-state-hover > a:link,
 .nav-training-courseware > .ui-state-hover a:visited{
   color: #8F288C;
   text-decoration: none;
   border: 0px  #8F288C;
-  background: #d2e7be;
+  background: #e2aae1;
 }
 
 .ui-state-active.ui-state-hover.ui-tabs-active a:hover {
