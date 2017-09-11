@@ -7,6 +7,11 @@ body, html {
   font-family: 'Montserrat', sans-serif;
 }
 
+.dg_logo {
+  height: 40px;
+  margin-right: 10px;
+}
+
 .bg-inverse {
   background: #3D3D3F !important;
 }

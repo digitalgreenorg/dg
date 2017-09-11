@@ -39,10 +39,10 @@
           <a *ngFor='let filter_name of filter_list'>
             <div class="row" (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand;" style="cursor: pointer; cursor: hand;">
               <div class="col-3">
-                  <label >{{ filter_name.heading }}</label>
+                <label>{{ filter_name.heading }}</label>
               </div>
-              <div class="col-7" >
-                  <label class="float-right">
+              <div class="col-7">
+                <label class="float-right">
                     <strong>{{filter_name.show_icon}}</strong>
                   </label>
               </div>
@@ -83,8 +83,8 @@
 </div>
 
 <div class="container">
-  <div class="row" style="-webkit-text-fill-color: white">
-    <div class="col-md-1">
+  <div style="-webkit-text-fill-color: white">
+    <div class="float-right">
       <span style="cursor:pointer" (click)="openNav()">&#9776;</span>
     </div>
   </div>
