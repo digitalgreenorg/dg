@@ -247,3 +247,4 @@ LOGGING = {
 LOOP_PAGE = 'http://alpha.digitalgreen.org/loop/'
 COCO_PAGE = 'http://alpha.digitalgreen.org/solution-coco/'
 TRAINING_PAGE = 'http://alpha.digitalgreen.org/training/'
+VIDEOS_PAGE = 'http://alpha.digitalgreen.org/community-videos/'

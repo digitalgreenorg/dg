@@ -17,6 +17,7 @@ import social_website.urls
 import videokheti.urls
 import ivr.urls
 import training.urls
+import videos.urls
 
 from django.contrib import admin
 admin.autodiscover()
@@ -96,6 +97,7 @@ urlpatterns = patterns('',
     (r'^dimagi/', include(dimagi.urls)),
     #(r'^analytics/', include('output.urls')),
     url(r'^video/?$',video_analytics.video, name='video'),
+    (r'^videos/', include(videos.urls)),
     (r'^ivrsadmin/', include(ivr_admin.urls)),
     (r'^training/', include(training.urls)),
     (r'^loop/', include(loop.urls)),
