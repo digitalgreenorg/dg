@@ -150,7 +150,7 @@ def screening_geog_pie_data(request):
     get_req_url = [i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id']
     get_req_url.append("geog="+geog_list[geog_list.index(geog)+1].lower())
 
-    url = "/analytics/screening_module?"
+    url = "/coco/analytics/screening_module?"
 
     scr_geog = run_query(shared_sql.overview(geog,id, from_date, to_date, partners,'screening'))
     geog_name = run_query_dict(shared_sql.child_geog_list(geog,id, from_date, to_date),'id')

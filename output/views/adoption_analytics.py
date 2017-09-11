@@ -87,7 +87,7 @@ def adoption_geog_pie_data(request):
     get_req_url = [i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id']
     get_req_url.append("geog="+geog_list[geog_list.index(geog)+1].lower())
 
-    url = "/analytics/adoption_module?"
+    url = "/coco/analytics/adoption_module?"
 
 
     ado_prod = run_query(shared_sql.overview(geog,id, from_date, to_date, partners, 'adoption'))

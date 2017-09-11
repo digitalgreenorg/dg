@@ -134,7 +134,7 @@ function videodefaultload(){
 //Function to enable/disable and fill option in Selects for region select drop downs
 function dochange(src, val) {
     $.ajax({ type: "GET", 
-            url: "/analytics/drop_down_val/",
+            url: "/coco/analytics/drop_down_val/",
             data: {"geog": src, "id":val},
             success: function(html) {                    
             var flag = false;

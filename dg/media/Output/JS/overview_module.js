@@ -16,7 +16,7 @@ var line_options = {
 
 function drawCharts() {
 
-  $.getJSON('/analytics/overview_line_graph/' + search_params, {
+  $.getJSON('/coco/analytics/overview_line_graph/' + search_params, {
     type: ['prod', 'screen', 'prac', 'person', 'adopt']
   }, function(json) {
     overview_line(json);

@@ -35,11 +35,11 @@ var bubble_options = {
 
 function drawCharts() {
 
-    $.getJSON('/analytics/video_geog_pie_data/' + search_params, function(json) { geog_pie(json) });
-    $.getJSON('/analytics/video_monthwise_bar_data/' + search_params, function(json) { monthwise_column(json); });
-    $.getJSON('/analytics/video_language_wise_scatter_data/' + search_params, function(json) { language_bubble(json) });
-    $.getJSON('/analytics/video_practice_wise_scatter/' + search_params, function(json) { practice_bubble(json) });
-    $.getJSON('/analytics/overview_line_graph/' + search_params, { type: ['prod'] }, function(json) { total_line(json) });
+    $.getJSON('/coco/analytics/video_geog_pie_data/' + search_params, function(json) { geog_pie(json) });
+    $.getJSON('/coco/analytics/video_monthwise_bar_data/' + search_params, function(json) { monthwise_column(json); });
+    $.getJSON('/coco/analytics/video_language_wise_scatter_data/' + search_params, function(json) { language_bubble(json) });
+    $.getJSON('/coco/analytics/video_practice_wise_scatter/' + search_params, function(json) { practice_bubble(json) });
+    $.getJSON('/coco/analytics/overview_line_graph/' + search_params, { type: ['prod'] }, function(json) { total_line(json) });
 }
 
 function remove_loader(div_id) {
