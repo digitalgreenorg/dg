@@ -133,7 +133,7 @@ window.onload = date;
 
 function populate(src, prevValue) {
     if (!(jQuery("#" + src + "Id" + " option ").length != 0))
-        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue})
+        $.get("/coco/rda/dropdown_" + src + "/", {selected: prevValue})
             .always(function(){
             })
             .done(function (data) {
@@ -155,7 +155,7 @@ function populate_video(src){
         "village[]":$("#villageId").val()
     }
   if (!(jQuery("#" + src + "Id" + " option ").length != 0))
-      $.get("/raw_data_analytics/dropdown_video/", prevValue)
+      $.get("/coco/rda/dropdown_video/", prevValue)
           .done(function (data) {
               data_json = JSON.parse(data);
               for (var jsonData in data_json) {
@@ -174,7 +174,7 @@ function populate_partner(src){
         "village[]":$("#villageId").val()
 }
     if(!(jQuery("#partnerId option").length!=0))
-        $.get("/raw_data_analytics/dropdown_partner",prevValue)
+        $.get("/coco/rda/dropdown_partner",prevValue)
             .done(function(data){
                 data_json =JSON.parse(data);
                 for(var jsonData in data_json){

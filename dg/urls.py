@@ -7,7 +7,7 @@ import coco.urls
 import data_upload.urls
 import dimagi.urls
 import feeds.urls
-import raw_data_analytics.urls
+#import raw_data_analytics.urls
 import loop.urls
 import qacoco.urls
 import loop_ivr.urls
@@ -99,7 +99,7 @@ urlpatterns = patterns('',
     (r'^ivrsadmin/', include(ivr_admin.urls)),
     (r'^training/', include(training.urls)),
     (r'^loop/', include(loop.urls)),
-    (r'^raw_data_analytics/', include(raw_data_analytics.urls)),
+    #(r'^raw_data_analytics/', include(raw_data_analytics.urls)),
     (r'^loopivr/', include(loop_ivr.urls)),
 
     (r'^get_log/?$', send_updated_log),

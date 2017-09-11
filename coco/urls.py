@@ -12,6 +12,7 @@ from dg.base_settings import COCO_PAGE
 from dg.coco_admin import coco_admin
 
 import output.urls
+import raw_data_analytics.urls
 
 v1_api = Api(api_name='v2')
 v1_api.register(DistrictResource())
@@ -50,4 +51,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(coco_admin.urls)),
     (r'coco/', coco_v2),
     (r'^analytics/', include(output.urls)),
+    (r'^rda/', include(raw_data_analytics.urls)),
 )
