@@ -38,7 +38,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-	            <a class="navbar-brand" href="/agri/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a>
+	            <a class="navbar-brand" href="/videos/videokheti/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -161,7 +161,7 @@
 	                                {% endif %}
 	                            
 	                            <div class="col-md-6 col-sm-6 col-xs-6 text-center">
-	                                <a href="/agri/video/?video={{obj.id}}">
+	                                <a href="/videos/videokheti/video/?video={{obj.id}}">
 	                                    <img class="img-responsive img-center vid-img" src="{{STATIC_URL}}videokheti/content/images/play.png" style="background:URL({{obj.image_file}}); background-repeat:no-repeat;" alt="">
 	                                </a>
 	                            </div>
@@ -224,7 +224,7 @@
     $(".language-click").click(function(event) {
         event.preventDefault();
         //alert($(this).data('id'));
-        $.get( "/agri/language/", { language: $(this).text() })
+        $.get( "/videos/videokheti/language/", { language: $(this).text() })
             .done(function( data ) {
                 if(data=='1'){
                     window.location.reload(true);

@@ -126,7 +126,7 @@ urlpatterns = patterns('',
     #(r'^analytics/vrptool/',include('vrppayment.urls')),
     #(r'^analytics/mrptool/',include('mrppayment.urls')),
     (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
-    (r'^agri/', include(videokheti.urls)),
+    #(r'^agri/', include(videokheti.urls)),
     (r'^ivrs/',include('ivr.urls')),
     (r"^", include("mezzanine.urls")),
 
