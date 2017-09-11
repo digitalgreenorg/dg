@@ -14,6 +14,8 @@ from views import login, dashboard, graph_data, get_overall_data, get_filter_dat
 from training.log.training_log import send_updated_log
 from training.admin import training_admin
 
+from social_website import picoseekho_view, disseminationprep_view, disseminationform_view, adoptionverification_view
+
 api = Api(api_name = "v1")
 api.register(TrainerResource())
 api.register(TrainingResource())
@@ -37,4 +39,16 @@ urlpatterns = patterns('',
     url(r'^getData', get_overall_data),
     url(r'^get_filter_data',get_filter_data),
     url(r'^admin/', include(training_admin.urls)),
+    url(r'^courseware/$', TemplateView.as_view(template_name='training_hi.html'), name='training'),
+    url(r'^courseware/en/$', TemplateView.as_view(template_name='training_en.html'), name='training-el'),
+    url(r'^courseware/hi/$', TemplateView.as_view(template_name='training_hi.html'), name='training-hi'),
+    url(r'^courseware/fr/$', TemplateView.as_view(template_name='training_fr.html'), name='training-fr'),
+    url(r'^courseware/picoseekho/(?P<uid>.+)/$', picoseekho_view, name='picoseekho'),
+    url(r'^courseware/picoseekho/$', picoseekho_view, name='picoseekho'),
+    url(r'^courseware/dissemination_prep/(?P<uid>.+)/$', disseminationprep_view, name='disseminationprep'),
+    url(r'^courseware/dissemination_prep/$', disseminationprep_view, name='disseminationprep'),
+    url(r'^courseware/dissemination_form/(?P<uid>.+)/$', disseminationform_view, name='disseminationform'),
+    url(r'^courseware/dissemination_form/$', disseminationform_view, name='disseminationform'),
+    url(r'^courseware/adoption_verification/(?P<uid>.+)/$', adoptionverification_view, name='adoptionverification'),
+    url(r'^courseware/adoption_verification/$', adoptionverification_view, name='adoptionverification'),
     )
