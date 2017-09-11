@@ -11,11 +11,11 @@ import videokheti.urls
 
 urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url=VIDEOS_PAGE)),
-    url(r'^discover/video/(?P<uid>.+)/$', video_view, name="video_page"),
-    url(r'^discover/(?P<partner>.+)/(?P<country>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/(?P<video>\d+)/$', collection_view, name="collection_video_page"), 
-    url(r'^discover/(?P<partner>.+)/(?P<country>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/$', collection_view, name="collection_page"),     
-    url(r'^discover/?$', search_view, name='search'),
-    url(r'^discover/$', DirectTemplateView.as_view(template_name='collections.html', extra_context={'header': {'jsController':'Collections', 'currentPage':'Discover', 'loggedIn':False}}), name='discover'),
+    url(r'^library/video/(?P<uid>.+)/$', video_view, name="video_page"),
+    url(r'^library/(?P<partner>.+)/(?P<country>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/(?P<video>\d+)/$', collection_view, name="collection_video_page"), 
+    url(r'^library/(?P<partner>.+)/(?P<country>.+)/(?P<state>.+)/(?P<language>.+)/(?P<title>.+)/$', collection_view, name="collection_page"),     
+    url(r'^library/?$', search_view, name='search'),
+    url(r'^library/$', DirectTemplateView.as_view(template_name='collections.html', extra_context={'header': {'jsController':'Collections', 'currentPage':'Discover', 'loggedIn':False}}), name='discover'),
     (r'^videokheti/', include(videokheti.urls)),
 
 )
