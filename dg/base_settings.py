@@ -124,6 +124,7 @@ TEMPLATES = [
                 'social.apps.django_app.context_processors.login_redirect',
                 "mezzanine.conf.context_processors.settings",
                 "mezzanine.pages.context_processors.page",
+                "dg.context_processors.admin_media",
             ],
         },
     },
@@ -243,3 +244,6 @@ LOGGING = {
         },
     }
 }
+
+LOOP_PAGE = 'http://alpha.digitalgreen.org/loop/'
+COCO_PAGE = 'http://alpha.digitalgreen.org/coco/'
