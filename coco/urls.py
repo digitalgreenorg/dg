@@ -16,6 +16,7 @@ import raw_data_analytics.urls
 import vrppayment.urls
 import mrppayment.urls
 import deoanalytics.urls
+import data_upload.urls
 
 v1_api = Api(api_name='v2')
 v1_api.register(DistrictResource())
@@ -58,4 +59,5 @@ urlpatterns = patterns('',
     (r'^vrp/',include(vrppayment.urls)),
     (r'^mrp/',include(mrppayment.urls)),
     (r'^cocouser/',include(deoanalytics.urls)),
+    (r'^dataupload/', include(data_upload.urls)),
 )

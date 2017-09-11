@@ -4,7 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
 import coco.urls
-import data_upload.urls
+#import data_upload.urls
 import dimagi.urls
 import feeds.urls
 #import raw_data_analytics.urls
@@ -90,7 +90,7 @@ urlpatterns = patterns('',
     #(r'^loopadmin/', include(loop_admin.urls)),
     (r'^loopivradmin/', include(loop_ivr_admin.urls)),
     (r'^adminblog/', include(admin.site.urls)),
-    (r'^data_upload/', include(data_upload.urls)),
+    #(r'^data_upload/', include(data_upload.urls)),
     (r'^coco/', include(coco.urls)),
     (r'^qacoco/', include(qacoco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
