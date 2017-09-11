@@ -92,5 +92,5 @@ class IndividualDistrictFeed(Feed):
                  'dgrss:subtopic': ', '.join(subtopic_list),
                  'dgrss:subject': ', '.join(subject_list),
                  'dgrss:analyticsLink': ''.join(['http://%s/coco/analytics/?geog=district&id='%(CURRENT_DOMAIN,), str(item.id)]),
-                 'dgrss:videosLink': ''.join(['http://%s/discover/?searchString='%(CURRENT_DOMAIN,), state])
+                 'dgrss:videosLink': ''.join(['http://%s/videos/discover/?searchString='%(CURRENT_DOMAIN,), state])
                  }
