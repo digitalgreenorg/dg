@@ -144,7 +144,7 @@
       <tr>
         <td class='table2statdesc2'>
           {% ifnotequal item.geog "NULL" %}
-          <a href='/analytics/overview_module/{% analytics_get_request item.geog item.id get_req_url %}'>
+          <a href='/coco/analytics/{% analytics_get_request item.geog item.id get_req_url %}'>
 										{{ item.name }} </a> {% else %} {{ item.name }} {% endifnotequal %}
         </td>
         <td class='table2statdesc2'>
@@ -180,7 +180,7 @@
     <tr>
       <td class='table2statdesc2'>
         {% ifnotequal par_geog_data.geog "NULL" %}
-        <a href='/analytics/overview_module/{% analytics_get_request par_geog_data.geog par_geog_data.id get_req_url %}'>
+        <a href='/coco/analytics/{% analytics_get_request par_geog_data.geog par_geog_data.id get_req_url %}'>
 					    		{{ par_geog_data.name }} </a> {% else %} {{ par_geog_data.name }} {% endifnotequal %}
       </td>
       <td class='table2statdesc2'>

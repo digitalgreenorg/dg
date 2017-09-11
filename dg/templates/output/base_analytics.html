@@ -172,7 +172,7 @@
 		<a href="http://www.digitalgreen.org/" target="_blank"><img src="/media/Output/Images/dg_logo.png" alt="DigitalGreen" class="digitalgreen_logo"></a>
 	</div>
 	<div id='analyticslogo'>
-		<a href="/analytics/overview_module?geog=country&id=1"> <img src="/media/Output/Images/CocoLogo_White.png" style="height:40px;" alt='Analytics Logo'/></a>
+		<a href="/coco/analytics/?geog=country&id=1"> <img src="/media/Output/Images/CocoLogo_White.png" style="height:40px;" alt='Analytics Logo'/></a>
 		<div class="solution">Analytics</div>
 	</div>
 
@@ -181,7 +181,7 @@
 			<a id='analyticsnavlink' href="#">Select Dashboard <img src="/media/Output/Images/navbtn1.png" alt=""></a>
 			<div id='analyticsnav1'>
 				<ul>
-					<li> <a href="{% if search_box_params %}/coco/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
+					<li> <a href="{% if search_box_params %}/coco/analytics/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
 					<li> <a href="{% if search_box_params %}/coco/analytics/video_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
 					<li> <a href="{% if search_box_params %}/coco/analytics/screening_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
 					<li> <a href="{% if search_box_params %}/coco/analytics/adoption_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/adoption_module?geog=country&id=1{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
@@ -199,7 +199,7 @@
 	&nbsp;
 	{% block analyticsbreadcrums %}
 		<a href='/'>Home</a> /
-		<a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>
+		<a href="{% if search_box_params %}/analytics/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>
 	{% endblock analyticsbreadcrums %}
 
 </div> -->

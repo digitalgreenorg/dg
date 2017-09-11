@@ -3,7 +3,7 @@ from views import overview_analytics, screening_analytics, video_analytics, adop
 from views.common import drop_down_val, overview_line_graph, practice_change
 
 urlpatterns = patterns('',
-    (r'^overview_module/?$',overview_analytics.overview_module),
+    (r'^$',overview_analytics.overview_module),
     (r'^get_parent_geog_id/?$',overview_analytics.get_parent_geog_id),
     (r'^screening_module/?$',screening_analytics.screening_module),
     (r'^screening_tot_lines/?$',screening_analytics.screening_tot_lines),
