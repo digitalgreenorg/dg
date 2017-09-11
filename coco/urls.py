@@ -14,6 +14,7 @@ from dg.coco_admin import coco_admin
 import output.urls
 import raw_data_analytics.urls
 import vrppayment.urls
+import mrppayment.urls
 
 v1_api = Api(api_name='v2')
 v1_api.register(DistrictResource())
@@ -54,4 +55,5 @@ urlpatterns = patterns('',
     (r'^analytics/', include(output.urls)),
     (r'^rda/', include(raw_data_analytics.urls)),
     (r'^vrp/',include(vrppayment.urls)),
+    (r'^mrp/',include(mrppayment.urls)),
 )
