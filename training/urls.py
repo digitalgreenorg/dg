@@ -14,7 +14,7 @@ from views import login, dashboard, graph_data, get_overall_data, get_filter_dat
 from training.log.training_log import send_updated_log
 from training.admin import training_admin
 
-from social_website import picoseekho_view, disseminationprep_view, disseminationform_view, adoptionverification_view
+from social_website.views import picoseekho_view, disseminationprep_view, disseminationform_view, adoptionverification_view
 
 api = Api(api_name = "v1")
 api.register(TrainerResource())
