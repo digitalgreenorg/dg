@@ -25,7 +25,7 @@ admin.autodiscover()
 from coco.data_log import send_updated_log
 from qacoco.qa_data_log import qa_send_updated_log
 #from coco_admin import coco_admin
-from qacoco_admin import qacoco_admin
+#from qacoco_admin import qacoco_admin
 #from training.admin import training_admin
 #from loop.admin import loop_admin
 from farmerbook import farmer_book_views
@@ -41,9 +41,9 @@ import deoanalytics.urls
 #coco_admin.index_template = 'social_website/index.html'
 #coco_admin.login_template = 'social_website/login.html'
 #coco_admin.logout_template = 'social_website/home.html'
-qacoco_admin.index_template = 'social_website/index.html'
-qacoco_admin.login_template = 'social_website/login.html'
-qacoco_admin.logout_template = 'social_website/home.html'
+# qacoco_admin.index_template = 'social_website/index.html'
+# qacoco_admin.login_template = 'social_website/login.html'
+# qacoco_admin.logout_template = 'social_website/home.html'
 #training_admin.index_template = 'social_website/index.html'
 #training_admin.login_template = 'social_website/login.html'
 #training_admin.logout_template = 'social_website/home.html'
@@ -84,7 +84,7 @@ urlpatterns = patterns('',
     #(r'^admin/coco/cocouser/add', 'coco.admin_views.add_cocouser'),
     #(r'^admin/coco/cocouser/[0-9]', 'coco.admin_views.add_cocouser'),
     #(r'^admin/', include(coco_admin.urls)),
-    (r'^qacoco_admin/', include(qacoco_admin.urls)),
+    #(r'^qacoco_admin/', include(qacoco_admin.urls)),
     (r'^adminwebsite/', include(website_admin.urls)),
     (r'^mcocoadmin/', include(mcoco_admin.urls)),
     #(r'^trainingadmin/', include(training_admin.urls)),
