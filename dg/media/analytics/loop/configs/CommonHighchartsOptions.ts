@@ -30,4 +30,7 @@ export const commonOptions = {
   scrollbar: {
     enabled: true
   },
+  lang: {
+    drillUpText: "<< Back"
+  }
 }

@@ -7,7 +7,7 @@ const tooltip = {
 const drillUpButton = {
   relativeTo: 'spacingBox',
   position: {
-    y: -20,
+    y: -12,
     x: 0
   }
 };

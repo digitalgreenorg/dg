@@ -42,7 +42,7 @@ export function highchartsFactory() {
   const noData = require('highcharts/modules/no-data-to-display');
   highChart.setOptions({
     lang: {
-      thousandsSep : ','
+      thousandsSep: ','
     }
   });
   drillDown(highChart);
