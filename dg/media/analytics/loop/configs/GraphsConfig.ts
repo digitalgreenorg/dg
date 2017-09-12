@@ -4,6 +4,14 @@ const tooltip = {
   pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
 };
 
+const drillUpButton = {
+  relativeTo: 'spacingBox',
+  position: {
+    y: -20,
+    x: 0
+  }
+};
+
 export const chartsConfig = {
   'cummulativeCount': {
     chart: {
@@ -111,7 +119,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     },
   },
   'aggrvisit': {
@@ -134,7 +143,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'aggrspkcpk': {
@@ -160,7 +170,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'aggrrecoveredtotal': {
@@ -183,7 +194,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'aggrfarmercount': {
@@ -206,7 +218,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'mandivolume': {
@@ -229,7 +242,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'mandivisit': {
@@ -252,7 +266,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'mandispkcpk': {
@@ -278,7 +293,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'mandirecoveredtotal': {
@@ -304,7 +320,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'mandifarmercount': {
@@ -327,7 +344,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'cropvolume': {
@@ -350,7 +368,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     },
   },
   'cropprices': {
@@ -377,7 +396,8 @@ export const chartsConfig = {
     series: [],
     drilldown: {
       allowPointDrilldown: false,
-      series: []
+      series: [],
+      drillUpButton: drillUpButton
     }
   },
   'cropfarmercount': {
