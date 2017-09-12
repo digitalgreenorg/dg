@@ -35,7 +35,7 @@ from website_admin import website_admin
 from mcoco_admin import mcoco_admin
 from ivr_admin import ivr_admin
 #from loop_ivr.admin import loop_ivr_admin
-import website_archive_urls
+#import website_archive_urls
 import deoanalytics.urls
 
 #coco_admin.index_template = 'social_website/index.html'
@@ -74,7 +74,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
     (r'^social/', include(social_website.api_urls)),
     (r'^bmgf/', include(feeds.urls)),
-    (r'^archive/', include(website_archive_urls)),
+    #(r'^archive/', include(website_archive_urls)),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
