@@ -316,6 +316,11 @@ a {
     border-bottom: 4px solid #b5086a;
     padding-top: 10px;
 }
+
+.global-nav-training-courseware {
+    border-bottom: 4px solid #7C1C7C;
+    padding-top: 10px;
+}
 .inner-nav {
     padding: 0 0 0 23px;
 }
@@ -334,6 +339,10 @@ a {
 }
 
 .nav > li {
+    float: left;
+}
+
+.nav-training-courseware > li {
     float: left;
 }
 
@@ -374,6 +383,16 @@ a {
 
 .nav li a {
     color: #047d0a;
+    font-family: source_sans_probold, arial, helvetica, sans-serif;
+    padding-left: 10px;
+    display: block;
+    padding-top: 6px;
+    text-transform: uppercase;
+    /* text-shadow: 1px 1px 1px rgba(49, 29, 33, 0.2); */
+}
+
+.nav-training-courseware li a {
+    color: #8F288C;
     font-family: source_sans_probold, arial, helvetica, sans-serif;
     padding-left: 10px;
     display: block;
@@ -438,6 +457,17 @@ a {
     text-indent: -9999px;
     display: block;
     background: url(../images/CommunityVideos_Horizontal_Reversed.png) no-repeat 0 0;
+    background-size: contain; 
+    height: 54px;
+    width: 300px;
+    max-height: 70px;
+    margin: 0 auto;
+}
+
+.logo-training-courseware a {
+    text-indent: -9999px;
+    display: block;
+    background: url(../images/logo-training-courseware.png) no-repeat 0 0;
     background-size: contain; 
     height: 54px;
     width: 300px;
@@ -900,6 +930,10 @@ a {
     color: #E80A89;
 }
 
+.hdg-purple {
+    color: #8F288C;
+}
+
 .hdg-black {
     color: #000000;
 }
@@ -1329,6 +1363,10 @@ a {
 
 .img-connect :hover {
     border: 2px solid #047d0a;
+}
+
+.training :hover {
+    border: 2px solid #8F288C;
 }
 
 .img-board {
@@ -2216,6 +2254,31 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 .video.featured-collection-title {
     padding: 15px 20px 15px 20px;
     border-left: 5px solid #E80A89;
+}
+
+.training-courseware.featured-collection-li.now-playing {
+    background-color: #8F288C;
+}
+
+.training-courseware.featured-collection-li.now-playing a{
+    color: #ffffff;
+}
+
+.training-courseware.featured-collection-li:hover {
+    background-color: #8F288C;
+}
+
+.training-courseware.featured-collection-li a {
+    color: #8F288C;
+}
+
+.training-courseware.featured-collection-li a:hover {
+    color: #ffffff;
+}
+
+.training-courseware.featured-collection-title {
+    padding: 15px 20px 15px 20px;
+    border-left: 5px solid #8F288C;
 }
 
 .featured-collection-indicator {
@@ -4402,6 +4465,15 @@ Modal for Survey
   border-bottom: 2px solid  #359123;
 }
 
+.nav-training-courseware > .ui-state-active a,
+.nav-training-courseware > .ui-state-active a:link,
+.nav-training-courseware > .ui-state-active a:visited {
+  color: #8F288C;
+  text-decoration: none;
+  background-color: #f3f2eb;
+  border-bottom: 2px solid  #8F288C;
+}
+
 .ui-state-active,
 .ui-widget-content .ui-state-active, 
 .ui-widget-header .ui-state-active {
@@ -4409,6 +4481,15 @@ Modal for Survey
     background: #ffffff url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
     font-weight: bold;
     color: #359123;
+}
+
+.nav-training-courseware > .ui-state-active,
+.nav-training-courseware > .ui-widget-content .ui-state-active, 
+.nav-training-courseware > .ui-widget-header .ui-state-active {
+    border: 0px  #8F288C;
+    background: #ffffff url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
+    font-weight: bold;
+    color: #8F288C;
 }
 
 .ui-state-hover a,
@@ -4421,10 +4502,26 @@ Modal for Survey
   background: #d2e7be;
 }
 
+.nav-training-courseware > .ui-state-hover > a,
+.nav-training-courseware > .ui-state-hover > a:hover,
+.nav-training-courseware > .ui-state-hover > a:link,
+.nav-training-courseware > .ui-state-hover a:visited{
+  color: #8F288C;
+  text-decoration: none;
+  border: 0px  #8F288C;
+  background: #e2aae1;
+}
+
 .ui-state-active.ui-state-hover.ui-tabs-active a:hover {
   background: #f3f2eb;
   border-bottom: 2px solid  #359123;
   color: #047d0a;
+}
+
+.nav-training-courseware > .ui-state-active.ui-state-hover.ui-tabs-active a:hover {
+  background: #f3f2eb;
+  border-bottom: 2px solid  #8F288C;
+  color: #8F288C;
 }
 
 .errorlist {
