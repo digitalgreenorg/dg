@@ -55,6 +55,12 @@ export class FiltersComponent implements OnInit {
 
   constructor(private myElement: ElementRef, private getFilterData: GetFilterDataService, private _sharedService: SharedService,
     private datepipe: DatePipe, private _globalfiltersharedService: GlobalFilterSharedService) {
+    this._globalfiltersharedService.argsList$.subscribe(filters => {
+      this.getFilters(global_filter);
+    });
+  }
+
+  ngOnInit() {
     Object.keys(this.filterConfig).forEach(key => {
       if (this.filterConfig[key].show) {
         if (this.filterConfig[key].name == 'date') {
@@ -71,13 +77,10 @@ export class FiltersComponent implements OnInit {
         }
       }
     });
-
-    this._globalfiltersharedService.argsList$.subscribe(filters => {
-      this.getfiltersData(global_filter);
-    });
+    this.getFilters(global_filter);
   }
 
-  select_all(filter): void {
+  selectAll(filter): void {
     for (let element of filter['element']) {
       element.checked = filter.select_all;
     }
@@ -143,10 +146,6 @@ export class FiltersComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.getfiltersData(global_filter);
-  }
-
   closeNav(): void {
     this.mySidenav.nativeElement.style.width = '0px';
     this.sideNavContent.nativeElement.style.display = 'none';
@@ -169,27 +168,31 @@ export class FiltersComponent implements OnInit {
       this.f_list['apply_filter'] = "true";
     }
     if (this.showDateFilter) {
-      this.invalidDate = false;
-      try {
-        let startDate = this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd');
-        let endDate = this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd');
-        let s_date = new Date(startDate);
-        let e_date = new Date(endDate);
-        if (s_date < e_date) {
-          this.f_list['start_date'] = startDate;
-          this.f_list['end_date'] = endDate;
-        } else {
-          this.invalidDate = true;
-          this.invalidDateMessage = "*'From' date should be less than 'To' date."
-        }
-      } catch (err) {
-        this.invalidDate = true;
-        this.invalidDateMessage = "* Invalid date entered."
-      }
+      this.dateValidation();
     }
     if (!this.invalidDate) {
       this.getDataForFilters();
       this.closeNav();
+    }
+  }
+
+  private dateValidation(): void {
+    this.invalidDate = false;
+    try {
+      let startDate = this.datepipe.transform(this.startModel.date.year.toString() + '-' + this.startModel.date.month.toString() + '-' + this.startModel.date.day.toString(), 'yyyy-MM-dd');
+      let endDate = this.datepipe.transform(this.endModel.date.year.toString() + '-' + this.endModel.date.month.toString() + '-' + this.endModel.date.day.toString(), 'yyyy-MM-dd');
+      let s_date = new Date(startDate);
+      let e_date = new Date(endDate);
+      if (s_date < e_date) {
+        this.f_list['start_date'] = startDate;
+        this.f_list['end_date'] = endDate;
+      } else {
+        this.invalidDate = true;
+        this.invalidDateMessage = "*'From' date should be less than 'To' date.";
+      }
+    } catch (err) {
+      this.invalidDate = true;
+      this.invalidDateMessage = "* Invalid date entered.";
     }
   }
 
@@ -218,7 +221,7 @@ export class FiltersComponent implements OnInit {
     }
   }
 
-  getfiltersData(filters): any {
+  getFilters(filters): any {
     this.getFilterData.getData(filters).subscribe(response => {
       for (let res_obj of response) {
         let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
