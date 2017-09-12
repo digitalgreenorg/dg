@@ -10,7 +10,8 @@
     <meta name="author" content="">
 
     <title>Video Kheti</title>
-
+    <link rel="icon" type="image/png" href="/media/Output/Images/new_fav_icon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
     <link href="{{STATIC_URL}}videokheti/css/bootstrap_black.min.css" rel="stylesheet">
 
@@ -31,26 +32,31 @@
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-	                <a class="navbar-brand" href="/videos/videokheti/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a>
-            </div>
-            
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li {% if language == 'Hindi' %}class="disabled"{% endif %}><a href="#" class="language-click">Hindi</a></li>
-                                <li {% if language == 'English' %}class="disabled"{% endif %}><a href="#" class="language-click">English</a></li>
-                            </ul>
-                    </li>
-                </ul>
+            <div class="row">
+                <div class="navbar-header col-lg-11">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- <a class="navbar-brand" href="/videos/videokheti/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a> -->
+                    <a class="navbar-brand digitalgreen_logo" href="http://www.digitalgreen.org/" target="_blank"><img src="/media/Output/Images/dg_logo.png" height="44px" alt="DigitalGreen" ></a>
+                    <div class="navbar-brand header-center">
+                        VideoKheti
+                    </div>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li {% if language == 'Hindi' %}class="disabled"{% endif %}><a href="#" class="language-click">Hindi</a></li>
+                                    <li {% if language == 'English' %}class="disabled"{% endif %}><a href="#" class="language-click">English</a></li>
+                                </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <!-- /.container -->
@@ -293,6 +299,10 @@
             });
     });
     </script>
+
+<div id="new_footer">
+    <p style="text-align:center;">&#169; 2017 Digital Green. All rights reserved. <b> Privacy Policy Terms of Service</b> </p>
+</div>
 </body>
 
 </html>

@@ -112,7 +112,7 @@ def overview_module(request):
     else:
         header_geog = "Village"
 
-    return render_to_response('overview_module.html', dict(search_box_params = search_box_params, \
+    return render(request, 'overview_module.html', dict(search_box_params = search_box_params, \
                                                            country_data = country_data, \
                                                            table_data = table_data, \
                                                            par_geog_data = par_geog_data, \
