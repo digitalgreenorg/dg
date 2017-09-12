@@ -1,5 +1,5 @@
 
-import { chartsConfig } from '../../loop/configs/GraphsConfig';
+import { chartsConfig, AddCommonOptions } from '../../loop/configs/GraphsConfig';
 import { tabsConfig } from '../../loop/configs/TabsConfig';
 import { cardConfig } from '../../loop/configs/CardsConfig';
 import { cardGraphConfig } from '../../loop/configs/GraphCardsConfig';
@@ -17,5 +17,6 @@ export const environment = {
   cardGraphConfig: cardGraphConfig,
   navsConfig: navsConfig,
   filtersConfig: filtersConfig,
-  generalConfig: generalConfig
+  generalConfig: generalConfig,
+  AddCommonOptions : AddCommonOptions
 };

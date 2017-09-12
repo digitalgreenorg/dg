@@ -27,7 +27,7 @@ export class NavsComponent implements OnInit,
   navsConfig = environment.navsConfig;
   chartsConfig = environment.chartsConfig;
   generalConfig = environment.generalConfig;
-
+  AddCommonOptions = environment.AddCommonOptions;
   //initialize modules as false and toggle based on user configuration
   overall: false;
   recent: false;
@@ -78,6 +78,9 @@ export class NavsComponent implements OnInit,
   }
 
   ngOnInit(): void {
+    let test = new this.AddCommonOptions();
+    test.AddCommonOptionsToGraph();
+    console.log(test);
     Object.keys(this.chartsConfig).forEach(chart => {
       this.charts.push({
         name: chart,
