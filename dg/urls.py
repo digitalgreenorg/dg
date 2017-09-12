@@ -32,7 +32,7 @@ from farmerbook import farmer_book_views
 from output.views import video_analytics
 from static_site_views import spring_analytics
 from website_admin import website_admin
-from mcoco_admin import mcoco_admin
+#from mcoco_admin import mcoco_admin
 from ivr_admin import ivr_admin
 #from loop_ivr.admin import loop_ivr_admin
 #import website_archive_urls
@@ -53,9 +53,9 @@ import deoanalytics.urls
 website_admin.index_template = 'social_website/index.html'
 website_admin.login_template = 'social_website/login.html'
 website_admin.logout_template = 'social_website/home.html'
-mcoco_admin.index_template = 'social_website/index.html'
-mcoco_admin.login_template = 'social_website/login.html'
-mcoco_admin.logout_template = 'social_website/home.html'
+# mcoco_admin.index_template = 'social_website/index.html'
+# mcoco_admin.login_template = 'social_website/login.html'
+# mcoco_admin.logout_template = 'social_website/home.html'
 ivr_admin.index_template = 'social_website/index.html'
 ivr_admin.login_template = 'social_website/login.html'
 ivr_admin.logout_template = 'social_website/home.html'
@@ -86,7 +86,7 @@ urlpatterns = patterns('',
     #(r'^admin/', include(coco_admin.urls)),
     #(r'^qacoco_admin/', include(qacoco_admin.urls)),
     (r'^adminwebsite/', include(website_admin.urls)),
-    (r'^mcocoadmin/', include(mcoco_admin.urls)),
+    #(r'^mcocoadmin/', include(mcoco_admin.urls)),
     #(r'^trainingadmin/', include(training_admin.urls)),
     #(r'^loopadmin/', include(loop_admin.urls)),
     #(r'^loopivradmin/', include(loop_ivr_admin.urls)),
