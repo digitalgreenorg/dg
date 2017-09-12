@@ -1,8 +1,8 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Min, Sum, Avg, Max, F, Value
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Count, Min, Sum, Avg, Max, F, Value
 from django.db.models.fields import CharField
 import json
 import math
@@ -77,7 +77,7 @@ def recent_graphs_data(**kwargs):
     res['spk'] = generate_res_recent('spk', 'recentcardGraphs', 'spk' , {})
     res['active_cluster'] = generate_res_recent( 'active_cluster','recentcardGraphs', 'active_cluster' , {})
     for key, aggregated_value in aggregated_result.iteritems():
-        for data in aggregated_value:
+        for data in reversed(aggregated_value):
             for k, v in data.iteritems():
                 if k not in res:
                     res[k] = {}

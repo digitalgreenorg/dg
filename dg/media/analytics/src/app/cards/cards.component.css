@@ -12,3 +12,7 @@
 .highcharts-yaxis-grid .highcharts-grid-line {
   display: none;
 }
+
+.dropdown-button {
+  background: #F37B55;
+}

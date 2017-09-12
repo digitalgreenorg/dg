@@ -90,6 +90,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
           title: this.cardsConfigs[key].text,
           options: this.cardsConfigs[key].recent.graph.options,
           nativeChart: null,
+          lastDataPoint: 0
         });
       }
     });
@@ -154,6 +155,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
             let dataToDisplay = cardData.value[numberOfDays];
             this.recentcharts.forEach(chart => {
               if (cardData.tagName === chart.tagName) {
+                chart.lastDataPoint = dataToDisplay[dataToDisplay.length - 1];
                 this.Dropdownitems = Object.keys(cardData.value);
                 this.recentChartsData[cardData.tagName] = cardData.value;
                 chart.nativeChart.series[0].update({ 'data': dataToDisplay, 'name': cardData.tagName });
@@ -163,7 +165,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
                   chart.nativeChart.showLoading("No data found");
                 }
               }
-            })
+            });
             this.chooseDateRange = numberOfDays + ' Days';
           }
         });
@@ -173,7 +175,9 @@ export class CardsComponent implements OnInit, AfterViewInit {
   public updateDropdown(day): any {
     this.chooseDateRange = day + ' Days';
     this.recentcharts.forEach(chart => {
-      chart.nativeChart.series[0].update({ 'data': this.recentChartsData[chart.tagName][day] });
+      let dataToDisplay = this.recentChartsData[chart.tagName][day];
+      chart.lastDataPoint = dataToDisplay[dataToDisplay.length - 1];
+      chart.nativeChart.series[0].update({ 'data': dataToDisplay });
     });
   }
 

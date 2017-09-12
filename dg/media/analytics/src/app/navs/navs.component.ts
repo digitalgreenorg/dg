@@ -78,9 +78,9 @@ export class NavsComponent implements OnInit,
   }
 
   ngOnInit(): void {
-    let test = new this.AddCommonOptions();
-    test.AddCommonOptionsToGraph();
-    console.log(test);
+    //To append common highcharts options.
+    new this.AddCommonOptions().AddCommonOptionsToGraph();
+    
     Object.keys(this.chartsConfig).forEach(chart => {
       this.charts.push({
         name: chart,
