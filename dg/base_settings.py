@@ -244,6 +244,7 @@ LOGGING = {
     }
 }
 
+PRODUCT_PAGE = 'http://alpha.digitalgreen.org/solutions/'
 LOOP_PAGE = 'http://alpha.digitalgreen.org/loop/'
 COCO_PAGE = 'http://alpha.digitalgreen.org/solution-coco/'
 TRAINING_PAGE = 'http://alpha.digitalgreen.org/training/'
