@@ -42,7 +42,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <!-- <a class="navbar-brand" href="/agri/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a> -->
-                    <a class="navbar-brand digitalgreen_logo" href="http://www.digitalgreen.org/" target="_blank"><img src="/media/Output/Images/dg_logo.png" height="44px" alt="DigitalGreen" ></a>
+                    <a class="navbar-brand digitalgreen_logo" href="{{ WEBSITE_DOMAIN }}" target="_blank"><img src="/media/Output/Images/dg_logo.png" height="44px" alt="DigitalGreen" ></a>
                     <div class="navbar-brand header-center">
                         VideoKheti
                     </div>
@@ -62,8 +62,8 @@
         </div>
         <!-- /.container -->
     </nav>
-    
-    
+
+
     <!-- Page Content -->
     <div class="container">
         {% if breadcrumb %}
@@ -91,7 +91,7 @@
                      </a>
                      {% endif %}
                     <label style="font-size: 20px; color: #ffffff;">{{title}}</label>
-                    
+
                 </form>
                 {% if title_audio %}
                 <audio preload="auto" id="0">
@@ -103,7 +103,7 @@
         </div>
         <!-- /.row -->
 
-        
+
         <!-- Page Features -->
         {% if crop %}
         <div class="row">
@@ -131,7 +131,7 @@
                                 </div>
                             </div>
                         </div>
-                
+
                         <audio preload="auto" id="{{obj.id}}">
                             <source src="{% if video %}{{obj.audio}}{% else %}{{STATIC_URL}}videokheti/content/audio/{{obj.audio}} {% endif %}" type="audio/mpeg">
                             Your browser does not support the audio element.
@@ -155,18 +155,18 @@
 	                        {% for obj in video_carousel %}
 	                        <li data-target="#videoCarousel" data-slide-to="{{forloop.counter}}" {% if forloop.counter == 1 %} class="active" {% endif %}></li>
 	                        {% endfor %}
-	                    </ol>   
+	                    </ol>
 	                    <!-- Carousel items -->
 	                    <div class="carousel-inner">
 	                        <div class="item active text-center ">
 	                        {% for obj in videos %}
-	                            
+
 	                            {% cycle 1 0  as new_row silent %}
 	                                {% if forloop.counter > 2 and new_row %}
 	                                    </div>
 	                                    <div class="item">
 	                                {% endif %}
-	                            
+
 	                            <div class="col-md-6 col-sm-6 col-xs-6 text-center">
 	                                <a href="/agri/video/?video={{obj.id}}">
 	                                    <img class="img-responsive img-center vid-img" src="{{STATIC_URL}}videokheti/content/images/play.png" style="background:URL({{obj.image_file}}); background-repeat:no-repeat;" alt="">
@@ -183,7 +183,7 @@
 	                        <span class="glyphicon glyphicon-chevron-right"></span>
 	                    </a>
 	                </div>
-	            
+
 	        </div>
         </div>
         </footer>
@@ -199,7 +199,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
-    
+
     <!-- Enabling Google Analytics -->
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -209,10 +209,10 @@
         try {
             var pageTracker = _gat._getTracker("UA-16211208-1");
             pageTracker._trackPageview();
-            } 
+            }
         catch(err) {}
     </script>
-    
+
     <script>
     $(".audio-click").click(function(event) {
         event.preventDefault();
@@ -227,7 +227,7 @@
             button.removeAttr('disabled');
         });
     });
-    
+
     $(".language-click").click(function(event) {
         event.preventDefault();
         //alert($(this).data('id'));
@@ -241,7 +241,7 @@
 </script>
 
 <div id="new_footer">
-    <p style="text-align:center;">&#169; 2017 Digital Green. All rights reserved. <b> Privacy Policy Terms of Service</b> </p>
+    <p style="text-align:center">&#169; 2017 Digital Green. All rights reserved. <b><a id="privacy" href="{{ PRIVACY_POLICY }}" target="_blank">Privacy Policy.</a> <a id="terms-service" href="{{ TERMS_SERVICE }}" target="_blank">Terms of Service</a></b> </p>
 </div>
 
 </body>

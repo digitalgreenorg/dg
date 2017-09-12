@@ -11,7 +11,7 @@
 
     <title>Digital Green</title>
     <link rel="icon" type="image/png" href="/media/Output/Images/new_fav_icon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
     <link href="{{STATIC_URL}}videokheti/css/bootstrap_black.min.css" rel="stylesheet">
 
@@ -45,7 +45,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <!-- <a class="navbar-brand" href="/agri/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a> -->
-                    <a class="navbar-brand digitalgreen_logo" href="http://www.digitalgreen.org/" target="_blank"><img src="/media/Output/Images/dg_logo.png" height="44px" alt="DigitalGreen" ></a>
+                    <a class="navbar-brand digitalgreen_logo" href="{{ WEBSITE_DOMAIN }}" target="_blank"><img src="/media/Output/Images/dg_logo.png" height="44px" alt="DigitalGreen" ></a>
                     <div class="navbar-brand header-center">
                         VideoKheti
                     </div>
@@ -79,7 +79,7 @@
                                         </button>
                                     </a>
                         </h1>
-                        
+
                         <audio preload="auto" id="0">
                             <source src="{{STATIC_URL}}videokheti/content/audio/welcome.mp3" type="audio/mpeg">
                             Your browser does not support the audio element.
@@ -92,7 +92,7 @@
                         </a>
                         </h3>
                     </div>
-                    
+
                     <div class="well text-center">
                         <h5 style="text-transform: none; margin-bottom: 0px;"> {{title}} </h5>
                     </div>
@@ -106,7 +106,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
-    
+
     <!-- Enabling Google Analytics -->
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -116,10 +116,10 @@
         try {
             var pageTracker = _gat._getTracker("UA-16211208-1");
             pageTracker._trackPageview();
-            } 
+            }
         catch(err) {}
     </script>
-    
+
     <script>
     $(".audio-click").click(function(event) {
         event.preventDefault();
@@ -134,7 +134,7 @@
             window.location.href = "/agri";
         });
     });
-    
+
     $(".language-click").click(function(event) {
         event.preventDefault();
         //alert($(this).data('id'));
@@ -148,7 +148,7 @@
     </script>
 
 <div id="new_footer">
-    <p style="text-align:center; font-size:14px;">&#169; 2017 Digital Green. All rights reserved. <b> Privacy Policy Terms of Service</b> </p>
+    <p style="text-align:center">&#169; 2017 Digital Green. All rights reserved. <b><a id="privacy" href="{{ PRIVACY_POLICY }}" target="_blank">Privacy Policy.</a> <a id="terms-service" href="{{ TERMS_SERVICE }}" target="_blank">Terms of Service</a></b> </p>
 </div>
 </body>
 

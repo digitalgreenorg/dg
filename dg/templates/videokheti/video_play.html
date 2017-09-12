@@ -41,7 +41,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <!-- <a class="navbar-brand" href="/agri/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a> -->
-                    <a class="navbar-brand digitalgreen_logo" href="http://www.digitalgreen.org/" target="_blank"><img src="/media/Output/Images/dg_logo.png" height="44px" alt="DigitalGreen" ></a>
+                    <a class="navbar-brand digitalgreen_logo" href="{{ WEBSITE_DOMAIN }}" target="_blank"><img src="/media/Output/Images/dg_logo.png" height="44px" alt="DigitalGreen" ></a>
                     <div class="navbar-brand header-center">
                         VideoKheti
                     </div>
@@ -61,8 +61,8 @@
         </div>
         <!-- /.container -->
     </nav>
-    
-    
+
+
     <!-- Page Content -->
     <div class="container">
         {% if breadcrumb %}
@@ -78,7 +78,7 @@
             {% endfor%}
         </ul>
         {% endif %}
-        
+
         <!-- Title -->
         <div class="row">
             <div class="col-lg-12">
@@ -87,7 +87,7 @@
         </div>
         <!-- /.row -->
 
-        
+
         <!-- Page Features -->
         <div class="row">
             <div class="col-md-9">
@@ -97,8 +97,8 @@
                     </div>
                 </div>
             </div>
-            
-            
+
+
             <div class="col-md-3">
                 <div id="videoCarousel" class="carousel slide well" data-interval="3000" data-ride="carousel">
                 <!-- Carousel indicators -->
@@ -106,7 +106,7 @@
                         {% for obj in video_carousel %}
                         <li data-target="#videoCarousel" data-slide-to="{{forloop.counter}}" {% if forloop.counter == 1 %} class="active" {% endif %}></li>
                         {% endfor %}
-                    </ol>   
+                    </ol>
                     <!-- Carousel items -->
                     <div class="carousel-inner">
                         {% for obj in video_carousel %}
@@ -125,7 +125,7 @@
                         <span class="glyphicon glyphicon-chevron-right"></span>
                     </a>
                 </div>
-                
+
                 <div class="well">
 	                <div class="media">
 	                    <div class="media-left">
@@ -141,17 +141,17 @@
                         </a>
                         </div>
 	                </div>
-                    
+
 	                <!-- <div>
 	                    <h6>
 	                        Produced on {{ date_pro|date:"D d M Y" }}
 	                    </h6>
 	                </div> -->
-                
+
                 </div>
-                
-                
-                
+
+
+
                 <div style="text-align:center; margin-bottom:20px;">
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#forum">
                         COMMENTS
@@ -160,8 +160,8 @@
             </div>
         </div>
         <!-- /.row -->
-        
-        
+
+
 
         <!-- Modal -->
         <div class="modal fade" id="forum" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -185,7 +185,7 @@
 	                                    {% else %}
 	                                            <img height='50px' width='50px' class="media-object" src="{{STATIC_URL}}social_website/content/default.png" alt="...">
 	                                    {% endif %}
-	                                {% endif %}                
+	                                {% endif %}
                                 </label>
                                 </div>
                                 <div class="col-md-8">
@@ -197,11 +197,11 @@
                                 {% else %}
                                     <button type="button" class="btn btn-success js-data" id="post-click" data-id="{{id}}">POST</button>
                                 {% endif %}
-                                
-                                
+
+
                                 </div>
                             </div>
-                            
+
                         </form>
                         </div>
                         <div class="panel panel-default">
@@ -224,7 +224,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
-    
+
     <!-- Enabling Google Analytics -->
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -234,10 +234,10 @@
         try {
             var pageTracker = _gat._getTracker("UA-16211208-1");
             pageTracker._trackPageview();
-            } 
+            }
         catch(err) {}
     </script>
-    
+
     <script>
     $("#post-click").click(function(event) {
         event.preventDefault();
@@ -252,13 +252,13 @@
                 var html_string = output_array.join("");
                 $("#commentlist").prepend(html_string);
                 $('textarea#commentText').val('');
-            });    
+            });
         }
         else{
             $('textarea#commentText').focus();
         }
     });
-    
+
     $('#forum').on('show.bs.modal', function(){
         var video = $(".js-data").data('id')
         if ($('#forum li').length == 0){
@@ -273,7 +273,7 @@
 	        });
         }
     });
-    
+
     $(".audio-click").click(function(event) {
         event.preventDefault();
         //alert($(this).data('id'));
@@ -287,7 +287,7 @@
             button.removeAttr('disabled');
         });
     });
-    
+
     $(".language-click").click(function(event) {
         event.preventDefault();
         //alert($(this).data('id'));
@@ -301,7 +301,7 @@
     </script>
 
 <div id="new_footer">
-    <p style="text-align:center;">&#169; 2017 Digital Green. All rights reserved. <b> Privacy Policy Terms of Service</b> </p>
+    <p style="text-align:center">&#169; 2017 Digital Green. All rights reserved. <b><a id="privacy" href="{{ PRIVACY_POLICY }}" target="_blank">Privacy Policy.</a> <a id="terms-service" href="{{ TERMS_SERVICE }}" target="_blank">Terms of Service</a></b> </p>
 </div>
 </body>
 
