@@ -1396,6 +1396,12 @@ a {
 
 .btn:hover,
 .like-btn.liked {
+    background: #047d0a;
+    color: #ffffff;
+}
+
+.video.like-btn.btn:hover,
+.video.like-btn.liked {
     background: #E80A89;
     color: #ffffff;
 }
@@ -1699,6 +1705,24 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     display: block;
     padding: 5px 8px 4px 24px;
     color: #E80A89;
+}
+
+.btn.video-save {
+    color: #E80A89;
+}
+
+.btn.video-save:hover {
+    background: #E80A89;
+    color: #ffffff;
+}
+
+.btn.video-reset {
+    color: #E80A89;
+}
+
+.btn.video-reset:hover {
+    background: #E80A89;
+    color: #ffffff;
 }
 
 .like-btn:hover .label {
@@ -2033,15 +2057,35 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .filterOptions .active {
-    background: url(../images/btn-video-back.png) no-repeat 0 0;
+    background: url(../images/btn-green-lt.png) no-repeat 0 0;
     color: #ffffff;
 }
 
 .filterOptions .active > span {
-    background: url(../images/btn-video-back.png) no-repeat right 0;
+    background: url(../images/btn-green-rt.png) no-repeat right 0;
 }
 
 .filterOptions .active:after {
+    content: " ";
+    left: 40%;
+    background: url(../images/btn-green-carat.png) no-repeat 0 0;
+    height: 12px;
+    width: 16px;
+    position: relative;
+    top: -1px;
+    display: block;
+}
+
+.video.filterOptions .active {
+    background: url(../images/btn-video-back.png) no-repeat 0 0;
+    color: #ffffff;
+}
+
+.video.filterOptions .active > span {
+    background: url(../images/btn-video-back.png) no-repeat right 0;
+}
+
+.video.filterOptions .active:after {
     content: " ";
     left: 40%;
     background: url(../images/btn-caret.png) no-repeat 0 0;
@@ -2153,7 +2197,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .featured-collection-li.now-playing {
-    background-color: #E80A89;
+    background-color: #047d0a;
 }
 
 .featured-collection-li.now-playing a{
@@ -2162,11 +2206,11 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 
 .featured-collection-li:hover {
-    background-color: #E80A89;
+    background-color: #047d0a;
 }
 
 .featured-collection-li a {
-    color: #E80A89;
+    color: #047d0a;
 }
 
 .featured-collection-li a:hover {
@@ -2174,6 +2218,31 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .featured-collection-title {
+    padding: 15px 20px 15px 20px;
+    border-left: 5px solid #047d0a;
+}
+
+.video.featured-collection-li.now-playing {
+    background-color: #E80A89;
+}
+
+.video.featured-collection-li.now-playing a{
+    color: #ffffff;
+}
+
+.video.featured-collection-li:hover {
+    background-color: #E80A89;
+}
+
+.video.featured-collection-li a {
+    color: #E80A89;
+}
+
+.video.featured-collection-li a:hover {
+    color: #ffffff;
+}
+
+.video.featured-collection-title {
     padding: 15px 20px 15px 20px;
     border-left: 5px solid #E80A89;
 }
@@ -3026,6 +3095,10 @@ textarea.comment-text {
 
 .js-comments-show-more-btn {
     color: #E80A89
+}
+.js-comments-show-more-btn:hover {
+    background: #E80A89;
+    color: #ffffff;
 }
 
 /* Container for the videos under the featured video */
