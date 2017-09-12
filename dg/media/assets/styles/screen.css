@@ -1364,8 +1364,8 @@ a {
 
 .video .like-btn .btn:hover,
 .video.like-btn.liked {
-    background: #E80A89;
-    color: #ffffff;
+    background: #E80A89 !important;
+    color: #ffffff !important;
 }
 
 
