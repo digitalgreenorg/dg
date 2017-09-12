@@ -2159,7 +2159,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .featured-collection-li.now-playing {
-    background-color: #E80A89;
+    background-color: #047d0a;
 }
 
 .featured-collection-li.now-playing a{
@@ -2168,11 +2168,11 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 
 .featured-collection-li:hover {
-    background-color: #E80A89;
+    background-color: #047d0a;
 }
 
 .featured-collection-li a {
-    color: #E80A89;
+    color: #047d0a;
 }
 
 .featured-collection-li a:hover {
@@ -2180,6 +2180,31 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .featured-collection-title {
+    padding: 15px 20px 15px 20px;
+    border-left: 5px solid #047d0a;
+}
+
+.video.featured-collection-li.now-playing {
+    background-color: #E80A89;
+}
+
+.video.featured-collection-li.now-playing a{
+    color: #ffffff;
+}
+
+.video.featured-collection-li:hover {
+    background-color: #E80A89;
+}
+
+.video.featured-collection-li a {
+    color: #E80A89;
+}
+
+.video.featured-collection-li a:hover {
+    color: #ffffff;
+}
+
+.video.featured-collection-title {
     padding: 15px 20px 15px 20px;
     border-left: 5px solid #E80A89;
 }

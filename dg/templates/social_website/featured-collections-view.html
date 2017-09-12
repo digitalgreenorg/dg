@@ -44,10 +44,10 @@
                         </div>
                         <ul>
                             {% for carousel_video in video_list %}
-                            <li class="featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
+                            <li class="video featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
                                 <a href="{% url 'collection_video_page' object.partner.name object.country object.state object.language object.title forloop.counter %}#player-section" >
                                     <div class="featured-collection-indicator"></div>
-                                    <div class="featured-collection-title">
+                                    <div class="video featured-collection-title">
                                         {{ carousel_video.title }}
                                     </div>
                                 </a>
