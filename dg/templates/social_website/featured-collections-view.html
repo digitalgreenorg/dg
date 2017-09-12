@@ -117,9 +117,9 @@
                                     <div class="layout-vr-sm">
                                         <!-- Implementation Note: the data attribute on the button below must be present on page load for like functionality to work -->
                                         {% if not request.user.is_authenticated %}
-                                        <a class="btn like-btn" href="/login/?next={{request.path|urlencode}}"><div class="icon"></div><span class="label">Like</span></a>
+                                        <a class="btn video like-btn" href="/login/?next={{request.path|urlencode}}"><div class="icon"></div><span class="label">Like</span></a>
                                         {% else %}
-                                        <a class="btn like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
+                                        <a class="btn  video like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
                                         {% endif %}
                                     </div>
                                     <a class="btn share-btn"><div class="icon"></div>

@@ -1358,6 +1358,12 @@ a {
 
 .btn:hover,
 .like-btn.liked {
+    background: #047d0a;
+    color: #ffffff;
+}
+
+.video .btn:hover,
+.video.like-btn.liked {
     background: #E80A89;
     color: #ffffff;
 }
