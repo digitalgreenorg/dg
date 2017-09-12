@@ -87,7 +87,7 @@ class VillageAuthorization(Authorization):
         self.village_field = field
 
     def read_list(self, object_list, bundle):
-        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        user = AdminUser.objects.get(user_id=bundle.request.user.id)
         districts =District.objects.filter(adminassigneddistrict__admin_user_id=user,adminassigneddistrict__aggregation_switch=True)
         villages = Village.objects.filter(block__district__in=districts)
         kwargs = {}
@@ -96,7 +96,7 @@ class VillageAuthorization(Authorization):
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
-        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        user = AdminUser.objects.get(user_id=bundle.request.user.id)
         districts =District.objects.filter(adminassigneddistrict__admin_user_id=user,adminassigneddistrict__aggregation_switch=True)
         villages = Village.objects.filter(block__district__in=districts)
         kwargs = {}
@@ -112,7 +112,7 @@ class CropLanguageAuthorization(Authorization):
         self.croplanguage_field = field
 
     def read_list(self, object_list, bundle):
-        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        user = AdminUser.objects.get(user_id=bundle.request.user.id)
         preferred_language = user.preferred_language
         croplanguage = CropLanguage.objects.filter(language=preferred_language)
         kwargs = {}
@@ -121,7 +121,7 @@ class CropLanguageAuthorization(Authorization):
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
-        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        user = AdminUser.objects.get(user_id=bundle.request.user.id)
         preferred_language = user.preferred_language
         croplanguage = CropLanguage.objects.filter(language=preferred_language)
         kwargs = {}
@@ -137,7 +137,7 @@ class VehicleLanguageAuthorization(Authorization):
         self.vehiclelanguage_field = field
 
     def read_list(self, object_list, bundle):
-        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        user = AdminUser.objects.get(user_id=bundle.request.user.id)
         preferred_language = user.preferred_language
         vehiclelanguage = VehicleLanguage.objects.filter(language=preferred_language)
         kwargs = {}
@@ -146,7 +146,7 @@ class VehicleLanguageAuthorization(Authorization):
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
-        user = AdminUser.objects.get(user_id=bundle.request.user.id);
+        user = AdminUser.objects.get(user_id=bundle.request.user.id)
         preferred_language = user.preferred_language
         vehiclelanguage = VehicleLanguage.objects.filter(language=preferred_language)
         kwargs = {}
