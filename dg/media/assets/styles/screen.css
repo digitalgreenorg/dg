@@ -1362,7 +1362,7 @@ a {
     color: #ffffff;
 }
 
-.video .btn:hover,
+.video .like-btn .btn:hover,
 .video.like-btn.liked {
     background: #E80A89;
     color: #ffffff;
