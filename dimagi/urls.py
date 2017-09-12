@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 from views import save_submission
 
 from dg.mcoco_admin import mcoco_admin
