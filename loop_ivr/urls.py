@@ -4,6 +4,8 @@ from django.conf.urls import patterns, include, url
 
 from loop_ivr.views import *
 
+from loop_ivr.admin import loop_ivr_admin
+
 urlpatterns = patterns('',
     url(r'^$', home, name='loop_ivr'),
     url(r'^market_info_incoming/',market_info_incoming),
@@ -11,4 +13,5 @@ urlpatterns = patterns('',
     url(r'^crop_price_query/',crop_price_query),
     url(r'^crop_price_sms_content/',crop_price_sms_content),
     url(r'^push_message_sms_response/',push_message_sms_response),
-    )
+    (r'^admin/', include(loop_ivr_admin.urls)),
+)

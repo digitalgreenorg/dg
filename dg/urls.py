@@ -34,7 +34,7 @@ from static_site_views import spring_analytics
 from website_admin import website_admin
 from mcoco_admin import mcoco_admin
 from ivr_admin import ivr_admin
-from loop_ivr.admin import loop_ivr_admin
+#from loop_ivr.admin import loop_ivr_admin
 import website_archive_urls
 import deoanalytics.urls
 
@@ -59,9 +59,9 @@ mcoco_admin.logout_template = 'social_website/home.html'
 ivr_admin.index_template = 'social_website/index.html'
 ivr_admin.login_template = 'social_website/login.html'
 ivr_admin.logout_template = 'social_website/home.html'
-loop_ivr_admin.index_template = 'social_website/index.html'
-loop_ivr_admin.login_template = 'social_website/login.html'
-loop_ivr_admin.logout_template = 'social_website/home.html'
+# loop_ivr_admin.index_template = 'social_website/index.html'
+# loop_ivr_admin.login_template = 'social_website/login.html'
+# loop_ivr_admin.logout_template = 'social_website/home.html'
 
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
@@ -89,7 +89,7 @@ urlpatterns = patterns('',
     (r'^mcocoadmin/', include(mcoco_admin.urls)),
     #(r'^trainingadmin/', include(training_admin.urls)),
     #(r'^loopadmin/', include(loop_admin.urls)),
-    (r'^loopivradmin/', include(loop_ivr_admin.urls)),
+    #(r'^loopivradmin/', include(loop_ivr_admin.urls)),
     (r'^adminblog/', include(admin.site.urls)),
     #(r'^data_upload/', include(data_upload.urls)),
     (r'^coco/', include(coco.urls)),
