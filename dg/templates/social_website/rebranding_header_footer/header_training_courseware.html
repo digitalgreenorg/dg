@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!--Updated new Header-->
     <head>
         <meta property="og:title" content="Digital Green"/>
         <meta property="og:type" content="website"/>
@@ -36,6 +35,13 @@
         <link rel="stylesheet" media="screen" href="{{STATIC_URL}}assets/styles/select2.css" />
 
 
+        <script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
+        
+        <script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-ui12.js"></script>
+        
+        <script type="text/javascript" src="/media/social_website/scripts/libs/external/html5lightbox/html5lightbox.js"></script>
+        
+
          <!--[if IE 9]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie9.css" /><![endif]-->
         <!--[if lte IE 8]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie8.css" /><![endif]-->
         <!--[if lte IE 7]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie7.css" /><![endif]-->
@@ -57,7 +63,8 @@
     -->
     <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
     <body data-controller="{% if header.jsController %}{{header.jsController}}{% else %}DigitalGreenPage{% endif %}" data-user-id={{request.user.id}}>
-    <div class="wrapper-main wrapper" >
+        <!-- Begin Main Wrapper -->
+        <div class="wrapper-main wrapper" >
             <div class="user-dropdown-div">
             </div>
             <div class="header-fixed" style="background-color: #8F288C">
@@ -79,8 +86,3 @@
                 </div>
             </div>
             <div class="header-margin"></div>
-
-
-
-
-

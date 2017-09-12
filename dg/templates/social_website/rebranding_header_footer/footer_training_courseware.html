@@ -1,4 +1,4 @@
-            <footer>
+<footer>
                     <div class="footer-video" role="contentinfo">
                     <div class="wrapper">
                         <div class="footer-nav-vid">
@@ -16,28 +16,20 @@
         <!-- End Main Wrapper -->
         <!-- JAVASCRIPT -->
         
-        <!-- For Debugging -->
-        <!-- <script data-main="{{STATIC_URL}}social_website/scripts/main" src="{{STATIC_URL}}social_website/scripts/libs/external/requirejs/require.js"></script> -->
-        <!-- Also change build to scripts in main.js -->
-        
-        <!-- For Production -->
-        <script type="text/javascript" src="{{STATIC_URL}}social_website/build/libs/external/requirejs/require.js"></script>
-        <script type="text/javascript" src="{{STATIC_URL}}social_website/build/main.js"></script>
-
         <!-- Enabling Google Analytics -->
         <script type="text/javascript">
-    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    	</script>
-    	<script type="text/javascript">
-    		try {
-    			var pageTracker = _gat._getTracker("UA-16211208-1");
-    			pageTracker._trackPageview();
-    			} 
-    	catch(err) {}
-    	</script>
-    	
-    	<!-- Universal Google Analytics -->
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      </script>
+      <script type="text/javascript">
+        try {
+          var pageTracker = _gat._getTracker("UA-16211208-1");
+          pageTracker._trackPageview();
+          } 
+      catch(err) {}
+      </script>
+      
+      <!-- Universal Google Analytics -->
         <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -51,16 +43,16 @@
         <!-- End Universal Google Analytics -->
         
         <!-- Begin Inspectlet Embed Code -->
-	    <script type="text/javascript" id="inspectletjs">
-	    window.__insp = window.__insp || [];
-	    __insp.push(['wid', 1500693903]);
-	    (function() {
-	        function __ldinsp(){var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); }
-	        if (window.attachEvent) window.attachEvent('onload', __ldinsp);
-	        else window.addEventListener('load', __ldinsp, false);
-	        })();
-	    </script>
-	    <!-- End Inspectlet Embed Code -->
+      <script type="text/javascript" id="inspectletjs">
+      window.__insp = window.__insp || [];
+      __insp.push(['wid', 1500693903]);
+      (function() {
+          function __ldinsp(){var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); }
+          if (window.attachEvent) window.attachEvent('onload', __ldinsp);
+          else window.addEventListener('load', __ldinsp, false);
+          })();
+      </script>
+      <!-- End Inspectlet Embed Code -->
 
         <!-- Google Code for Newsletter Sign Up Conversion Page
         In your html page, add the snippet and call
@@ -95,32 +87,6 @@
         <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion_async.js">
         </script>
         <!-- End of Google Conversion Tracker Code  -->
-
-            <!-- Quantcast Tag -->
-            <script type="text/javascript">
-                var _qevents = _qevents || [];
-
-                (function () {
-                    var elem = document.createElement('script');
-                    elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
-                    elem.async = true;
-                    elem.type = "text/javascript";
-                    var scpt = document.getElementsByTagName('script')[0];
-                    scpt.parentNode.insertBefore(elem, scpt);
-                })();
-
-                _qevents.push({
-                    qacct: "p-v8ZfLRLAahkeW"
-                });
-            </script>
-
-            <noscript>
-                <div style="display:none;">
-                    <img src="//pixel.quantserve.com/pixel/p-v8ZfLRLAahkeW.gif" border="0" height="1" width="1"
-                         alt="Quantcast"/>
-                </div>
-            </noscript>
-            <!-- End Quantcast tag -->
 
     </body>
 </html>

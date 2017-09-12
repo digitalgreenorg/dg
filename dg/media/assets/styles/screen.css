@@ -2247,6 +2247,31 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     border-left: 5px solid #E80A89;
 }
 
+.training-courseware.featured-collection-li.now-playing {
+    background-color: #8F288C;
+}
+
+.training-courseware.featured-collection-li.now-playing a{
+    color: #ffffff;
+}
+
+.training-courseware.featured-collection-li:hover {
+    background-color: #8F288C;
+}
+
+.training-courseware.featured-collection-li a {
+    color: #8F288C;
+}
+
+.training-courseware.featured-collection-li a:hover {
+    color: #ffffff;
+}
+
+.training-courseware.featured-collection-title {
+    padding: 15px 20px 15px 20px;
+    border-left: 5px solid #8F288C;
+}
+
 .featured-collection-indicator {
     background: url(../images/icon-sprite.png) no-repeat -69px -305px;
     height: 20px;
