@@ -3058,6 +3058,10 @@ textarea.comment-text {
 .js-comments-show-more-btn {
     color: #E80A89
 }
+.js-comments-show-more-btn:hover {
+    background: #E80A89;
+    color: #ffffff;
+}
 
 /* Container for the videos under the featured video */
 
