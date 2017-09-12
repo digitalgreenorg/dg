@@ -1362,10 +1362,10 @@ a {
     color: #ffffff;
 }
 
-.video .like-btn .btn:hover,
+.video.like-btn.btn:hover,
 .video.like-btn.liked {
-    background: #E80A89 !important;
-    color: #ffffff !important;
+    background: #E80A89;
+    color: #ffffff;
 }
 
 
@@ -1667,6 +1667,24 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     display: block;
     padding: 5px 8px 4px 24px;
     color: #E80A89;
+}
+
+.btn.video-save {
+    color: #E80A89;
+}
+
+.btn.video-save:hover {
+    background: #E80A89;
+    color: #ffffff;
+}
+
+.btn.video-reset {
+    color: #E80A89;
+}
+
+.btn.video-reset:hover {
+    background: #E80A89;
+    color: #ffffff;
 }
 
 .like-btn:hover .label {
@@ -2001,15 +2019,35 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .filterOptions .active {
-    background: url(../images/btn-video-back.png) no-repeat 0 0;
+    background: url(../images/btn-green-lt.png) no-repeat 0 0;
     color: #ffffff;
 }
 
 .filterOptions .active > span {
-    background: url(../images/btn-video-back.png) no-repeat right 0;
+    background: url(../images/btn-green-rt.png) no-repeat right 0;
 }
 
 .filterOptions .active:after {
+    content: " ";
+    left: 40%;
+    background: url(../images/btn-green-carat.png) no-repeat 0 0;
+    height: 12px;
+    width: 16px;
+    position: relative;
+    top: -1px;
+    display: block;
+}
+
+.video.filterOptions .active {
+    background: url(../images/btn-video-back.png) no-repeat 0 0;
+    color: #ffffff;
+}
+
+.video.filterOptions .active > span {
+    background: url(../images/btn-video-back.png) no-repeat right 0;
+}
+
+.video.filterOptions .active:after {
     content: " ";
     left: 40%;
     background: url(../images/btn-caret.png) no-repeat 0 0;
