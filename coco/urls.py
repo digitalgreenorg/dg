@@ -11,11 +11,8 @@ from views import coco_v2, debug, login, logout, record_full_download_time, rese
 from dg.base_settings import COCO_PAGE
 from dg.coco_admin import coco_admin
 
-<<<<<<< HEAD
 from farmerbook import farmer_book_views
 
-=======
->>>>>>> origin/footer_changes_sujit
 import output.urls
 import raw_data_analytics.urls
 import vrppayment.urls
