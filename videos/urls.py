@@ -20,5 +20,5 @@ urlpatterns = patterns('',
     url(r'^library/$', DirectTemplateView.as_view(template_name='collections.html', extra_context={'header': {'jsController':'Collections', 'currentPage':'Discover', 'loggedIn':False}}), name='discover'),
     (r'^videokheti/', include(videokheti.urls)),
     (r'^search/$',video_analytics.video_search),
-    url(r'^video/?$',video_analytics.video, name='video'),
+    url(r'^video/$',video_analytics.video, name='video'),
 )
