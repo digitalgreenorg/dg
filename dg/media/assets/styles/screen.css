@@ -29,7 +29,7 @@ time, mark, audio, video {
     font-size: 100%;
     font-weight: inherit;
     font-style: inherit;
-    font-family: inherit;
+    font-family: 'Montserrat', sans-serif !important;
     vertical-align: baseline;
 }
 
@@ -300,7 +300,7 @@ body {
 
 a {
     text-decoration: none;
-    color: #047d0a;
+    color: #3D3D3F;
 }
 
 /* ---------------------------------------------------------------------
@@ -308,7 +308,7 @@ a {
 ------------------------------------------------------------------------ */
 
 .global-nav {
-    border-bottom: 4px solid #047d0a;
+    border-bottom: 4px solid rgba(61, 61, 63, 0.8);
     padding-top: 10px;
 }
 
@@ -483,10 +483,11 @@ a {
 }
 
 .nav .btn-sign-in {
+    float: right;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    color: #000000;
+    color: #3D3D3F;
     text-transform: uppercase;
     font-size: 12px;
     padding: 8px 9px 6px 35px;
@@ -620,7 +621,7 @@ a {
 
 .footer {
     background: #6bb155;
-    border-top: 4px solid #047d0a;
+    border-top: 4px solid rgba(61, 61, 63, 0.8);
     padding: 8px 0 14px 0;
 }
 .footer-video {
@@ -668,6 +669,8 @@ a {
 .footer-links {
     overflow: hidden;
     padding-top: 5px;
+    color:#3D3D3F;
+    text-align: center;
 }
 
 .footer-links > li {
@@ -923,7 +926,15 @@ a {
 }
 
 .hdg-green {
-    color: #047d0a;
+    color: #3D3D3F;
+}
+
+.hdg-pink {
+    color: #E80A89;
+}
+
+.hdg-purple {
+    color: #8F288C;
 }
 
 .hdg-pink {
@@ -1002,7 +1013,7 @@ a {
 }
 
 .copy-lt {
-    color: #8b8b8b;
+    color: #3D3D3F;
 }
 
 .copy-extra-lt {
@@ -1388,7 +1399,7 @@ a {
 .btn {
     display: inline-block;
     text-transform: uppercase;
-    color: #047d0a;
+    color: #3D3D3F;
     font-family: source_sans_prosemibold, arial, helvetica, sans-serif;
     font-size: 14px;
     padding: 10px 18px 9px 18px;
@@ -1405,7 +1416,13 @@ a {
 
 .btn:hover,
 .like-btn.liked {
-    background: #047d0a;
+    background: #3D3D3F;
+    color: #ffffff;
+}
+
+.video.like-btn.btn:hover,
+.video.like-btn.liked {
+    background: #E80A89;
     color: #ffffff;
 }
 
