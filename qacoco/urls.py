@@ -6,6 +6,8 @@ from tastypie.api import Api
 from qacoco.api import VideoResource, BlockResource, VillageResource, QAReviewerNameResource, QAReviewerCategoryResource, VideoQualityReviewResource, DisseminationQualityResource, MediatorResource, AdoptionVerificationResource, PersonResource, PersonGroupResource, NonNegotiableResource
 from views import qacoco_v1, debug, login, logout, record_full_download_time, reset_database_check
 
+from dg.qacoco_admin import qacoco_admin
+
 qa_api = Api(api_name = "v1")
 qa_api.register(VideoResource())
 qa_api.register(VillageResource())
@@ -26,4 +28,5 @@ urlpatterns = patterns('',
     (r'^logout/', logout),
     (r'^record_full_download_time/', record_full_download_time),
     (r'^reset_database_check/', reset_database_check),
-    )
+    (r'^admin/', include(qacoco_admin.urls)),
+)

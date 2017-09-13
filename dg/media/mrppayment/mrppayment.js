@@ -76,7 +76,7 @@ function districtfilter(partner_id)
         data:{
         'partner': partner_id
         },
-        url: window.location.origin + "/analytics/mrptool/getdistrict",
+        url: window.location.origin + "/coco/mrp/getdistrict",
 
         success: function(data){
 
@@ -112,7 +112,7 @@ function blockfilter(district_id) {
             data: {
                 'district': district_id
             },
-            url: window.location.origin + "/analytics/mrptool/getblock",
+            url: window.location.origin + "/coco/mrp/getblock",
 
             success: function (data) {
                 if(bflag == 0) {
@@ -178,7 +178,7 @@ function mrp_payment_goclicked()
                 'block_name': block_name
             },
 
-            url: window.location.origin + "/analytics/mrptool/report",
+            url: window.location.origin + "/coco/mrp/report",
 
             success: function (data) {
                 j$.unblockUI();

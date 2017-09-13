@@ -1,4 +1,5 @@
-{% include "includes/header.html" %}
+
+{% include "rebranding_header_footer/header_community_video.html" %}
     {% include "includes/partials/search.html" %}
     
     <!-- Main page content -->
@@ -7,7 +8,7 @@
         <div class="inner-wrapper js-collections-wrapper" data-searchstring="{{searchString}}" data-country={{country}} data-partner="{{partner}}" data-title="{{title}}" data-state="{{state}}" data-language="{{language}}" data-category="{{category}}" data-subcategory="{{subcategory}}" data-topic="{{topic}}" data-subject="{{subject}}" data-order="{{order}}">
             <header class="clearfix layout-vr-lg">
                 <div class="grid-col">
-                    <h1 class="hdg-a hdg-source-lt">Community Videos</h1>
+                    <h1 class="hdg-a hdg-source-lt"></h1>
                 </div>
                 <div class="grid-rt">
                     {% include "includes/partials/mostFilters.html" %}
@@ -28,7 +29,7 @@
                     </div>
                     <div class="grid" >
                         <div class="grid-lt">
-                            <span class="loading-indicator js-loading-indicator">Loading...</span>
+                            <span class="loading-indicator-video js-loading-indicator">Loading...</span>
                         </div>
                         <div class="grid-rt js-pagination">
 
@@ -53,4 +54,4 @@
         </div> <!-- End .inner-wrapper -->
     </section> <!-- End .wrapper -->
 
-{% include "includes/footer.html" %}
+{% include "rebranding_header_footer/footer_community_video.html" %}

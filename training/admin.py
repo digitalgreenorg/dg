@@ -53,6 +53,11 @@ class TrainingListAdmin(admin.ModelAdmin):
     list_display_links = None
 
 training_admin = TrainingAdmin(name='training_admin')
+
+training_admin.index_template = 'social_website/index.html'
+training_admin.login_template = 'social_website/login.html'
+training_admin.logout_template = 'social_website/home.html'
+
 training_admin.register(Trainer, TrainerAdmin)
 training_admin.register(TrainingUser,TrainingUserAdmin)
 training_admin.register(Assessment)

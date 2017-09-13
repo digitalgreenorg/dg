@@ -1,4 +1,4 @@
-{% include "includes/header.html" %}
+{% include "rebranding_header_footer/header_community_video.html" %}
 {% include "includes/partials/search.html" %}
 {% load app_tags %}
         
@@ -48,9 +48,9 @@
                                     <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
                                 </div>
                                 <div class="bd">
-                                    <h2 class="copy hdg-bold layout-vr-tiny"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
+                                    <h2 class="copy hdg-bold layout-vr-tiny"><a class="hdg-pink" href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
                                     <p class="copy layout-vr-tiny">Member since {{ object.partner.joinDate.year }}</p>
-                                    <a class="hdg-bold copy" href="{% url 'partner' object.partner.name %}">{{ object.partner.collection_count }} Collections</a>
+                                    <a class="hdg-bold copy hdg-pink" href="{% url 'partner' object.partner.name %}">{{ object.partner.collection_count }} Collections</a>
                                 </div>
                             </div> <!-- End .media -->
                             <h3 class="copy hdg-bold layout-vr-tiny">{{ object.state }}</h3>
@@ -98,9 +98,9 @@
                             <div class="layout-vr-sm">
                                 <!-- Implementation Note: the data attribute on the button below must be present on page load for like functionality to work -->
                                 {% if not request.user.is_authenticated %}
-                                    <a class="btn like-btn" href="/login/?next={{request.path|urlencode}}"><div class="icon"></div><span class="label">Like</span></a>
+                                    <a class="btn video like-btn" href="/login/?next={{request.path|urlencode}}"><div class="icon"></div><span class="label">Like</span></a>
                                 {% else %}
-                                    <a class="btn like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
+                                    <a class="btn video like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
                                 {% endif %}
                             </div>
                             <a class="btn share-btn"><div class="icon"></div>
@@ -270,7 +270,7 @@
                                                 </div>
                                                 <div class="vid-cat-inner">
                                                     <div class="vid-cat-hd">
-                                                        <h3 class="hdg-green hdg-f hdg-bold">{{related.title}}</h3>
+                                                        <h3 class="hdg-pink hdg-f hdg-bold">{{related.title}}</h3>
                                                     </div>
                                                     <div class="vid-cat-bd">
                                                         <p class="copy copy-sm layout-vr-tiny">{{related.state}} | {{related.language}}</p>
@@ -301,5 +301,5 @@
             </div>
         </section>
 
-{% include "includes/footer.html" %}
+{% include "rebranding_header_footer/footer_community_video.html" %}
 

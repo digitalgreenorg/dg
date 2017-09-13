@@ -1,4 +1,4 @@
-{% include "includes/header.html" %}
+{% include "rebranding_header_footer/header_training_courseware.html" %}
 {% load app_tags %}
         
         <section id="picoseekho" role="main" class="push-top-lg">
@@ -27,10 +27,10 @@
                                 </div>
                                 <ul>
                                     {% for pico_video in video_list %}
-                                    <li class="featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
+                                    <li class="training-courseware featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
                                         <a href="{% url 'picoseekho' forloop.counter %}" >
                                             <div class="featured-collection-indicator"></div>
-                                            <div class="featured-collection-title">
+                                            <div class="training-courseware featured-collection-title">
                                                 {{ pico_video.title }}
                                             </div>
                                         </a>
@@ -70,34 +70,34 @@
                         <div class="hdg-f hdg-source-reg grid">
                             <div class="grid-col grid-size1of4 layout-vr-lg">
                                 <a href="{{STATIC_URL}}docs/pico_seekho/por315.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                                         <img src="{{STATIC_URL}}docs/pico_seekho/por315.png" height="260" width="190" alt=""/> 
                                     </div>
-                                    <div class="centered">Pico POR315 Handout</div>
+                                    <div class="hdg-purple centered">Pico POR315 Handout</div>
                                 </a>
                             </div>
                             <div class="grid-col grid-size1of4 layout-vr-lg">
                                 <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Assessment_Hindi.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                                         <img src="{{STATIC_URL}}docs/pico_seekho/assessment.png" height="260" width="190" alt=""/>
                                     </div>
-                                    <div class="centered">Pico Game Scoresheet</div>
+                                    <div class="hdg-purple centered">Pico Game Scoresheet</div>
                                 </a>
                             </div>
                             <div class="grid-col grid-size1of4 layout-vr-lg">
                                 <a href="{{STATIC_URL}}docs/pico_seekho/Pico_Training_Manual.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                                         <img src="{{STATIC_URL}}docs/pico_seekho/manual.png" height="260" width="190" alt=""/>
                                     </div>
-                                    <div class="centered">Pico Training Manual</div>
+                                    <div class="hdg-purple centered">Pico Training Manual</div>
                                 </a>
                             </div>
                             <div class="grid-col grid-size1of4 layout-vr-lg">
                                 <a href="{{STATIC_URL}}docs/training/Training-App-Guide.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                                         <img src="{{STATIC_URL}}docs/training/training_app.png" height="260" width="190" alt=""/> 
                                     </div>
-                                    <div class="centered">Pico Seekho App Guide</div>
+                                    <div class="hdg-purple centered">Pico Seekho App Guide</div>
                                 </a>
                             </div>
                         </div>    
@@ -126,7 +126,7 @@
                                         </div>
                                         <div class="vid-cat-inner">
                                             <div class="vid-cat-hd">
-                                                <h3 class="hdg-green hdg-f hdg-bold">Preparing for Dissemi ...</h3>
+                                                <h3 class="hdg-purple hdg-f hdg-bold">Preparing for Dissemi ...</h3>
                                             </div>
                                             <div class="vid-cat-bd">
                                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -152,7 +152,7 @@
                                         </div>
                                         <div class="vid-cat-inner">
                                             <div class="vid-cat-hd">
-                                                <h3 class="hdg-green hdg-f hdg-bold">Dissemination process ...</h3>
+                                                <h3 class="hdg-purple hdg-f hdg-bold">Dissemination process ...</h3>
                                             </div>
                                             <div class="vid-cat-bd">
                                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -178,7 +178,7 @@
                                         </div>
                                         <div class="vid-cat-inner">
                                             <div class="vid-cat-hd">
-                                                <h3 class="hdg-green hdg-f hdg-bold">Adoption Verification ...</h3>
+                                                <h3 class="hdg-purple hdg-f hdg-bold">Adoption Verification ...</h3>
                                             </div>
                                             <div class="vid-cat-bd">
                                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -196,4 +196,4 @@
             </div>
         </section>
 
-{% include "includes/footer.html" %}
+{% include "rebranding_header_footer/footer_training_courseware.html" %}

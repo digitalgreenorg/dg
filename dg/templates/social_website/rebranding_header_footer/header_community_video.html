@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--Updated new Header-->
+    <head>
+        <meta property="og:title" content="Digital Green"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:site_name" content="DigitalGreen"/>
+        <meta property="og:description" content="Digital Green is a knowledge platform to amplify development around the world. Watch, Learn, Share."/>
+        <meta property="fb:app_id" content="149405231925556" />
+        <!-- META DATA -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="MSSmartTagsPreventParsing" content="true" />
+        <meta http-equiv="imagetoolbar" content="no" />
+        <!--[if IE]><meta http-equiv="cleartype" content="on" /><![endif]-->
+
+        <!-- SEO -->
+        <title>Digital Green</title>
+        <meta name="description" content=" Digital Green is an international non-profit development organization that supports rural communities across South Asia and Sub-Saharan Africa to produce and share videos on sustainable agricultural and health practices" />
+        <meta name="author" content="" />
+
+        <!-- HTML5 SHIV -->
+        <!--[if lt IE 9]><script type="text/javascript" src="{{STATIC_URL}}assets/scripts/html5shiv.js"></script><![endif]-->
+        <!-- ICONS -->
+        <link rel="shortcut icon" type="image/ico" href="{{STATIC_URL}}assets/images/favicon.ico" />
+
+        <!-- STYLESHEETS -->
+        <link rel="stylesheet" media="screen" href="{{STATIC_URL}}assets/styles/chosen.css" />
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/jquery-ui.css" />
+         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/deoanalytics.css" />
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/NCarousel.css" />
+        <link rel="stylesheet" media="print" href="{{STATIC_URL}}assets/styles/print.css" />
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/jquery.dataTables.css" />
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/dataTables.tableTools.css" />
+        <link rel="stylesheet" media="screen" href="{{STATIC_URL}}assets/styles/select2.css" />
+
+
+         <!--[if IE 9]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie9.css" /><![endif]-->
+        <!--[if lte IE 8]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie8.css" /><![endif]-->
+        <!--[if lte IE 7]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie7.css" /><![endif]-->
+    </head>
+    <!--
+        =======================
+        | Implementation Note |
+        =======================
+
+        The body needs to have this "data-controller" attribute 
+        on it to control which JS controller is loaded.
+
+        Current list includes:
+            Home
+            About
+            Collections
+            ViewCollections
+            Profile
+    -->
+    <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
+    <body data-controller="{% if header.jsController %}{{header.jsController}}{% else %}DigitalGreenPage{% endif %}" data-user-id={{request.user.id}}>
+    <div class="wrapper-main wrapper" >
+            <div class="user-dropdown-div">
+            </div>
+            <div class="header-fixed" style="background-color: #E80A89">
+                <div class="clearfix">
+                    <header class="global-nav-video">
+                        <a class="skip-to-content" href="#main">Skip to content</a>
+                        <div class="wrapper">
+                            <div></div>
+                            <div>
+                                <ul class="nav-vid">
+                                    <li class="logodg"><a href="{{ WEBSITE_DOMAIN }}">Green Digital</a></li>
+                                    <li class="logovideo"><a href="#">Green Digital</a></li>
+
+                                </ul>
+                            </div>
+                            <div></div>
+                        </div>  <!-- End .wrapper -->
+                    </header> <!-- End .global-nav -->
+                </div>
+            </div>
+            <div class="header-margin"></div>
+
+
+
+
+
