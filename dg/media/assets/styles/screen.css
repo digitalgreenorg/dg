@@ -643,23 +643,25 @@ a {
 .footer-nav-vid > ul {
     display: inline-block;
     text-align: center;
-    margin-left: 20%;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .footer_copyright {
-    float: left;
+    display: inline;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .privacy_policy {
-    float: left;
+    display: inline;
     font-weight: bold;
-    padding-left: 10px;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .terms_of_service {
-    float: left;
+    display: inline;
     font-weight: bold;
-    padding-left: 10px;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .footer-nav-vid a {
