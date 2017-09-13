@@ -165,11 +165,11 @@
 		}
 		
 		function checkLoginFB(person_id) {
-			server_url = '/getpersonpage?person_id='+person_id;
+			server_url = '/coco/getpersonpage?person_id='+person_id;
 			FB.getLoginStatus(function(response) {
 				if (response.status === 'connected') {
 					fuid = response.authResponse.userID;
-					server_url = '/getpersonpage?person_id='+person_id+'&fuid='+fuid				
+					server_url = '/coco/getpersonpage?person_id='+person_id+'&fuid='+fuid				
 				}				
 			});
 			personPageLoad(server_url);
@@ -177,7 +177,7 @@
 		
 		function groupClick(group_id) {
 			showLoading();
-			$("#myModal").load('/getgrouppage?group_id='+group_id, function(response, status, xhr) {
+			$("#myModal").load('/coco/getgrouppage?group_id='+group_id, function(response, status, xhr) {
 				  if (status == "error") {
 					var msg = "Sorry but there was an error: ";
 					alert(msg + xhr.status + " " + xhr.statusText);
@@ -188,7 +188,7 @@
 		
 		function villageClick(vil_id) {
 			showLoading();
-			$("div#myModal").load('/getvillagepage?village_id='+vil_id, function(response, status, xhr) {
+			$("div#myModal").load('/coco/getvillagepage?village_id='+vil_id, function(response, status, xhr) {
 				  if (status == "error") {
 					var msg = "Sorry but there was an error: ";
 					alert(msg + xhr.status + " " + xhr.statusText);
@@ -203,7 +203,7 @@
 		
 		function cspClick(csp_id) {
 			showLoading();
-			$("div#myModal").load('/getserviceproviderpage?csp_id='+csp_id, function(response, status, xhr) {
+			$("div#myModal").load('/coco/getserviceproviderpage?csp_id='+csp_id, function(response, status, xhr) {
 				  if (status == "error") {
 					var msg = "Sorry but there was an error: ";
 					alert(msg + xhr.status + " " + xhr.statusText);
@@ -220,7 +220,7 @@
 		
 		function partnerClick(partner_id) {
 			showLoading();
-			$("div#myModal").load('/getpartnerpage?partner_id='+partner_id, function(response, status, xhr) {
+			$("div#myModal").load('/coco/getpartnerpage?partner_id='+partner_id, function(response, status, xhr) {
 				  if (status == "error") {
 					var msg = "Sorry but there was an error: ";
 					alert(msg + xhr.status + " " + xhr.statusText);
@@ -303,7 +303,7 @@
 				   $('#myModal').show();
 				   $('#myModal').css('margin-top', ($('#myModal').outerHeight() / 2) * -1)
 								 .css('margin-left', ($('#myModal').outerWidth() / 2) * -1);
-				   $("div#myModal").load('/getvillagepage?village_id='+i, function(response, status, xhr) {
+				   $("div#myModal").load('/coco/getvillagepage?village_id='+i, function(response, status, xhr) {
 					  if (status == "error") {
 						var msg = "Sorry but there was an error: ";
 						alert(msg + xhr.status + " " + xhr.statusText);
@@ -317,7 +317,7 @@
 				};				
 			 }
 			
-			$.getJSON("/getvillages",function(json){
+			$.getJSON("/coco/getvillages",function(json){
 				$.each(json,function(i){
 					vil_details = json[i];
 					//console.log(json[i].grade);
@@ -549,7 +549,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 					var message = fuid+person_id+"dg_farmerbook";
 					var hash = CryptoJS.SHA256(message);
 					var data = { 'fuid' : fuid, 'person_id' : person_id, 'hash': hash.toString()};
-					link_url = '{{server_url}}/farmerbook/person/'+person_id;
+					link_url = '{{server_url}}/coco/farmerbook/person/'+person_id;
 					$.post("/fbconnect/savefollower/", data, function(data) { 
 						console.log(data);
 						console.log($(this));
@@ -566,7 +566,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 								
 					var obj = {
 					  method: 'feed',
-					  link: '{{server_url}}/farmerbook/person/'+person_id,
+					  link: '{{server_url}}/coco/farmerbook/person/'+person_id,
 					  picture: 'https://s3.amazonaws.com/dg-farmerbook/2/'+person_id+'.jpg',
 					  name: 'Farmerbook',
 					  caption: person_name,
@@ -584,7 +584,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 					console.log(obj);					
 				} else {
 					console.log('redirecting');
-					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook &scope=publish_actions,publish_stream&response_type=token");
+					top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/coco/farmerbook &scope=publish_actions,publish_stream&response_type=token");
 				}	
 			});
 		}		
@@ -613,7 +613,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 				loggedIn(response);				
 			} else {
 				console.log('redirecting');
-				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook &scope=publish_actions,publish_stream&response_type=token");
+				top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/coco/farmerbook &scope=publish_actions,publish_stream&response_type=token");
 			}
 			});
 		}
@@ -638,7 +638,7 @@ mixpanel.init("aff3746cb82389a0d95f2a660a906858");</script><!-- end Mixpanel -->
 		  		{% if type == 'person' %}
 					personClick('{{type_id}}')
 				{% endif %}
-				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/farmerbook&response_type=token");
+				//top.location = encodeURI("https://www.facebook.com/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri={{server_url}}/coco/farmerbook&response_type=token");
 		  }
 		  });
         };

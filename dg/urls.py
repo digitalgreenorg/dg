@@ -28,7 +28,7 @@ from qacoco.qa_data_log import qa_send_updated_log
 #from qacoco_admin import qacoco_admin
 #from training.admin import training_admin
 #from loop.admin import loop_admin
-from farmerbook import farmer_book_views
+#from farmerbook import farmer_book_views
 from output.views import video_analytics
 from static_site_views import spring_analytics
 from website_admin import website_admin
@@ -111,16 +111,16 @@ urlpatterns = patterns('',
     (r'^spring/analytics/?$', spring_analytics),
     
     # Imports from farmerbook
-    (r'^farmerbook/$', farmer_book_views.get_home_page),
-    (r'^farmerbook/(?P<type>\D*)/(?P<id>\d*)/$', farmer_book_views.get_home_page),
-    (r'^trial/?$', farmer_book_views.get_admin_panel),
-    (r'^getvillagepage/?$', farmer_book_views.get_village_page),
-    (r'^getserviceproviderpage/?$', farmer_book_views.get_csp_page),
-    (r'^getpartnerpage/?$', farmer_book_views.get_partner_page),
-    (r'^getpersonpage/?$', farmer_book_views.get_person_page),
-    (r'^getgrouppage/?$', farmer_book_views.get_group_page),
-    (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
-    (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
+    # (r'^farmerbook/$', farmer_book_views.get_home_page),
+    # (r'^farmerbook/(?P<type>\D*)/(?P<id>\d*)/$', farmer_book_views.get_home_page),
+    # (r'^trial/?$', farmer_book_views.get_admin_panel),
+    # (r'^getvillagepage/?$', farmer_book_views.get_village_page),
+    # (r'^getserviceproviderpage/?$', farmer_book_views.get_csp_page),
+    # (r'^getpartnerpage/?$', farmer_book_views.get_partner_page),
+    # (r'^getpersonpage/?$', farmer_book_views.get_person_page),
+    # (r'^getgrouppage/?$', farmer_book_views.get_group_page),
+    # (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
+    # (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
     (r'^fbconnect/', include('fbconnect.urls')),
     #(r'^analytics/cocouser/',include('deoanalytics.urls')),
     #(r'^analytics/vrptool/',include('vrppayment.urls')),

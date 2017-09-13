@@ -11,6 +11,8 @@ from views import coco_v2, debug, login, logout, record_full_download_time, rese
 from dg.base_settings import COCO_PAGE
 from dg.coco_admin import coco_admin
 
+from farmerbook import farmer_book_views
+
 import output.urls
 import raw_data_analytics.urls
 import vrppayment.urls
@@ -61,4 +63,15 @@ urlpatterns = patterns('',
     (r'^mrp/',include(mrppayment.urls)),
     (r'^cocouser/',include(deoanalytics.urls)),
     (r'^dataupload/', include(data_upload.urls)),
+    # Imports from farmerbook
+    (r'^farmerbook/$', farmer_book_views.get_home_page),
+    (r'^farmerbook/(?P<type>\D*)/(?P<id>\d*)/$', farmer_book_views.get_home_page),
+    (r'^trial/?$', farmer_book_views.get_admin_panel),
+    (r'^getvillagepage/?$', farmer_book_views.get_village_page),
+    (r'^getserviceproviderpage/?$', farmer_book_views.get_csp_page),
+    (r'^getpartnerpage/?$', farmer_book_views.get_partner_page),
+    (r'^getpersonpage/?$', farmer_book_views.get_person_page),
+    (r'^getgrouppage/?$', farmer_book_views.get_group_page),
+    (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
+    (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
 )
