@@ -104,13 +104,13 @@ def add_cocouser(request):
             coco_user_obj.videos.add(*list(new_video_set-old_video_set))
             if '_save' in request.POST:
                 message = "The coco user \"%s\" was changed successfully."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/'
+                redirect_to = '/coco/admin/coco/cocouser/'
             elif '_addanother' in request.POST:
                 message = "The coco user \"%s\" was changed successfully. You may add another qa coco user below."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/add/'
+                redirect_to = '/coco/admin/coco/cocouser/add/'
             elif '_continue' in request.POST:
                 message = "The coco user \"%s\" was changed successfully. You may edit it again below."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/%s/'%(coco_user_id)
+                redirect_to = '/coco/admin/coco/cocouser/%s/'%(coco_user_id)
             else:
                 return HttpResponseBadRequest("BAD REQUEST")
             messages.add_message(request, messages.SUCCESS, message)
@@ -134,13 +134,13 @@ def add_cocouser(request):
 
             if '_save' in request.POST:
                 message = "The coco user \"%s\" was added successfully."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/'
+                redirect_to = '/coco/admin/coco/cocouser/'
             elif '_addanother' in request.POST:
                 message = "The coco user \"%s\" was added successfully. You may add another qa coco user below."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/add/'
+                redirect_to = '/coco/admin/coco/cocouser/add/'
             elif '_continue' in request.POST:
                 message = "The coco user \"%s\" was added successfully. You may edit it again below."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/%s/'%(coco_user_obj.id)
+                redirect_to = '/coco/admin/coco/cocouser/%s/'%(coco_user_obj.id)
             else:
                 return HttpResponseBadRequest("BAD REQUEST")
             messages.add_message(request, messages.SUCCESS, message)

@@ -16,6 +16,8 @@ from loop.utils.send_log.loop_data_log import send_updated_log
 from loop.utils.send_log.loop_admin_log import send_updated_admin_log
 from loop.utils.send_log.send_extra_data import sendData
 
+from loop.admin import loop_admin
+
 api1 = Api(api_name = "v1")
 api1.register(api.VillageResource())
 api1.register(api.LoopUserResource())
@@ -74,7 +76,7 @@ urlpatterns = patterns('',
     url(r'^get_log/', send_updated_log),
     url(r'^get_admin_log/', send_updated_admin_log),
     url(r'^get_extra_data/',sendData),
-    url(r'^dashboard/$', dashboard),
+    url(r'^analytics/$', dashboard),
     url(r'^get_payment_sheet/', download_data_workbook, name="download-data-workbook"),
     url(r'^filter_data/', filter_data),
     url(r'^total_static_data/',total_static_data),
@@ -82,7 +84,7 @@ urlpatterns = patterns('',
     url(r'^data_for_drilldown_graphs/',data_for_drilldown_graphs),
     url(r'^data_for_line_graph/',data_for_line_graph),
     url(r'^payments/',payments),
-    url(r'^dashboard/payment/',dashboard_payments),
+    url(r'^analytics/payment/',dashboard_payments),
     url(r'^farmer_payment_update/',farmer_payments),
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^helpline_incoming/',helpline_incoming),
@@ -91,4 +93,5 @@ urlpatterns = patterns('',
     url(r'^broadcast/',broadcast),
     url(r'^broadcast_call_response/',broadcast_call_response),
     url(r'^broadcast_audio_request/',broadcast_audio_request),
+    url(r'^admin/', include(loop_admin.urls)),
     )

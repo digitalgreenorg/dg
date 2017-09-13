@@ -1,4 +1,4 @@
-{% include "includes/header.html" %}
+{% include "rebranding_header_footer/header_community_video.html" %}
 {% include "includes/partials/search.html" %}
 {% load app_tags %}
 
@@ -22,7 +22,7 @@
             <div class="media">
                 <div id="player-section" class="img img-size-sq-small">
                     <a href="{% url 'partner' object.partner.name %}"><img src="{{ object.partner.logoURL.url }}" alt="" /></a>
-                    <h2 class="copy hdg-bold"><a href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
+                    <h2 class="copy hdg-bold"><a class="hdg-pink" href="{% url 'partner' object.partner.name %}">{{ object.partner.name }}</a></h2>
                 </div>
                 <div class="hdg-source-reg hdg-f">{{object.description|safe}}</div>
             </div> <!-- End .media -->
@@ -44,10 +44,10 @@
                         </div>
                         <ul>
                             {% for carousel_video in video_list %}
-                            <li class="featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
+                            <li class="video featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
                                 <a href="{% url 'collection_video_page' object.partner.name object.country object.state object.language object.title forloop.counter %}#player-section" >
                                     <div class="featured-collection-indicator"></div>
-                                    <div class="featured-collection-title">
+                                    <div class="video featured-collection-title">
                                         {{ carousel_video.title }}
                                     </div>
                                 </a>
@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">{{related.title}}</h3>
+                                            <h3 class="hdg-pink hdg-f hdg-bold">{{related.title}}</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">{{related.state}} | {{related.language}}</p>
@@ -117,9 +117,9 @@
                                     <div class="layout-vr-sm">
                                         <!-- Implementation Note: the data attribute on the button below must be present on page load for like functionality to work -->
                                         {% if not request.user.is_authenticated %}
-                                        <a class="btn like-btn" href="/login/?next={{request.path|urlencode}}"><div class="icon"></div><span class="label">Like</span></a>
+                                        <a class="btn video like-btn" href="/login/?next={{request.path|urlencode}}"><div class="icon"></div><span class="label">Like</span></a>
                                         {% else %}
-                                        <a class="btn like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
+                                        <a class="btn  video like-btn js-like-button" data-video-uid="{{video.uid}}"><div class="icon"></div><span class="label">Like</span></a>
                                         {% endif %}
                                     </div>
                                     <a class="btn share-btn"><div class="icon"></div>
@@ -238,4 +238,4 @@
     </div>                         
 </section>
 
-{% include "includes/footer.html" %}
+{% include "rebranding_header_footer/footer_community_video.html" %}

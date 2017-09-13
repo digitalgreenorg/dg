@@ -1,4 +1,4 @@
-window.__admin_url = '/admin/';
+window.__admin_url = '/coco/admin/';
 function addEvent(obj, evType, fn) {
 	if (obj.addEventListener) {
 	    obj.addEventListener(evType, fn, false);
@@ -29,7 +29,7 @@ function get_villages()
 	.each(function(index,obj){
 		selected_villages.push(parseInt(obj.value));
 	});
-	$.get("/admin/coco/cocouser/add/district_wise_village",{district_id:district_id}).done(function(village_list){
+	$.get("/coco/admin/coco/cocouser/add/district_wise_village",{district_id:district_id}).done(function(village_list){
 		village_list = JSON.parse(village_list);           	
 		clear_list("#village_from");
 		village_list = village_list.filter(function(village) { 
@@ -48,7 +48,7 @@ function get_district()
 {
 	state_id = $("#id_state").val();
 	clear_list("#village_from");
-	$.get("/admin/coco/cocouser/add/state_wise_district",{state_id:state_id}).done(function(district_list){
+	$.get("/coco/admin/coco/cocouser/add/state_wise_district",{state_id:state_id}).done(function(district_list){
 		district_list = JSON.parse(district_list);           	
 		clear_list("#id_district");
 		$('#id_district').append("<option selected disabled> -- select an option -- </option>");
@@ -69,7 +69,7 @@ function get_video()
 	.each(function(index,obj){
 		selected_videos.push(parseInt(obj.value));
 	});
-	$.get("/admin/coco/cocouser/add/partner_wise_video",{partner_id:partner_id}).done(function(video_list){
+	$.get("/coco/admin/coco/cocouser/add/partner_wise_video",{partner_id:partner_id}).done(function(video_list){
 		video_list = JSON.parse(video_list);           	
 		clear_list("#id_video_from");
 		video_list = video_list.filter(function(video) { 

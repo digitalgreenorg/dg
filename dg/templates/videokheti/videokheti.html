@@ -11,6 +11,8 @@
 
     <title>Video Kheti</title>
 
+    <link rel="icon" type="image/png" href="/media/Output/Images/new_fav_icon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
     <link href="{{STATIC_URL}}videokheti/css/bootstrap_black.min.css" rel="stylesheet">
 
@@ -31,32 +33,37 @@
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-	            <a class="navbar-brand" href="/agri/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a>
+            <div class="row">
+                <div class="navbar-header col-lg-11">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- <a class="navbar-brand" href="/videos/videokheti/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a> -->
+                    <a class="navbar-brand digitalgreen_logo" href="{{ WEBSITE_DOMAIN }}" target="_blank"><img src="/media/Output/Images/dg_logo.png" height="44px" alt="DigitalGreen" ></a>
+                    <div class="navbar-brand header-center">
+                        VideoKheti
+                    </div>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li {% if language == 'Hindi' %}class="disabled"{% endif %}><a href="#" class="language-click">Hindi</a></li>
+                                    <li {% if language == 'English' %}class="disabled"{% endif %}><a href="#" class="language-click">English</a></li>
+                                </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li {% if language == 'Hindi' %}class="disabled"{% endif %}><a href="#" class="language-click">Hindi</a></li>
-                                <li {% if language == 'English' %}class="disabled"{% endif %}><a href="#" class="language-click">English</a></li>
-                            </ul>
-                    </li>
-                </ul>
-            </div>
-            
         </div>
         <!-- /.container -->
     </nav>
-    
-    
+
+
     <!-- Page Content -->
     <div class="container">
         {% if breadcrumb %}
@@ -84,7 +91,7 @@
                      </a>
                      {% endif %}
                     <label style="font-size: 20px; color: #ffffff;">{{title}}</label>
-                    
+
                 </form>
                 {% if title_audio %}
                 <audio preload="auto" id="0">
@@ -96,7 +103,7 @@
         </div>
         <!-- /.row -->
 
-        
+
         <!-- Page Features -->
         {% if crop %}
         <div class="row">
@@ -124,7 +131,7 @@
                                 </div>
                             </div>
                         </div>
-                
+
                         <audio preload="auto" id="{{obj.id}}">
                             <source src="{% if video %}{{obj.audio}}{% else %}{{STATIC_URL}}videokheti/content/audio/{{obj.audio}} {% endif %}" type="audio/mpeg">
                             Your browser does not support the audio element.
@@ -148,20 +155,20 @@
 	                        {% for obj in video_carousel %}
 	                        <li data-target="#videoCarousel" data-slide-to="{{forloop.counter}}" {% if forloop.counter == 1 %} class="active" {% endif %}></li>
 	                        {% endfor %}
-	                    </ol>   
+	                    </ol>
 	                    <!-- Carousel items -->
 	                    <div class="carousel-inner">
 	                        <div class="item active text-center ">
 	                        {% for obj in videos %}
-	                            
+
 	                            {% cycle 1 0  as new_row silent %}
 	                                {% if forloop.counter > 2 and new_row %}
 	                                    </div>
 	                                    <div class="item">
 	                                {% endif %}
-	                            
+
 	                            <div class="col-md-6 col-sm-6 col-xs-6 text-center">
-	                                <a href="/agri/video/?video={{obj.id}}">
+	                                <a href="/videos/videokheti/video/?video={{obj.id}}">
 	                                    <img class="img-responsive img-center vid-img" src="{{STATIC_URL}}videokheti/content/images/play.png" style="background:URL({{obj.image_file}}); background-repeat:no-repeat;" alt="">
 	                                </a>
 	                            </div>
@@ -176,7 +183,7 @@
 	                        <span class="glyphicon glyphicon-chevron-right"></span>
 	                    </a>
 	                </div>
-	            
+
 	        </div>
         </div>
         </footer>
@@ -192,7 +199,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
-    
+
     <!-- Enabling Google Analytics -->
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -202,10 +209,10 @@
         try {
             var pageTracker = _gat._getTracker("UA-16211208-1");
             pageTracker._trackPageview();
-            } 
+            }
         catch(err) {}
     </script>
-    
+
     <script>
     $(".audio-click").click(function(event) {
         event.preventDefault();
@@ -220,11 +227,11 @@
             button.removeAttr('disabled');
         });
     });
-    
+
     $(".language-click").click(function(event) {
         event.preventDefault();
         //alert($(this).data('id'));
-        $.get( "/agri/language/", { language: $(this).text() })
+        $.get( "/videos/videokheti/language/", { language: $(this).text() })
             .done(function( data ) {
                 if(data=='1'){
                     window.location.reload(true);
@@ -232,6 +239,10 @@
             });
     });
 </script>
+
+<div id="new_footer">
+    <p style="text-align:center">&#169; 2017 Digital Green. All rights reserved. <b><a id="privacy" href="{{ PRIVACY_POLICY }}" target="_blank">Privacy Policy.</a> <a id="terms-service" href="{{ TERMS_SERVICE }}" target="_blank">Terms of Service</a></b> </p>
+</div>
 
 </body>
 

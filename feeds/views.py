@@ -43,7 +43,7 @@ class CombinedDistrictFeed(Feed):
         return item.district_name
 
     def item_link(self, item):
-        return ''.join(['http://%s/analytics/overview_module?geog=district&id='%(CURRENT_DOMAIN,), str(item.id)])
+        return ''.join(['http://%s/coco/analytics/?geog=district&id='%(CURRENT_DOMAIN,), str(item.id)])
 
     def item_guid(self, item):
         return str(item.id)
@@ -72,7 +72,7 @@ class IndividualDistrictFeed(Feed):
         return item.district_name
 
     def item_link(self, item):
-        return ''.join(['http://%s/analytics/overview_module?geog=district&id='%(CURRENT_DOMAIN,), str(item.id)])
+        return ''.join(['http://%s/coco/analytics/?geog=district&id='%(CURRENT_DOMAIN,), str(item.id)])
 
     def item_extra_kwargs(self, item):
         adoption_list = PersonAdoptPractice.objects.filter(person__village__block__district__id = item.id)
@@ -91,6 +91,6 @@ class IndividualDistrictFeed(Feed):
                  'dgrss:topic': ', '.join(topic_list),
                  'dgrss:subtopic': ', '.join(subtopic_list),
                  'dgrss:subject': ', '.join(subject_list),
-                 'dgrss:analyticsLink': ''.join(['http://%s/analytics/overview_module?geog=district&id='%(CURRENT_DOMAIN,), str(item.id)]),
-                 'dgrss:videosLink': ''.join(['http://%s/discover/?searchString='%(CURRENT_DOMAIN,), state])
+                 'dgrss:analyticsLink': ''.join(['http://%s/coco/analytics/?geog=district&id='%(CURRENT_DOMAIN,), str(item.id)]),
+                 'dgrss:videosLink': ''.join(['http://%s/videos/library/?searchString='%(CURRENT_DOMAIN,), state])
                  }
