@@ -2,7 +2,8 @@
 {% extends "static_site/base.html" %}
 
 {% block cssfile %}
-	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/base_all.css'/>       
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/base_all.css'/> 
+
 {% endblock cssfile %}
 
 {% block mainbody %} 
@@ -49,7 +50,6 @@
 			{% endblock content %}	
 				
 				<div id='footertop'>  </div>
-
 				<!--<div id='footerdivleft'>
 					<div id='footerquicklinkdiv'>
 						<ul>
@@ -93,6 +93,12 @@
 						<a class="footerquicklink" rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/" title="Creative Commons Licence" target="_blank"> <span style='font-weight:bold'>(cc)</span> &nbsp;Digital Green 2010</a>
 					</div> -->
 				<div id='footerdivleft'>
+					<ul>
+                        <li class="footer_copyright">&#169; 2017 Digital Green. All rights reserved.</li>
+                        <li class="privacy_policy"><a href="{{ PRIVACY_POLICY }}" target="_blank">Privacy Policy |</a></li>
+                        <li class="terms_of_service"><a href="{{ TERMS_SERVICE }}" target="_blank">Terms of Service</a></li>
+
+                    </ul>
 				</div>
 				
 {% endblock mainbody %}
