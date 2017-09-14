@@ -8,6 +8,7 @@ from social_website.urls import DirectTemplateView
 from output.views import video_analytics
 
 from dg.base_settings import VIDEOS_PAGE
+from dg.website_admin import website_admin
 
 import videokheti.urls
 
@@ -23,4 +24,5 @@ urlpatterns = patterns('',
     (r'^videokheti/', include(videokheti.urls)),
     (r'^search/$',video_analytics.video_search),
     url(r'^video/$',video_analytics.video, name='video'),
+    (r'^admin/', include(website_admin.urls)),
 )

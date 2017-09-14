@@ -13,6 +13,10 @@ class WebsiteAdmin(AdminSite):
 
 website_admin = WebsiteAdmin(name="admin_website")
 
+website_admin.index_template = 'social_website/index.html'
+website_admin.login_template = 'social_website/login.html'
+website_admin.logout_template = 'social_website/home.html'
+
 website_admin.register(Activity, ActivityAdmin)
 website_admin.register(Feedback, FeedbackAdmin)
 website_admin.register(Article, ArticleAdmin)
