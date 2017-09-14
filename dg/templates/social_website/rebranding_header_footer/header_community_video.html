@@ -47,7 +47,7 @@
         | Implementation Note |
         =======================
 
-        The body needs to have this "data-controller" attribute 
+        The body needs to have this "data-controller" attribute
         on it to control which JS controller is loaded.
 
         Current list includes:
@@ -60,7 +60,17 @@
     <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
     <body data-controller="{% if header.jsController %}{{header.jsController}}{% else %}DigitalGreenPage{% endif %}" data-user-id={{request.user.id}}>
     <div class="wrapper-main wrapper" >
-            <div class="user-dropdown-div">
+      <div class="user-dropdown-div" >
+          <div class="user-dropdown js-user-dropdown" >
+              <ul>
+                  <li class="user-dropdown-option"><a class="hdg-black">{{request.user.username}}</a></li>
+                  {% if not request.user.social_auth.all.0 %}
+                      <li class="user-dropdown-option">
+                          <a class="hdg-pink" href="{% url 'change_password' %}">Change Password</a>
+                      </li>
+                  {% endif %}
+                  <li class="user-dropdown-option"><a class="hdg-pink" href="{% url 'logout' %}">Sign Out</a></li>
+              </ul>
             </div>
             <div class="header-fixed" style="background-color: #E80A89">
                 <div class="clearfix">
@@ -70,9 +80,32 @@
                             <div></div>
                             <div>
                                 <ul class="nav-vid">
-                                    <li class="logodg"><a href="{{ WEBSITE_DOMAIN }}" target="_blank">Green Digital</a></li>
-                                    <li class="logovideo"><a href="#">Green Digital</a></li>
-
+                                    <li class="logodg"><a href="{{ WEBSITE_DOMAIN }}" target="_blank"></a></li>
+                                    <div class="logovideo"><a href="#"></a></div>
+                                    {% if not request.user.is_authenticated %}
+                                        <li class="nav-pipe video"><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
+                                    {% else %}
+                                        <li class="video grid-rt">
+                                            <div class="media grid-rt">
+                                                <div class="img">
+                                                    {% if "facebook" == request.user.social_auth.all.0.provider %}
+                                                    <div class="img-effects">
+                                                        <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" class="user-image js-user-image">
+                                                    </div>
+                                                    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
+                                                    <div class="img-effects">
+                                                        <img src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=40" class="user-image js-user-image">
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="img-effects">
+                                                        <img src="{{STATIC_URL}}social_website/content/default.png" class="user-image js-user-image">
+                                                    </div>
+                                                    {% endif %}
+                                                    <img src="{{STATIC_URL}}social_website/content/dropdown.png" class="user-dropdown-arrow js-user-dropdown-arrow">
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% endif %}
                                 </ul>
                             </div>
                             <div></div>
@@ -81,8 +114,3 @@
                 </div>
             </div>
             <div class="header-margin"></div>
-
-
-
-
-
