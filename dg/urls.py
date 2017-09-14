@@ -22,8 +22,8 @@ import videos.urls
 from django.contrib import admin
 admin.autodiscover()
 
-from coco.data_log import send_updated_log
-from qacoco.qa_data_log import qa_send_updated_log
+#from coco.data_log import send_updated_log
+#from qacoco.qa_data_log import qa_send_updated_log
 #from coco_admin import coco_admin
 #from qacoco_admin import qacoco_admin
 #from training.admin import training_admin
@@ -104,8 +104,8 @@ urlpatterns = patterns('',
     #(r'^raw_data_analytics/', include(raw_data_analytics.urls)),
     (r'^loopivr/', include(loop_ivr.urls)),
 
-    (r'^get_log/?$', send_updated_log),
-    (r'^qa_get_log/?$', qa_send_updated_log),
+    #(r'^get_log/?$', send_updated_log),
+    #(r'^qa_get_log/?$', qa_send_updated_log),
     # End imports from dashboard
     ##Special page.needs to be deleted
     (r'^spring/analytics/?$', spring_analytics),

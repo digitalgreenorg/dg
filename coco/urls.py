@@ -11,6 +11,8 @@ from views import coco_v2, debug, login, logout, record_full_download_time, rese
 from dg.base_settings import COCO_PAGE
 from dg.coco_admin import coco_admin
 
+from coco.data_log import send_updated_log
+
 from farmerbook import farmer_book_views
 
 import output.urls
@@ -57,6 +59,7 @@ urlpatterns = patterns('',
     (r'^admin/coco/cocouser/[0-9]', 'coco.admin_views.add_cocouser'),
     url(r'^admin/', include(coco_admin.urls)),
     (r'coco/', coco_v2),
+    (r'^get_log/?$', send_updated_log),
     (r'^analytics/', include(output.urls)),
     (r'^rda/', include(raw_data_analytics.urls)),
     (r'^vrp/',include(vrppayment.urls)),
