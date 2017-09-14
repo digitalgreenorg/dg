@@ -167,7 +167,7 @@ def video(request):
             if(len(rel_vids)< 9):
                 rel_vids.update(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
 
-        return render_to_response('videopage.html',dict(vid = vid, \
+        return render(request, 'videopage.html',dict(vid = vid, \
                                                          tot_vid_scr = tot_vid_scr, \
                                                          tot_vid_adopt = tot_vid_adopt, \
                                                          tot_vid_views = tot_vid_views, \
@@ -307,7 +307,7 @@ def video_search(request):
     vids = vids[(page-1)*vid_per_page:(page*vid_per_page)]
     paging = dict(tot_pages = range(1,tot_pages+1), vid_count = vid_count, cur_page = page)
 
-    return render_to_response("searchvideo_result.html",dict(vids = vids, paging=paging, search_box_params = search_box_params))
+    return render(request, "searchvideo_result.html",dict(vids = vids, paging=paging, search_box_params = search_box_params))
 
 #Data generator for Month-wise Bar graph for Screening of videos
 def video_screening_month_bar_data(request):
