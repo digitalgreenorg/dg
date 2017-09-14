@@ -11,6 +11,7 @@
        
     {% endblock cssfile %}    
     <link type='text/css' rel='stylesheet' href='/media/Output/CSS/jquery.calendar.css'  media="screen" />     
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">  
               
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.8.3.min.js"></script>   
 	<script type="text/javascript" src="/media/Output/JS/jquery.calendar.js"></script>	
@@ -57,7 +58,7 @@
 			{% block mainbody %}
 
 				<div id='logosearchdiv'>				
-					<div id='navheaderleft'> <a href="/"> <img  style="max-height: 54px" src="/media/Output/Images/dglogo_new.png" alt='Digital Green Logo' title="Logo"> </a></div>
+					<div id='navheaderleft'> <a href="{{WEBSITE_DOMAIN}}" target="_blank"> <img  style="max-height: 54px" src="/media/Output/Images/dglogo_new.png" alt='Digital Green Logo' title="Logo"> </a></div>
 				</div>
 				
 			{% endblock mainbody %}		
