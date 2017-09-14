@@ -73,9 +73,25 @@ urlpatterns = patterns('',
     url(r'^password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'social_website/password_change.html', 'post_change_redirect':'/',}, name='change_password'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
     (r'^social/', include(social_website.api_urls)),
+    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
+    (r'^adminblog/', include(admin.site.urls)),
+    (r'^coco/', include(coco.urls)),
+    (r'^qacoco/', include(qacoco.urls)),
+    (r'^dimagi/', include(dimagi.urls)),
+    (r'^videos/', include(videos.urls)),
+    (r'^ivrsadmin/', include(ivr_admin.urls)),
+    (r'^training/', include(training.urls)),
+    (r'^loop/', include(loop.urls)),
+    (r'^loopivr/', include(loop_ivr.urls)),
+    (r'^spring/analytics/?$', spring_analytics),
+    (r'^fbconnect/', include('fbconnect.urls')),
+    (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
+    (r'^ivrs/',include('ivr.urls')),
+    (r"^", include("mezzanine.urls")),
+
     #(r'^bmgf/', include(feeds.urls)),
     #(r'^archive/', include(website_archive_urls)),
-    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
+    
     #(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
     #(r'^admin/coco/cocouser/add/state_wise_district', 'coco.admin_views.state_wise_district'),
@@ -90,26 +106,18 @@ urlpatterns = patterns('',
     #(r'^trainingadmin/', include(training_admin.urls)),
     #(r'^loopadmin/', include(loop_admin.urls)),
     #(r'^loopivradmin/', include(loop_ivr_admin.urls)),
-    (r'^adminblog/', include(admin.site.urls)),
+
     #(r'^data_upload/', include(data_upload.urls)),
-    (r'^coco/', include(coco.urls)),
-    (r'^qacoco/', include(qacoco.urls)),
-    (r'^dimagi/', include(dimagi.urls)),
+
     #(r'^analytics/', include('output.urls')),
     #url(r'^video/?$',video_analytics.video, name='video'),
-    (r'^videos/', include(videos.urls)),
-    (r'^ivrsadmin/', include(ivr_admin.urls)),
-    (r'^training/', include(training.urls)),
-    (r'^loop/', include(loop.urls)),
     #(r'^raw_data_analytics/', include(raw_data_analytics.urls)),
-    (r'^loopivr/', include(loop_ivr.urls)),
 
     #(r'^get_log/?$', send_updated_log),
     #(r'^qa_get_log/?$', qa_send_updated_log),
     # End imports from dashboard
     ##Special page.needs to be deleted
-    (r'^spring/analytics/?$', spring_analytics),
-    
+
     # Imports from farmerbook
     # (r'^farmerbook/$', farmer_book_views.get_home_page),
     # (r'^farmerbook/(?P<type>\D*)/(?P<id>\d*)/$', farmer_book_views.get_home_page),
@@ -121,17 +129,12 @@ urlpatterns = patterns('',
     # (r'^getgrouppage/?$', farmer_book_views.get_group_page),
     # (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     # (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
-    (r'^fbconnect/', include('fbconnect.urls')),
     #(r'^analytics/cocouser/',include('deoanalytics.urls')),
     #(r'^analytics/vrptool/',include('vrppayment.urls')),
     #(r'^analytics/mrptool/',include('mrppayment.urls')),
-    (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
     #(r'^agri/', include(videokheti.urls)),
-    (r'^ivrs/',include('ivr.urls')),
-    (r"^", include("mezzanine.urls")),
-
     #AJAX for Feedback
-    url(r'^feedbacksubmit_json$', 'dg.feedback_view.ajax'),
+    #url(r'^feedbacksubmit_json$', 'dg.feedback_view.ajax'),
 )
 
 # Static files serving locally
