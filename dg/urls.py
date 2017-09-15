@@ -81,6 +81,8 @@ urlpatterns = patterns('',
     (r'^qacoco/', include(qacoco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
     (r'^videos/', include(videos.urls)),
+    # ivrsadmin/logout/ should be above admin/ URL
+    url(r'^ivrsadmin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/ivrsadmin'}),
     (r'^ivrsadmin/', include(ivr_admin.urls)),
     (r'^training/', include(training.urls)),
     (r'^loop/', include(loop.urls)),
