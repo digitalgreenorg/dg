@@ -1,3 +1,15 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.digitalgreen_logo {
+    float: left;
+    height: 44px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 a, h1, h2, h3, h4, h5, h6, span, input, nav ul a {
   color: #3D3D3F;
 }

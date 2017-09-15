@@ -906,12 +906,12 @@ textarea {
   line-height: inherit;
 }
 a {
-  color: #047d0a;
+  color: #26A7DF;
   text-decoration: none;
 }
 a:hover,
 a:focus {
-  color: #023304;
+  color: #0d6684;
   text-decoration: underline;
 }
 a:focus {
@@ -2805,8 +2805,8 @@ fieldset[disabled] .btn-default.active {
 }
 .btn-primary {
   color: #ffffff;
-  background-color: #047d0a;
-  border-color: #036408;
+  background-color: #148AB2;
+  border-color: #148AB2;
 }
 .btn-primary:hover,
 .btn-primary:focus,
@@ -2814,8 +2814,8 @@ fieldset[disabled] .btn-default.active {
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
   color: #ffffff;
-  background-color: #024c06;
-  border-color: #012903;
+  background-color: #0d6684;
+  border-color: #0d6684;
 }
 .btn-primary:active,
 .btn-primary.active,
@@ -2837,8 +2837,8 @@ fieldset[disabled] .btn-primary:active,
 .btn-primary.disabled.active,
 .btn-primary[disabled].active,
 fieldset[disabled] .btn-primary.active {
-  background-color: #047d0a;
-  border-color: #036408;
+  background-color: #148AB2;
+  border-color: #148AB2;
 }
 .btn-primary .badge {
   color: #047d0a;
@@ -3693,7 +3693,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
   color: #ffffff;
-  background-color: #047d0a;
+  background-color: #26A7DF;
 }
 .nav-stacked > li {
   float: none;

@@ -19,12 +19,15 @@
     <div class="nav-wrapper nav_row">
       <a class="brand-logo center"><img src="{% static 'app_dashboards/images/loop_logo.png' %}" style="height:25px"/></a>
       <a data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
+      <div class="left">
+    		<a href="{{WEBSITE_DOMAIN}}" target="_blank"><img src="/media/Output/Images/dg_logo.png" alt="DigitalGreen" class="digitalgreen_logo"></a>
+    	</div>
       <div class="left col s5">
         <ul class="hide-on-med-and-down">
           <li class="active" id="home_tab"><a class="white-text" onclick="hide_nav('home')">Home</a></li>
           <li id="analytics_tab"><a class="white-text" onclick="show_nav('analytics')">Analytics</a></li>
           <li id="time_series_tab"><a class="white-text" onclick="show_nav('time_series')">Time Series</a></li>
-          <li id="payments_tab"><a class="white-text" href="/loop/dashboard/payment/">Payments</a></li>
+          <li id="payments_tab"><a class="white-text" href="/loop/analytics/payment/">Payments</a></li>
         </ul>
       </div>
       <div id="language" class="col s2 initialized" style="float:right;">
@@ -49,7 +52,7 @@
         <li><a onclick="hide_nav()">Home</a></li>
         <li><a onclick="show_nav('analytics')">Analytics</a></li>
         <li><a onclick="show_nav('time_series')">Time Series</a></li>
-        <li><a href="/loop/dashboard/payment/">Payments</a></li>
+        <li><a href="/loop/analytics/payment/">Payments</a></li>
       </ul>
     </div>
     <div class="nav-wrapper hide secondary_header" id="filters_nav">
