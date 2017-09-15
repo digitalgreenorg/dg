@@ -639,6 +639,7 @@ a {
 
 .footer_copyright {
     display: inline;
+    font-weight: bold;
     font-family: 'Montserrat', sans-serif;
 }
 
