@@ -1,5 +1,7 @@
 # Django settings for dg project.
 import os
+from dg.settings import WEBSITE_DOMAIN
+
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 ADMINS = (
@@ -245,8 +247,8 @@ LOGGING = {
     }
 }
 
-PRODUCT_PAGE = 'http://alpha.digitalgreen.org/solutions/'
-LOOP_PAGE = 'http://alpha.digitalgreen.org/loop/'
-COCO_PAGE = 'http://alpha.digitalgreen.org/solution-coco/'
-TRAINING_PAGE = 'http://alpha.digitalgreen.org/training/'
-VIDEOS_PAGE = 'http://alpha.digitalgreen.org/community-videos/'
+PRODUCT_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'solutions/')
+LOOP_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'loop/')
+COCO_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'coco/')
+TRAINING_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'training/')
+VIDEOS_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'community-videos/')
