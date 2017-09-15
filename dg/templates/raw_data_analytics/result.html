@@ -49,7 +49,7 @@
         | Implementation Note |
         =======================
 
-        The body needs to have this "data-controller" attribute 
+        The body needs to have this "data-controller" attribute
         on it to control which JS controller is loaded.
 
         Current list includes:
@@ -84,7 +84,7 @@
                             <nav class="inner-nav" role="navigation" >
                                 <ul class="nav" >
                                     <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
-                                    <li class="logonew" style="float: left"><a href="#">Green Digital</a></li>
+                                    <li class="logonew" style="float: left"><a href="{{WEBSITE_DOMAIN}}" target="_blank" >Green Digital</a></li>
                                     {% if not request.user.is_authenticated %}
                                         <li class="nav-pipe"><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
@@ -136,17 +136,17 @@
 								<table id="example" class="display" style="text-align:center;">
 							    </table>
 						</div>
-					</div>		
+					</div>
 				</div>
 			</section>
 <!-- ######################################################################################################-->
-			 
+
       <footer>
                 <div class="footer" role="contentinfo" style="background-color: #66E214">
                     <div class="wrapper">
                         <div class="inner-wrapper">
                             <nav role="navigation">
-                                <ul class="copy-lt hdg-upper copy footer-links">  
+                                <ul class="copy-lt hdg-upper copy footer-links">
                                 </ul>
                             </nav>
                         </div>
@@ -157,13 +157,13 @@
 
         <!-- End Main Wrapper -->
         <!-- JAVASCRIPT -->
-        
+
         <!-- For Debugging -->
         <!--script data-main="{{STATIC_URL}}social_website/scripts/main" src="{{STATIC_URL}}social_website/scripts/libs/external/requirejs/require.js"></script-->
         <!-- Also change build to scripts in main.js -->
-        
+
         <!-- For Production -->
-        
+
         <!-- Enabling Google Analytics -->
         <script type="text/javascript">
     		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -173,7 +173,7 @@
     		try {
     			var pageTracker = _gat._getTracker("UA-16211208-1");
     			pageTracker._trackPageview();
-    			} 
+    			}
     	catch(err) {}
     	</script>
 
@@ -205,6 +205,3 @@
 
     </body>
 </html>
-
-
-
