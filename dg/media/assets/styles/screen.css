@@ -254,11 +254,11 @@ textarea {
 
 /* ---------------------------------------------------------------------
  Color Key
------------------------------------------------------------------------- 
+------------------------------------------------------------------------
 
     NOTE: the desinger used opacity for some of the colors, have used
     RGBA where appropriate, with backup color for older browsers
-    
+
     green: #047d0a
     lt grey: #959595
     cream: 3f3f2eb
@@ -372,6 +372,17 @@ a {
     background: url(../images/nav-border.png) no-repeat 0 0;
 }
 
+.video.nav-pipe {
+    background: url(../images/nav-border.png) no-repeat 0 0;
+    margin-top: -53px;
+    margin-right: 10px;
+    float: right;
+}
+
+.video.grid-rt {
+  margin-top: -53px;
+}
+
 .nav-pipe.selected {
     background: #ffffff url(../images/nav-border-selected.png) no-repeat 0 0;
     height: 44px;
@@ -435,10 +446,10 @@ a {
 }
 
 .logodg a {
-    text-indent: -9999px;
+    /*text-indent: -9999px;*/
     display: block;
     background: url(../images/favicon-white-dg.png) no-repeat 0 0;
-    background-size: contain; 
+    background-size: contain;
     height: 50px;
     width: 50px;
     margin-left: 10px;
@@ -448,7 +459,7 @@ a {
     text-indent: -9999px;
     display: block;
     background: url(../images/CommunityVideos_Horizontal_Reversed.png) no-repeat 0 0;
-    background-size: contain; 
+    background-size: contain;
     height: 54px;
     width: 300px;
     max-height: 70px;
@@ -459,7 +470,7 @@ a {
     text-indent: -9999px;
     display: block;
     background: url(../images/logo-training-courseware.png) no-repeat 0 0;
-    background-size: contain; 
+    background-size: contain;
     height: 54px;
     width: 300px;
     max-height: 70px;
@@ -473,7 +484,7 @@ a {
     padding-bottom: 7px;
 }
 
-.nav .btn-sign-in {
+.nav .btn-sign-in, .nav-vid .btn-sign-in {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -959,8 +970,8 @@ a {
 }
 
 .hdg-trunc {
-	white-space: nowrap; 
-    overflow: hidden; 
+	white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
@@ -1126,7 +1137,7 @@ a {
 .v-list-divided-dk > * + * {
     border-color: #999999;
     padding-top: 28px;
-    
+
 }
 
 /* ---------------------------------------------------------------------
@@ -1220,15 +1231,15 @@ a {
 
 }
 
-.media, 
+.media,
 .bd {
-    overflow:hidden; 
-    _overflow:visible; 
+    overflow:hidden;
+    _overflow:visible;
     zoom:1;
 }
 
 .media .img {
-    float:left; 
+    float:left;
     margin-right: 15px;
 }
 
@@ -1239,7 +1250,7 @@ a {
 .media .img img { display:block; }
 
 .media .imgExt {
-    float:right; 
+    float:right;
     margin-left: 10px;
 }
 
@@ -1250,7 +1261,7 @@ a {
 
 .media .img-size-lg img{
     width: 463px;
-    height: 283px;  
+    height: 283px;
 }
 
 .media .img-size-md img{
@@ -1281,7 +1292,7 @@ a {
 
 .media .img-size-contact img{
     width: 463px;
-    height: 444px;  
+    height: 444px;
 }
 
 .media .img-size-logo img{
@@ -1306,7 +1317,7 @@ a {
 
 .media .img-size-usaid img{
     width: 404px;
-    height: 247px;  
+    height: 247px;
 }
 
 .media .img-marginLg-lt {
@@ -1580,7 +1591,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     height: 25px;
     width: 30px;
 }
-    
+
 .vid-cat-inner {
     padding: 9px 9px 4px 9px;
 }
@@ -1740,7 +1751,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     top: 9px;
     left: 19px;
     background: url(../images/like-icon.png) no-repeat 0 0;
-    background-size: contain; 
+    background-size: contain;
 }
 
 .like-btn.liked {
@@ -1840,7 +1851,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     top: 7px;
     left: 15px;
     background: url(../images/share-icon.png) no-repeat 0 0;
-    background-size: contain;: 
+    background-size: contain;:
 }
 
 .share-btn:hover {
@@ -1908,7 +1919,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     cursor: pointer;
 }
 
-.sorting-list .open .filter-category-label {                 
+.sorting-list .open .filter-category-label {
     background: #E80A89;
     color: #ffffff;
     -webkit-box-shadow: 0px 1px 1px rgba(35, 31, 32, 0.2);
@@ -2156,7 +2167,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 
 .active .filterOptions-view .icon {
     background-position: 0 -181px;
-    
+
 }
 
 .filterOptions-adopt {
@@ -2185,7 +2196,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 .featured-line-clamp {
     display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;  
+    -webkit-box-orient: vertical;
     overflow:hidden;
 }
 
@@ -2350,8 +2361,8 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
 }
 
 .vidDrawer-wrapper-short,
-.vidDrawer-wrapper-short .vidDrawer-container { 
-    width: 767px; 
+.vidDrawer-wrapper-short .vidDrawer-container {
+    width: 767px;
 }
 
 .vidDrawer-wrapper-short {
@@ -2481,7 +2492,7 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     bottom: 0;
     left: 0;
     background: #000000; /* Old browsers */
-   
+
     background: -moz-linear-gradient(top,  rgba(0,0,0,0) 0%, rgba(0,0,0,1) 70%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(70%,rgba(0,0,0,1))); /* Chrome,Safari4+ */
     background: -webkit-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,1) 70%); /* Chrome10+,Safari5.1+ */
@@ -2490,14 +2501,14 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     background: linear-gradient(to bottom,  rgba(0,0,0,0) 0%,rgba(0,0,0,1) 70%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
 
-    
+
 }
 ul.carousel-list li{
     position: relative;
 }
 .image-carousel-caption{
     position:absolute;
-    bottom:0; 
+    bottom:0;
     width:100%;
 }
 .imageCarousel{
@@ -2577,7 +2588,7 @@ ul.carousel-list li{
 }
 
 .slide-text {
-    
+
     line-height: 44px;
 }
 
@@ -2758,7 +2769,7 @@ sup {
     background: #f3f2eb;
     -webkit-box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5);
     -moz-box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5);
-    box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5); 
+    box-shadow: 0px 0px 10px 1px rgba(228, 228, 228, .5);
 }
 
 .imgBorder img {
@@ -3093,7 +3104,7 @@ textarea.comment-text {
 .comment-avatar-thumbnail{
 	height: 75px;
 	width: 75px;
-	
+
 }
 .commentLeft-border {
     padding-bottom: 30px;
@@ -3294,21 +3305,21 @@ textarea.comment-text {
 .line-clamp.team-line-clamp{
     display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;  
+    -webkit-box-orient: vertical;
     overflow:hidden;
 }
 
 .line-clamp.board-line-clamp{
     display: -webkit-box;
     -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;  
+    -webkit-box-orient: vertical;
     overflow:hidden;
 }
 
 .line-clamp.partner-line-clamp{
     display: -webkit-box;
     -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;  
+    -webkit-box-orient: vertical;
     overflow:hidden;
 }
 
@@ -3510,7 +3521,7 @@ textarea.comment-text {
     left: 45%;
     position: absolute;
     z-index: 1000;
-    
+
 }
 
 .play-button:hover {
@@ -3518,7 +3529,7 @@ textarea.comment-text {
     color: #49cd34;
     cursor: pointer;
 }
- 
+
 
 
 
@@ -3574,7 +3585,7 @@ textarea.comment-text {
     margin-top: 2px;
     color: #888;
 }
-    
+
 .left-value,
 .left-stat-label {
     left: 0;
@@ -3806,7 +3817,7 @@ body {
     border-style:solid;
     border-color:red;
     border-width: 1px;
-    width: 163px;  
+    width: 163px;
 }
 
 .auth-err-msg {
@@ -3858,62 +3869,62 @@ div.social-wrap button.googleplus {
 /* The following breakpoints were chosen because they're the standard breakpoints in bootstrap 3.0 */
 
 @media(max-width: 480px) {
-    
+
     .wrapper-responsive {
         width: 480px;
         height: 500px;
-        
+
     }
-    
+
     .auth-box {
         height: 500px;
         margin-left: 10%;
         margin-top: -40px;
     }
-    
+
     .auth-separator {
         height: 40px;
         line-height: 40px;
     }
-   
+
 }
 
 @media (min-width: 481px) and (max-width: 767px) {
-    
+
     .wrapper-responsive {
-        width: 767px;        
+        width: 767px;
     }
-    
+
     .auth-box {
         height: 500px;
         margin-left: 30%;
         margin-top: -40px;
     }
-   
+
     .auth-separator {
         height: 40px;
         line-height: 40px;
     }
-    
+
 }
 
 @media (min-width: 768px) and (max-width: 992px) {
-    
+
     .wrapper-responsive {
         width: 992px;
         height: 650px;
-        
+
     }
-    
+
     .auth-box {
         margin-left: 35%;
     }
-    
+
     .auth-separator {
         height: 40px;
         line-height: 40px;
     }
-    
+
 }
 
 /****** User Dropdown Menu *************/
@@ -3939,7 +3950,6 @@ div.social-wrap button.googleplus {
 
 .user-dropdown {
     position: absolute;
-	margin-top: 68px;
     display: none;
     right: 0;
     background-color: white;
@@ -3976,7 +3986,7 @@ div.social-wrap button.googleplus {
 /* ---------------------------------------------------------------------
   Video App
  ------------------------------------------------------------------------ */
- 
+
  .collec-title{
      width: 300px;
      height: 25px;
@@ -3984,7 +3994,7 @@ div.social-wrap button.googleplus {
      font-size: 20px;
      padding: 5px;
  }
- 
+
  .collec-hidden{
      display: none;
  }
@@ -3992,18 +4002,18 @@ div.social-wrap button.googleplus {
 .display-inline {
     display: inline;
 }
- 
+
  .carousel-border {
      border: 2px solid #DEDEDE;
      padding: 10px 10px 10px 10px;
      border-radius: 10px;
      box-shadow: 4px 4px 4px #9f9f9f;
  }
- 
+
  .top-mar {
      margin-top: 20px;
  }
- 
+
  .video-remove {
      position: absolute;
      top: 15px;
@@ -4014,50 +4024,50 @@ div.social-wrap button.googleplus {
      padding: 3px 0 0 4px;
      opacity: 0.5;
  }
- 
+
  .video-remove:hover {
      opacity: 1;
      cursor: pointer;
  }
- 
+
  .cursor-move{
     cursor: move;
  }
- 
+
  .icon-addedit{
     height : 25px;
     width: 25px;
     overflow: hidden;
  }
- 
+
  .icon-coll-add{
     background: url(../images/addedit-sprite.png) no-repeat 0 -80px;
  }
- 
+
  .icon-coll-add:hover{
     background: url(../images/addedit-sprite.png) no-repeat 0 -120px;
  }
- 
+
  .icon-video-add{
     background: url(../images/addedit-sprite.png) no-repeat -40px 4px;
  }
- 
+
  .icon-video-add:hover{
     background: url(../images/addedit-sprite.png) no-repeat -40px -39px;
  }
- 
+
  .icon-coll-edit{
     background: url(../images/addedit-sprite.png) no-repeat 0 0;
  }
- 
+
  .icon-coll-edit:hover{
     background: url(../images/addedit-sprite.png) no-repeat 1px -40px;
  }
- 
+
  .icon-video-edit{
     background: url(../images/addedit-sprite.png) no-repeat -40px -82px;
  }
- 
+
  .icon-video-edit:hover{
     background: url(../images/addedit-sprite.png) no-repeat -41px -121px;
  }
@@ -4067,20 +4077,20 @@ div.social-wrap button.googleplus {
 }
 
  /*------------------ Sortable ------------------*/
- 
+
  .video-wrapper-sortable{
     float: left;
     width: 703px;
     margin-right: 30px;
  }
- 
- .sortable { 
+
+ .sortable {
  list-style-type: none;
  margin: 5px;
  padding: 5px;
  width: 600px;
  }
- 
+
  .sortable li {
  margin: 3px 3px 3px 3px;
  padding: 30px;
@@ -4089,12 +4099,12 @@ div.social-wrap button.googleplus {
  height: 90px;
  font-size: 1em;
  text-align: center; }
- 
+
  /*Events Page CSS
 ------------------------------------------------------------------------ */
 
 /* Event Icons */
-.list-icons-business li a { 
+.list-icons-business li a {
     background:url(../images/icon-business.png) no-repeat left 0px;
     padding-left:32px;
     line-height:26px;
@@ -4107,64 +4117,64 @@ div.social-wrap button.googleplus {
     color:#047D0A;
 }
 
-.list-icons-business li.pdf a { 
-    background-position: left -31px; 
+.list-icons-business li.pdf a {
+    background-position: left -31px;
 }
 
-.list-icons-business li.spk a { 
-    background-position: left -61px; 
+.list-icons-business li.spk a {
+    background-position: left -61px;
 }
 
-.list-icons-business li.mail a { 
-    background-position: left -185px; 
+.list-icons-business li.mail a {
+    background-position: left -185px;
 }
 
-.list-icons-business li.faq a { 
-    background-position: left -95px; 
+.list-icons-business li.faq a {
+    background-position: left -95px;
 }
 
-.list-icons-business li.reg a { 
-    background-position: left -126px; 
+.list-icons-business li.reg a {
+    background-position: left -126px;
 }
 
 /* Form Styles */
-.form-row { 
+.form-row {
     width:550px;
-    overflow:hidden; 
-    line-height:30px; 
-    margin-bottom:6px; 
+    overflow:hidden;
+    line-height:30px;
+    margin-bottom:6px;
 }
 
-.form-label { 
-    width:200px; 
+.form-label {
+    width:200px;
 }
 
-.form-box { 
-    border:1px solid #82d184; 
-    border-top:5px solid #82d184;  
-    background-color:#f1faf1; 
-    position:relative; 
-    z-index:998; 
+.form-box {
+    border:1px solid #82d184;
+    border-top:5px solid #82d184;
+    background-color:#f1faf1;
+    position:relative;
+    z-index:998;
     /*display:none;*/
 }
 
-.form-box input[type="text"]{   
-    background-color: #FFFFFF; 
-    border: 1px solid #CCCCCC;  
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; 
-    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; 
+.form-box input[type="text"]{
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-    border-radius: 4px; 
-    -moz-border-radius: 4px; 
-    -webkit-border-radius: 4px; 
-    color: #555555;  display: 
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    color: #555555;  display:
     inline-block; font-size: 14px;
-    height: 20px; 
-    line-height: 20px; 
-    margin-bottom: 10px; 
-    padding: 4px 6px;  
-    vertical-align: middle; 
-    width:300px; 
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 10px;
+    padding: 4px 6px;
+    vertical-align: middle;
+    width:300px;
 }
 
 .form-result {
@@ -4175,43 +4185,43 @@ div.social-wrap button.googleplus {
 
 /* Form Tabs */
 
-.form-tabs {  
+.form-tabs {
     margin-bottom:-6px;
 }
 .form-tabs li {
     margin-right:2px;
 }
 .form-tabs li a {
-    background:url(../images/tab_bg.jpg) 
+    background:url(../images/tab_bg.jpg)
     repeat-x #5cc25e;
-    border: 1px solid #c6e7c4; 
+    border: 1px solid #c6e7c4;
     width:130px;
     height:45px;
     line-height:42px; color:#fff;
-    border-radius:7px; 
-    -moz-border-radius:10px; 
-    -webkit-border-radius:10px; 
-    
+    border-radius:7px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+
     font-size: 14px;
     text-align: center;
-     
-    display: block; 
-    position: relative; 
+
+    display: block;
+    position: relative;
     z-index: 997;
 }
 .form-tabs li a.active{
-    background-image:none; 
-    background-color: #f1faf1; 
-    border-bottom: none; 
-    color: #3ea441; 
-    -webkit-border-bottom-right-radius: 0;  
+    background-image:none;
+    background-color: #f1faf1;
+    border-bottom: none;
+    color: #3ea441;
+    -webkit-border-bottom-right-radius: 0;
     -webkit-border-bottom-left-radius: 0;
-    -moz-border-bottom-right-radius: 0;  
-    -moz-border-bottom-left-radius: 0; 
-    border-bottom-right-radius: 0; 
-    border-bottom-left-radius:0; 
+    -moz-border-bottom-right-radius: 0;
+    -moz-border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius:0;
 
-    position: relative; 
+    position: relative;
     z-index: 999;
 }
 /* ---------------------------------------------------------------------
@@ -4222,7 +4232,7 @@ table.tableizer-table {
 				font-size: 10px;
 				display:block;
 				float:left;
-				} 
+				}
 			.tableizer-table td {
 				padding: 4px;
 				margin: 3px;
@@ -4230,7 +4240,7 @@ table.tableizer-table {
 				}
 			.tableizer-table th {
 				padding: 5px;
-				background-color:White; 
+				background-color:White;
 				color: Black;
 				font-weight: bold;
 				border: 2px solid Black;
@@ -4238,7 +4248,7 @@ table.tableizer-table {
 
 
 /* -----------------------------------------------------------------------
-Awards Strip 
+Awards Strip
 ------------------------------------------------------------------------ */
 
 .awards-container {
@@ -4253,17 +4263,17 @@ Awards Strip
 }
 
 .awards-right-arrow {
-    right: 0; 
-    top: 50px; 
+    right: 0;
+    top: 50px;
     position: absolute;
     cursor: pointer;
 }
 
 .awards-ticker {
     position: relative;
-    overflow: hidden; 
-    left: 40px; 
-    height: 130px; 
+    overflow: hidden;
+    left: 40px;
+    height: 130px;
     width: 865px;
 }
 
@@ -4295,7 +4305,7 @@ Awards Strip
 }
 
 /* -----------------------------------------------------------------------
-Investor Ticker 
+Investor Ticker
 ------------------------------------------------------------------------ */
 
 .investors-container {
@@ -4305,8 +4315,8 @@ Investor Ticker
 
 .investors-ticker {
     position: relative;
-    overflow-y: hidden;  
-    height: 91px; 
+    overflow-y: hidden;
+    height: 91px;
     width: 1200px;
 }
 
@@ -4391,27 +4401,27 @@ Modal for Survey
     box-shadow: 1px 1px 3px #000;
 }
 
-.close:hover { 
-    background: #090; 
+.close:hover {
+    background: #090;
 }
 
 /* WebKit, Blink, Edge */
-::-webkit-input-placeholder { 
+::-webkit-input-placeholder {
     font-size: 12px;
 }
 
 /* Mozilla Firefox 4 to 18 */
-:-moz-placeholder { 
+:-moz-placeholder {
    font-size: 12px;
 }
 
 /* Mozilla Firefox 19+ */
-::-moz-placeholder { 
+::-moz-placeholder {
    font-size: 12px;
 }
 
 /* Internet Explorer 10-11 */
-:-ms-input-placeholder { 
+:-ms-input-placeholder {
    font-size: 12px;
 }
 
@@ -4469,7 +4479,7 @@ Modal for Survey
 }
 
 .ui-state-active,
-.ui-widget-content .ui-state-active, 
+.ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
     border: 0px  #359123;
     background: #ffffff url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
@@ -4478,7 +4488,7 @@ Modal for Survey
 }
 
 .nav-training-courseware > .ui-state-active,
-.nav-training-courseware > .ui-widget-content .ui-state-active, 
+.nav-training-courseware > .ui-widget-content .ui-state-active,
 .nav-training-courseware > .ui-widget-header .ui-state-active {
     border: 0px  #8F288C;
     background: #ffffff url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
