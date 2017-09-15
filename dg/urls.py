@@ -3,6 +3,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
+from dg.settings import PRODUCT_PAGE
+
 import coco.urls
 #import data_upload.urls
 import dimagi.urls
@@ -71,7 +73,7 @@ urlpatterns = patterns('',
     url(r'^signup/$', 'social_website.views.signup_view', {'template_name': 'social_website/signup.html'}, name='signup'),
     url(r'^denied/$', 'django.views.defaults.permission_denied', {'template_name': 'social_website/403.html'}),
     url(r'^password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'social_website/password_change.html', 'post_change_redirect':'/',}, name='change_password'),
-    url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': PRODUCT_PAGE}, name='logout'),
     (r'^social/', include(social_website.api_urls)),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     (r'^adminblog/', include(admin.site.urls)),
