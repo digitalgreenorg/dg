@@ -25,5 +25,7 @@ urlpatterns = patterns('',
     (r'^videokheti/', include(videokheti.urls)),
     (r'^search/$',video_analytics.video_search),
     url(r'^video/$',video_analytics.video, name='video'),
+    # admin/logout/ should be above admin/ URL
+    url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/videos/admin/'}),
     (r'^admin/', include(website_admin.urls)),
 )

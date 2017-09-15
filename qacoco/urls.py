@@ -31,5 +31,7 @@ urlpatterns = patterns('',
     (r'^logout/', logout),
     (r'^record_full_download_time/', record_full_download_time),
     (r'^reset_database_check/', reset_database_check),
+    # admin/logout/ should be above admin/ URL
+    url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/qacoco/admin/'}),
     (r'^admin/', include(qacoco_admin.urls)),
 )

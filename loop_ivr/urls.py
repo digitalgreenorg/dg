@@ -16,5 +16,7 @@ urlpatterns = patterns('',
     url(r'^crop_price_query/',crop_price_query),
     url(r'^crop_price_sms_content/',crop_price_sms_content),
     url(r'^push_message_sms_response/',push_message_sms_response),
+    # admin/logout/ should be above admin/ URL
+    url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loopivr/admin/'}),
     (r'^admin/', include(loop_ivr_admin.urls)),
 )

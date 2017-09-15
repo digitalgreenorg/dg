@@ -57,6 +57,8 @@ urlpatterns = patterns('',
     (r'^admin/coco/cocouser/add/partner_wise_video', 'coco.admin_views.partner_wise_video'),
     (r'^admin/coco/cocouser/add', 'coco.admin_views.add_cocouser'),
     (r'^admin/coco/cocouser/[0-9]', 'coco.admin_views.add_cocouser'),
+    # admin/logout/ should be above admin/ URL
+    url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/coco/admin/'}),
     url(r'^admin/', include(coco_admin.urls)),
     (r'coco/', coco_v2),
     (r'^get_log/?$', send_updated_log),

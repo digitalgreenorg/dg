@@ -93,5 +93,7 @@ urlpatterns = patterns('',
     url(r'^broadcast/',broadcast),
     url(r'^broadcast_call_response/',broadcast_call_response),
     url(r'^broadcast_audio_request/',broadcast_audio_request),
+    # admin/logout/ should be above admin/ URL
+    url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loop/admin/'}),
     url(r'^admin/', include(loop_admin.urls)),
     )
