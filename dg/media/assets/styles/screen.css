@@ -455,7 +455,7 @@ a {
 }
 
 .logodg a {
-    /*text-indent: -9999px;*/
+    text-indent: -9999px;
     display: block;
     background: url(../images/favicon-white-dg.png) no-repeat 0 0;
     background-size: contain;
