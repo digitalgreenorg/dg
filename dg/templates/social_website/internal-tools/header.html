@@ -79,7 +79,7 @@
                             <nav class="inner-nav" role="navigation" >
                                 <ul class="nav" >
                                     <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
-                                    <li class="logonew" style="float: left"><a href="#">Green Digital</a></li>
+                                    <li class="logonew" style="float: left"><a href="{{ WEBSITE_DOMAIN }}" target="_blank">Green Digital</a></li>
                                     {% if not request.user.is_authenticated %}
                                         <li class="nav-pipe"><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
