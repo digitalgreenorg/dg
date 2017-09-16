@@ -1,4 +1,4 @@
-{% include "includes/header.html" %}
+{% include "internal-tools/header_training_courseware.html" %}
 {% load app_tags %}
         
         <section id="disseminationform" role="main" class="push-top-lg">
@@ -27,10 +27,10 @@
                                 </div>
                                 <ul>
                                     {% for video in video_list %}
-                                        <li class="featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
+                                        <li class="training-courseware featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
                                             <a href="{% url 'disseminationform' forloop.counter %}" >
                                                 <div class="featured-collection-indicator"></div>
-                                                <div class="featured-collection-title">
+                                                <div class="training-courseware featured-collection-title">
                                                     {{ video.title }}
                                                 </div>
                                             </a>
@@ -70,10 +70,10 @@
                         <div class="hdg-f hdg-source-reg grid">
                             <div class="grid-col grid-size1of4 layout-vr-lg">
                                 <a href="{{STATIC_URL}}docs/training/Dissemination-Training-Manual-June-2015.pdf" target="_blank">
-                                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                                         <img src="{{STATIC_URL}}docs/training/dissemination_training.png" height="260" width="190" alt=""/> 
                                     </div>
-                                    <div class="centered">Dissemination Training Manual</div>
+                                    <div class="hdg-purple centered">Dissemination Training Manual</div>
                                 </a>
                             </div>
                         </div>    
@@ -103,7 +103,7 @@
                                             </div>
                                             <div class="vid-cat-inner">
                                                 <div class="vid-cat-hd">
-                                                    <h3 class="hdg-green hdg-f hdg-bold">Pico Seekho</h3>
+                                                    <h3 class="hdg-purple hdg-f hdg-bold">Pico Seekho</h3>
                                                 </div>
                                                 <div class="vid-cat-bd">
                                                     <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -129,7 +129,7 @@
                                             </div>
                                             <div class="vid-cat-inner">
                                                 <div class="vid-cat-hd">
-                                                    <h3 class="hdg-green hdg-f hdg-bold">Preparing for Dissemi ...</h3>
+                                                    <h3 class="hdg-purple hdg-f hdg-bold">Preparing for Dissemi ...</h3>
                                                 </div>
                                                 <div class="vid-cat-bd">
                                                     <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -155,7 +155,7 @@
                                             </div>
                                             <div class="vid-cat-inner">
                                                 <div class="vid-cat-hd">
-                                                    <h3 class="hdg-green hdg-f hdg-bold">Adoption Verification ...</h3>
+                                                    <h3 class="hdg-purple hdg-f hdg-bold">Adoption Verification ...</h3>
                                                 </div>
                                                 <div class="vid-cat-bd">
                                                     <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -174,4 +174,4 @@
             </div>
         </section>
 
-{% include "includes/footer.html" %}
+{% include "internal-tools/footer_training_courseware.html" %}

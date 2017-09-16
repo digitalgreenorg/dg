@@ -448,7 +448,7 @@ function() {
                        line_11:"Database last deleted and downloaded at", line_12:"Database last synced at",
                        line_13:"Entries to upload"},
         background_download_interval: 5 * 60 * 1000,
-        inc_download_url: "/qa_get_log/",
+        inc_download_url: "/qacoco/qa_get_log/",
         afterFullDownload: function(start_time, download_status){
             return saveTimeTaken();
             function saveTimeTaken(){

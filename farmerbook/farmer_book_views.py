@@ -79,7 +79,7 @@ def get_home_page(request, type=None, id=None):
         top_partner_stats [partner[0]][3] = partner[3]
     top_partner_stats = sorted(top_partner_stats.items(), key = lambda(k, v):(v[2],k), reverse=True)[:3]   
                           
-    return render_to_response('farmerbook.html', dict(csp_leader_stats = csp_leader_stats, partner_leader_stats = top_partner_stats, 
+    return render(request,'farmerbook.html', dict(csp_leader_stats = csp_leader_stats, partner_leader_stats = top_partner_stats, 
                                                       type=type, type_id = id, facebook_app_id = facebook_app_id, server_url = server_url))
 
 def get_leaderboard_data():
