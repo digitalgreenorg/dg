@@ -4,7 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 
-from dg.base_settings import TRAINING_PAGE
+from dg.base_settings import TRAINING_PAGE, TRAINING_APP_PAGE
 
 from tastypie.api import Api
 from training.api import TrainerResource, LanguageResource, AssessmentResource, QuestionResource, MediatorResource, DistrictResource, VillageResource, PartnerResource, TrainingResource, StateResource, ScoreResource
@@ -31,6 +31,7 @@ api.register(ScoreResource())
 
 urlpatterns = patterns('',
 	url(r'^$', RedirectView.as_view(url=TRAINING_PAGE)),
+    url(r'^app/', RedirectView.as_view(url=TRAINING_APP_PAGE)),
     url(r'^login/', login),
     url(r'^api/', include(api.urls)),
     url(r'^analytics/', dashboard),
