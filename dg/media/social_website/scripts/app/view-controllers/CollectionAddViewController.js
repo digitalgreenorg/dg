@@ -151,7 +151,7 @@ define(function(require) {
 
         afterCollectionAdd: function(){
             var references = this._references;
-            var url = "/discover" +"/"+ references.$partnerList.find("option:selected").text() +"/"+ references.$countryList.val() +"/"+ references.$stateList.val() +"/"+ references.$langList.val() +"/"+ references.$collectionTitle.val()
+            var url = "/videos/library" +"/"+ references.$partnerList.find("option:selected").text() +"/"+ references.$countryList.val() +"/"+ references.$stateList.val() +"/"+ references.$langList.val() +"/"+ references.$collectionTitle.val()
             window.location.assign(url)
         },
         

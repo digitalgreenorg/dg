@@ -235,6 +235,11 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
     search_fields = ['to_number']
 
 loop_admin = LoopAdmin(name='loop_admin')
+
+loop_admin.index_template = 'social_website/index.html'
+loop_admin.login_template = 'social_website/login.html'
+loop_admin.logout_template = 'social_website/home.html'
+
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Country)
 loop_admin.register(AdminUser,AdminUserAdmin)

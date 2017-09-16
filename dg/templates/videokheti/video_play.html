@@ -10,7 +10,8 @@
     <meta name="author" content="">
 
     <title>Video Kheti</title>
-
+    <link rel="icon" type="image/png" href="/media/Output/Images/new_fav_icon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
     <link href="{{STATIC_URL}}videokheti/css/bootstrap_black.min.css" rel="stylesheet">
 
@@ -31,32 +32,37 @@
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-	                <a class="navbar-brand" href="/agri/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a>
-            </div>
-            
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li {% if language == 'Hindi' %}class="disabled"{% endif %}><a href="#" class="language-click">Hindi</a></li>
-                                <li {% if language == 'English' %}class="disabled"{% endif %}><a href="#" class="language-click">English</a></li>
-                            </ul>
-                    </li>
-                </ul>
+            <div class="row">
+                <div class="navbar-header col-lg-11">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- <a class="navbar-brand" href="/videos/videokheti/home"><span style="font-weight: bold; font-family: georgia;">digital</span><span style="font-weight: bold; color: #23BD2A; font-family: georgia;">GREEN</span></a> -->
+                    <a class="navbar-brand digitalgreen_logo" href="{{ WEBSITE_DOMAIN }}" target="_blank"><img src="/media/Output/Images/dg_logo.png" height="44px" alt="DigitalGreen" ></a>
+                    <div class="navbar-brand header-center">
+                        VideoKheti
+                    </div>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{language}}<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li {% if language == 'Hindi' %}class="disabled"{% endif %}><a href="#" class="language-click">Hindi</a></li>
+                                    <li {% if language == 'English' %}class="disabled"{% endif %}><a href="#" class="language-click">English</a></li>
+                                </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <!-- /.container -->
     </nav>
-    
-    
+
+
     <!-- Page Content -->
     <div class="container">
         {% if breadcrumb %}
@@ -72,7 +78,7 @@
             {% endfor%}
         </ul>
         {% endif %}
-        
+
         <!-- Title -->
         <div class="row">
             <div class="col-lg-12">
@@ -81,7 +87,7 @@
         </div>
         <!-- /.row -->
 
-        
+
         <!-- Page Features -->
         <div class="row">
             <div class="col-md-9">
@@ -91,8 +97,8 @@
                     </div>
                 </div>
             </div>
-            
-            
+
+
             <div class="col-md-3">
                 <div id="videoCarousel" class="carousel slide well" data-interval="3000" data-ride="carousel">
                 <!-- Carousel indicators -->
@@ -100,7 +106,7 @@
                         {% for obj in video_carousel %}
                         <li data-target="#videoCarousel" data-slide-to="{{forloop.counter}}" {% if forloop.counter == 1 %} class="active" {% endif %}></li>
                         {% endfor %}
-                    </ol>   
+                    </ol>
                     <!-- Carousel items -->
                     <div class="carousel-inner">
                         {% for obj in video_carousel %}
@@ -119,7 +125,7 @@
                         <span class="glyphicon glyphicon-chevron-right"></span>
                     </a>
                 </div>
-                
+
                 <div class="well">
 	                <div class="media">
 	                    <div class="media-left">
@@ -135,17 +141,17 @@
                         </a>
                         </div>
 	                </div>
-                    
+
 	                <!-- <div>
 	                    <h6>
 	                        Produced on {{ date_pro|date:"D d M Y" }}
 	                    </h6>
 	                </div> -->
-                
+
                 </div>
-                
-                
-                
+
+
+
                 <div style="text-align:center; margin-bottom:20px;">
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#forum">
                         COMMENTS
@@ -154,8 +160,8 @@
             </div>
         </div>
         <!-- /.row -->
-        
-        
+
+
 
         <!-- Modal -->
         <div class="modal fade" id="forum" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -179,7 +185,7 @@
 	                                    {% else %}
 	                                            <img height='50px' width='50px' class="media-object" src="{{STATIC_URL}}social_website/content/default.png" alt="...">
 	                                    {% endif %}
-	                                {% endif %}                
+	                                {% endif %}
                                 </label>
                                 </div>
                                 <div class="col-md-8">
@@ -191,11 +197,11 @@
                                 {% else %}
                                     <button type="button" class="btn btn-success js-data" id="post-click" data-id="{{id}}">POST</button>
                                 {% endif %}
-                                
-                                
+
+
                                 </div>
                             </div>
-                            
+
                         </form>
                         </div>
                         <div class="panel panel-default">
@@ -218,7 +224,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="{{STATIC_URL}}videokheti/js/bootstrap.min.js"></script>
-    
+
     <!-- Enabling Google Analytics -->
     <script type="text/javascript">
         var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -228,10 +234,10 @@
         try {
             var pageTracker = _gat._getTracker("UA-16211208-1");
             pageTracker._trackPageview();
-            } 
+            }
         catch(err) {}
     </script>
-    
+
     <script>
     $("#post-click").click(function(event) {
         event.preventDefault();
@@ -239,24 +245,24 @@
         var video = $(this).data('id')
         var comment = $('textarea#commentText').val().trim();
         if (comment.length > 0) {
-            $.post( "/agri/comment/", { video: video, comment: comment })
+            $.post( "/videos/videokheti/comment/", { video: video, comment: comment })
             .done(function( data ) {
                 data_json = JSON.parse(data);
                 var output_array = ['<li class="list-group-item">', '<div class="media">', '<div class="media-left">', '<img height="30px" width="30px" class="media-object" src="', data_json.fields.imageURL, '" alt="...">', '</div>', '<div class="media-body">', '<h4 class="media-heading">', data_json.fields.personName, '</h4>', '<h6 class="media-heading">', data_json.fields.text, '</h6>', '</div></div></li>'];
                 var html_string = output_array.join("");
                 $("#commentlist").prepend(html_string);
                 $('textarea#commentText').val('');
-            });    
+            });
         }
         else{
             $('textarea#commentText').focus();
         }
     });
-    
+
     $('#forum').on('show.bs.modal', function(){
         var video = $(".js-data").data('id')
         if ($('#forum li').length == 0){
-	        $.get( "/agri/get-comments/", { video: video })
+	        $.get( "/videos/videokheti/get-comments/", { video: video })
 	        .done(function( data ) {
 	            data_json = JSON.parse(data);
 	            for (obj in data_json) {
@@ -267,7 +273,7 @@
 	        });
         }
     });
-    
+
     $(".audio-click").click(function(event) {
         event.preventDefault();
         //alert($(this).data('id'));
@@ -281,11 +287,11 @@
             button.removeAttr('disabled');
         });
     });
-    
+
     $(".language-click").click(function(event) {
         event.preventDefault();
         //alert($(this).data('id'));
-        $.get( "/agri/language/", { language: $(this).text() })
+        $.get( "/videos/videokheti/language/", { language: $(this).text() })
             .done(function( data ) {
                 if(data=='1'){
                     window.location.reload(true);
@@ -293,6 +299,10 @@
             });
     });
     </script>
+
+<div id="new_footer">
+    <p style="text-align:center">&#169; 2017 Digital Green. All rights reserved. <b><a id="privacy" href="{{ PRIVACY_POLICY }}" target="_blank">Privacy Policy.</a> <a id="terms-service" href="{{ TERMS_SERVICE }}" target="_blank">Terms of Service</a></b> </p>
+</div>
 </body>
 
 </html>

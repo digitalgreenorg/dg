@@ -1,5 +1,7 @@
 # Django settings for dg project.
 import os
+from dg.settings import WEBSITE_DOMAIN
+
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 ADMINS = (
@@ -124,6 +126,7 @@ TEMPLATES = [
                 'social.apps.django_app.context_processors.login_redirect',
                 "mezzanine.conf.context_processors.settings",
                 "mezzanine.pages.context_processors.page",
+                "dg.context_processors.admin_media",
             ],
         },
     },
@@ -243,3 +246,9 @@ LOGGING = {
         },
     }
 }
+
+PRODUCT_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'solutions/')
+LOOP_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'loop/')
+COCO_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'coco/')
+TRAINING_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'training/')
+VIDEOS_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'videos/')

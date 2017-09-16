@@ -4,7 +4,7 @@
   position: fixed;
   z-index: 1;
   top: 0;
-  left: 0;
+  right: 0;
   background-color: #3E3E40;
   transition: 0.4s;
   padding-top: 20px;

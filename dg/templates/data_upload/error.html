@@ -1,4 +1,4 @@
-{% include "includes/header.html" %}
+{% include "internal-tools/header.html" %}
 
 	<section id="Static Data Upload" class="about-bg">
 		        	<div class="wrapper">
@@ -28,10 +28,10 @@
 									</div><br><br>
 									
 									<div id="download link" class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">
-										<a href="/data_upload/zip/">Download all excel sheets as a zip file</a>
+										<a href="/coco/dataupload/zip/">Download all excel sheets as a zip file</a>
 									</div>
 									<center>
-										<form action="/data_upload/" method="POST">
+										<form action="/coco/dataupload/" method="POST">
 											{% csrf_token %}
 											<input type="submit" value="Go Back" >
 										</form>
@@ -43,4 +43,4 @@
 					</div>
 	</section>
 
-{% include "includes/footer.html" %}
+{% include "internal-tools/footer.html" %}
