@@ -43,13 +43,16 @@
          <!--[if IE 9]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie9.css" /><![endif]-->
         <!--[if lte IE 8]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie8.css" /><![endif]-->
         <!--[if lte IE 7]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie7.css" /><![endif]-->
+
+
+
     </head>
     <!--
         =======================
         | Implementation Note |
         =======================
 
-        The body needs to have this "data-controller" attribute 
+        The body needs to have this "data-controller" attribute
         on it to control which JS controller is loaded.
 
         Current list includes:
@@ -84,7 +87,7 @@
                             <nav class="inner-nav" role="navigation" >
                                 <ul class="nav" >
                                     <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
-                                    <li class="logonew" style="float: left"><a href="#">Green Digital</a></li>
+                                    <li class="logonew" style="float: left"><a href="{{WEBSITE_DOMAIN}}" target="_blank" >Green Digital</a></li>
                                     {% if not request.user.is_authenticated %}
                                         <li class="nav-pipe"><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
@@ -136,17 +139,17 @@
 								<table id="example" class="display" style="text-align:center;">
 							    </table>
 						</div>
-					</div>		
+					</div>
 				</div>
 			</section>
 <!-- ######################################################################################################-->
-			 
+
       <footer>
                 <div class="footer" role="contentinfo" style="background-color: #66E214">
                     <div class="wrapper">
                         <div class="inner-wrapper">
                             <nav role="navigation">
-                                <ul class="copy-lt hdg-upper copy footer-links">  
+                                <ul class="copy-lt hdg-upper copy footer-links">
                                 </ul>
                             </nav>
                         </div>
@@ -157,25 +160,55 @@
 
         <!-- End Main Wrapper -->
         <!-- JAVASCRIPT -->
-        
+
         <!-- For Debugging -->
         <!--script data-main="{{STATIC_URL}}social_website/scripts/main" src="{{STATIC_URL}}social_website/scripts/libs/external/requirejs/require.js"></script-->
         <!-- Also change build to scripts in main.js -->
-        
+
         <!-- For Production -->
-        
-        <!-- Enabling Google Analytics -->
-        <script type="text/javascript">
-    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    	</script>
-    	<script type="text/javascript">
-    		try {
-    			var pageTracker = _gat._getTracker("UA-16211208-1");
-    			pageTracker._trackPageview();
-    			} 
-    	catch(err) {}
-    	</script>
+
+<!-- Enable Google Analytics -->
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106595309-1"></script>
+<script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments)};
+        gtag('js', new Date());
+
+        gtag('config', 'UA-106595309-1');
+
+
+</script>
+
+<!-- End Google Analytics -->
+
+
+<!-- OLD Enabling Google Analytics -->
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-16211208-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} -->
+<!--catch(err) {}-->
+<!--</script>-->
+<!---->
+<!--&lt;!&ndash; Universal Google Analytics &ndash;&gt;-->
+<!--<script>-->
+<!--(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){-->
+<!--(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),-->
+<!--m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)-->
+<!--})(window,document,'script','//www.google-analytics.com/analytics.js','ga');-->
+
+<!--ga('create', 'UA-16211208-3', 'auto');  // Replace with your property ID.-->
+<!--ga('send', 'pageview');-->
+
+<!--</script>-->
+<!-- OLD End Universal Google Analytics -->
 
         <!-- Quantcast Tag -->
         <script type="text/javascript">
@@ -205,6 +238,3 @@
 
     </body>
 </html>
-
-
-

@@ -9,7 +9,7 @@
         <script  src="/media/social_website/scripts/libs/external/jquery.mtz.monthpicker.js"></script>
         <script  src="/media/social_website/scripts/libs/external/jquery-ui.js"></script>
         <script  src="/media/social_website/scripts/libs/external/jquery.blockUI.js"></script>
-        
+
         <meta property="og:title" content="Digital Green"/>
         <meta property="og:type" content="website"/>
         <meta property="og:site_name" content="DigitalGreen"/>
@@ -52,7 +52,7 @@
         | Implementation Note |
         =======================
 
-        The body needs to have this "data-controller" attribute 
+        The body needs to have this "data-controller" attribute
         on it to control which JS controller is loaded.
 
         Current list includes:
@@ -87,7 +87,7 @@
                             <nav class="inner-nav" role="navigation" >
                                 <ul class="nav" >
                                     <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
-                                    <li class="logonew" style="float: left"><a href="#">Green Digital</a></li>
+                                    <li class="logonew" style="float: left"><a href="{{ WEBSITE_DOMAIN }}" target="_blank">Green Digital</a></li>
                                     {% if not request.user.is_authenticated %}
                                         <li class="nav-pipe"><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
                                     {% else %}
@@ -119,5 +119,3 @@
                 </div>
             </div>
             <div class="header-margin"></div>
-
-
