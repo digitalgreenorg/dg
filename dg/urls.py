@@ -91,6 +91,7 @@ urlpatterns = patterns('',
     (r'^fbconnect/', include('fbconnect.urls')),
     (r'^coco/docs/', TemplateView.as_view(template_name='cocodoc.html')),
     (r'^ivrs/',include('ivr.urls')),
+    (r'^social/email_signature/?$', TemplateView.as_view(template_name='email_signature.html')),
     (r"^", include("mezzanine.urls")),
 
     #(r'^bmgf/', include(feeds.urls)),
