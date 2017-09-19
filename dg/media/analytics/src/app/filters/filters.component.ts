@@ -146,16 +146,6 @@ export class FiltersComponent implements OnInit {
     }
   }
 
-  closeNav(): void {
-    this.mySidenav.nativeElement.style.width = '0px';
-    this.sideNavContent.nativeElement.style.display = 'none';
-  }
-
-  openNav(): void {
-    this.mySidenav.nativeElement.style.width = '320px';
-    this.sideNavContent.nativeElement.style.display = 'block';
-  }
-
   applyFilters(): void {
     this.f_list = {};
     for (let f of this.filter_list) {
@@ -197,12 +187,38 @@ export class FiltersComponent implements OnInit {
   }
 
   private getDataForFilters(): any {
-    let argstest = {
-      webUrl: environment.url + "getData",
+    let args = {
+      // webUrl: environment.url + "getData",
       params: this.f_list
     }
-    Object.assign(argstest.params, global_filter);
-    this._sharedService.publishData(argstest);
+    Object.assign(args.params, global_filter);
+    this._sharedService.publishData(args);
+  }
+
+  getFilters(filters): void {
+    this.getFilterData.getData(filters).subscribe(response => {
+      for (let res_obj of response) {
+        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
+        filter[0].element = [];
+        let data = res_obj;
+        for (let val of data['data']) {
+          let filterElement = new FilterElement();
+          filterElement.id = val['id'];
+          filterElement.value = val['value'];
+          filter[0].element.push(filterElement);
+        }
+      }
+    });
+  }
+
+  closeNav(): void {
+    this.mySidenav.nativeElement.style.width = '0px';
+    this.sideNavContent.nativeElement.style.display = 'none';
+  }
+
+  openNav(): void {
+    this.mySidenav.nativeElement.style.width = '320px';
+    this.sideNavContent.nativeElement.style.display = 'block';
   }
 
   handleClick(event) {
@@ -221,19 +237,4 @@ export class FiltersComponent implements OnInit {
     }
   }
 
-  getFilters(filters): any {
-    this.getFilterData.getData(filters).subscribe(response => {
-      for (let res_obj of response) {
-        let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
-        filter[0].element = [];
-        let data = res_obj;
-        for (let val of data['data']) {
-          let filterElement = new FilterElement();
-          filterElement.id = val['id'];
-          filterElement.value = val['value'];
-          filter[0].element.push(filterElement);
-        }
-      }
-    });
-  }
 }

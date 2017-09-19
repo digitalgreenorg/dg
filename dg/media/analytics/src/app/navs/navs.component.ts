@@ -80,7 +80,7 @@ export class NavsComponent implements OnInit,
   ngOnInit(): void {
     //To append common highcharts options.
     new this.AddCommonOptions().AddCommonOptionsToGraph();
-    
+
     Object.keys(this.chartsConfig).forEach(chart => {
       this.charts.push({
         name: chart,
@@ -90,7 +90,6 @@ export class NavsComponent implements OnInit,
       });
     })
     this.renderNavs();
-    //this.renderCharts();
   }
 
   ngAfterViewChecked() {
@@ -102,16 +101,6 @@ export class NavsComponent implements OnInit,
     }
   }
 
-  // renderCharts(): void {
-  //   Object.keys(this.chartsConfig).forEach(chart => {
-  //     this.charts.push({
-  //       name: chart,
-  //       options: this.chartsConfig[chart],
-  //       // nativeChart will be assigned with saveInstance
-  //       nativeChart: null
-  //     });
-  //   })
-  // }
   //render navs and subnavs and create respective containers based on selected nav
   renderNavs(): void {
     Object.keys(this.navsConfig.navs).forEach(nav => {
@@ -125,18 +114,11 @@ export class NavsComponent implements OnInit,
           if (this.navsConfig.navs[nav].subNavs[subNav].containers != undefined) {
             this.setContainer(subNav, container);
           }
-          else if (this.navsConfig.navs[nav].subNavs[subNav].DropDownGraph != undefined) {
-            this.setFilterContainer(subNav, container);
-          }
         });
       }
       else if (this.navsConfig.navs[nav].containers != undefined) {
         let container = this.navsConfig.navs[nav];
         this.setContainer(nav, container);
-      }
-      else if (this.navsConfig.navs[nav].DropDownGraph != undefined) {
-        let container = this.navsConfig.navs[nav];
-        this.setFilterContainer(nav, container);
       }
       else if (this.navsConfig.navs[nav].href != undefined) {
         tempDict['href'] = this.navsConfig.navs[nav].href;
@@ -151,7 +133,7 @@ export class NavsComponent implements OnInit,
     });
   }
 
-  addChartsToDict(containers) {
+  private addChartsToDict(containers): any {
     let charts = [];
     Object.keys(containers).forEach(container => {
       Object.keys(containers[container]).forEach(tab => {
@@ -166,19 +148,11 @@ export class NavsComponent implements OnInit,
   }
 
   //set container view based on clicked nav link
-  setContainer(nav, container): void {
+  private setContainer(nav, container): void {
     this.containers[nav] = container;
     this.containers[nav]['charts'] = this.addChartsToDict(container.containers);
     this.containers[nav]['displayContent'] = false;
     this.containers[nav]['applyFilter'] = true;
-  }
-
-  //set container for navs with interdependent filter and graph
-  setFilterContainer(nav, container): void {
-    this.filterGraphs[nav] = container;
-    this.filterGraphs[nav]['charts'] = this.addChartsToDict(container.DropDownGraph);
-    this.filterGraphs[nav]['displayContent'] = false;
-    this.filterGraphs[nav]['applyFilter'] = true;
   }
 
   //access underlying chart
@@ -187,7 +161,7 @@ export class NavsComponent implements OnInit,
   }
 
   //get data for graphs from service
-  getGraphsData(filters): void {
+  private getGraphsData(filters): void {
     this.containerCharts.forEach(chart => {
       if (chart.nativeChart && (chart.nativeChart.series.length == 0 || (!this.containers[this.selectedNav].applyFilter))) {
         chart.nativeChart.showLoading();
@@ -198,26 +172,7 @@ export class NavsComponent implements OnInit,
             this.parseDataForStockChart(chart, dataList);
           }
           else {
-            Object.keys(dataList).forEach(key => {
-              //Find already displayed chart to enter data
-              if (key === chart.name) {
-                chart.nativeChart.hideLoading();
-                this.clearSeriesFromGraph(chart);
-                dataList[key]['outerData']['series'].forEach(entry => {
-                  chart.nativeChart.addSeries(entry);
-                  chart.chart.series.push(entry);
-                });
-                if (chart.chart.chart.drillDown) {
-                  dataList[key]['innerData'].forEach(drilldownEntry => {
-                    chart.chart.drilldown.series.push(drilldownEntry);
-                  });
-                }
-              }
-              else {
-                this.clearSeriesFromGraph(chart);
-                chart.nativeChart.showLoading(dataList['error']);
-              }
-            });
+            this.parseDataForCharts(chart, dataList);
           }
         });
       }
@@ -243,6 +198,29 @@ export class NavsComponent implements OnInit,
     else {
       chart.nativeChart.showLoading();
     }
+  }
+
+  private parseDataForCharts(chart, dataList): void {
+    Object.keys(dataList).forEach(key => {
+      //Find already displayed chart to enter data
+      if (key === chart.name) {
+        chart.nativeChart.hideLoading();
+        this.clearSeriesFromGraph(chart);
+        dataList[key]['outerData']['series'].forEach(entry => {
+          chart.nativeChart.addSeries(entry);
+          chart.chart.series.push(entry);
+        });
+        if (chart.chart.chart.drillDown) {
+          dataList[key]['innerData'].forEach(drilldownEntry => {
+            chart.chart.drilldown.series.push(drilldownEntry);
+          });
+        }
+      }
+      else {
+        this.clearSeriesFromGraph(chart);
+        chart.nativeChart.showLoading(dataList['error']);
+      }
+    });
   }
 
   private fillMenuItemForDropDown(chart, dataList): any {
@@ -314,13 +292,6 @@ export class NavsComponent implements OnInit,
   //render charts to container
   private renderContainerCharts(container): void {
     container.displayContent = true;
-    /*    container.charts.forEach(chart => {
-          this.charts.push({
-            options: chart,
-            // nativeChart will be assigned with saveInstance
-            nativeChart: null
-          });
-        });*/
     container.charts.forEach(containerChart => {
       this.charts.forEach(chart => {
         if (chart.name === containerChart.name) {
@@ -342,13 +313,9 @@ export class NavsComponent implements OnInit,
       this.showFilters = true;
     }
     this.resetDict(this.containers, 'displayContent', false);
-    this.resetDict(this.filterGraphs, 'displayContent', false);
     this.containerCharts = [];
     if (this.containers[selectedNav] != undefined) {
       this.renderContainerCharts(this.containers[selectedNav]);
-    }
-    else if (this.filterGraphs[selectedNav] != undefined) {
-      this.renderContainerCharts(this.filterGraphs[selectedNav]);
     }
   }
 }
