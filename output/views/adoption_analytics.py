@@ -62,6 +62,13 @@ def adoption_module(request):
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
 
+    if "/coco/jslps/analytics/" in request.get_full_path():
+        return render(request, 'jslps_adoption_module.html', dict(search_box_params = search_box_params,
+                                                          get_req_url = get_req_url,
+                                                          **main_stats
+                                                          ))
+
+    
     return render(request, 'adoption_module.html', dict(search_box_params = search_box_params,
                                                           get_req_url = get_req_url,
                                                           **main_stats

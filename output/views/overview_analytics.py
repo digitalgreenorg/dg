@@ -112,13 +112,24 @@ def overview_module(request):
     else:
         header_geog = "Village"
 
-    return render(request, 'overview_module.html', dict(search_box_params = search_box_params, \
+    if  "/coco/jslps/analytics/" in request.get_full_path():
+        return render(request, 'jslps_overview_module.html', dict(search_box_params = search_box_params, \
                                                            country_data = country_data, \
                                                            table_data = table_data, \
                                                            par_geog_data = par_geog_data, \
                                                            get_req_url = get_req_url, \
                                                            header_geog = header_geog \
                                                            ))
+    else:
+        return render(request, 'overview_module.html', dict(search_box_params = search_box_params, \
+                                                               country_data = country_data, \
+                                                               table_data = table_data, \
+                                                               par_geog_data = par_geog_data, \
+                                                               get_req_url = get_req_url, \
+                                                               header_geog = header_geog \
+                                                               ))
+
+
 
 def get_parent_geog_id(geog, id):
     if geog is None:
