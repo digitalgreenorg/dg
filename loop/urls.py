@@ -1,6 +1,9 @@
 from django.conf.urls import patterns, url
 from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.views.generic.base import RedirectView
+
+from dg.base_settings import LOOP_PAGE, LOOP_APP_PAGE
 
 from tastypie.api import Api
 import api,api_admin
@@ -12,6 +15,8 @@ from loop.views import *
 from loop.utils.send_log.loop_data_log import send_updated_log
 from loop.utils.send_log.loop_admin_log import send_updated_admin_log
 from loop.utils.send_log.send_extra_data import sendData
+
+from loop.admin import loop_admin
 
 api1 = Api(api_name = "v1")
 api1.register(api.VillageResource())
@@ -64,14 +69,15 @@ api2.register(api_admin.VehicleLanguageResource())
 
 
 urlpatterns = patterns('',
-    url(r'^$', home, name='loop'),
+    url(r'^$', RedirectView.as_view(url=LOOP_PAGE)),
+    url(r'^app/', RedirectView.as_view(url=LOOP_APP_PAGE)),
     url(r'^api/', include(api1.urls)),
     url(r'^api/', include(api2.urls)),
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
     url(r'^get_admin_log/', send_updated_admin_log),
     url(r'^get_extra_data/',sendData),
-    url(r'^dashboard/$', dashboard),
+    url(r'^analytics/$', dashboard),
     url(r'^get_payment_sheet/', download_data_workbook, name="download-data-workbook"),
     url(r'^filter_data/', filter_data),
     url(r'^total_static_data/',total_static_data),
@@ -79,7 +85,7 @@ urlpatterns = patterns('',
     url(r'^data_for_drilldown_graphs/',data_for_drilldown_graphs),
     url(r'^data_for_line_graph/',data_for_line_graph),
     url(r'^payments/',payments),
-    url(r'^dashboard/payment/',dashboard_payments),
+    url(r'^analytics/payment/',dashboard_payments),
     url(r'^farmer_payment_update/',farmer_payments),
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^helpline_incoming/',helpline_incoming),
@@ -88,4 +94,7 @@ urlpatterns = patterns('',
     url(r'^broadcast/',broadcast),
     url(r'^broadcast_call_response/',broadcast_call_response),
     url(r'^broadcast_audio_request/',broadcast_audio_request),
+    # admin/logout/ should be above admin/ URL
+    url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loop/admin/'}),
+    url(r'^admin/', include(loop_admin.urls)),
     )

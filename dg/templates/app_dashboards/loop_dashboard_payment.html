@@ -21,17 +21,17 @@
       <a data-activates="page-navigation" class="button-collapse"><i class="material-icons">menu</i></a>
       <div class="left col s5">
         <ul class="hide-on-med-and-down grey lighten-2">
-          <li class="active" id="home_tab"><a class="white-text" href="/loop/dashboard/">LOOP Dashboard</a></li>
+          <li class="active" id="home_tab"><a class="white-text" href="/loop/analytics/">LOOP Dashboard</a></li>
         </ul>
       </div>
       <div id="user" class="col s2 initialized" style="float:right;">
         <ul class="hide-on-med-and-down grey lighten-2">
-          <li class="active" id="logout_tab"><a class="white-text" href="{% url 'logout' %}?next=/loop/dashboard/">SIGN OUT</a></li>
+          <li class="active" id="logout_tab"><a class="white-text" href="{% url 'logout' %}?next=/loop/analytics/">SIGN OUT</a></li>
         </ul>
       </div>
       <ul class="side-nav" id="page-navigation">
-        <li><a href="/loop/dashboard/">LOOP Dashboard</a></li>
-        <li><a href="{% url 'logout' %}?next=/loop/dashboard/">SIGN OUT</a></li>
+        <li><a href="/loop/analytics/">LOOP Dashboard</a></li>
+        <li><a href="{% url 'logout' %}?next=/loop/analytics/">SIGN OUT</a></li>
       </ul>
     </div>
   </nav>

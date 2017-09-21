@@ -50,9 +50,10 @@ class LoopUserAssignedVillages(admin.StackedInline):
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
-    list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
+    list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en', 'days_count')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country', 'village__block__district__state', 'village__block__district', 'role']
+    list_editable = ['days_count']
 
 class AdminAssignedDistricts(admin.StackedInline):
     model = AdminAssignedDistrict
@@ -60,11 +61,11 @@ class AdminAssignedDistricts(admin.StackedInline):
 
 class AdminAssignedLoopUsers(admin.StackedInline):
     model = AdminAssignedLoopUser
-    extra = 5
+    extra = 10
 
 
 class AdminUserAdmin(admin.ModelAdmin):
-    inlines = [AdminAssignedDistricts, AdminAssignedLoopUsers]    
+    inlines = [AdminAssignedDistricts, AdminAssignedLoopUsers]
     list_display = ('__user__','name')
 
 
@@ -134,13 +135,13 @@ class BlockAdmin(admin.ModelAdmin):
     fields = ('district',('block_name','block_name_en'),'is_visible')
     list_display = ('id', 'block_name', 'district', 'block_name_en')
     search_fields = ['block_name', 'block_name_en', 'district__district_name']
-    list_filter = ['district__district_name', 'district__state__country']    
+    list_filter = ['district__district_name', 'district__state__country']
 
 class DistrictAdmin(admin.ModelAdmin):
     fields = ('state',('district_name','district_name_en'),'is_visible')
     list_display = ('id', 'district_name', 'state', 'district_name_en')
     search_fields = ['district_name', 'district_name_en', 'state__state_name']
-    list_filter = ['state__state_name', 'state__country']    
+    list_filter = ['state__state_name', 'state__country']
 
 class StateAdmin(admin.ModelAdmin):
     fields = ('country',('state_name','state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start', 'is_visible')
@@ -235,6 +236,11 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
     search_fields = ['to_number']
 
 loop_admin = LoopAdmin(name='loop_admin')
+
+loop_admin.index_template = 'social_website/index.html'
+loop_admin.login_template = 'social_website/login.html'
+loop_admin.logout_template = 'social_website/home.html'
+
 loop_admin.register(Village, VillageAdmin)
 loop_admin.register(Country)
 loop_admin.register(AdminUser,AdminUserAdmin)

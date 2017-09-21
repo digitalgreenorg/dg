@@ -8,7 +8,7 @@
 {% block pagetitle %}{{block.super}} Video Page{% endblock pagetitle %}
 
 {% block videobreadcrums %}
-	<a href='/analytics/video_search'>Search Videos</a> / 
+	<a href='/videos/search'>Search Videos</a> / 
 	<span style="font-weight: bold;">Video Page</span>			
 {% endblock videobreadcrums %}	
 
@@ -252,7 +252,7 @@
     	google.load("visualization", "1", {packages:["corechart"]});
     	google.setOnLoadCallback(bar_chart);
     	function bar_chart() {
-    		$.getJSON('/analytics/video_screening_month_bar_data/?id={{vid.id}}', function(json){
+    		$.getJSON('/coco/analytics/video_screening_month_bar_data/?id={{vid.id}}', function(json){
     			var data = google.visualization.arrayToDataTable(json,false);
 				if(json.length>1)
 					{
