@@ -17,15 +17,17 @@ import { GlobalFilterSharedService } from '../global-filter/global-filter-shared
   styleUrls: ['./filters.component.css']
 })
 export class FiltersComponent implements OnInit {
+  private filterConfig = environment.filtersConfig;
+  private generalConfig = environment.generalConfig;
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
   @ViewChild('sideNavContent') sideNavContent: ElementRef;
-  filterConfig = environment.filtersConfig;
+
   filter_list: Filter[] = new Array<Filter>();
   showDateFilter: boolean = false;
   invalidDate: boolean = false;
   invalidDateMessage: string;
-  private f_list = {};
+  private filtersToApply = {};
   private date = new Date();
   public endModel = {
     date: {
@@ -37,8 +39,8 @@ export class FiltersComponent implements OnInit {
   public startModel = {
     date: {
       day: new Date(this.date.setDate(this.date.getDate() + 1)).getDate(),
-      month: new Date(this.date.setMonth(this.date.getMonth())).getMonth(),
-      year: new Date(this.date.setFullYear(this.date.getFullYear())).getFullYear()
+      month: new Date(this.date.setMonth(this.date.getMonth() + this.generalConfig.start_date_month_difference)).getMonth(),
+      year: new Date(this.date.setFullYear(this.date.getFullYear() + this.generalConfig.start_date_year_difference)).getFullYear()
     }
   };
 
@@ -147,15 +149,15 @@ export class FiltersComponent implements OnInit {
   }
 
   applyFilters(): void {
-    this.f_list = {};
-    for (let f of this.filter_list) {
-      let list = f.element.filter(data => { return data.checked }).map(data => {
+    this.filtersToApply = {};
+    for (let filter_item of this.filter_list) {
+      let checked_item_list = filter_item.element.filter(data => { return data.checked }).map(data => {
         return data.id;
       });
-      if (list.length > 0) {
-        this.f_list[f.heading] = list;
+      if (checked_item_list.length > 0) {
+        this.filtersToApply[filter_item.heading] = checked_item_list;
       }
-      this.f_list['apply_filter'] = "true";
+      this.filtersToApply['apply_filter'] = "true";
     }
     if (this.showDateFilter) {
       this.dateValidation();
@@ -174,8 +176,8 @@ export class FiltersComponent implements OnInit {
       let s_date = new Date(startDate);
       let e_date = new Date(endDate);
       if (s_date < e_date) {
-        this.f_list['start_date'] = startDate;
-        this.f_list['end_date'] = endDate;
+        this.filtersToApply['start_date'] = startDate;
+        this.filtersToApply['end_date'] = endDate;
       } else {
         this.invalidDate = true;
         this.invalidDateMessage = "*'From' date should be less than 'To' date.";
@@ -189,14 +191,14 @@ export class FiltersComponent implements OnInit {
   private getDataForFilters(): any {
     let args = {
       // webUrl: environment.url + "getData",
-      params: this.f_list
+      params: this.filtersToApply
     }
     Object.assign(args.params, global_filter);
     this._sharedService.publishData(args);
   }
 
-  getFilters(filters): void {
-    this.getFilterData.getData(filters).subscribe(response => {
+  private getFilters(global_filters): void {
+    this.getFilterData.getData(global_filters).subscribe(response => {
       for (let res_obj of response) {
         let filter = this.filter_list.filter(f_obj => { return f_obj.heading === res_obj['name']; });
         filter[0].element = [];
