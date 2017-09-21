@@ -1,12 +1,12 @@
 
 import { Component, OnInit, AfterViewInit, AfterViewChecked, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
-import { environment } from '../../environments/environment.loop';
 import { GraphsService } from './navs.service';
 import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 import { DropDownItem } from './dropdown.model';
+import { environment } from '../../environments/environment.loop';
 
 @Component({
   selector: 'app-navs',
@@ -16,11 +16,11 @@ import { DropDownItem } from './dropdown.model';
 
 export class NavsComponent implements OnInit,
   AfterViewChecked {
+  private navClicked: boolean = false;
   //used for collapse button
   public isCollapsed: boolean = false;
   public showOverall: boolean = true;
   public showFilters: boolean = true;
-  navClicked: boolean = false;
   public selectedNav: string = '';
 
   //read config files from environment created for each app
@@ -31,18 +31,13 @@ export class NavsComponent implements OnInit,
   //initialize modules as false and toggle based on user configuration
   overall: false;
   recent: false;
-
   //keep track of nav switches and respective subnavs
   toggleNav = {};
   //dict with key as end nav and its corresponding containers
   containers = {};
-  //dict with key and its corresponding filter graphs to show drop down for graphs
-  filterGraphs = {};
   //list of charts in DOM
   charts = [];
   containerCharts = [];
-  //Display drop down type graphs
-  // showDropDownGraphs: boolean = false;
   filters = { 'params': {} };
 
   constructor(private graphService: GraphsService, private _sharedService: SharedService,

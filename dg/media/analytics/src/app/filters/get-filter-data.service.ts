@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Request, Headers, RequestOptions, URLSearchParams } from '@angular/http';
+import { Http, RequestOptions, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -9,10 +9,10 @@ import { environment } from '../../environments/environment.loop';
 @Injectable()
 export class GetFilterDataService {
   _baseUrl: string = environment.url + "get_filter_data/";
-  private _request = new Request({
-    method: 'GET',
-    url: this._baseUrl
-  });
+  // private _request = new Request({
+  //   method: 'GET',
+  //   url: this._baseUrl
+  // });
 
   constructor(private http: Http) { }
 
