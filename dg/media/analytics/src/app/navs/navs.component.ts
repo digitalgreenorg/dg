@@ -24,13 +24,10 @@ export class NavsComponent implements OnInit,
   public selectedNav: string = '';
 
   //read config files from environment created for each app
-  navsConfig = environment.navsConfig;
-  chartsConfig = environment.chartsConfig;
-  generalConfig = environment.generalConfig;
-  AddCommonOptions = environment.AddCommonOptions;
-  //initialize modules as false and toggle based on user configuration
-  overall: false;
-  recent: false;
+  private navsConfig = environment.navsConfig;
+  private chartsConfig = environment.chartsConfig;
+  private generalConfig = environment.generalConfig;
+  private AddCommonOptions = environment.AddCommonOptions;
   //keep track of nav switches and respective subnavs
   toggleNav = {};
   //dict with key as end nav and its corresponding containers
@@ -43,12 +40,12 @@ export class NavsComponent implements OnInit,
   constructor(private graphService: GraphsService, private _sharedService: SharedService,
     private _globalfiltersharedService: GlobalFilterSharedService, @Inject(DOCUMENT) private document: any) {
     this._sharedService.argsList$.subscribe(filters => {
-      if (filters) {
-        Object.assign(filters.params, global_filter);
-      } else {
-        filters = {};
-        filters['params'] = global_filter;
-      }
+      Object.assign(filters.params, global_filter);
+      // if (filters) {
+      // } else {
+      //   filters = {};
+      //   filters['params'] = global_filter;
+      // }
       this.filters = filters;
       Object.keys(this.containers).forEach(container => {
         this.containers[container].applyFilter = false;
