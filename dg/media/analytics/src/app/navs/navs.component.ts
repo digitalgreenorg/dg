@@ -88,6 +88,7 @@ export class NavsComponent implements OnInit,
   }
 
   ngAfterViewChecked() {
+    //To check if a tab was clicked or not, to reduce number of calls made to the server.
     if (this.navClicked) {
       this.navClicked = false;
       Object.assign(this.filters.params, global_filter);
@@ -97,7 +98,7 @@ export class NavsComponent implements OnInit,
   }
 
   //render navs and subnavs and create respective containers based on selected nav
-  renderNavs(): void {
+  private renderNavs(): void {
     Object.keys(this.navsConfig.navs).forEach(nav => {
       let tempDict = {};
       tempDict['status'] = false;
@@ -246,24 +247,6 @@ export class NavsComponent implements OnInit,
     chart.chart.series = [];
   }
 
-  //function to return list of keys from a dictionary
-  getDictKeys(dict) {
-    return Object.keys(dict);
-  }
-
-  ifDictionary(obj): boolean {
-    if (typeof obj !== 'boolean')
-      return true;
-    else return false;
-  }
-
-  //reset values in a dict, used for navigation and setting containers
-  private resetDict(dict, flag, value): void {
-    Object.keys(dict).forEach(key => {
-      dict[key][flag] = value;
-    });
-  }
-
   //set status as true for clicked nav item and rest as false
   setNav(selectedItem: string): void {
     this.resetDict(this.toggleNav, 'status', false);
@@ -312,5 +295,23 @@ export class NavsComponent implements OnInit,
     if (this.containers[selectedNav] != undefined) {
       this.renderContainerCharts(this.containers[selectedNav]);
     }
+  }
+
+  //function to return list of keys from a dictionary
+  getDictKeys(dict): any {
+    return Object.keys(dict);
+  }
+
+  ifDictionary(obj): boolean {
+    if (typeof obj !== 'boolean')
+      return true;
+    else return false;
+  }
+
+  //reset values in a dict, used for navigation and setting containers
+  private resetDict(dict, flag, value): void {
+    Object.keys(dict).forEach(key => {
+      dict[key][flag] = value;
+    });
   }
 }
