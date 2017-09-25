@@ -31,6 +31,7 @@ import { SearchPipe } from './filters/search.pipe';
 import { BsDropdownModule } from 'ngx-bootstrap';
 import { GlobalFilterComponent } from './global-filter/global-filter.component';
 import { GlobalFilterSharedService } from './global-filter/global-filter-shared.service';
+import { FooterComponent } from './footer/footer.component';
 
 declare var require: any;
 export function highchartsFactory() {
@@ -69,6 +70,7 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CardsComponent,
     NavsComponent,
     GlobalFilterComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
