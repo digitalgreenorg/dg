@@ -13,7 +13,7 @@ export class CardsService {
   private cardUrl = environment.url + "getCardGraphData/";
 
   getApiData(args): Observable<any> {
-
+    console.log("called");
     let params: URLSearchParams = new URLSearchParams();
     for (let key in args.params) {
       params.set(key.toString(), args.params[key]);
