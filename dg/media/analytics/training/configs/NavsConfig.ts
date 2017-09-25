@@ -2,16 +2,14 @@ export const navsConfig = {
   'navs': {
     'Home': {
       'active': true,
-      'filters': false,
+      'filters': true,
       'import': {
         'overall': false,
         'recent': false,
       },
-      // 'class': 'col-11',
       'classes': {
         'container1': 'col-md-11',
       },
-
       'addTab': true,
       'containers': {
         'container1': {

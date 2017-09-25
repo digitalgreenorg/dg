@@ -11,8 +11,6 @@ export const chartsConfig = {
       },
       drillDown: true
     },
-    credits: { enabled: false },
-    colors: ['#7C287D', ' #9AA0A7'],
     title: {
       text: 'Trainings Conducted',
       style: {
@@ -24,7 +22,6 @@ export const chartsConfig = {
       tickInterval: 10,
       title: { text: 'Number of Trainings' }
     },
-    legend: { enabled: false },
     plotOptions: {
       column: {
         grouping: false,
@@ -48,9 +45,6 @@ export const chartsConfig = {
       },
       allowPointDrilldown: false,
       series: []
-    },
-    lang: {
-      drillUpText: '<< Back'
     },
   },
 
@@ -64,17 +58,14 @@ export const chartsConfig = {
       },
       drillDown: true
     },
-    credits: { enabled: false },
     title: {
       text: 'Mediators trained',
       style: {
         "color": "#656566",
       }
     },
-    colors: ['#7C287D', ' #9AA0A7'],
     xAxis: { type: 'category' },
     yAxis: { title: { text: 'Number of Mediators' } },
-    legend: { enabled: false },
     plotOptions: {
       column: {
         grouping: false,
@@ -89,7 +80,6 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
     },
     series: [],
-
     drilldown: {
       activeAxisLabelStyle: {
         color: '#656566'
@@ -99,9 +89,6 @@ export const chartsConfig = {
       },
       allowPointDrilldown: false,
       series: []
-    },
-    lang: {
-      drillUpText: '<< Back'
     },
   },
 
@@ -115,8 +102,6 @@ export const chartsConfig = {
       },
       drillDown: false
     },
-    credits: { enabled: false },
-    colors: ['#7C287D', ' #9AA0A7'],
     title: {
       text: 'Questions Answered Correctly',
       style: {
@@ -129,7 +114,6 @@ export const chartsConfig = {
       max: 100,
       title: { text: 'Percentage Answered' }
     },
-    legend: { enabled: false },
     plotOptions: {
       column: {
         grouping: false,
@@ -158,7 +142,6 @@ export const chartsConfig = {
       },
       drillDown: true
     },
-    credits: { enabled: false },
     title: {
       text: 'Periodical Trainings Conducted',
       style: {
@@ -167,8 +150,6 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category' },
     yAxis: { title: { text: 'Number of Trainings' } },
-    legend: { enabled: false },
-    colors: ['#7C287D', ' #9AA0A7'],
     plotOptions: {
       column: {
         grouping: false,
@@ -192,9 +173,6 @@ export const chartsConfig = {
       },
       allowPointDrilldown: false,
       series: []
-    },
-    lang: {
-      drillUpText: '<< Back'
     },
   },
 }

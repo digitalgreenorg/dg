@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
     global_filter = this.parseUrl(this.document.location.href);
   }
   defaults: any;
-  ngOnInit() :void { 
+  ngOnInit() :void {
     this.setTitle (this.generalConfig.title);
   }
   private parseUrl(url): any {
@@ -35,6 +35,6 @@ export class AppComponent implements OnInit {
   }
 
   public setTitle( newTitle: string) {
-    this.titleService.setTitle( 'Loop' );
+    this.titleService.setTitle( newTitle );
   }
 }

@@ -11,7 +11,7 @@
       </ul>
       <app-global-filter></app-global-filter>
     </div>
-    <a class="navbar-brand col-2 text-center" href="{{ generalConfig.baseUrl }}"><img src="{{generalConfig.logoPath}}" alt="LOOP" style="height:25px;"></a>
+    <a class="navbar-brand col-2 text-center" href="{{ generalConfig.baseUrl }}"><img src="{{generalConfig.logoPath}}" alt="{{generalConfig.title}}" style="height:25px;"></a>
     <div class="col-5" [hidden]="!showFilters">
       <app-filters></app-filters>
     </div>
