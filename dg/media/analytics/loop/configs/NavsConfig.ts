@@ -143,7 +143,7 @@ export const navsConfig = {
       }
     },
     'Payments': {
-      'href': '/loop/dashboard/payment/'
+      'href': '/loop/analytics/payment/'
     }
   },
 }
