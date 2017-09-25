@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-import { environment } from '../../environments/environment.loop';
+import { environment } from '../../environments/environment.training';
 
 @Injectable()
 export class GetFilterDataService {

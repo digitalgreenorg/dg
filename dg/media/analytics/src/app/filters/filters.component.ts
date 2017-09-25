@@ -5,9 +5,10 @@ import { Filter } from './filter.model';
 import { FilterElement } from './filter-element.model';
 import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
-import { environment } from '../../environments/environment.loop';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
+import { environment } from '../../environments/environment.training';
+
 @Component({
   selector: 'app-filters',
   host: {
