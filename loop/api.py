@@ -504,7 +504,10 @@ class CropResource(BaseResource):
         user = LoopUser.objects.get(user_id=request.user)
         languageFilter = str(user.preferred_language.notation)
         if languageFilter:
-            result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
+            if languageFilter!='en':
+                result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
+            else:
+                result = super(CropResource,self).get_object_list(request)
         else:
             result = super(CropResource,self).get_object_list(request).filter(crops__language_id=1)
         return result
@@ -618,7 +621,10 @@ class VehicleResource(BaseResource):
         user = LoopUser.objects.get(user_id=request.user)
         languageFilter = user.preferred_language.notation
         if languageFilter:
-            result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
+            if languageFilter!='en':
+                result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
+            else:
+                result = super(VehicleResource, self).get_object_list(request)
         else:
             result = super(VehicleResource,self).get_object_list(request).filter(vehicles__language__id=1)
         return result

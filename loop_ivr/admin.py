@@ -28,6 +28,11 @@ class SubscriptionLogAdmin(admin.ModelAdmin):
 	list_display = ('id', 'subscription', 'date', 'sms_id', 'status')
 
 loop_ivr_admin = LoopIVRAdmin(name='loop_ivr_admin')
+
+loop_ivr_admin.index_template = 'social_website/index.html'
+loop_ivr_admin.login_template = 'social_website/login.html'
+loop_ivr_admin.logout_template = 'social_website/home.html'
+
 loop_ivr_admin.register(PriceInfoIncoming, PriceInfoIncomingAdmin)
 loop_ivr_admin.register(PriceInfoLog, PriceInfoLogAdmin)
 loop_ivr_admin.register(Subscriber, SubscriberAdmin)

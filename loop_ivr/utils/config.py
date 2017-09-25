@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from dg.settings import MEDIA_ROOT
+from dg.settings import MEDIA_ROOT, CURRENT_DOMAIN
 
 LOG_FILE = '%s/loop/loop_ivr_log.log'%(MEDIA_ROOT,)
 AGGREGATOR_SMS_NO = '01139585707'
@@ -25,6 +25,6 @@ crop_and_code = 'फसल और उनके कोड:\n\
 नेनुआ - 20\n\
 भिंडी - 22\n'
 
-MARKET_INFO_CALL_RESPONSE_URL = 'http://www.digitalgreen.org/loopivr/market_info_response/'
-PUSH_MESSAGE_SMS_RESPONSE_URL = 'http://www.digitalgreen.org/loopivr/push_message_sms_response/'
+MARKET_INFO_CALL_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/market_info_response/')
+PUSH_MESSAGE_SMS_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/push_message_sms_response/')
 MARKET_INFO_APP = '137265'

@@ -39,7 +39,6 @@ class LoopAdmin(AdminSite):
     def has_permission(self, request):
         return request.user.is_active
 
-
 class LoopUserAssignedMandis(admin.StackedInline):
     model = LoopUserAssignedMandi
     extra = 4
@@ -51,14 +50,23 @@ class LoopUserAssignedVillages(admin.StackedInline):
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
-    list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en')
+    list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en', 'days_count')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country', 'village__block__district__state', 'village__block__district', 'role']
+    list_editable = ['days_count']
 
-# class LoopUserInline(admin.TabularInline):
-#     model = LoopUser
-#     extra = 5
-#     exclude = ('assigned_mandis', 'assigned_villages')
+class AdminAssignedDistricts(admin.StackedInline):
+    model = AdminAssignedDistrict
+    extra = 4
+
+class AdminAssignedLoopUsers(admin.StackedInline):
+    model = AdminAssignedLoopUser
+    extra = 10
+
+
+class AdminUserAdmin(admin.ModelAdmin):
+    inlines = [AdminAssignedDistricts, AdminAssignedLoopUsers]
+    list_display = ('__user__','name')
 
 
 class FarmerAdmin(admin.ModelAdmin):
@@ -93,9 +101,8 @@ class DayTransportationAdmin(admin.ModelAdmin):
 
 
 class GaddidarAdmin(admin.ModelAdmin):
-    fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','commission','is_visible')
-    list_display = ('id', 'gaddidar_name',
-                    'gaddidar_phone', 'mandi','discount_criteria', 'commission', 'gaddidar_name_en')
+    fields = (('gaddidar_name','gaddidar_name_en'),'gaddidar_phone','mandi','discount_criteria','is_visible','is_prime')
+    list_display = ('id', 'gaddidar_name','gaddidar_phone', 'mandi','discount_criteria', 'commission', 'gaddidar_name_en')
     search_fields = ['gaddidar_name', 'mandi__mandi_name', 'gaddidar_phone', 'gaddidar_name_en']
     list_filter = ['mandi__mandi_name', 'mandi__district__state__country']
 
@@ -107,11 +114,16 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
 
 
 class MandiAdmin(admin.ModelAdmin):
-    fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible')
-    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en')
-    search_fields = ['mandi_name', 'district__district_name', 'mandi_name_en']
-    list_filter = ['district__district_name','district__state', 'district__state__country']
+    fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible', 'mandi_type')
+    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type')
+    search_fields = ['mandi_name', 'district__district_name', 'mandi_type__mandi_type_name', 'mandi_name_en']
+    list_filter = ['district__district_name', 'district__state__country', 'mandi_type', 'district__state']
 
+class MandiTypeAdmin(admin.ModelAdmin):
+    fields = ('mandi_type_name', 'mandi_category', 'type_description')
+    list_display = ('mandi_type_name', 'mandi_category', 'type_description')
+    search_fields = ['mandi_type_name', 'mandi_category']
+    list_filter = ['mandi_category']
 
 class VillageAdmin(admin.ModelAdmin):
     fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
@@ -123,13 +135,13 @@ class BlockAdmin(admin.ModelAdmin):
     fields = ('district',('block_name','block_name_en'),'is_visible')
     list_display = ('id', 'block_name', 'district', 'block_name_en')
     search_fields = ['block_name', 'block_name_en', 'district__district_name']
-    list_filter = ['district__district_name', 'district__state__country']    
+    list_filter = ['district__district_name', 'district__state__country']
 
 class DistrictAdmin(admin.ModelAdmin):
     fields = ('state',('district_name','district_name_en'),'is_visible')
     list_display = ('id', 'district_name', 'state', 'district_name_en')
     search_fields = ['district_name', 'district_name_en', 'state__state_name']
-    list_filter = ['state__state_name', 'state__country']    
+    list_filter = ['state__state_name', 'state__country']
 
 class StateAdmin(admin.ModelAdmin):
     fields = ('country',('state_name','state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start', 'is_visible')
@@ -155,6 +167,7 @@ class GaddidarShareOutliersAdmin(admin.ModelAdmin):
 
 class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__','crop_name', 'language')
+    list_filter = ['language','crop__crop_name']
     search_fields = ['crop_name', 'crop__crop_name']
 
 class AggregatorIncentiveAdmin(admin.ModelAdmin):
@@ -201,6 +214,12 @@ class LogAdmin(admin.ModelAdmin):
     list_filter = ['entry_table', 'action']
     list_display_link = None
 
+class AdminLogAdmin(admin.ModelAdmin):
+    actions = None
+    list_display = ('id', 'timestamp', 'entry_table','model_id','action','district','admin_user','user')
+    list_filter = ['entry_table', 'action']
+    list_display_link = None
+
 class LogDeletedAdmin(admin.ModelAdmin):
     actions = None
     list_display_link = None
@@ -217,7 +236,14 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
     search_fields = ['to_number']
 
 loop_admin = LoopAdmin(name='loop_admin')
+
+loop_admin.index_template = 'social_website/index.html'
+loop_admin.login_template = 'social_website/login.html'
+loop_admin.logout_template = 'social_website/home.html'
+
 loop_admin.register(Village, VillageAdmin)
+loop_admin.register(Country)
+loop_admin.register(AdminUser,AdminUserAdmin)
 loop_admin.register(Block, BlockAdmin)
 loop_admin.register(District, DistrictAdmin)
 loop_admin.register(State, StateAdmin)
@@ -247,7 +273,9 @@ loop_admin.register(HelplineOutgoing,HelplineOutgoingAdmin)
 loop_admin.register(HelplineCallLog,HelplineCallLogAdmin)
 loop_admin.register(HelplineSmsLog,HelplineSmsLogAdmin)
 loop_admin.register(Log,LogAdmin)
+loop_admin.register(AdminLog,AdminLogAdmin)
 loop_admin.register(LogDeleted, LogDeletedAdmin)
 loop_admin.register(Broadcast,BroadcastAdmin)
 loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
 loop_admin.register(VehicleLanguage)
+loop_admin.register(MandiType, MandiTypeAdmin)

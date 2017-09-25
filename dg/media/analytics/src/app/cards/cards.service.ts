@@ -11,7 +11,7 @@ export class CardsService {
 
   constructor(private http: Http) { }
   private cardUrl = environment.url + "getCardGraphData/";
-  
+
   getApiData(args): Observable<any> {
 
     let params: URLSearchParams = new URLSearchParams();

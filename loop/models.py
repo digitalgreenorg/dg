@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete, post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 from loop.utils.send_log.loop_data_log import save_log#, delete_log
+from loop.utils.send_log.loop_admin_log import save_admin_log#, delete_log
 from smart_selects.db_fields import ChainedForeignKey
 from constants.constants import *
 
@@ -16,6 +17,7 @@ CALL_TYPES = ((0, "Incoming"), (1, "Outgoing"))
 CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
 BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
+MANDI_CATEGORY = ((0,"Wholesale Market"), (1,"Retail Market"), (2,"Individual Entity"))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -55,7 +57,7 @@ class State(LoopModel):
     state_name = models.CharField(max_length=50)
     country = models.ForeignKey(Country)
     is_visible = models.BooleanField(default=True)
-    state_name_en = models.CharField(max_length=100, null=True)
+    state_name_en = models.CharField(max_length=100)
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
     crop_add = models.BooleanField(default=False)
     phone_digit = models.CharField(default=10, max_length=2, blank=True, null=True)
@@ -64,7 +66,7 @@ class State(LoopModel):
         return self.state_name
 
     class Meta:
-        unique_together = ("state_name",)
+        unique_together = ("state_name","country")
 
 post_save.connect(save_log,sender=State)
 pre_delete.connect(save_log,sender=State)
@@ -74,7 +76,7 @@ class District(LoopModel):
     district_name = models.CharField(max_length=50)
     state = models.ForeignKey(State)
     is_visible = models.BooleanField(default=True)
-    district_name_en = models.CharField(max_length=100, null=True)
+    district_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "%s (%s)" % (self.district_name, self.state.state_name)
@@ -88,7 +90,7 @@ class Block(LoopModel):
     block_name = models.CharField(max_length=50)
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
-    block_name_en = models.CharField(max_length=100, null=True)
+    block_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "%s (%s)" % (self.block_name, self.district.district_name)
@@ -96,6 +98,8 @@ class Block(LoopModel):
     class Meta:
         unique_together = ("block_name", "district")
 
+post_save.connect(save_admin_log, sender=Block)
+pre_delete.connect(save_admin_log, sender=Block)
 
 class Village(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -104,7 +108,7 @@ class Village(LoopModel):
     longitude = models.FloatField(null=True, blank=True)
     block = models.ForeignKey(Block)
     is_visible = models.BooleanField(default=True)
-    village_name_en = models.CharField(max_length=100, null=True)
+    village_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "%s (%s)" % (self.village_name, self.block.block_name)
@@ -115,6 +119,20 @@ class Village(LoopModel):
 
 post_save.connect(save_log, sender=Village)
 pre_delete.connect(save_log, sender=Village)
+post_save.connect(save_admin_log, sender=Village)
+pre_delete.connect(save_admin_log, sender=Village)
+
+class MandiType(LoopModel):
+    id = models.AutoField(primary_key=True)
+    mandi_type_name = models.CharField(max_length=100)
+    mandi_category = models.IntegerField(choices=MANDI_CATEGORY, default=0)
+    type_description = models.CharField(max_length=300, null=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.mandi_type_name, self.mandi_category)
+
+    class Meta:
+        unique_together = ("mandi_type_name", "mandi_category")
 
 
 class Mandi(LoopModel):
@@ -124,7 +142,9 @@ class Mandi(LoopModel):
     longitude = models.FloatField(null=True)
     district = models.ForeignKey(District)
     is_visible = models.BooleanField(default=True)
-    mandi_name_en = models.CharField(max_length=100, null=True)
+    mandi_name_en = models.CharField(max_length=100)
+    mandi_type = models.ForeignKey(MandiType, default=None, null=True)
+
 
     def __unicode__(self):
         return "%s (%s)" % (self.mandi_name, self.district.district_name)
@@ -134,7 +154,8 @@ class Mandi(LoopModel):
 
 post_save.connect(save_log, sender=Mandi)
 pre_delete.connect(save_log, sender=Mandi)
-
+post_save.connect(save_admin_log, sender = Mandi)
+pre_delete.connect(save_admin_log, sender = Mandi)
 
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -149,13 +170,13 @@ class LoopUser(LoopModel):
     phone_number = models.CharField(
         max_length=14, null=False, blank=False, default="0")
     village = models.ForeignKey(Village, default=None, null=True)
-    name_en = models.CharField(max_length=100, null=True)
+    name_en = models.CharField(max_length=100)
     preferred_language = models.ForeignKey(Language, null=True)
     days_count = models.IntegerField(default=3)
     is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return self.name
+        return """%s (%s)"""  % (self.name, self.phone_number)
 
     def get_villages(self):
         return self.assigned_villages.all()
@@ -168,6 +189,8 @@ class LoopUser(LoopModel):
 
 post_save.connect(save_log,sender=LoopUser)
 pre_delete.connect(save_log,sender=LoopUser)
+post_save.connect(save_admin_log,sender=LoopUser)
+pre_delete.connect(save_admin_log, sender = LoopUser)
 
 class LoopUserAssignedMandi(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -177,6 +200,8 @@ class LoopUserAssignedMandi(LoopModel):
 
 post_save.connect(save_log, sender=LoopUserAssignedMandi)
 pre_delete.connect(save_log, sender=LoopUserAssignedMandi)
+post_save.connect(save_admin_log, sender=LoopUserAssignedMandi)
+pre_delete.connect(save_admin_log, sender = LoopUserAssignedMandi)
 
 
 class LoopUserAssignedVillage(LoopModel):
@@ -187,17 +212,68 @@ class LoopUserAssignedVillage(LoopModel):
 
 post_save.connect(save_log, sender=LoopUserAssignedVillage)
 pre_delete.connect(save_log, sender=LoopUserAssignedVillage)
+post_save.connect(save_admin_log, sender=LoopUserAssignedVillage)
+pre_delete.connect(save_admin_log, sender = LoopUserAssignedVillage)
 
+
+
+class AdminUser(LoopModel):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, related_name="admin_user")
+    name = models.CharField(max_length=100, default="default")
+    assigned_districts = models.ManyToManyField(
+        District,through='AdminAssignedDistrict', blank=True)
+    assigned_loopusers = models.ManyToManyField(LoopUser,through='AdminAssignedLoopUser')
+    phone_number = models.CharField(
+        max_length=14, null=False, blank=False, default="0")
+    name_en = models.CharField(max_length=100)
+    preferred_language = models.ForeignKey(Language, null=True)
+    is_visible = models.BooleanField(default=True)
+    state = models.ForeignKey(State)
+
+    def __unicode__(self):
+        return self.name
+
+    def get_districts(self):
+        return self.assigned_districts.all()
+
+    def get_loopusers(self):
+        return self.assigned_loopusers.all()
+
+    def __user__(self):
+        return "%s" % self.user.id
+
+post_save.connect(save_admin_log, sender=AdminUser)
+pre_delete.connect(save_admin_log, sender=AdminUser)
+class AdminAssignedLoopUser(LoopModel):
+    id = models.AutoField(primary_key=True)
+    admin_user = models.ForeignKey(AdminUser)
+    loop_user = models.ForeignKey(LoopUser)
+    is_visible = models.BooleanField(default=True)
+
+post_save.connect(save_admin_log, sender=AdminAssignedLoopUser)
+pre_delete.connect(save_admin_log, sender = AdminAssignedLoopUser)
+        
+class AdminAssignedDistrict(LoopModel):
+    id = models.AutoField(primary_key=True)
+    admin_user = models.ForeignKey(AdminUser)
+    district = models.ForeignKey(District)
+    aggregation_switch = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
+
+post_save.connect(save_admin_log, sender=AdminAssignedDistrict)
+pre_delete.connect(save_admin_log, sender=AdminAssignedDistrict)
 
 class Gaddidar(LoopModel):
     id = models.AutoField(primary_key=True)
     gaddidar_name = models.CharField(max_length=100)
     gaddidar_phone = models.CharField(max_length=13)
-    commission = models.FloatField("Discount",default=1.0)
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
-    gaddidar_name_en = models.CharField(max_length=100, null=True)
+    gaddidar_name_en = models.CharField(max_length=100)
     discount_criteria = models.IntegerField(choices=DISCOUNT_CRITERIA, default=0)
+    commission = models.FloatField("Discount",default=1.0)
+    is_prime = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.gaddidar_name
@@ -207,7 +283,8 @@ class Gaddidar(LoopModel):
 
 post_save.connect(save_log, sender=Gaddidar)
 pre_delete.connect(save_log, sender=Gaddidar)
-
+post_save.connect(save_admin_log, sender=Gaddidar)
+pre_delete.connect(save_admin_log, sender = Gaddidar)
 
 class Farmer(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -248,22 +325,30 @@ class Crop(LoopModel):
 
 post_save.connect(save_log, sender=Crop)
 pre_delete.connect(save_log, sender=Crop)
-
+post_save.connect(save_admin_log, sender=Crop)
+pre_delete.connect(save_admin_log, sender = Crop)
 #############Crop name in multiple languages###############
 
 class CropLanguage(models.Model):
     id = models.AutoField(primary_key=True)
-    language = models.ForeignKey(Language,null=True)
+    language = models.ForeignKey(Language)
     crop = models.ForeignKey(Crop, related_name="crops")
     crop_name = models.CharField(max_length=30)
+    measuring_unit = models.CharField(max_length=20, default="kg")
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.crop_name
     def __crop__(self):
         return "%s" % (self.crop.crop_name)
 
+    class Meta:
+        unique_together = ("crop","language",)
+
 post_save.connect(save_log,sender=CropLanguage)
 pre_delete.connect(save_log,sender=CropLanguage)
+post_save.connect(save_admin_log,sender=CropLanguage)
+pre_delete.connect(save_admin_log, sender = CropLanguage)
 
 class Transporter(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -284,7 +369,6 @@ class Transporter(LoopModel):
 post_save.connect(save_log, sender=Transporter)
 pre_delete.connect(save_log, sender=Transporter)
 
-
 class Vehicle(LoopModel):
     id = models.AutoField(primary_key=True)
     vehicle_name = models.CharField(max_length=30, blank=False, null=False)
@@ -299,20 +383,27 @@ class Vehicle(LoopModel):
 
 post_save.connect(save_log, sender=Vehicle)
 pre_delete.connect(save_log, sender=Vehicle)
+post_save.connect(save_admin_log, sender=Vehicle)
+pre_delete.connect(save_admin_log, sender = Vehicle)
 
 class VehicleLanguage(models.Model):
     id = models.AutoField(primary_key=True)
-    language = models.ForeignKey(Language,null=True)
+    language = models.ForeignKey(Language)
     vehicle = models.ForeignKey(Vehicle, related_name="vehicles")
     vehicle_name = models.CharField(max_length=30)
+    is_visible = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.vehicle_name
     def __vehicle__(self):
         return "%s" % (self.vehicle.vehicle_name)
 
+    class Meta:
+        unique_together = ("vehicle","language",)
 post_save.connect(save_log,sender=VehicleLanguage)
 pre_delete.connect(save_log,sender=VehicleLanguage)
+post_save.connect(save_admin_log,sender=VehicleLanguage)
+pre_delete.connect(save_admin_log, sender = VehicleLanguage)
 
 class TransportationVehicle(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -429,6 +520,8 @@ class GaddidarCommission(LoopModel):
         unique_together = ("start_date", "gaddidar", "mandi")
 post_save.connect(save_log, sender=GaddidarCommission)
 pre_delete.connect(save_log, sender=GaddidarCommission)
+post_save.connect(save_admin_log, sender=GaddidarCommission)
+pre_delete.connect(save_admin_log, sender = GaddidarCommission)
 
 class GaddidarShareOutliers(LoopModel):
     mandi = ChainedForeignKey(Mandi, chained_field="aggregator", chained_model_field="assigned_mandis")
@@ -498,8 +591,7 @@ class AggregatorShareOutliers(LoopModel):
 
 class Log(models.Model):
     id = models.AutoField(primary_key=True)
-    timestamp = models.DateTimeField(
-        auto_now_add=False, default=datetime.datetime.utcnow)
+    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.datetime.utcnow)
     user = models.ForeignKey(User, null=True)
     loop_user = models.ForeignKey(LoopUser, null=True)
     village = models.IntegerField(null=True)
@@ -507,6 +599,15 @@ class Log(models.Model):
     entry_table = models.CharField(max_length=100)
     model_id = models.IntegerField(null=True)
 
+class AdminLog(models.Model):
+    id = models.AutoField(primary_key=True)
+    timestamp = models.DateTimeField(auto_now_add=False, default=datetime.datetime.utcnow)
+    user = models.ForeignKey(User,null=True)
+    admin_user = models.ForeignKey(AdminUser,null=True)
+    district = models.IntegerField(null=True)
+    action = models.IntegerField()
+    entry_table = models.CharField(max_length=100)
+    model_id = models.IntegerField(null=True)
 
 class HelplineExpert(LoopModel):
     id = models.AutoField(primary_key=True)

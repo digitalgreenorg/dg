@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from tastypie.models import ApiKey
 
+
+
 class TimestampException(Exception):
     pass
 
@@ -151,9 +153,11 @@ def send_updated_log(request):
             mandis = requesting_loop_user.get_mandis()
             Log = get_model('loop', 'Log')
             Farmer = get_model('loop', 'Farmer')
+            Mandi = get_model('loop','Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')
             Transporter = get_model('loop', 'Transporter')
             TransportationVehicle = get_model('loop', 'TransportationVehicle')
+
 
             list_rows = []
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_loop_user.id,entry_table__in=['LoopUser']))
@@ -194,11 +198,14 @@ def send_updated_log(request):
                             list_rows.append(entry)
                     except:
                         pass
-
             mandi_list_queryset = Log.objects.filter(
-                timestamp__gt=timestamp, loop_user=requesting_loop_user, entry_table__in=['Mandi'])
-            list_rows.append(mandi_list_queryset)
-
+                timestamp__gt=timestamp, entry_table__in=['Mandi'])
+            for mrow in mandi_list_queryset:
+                try:
+                    if Mandi.objects.get(id=mrow.model_id).mandi in mandis:
+                        list_rows.append(mrow)
+                except:
+                    pass
             gaddidar_rows = Log.objects.filter(
                 timestamp__gt=timestamp, entry_table__in=['Gaddidar'])
             for grow in gaddidar_rows:
@@ -233,7 +240,7 @@ def send_updated_log(request):
 
             mandi_gaddidar_list = []
             for mandi in mandi_list_queryset:
-                if mandi.action == 1:
+                if mandi.action == 1 and Mandi.objects.get(id=mandi.model_id) in mandis:
                     mandi_wise_gaddidar_list = Gaddidar.objects.filter(
                         mandi__id=mandi.model_id)
                     for gaddidar in mandi_wise_gaddidar_list:

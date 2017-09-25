@@ -14,7 +14,7 @@ import { Cards } from './cards.model'
 })
 
 export class CardsComponent implements OnInit, AfterViewInit {
-  
+
   overallcharts = [];
   recentcharts = [];
   Dropdownitems = [];
@@ -26,7 +26,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
   private chooseDateRange: string = '';
   private cardGraphConfig = environment.cardGraphConfig;
   private cardsConfigs = environment.cardsConfig;
-  
+
   constructor(private cardsService: CardsService, private _sharedService: SharedService
     , private _globalfiltersharedService: GlobalFilterSharedService) {
     this._globalfiltersharedService.argsList$.subscribe(data => {
@@ -34,7 +34,7 @@ export class CardsComponent implements OnInit, AfterViewInit {
       this.getCardsData(options);
     });
   }
-  
+
   ngOnInit(): void {
     Object.keys(this.cardsConfigs).forEach(key => {
       if (this.cardsConfigs[key].overall.cards) {
@@ -77,9 +77,9 @@ export class CardsComponent implements OnInit, AfterViewInit {
       cardsgraphobj.options = this.cardsConfigs[data].recent.graph.options;
       cardsgraphobj.helpTip = '';
     }
-    
+
     cards.push(cardsgraphobj)
-    
+
   }
 
   ngAfterViewInit(): void {

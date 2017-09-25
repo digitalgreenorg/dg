@@ -10,7 +10,13 @@ export const chartsConfig = {
                                   drillDown: true
                           },
                           credits:{ enabled: false },
-                          title: { text: 'Trainings Conducted'},
+                          colors : ['#7C287D', ' #9AA0A7'],
+                          title: { 
+                                  text: 'Trainings Conducted',
+                                  style : {
+                                        "color" : "#656566",
+                                }
+                        },
                           xAxis: { type: 'category' },
                           yAxis: {
                                   tickInterval: 10, 
@@ -31,15 +37,14 @@ export const chartsConfig = {
                           },
                           series: [],
                           drilldown: {
-                                      allowPointDrilldown: false,
-                                       drillUpButton: {
-                                                       relativeTo: 'spacingBox',
-                                                       position: {
-                                                                y: 0,
-                                                                x: -30
-                                                        },
-                                        },
-                                      series: []
+                                activeAxisLabelStyle: {
+                                        color:'#656566'
+                                },
+                                activeDataLabelStyle: {
+                                        color:'#656566'
+                                },
+                                allowPointDrilldown: false,
+                                series: []
                           },
                           lang: {
                                 drillUpText: '<< Back'
@@ -57,8 +62,13 @@ export const chartsConfig = {
                                         drillDown: true
                                 },
                                 credits: { enabled: false },
-                                title: { text: 'Mediators trained'},
-                                subtitle: { text: 'Click the columns to view state wise trainer figures.'},
+                                title: { 
+                                        text: 'Mediators trained',
+                                        style : {
+                                                "color" : "#656566",
+                                        }
+                                },
+                                colors : ['#7C287D', ' #9AA0A7'],
                                 xAxis: { type: 'category' },
                                 yAxis: { title: { text: 'Number of Mediators' } },
                                 legend: { enabled: false },
@@ -76,16 +86,16 @@ export const chartsConfig = {
                                           pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
                                 },
                                 series: [],
+
                                 drilldown: {
-                                            drillUpButton: {
-                                                       relativeTo: 'spacingBox',
-                                                       position: {
-                                                                y: 0,
-                                                                x: -30
-                                                        },
-                                            },
-                                            allowPointDrilldown: false,
-                                            series: []
+                                        activeAxisLabelStyle: {
+                                                color:'#656566'
+                                        },
+                                        activeDataLabelStyle: {
+                                                color:'#656566'
+                                        },
+                                        allowPointDrilldown: false,
+                                        series: []
                                 },
                                 lang: {
                                         drillUpText: '<< Back'
@@ -103,8 +113,12 @@ export const chartsConfig = {
                                 drillDown: false
                         },
                         credits: { enabled: false },
+                        colors : ['#7C287D', ' #9AA0A7'],
                         title: {
-                                text: 'Questions Answered Correctly'
+                                text: 'Questions Answered Correctly',
+                                style : {
+                                        "color" : "#656566",
+                                }
                         },
                         xAxis: { type: 'category' },
                         yAxis: {
@@ -141,10 +155,16 @@ export const chartsConfig = {
                                   drillDown: true
                           },
                           credits: { enabled: false },
-                          title: { text: 'Periodical Trainings Conducted' },
+                          title: { 
+                                  text: 'Periodical Trainings Conducted', 
+                                  style : {
+                                          "color" : "#656566",
+                                  } 
+                                },
                           xAxis: { type: 'category' },
                           yAxis: { title: { text: 'Number of Trainings'} },
                           legend: { enabled: false },
+                          colors : ['#7C287D', ' #9AA0A7'],
                           plotOptions: {
                                         column: {
                                                 grouping: false,
@@ -160,15 +180,14 @@ export const chartsConfig = {
                           },
                           series: [],
                           drilldown: {
-                                        drillUpButton: {
-                                                       relativeTo: 'spacingBox',
-                                                       position: {
-                                                                y: 0,
-                                                                x: -30
-                                                        },
-                                        },
-                                        allowPointDrilldown: false,
-                                        series: []
+                                activeAxisLabelStyle: {
+                                        color:'#656566'
+                                },
+                                activeDataLabelStyle: {
+                                        color:'#656566'
+                                },
+                                allowPointDrilldown: false,
+                                series: []
                           },
                           lang: {
                                 drillUpText: '<< Back'

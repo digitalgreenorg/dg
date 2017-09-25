@@ -85,6 +85,7 @@ class LoopStatistics():
             result.fillna(value=0,axis=1,inplace=True)
 
             # Getting new farmers who did any transaction on a particular date
+<<<<<<< HEAD
             df_farmer_count = pd.read_sql("""
             SELECT T.date, T.country_id, COUNT(T.farmer_id) AS distinct_farmer_count, T.user_created_id
             FROM
@@ -112,16 +113,26 @@ class LoopStatistics():
 
             # Cummulating sum of farmers that were unique and did any transaction till a particular date
             # df_farmer_count['cummulative_distinct_farmer'] = df_farmer_count.groupby(by=['country_id'])['distinct_farmer_count'].cumsum()
+=======
+            df_farmer_count = pd.read_sql("SELECT T.date, T.country_id, T.state_id, count(T.farmer_id) as distinct_farmer_count FROM ( SELECT lct.farmer_id, ld.state_id, ls.country_id, min(lct.date) as date FROM loop_combinedtransaction lct join loop_farmer lf on lf.id = lct.farmer_id  join loop_village lv on lv.id = lf.village_id join loop_block lb on lb.id = lv.block_id join loop_district ld on ld.id=lb.district_id join loop_state ls on ls.id = ld.state_id join loop_country lc on lc.id = ls.country_id  GROUP BY lct.farmer_id) as T GROUP BY T.date, T.country_id, T.state_id",con=self.mysql_cn)
+            
+            # Cummulating sum of farmers that were unique and did any transaction till a particular date
+            df_farmer_count['cummulative_distinct_farmer'] = df_farmer_count.groupby(by=['country_id', 'state_id'])['distinct_farmer_count'].cumsum()
+>>>>>>> origin/master
 
             # df_farmer_count.drop(['distinct_farmer_count'],axis=1,inplace=True)
 
+<<<<<<< HEAD
             result = pd.merge(result,df_farmer_count,left_on=['date', 'user_created__id', 'country_id'],right_on=['date', 'user_created_id', 'country_id'],how='left')
             result.fillna(value=0,axis=1,inplace=True)
 
             # result['cummulative_distinct_farmer'] = result.groupby(by=['country_id'])['cummulative_distinct_farmer'].apply(lambda group: group.ffill())
+=======
+            result = pd.merge(result,df_farmer_count,left_on=['date', 'country_id', 'state_id'],right_on=['date', 'country_id', 'state_id'],how='left')
 
-            # Final result DataFrame contains same value for transportation_cost, farmer share, aggregator_incentive where date,aggregator_id,mandi are same but gaddidar_id is different.
-            # Also cummulative_distinct_farmer is same where date is same but aggregator_id,gaddidar_id,mandi_id are different
+            result['cummulative_distinct_farmer'] = result.groupby(by=['state_id'])['cummulative_distinct_farmer'].apply(lambda group: group.ffill())
+>>>>>>> origin/master
+
             print "After adding cummulative distinct farmer ", result.shape
 
             if not result.empty:
