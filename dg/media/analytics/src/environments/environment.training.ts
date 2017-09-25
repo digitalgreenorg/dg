@@ -1,7 +1,10 @@
-import { chartsConfig } from '../../training/configs/GraphsConfig';
+import { chartsConfig, AddCommonOptions } from '../../training/configs/GraphsConfig';
 import { tabsConfig } from '../../training/configs/TabsConfig';
 import { cardConfig } from '../../training/configs/CardsConfig';
+import { cardGraphConfig } from '../../training/configs/GraphCardsConfig';
+import { navsConfig } from '../../training/configs/NavsConfig';
 import { filtersConfig } from '../../training/configs/FiltersConfig';
+import { generalConfig } from '../../training/configs/GeneralConfig';
 
 export const environment = {
   production: true,
@@ -10,5 +13,9 @@ export const environment = {
   chartsConfig: chartsConfig,
   tabsConfig: tabsConfig,
   cardsConfig: cardConfig,
+  cardGraphConfig: cardGraphConfig,
+  navsConfig: navsConfig,
   filtersConfig: filtersConfig,
+  generalConfig: generalConfig,
+  AddCommonOptions : AddCommonOptions
 };
