@@ -5,7 +5,7 @@ import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 import { CardsGraph } from './cardsgraph.model'
 import { Cards } from './cards.model';
-import { environment } from '../../environments/environment.training';
+import { environment } from '../../environments/environment.loop';
 
 @Component({
   selector: 'app-cards',

@@ -1,6 +1,6 @@
 import { Component, OnInit, Pipe, Inject } from '@angular/core';
 import { DOCUMENT,Title } from '@angular/platform-browser';
-import { environment } from '../environments/environment.training';
+import { environment } from '../environments/environment.loop';
 
 export var global_filter: any;
 

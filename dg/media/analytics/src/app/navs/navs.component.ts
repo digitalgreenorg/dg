@@ -6,7 +6,7 @@ import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 import { DropDownItem } from './dropdown.model';
-import { environment } from '../../environments/environment.training';
+import { environment } from '../../environments/environment.loop';
 
 @Component({
   selector: 'app-navs',

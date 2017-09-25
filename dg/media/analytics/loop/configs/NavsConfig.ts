@@ -4,8 +4,8 @@ export const navsConfig = {
       'active': true,
       'filters': false,
       'import': {
-        'overall': false,
-        'recent': false,
+        'overall': true,
+        'recent': true,
       },
       // 'class': 'col-11',
       'classes': {

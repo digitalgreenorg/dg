@@ -7,7 +7,7 @@ import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
-import { environment } from '../../environments/environment.training';
+import { environment } from '../../environments/environment.loop';
 
 @Component({
   selector: 'app-filters',

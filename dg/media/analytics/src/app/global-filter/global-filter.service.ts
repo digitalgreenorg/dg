@@ -4,7 +4,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Rx';
-import { environment } from '../../environments/environment.training';
+import { environment } from '../../environments/environment.loop';
 
 @Injectable()
 export class GlobalFilterService {
