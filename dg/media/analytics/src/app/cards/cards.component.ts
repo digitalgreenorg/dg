@@ -114,7 +114,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
   public fetchData(options): any {
     this.cardsService.getApiData(options)
       .subscribe(dataList => {
-        console.log(dataList['data'])
         dataList['data'].forEach(cardData => {
           if (cardData.placeHolder == "overall") {
             this.cardsOverall.forEach(card => {

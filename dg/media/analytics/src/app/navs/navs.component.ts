@@ -280,13 +280,20 @@ export class NavsComponent implements OnInit,
   showContent(selectedNav: string): void {
     this.selectedNav = selectedNav;
     this.navClicked = true;
-    if (selectedNav == 'Home') {
-      this.showOverall = true;
+    try {
+      this.showFilters = this.containers[selectedNav].filters;
+      this.showOverall = this.containers[selectedNav].import.overall;
+    } catch (e) {
       this.showFilters = false;
-    } else {
       this.showOverall = false;
-      this.showFilters = true;
     }
+    // if (selectedNav == 'Home') {
+    //   this.showOverall = true;
+    //   this.showFilters = false;
+    // } else {
+    //   this.showOverall = false;
+    //   this.showFilters = true;
+    // }
     this.resetDict(this.containers, 'displayContent', false);
     this.containerCharts = [];
     if (this.containers[selectedNav] != undefined) {

@@ -80,7 +80,7 @@ export const chartsConfig = {
       renderTo: 'question_wise_data',
       tab: {
         'id': 'tab2',
-        'class': 'col-sm-12'
+        'class': 'col'
       },
       drillDown: false
     },
@@ -120,7 +120,7 @@ export const chartsConfig = {
       renderTo: 'year_month_wise_data',
       tab: {
         'id': 'tab3',
-        'class': 'col-sm-12'
+        'class': 'col'
       },
       drillDown: true
     },
