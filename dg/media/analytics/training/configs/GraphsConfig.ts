@@ -4,7 +4,7 @@ export const chartsConfig = {
   'state_trainer_#trainings': {
     chart: {
       type: 'column',
-      renderTo: 'graph_1',
+      renderTo: 'state_trainer_#trainings',
       tab: {
         'id': 'tab1',
         'class': 'col-sm-6'
@@ -21,15 +21,6 @@ export const chartsConfig = {
     yAxis: {
       tickInterval: 10,
       title: { text: 'Number of Trainings' }
-    },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
     },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -51,7 +42,7 @@ export const chartsConfig = {
   'state_trainer_#mediators': {
     chart: {
       type: 'column',
-      renderTo: 'graph_2',
+      renderTo: 'state_trainer_#mediators',
       tab: {
         'id': 'tab1',
         'class': 'col-sm-6'
@@ -66,15 +57,6 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category' },
     yAxis: { title: { text: 'Number of Mediators' } },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
-    },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
@@ -95,7 +77,7 @@ export const chartsConfig = {
   'question_wise_data': {
     chart: {
       type: 'column',
-      renderTo: 'graph_3',
+      renderTo: 'question_wise_data',
       tab: {
         'id': 'tab2',
         'class': 'col-sm-12'
@@ -114,16 +96,16 @@ export const chartsConfig = {
       max: 100,
       title: { text: 'Percentage Answered' }
     },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true,
-          format: '{point.y}%'
-        }
-      }
-    },
+    // plotOptions: {
+    //   column: {
+    //     grouping: false,
+    //     borderWidth: 0,
+    //     dataLabels: {
+    //       enabled: true,
+    //       format: '{point.y}%'
+    //     }
+    //   }
+    // },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
@@ -135,7 +117,7 @@ export const chartsConfig = {
   'year_month_wise_data': {
     chart: {
       type: 'column',
-      renderTo: 'graph_4',
+      renderTo: 'year_month_wise_data',
       tab: {
         'id': 'tab3',
         'class': 'col-sm-12'
@@ -150,15 +132,6 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category' },
     yAxis: { title: { text: 'Number of Trainings' } },
-    plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        dataLabels: {
-          enabled: true
-        }
-      }
-    },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
