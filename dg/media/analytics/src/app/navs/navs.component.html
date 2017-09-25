@@ -50,10 +50,10 @@
     <div *ngFor="let option of getDictKeys(containers[container]['containers']);let i=index;" class="justify-content-center" [class]="containers[container]['classes']['container'+(i+1)]">
       <div class="container-box col" *ngIf="ifDictionary(containers[container]['containers'][option])">
         <tabset [justified]="true">
-          <tab customClass="customClass" *ngFor="let tab of getDictKeys(containers[container]['containers'][option])" [heading]="tab">
+          <tab customClass="customClass" *ngFor="let tab of getDictKeys(containers[container]['containers'][option]); let idx=index;" [heading]="tab">
             <br><br>
             <div class="row">
-              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs']" [class]="containers[container]['charts'][0]['chart']['chart']['tab']['class']">
+              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs'];" [class]="containers[container]['charts'][(idx + 1)]['chart']['chart']['tab']['class']">
                 <div [id]="div"></div>
                 <br><br>
               </div>

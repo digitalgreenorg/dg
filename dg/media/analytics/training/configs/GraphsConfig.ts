@@ -4,7 +4,7 @@ export const chartsConfig = {
   'state_trainer_#trainings': {
     chart: {
       type: 'column',
-      renderTo: 'state_trainer_#trainings',
+      renderTo: 'state_trainer_#trainings', // to be kept as same as the key for this particular object.
       tab: {
         'id': 'tab1',
         'class': 'col-sm-6'
@@ -80,7 +80,7 @@ export const chartsConfig = {
       renderTo: 'question_wise_data',
       tab: {
         'id': 'tab2',
-        'class': 'col'
+        'class': 'col-12'
       },
       drillDown: false
     },
@@ -120,7 +120,7 @@ export const chartsConfig = {
       renderTo: 'year_month_wise_data',
       tab: {
         'id': 'tab3',
-        'class': 'col'
+        'class': 'col-12'
       },
       drillDown: true
     },

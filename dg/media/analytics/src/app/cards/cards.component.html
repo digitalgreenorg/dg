@@ -3,7 +3,7 @@
   <hr/>
   <div class="row">
     <div class="col" *ngFor="let card of cardsOverall">
-      <div class="card" style="background-color: #009688">
+      <div class="card" style="background-color: #7C287D">
         <div #cardTitle id={{card.id}} class="card-block">
           <h6 class="card-title text-white">{{card.text}}</h6>
           <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
@@ -19,25 +19,11 @@
     <div class="col">
       <h5 class="text-muted">Recent</h5>
     </div>
-    <div class="btn-group" dropdown>
-      <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
-        Button dropdown <span class="caret"></span>
-      </button>
-      <ul *dropdownMenu class="dropdown-menu" role="menu">
-        <li role="menuitem">
-          <a class="dropdown-item">
-            <form #myForm="ngForm" novalidate>
-              <my-date-picker class="datepicker" name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
-            </form>
-          </a>
-        </li>
-      </ul>
-    </div>
   </div>
   <hr/>
   <div class="row">
     <div class="col" *ngFor="let card of cardsRecent">
-      <div class="card " style="background-color: #009688">
+      <div class="card" style="background-color: #7C287D">
         <div #cardTitle id={{card.id}} class="card-block">
           <h6 class="card-title text-white">{{card.text}}</h6>
           <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
