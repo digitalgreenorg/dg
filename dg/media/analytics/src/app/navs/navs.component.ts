@@ -26,8 +26,8 @@ export class NavsComponent implements OnInit,
   //read config files from environment created for each app
   private navsConfig = environment.navsConfig;
   private chartsConfig = environment.chartsConfig;
-  private generalConfig = environment.generalConfig;
   private AddCommonOptions = environment.AddCommonOptions;
+  generalConfig = environment.generalConfig;
   //keep track of nav switches and respective subnavs
   toggleNav = {};
   //dict with key as end nav and its corresponding containers
