@@ -37,7 +37,7 @@ urlpatterns = patterns('',
     url(r'^analytics/', dashboard),
     url(r'^graph_data', graph_data),
     url(r'^get_log/', send_updated_log),
-    url(r'^getData', get_overall_data),
+    url(r'^getCardGraphData', get_overall_data),
     url(r'^get_filter_data',get_filter_data),
     # admin/logout/ should be above admin/ URL
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/training/admin/'}),
