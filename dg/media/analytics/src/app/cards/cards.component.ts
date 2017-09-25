@@ -2,10 +2,10 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CardsService } from './cards.service';
 import { SharedService } from '../shared.service';
 import { environment } from '../../environments/environment.loop';
-import { IMyOptions } from 'mydatepicker';
-import { DatePipe } from '@angular/common';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
+import { CardsGraph } from './cardsgraph.model'
+import { Cards } from './cards.model'
 
 @Component({
   selector: 'app-cards',
@@ -14,92 +14,78 @@ import { GlobalFilterSharedService } from '../global-filter/global-filter-shared
 })
 
 export class CardsComponent implements OnInit, AfterViewInit {
-  cardsOverall = [];
-  cardsRecent = [];
-  charts = [];
+  
   overallcharts = [];
   recentcharts = [];
-  cardGraphConfig = environment.cardGraphConfig;
   Dropdownitems = [];
-  recentChartsData = {};
+  cardsOverall = [];
+  cardsRecent = [];
+
+  private charts = [];
+  private recentChartsData = {};
   private chooseDateRange: string = '';
-
-  // DatePicker
-  private date = new Date();
-  public endModel = {
-    date: {
-      day: this.date.getDate(),
-      month: this.date.getMonth() + 1,
-      year: this.date.getFullYear()
-    }
-  };
-  public startModel = {
-    date: {
-      day: new Date(this.date.setDate(this.date.getDate() + 1)).getDate(),
-      month: new Date(this.date.setMonth(this.date.getMonth() + 1)).getMonth(),
-      year: new Date(this.date.setFullYear(this.date.getFullYear() - 1)).getFullYear()
-    }
-  };
-
-  private myDatePickerOptions: IMyOptions = {
-    dateFormat: 'dd-mm-yyyy',
-    alignSelectorRight: true,
-    showClearDateBtn: false,
-    // editableDateField: false,
-    indicateInvalidDate: true,
-    inline: false,
-    maxYear: this.date.getFullYear() + 1,
-    selectionTxtFontSize: '16px',
-  };
-
-  constructor(private cardsService: CardsService, private _sharedService: SharedService, private datepipe: DatePipe
+  private cardGraphConfig = environment.cardGraphConfig;
+  private cardsConfigs = environment.cardsConfig;
+  
+  constructor(private cardsService: CardsService, private _sharedService: SharedService
     , private _globalfiltersharedService: GlobalFilterSharedService) {
     this._globalfiltersharedService.argsList$.subscribe(data => {
       let options = this.createParams();
-      this.getData(options);
+      this.getCardsData(options);
     });
   }
-  cardsConfigs = environment.cardsConfig;
-
+  
   ngOnInit(): void {
     Object.keys(this.cardsConfigs).forEach(key => {
       if (this.cardsConfigs[key].overall.cards) {
-        this.cardsOverall.push({
-          'id': key,
-          'text': this.cardsConfigs[key].text
-        });
+        this.initCards(this.cardsOverall, key);
       } else if (this.cardsConfigs[key].overall.graph) {
-        this.overallcharts.push({
-          tagName: this.cardsConfigs[key].overall.text,
-          title: this.cardsConfigs[key].text,
-          options: this.cardsConfigs[key].overall.graph.options,
-          helpTip: this.cardsConfigs[key].helpTip,
-          nativeChart: null,
-        });
+        this.initCardsGraph(this.overallcharts, key, 'overall');
       }
 
       if (this.cardsConfigs[key].recent.cards) {
-        this.cardsRecent.push({
-          'id': key,
-          'text': this.cardsConfigs[key].text
-        });
+        this.initCards(this.cardsRecent, key);
       }
       else if (this.cardsConfigs[key].recent.graph) {
-        this.recentcharts.push({
-          tagName: this.cardsConfigs[key].recent.text,
-          title: this.cardsConfigs[key].text,
-          options: this.cardsConfigs[key].recent.graph.options,
-          nativeChart: null,
-          lastDataPoint: 0
-        });
+        this.initCardsGraph(this.recentcharts, key, 'recent');
       }
     });
+  }
+
+  initCards(cards, key) : void {
+    let cardsobj : Cards = {
+      'id': key,
+      'text': this.cardsConfigs[key].text
+    }
+    cards.push(cardsobj);
+  }
+
+  initCardsGraph(cards, data, option) : void {
+
+    let cardsgraphobj = {} as CardsGraph;
+    cardsgraphobj.title = this.cardsConfigs[data].text;
+    cardsgraphobj.nativeChart = null;
+    cardsgraphobj.lastDataPoint = 0;
+
+    if(option == 'overall') {
+      cardsgraphobj.tagName = this.cardsConfigs[data].overall.text;
+      cardsgraphobj.options = this.cardsConfigs[data].overall.graph.options;
+      cardsgraphobj.helpTip = this.cardsConfigs[data].helpTip;
+
+    } else if(option == 'recent') {
+      cardsgraphobj.tagName = this.cardsConfigs[data].recent.text;
+      cardsgraphobj.options = this.cardsConfigs[data].recent.graph.options;
+      cardsgraphobj.helpTip = '';
+    }
+    
+    cards.push(cardsgraphobj)
+    
   }
 
   ngAfterViewInit(): void {
     this.showLoadingMessage();
     let options = this.createParams();
-    this.getData(options);
+    this.getCardsData(options);
   }
 
   showLoadingMessage(): void {
@@ -108,15 +94,15 @@ export class CardsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public getData(options): any {
+  public getCardsData(options): any {
     Object.keys(this.cardsConfigs).forEach(key => {
       if (this.cardsConfigs[key].overall.borrowData == false) {
         options.params.cardName = this.cardsConfigs[key].overall.text;
-        this.saveData(options);
+        this.fetchData(options);
       }
       if (this.cardsConfigs[key].recent.borrowData == false) {
         options.params.cardName = this.cardsConfigs[key].recent.text;
-        this.saveData(options);
+        this.fetchData(options);
       }
     });
   }
@@ -125,9 +111,10 @@ export class CardsComponent implements OnInit, AfterViewInit {
     chart.nativeChart = chartInstance;
   }
 
-  public saveData(options): any {
+  public fetchData(options): any {
     this.cardsService.getApiData(options)
       .subscribe(dataList => {
+        console.log(dataList['data'])
         dataList['data'].forEach(cardData => {
           if (cardData.placeHolder == "overall") {
             this.cardsOverall.forEach(card => {
@@ -136,21 +123,21 @@ export class CardsComponent implements OnInit, AfterViewInit {
               }
             });
           }
-          if (cardData.placeHolder == "recent") {
+          else if (cardData.placeHolder == "recent") {
             this.cardsRecent.forEach(card => {
               if (card.text == cardData.tagName) {
                 card['value'] = cardData.value;
               }
             });
           }
-          if (cardData.placeHolder == "overallcardGraphs") {
+          else if (cardData.placeHolder == "overallcardGraphs") {
             this.overallcharts.forEach(chart => {
               if (cardData.tagName === chart.tagName) {
                 chart.nativeChart.series[0].update({ 'data': [cardData.value] });
               }
             });
           }
-          if (cardData.placeHolder == "recentcardGraphs") {
+          else if (cardData.placeHolder == "recentcardGraphs") {
             let numberOfDays = Object.keys(cardData.value)[0];
             let dataToDisplay = cardData.value[numberOfDays];
             this.recentcharts.forEach(chart => {
@@ -183,7 +170,6 @@ export class CardsComponent implements OnInit, AfterViewInit {
 
   private createParams(): any {
     let options = {
-      webUrl: "getCardGraphData/",
       params: {
         apply_filter: false,
       }
