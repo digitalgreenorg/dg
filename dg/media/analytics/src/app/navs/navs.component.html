@@ -1,4 +1,5 @@
-<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse row">
+<nav class="navbar navbar-toggleable-md navbar-inverse row"
+[ngStyle]="{'background-color' : generalConfig.header_bg_color, height: generalConfig.header_height}">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -35,13 +36,14 @@
 <!--<br>-->
 
 <!--Show Overall and Recent Cards-->
-<div [hidden]="!showOverall" class="container-fluid">
+<div [hidden]="!showOverall" class="container-fluid"
+[ngStyle]="{'width' : generalConfig.body_width}">
   <div class="row">
     <div class="col-md-12">
       <app-cards></app-cards>
     </div>
   </div>
-  <br><br>
+  <br>
 </div>
 
 

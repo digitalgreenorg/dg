@@ -1,39 +1,38 @@
-<div *ngIf="cardsOverall.length > 0" class="container-fluid">
+<div *ngIf="cardsOverall.length > 0" class="container-fluid"
+  [ngStyle]="{'width' : generalConfigs.body_width}" >
+  <br>
+  <br>
   <h5 class="text-muted">Overall</h5>
   <hr/>
   <div class="row">
     <div class="col" *ngFor="let card of cardsOverall">
-      <div class="card" style="background-color: #7C287D">
+      <div class="card" [ngStyle]="{'background-color' : generalConfigs.overall_bg_color}">
         <div #cardTitle id={{card.id}} class="card-block">
           <h6 class="card-title text-white">{{card.text}}</h6>
           <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
-        </div>
       </div>
     </div>
   </div>
 </div>
-<br>
-<br>
-<div *ngIf="cardsRecent.length > 0" class="container-fluid">
-  <div class="row">
-    <div class="col">
-      <h5 class="text-muted">Recent</h5>
-    </div>
-  </div>
-  <hr/>
-  <div class="row">
-    <div class="col" *ngFor="let card of cardsRecent">
-      <div class="card" style="background-color: #7C287D">
-        <div #cardTitle id={{card.id}} class="card-block">
-          <h6 class="card-title text-white">{{card.text}}</h6>
-          <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
+</div>
+<div *ngIf="cardsRecent.length > 0" class="container-fluid"
+    [ngStyle]="{'width' : generalConfigs.body_width}" >
+    <h5 class="text-muted">Recent</h5>
+    <hr/>
+    <div class="row">
+      <div class="col" *ngFor="let card of cardsRecent">
+        <div class="card" [ngStyle]="{'background-color' : generalConfigs.recent_bg_color}">
+          <div #cardTitle id={{card.id}} class="card-block">
+            <h6 class="card-title text-white">{{card.text}}</h6>
+            <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="overallcharts.length" class="container-fluid">
+<div *ngIf="overallcharts.length" class="container-fluid" 
+[ngStyle]="{'width' : generalConfigs.body_width}" >
   <h5 class="text-muted">Overall</h5>
   <div class="row">
     <div class="col" *ngFor="let chart of overallcharts">
@@ -43,10 +42,9 @@
   </div>
 </div>
 
+<div *ngIf="recentcharts.length" class="container-fluid"
+[ngStyle]="{'width' : generalConfigs.body_width}" >
 <br>
-<br>
-
-<div *ngIf="recentcharts.length" class="container-fluid">
   <div class="row">
     <h5 class="text-muted col">Recent</h5>
     <div class="col">
@@ -62,7 +60,6 @@
       </div>
     </div>
   </div>
-  <br>
   <div class="row">
     <div class="col" *ngFor="let chart of recentcharts">
       <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</label>

@@ -12,10 +12,6 @@ body, html {
   margin-right: 10px;
 }
 
-.bg-inverse {
-  background: #3D3D3F !important;
-}
-
 /*Highchart exporting option with menuItem containing a dropDown of items to changes graph content*/
 .highcharts-menu {
   overflow: auto;
