@@ -9,8 +9,8 @@ import { generalConfig } from '../../loop/configs/GeneralConfig';
 
 export const environment = {
   production: true,
-  url: '/loop/',
-  // url: 'http://127.0.0.1:8000/loop/',
+  // url: '/loop/',
+  url: 'http://127.0.0.1:8000/loop/',
   chartsConfig: chartsConfig,
   tabsConfig: tabsConfig,
   cardsConfig: cardConfig,

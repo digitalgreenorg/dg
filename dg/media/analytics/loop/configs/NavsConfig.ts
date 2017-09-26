@@ -23,10 +23,11 @@ export const navsConfig = {
     },
     'Analytics': {
       // 'active': true,
-      'filters': true,
+      // 'filters': true,
       'subNavs': {
         'Aggregators': {
           'active': true,
+          'filters': true,
           'classes': {
             'container1': 'col-md-5',
             'container2': 'col-md-5',
@@ -58,6 +59,7 @@ export const navsConfig = {
           }
         },
         'Mandi': {
+          'filters': true,
           'classes': {
             'container1': 'col-md-5',
             'container2': 'col-md-5',
@@ -89,6 +91,7 @@ export const navsConfig = {
           }
         },
         'Crop': {
+          'filters': true,
           'classes': {
             'container1': 'col-md-5',
             'container2': 'col-md-5',
