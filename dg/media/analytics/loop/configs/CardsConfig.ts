@@ -13,7 +13,7 @@ export const cardConfig = {
       },
     },
     recent: {
-      text: 'active_cluster',
+      text: 'Clusters',
       borrowData: false,
       dateRange: 60, // In days
       filter: false,
@@ -37,7 +37,7 @@ export const cardConfig = {
       },
     },
     recent: {
-      text: 'distinct_farmer_count',
+      text: 'Farmers',
       borrowData: true,
       dateRange: 60, // In days
       filter: false,
@@ -61,7 +61,7 @@ export const cardConfig = {
       },
     },
     recent: {
-      text: 'quantity__sum',
+      text: 'Volume',
       borrowData: true,
       dateRange: 60, // In days
       filter: false,
@@ -85,7 +85,7 @@ export const cardConfig = {
       },
     },
     recent: {
-      text: 'amount__sum',
+      text: 'Amount',
       borrowData: true,
       dateRange: 60, // In days
       filter: false,
@@ -109,7 +109,7 @@ export const cardConfig = {
       },
     },
     recent: {
-      text: 'cpk',
+      text: 'Cpk',
       borrowData: true,
       dateRange: 60, // In days
       filter: false,
@@ -133,7 +133,7 @@ export const cardConfig = {
       },
     },
     recent: {
-      text: 'spk',
+      text: 'Spk',
       borrowData: true,
       dateRange: 60, // In days
       filter: false,

@@ -70,12 +70,12 @@ def recent_graphs_data(**kwargs):
 
     # algorithm to store column wise grouped data
     res = {}
-    res['cpk'] = generate_res_recent('cpk', 'recentcardGraphs', 'cpk' , {})
-    res['quantity__sum'] = generate_res_recent('quantity__sum', 'recentcardGraphs', 'quantity__sum' , {})
-    res['amount__sum'] = generate_res_recent('amount__sum','recentcardGraphs', 'amount__sum' , {})
-    res['distinct_farmer_count'] = generate_res_recent('distinct_farmer_count', 'recentcardGraphs', 'distinct_farmer_count' , {})
-    res['spk'] = generate_res_recent('spk', 'recentcardGraphs', 'spk' , {})
-    res['active_cluster'] = generate_res_recent( 'active_cluster','recentcardGraphs', 'active_cluster' , {})
+    res['cpk'] = generate_res_recent('cpk', 'recentcardGraphs', 'Cpk' , {})
+    res['quantity__sum'] = generate_res_recent('quantity__sum', 'recentcardGraphs', 'Volume' , {})
+    res['amount__sum'] = generate_res_recent('amount__sum','recentcardGraphs', 'Amount' , {})
+    res['distinct_farmer_count'] = generate_res_recent('distinct_farmer_count', 'recentcardGraphs', 'Farmers' , {})
+    res['spk'] = generate_res_recent('spk', 'recentcardGraphs', 'Spk' , {})
+    res['active_cluster'] = generate_res_recent( 'active_cluster','recentcardGraphs', 'Clusters' , {})
     for key, aggregated_value in aggregated_result.iteritems():
         for data in reversed(aggregated_value):
             for k, v in data.iteritems():
@@ -193,7 +193,7 @@ def get_card_graph_data(request):
 
     if filter_args['cardName'] in ['No_of_clusters_overall']:
         data_to_send = overall_graph_data(**filter_args)
-    elif filter_args['cardName'] in ['active_cluster']:
+    elif filter_args['cardName'] in ['Clusters']:
         data_to_send = recent_graphs_data(**filter_args)
 
     data = json.dumps({'data' : data_to_send}, cls=DjangoJSONEncoder)
