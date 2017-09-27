@@ -4,7 +4,7 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Rx';
-import { config } from '../../config'
+import { config } from '../../config';
 
 @Injectable()
 export class CardsService {
@@ -13,7 +13,6 @@ export class CardsService {
   private cardUrl = config.url + "getCardGraphData/";
 
   getApiData(args): Observable<any> {
-    console.log("called");
     let params: URLSearchParams = new URLSearchParams();
     for (let key in args.params) {
       params.set(key.toString(), args.params[key]);

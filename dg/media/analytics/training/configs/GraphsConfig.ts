@@ -17,7 +17,12 @@ export const chartsConfig = {
         "color": "#656566",
       }
     },
-    xAxis: { type: 'category' },
+    xAxis: {
+      type: 'category',
+      labels: {
+        rotation: 0
+      }
+    },
     yAxis: {
       tickInterval: 10,
       title: { text: 'Number of Trainings' }
@@ -55,7 +60,12 @@ export const chartsConfig = {
         "color": "#656566",
       }
     },
-    xAxis: { type: 'category' },
+    xAxis: {
+      type: 'category',
+      labels: {
+        rotation: 0
+      }
+    },
     yAxis: { title: { text: 'Number of Mediators' } },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -90,7 +100,12 @@ export const chartsConfig = {
         "color": "#656566",
       }
     },
-    xAxis: { type: 'category' },
+    xAxis: {
+      type: 'category',
+      labels: {
+        rotation: 0
+      }
+    },
     yAxis: {
       min: 0,
       max: 100,
@@ -130,7 +145,12 @@ export const chartsConfig = {
         "color": "#656566",
       }
     },
-    xAxis: { type: 'category' },
+    xAxis: {
+      type: 'category',
+      labels: {
+        rotation: 0
+      }
+    },
     yAxis: { title: { text: 'Number of Trainings' } },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',

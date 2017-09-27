@@ -26,7 +26,7 @@ export const commonOptions = {
       }
     }
   },
-  title: { text: '' },
+  // title: { text: '' },
   scrollbar: {
     enabled: true
   },

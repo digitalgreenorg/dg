@@ -41,21 +41,19 @@ export class NavsComponent implements OnInit,
     private _globalfiltersharedService: GlobalFilterSharedService, @Inject(DOCUMENT) private document: any) {
     this._sharedService.argsList$.subscribe(filters => {
       Object.assign(filters.params, global_filter);
-      // if (filters) {
-      // } else {
-      //   filters = {};
-      //   filters['params'] = global_filter;
-      // }
       this.filters = filters;
       Object.keys(this.containers).forEach(container => {
         this.containers[container].applyFilter = false;
       });
+      if (this.containers.hasOwnProperty('Home')) {
+        //To check whether to apply filter on graph on home page or not.
+        this.containers['Home'].applyFilter = !this.containers['Home'].filters;
+      }
       this.getGraphsData(filters);
       this.containers[this.selectedNav].applyFilter = true;
     });
     this._globalfiltersharedService.argsList$.subscribe(filters => {
       this.filters.params = global_filter;
-
       Object.keys(this.containers).forEach(container => {
         this.containers[container].applyFilter = false;
       });
@@ -281,17 +279,9 @@ export class NavsComponent implements OnInit,
     this.selectedNav = selectedNav;
     this.navClicked = true;
 
-    console.log(this.containers[selectedNav]);
     this.showFilters = this.containers[selectedNav].hasOwnProperty('filters') ? this.containers[selectedNav].filters : false;
     this.showOverall = this.containers[selectedNav].hasOwnProperty('import') ? this.containers[selectedNav].import.overall : false;
 
-    // if (selectedNav == 'Home') {
-    //   this.showOverall = true;
-    //   this.showFilters = false;
-    // } else {
-    //   this.showOverall = false;
-    //   this.showFilters = true;
-    // }
     this.resetDict(this.containers, 'displayContent', false);
     this.containerCharts = [];
     if (this.containers[selectedNav] != undefined) {

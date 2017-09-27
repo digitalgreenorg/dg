@@ -7,11 +7,9 @@ export const navsConfig = {
         'overall': true,
         'recent': true,
       },
-      // 'class': 'col-11',
       'classes': {
         'container1': 'col-md-11',
       },
-
       'addTab': true,
       'containers': {
         'container1': {
