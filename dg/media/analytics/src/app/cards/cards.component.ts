@@ -35,6 +35,10 @@ export class CardsComponent implements OnInit, AfterViewInit {
       let options = this.createParams();
       this.getCardsData(options);
     });
+    this._sharedService.argsList$.subscribe(filters => {
+      // console.log(filters);
+      this.getCardsData(filters);
+    });
   }
 
   ngOnInit(): void {
