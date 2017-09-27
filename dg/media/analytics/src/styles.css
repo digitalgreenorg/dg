@@ -39,9 +39,8 @@ body, html, div, nav {
 
 .customClass.active > a:hover {
   background-color: #656566 !important;
-
 }
 
-.nav-justified .nav-item {
+/* .nav-justified .nav-item {
 flex:0 1 12%;
-}
+} */
