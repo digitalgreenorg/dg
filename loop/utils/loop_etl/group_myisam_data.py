@@ -3,6 +3,7 @@ import MySQLdb
 import datetime, time
 import pandas as pd
 import numpy as np
+from operator import itemgetter
 from loop.utils.loop_etl.aggregation_methods import *
 from loop.models import CombinedTransaction
 from loop.utils.utility import get_init_sql_ds, join_sql_ds
@@ -568,6 +569,7 @@ def createInnerdataDict(dictData, keyword):
         temp_dict_inner['id'] = key + keyword
         for k, v in value.iteritems():
             temp_dict_inner['data'].append([k,round(v,2)])
+        temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
         inner_data['innerData'].append(temp_dict_inner)
 
     return inner_data
@@ -609,6 +611,7 @@ def agg_spk_cpk(**kwargs):
             temp_dict_inner['id'] = str(key) + ' cpk'
             for k, v in value.iteritems():
                 temp_dict_inner['data'].append([k,round(v,3)])
+            temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
             inner_data['innerData'].append(temp_dict_inner)
 
         for key, value in agg_mandi_spk_dict.iteritems():
@@ -617,6 +620,7 @@ def agg_spk_cpk(**kwargs):
             temp_dict_inner['id'] = str(key) + ' spk'
             for k, v in value.iteritems():
                 temp_dict_inner['data'].append([k,round(v,3)])
+            temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
             inner_data['innerData'].append(temp_dict_inner)
 
         final_data_list['aggrspkcpk'].update(inner_data)
@@ -661,6 +665,7 @@ def agg_cost(**kwargs):
             temp_dict_inner['id'] = str(key) + ' cost'
             for k, v in value.iteritems():
                 temp_dict_inner['data'].append([k,round(v,3)])
+            temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
             inner_data['innerData'].append(temp_dict_inner)
 
         for key, value in agg_mandi_spk_dict.iteritems():
@@ -669,6 +674,7 @@ def agg_cost(**kwargs):
             temp_dict_inner['id'] = str(key) + ' recovered'
             for k, v in value.iteritems():
                 temp_dict_inner['data'].append([k,round(v,3)])
+            temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
             inner_data['innerData'].append(temp_dict_inner)
 
         final_data_list['aggrrecoveredtotal'].update(inner_data)
