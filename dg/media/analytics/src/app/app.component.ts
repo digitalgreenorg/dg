@@ -1,6 +1,6 @@
 import { Component, OnInit, Pipe, Inject } from '@angular/core';
 import { DOCUMENT,Title } from '@angular/platform-browser';
-import { environment } from '../environments/environment.training';
+import { config } from '../config';
 
 export var global_filter: any;
 
@@ -12,7 +12,7 @@ export var global_filter: any;
 })
 
 export class AppComponent implements OnInit {
-  generalConfig = environment.generalConfig;
+  generalConfig = config.generalConfig;
   constructor( @Inject(DOCUMENT) private document: any, private titleService: Title) {
     global_filter = this.parseUrl(this.document.location.href);
   }

@@ -4,13 +4,13 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Rx';
-import { environment } from '../../environments/environment.training';
+import { config } from '../../config'
 
 @Injectable()
 export class CardsService {
 
   constructor(private http: Http) { }
-  private cardUrl = environment.url + "getCardGraphData/";
+  private cardUrl = config.url + "getCardGraphData/";
 
   getApiData(args): Observable<any> {
     console.log("called");

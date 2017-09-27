@@ -7,7 +7,7 @@ import { GetFilterDataService } from './get-filter-data.service';
 import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
-import { environment } from '../../environments/environment.training';
+import { config } from '../../config';
 
 @Component({
   selector: 'app-filters',
@@ -18,8 +18,8 @@ import { environment } from '../../environments/environment.training';
   styleUrls: ['./filters.component.css']
 })
 export class FiltersComponent implements OnInit {
-  private filterConfig = environment.filtersConfig;
-  private generalConfig = environment.generalConfig;
+  private filterConfig = config.filtersConfig;
+  private generalConfig = config.generalConfig;
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
   @ViewChild('sideNavContent') sideNavContent: ElementRef;

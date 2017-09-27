@@ -4,12 +4,12 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Rx';
-import { environment } from '../../environments/environment.training';
+import { config } from '../../config';
 
 @Injectable()
 export class GraphsService {
 
-  private graphURL = environment.url + "graph_data";
+  private graphURL = config.url + "graph_data";
 
   constructor(private http: Http) { }
 

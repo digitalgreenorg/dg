@@ -4,12 +4,12 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Rx';
-import { environment } from '../../environments/environment.training';
+import { config } from '../../config';
 
 @Injectable()
 export class GlobalFilterService {
 
-  private graphURL = environment.url + "get_global_filter_data/";
+  private graphURL = config.url + "get_global_filter_data/";
 
   constructor(private http: Http) { }
 

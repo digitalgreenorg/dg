@@ -5,7 +5,7 @@ import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 import { CardsGraph } from './cardsgraph.model'
 import { Cards } from './cards.model';
-import { environment } from '../../environments/environment.training';
+import { config } from '../../config'
 
 @Component({
   selector: 'app-cards',
@@ -24,10 +24,11 @@ export class CardsComponent implements OnInit, AfterViewInit {
   private charts = [];
   private recentChartsData = {};
   private chooseDateRange: string = '';
-  private cardGraphConfig = environment.cardGraphConfig;
-  private cardsConfigs = environment.cardsConfig;
-  generalConfigs = environment.generalConfig;
-  
+  private cardGraphConfig = config.cardGraphConfig;
+  private cardsConfigs = config.cardsConfig;
+  generalConfigs = config.generalConfig;
+
+
   constructor(private cardsService: CardsService, private _sharedService: SharedService
     , private _globalfiltersharedService: GlobalFilterSharedService) {
     this._globalfiltersharedService.argsList$.subscribe(data => {

@@ -6,7 +6,7 @@ import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 import { DropDownItem } from './dropdown.model';
-import { environment } from '../../environments/environment.training';
+import { config } from '../../config';
 
 @Component({
   selector: 'app-navs',
@@ -24,10 +24,10 @@ export class NavsComponent implements OnInit,
   public selectedNav: string = '';
 
   //read config files from environment created for each app
-  private navsConfig = environment.navsConfig;
-  private chartsConfig = environment.chartsConfig;
-  private AddCommonOptions = environment.AddCommonOptions;
-  generalConfig = environment.generalConfig;
+  private navsConfig = config.navsConfig;
+  private chartsConfig = config.chartsConfig;
+  private AddCommonOptions = config.AddCommonOptions;
+  generalConfig = config.generalConfig;
   //keep track of nav switches and respective subnavs
   toggleNav = {};
   //dict with key as end nav and its corresponding containers
