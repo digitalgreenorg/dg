@@ -60,10 +60,6 @@ input {
   height: 300px;
 }
 
-.btn {
-  background-color: #D13D14;
-}
-
 .red-text {
   -webkit-text-fill-color: red;
   margin-bottom: 0px;

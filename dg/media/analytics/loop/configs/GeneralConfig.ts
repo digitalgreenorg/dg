@@ -11,4 +11,5 @@ export const generalConfig = {
   body_width: '100%',
   header_height: '50px',
   applyFilterOnRecent: false,
+  applyFilterButton:'#D13D14',
 }

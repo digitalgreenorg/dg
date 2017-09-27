@@ -19,7 +19,10 @@ import { config } from '../../config';
 })
 export class FiltersComponent implements OnInit {
   private filterConfig = config.filtersConfig;
-  private generalConfig = config.generalConfig;
+  private filtersToApply = {};
+  private date = new Date();
+  
+  generalConfig = config.generalConfig;
 
   @ViewChild('mySidenav') mySidenav: ElementRef;
   @ViewChild('sideNavContent') sideNavContent: ElementRef;
@@ -28,8 +31,7 @@ export class FiltersComponent implements OnInit {
   showDateFilter: boolean = false;
   invalidDate: boolean = false;
   invalidDateMessage: string;
-  private filtersToApply = {};
-  private date = new Date();
+
   public endModel = {
     date: {
       day: this.date.getDate(),

@@ -74,7 +74,8 @@
       <div class="row white-text">
         <div class="col-sm-12">
           <div class="text-center">
-            <button class="btn btn-sx" (click)="applyFilters()">Apply Filters</button>
+            <button class="btn btn-sx" (click)="applyFilters()"
+            [ngStyle]="{'background-color' : generalConfig.applyFilterButton}" >Apply Filters</button>
           </div>
         </div>
       </div>
