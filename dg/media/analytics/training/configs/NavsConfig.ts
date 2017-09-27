@@ -13,13 +13,13 @@ export const navsConfig = {
       'addTab': true,
       'containers': {
         'container1': {
-          'Trainings Conducted': {
+          'Trainings': {
             'addDivs': ['state_trainer_#trainings','state_trainer_#mediators']
           },
-          'Question Wise Data': {
+          'Question': {
             'addDivs': ['question_wise_data']
           },
-          'Year Wise Data': {
+          'Time Period': {
             'addDivs': ['year_month_wise_data']
           }
         }

@@ -8,6 +8,6 @@ export const generalConfig = {
   overall_bg_color : '#7C287D',
   recent_bg_color  : '#656566',
   header_bg_color : '#902b8c',
-  body_width : '90%',
+  body_width : '95%',
   header_height : '45px',
 }

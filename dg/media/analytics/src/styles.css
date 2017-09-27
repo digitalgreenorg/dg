@@ -3,8 +3,8 @@
 
 /* @import url('https://fonts.google.com/selection?selection.family=Montserrat'); */
 
-body, html {
-  font-family: 'Montserrat', sans-serif;
+body, html, div, nav {
+  font-family: 'Montserrat', sans-serif !important;
 }
 
 .dg_logo {
@@ -42,6 +42,6 @@ body, html {
 
 }
 
-/* .nav-justified .nav-item {
-flex:0 1 50%;
-} */
+.nav-justified .nav-item {
+flex:0 1 12%;
+}
