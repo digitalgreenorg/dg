@@ -34,6 +34,7 @@
 <div *ngIf="overallcharts.length" class="container-fluid" 
 [ngStyle]="{'width' : generalConfigs.body_width}" >
   <h5 class="text-muted">Overall</h5>
+  <hr/>
   <div class="row">
     <div class="col" *ngFor="let chart of overallcharts">
       <label data-toggle="tooltip" data-placement="top" title="{{chart.helpTip}}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</label>
@@ -44,7 +45,6 @@
 
 <div *ngIf="recentcharts.length" class="container-fluid"
 [ngStyle]="{'width' : generalConfigs.body_width}" >
-<br>
   <div class="row">
     <h5 class="text-muted col">Recent</h5>
     <div class="col">
@@ -60,6 +60,7 @@
       </div>
     </div>
   </div>
+  <hr/>
   <div class="row">
     <div class="col" *ngFor="let chart of recentcharts">
       <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</label>
