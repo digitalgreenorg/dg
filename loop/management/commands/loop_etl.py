@@ -86,35 +86,35 @@ class LoopStatistics():
 
             # Getting new farmers who did any transaction on a particular date
             df_farmer_count = pd.read_sql("""
-            SELECT T.date, T.country_id, COUNT(T.farmer_id) AS distinct_farmer_count, T.user_created_id
+            SELECT
+                T.date,
+                T.country_id,
+                T.state_id,
+                COUNT(T.farmer_id) AS distinct_farmer_count
             FROM
-                (SELECT lct.farmer_id, ls.country_id, MIN(lct.date) AS date, lct.user_created_id
+                (SELECT
+                    ls.country_id,
+                        ls.id AS state_id,
+                        lct.farmer_id,
+                        MIN(lct.date) AS date
                 FROM
                     loop_combinedtransaction lct
-                    JOIN loop_loopuser llu ON lct.user_created_id = llu.user_id
-                    JOIN loop_farmer lf ON lf.id = lct.farmer_id
-                    JOIN loop_village lv ON lv.id = lf.village_id
-                    JOIN loop_block lb ON lb.id = lv.block_id
-                    JOIN loop_district ld ON ld.id = lb.district_id
-                    JOIN loop_state ls ON ls.id = ld.state_id
+                JOIN loop_loopuser llu ON lct.user_created_id = llu.user_id
+                JOIN loop_farmer lf ON lf.id = lct.farmer_id
+                JOIN loop_village lv ON lv.id = lf.village_id
+                JOIN loop_block lb ON lb.id = lv.block_id
+                JOIN loop_district ld ON ld.id = lb.district_id
+                JOIN loop_state ls ON ls.id = ld.state_id
                 WHERE
                     llu.role = 2
-                GROUP BY lct.farmer_id , lct.user_created_id) AS T
-            JOIN
-                (SELECT
-                    MIN(date) AS min_date, farmer_id AS f_id
-                FROM
-                    loop_combinedtransaction
-                GROUP BY farmer_id
-                ) AS B ON B.f_id = T.farmer_id
-                    AND B.min_date = T.date
-            GROUP BY T.date , T.country_id , T.user_created_id """,con=self.mysql_cn)
+                GROUP BY lct.farmer_id) as T
+            GROUP BY T.date , T.country_id , T.state_id; """,con=self.mysql_cn)
 
             # Cummulating sum of farmers that were unique and did any transaction till a particular date
             # df_farmer_count['cummulative_distinct_farmer'] = df_farmer_count.groupby(by=['country_id'])['distinct_farmer_count'].cumsum()
             # df_farmer_count.drop(['distinct_farmer_count'],axis=1,inplace=True)
 
-            result = pd.merge(result,df_farmer_count,left_on=['date', 'user_created__id', 'country_id'],right_on=['date', 'user_created_id', 'country_id'],how='left')
+            result = pd.merge(result,df_farmer_count,left_on=['date', 'country_id','state_id'],right_on=['date', 'country_id','state_id'],how='left')
             result.fillna(value=0,axis=1,inplace=True)
 
             # result['cummulative_distinct_farmer'] = result.groupby(by=['country_id'])['cummulative_distinct_farmer'].apply(lambda group: group.ffill())

@@ -335,33 +335,43 @@ def get_cummulative_vol_farmer(**kwargs):
     aggregate_cumm_vol_farmer = {
         'quantity':{
             'quantity__sum': 'sum'
-        },
+        }
+        ,
         'new_distinct_farmer':{
             'cum_vol_farmer': 'mean'
         }
     }
     agg_vol_farmer = {
         'quantity': 'sum',
-        'new_distinct_farmer': 'sum'
+        # 'new_distinct_farmer': 'mean'
     }
     result_data = {}
     df_result = query_myisam(**kwargs)
     try:
-        df_cum_vol_farmer = df_result.groupby(['date','aggregator_id']).agg(aggregate_cumm_vol_farmer).reset_index()
+        df_cum_vol_farmer = df_result.groupby(['date','country_id','state_id']).agg(aggregate_cumm_vol_farmer).reset_index()
         df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
-        df_cum_vol_farmer = df_cum_vol_farmer.groupby('date').agg(agg_vol_farmer).reset_index()
 
-        df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
         df_cum_vol_farmer['cum_distinct_farmer'] = df_cum_vol_farmer['new_distinct_farmer'].cumsum()
+        df_cum_vol = df_cum_vol_farmer.groupby('date').agg(agg_vol_farmer).reset_index()
 
-        df_cum_vol_farmer.drop('quantity',axis=1,inplace=True)
+        df_cum_vol['cum_vol'] = df_cum_vol['quantity'].cumsum().round()
+        # df_cum_vol_farmer['cum_distinct_farmer'] = df_cum_vol_farmer['new_distinct_farmer'].cumsum()
+
+        df_cum_vol.drop('quantity',axis=1,inplace=True)
         df_cum_vol_farmer['date'] = df_cum_vol_farmer['date'].astype('datetime64[ns]')
         df_cum_vol_farmer['date_time'] = df_cum_vol_farmer['date'].astype('int64')//10**6
 
+        df_cum_vol['date'] = df_cum_vol['date'].astype('datetime64[ns]')
+        df_cum_vol['date_time'] = df_cum_vol['date'].astype('int64')//10**6
+
         data_farmers = []
         data_vol = []
-        for index, row in df_cum_vol_farmer.iterrows():
+
+        for index, row in df_cum_vol.iterrows():
             data_vol.append([row['date_time'],row['cum_vol']])
+
+        for index, row in df_cum_vol_farmer.iterrows():
+            # data_vol.append([row['date_time'],row['cum_vol']])
             data_farmers.append([row['date_time'],row['cum_distinct_farmer']])
 
         result_data['chartName'] = "cummulativeCount"
