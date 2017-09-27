@@ -1,4 +1,4 @@
-import { environment } from '././environments/environment.training';
+import { environment } from '././environments/environment.loop';
 
 export const config = {
     cardGraphConfig : environment.cardGraphConfig,
