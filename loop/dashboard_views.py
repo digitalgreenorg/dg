@@ -256,9 +256,13 @@ def send_filter_data(request):
     # language = request.GET.get('language')
     filter_args = extract_filters_request(request)
     country_id = filter_args['country_id']
-    #TODO: apply country filter and language filter
+    state_id = filter_args['state_id']
     response_list = []
-    aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
+
+    aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
+    if state_id != None:
+        aggregator_data = aggregator_data.filter(village__block__district__state=state_id)
+    aggregator_data = aggregator_data.annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
     aggregator_list = aggregator_data.annotate(id=F('user_id')).values('id', 'value')
 
     aggregator_dict = {'name':'Aggregator', 'data':list(aggregator_list)}
@@ -266,11 +270,17 @@ def send_filter_data(request):
     crop_list = Crop.objects.annotate(value=F('crop_name')).values('id', 'value').order_by('value')
     crop_dict = {'name':'Crops', 'data':list(crop_list)}
 
-    mandi_list = Mandi.objects.filter(district__state__country=country_id).annotate(value=F('mandi_name_en')).values('id', 'value').order_by('value')
+    mandi_list = Mandi.objects.filter(district__state__country=country_id)
+    if state_id != None:
+        mandi_list = mandi_list.filter(district__state=state_id)
+    mandi_list = mandi_list.annotate(value=F('mandi_name_en')).values('id', 'value').order_by('value')
+
     mandi_dict = {'name':'Mandi', 'data':list(mandi_list)}
 
-    gaddidar_list = Gaddidar.objects.filter(mandi__district__state__country=country_id).annotate(value=F('gaddidar_name_en')).values(
-        'id', 'value').order_by('value')
+    gaddidar_list = Gaddidar.objects.filter(mandi__district__state__country=country_id)
+    if state_id != None:
+        gaddidar_list = gaddidar_list.filter(mandi__district__state=state_id)
+    gaddidar_list = gaddidar_list.annotate(value=F('gaddidar_name_en')).values('id', 'value').order_by('value')
     gaddidar_dict = {'name':'Gaddidar','data':list(gaddidar_list)}
 
     response_list.extend([aggregator_dict, crop_dict, mandi_dict, gaddidar_dict])
