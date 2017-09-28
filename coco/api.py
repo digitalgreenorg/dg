@@ -648,9 +648,12 @@ class ScreeningResource(BaseResource):
                 try:
                     int_pma_db_list = [int(item) for item in ast.literal_eval(pma.get('category'))]
                 except:
-                    int_pma_db_list = [int(item.get('id')) for item in ast.literal_eval(pma.get('category'))]
+                    try:
+                        int_pma_db_list = [int(item.get('id')) for item in ast.literal_eval(pma.get('category'))]
+                    except:
+                        pass
                 for iterable in int_pma_db_list:
-                    data_list.append({'id': iterable, 
+                    data_list.append({'id': iterable,
                                       'category': DirectBeneficiaries.objects.get(id=iterable).direct_beneficiaries_category,
                                       'person_id': pma.get('person_id'),
                                       'person_name': pma.get('person__person_name')
