@@ -67,7 +67,7 @@ export const cardGraphConfig = {
     series: [{
       name: 'present',
       dataLabels: {
-        format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
+        format: '<div style="text-align:center"><span style="font-size:1.3em;color: #3D3D3F' +
         '">' + '{y:,.0f}' + '</span><br/></div>'
       },
       tooltip: {
@@ -140,7 +140,7 @@ export const cardGraphConfig = {
     series: [{
       name: 'present',
       dataLabels: {
-        format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
+        format: '<div style="text-align:center"><span style="font-size:1.3em;color: #3D3D3F' +
         '">' + '{y:,.0f}' + '</span><br/></div>'
       },
       tooltip: {
@@ -212,7 +212,7 @@ export const cardGraphConfig = {
     series: [{
       name: 'present',
       dataLabels: {
-        format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
+        format: '<div style="text-align:center"><span style="font-size:1.3em;color: #3D3D3F' +
         '">' + '{y:,.0f}' + '</span><br/></div>'
       },
       tooltip: {
@@ -284,7 +284,7 @@ export const cardGraphConfig = {
     series: [{
       name: 'present',
       dataLabels: {
-        format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
+        format: '<div style="text-align:center"><span style="font-size:1.3em;color: #3D3D3F' +
         '">' + '{y:,.0f}' + '</span><br/></div>'
       },
       tooltip: {
@@ -356,7 +356,7 @@ export const cardGraphConfig = {
     series: [{
       name: 'present',
       dataLabels: {
-        format: '<div style="text-align:center"><span style="font-size:18px;color: black' +
+        format: '<div style="text-align:center"><span style="font-size:1.3em;color: #3D3D3F' +
         '">{y}</span><br/></div>'
       },
       tooltip: {
@@ -428,7 +428,7 @@ export const cardGraphConfig = {
     series: [{
       name: 'present',
       dataLabels: {
-        format: '<div style="text-align:center"><span style="font-size:20px;color: black' +
+        format: '<div style="text-align:center"><span style="font-size:1.3em;color: #3D3D3F' +
         '">{y}</span><br/></div>'
       },
       tooltip: {
