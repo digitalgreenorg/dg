@@ -1,10 +1,10 @@
 <nav class="navbar navbar-toggleable-md navbar-inverse row"
-[ngStyle]="{'background-color' : generalConfig.header_bg_color, height: generalConfig.header_height}">
+[ngStyle]="{'background-color' : generalConfig.header_bg_color }">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="col-5 collapse navbar-collapse" [collapse]="isCollapsed">
-    <a href="http://www.digitalgreen.org" target="_blank"><img src="/media/Output/Images/dg_logo.png" alt="DigitalGreen" class="dg_logo"/></a>
+    <a href="http://www.digitalgreen.org" target="_blank"><img src="/media/Output/Images/dg_logo.png" alt="DG" class="dg_logo"/></a>
     <ul class="navbar-nav">
       <li class="nav-item" *ngFor="let nav of getDictKeys(toggleNav);">
         <a class="nav-link" data-toggle="collapse" [ngClass]="{'active':toggleNav[nav].status === true}" (click)="setNav(nav)" style="cursor: pointer; cursor: hand;">{{nav}}</a>
@@ -14,7 +14,7 @@
     <app-global-filter></app-global-filter>
   </div>
   </div>
-  <a class="navbar-brand col-2 text-center" href="{{ generalConfig.baseUrl }}"><img src="{{generalConfig.logoPath}}" alt="{{generalConfig.title}}" style="height:25px;"></a>
+  <a class="navbar-brand col-2 text-center" href="{{ generalConfig.baseUrl }}"><img src="{{generalConfig.logoPath}}" alt="{{generalConfig.title}}" style="height:22px;"></a>
   <div class="col-5" [hidden]="!showFilters">
     <app-filters></app-filters>
   </div>
