@@ -641,33 +641,39 @@ class ScreeningResource(BaseResource):
         data_list= []
         db_list = DirectBeneficiaries.objects.values_list('id', flat=True)
         int_db_list = [int(item) for item in db_list]
-        for pma in bundle.obj.personmeetingattendance_set.all():
-            if isinstance(pma.category, unicode):
+        queryset = bundle.obj.personmeetingattendance_set.values('id', 'person_id', 'person__person_name', 'category')
+        list_queryset = list(queryset)
+        for pma in filter(None, list_queryset):
+            if isinstance(pma.get('category'), unicode):
                 try:
-                    int_pma_db_list = [int(item) for item in ast.literal_eval(pma.category)]
+                    int_pma_db_list = [int(item) for item in ast.literal_eval(pma.get('category'))]
                 except:
-                    int_pma_db_list = [int(item.get('id')) for item in ast.literal_eval(pma.category)]
+                    int_pma_db_list = [int(item.get('id')) for item in ast.literal_eval(pma.get('category'))]
                 for iterable in int_pma_db_list:
                     data_list.append({'id': iterable, 
                                       'category': DirectBeneficiaries.objects.get(id=iterable).direct_beneficiaries_category,
-                                      'person_id': pma.person.id,
-                                      'person_name': pma.person.person_name
+                                      'person_id': pma.get('person_id'),
+                                      'person_name': pma.get('person__person_name')
                                      })
         return data_list
 
     def dehydrate_category(self, bundle):
-        return  [{'person_id':pma.person.id, 
-                  'person_name': pma.person.person_name,
-                  'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.person.id]
+        queryset = bundle.obj.personmeetingattendance_set.values('id', 'person_id', 'person__person_name', 'category')
+        list_queryset = list(queryset)
+        return  [{'person_id':pma.get('person_id'),
+                  'person_name': pma.get('person__person_name'),
+                  'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.get('person_id')]
                  }  
-                 for pma in bundle.obj.personmeetingattendance_set.all()]
+                 for pma in list_queryset]
 
     def dehydrate_farmers_attendance(self, bundle):
-        return [{'person_id':pma.person.id, 
-                 'person_name': pma.person.person_name,
-                 'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.person.id]
+        queryset = bundle.obj.personmeetingattendance_set.values('id', 'person_id', 'person__person_name', 'category')
+        list_queryset = list(queryset)
+        return [{'person_id':pma.get('person_id'),
+                 'person_name': pma.get('person__person_name'),
+                 'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.get('person_id')]
                  }  
-                 for pma in bundle.obj.personmeetingattendance_set.all()]
+                 for pma in list_queryset]
     
 class PersonResource(BaseResource):
     label = fields.CharField()
