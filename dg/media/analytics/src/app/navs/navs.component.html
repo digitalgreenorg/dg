@@ -1,4 +1,4 @@
-<nav class="navbar navbar-toggleable-md navbar-inverse row"
+<nav class="navbar navbar-toggleable-sm navbar-inverse row"
 [ngStyle]="{'background-color' : generalConfig.header_bg_color }">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
@@ -15,7 +15,7 @@
   </div>
   </div>
   <a class="navbar-brand col-2 text-center" href="{{ generalConfig.baseUrl }}"><img src="{{generalConfig.logoPath}}" alt="{{generalConfig.title}}" style="height:22px;"></a>
-  <div class="col-5" [hidden]="!showFilters">
+  <div class="col-sm-12 col-md-5" [hidden]="!showFilters">
     <app-filters></app-filters>
   </div>
 </nav>

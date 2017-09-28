@@ -18,7 +18,7 @@ export class NavsComponent implements OnInit,
   AfterViewChecked {
   private navClicked: boolean = false;
   //used for collapse button
-  public isCollapsed: boolean = false;
+  public isCollapsed: boolean = true;
   public showOverall: boolean = true;
   public showFilters: boolean = true;
   public selectedNav: string = '';
