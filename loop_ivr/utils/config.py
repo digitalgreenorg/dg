@@ -24,7 +24,8 @@ crop_and_code = 'फसल और उनके कोड:\n\
 परवल - 17\n\
 नेनुआ - 20\n\
 भिंडी - 22\n'
-call_failed_sms = 'अभी आपसे संपर्क नही हो रहा है, कृपया थोड़ी देर बाद दोबारा कोशिश करे !'
+call_failed_sms = 'नमस्ते। हमने आपको कॉल किया पर संपर्क नहीं हो पाया। किसी भी फसल का रेट जानने के लिए 011-39585707 पर दोबारा कॉल करें और फसल का कोड डालें।'
+remaining_crop_line = 'बाकी फसलों का कोड जानने के लिए कॉल करें:'
 
 MARKET_INFO_CALL_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/market_info_response/')
 PUSH_MESSAGE_SMS_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/push_message_sms_response/')

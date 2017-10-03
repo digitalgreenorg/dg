@@ -13,7 +13,7 @@ from dg.settings import EXOTEL_HELPLINE_NUMBER
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, SubscriptionLog
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call
-from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, helpline_hi
+from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, helpline_hi, remaining_crop_line
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 
@@ -42,7 +42,7 @@ def market_info_response(request):
             # if call found in our database, then fetch number of caller and send SMS
             if price_info_incoming_obj != '':
                 user_no = price_info_incoming_obj.from_number
-                message = [call_failed_sms,'\n\n', crop_and_code, '\n',('%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER)]
+                message = [call_failed_sms,'\n\n', crop_and_code, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
                 message = ''.join(message)
                 send_info(user_no, message)
     return HttpResponse(status=200)
