@@ -21,7 +21,7 @@ from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
     agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
-    agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code
+    agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -191,5 +191,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         price_info_incoming_obj.save()
     # If caller is calling first time then send crop code to them.
     if PriceInfoIncoming.objects.filter(from_number=from_number).count() == 1:
-        send_sms(AGGREGATOR_SMS_NO, from_number, crop_and_code)
+        if query_result:
+            send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller)
+        else:
+            send_sms(AGGREGATOR_SMS_NO, from_number, crop_and_code)
     PriceInfoLog.objects.bulk_create(price_info_log_list)
