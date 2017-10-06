@@ -44,4 +44,4 @@ class Command(BaseCommand):
         print "Adoption,jslps_adoptions"
         call_command('jslps_adoptions_new')
 
-        self.send_mail()
+        #self.send_mail()

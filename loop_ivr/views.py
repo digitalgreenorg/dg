@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from threading import Thread
+from datetime import datetime
 import time
 
 from dg.settings import EXOTEL_HELPLINE_NUMBER
@@ -24,8 +25,10 @@ def home(request):
 def market_info_incoming(request):
     if request.method == 'GET':
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-        time.sleep(2)
-        make_market_info_call(to_number, dg_number, incoming_time, call_id)
+        today_date = datetime.now().date()
+        if PriceInfoIncoming.objects.filter(incoming_time__gte=today_date, from_number=to_number).count() < 10:
+            time.sleep(2)
+            make_market_info_call(to_number, dg_number, incoming_time, call_id)
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
