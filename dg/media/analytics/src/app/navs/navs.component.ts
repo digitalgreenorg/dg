@@ -206,6 +206,8 @@ export class NavsComponent implements OnInit,
             chart.chart.drilldown.series.push(drilldownEntry);
           });
         }
+        // chart.nativeChart.setTitle({'text': dataList[key].message});
+        // chart.chart.title = {'text': dataList[key].message};
       }
       else {
         this.clearSeriesFromGraph(chart);
