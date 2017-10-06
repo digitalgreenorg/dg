@@ -222,6 +222,8 @@ def graph_data(request):
         result = get_cummulative_vol_farmer(**filter_args)
     elif chart_name == 'aggrvol':
         result = aggregator_volume(**filter_args)
+    elif chart_name == 'aggramt':
+        result = aggregator_amount(**filter_args)
     elif chart_name == 'aggrvisit':
         result = aggregator_visits(**filter_args)
     elif chart_name == 'aggrspkcpk':

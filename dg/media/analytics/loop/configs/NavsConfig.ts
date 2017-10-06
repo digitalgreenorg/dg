@@ -37,6 +37,9 @@ export const navsConfig = {
               'Volume': {
                 'addDivs': ['aggrvol']
               },
+              'Amount': {
+                'addDivs': ['aggramt']
+              },
               'Visits': {
                 'addDivs': ['aggrvisit']
               }
@@ -127,7 +130,7 @@ export const navsConfig = {
       'addTab': true,
       'containers': {
         'container1': {
-          'Volume Farmer': {
+          'Volume Amount': {
             'addDivs': ['volFarmerTS']
           }
         },

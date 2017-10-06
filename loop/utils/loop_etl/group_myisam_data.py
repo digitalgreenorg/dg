@@ -397,7 +397,17 @@ def aggregator_volume(**kwargs):
     final_data_list = {}
     try:
         aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['quantity'].sum().reset_index().sort('quantity', ascending=False)
-        final_data_list = volumedata(df_result, aggregator_groupby_data, 'aggrvol', 'aggregator_name', 'mandi_name', True)
+        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='aggrvol', outer_param='aggregator_name', inner_param='mandi_name', isdrillDown=True, parameter='quantity', series_name='Volume')
+    except:
+        final_data_list["error"] = "No data found"
+    return final_data_list
+
+def aggregator_amount(**kwargs):
+    df_result = query_myisam(**kwargs)
+    final_data_list = {}
+    try:
+        aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['amount'].sum().reset_index().sort('amount', ascending=False)
+        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='aggramt', outer_param='aggregator_name', inner_param='mandi_name', isdrillDown=True, parameter='amount', series_name='Amount')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
@@ -417,7 +427,7 @@ def mandi_volume(**kwargs):
     final_data_list = {}
     try:
         aggregator_groupby_data = df_result.groupby(['mandi_id', 'mandi_name'])['quantity'].sum().reset_index().sort('quantity', ascending=False)
-        final_data_list = volumedata(df_result, aggregator_groupby_data, 'mandivolume', 'mandi_name', 'aggregator_name', True)
+        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='mandivolume', outer_param='mandi_name', inner_param='aggregator_name', isdrillDown=True, parameter='quantity', series_name='Volume')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
@@ -437,7 +447,7 @@ def crop_volume(**kwargs):
     final_data_list = {}
     try:
         aggregator_groupby_data = df_result.groupby(['crop_id', 'crop_name'])['quantity'].sum().reset_index().sort('quantity', ascending=False)
-        final_data_list = volumedata(df_result, aggregator_groupby_data, 'cropvolume', 'crop_name', 'mandi_name', True)
+        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='cropvolume', outer_param='crop_name', inner_param='mandi_name', isdrillDown=True, parameter='quantity', series_name='Volume')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
@@ -549,21 +559,21 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
         final_data_list["error"] = "No Data Found"
     return final_data_list
 
-def volumedata(df_result, groupby_result, graphname, outer_param, inner_param, isdrillDown):
+def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_param=None, inner_param=None, isdrillDown=False, parameter=None, series_name=None):
     final_data_list = {}
     try:
         outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
-        temp_dict_outer = {'name':'Aggregator Volume','data':[]}
+        temp_dict_outer = {'name':series_name,'data':[]}
 
         for index, row in groupby_result.iterrows():
-            temp_dict_outer['data'].append({'name':row[1],'y':int(row[2]),'drilldown':row[1] + ' Volume'})
+            temp_dict_outer['data'].append({'name':row[1],'y':int(row[2]),'drilldown':row[1] + str(' ' + series_name)})
 
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
         if(isdrillDown):
-            df_result = df_result.groupby([outer_param, inner_param])['quantity'].sum().reset_index()
-            mandi_groupby_data = {name:dict(zip(g[inner_param],g['quantity'])) for name,g in df_result.groupby([outer_param])}
-            inner_data = createInnerdataDict(mandi_groupby_data, ' Volume')
+            df_result = df_result.groupby([outer_param, inner_param])[parameter].sum().reset_index()
+            mandi_groupby_data = {name:dict(zip(g[inner_param],g[parameter])) for name,g in df_result.groupby([outer_param])}
+            inner_data = createInnerdataDict(mandi_groupby_data, str(' '+ series_name))
 
             final_data_list[graphname].update(inner_data)
     except:

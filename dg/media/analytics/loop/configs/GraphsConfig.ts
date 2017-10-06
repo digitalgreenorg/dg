@@ -123,6 +123,30 @@ export const chartsConfig = {
       drillUpButton: drillUpButton
     },
   },
+  'aggramt': {
+    chart: {
+      type: 'column',
+      renderTo: 'aggramt',
+      tab: {
+        'id': 'tab1',
+        'class': 'col'
+      },
+      drillDown: true,
+      inverted: true,
+    },
+    xAxis: { type: 'category', max: 5 },
+    yAxis: {
+      tickInterval: 10000,
+      title: { text: 'Amount' }
+    },
+    tooltip: tooltip,
+    series: [],
+    drilldown: {
+      allowPointDrilldown: false,
+      series: [],
+      drillUpButton: drillUpButton
+    },
+  },
   'aggrvisit': {
     chart: {
       type: 'column',
