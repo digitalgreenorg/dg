@@ -1,4 +1,4 @@
-<nav class="navbar navbar-toggleable-sm navbar-inverse row"
+<nav class="navbar navbar-toggleable-sm navbar-inverse row clearfix"
 [ngStyle]="{'background-color' : generalConfig.header_bg_color }">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
@@ -39,7 +39,7 @@
 <div [hidden]="!showOverall" class="container-fluid"
 [ngStyle]="{'width' : generalConfig.body_width}">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-sm-12">
       <app-cards></app-cards>
     </div>
   </div>
@@ -51,7 +51,7 @@
 [ngStyle]="{'width' : generalConfig.body_width}">
   <div class="row justify-content-center" *ngIf="containers[container].displayContent && containers[container]['addTab']">
     <div *ngFor="let option of getDictKeys(containers[container]['containers']);let i=index;" class="justify-content-center" [class]="containers[container]['classes']['container'+(i+1)]">
-      <div class=" col container-box" *ngIf="ifDictionary(containers[container]['containers'][option])">
+      <div class="col container-box" *ngIf="ifDictionary(containers[container]['containers'][option])">
         <tabset [justified]="true">
           <tab customClass="customClass" *ngFor="let tab of getDictKeys(containers[container]['containers'][option]); let idx=index;" [heading]="tab">
             <br><br>

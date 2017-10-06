@@ -11,11 +11,11 @@
 
 
 <div class="btn-group" dropdown [autoClose]="true">
-  <button dropdownToggle type="button" class="btn dropdown-toggle">
+  <button dropdownToggle type="button" class="btn dropdown-toggle" style="cursor: pointer; cursor: hand;">
     {{country}} <span class="caret"></span>
   </button>
   <ul *dropdownMenu class="dropdown-menu" role="menu">
-    <li *ngFor="let item of Dropdownitems" role="menuitem" triggers="mouseover" dropdown placement="right" container="body">
+    <li *ngFor="let item of Dropdownitems" role="menuitem" triggers="mouseover" dropdown placement="right" container="body" style="cursor: pointer; cursor: hand;">
       <!-- class="btn-group" [autoClose]="true" -->
       <!-- <button class="btn" (click)="updateDropdown(item)"> {{item.value}}</button>
       <button type="button" dropdownToggle class="btn dropdown-toggle dropdown-toggle-split">
@@ -25,7 +25,7 @@
       <a dropdownToggle class="dropdown-item dropdown-toggle" (click)="updateDropdown(item)">{{item.value}}<span class="caret"></span></a>
       <ul *dropdownMenu class="dropdown-menu" role="menu">
         <li *ngFor="let subItem of item.dropDownData" role="menuitem">
-          <button class="dropdown-item" (click)="updateDropdown(subItem)">{{subItem.value}}</button></li>
+          <button class="dropdown-item" (click)="updateDropdown(subItem)" style="cursor: pointer; cursor: hand;">{{subItem.value}}</button></li>
       </ul>
     </li>
   </ul>

@@ -5,8 +5,8 @@
   <h5 class="text-muted">Overall</h5>
   <hr/>
   <div class="row">
-    <div class="col" *ngFor="let card of cardsOverall">
-      <div class="card" [ngStyle]="{'background-color' : generalConfigs.overall_bg_color}">
+    <div class="col-sm-6 col-md-3" *ngFor="let card of cardsOverall">
+      <div class="card" [ngStyle]="{'background-color' : generalConfigs.overall_bg_color, 'margin-bottom':'4px'}">
         <div #cardTitle id={{card.id}} class="card-block">
           <h6 class="card-title text-white">{{card.text}}</h6>
           <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
@@ -20,8 +20,8 @@
     <h5 class="text-muted">Recent</h5>
     <hr/>
     <div class="row">
-      <div class="col" *ngFor="let card of cardsRecent">
-        <div class="card" [ngStyle]="{'background-color' : generalConfigs.recent_bg_color}">
+      <div class="col-sm-6 col-md-3" *ngFor="let card of cardsRecent">
+        <div class="card" [ngStyle]="{'background-color' : generalConfigs.recent_bg_color, 'margin-bottom':'4px'}">
           <div #cardTitle id={{card.id}} class="card-block">
             <h6 class="card-title text-white">{{card.text}}</h6>
             <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<div *ngIf="overallcharts.length" class="container-fluid" 
+<div *ngIf="overallcharts.length" class="container-fluid"
 [ngStyle]="{'width' : generalConfigs.body_width}" >
   <h5 class="text-muted">Overall</h5>
   <hr/>
@@ -49,12 +49,12 @@
     <h5 class="text-muted col">Recent</h5>
     <div class="col">
       <div class="btn-group float-right" dropdown>
-        <button dropdownToggle type="button" class="btn dropdown-button dropdown-toggle">
+        <button dropdownToggle type="button" class="btn dropdown-button dropdown-toggle" style="cursor: pointer; cursor: hand;">
           {{chooseDateRange}} <span class="caret"></span>
         </button>
         <ul *dropdownMenu class="dropdown-menu" role="menu">
           <li *ngFor="let action of Dropdownitems" role="menuitem">
-            <button class="dropdown-item" (click)="updateDropdown(action)">{{action}} Days</button>
+            <button class="dropdown-item" (click)="updateDropdown(action)" style="cursor: pointer; cursor: hand;">{{action}} Days</button>
           </li>
         </ul>
       </div>
@@ -64,7 +64,7 @@
   <div class="row">
     <div class="col" *ngFor="let chart of recentcharts">
       <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{chart.title}}</label>
-      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{chart.lastDataPoint}}</b></p>
+      <p style="margin:0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{chart.lastDataPoint}}</b></p>
       <chart style="margin:0%;" [options]="chart.options" (load)="saveInstance($event.context, chart)"></chart>
     </div>
   </div>
