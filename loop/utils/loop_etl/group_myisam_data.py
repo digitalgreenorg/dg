@@ -397,7 +397,11 @@ def aggregator_volume(**kwargs):
     final_data_list = {}
     try:
         aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['quantity'].sum().reset_index().sort('quantity', ascending=False)
-        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='aggrvol', outer_param='aggregator_name', inner_param='mandi_name', isdrillDown=True, parameter='quantity', series_name='Volume')
+        outer_param = {
+            'name' : 'aggregator_name',
+            'id' : 'aggregator_id'
+        }
+        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='aggrvol', outer_param=outer_param, inner_param='mandi_name', isdrillDown=True, parameter='quantity', series_name='Volume')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
@@ -406,8 +410,12 @@ def aggregator_amount(**kwargs):
     df_result = query_myisam(**kwargs)
     final_data_list = {}
     try:
+        outer_param = {
+            'name' : 'aggregator_name',
+            'id' : 'aggregator_id'
+        }
         aggregator_groupby_data = df_result.groupby(['aggregator_id', 'aggregator_name'])['amount'].sum().reset_index().sort('amount', ascending=False)
-        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='aggramt', outer_param='aggregator_name', inner_param='mandi_name', isdrillDown=True, parameter='amount', series_name='Amount')
+        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='aggramt', outer_param=outer_param, inner_param='mandi_name', isdrillDown=True, parameter='amount', series_name='Amount')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
@@ -426,8 +434,12 @@ def mandi_volume(**kwargs):
     df_result = query_myisam(**kwargs)
     final_data_list = {}
     try:
+        outer_param = {
+            'name' : 'mandi_name',
+            'id' : 'mandi_id'
+        }
         aggregator_groupby_data = df_result.groupby(['mandi_id', 'mandi_name'])['quantity'].sum().reset_index().sort('quantity', ascending=False)
-        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='mandivolume', outer_param='mandi_name', inner_param='aggregator_name', isdrillDown=True, parameter='quantity', series_name='Volume')
+        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='mandivolume', outer_param=outer_param, inner_param='aggregator_name', isdrillDown=True, parameter='quantity', series_name='Volume')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
@@ -446,8 +458,12 @@ def crop_volume(**kwargs):
     df_result = sql_query(**kwargs)
     final_data_list = {}
     try:
+        outer_param = {
+            'name' : 'crop_name',
+            'id' : 'crop_id'
+        }
         aggregator_groupby_data = df_result.groupby(['crop_id', 'crop_name'])['quantity'].sum().reset_index().sort('quantity', ascending=False)
-        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='cropvolume', outer_param='crop_name', inner_param='mandi_name', isdrillDown=True, parameter='quantity', series_name='Volume')
+        final_data_list = convert_to_dict(df_result=df_result, groupby_result=aggregator_groupby_data, graphname='cropvolume', outer_param=outer_param, inner_param='mandi_name', isdrillDown=True, parameter='quantity', series_name='Volume')
     except:
         final_data_list["error"] = "No data found"
     return final_data_list
@@ -564,19 +580,19 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
 def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_param=None, inner_param=None, isdrillDown=False, parameter=None, series_name=None):
     final_data_list = {}
     try:
-        outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
+        outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param['name']].tolist()}}
         total_data = {'message' : series_name + ' : ' + str(groupby_result[parameter].sum())}
         temp_dict_outer = {'name':series_name,'data':[]}
 
         for index, row in groupby_result.iterrows():
-            temp_dict_outer['data'].append({'name':row[1],'y':int(row[2]),'drilldown':row[1] + str(' ' + series_name)})
+            temp_dict_outer['data'].append({'name':str(row[0]) + row[1],'y':int(row[2]),'drilldown':str(row[0]) + row[1] + str(' ' + series_name)})
 
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
         final_data_list[graphname].update(total_data)
         if(isdrillDown):
-            df_result = df_result.groupby([outer_param, inner_param])[parameter].sum().reset_index()
-            mandi_groupby_data = {name:dict(zip(g[inner_param],g[parameter])) for name,g in df_result.groupby([outer_param])}
+            df_result = df_result.groupby([outer_param['name'], outer_param['id'], inner_param])[parameter].sum().reset_index()
+            mandi_groupby_data = {name:dict(zip(g[inner_param],g[parameter])) for name,g in df_result.groupby([outer_param['name'], outer_param['id']])}
             inner_data = createInnerdataDict(mandi_groupby_data, str(' '+ series_name))
 
             final_data_list[graphname].update(inner_data)
@@ -586,11 +602,10 @@ def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_p
 
 def createInnerdataDict(dictData, keyword):
     inner_data = {'innerData': []}
-
     for key,value in dictData.iteritems():
         temp_dict_inner = {'data':[]}
-        temp_dict_inner['name'] = key
-        temp_dict_inner['id'] = key + keyword
+        temp_dict_inner['name'] = str(key[1]) + key[0]
+        temp_dict_inner['id'] = str(key[1]) + key[0] + keyword
         for k, v in value.iteritems():
             temp_dict_inner['data'].append([k,round(v,2)])
         temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
