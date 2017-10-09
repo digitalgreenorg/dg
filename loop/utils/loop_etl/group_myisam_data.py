@@ -541,7 +541,8 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
     final_data_list = {}
     try:
         outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
-        temp_dict_outer = {'name':'Visit','data':[]}
+        total_data = {'message' : 'Visits ' + ' : ' + str(groupby_result[count_param].sum())}
+        temp_dict_outer = {'name':'Aggregator Visit','data':[]}
 
         aggregator_visit_data = groupby_result.groupby(outer_param)[count_param].sum().reset_index().sort(sortParam, ascending=False)
         for index, row in aggregator_visit_data.iterrows():
@@ -549,6 +550,7 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
 
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
+        final_data_list[graphname].update(total_data)
         if(isdrillDown):
             mandi_groupby_data = {name:dict(zip(g[inner_param],g[count_param])) for name,g in groupby_result.groupby([outer_param])}
             inner_data = createInnerdataDict(mandi_groupby_data, ' Count')
@@ -563,6 +565,7 @@ def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_p
     final_data_list = {}
     try:
         outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
+        total_data = {'message' : series_name + ' : ' + str(groupby_result[parameter].sum())}
         temp_dict_outer = {'name':series_name,'data':[]}
 
         for index, row in groupby_result.iterrows():
@@ -570,6 +573,7 @@ def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_p
 
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
+        final_data_list[graphname].update(total_data)
         if(isdrillDown):
             df_result = df_result.groupby([outer_param, inner_param])[parameter].sum().reset_index()
             mandi_groupby_data = {name:dict(zip(g[inner_param],g[parameter])) for name,g in df_result.groupby([outer_param])}

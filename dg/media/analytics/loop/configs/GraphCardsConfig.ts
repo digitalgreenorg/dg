@@ -438,10 +438,10 @@ export const cardGraphConfig = {
   },
   'No_of_clusters_spark': {
     chart: {
-      margin: [40, 10, 40, 40],
-      height: 160,
       width: 160,
+      height: 100,
       type: 'area',
+      margin: [10, 10, 10, 40]
     },
     title: '#Clusters_spark',
     legend: { enabled: false },
