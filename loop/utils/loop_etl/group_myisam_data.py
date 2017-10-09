@@ -542,7 +542,7 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
     try:
         outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
         total_data = {'message' : 'Visits ' + ' : ' + str(groupby_result[count_param].sum())}
-        temp_dict_outer = {'name':'Aggregator Visit','data':[]}
+        temp_dict_outer = {'name':'Visit','data':[]}
 
         aggregator_visit_data = groupby_result.groupby(outer_param)[count_param].sum().reset_index().sort(sortParam, ascending=False)
         for index, row in aggregator_visit_data.iterrows():
