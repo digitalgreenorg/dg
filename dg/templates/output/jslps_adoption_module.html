@@ -72,23 +72,7 @@
                     </div>
                 </td>
 
-                {% comment %}
-                <td class="table1statdesc">
-                    <div class="statdesc">
-                        <div class="statdescname">Ratio of manifested expressed interests</div>
-                        <div id="statdescimg">
-                            <div id="statdescimg1" style="display: none;">
-                                Viewers express interests for adopting a practice during video screenings.
-                                <br\>
-                                    This statistic indicates the ratio of interests that materialized into actual adoption.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="statnumber">
-                        <div class="statdesnumber">{{ratio_exp_int|floatformat:2|default:"0"}} interests</div>
-                    </div>
-                </td>
-                {% endcomment %}
+                
                 <td class='table1statdesc'>
                     <div class='statdesc'>
                         <div class='statdescname'> Average adoption per video</div>
@@ -163,27 +147,7 @@
                     </div>
                 </td>
             </tr>
-            {% comment %}
-            <tr>
-                <td class='table1statdesc'>
-                </td>
-                <td class='table1statdesc'>
-                    <div class='statdesc'>
-                        <div class='statdescname'> Average adoption per video</div>
-                        <div id='statdescimg'>
-                            <div id='statdescimg1'>
-                                Average number of adoptions <br/> per video
-                            </div>
-                        </div>
-                    </div>
-                    <div class='statnumber'>
-                        <div class='statdesnumber'> {{ avg_ado_per_vid|floatformat:2|default:"0"}} adoptions/video</div>
-                    </div>
-                </td>
-                <td class='table1statdesc'>
-                </td>
-            </tr>
-            {% endcomment %}
+            
         </table>
     </div>
 </div>

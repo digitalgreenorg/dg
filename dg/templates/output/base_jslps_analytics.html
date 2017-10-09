@@ -263,14 +263,7 @@
 				   				<select class='select' name='country' id = 'countryId' onChange="dochange('state', this.value)">
 					    			<option value='-1'>Select Country</option>
 				   					<option value="1" selected="selected">India</option>
-					    			{% comment %}
 					    			
-										
-										
-										{% for key,item in search_box_params.geog_val.0.items %}
-											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
-										{%endfor%}
-										{% endcomment %}
 				    			</select>
 							</div>
 							<div class='searchbody1' id='state'>
@@ -279,17 +272,7 @@
 									
 					    			<option value='-1'>Select State</option>
 					    			<option value="2">Jharkhand</option>
-									{% comment %}
-									{%if search_box_params.geog_val.1 %}
-										
-										
-										
-										{% for key,item in search_box_params.geog_val.1.items %}
-											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
-										{%endfor%}
-										
-									{%endif%}
-									{% endcomment %}
+									
 				    			</select>
 							</div>
 							
@@ -327,74 +310,6 @@
 				</div>
 			</div>
 
-
-			{% comment %}
-			{% if search_box_params.projects %}
-			<div id='project' class='customdiv'>
-				<div id='projecttitle' class='customtitle'>
-					<table id='projecttitletable' class='customtitletable' cellspacing='0' cellpadding='0'>
-						<tr>
-							<td class='customtitlename'> Projects </td>
-							<td class='customtitleimg'>  </td>
-						</tr>
-					</table>
-				</div>
-				<div id='arrowimg'>  </div>
-				<div id='projectbody' class='custombody'>
-					<table id='projectbodytable' class='custombodytable'>
-					{% for project in search_box_params.projects %}
-						<tr>
-							<td id='projectbodytd2' class='customprojectbodytd'>
-								<div id='projectname' class='projectdiv' title='{{project.project_description}}'>{{project.project_name}}</div>
-								<div class='projectcheckbox'>
-									<input type="checkbox" name="projects" {% if not project.unmarked %}checked="checked"{% endif %} onChange="project_wise_partner()" value="{{project.id}}"/>
-								</div>
-							</td>
-						</tr>
-					{% endfor %}
-					</table>
-				</div>
-			</div>
-			{% endif %}
-
-
-			
-			{% if search_box_params.partners %}
-			<div id='partner' class='customdiv'>
-				<div id='partnertitle' class='customtitle'>
-					<table id='partnertitletable' class='customtitletable' cellspacing='0' cellpadding='0'>
-						<tr>
-							<td class='customtitlename'> Partners </td>
-							<td class='customtitleimg'>  </td>
-						</tr>
-					</table>
-				</div>
-				<div id='arrowimg'>  </div>
-				<div id='partnerbody' class='custombody'>
-					<table id='partnerbodytable' class='custombodytable'>
-					   <tr>
-                            <td id='partnerbodytd2' class='custompartnerbodytd'>
-                                <div id='selectalltag' class='partnerdiv' style="font-style:italic;">Select All</div>
-                                <div class='partnercheckbox'>
-                                    <input type="checkbox" id="selectall" value="-1" {% if search_box_params.checked != 0 %} checked {% endif %}onclick="select_deselect(this)"/>
-                                </div>
-                            </td>
-                        </tr>
-					{% for partner in search_box_params.partners %}
-						<tr>
-							<td id='partnerbodytd2' class='custompartnerbodytd'>
-								<div id='partnername' class='partnerdiv' title='{{partner.FULL_PARTNER_NAME}}' {% if partner.highlight == 1 and not partner.unmarked %} style="font-weight:bolder; font-size:100%; color:#3D3D3F; background-color:rgba(38,167,223,0.5);" {% elif partner.highlight == 1 %} style="font-weight:bolder; font-size: 100%; color:#3D3D3F;" {% endif %}>{{partner.PARTNER_NAME}}</div>
-								<div class='partnercheckbox'>
-									<input type="checkbox" name="partners" value="{{partner.partner_id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
-								</div>
-							</td>
-						</tr>
-					{% endfor %}
-					</table>
-				</div>
-			</div>
-			{% endif %}
-			{% endcomment %}
 		</div>
 
 	</div>
