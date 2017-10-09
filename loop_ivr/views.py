@@ -38,16 +38,21 @@ def market_info_response(request):
     if request.method == 'POST':
         status = str(request.POST.getlist('Status')[0])
         outgoing_call_id = str(request.POST.getlist('CallSid')[0])
+        price_info_incoming_obj = PriceInfoIncoming.objects.filter(call_id=outgoing_call_id).order_by('-id')
+        price_info_incoming_obj = price_info_incoming_obj[0] if len(price_info_incoming_obj) > 0 else ''
+        # If call failed then send acknowledgement to user
         if status != 'completed':
-            # If call failed then send acknowledgement to user 
-            price_info_incoming_obj = PriceInfoIncoming.objects.filter(call_id=outgoing_call_id).order_by('-id')
-            price_info_incoming_obj = price_info_incoming_obj[0] if len(price_info_incoming_obj) > 0 else ''
             # if call found in our database, then fetch number of caller and send SMS
             if price_info_incoming_obj != '':
                 user_no = price_info_incoming_obj.from_number
                 message = [call_failed_sms,'\n\n', crop_and_code, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
                 message = ''.join(message)
                 send_info(user_no, message)
+        # If call is completed, then check if Initial status is Not Picked, if yes then change it to No Input
+        else:
+            if price_info_incoming_obj != '' and if price_info_incoming_obj.info_status == 4:
+                price_info_incoming_obj.info_status = 3
+                price_info_incoming_obj.save()
     return HttpResponse(status=200)
 
 
