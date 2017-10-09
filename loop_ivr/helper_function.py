@@ -44,7 +44,7 @@ def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call
     else:
         # Enter in Log
         price_info_incoming_obj = PriceInfoIncoming(call_id=incoming_call_id, from_number=caller_number,
-                                        to_number=dg_number, incoming_time=incoming_time, info_status=5)
+                                        to_number=dg_number, incoming_time=incoming_time, info_status=0)
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(LOG_FILE,module,log)
     try:
