@@ -47,7 +47,7 @@ export const cardGraphConfig = {
         y: 16
       },
       min: 0,
-      max: 50
+      max: 80
     },
 
     plotOptions: {
@@ -192,7 +192,7 @@ export const cardGraphConfig = {
         y: 16
       },
       min: 0,
-      max: 8000000
+      max: 16000000
     },
 
     plotOptions: {
@@ -264,7 +264,7 @@ export const cardGraphConfig = {
         y: 16
       },
       min: 0,
-      max: 80000000
+      max: 160000000
     },
 
     plotOptions: {

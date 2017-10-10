@@ -217,6 +217,7 @@ export class NavsComponent implements OnInit,
   }
 
   private fillMenuItemForDropDown(chart, dataList): any {
+    let first_element = null;
     Object.keys(dataList.data).forEach(series => {
       let dropDownItem = new DropDownItem();
       dropDownItem.text = dataList.data[series][0]['name'];
@@ -226,7 +227,12 @@ export class NavsComponent implements OnInit,
         this.exportSVGElements[0].attr({ text: dropDownItem.text });
       };
       chart.chart.exporting.buttons.toggle.menuItems.push(dropDownItem);
+      if (first_element == null) {
+        first_element = dataList.data[series][0]['name'];
+      }
     });
+    chart.nativeChart.exportSVGElements[0].attr({ text: first_element });
+    chart.chart.exporting.buttons.toggle.text = first_element;
   }
 
   //Empty exting data and then fill in updated data
