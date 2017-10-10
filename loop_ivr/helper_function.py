@@ -21,7 +21,7 @@ from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
     agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
-    agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller
+    agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller, code_hi
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -117,6 +117,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         crop_in_hindi_map[crop['crop_id']] = crop['crop_name']
     # Fetching price from DB
     price_info_list.append(agg_sms_initial_line)
+    price_info_list.append('\n')
+    price_info_list.append(AGGREGATOR_SMS_NO)
     today_date = datetime.now()
     raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],) if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
     query_result = run_query(raw_query)
@@ -147,7 +149,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                 crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                 mandi_name = mandi_map[mandi].encode("utf-8")
                 if crop != prev_crop:
-                    temp_str = ('\n%s: %s\n\n%s %s\n')%(agg_sms_crop_line,crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                    temp_str = ('\n%s: %s (%s: %s)\n\n%s %s\n')%(agg_sms_crop_line,crop_name,code_hi,str(crop),mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                 else:
                     temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                 price_info_list.append(temp_str)
@@ -173,7 +175,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                     mandi_name = mandi_map[mandi].encode("utf-8")
                     if crop != prev_crop:
                         prev_crop = crop
-                        temp_str = ('\n%s: %s\n%s %s\n')%(agg_sms_crop_line,crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                        temp_str = ('\n%s: %s (%s: %s)\n\n%s %s\n')%(agg_sms_crop_line,crop_name,code_hi,str(crop),mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     else:
                         prev_mandi = mandi
                         temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
