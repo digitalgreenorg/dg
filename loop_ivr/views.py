@@ -50,7 +50,7 @@ def market_info_response(request):
                 send_info(user_no, message)
         # If call is completed, then check if Initial status is Not Picked, if yes then change it to No Input
         else:
-            if price_info_incoming_obj != '' and if price_info_incoming_obj.info_status == 4:
+            if price_info_incoming_obj != '' and price_info_incoming_obj.info_status == 4:
                 price_info_incoming_obj.info_status = 3
                 price_info_incoming_obj.save()
     return HttpResponse(status=200)
