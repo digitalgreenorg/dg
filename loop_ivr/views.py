@@ -84,7 +84,7 @@ def crop_price_query(request):
                                         to_number=dg_number, incoming_time=incoming_time, query_code=query_code)
                 price_info_incoming_obj.save()
             # If this request has no query code then save object as No input.
-            if query_code == '':
+            if query_code == '' or query_code == None or query_code == 'None':
                 price_info_incoming_obj.info_status = 3
                 price_info_incoming_obj.save()
                 return HttpResponse(status=200)
