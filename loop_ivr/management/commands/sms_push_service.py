@@ -106,9 +106,10 @@ class Command(BaseCommand):
     def send_info(self,subscription_id, user_no, content):
         index = 0
         from_number = AGGREGATOR_SMS_NO
+        content = content.replace('\n','%0A')
         while index < len(content):
-            self.send_sms(subscription_id, from_number, user_no, content[index:index+1998])
-            index += 1998
+            self.send_sms(subscription_id, from_number, user_no, content[index:index+700])
+            index += 700
             time.sleep(1)
 
 
@@ -147,10 +148,6 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
-        print "Start"
-        self.send_sms(28,AGGREGATOR_SMS_NO, '9205812770', 'hello test SMS %0A Next line')
-        print "End"
-        return
         all_subscriptions = Subscription.objects.filter(status=1).values('id', 'subscription_code', 'subscriber__phone_no')
         for subscription in all_subscriptions:
             subscription_id, subscription_code, user_no = subscription['id'], subscription['subscription_code'], subscription['subscriber__phone_no']
