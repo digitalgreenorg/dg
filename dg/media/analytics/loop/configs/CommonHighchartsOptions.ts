@@ -3,7 +3,7 @@ export const commonOptions = {
     '#F37B55',
     '#656566',
   ],
-  legend: { enabled: false },
+  legend: { enabled: true },
   credits: {
     enabled: false
   },

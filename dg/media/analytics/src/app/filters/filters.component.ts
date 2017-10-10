@@ -21,7 +21,7 @@ export class FiltersComponent implements OnInit {
   private filterConfig = config.filtersConfig;
   private filtersToApply = {};
   private date = new Date();
-  
+
   generalConfig = config.generalConfig;
 
   @ViewChild('mySidenav') mySidenav: ElementRef;

@@ -13,7 +13,7 @@ export const navsConfig = {
       'addTab': true,
       'containers': {
         'container1': {
-          'Volume and Famers Cummulative Count': {
+          'Volume & Famers Cummulative Count': {
             'addDivs': ['cummulativeCount']
           },
         }
@@ -45,10 +45,10 @@ export const navsConfig = {
               }
             },
             'container2': {
-              'SPK/CPK': {
+              'SPK & CPK': {
                 'addDivs': ['aggrspkcpk']
               },
-              'Recovered/Total': {
+              'Recovered & Total': {
                 'addDivs': ['aggrrecoveredtotal']
               }
             },
@@ -77,10 +77,10 @@ export const navsConfig = {
               }
             },
             'container2': {
-              'SPK/CPK': {
+              'SPK & CPK': {
                 'addDivs': ['mandispkcpk']
               },
-              'Recovered/Total': {
+              'Recovered & Total': {
                 'addDivs': ['mandirecoveredtotal']
               }
             },
@@ -130,12 +130,12 @@ export const navsConfig = {
       'addTab': true,
       'containers': {
         'container1': {
-          'Volume Amount': {
+          'Volume & Amount': {
             'addDivs': ['volFarmerTS']
           }
         },
         'container2': {
-          'CPK / SPK': {
+          'CPK & SPK': {
             'addDivs': ['cpkSpkTS']
           }
         },

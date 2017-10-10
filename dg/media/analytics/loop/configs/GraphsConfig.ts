@@ -38,7 +38,7 @@ export const chartsConfig = {
     tooltip: {
       // shared: true,
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>',
-      valueDecimals: 2
+      valueDecimals: 0
     },
     series: [],
     drilldown: {}
@@ -110,10 +110,14 @@ export const chartsConfig = {
       drillDown: true,
       inverted: true,
     },
-    xAxis: { type: 'category', max: 5 },
+    xAxis: {
+      type: 'category', max: 5
+    },
     yAxis: {
-      tickInterval: 10000,
-      title: { text: 'Volume' }
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -136,8 +140,10 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10000,
-      title: { text: 'Amount' }
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -160,8 +166,10 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 1,
-      title: { text: 'Visits' }
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -187,8 +195,10 @@ export const chartsConfig = {
       max: 5
     },
     yAxis: {
-      tickInterval: 1,
-      title: { text: 'SPK CPK' }
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -211,8 +221,10 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 1000,
-      title: { text: 'Recovered / Total Cost' }
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -235,8 +247,10 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10,
-      title: { text: 'Farmer count' }
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -259,8 +273,10 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 1000,
-      title: { text: 'Volume' }
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -283,8 +299,11 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 1,
-      title: { text: 'Visits' }
+      // tickInterval: 1,
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -310,8 +329,11 @@ export const chartsConfig = {
       max: 5
     },
     yAxis: {
-      tickInterval: 1,
-      title: { text: 'SPK CPK' }
+      // tickInterval: 1,
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -337,8 +359,11 @@ export const chartsConfig = {
       max: 5
     },
     yAxis: {
-      tickInterval: 1000,
-      title: { text: 'Recovered / Total cost' }
+      // tickInterval: 1000,
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -361,8 +386,11 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10,
-      title: { text: 'Farmer count' }
+      // tickInterval: 10,
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -385,8 +413,11 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 1000,
-      title: { text: 'Volume' }
+      // tickInterval: 1000,
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: [],
@@ -412,8 +443,11 @@ export const chartsConfig = {
       max: 5
     },
     yAxis: {
-      tickInterval: 10,
-      title: { text: 'Price range' }
+      // tickInterval: 10,
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     credits: { enabled: false },
@@ -437,8 +471,11 @@ export const chartsConfig = {
     },
     xAxis: { type: 'category', max: 5 },
     yAxis: {
-      tickInterval: 10,
-      title: { text: 'Farmer count' }
+      // tickInterval: 10,
+      title: { text: '' },
+      labels: {
+        enabled: false
+      },
     },
     tooltip: tooltip,
     series: []
