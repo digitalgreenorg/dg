@@ -139,7 +139,7 @@ def overall_graph_data(**filter_args):
     farmer_share = aggregated_result['farmer_share'][0]
     gaddidar_share = aggregated_result['gaddidar_share'][0]
     cpk = round((aggregator_incentive + transportation_cost) / volume, 2)
-    spk = round((farmer_share + gaddidar_share) * 100 / volume, 2)
+    spk = round((farmer_share + gaddidar_share) * 100 / (aggregator_incentive + transportation_cost)), 2)
 
     data = []
     data.append({
