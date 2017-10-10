@@ -4,6 +4,7 @@ import time
 import datetime
 import requests
 import itertools
+import json
 import xml.etree.ElementTree as xml_parse
 
 from datetime import timedelta
@@ -11,7 +12,7 @@ from pytz import timezone
 
 from django.core.management.base import BaseCommand
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, TEXTLOCAL_API_KEY
 
 from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
@@ -22,7 +23,8 @@ from loop_ivr.helper_function import get_valid_list, run_query
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
-    agg_sms_crop_line, helpline_hi, PUSH_MESSAGE_SMS_RESPONSE_URL, MONTH_NAMES
+    agg_sms_crop_line, helpline_hi, PUSH_MESSAGE_SMS_RESPONSE_URL, MONTH_NAMES, \
+    TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME
 
 class Command(BaseCommand):
 
@@ -41,6 +43,34 @@ class Command(BaseCommand):
 
 
     def send_sms(self,subscription_id, from_number,user_no,sms_body):
+        current_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+        subscription_log_obj = SubscriptionLog(subscription_id=subscription_id, date=current_time)
+        try:
+            subscription_log_obj.save()
+        except Exception as e:
+            print "Error aa gayi: ", str(e)
+            module = 'push_message_send_sms'
+            log = "Status Code: %s (subscription_id: %s) (Exception: %s)"%('Failed', str(subscription_id), str(e))
+            write_log(LOG_FILE,module,log)
+            return
+        recipient_custom_id = subscription_log_obj.id
+        sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
+        headers = {'content-type': 'application/json' }
+        parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers':user_no,
+                        'message': sms_body, 'receipt_url': PUSH_MESSAGE_SMS_RESPONSE_URL, 'unicode': 'true',
+                        'custom': recipient_custom_id}
+        response = requests.post(sms_request_url, params=parameters)
+        response_text = json.loads(str(response.text))
+        if response_text['status'] == 'success':
+            message_id = ','.join([str(message["id"]) for message in response_text['messages']])
+            subscription_log_obj.sms_id = message_id
+            subscription_log_obj.save()
+        elif response_text['status'] == 'failure':
+            error_codes = ','.join([str(error["code"]) for error in response_text['errors']])
+            subscription_log_obj.status = 2
+            subscription_log_obj.failed_code = error_codes
+            subscription_log_obj.save()
+        '''
         sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
         parameters = {'From':from_number,'To':user_no,'Body':sms_body,'Priority':'high','EncodingType':'unicode','StatusCallback':PUSH_MESSAGE_SMS_RESPONSE_URL}
         response = requests.post(sms_request_url,data=parameters)
@@ -70,6 +100,7 @@ class Command(BaseCommand):
             module = 'push_message_send_sms'
             log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
             write_log(LOG_FILE,module,log)
+        '''
 
 
     def send_info(self,subscription_id, user_no, content):
@@ -116,6 +147,10 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
+        print "Start"
+        self.send_sms(28,AGGREGATOR_SMS_NO, '9205812770', 'hello test SMS %0A Next line')
+        print "End"
+        return
         all_subscriptions = Subscription.objects.filter(status=1).values('id', 'subscription_code', 'subscriber__phone_no')
         for subscription in all_subscriptions:
             subscription_id, subscription_code, user_no = subscription['id'], subscription['subscription_code'], subscription['subscriber__phone_no']
