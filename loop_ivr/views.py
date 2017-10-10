@@ -64,7 +64,7 @@ def crop_price_query(request):
         try:
             query_code = str(request.GET.get('digits')).strip('"')
         except Exception as e:
-            query_code = ''
+            query_code = None
         # Check if its retry or first time request.
         try:
             # Search if this request generated in second try.
