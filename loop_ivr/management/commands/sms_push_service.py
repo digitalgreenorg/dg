@@ -48,7 +48,6 @@ class Command(BaseCommand):
         try:
             subscription_log_obj.save()
         except Exception as e:
-            print "Error aa gayi: ", str(e)
             module = 'push_message_send_sms'
             log = "Status Code: %s (subscription_id: %s) (Exception: %s)"%('Failed', str(subscription_id), str(e))
             write_log(LOG_FILE,module,log)
@@ -108,8 +107,8 @@ class Command(BaseCommand):
         from_number = AGGREGATOR_SMS_NO
         content = content.replace('\n','%0A')
         while index < len(content):
-            self.send_sms(subscription_id, from_number, user_no, content[index:index+700])
-            index += 700
+            self.send_sms(subscription_id, from_number, user_no, content[index:index+720])
+            index += 720
             time.sleep(1)
 
 
