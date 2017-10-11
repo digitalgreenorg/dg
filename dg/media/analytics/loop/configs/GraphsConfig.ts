@@ -23,7 +23,7 @@ export const chartsConfig = {
     },
     type: "StockChart",
     rangeSelector: {
-      selected: 2
+      selected: 5
     },
     yAxis: [{ // Primary yAxis
       title: {

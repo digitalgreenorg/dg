@@ -472,6 +472,9 @@ export const cardGraphConfig = {
       // tickWidth: .5,
       // tickLength: 3,
       // tickColor: '#000',
+      labels: {
+        enabled: false
+      },
       title: { text: '' }
     },
     series: [{
