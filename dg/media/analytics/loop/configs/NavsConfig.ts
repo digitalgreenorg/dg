@@ -27,9 +27,9 @@ export const navsConfig = {
           'active': true,
           'filters': true,
           'classes': {
-            'container1': 'col-md-5',
-            'container2': 'col-md-5',
-            'container3': 'col-md-5'
+            'container1': 'col-md-6',
+            'container2': 'col-md-6',
+            'container3': 'col-md-6'
           },
           'addTab': true,
           'containers': {
@@ -62,9 +62,9 @@ export const navsConfig = {
         'Mandi': {
           'filters': true,
           'classes': {
-            'container1': 'col-md-5',
-            'container2': 'col-md-5',
-            'container3': 'col-md-5'
+            'container1': 'col-md-6',
+            'container2': 'col-md-6',
+            'container3': 'col-md-6'
           },
           'addTab': true,
           'containers': {
@@ -94,9 +94,9 @@ export const navsConfig = {
         'Crop': {
           'filters': true,
           'classes': {
-            'container1': 'col-md-5',
-            'container2': 'col-md-5',
-            'container3': 'col-md-5'
+            'container1': 'col-md-6',
+            'container2': 'col-md-6',
+            'container3': 'col-md-6'
           },
           'addTab': true,
           'containers': {
@@ -123,9 +123,9 @@ export const navsConfig = {
       // 'active': true,
       'filters': true,
       'classes': {
-        'container1': 'col-md-5',
-        'container2': 'col-md-5',
-        'container3': 'col-md-10',
+        'container1': 'col-md-6',
+        'container2': 'col-md-6',
+        'container3': 'col-md-11',
       },
       'addTab': true,
       'containers': {

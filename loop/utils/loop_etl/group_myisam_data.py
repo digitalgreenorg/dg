@@ -25,8 +25,8 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
 
         data =  pd.Series(pd.DataFrame(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))).sum(numeric_only=True))
 
-        data_by_grouped_days.loc[index,'amount__sum'] = data['amount']
-        data_by_grouped_days.loc[index,'quantity__sum'] = data['quantity']
+        data_by_grouped_days.loc[index,'amount__sum'] = round(data['amount'])
+        data_by_grouped_days.loc[index,'quantity__sum'] = round(data['quantity'])
         data_by_grouped_days.loc[index,'farmer_share__sum'] = data['farmer_share']
         data_by_grouped_days.loc[index,'transportation_cost__sum'] = data['transportation_cost']
         data_by_grouped_days.loc[index,'gaddidar_share__sum'] = data['gaddidar_share']
