@@ -111,6 +111,43 @@ def query_myisam(**kwargs):
     df_result = pd.read_sql(sql_q, con=mysql_cn)
     return df_result
 
+def get_farmers_per_day(**kwargs):
+    country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+    database = DATABASES['default']['NAME']
+    username = DATABASES['default']['USER']
+    password = DATABASES['default']['PASSWORD']
+    host = DATABASES['default']['HOST']
+    port = DATABASES['default']['PORT']
+    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
+
+    # Constructing sql query
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('lct.date,count(distinct(lct.farmer_id)) as farmer_count')
+    sql_ds['from'].append('loop_combinedtransaction lct')
+    sql_ds['join'].append(['loop_mandi lm', 'lm.id = lct.mandi_id'])
+    sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
+    sql_ds['join'].append(['loop_farmer lf', 'lf.id = lct.farmer_id'])
+    sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id and lu.role = ' + str(ROLE_CHOICE_AGGREGATOR)])
+    sql_ds['join'].append(['loop_district ld', 'ld.id = lm.district_id'])
+    sql_ds['join'].append(['loop_state ls', 'ls.id = ld.state_id'])
+    sql_ds['join'].append(['loop_country lc', 'lc.id = ls.country_id'])
+    sql_ds['group by'].append('date')
+
+    if len(aggregators_list) > 0:
+        sql_ds['where'].append('lct.user_created_id in (' + ",".join(aggregators_list) + ")")
+    if len(mandis_list) > 0:
+        sql_ds['where'].append('lm.id in (' + ",".join(mandis_list) + ')')
+    if len(crops_list) > 0:
+        sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
+    sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
+    sql_ds['where'].append('country_id = ' + str(country_id))
+    if(state_id) :
+        sql_ds['where'].append('state_id = ' + str(state_id))
+
+    query = join_sql_ds(sql_ds)
+    df_result = pd.read_sql(query, con=mysql_cn)
+    return df_result
+
 def crop_prices_query(from_timeseries, **kwargs):
     country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     database = DATABASES['default']['NAME']
@@ -271,11 +308,20 @@ def volume_amount_farmers_ts(**kwargs):
         df_result = df_result.groupby(['date'])['quantity','amount'].sum().reset_index()
         df_result['date'] = df_result['date'].astype('datetime64[ns]')
         df_result['date_time'] = df_result['date'].astype('int64')//10**6
+
+        df_number_of_farmers = get_farmers_per_day(**kwargs)
+        df_number_of_farmers['date'] = df_number_of_farmers['date'].astype('datetime64[ns]')
+        df_number_of_farmers['date_time'] = df_number_of_farmers['date'].astype('int64')//10**6
+
         data_vol = []
         data_amount = []
+        data_farmers = []
         for index, row in df_result.iterrows():
             data_vol.append([row['date_time'],row['quantity']])
-            data_amount.append([row['date_time'],row['amount']])
+            # data_amount.append([row['date_time'],row['amount']])
+        for index, row in df_number_of_farmers.iterrows():
+            data_farmers.append([row['date_time'],row['farmer_count']])
+
         result_data['chartName'] = "volFarmerTS"
         result_data['chartType'] = "StockChart"
         result_data['data'] = []
@@ -283,12 +329,14 @@ def volume_amount_farmers_ts(**kwargs):
         volume['data'] = data_vol
         volume['name'] = 'Volume'
         volume['yAxis'] = 0
-        amount = {}
-        amount['data'] = data_amount
-        amount['name'] = 'Amount'
-        amount['yAxis'] = 1
+        volume['type'] = 'areaspline'
+        farmers = {}
+        farmers['data'] = data_farmers
+        farmers['name'] = 'Farmers'
+        farmers['yAxis'] = 1
+        farmers['type'] = 'column'
         result_data['data'].append(volume)
-        result_data['data'].append(amount)
+        result_data['data'].append(farmers)
     # result_data = [data_vol,data_amount]
     except:
         result_data["error"] = "No data found"

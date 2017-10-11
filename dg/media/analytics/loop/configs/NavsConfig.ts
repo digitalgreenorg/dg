@@ -130,7 +130,7 @@ export const navsConfig = {
       'addTab': true,
       'containers': {
         'container1': {
-          'Volume & Amount': {
+          'Volume & Farmers': {
             'addDivs': ['volFarmerTS']
           }
         },

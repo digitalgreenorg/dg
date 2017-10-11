@@ -460,18 +460,12 @@ export const cardGraphConfig = {
       title: { text: '' },
       lineWidth: .1,
       lineColor: '#000',
-      // tickWidth: .5,
-      // tickLength: 3,
-      // tickColor: '#000'
     },
     yAxis: {
       gridLineColor: '#eee',
       gridLineWidth: .5,
       lineWidth: .1,
       lineColor: '#000',
-      // tickWidth: .5,
-      // tickLength: 3,
-      // tickColor: '#000',
       labels: {
         enabled: false
       },

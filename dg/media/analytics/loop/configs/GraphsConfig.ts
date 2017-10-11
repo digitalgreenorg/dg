@@ -63,7 +63,7 @@ export const chartsConfig = {
       opposite: false
     }, { // Secondary yAxis
       title: {
-        text: 'Amount',
+        text: 'Farmers',
       }
     }],
     tooltip: {
