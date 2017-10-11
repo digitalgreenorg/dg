@@ -30,13 +30,13 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
         data_by_grouped_days.loc[index,'farmer_share__sum'] = data['farmer_share']
         data_by_grouped_days.loc[index,'transportation_cost__sum'] = data['transportation_cost']
         data_by_grouped_days.loc[index,'gaddidar_share__sum'] = data['gaddidar_share']
-        data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = data['transportation_cost']
+        data_by_grouped_days.loc[index,'aggregator_incentive__sum'] = data['aggregator_incentive']
 
         data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
 
         data_by_grouped_days.loc[index,'distinct_farmer_count'] = df_farmers.where((df_farmers['date'] > end_date) & (df_farmers['date']<=start_date))['farmer_id'].nunique()
-        data_by_grouped_days.loc[index, 'cpk'] = (data['transportation_cost'] + data['transportation_cost']) / data['quantity']
-        data_by_grouped_days.loc[index, 'spk'] = (data['gaddidar_share'] + data['farmer_share']) / data['quantity']
+        data_by_grouped_days.loc[index, 'cpk'] = (data['transportation_cost'] + data['aggregator_incentive']) / data['quantity']
+        data_by_grouped_days.loc[index, 'spk'] = (data['gaddidar_share'] + data['farmer_share']) / (data['transportation_cost'] + data['aggregator_incentive'])
     data_by_grouped_days = data_by_grouped_days.round(2)
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
