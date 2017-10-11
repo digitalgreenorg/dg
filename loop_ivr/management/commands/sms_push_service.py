@@ -68,7 +68,7 @@ class Command(BaseCommand):
         elif response_text['status'] == 'failure':
             error_codes = ','.join([str(error["code"]) for error in response_text['errors']])
             subscription_log_obj.status = 2
-            subscription_log_obj.failed_code = error_codes
+            subscription_log_obj.status_code = error_codes
             subscription_log_obj.save()
         '''
         sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)

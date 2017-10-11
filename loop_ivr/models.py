@@ -65,7 +65,7 @@ class SubscriptionLog(LoopModel):
     date = models.DateTimeField()
     sms_id = models.CharField(max_length=150, null=True, blank=True)
     status = models.IntegerField(choices=SMS_STATUS, default=0)
-    failed_code = models.CharField(max_length=5, null=True, blank=True)
+    status_code = models.CharField(max_length=5, null=True, blank=True)
     receipt_time = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
