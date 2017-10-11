@@ -121,7 +121,7 @@ export const cardConfig = {
   },
 
   'Sustainability_perc': {
-    text: 'Sustainability',
+    text: 'Sustainability(%)',
     helpTip: 'Operational cost covered by local players = Sustainability Per Kg (SPK) / CPK where SPK = Trader discount per kg on commision + Farmers transport contribution per kg',
     overall: {
       text: 'Sustainability_overall',
