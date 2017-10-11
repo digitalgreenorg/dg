@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from threading import Thread
 from datetime import datetime
+from pytz import timezone
 import time
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, SubscriptionLog
@@ -124,8 +125,8 @@ def crop_price_sms_content(request):
 @csrf_exempt
 def push_message_sms_response(request):
     if request.method == 'POST':
-        current_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
-        status = str(request.POST.get('Status'))
+        current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+        status = str(request.POST.get('status'))
         custom_id = str(request.POST.get('customID'))  # id of row in MySQL
         outgoing_obj = SubscriptionLog.objects.filter(id=custom_id)
         outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
