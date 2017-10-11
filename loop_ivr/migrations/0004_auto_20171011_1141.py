@@ -13,12 +13,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='subscriptionlog',
-            name='failed_code',
-            field=models.CharField(max_length=5, null=True, blank=True),
+            name='receipt_time',
+            field=models.DateTimeField(null=True, blank=True),
         ),
         migrations.AddField(
             model_name='subscriptionlog',
-            name='receipt_time',
-            field=models.DateTimeField(null=True, blank=True),
+            name='status_code',
+            field=models.CharField(max_length=5, null=True, blank=True),
         ),
     ]
