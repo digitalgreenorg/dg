@@ -30,7 +30,11 @@ def screening_module(request):
 
     
     if  "/coco/jslps/analytics/" in request.get_full_path():
-        return render(request, 'jslps_screening_module.html',dict(search_box_params = search_box_params,
+        template = 'jslps_screening_module.html'
+    else:
+        template = 'screening_module.html'
+
+    return render(request, template, dict(search_box_params = search_box_params,
                                                           tot_scr=tot_val['tot_scr'],
                                                           tot_att=tot_val['dist_att'],
                                                           avg_scr=tot_val['avg_sc_per_day'],
@@ -38,16 +42,6 @@ def screening_module(request):
                                                           avg_vid_by_active = avg_vid_by_active,
                                                           get_req_url = get_req_url
                                                           ))
-    else:
-
-        return render(request, 'screening_module.html',dict(search_box_params = search_box_params,
-                                                              tot_scr=tot_val['tot_scr'],
-                                                              tot_att=tot_val['dist_att'],
-                                                              avg_scr=tot_val['avg_sc_per_day'],
-                                                              avg_att=tot_val['avg_att_per_sc'],
-                                                              avg_vid_by_active = avg_vid_by_active,
-                                                              get_req_url = get_req_url
-                                                              ))
 
     ################
     ## LINE CHART ##
