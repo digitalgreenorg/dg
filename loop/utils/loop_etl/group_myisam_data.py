@@ -556,13 +556,13 @@ def repeat_farmer_count(outer_param1, outer_param2, graphname, **kwargs):
         temp_dict_outer = {'name': 'Total farmer Count', 'data':[]}
 
         for index, row in aggregator_farmer_count.iterrows():
-            temp_dict_outer['data'].append({'name':row[outer_param2], 'y':int(row['farmer_count']), 'drilldown':row[outer_param2] + ' Count'})
+            temp_dict_outer['data'].append({'name':row[outer_param2], 'high':int(row['farmer_count']),'low':0, 'drilldown':row[outer_param2] + ' Count'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
         temp_dict_outer = {'name':'Repeated Farmer Count', 'data':[]}
         repeat_farmer_count = aggregator_groupby_data[aggregator_groupby_data['repeat_count']>1].groupby([outer_param1, outer_param2]).agg({'repeat_count':'count'}).rename(columns={'repeat_count':'repeat_farmer_count'}).reset_index()
         for index, row in repeat_farmer_count.iterrows():
-            temp_dict_outer['data'].append({'name':row[outer_param2], 'y':int(row['repeat_farmer_count']), 'drilldown':row[outer_param2] + ' Repeat'})
+            temp_dict_outer['data'].append({'name':row[outer_param2], 'high':int(row['repeat_farmer_count']),'low':0, 'drilldown':row[outer_param2] + ' Repeat'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
         final_data_list[graphname] = outer_data
@@ -574,9 +574,10 @@ def repeat_farmer_count(outer_param1, outer_param2, graphname, **kwargs):
 
         for index, row in farmer_count_agg:
             temp_dict_inner = {'data':[]}
+            temp_dict_inner['name'] = index[1]
             temp_dict_inner['id'] = index[1] + ' Count'
             for k, v in row.iterrows():
-                temp_dict_inner['data'].append([v['repeat_count'], v['farmer_count']])
+                temp_dict_inner['data'].append({'name':v['repeat_count'], 'high':v['farmer_count'],'low':0})
             inner_data['innerData'].append(temp_dict_inner)
 
         final_data_list[graphname].update(inner_data)

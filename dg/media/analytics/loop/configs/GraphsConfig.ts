@@ -236,7 +236,7 @@ export const chartsConfig = {
   },
   'aggrfarmercount': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'aggrfarmercount',
       tab: {
         'id': 'tab1',
@@ -375,7 +375,7 @@ export const chartsConfig = {
   },
   'mandifarmercount': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'mandifarmercount',
       tab: {
         'id': 'tab1',
