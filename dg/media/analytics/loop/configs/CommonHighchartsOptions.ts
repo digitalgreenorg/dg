@@ -22,6 +22,19 @@ export const commonOptions = {
       grouping: false,
       borderWidth: 0,
       dataLabels: {
+        enabled: true,
+        formatter: function() {
+          if (this.y == 0) {
+            return '';
+          }
+          else {
+            return '<b>' + this.y + '</b>';
+          }
+        }
+      }
+    },
+    bar: {
+      dataLabels: {
         enabled: true
       }
     }

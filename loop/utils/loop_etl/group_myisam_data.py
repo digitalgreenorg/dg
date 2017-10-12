@@ -594,7 +594,7 @@ def visitData(groupby_result, graphname, outer_param, inner_param, count_param, 
 
         aggregator_visit_data = groupby_result.groupby(outer_param)[count_param].sum().reset_index().sort(sortParam, ascending=False)
         for index, row in aggregator_visit_data.iterrows():
-            temp_dict_outer['data'].append({'name':row[outer_param],'y':int(row[count_param]),'drilldown':row[outer_param] + ' Count'})
+            temp_dict_outer['data'].append({'name':row[outer_param],'high':int(row[count_param]),'low':0,'drilldown':row[outer_param] + ' Count'})
 
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
@@ -617,7 +617,7 @@ def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_p
         temp_dict_outer = {'name':series_name,'data':[]}
 
         for index, row in groupby_result.iterrows():
-            temp_dict_outer['data'].append({'name':row[1],'y':int(row[2]),'drilldown':row[1] + str(' ' + series_name)})
+            temp_dict_outer['data'].append({'name':row[1],'high':int(row[2]),'low':0,'drilldown':row[1] + str(' ' + series_name)})
 
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
@@ -640,8 +640,8 @@ def createInnerdataDict(dictData, keyword):
         temp_dict_inner['name'] = key
         temp_dict_inner['id'] = key + keyword
         for k, v in value.iteritems():
-            temp_dict_inner['data'].append([k,round(v,2)])
-        temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
+            temp_dict_inner['data'].append({'name':k,'high':round(v,2),'low':0})
+        temp_dict_inner['data'].sort(key=itemgetter('high'),reverse=True)
         inner_data['innerData'].append(temp_dict_inner)
 
     return inner_data
@@ -660,12 +660,12 @@ def agg_spk_cpk(**kwargs):
         outer_data = {'outerData': {'series':[],'categories':df_result_agg['aggregator_name'].tolist()}}
         temp_dict_outer = {'name':'cpk','data':[]}
         for row in df_result_agg.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].aggregator_name,'y':round(row[1].cpk,3),'drilldown':row[1].aggregator_name+' cpk'})
+            temp_dict_outer['data'].append({'name':row[1].aggregator_name,'high':round(row[1].cpk,3),'low':0,'drilldown':row[1].aggregator_name+' cpk'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
         temp_dict_outer = {'name':'spk','data':[]}
         for row in df_result_agg.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].aggregator_name,'y':round(row[1].spk,3),'drilldown':row[1].aggregator_name+' spk'})
+            temp_dict_outer['data'].append({'name':row[1].aggregator_name,'high':round(row[1].spk,3),'low':0,'drilldown':row[1].aggregator_name+' spk'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
         final_data_list['aggrspkcpk'] = outer_data
@@ -682,8 +682,8 @@ def agg_spk_cpk(**kwargs):
             temp_dict_inner['name'] = key
             temp_dict_inner['id'] = str(key) + ' cpk'
             for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,round(v,3)])
-            temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
+                temp_dict_inner['data'].append({'name':k,'high':round(v,3),'low':0})
+            temp_dict_inner['data'].sort(key=itemgetter('high'),reverse=True)
             inner_data['innerData'].append(temp_dict_inner)
 
         for key, value in agg_mandi_spk_dict.iteritems():
@@ -691,8 +691,8 @@ def agg_spk_cpk(**kwargs):
             temp_dict_inner['name'] = key
             temp_dict_inner['id'] = str(key) + ' spk'
             for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,round(v,3)])
-            temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
+                temp_dict_inner['data'].append({'name':k,'high':round(v,3),'low':0})
+            temp_dict_inner['data'].sort(key=itemgetter('high'),reverse=True)
             inner_data['innerData'].append(temp_dict_inner)
 
         final_data_list['aggrspkcpk'].update(inner_data)
@@ -714,12 +714,12 @@ def agg_cost(**kwargs):
         outer_data = {'outerData': {'series':[],'categories':df_result_agg['aggregator_name'].tolist()}}
         temp_dict_outer = {'name':'cost','data':[]}
         for row in df_result_agg.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].aggregator_name,'y':round(row[1].cost,3),'drilldown':row[1].aggregator_name+' cost'})
+            temp_dict_outer['data'].append({'name':row[1].aggregator_name,'high':round(row[1].cost,3),'low':0,'drilldown':row[1].aggregator_name+' cost'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
         temp_dict_outer = {'name':'recovered','data':[]}
         for row in df_result_agg.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].aggregator_name,'y':round(row[1].recovered,3),'drilldown':row[1].aggregator_name+' recovered'})
+            temp_dict_outer['data'].append({'name':row[1].aggregator_name,'high':round(row[1].recovered,3),'low':0,'drilldown':row[1].aggregator_name+' recovered'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
         final_data_list['aggrrecoveredtotal'] = outer_data
@@ -736,8 +736,8 @@ def agg_cost(**kwargs):
             temp_dict_inner['name'] = key
             temp_dict_inner['id'] = str(key) + ' cost'
             for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,round(v,3)])
-            temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
+                temp_dict_inner['data'].append({'name':k,'high':round(v,3),'low':0})
+            temp_dict_inner['data'].sort(key=itemgetter('high'),reverse=True)
             inner_data['innerData'].append(temp_dict_inner)
 
         for key, value in agg_mandi_spk_dict.iteritems():
@@ -745,8 +745,8 @@ def agg_cost(**kwargs):
             temp_dict_inner['name'] = key
             temp_dict_inner['id'] = str(key) + ' recovered'
             for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,round(v,3)])
-            temp_dict_inner['data'].sort(key=itemgetter(1),reverse=True)
+                temp_dict_inner['data'].append({'name':k,'high':round(v,3),'low':0})
+            temp_dict_inner['data'].sort(key=itemgetter('high'),reverse=True)
             inner_data['innerData'].append(temp_dict_inner)
 
         final_data_list['aggrrecoveredtotal'].update(inner_data)
@@ -760,11 +760,11 @@ def cost_recovered_data(df_result, groupby_result, df_result_mandi, graphname, o
         outer_data = {'outerData': {'series':[],'categories':groupby_result[outer_param].tolist()}}
         temp_dict_outer = {'name':'cost','data':[]}
         for index, row in groupby_result.iterrows():
-            temp_dict_outer['data'].append({'name':row[1],'y':round(row[8],3),'drilldown':row[1]+' cost'})
+            temp_dict_outer['data'].append({'name':row[1],'high':round(row[8],3),'low':0,'drilldown':row[1]+' cost'})
         outer_data['outerData']['series'].append(temp_dict_outer)
         temp_dict_outer = {'name':'recovered','data':[]}
         for index, row in groupby_result.iterrows():
-            temp_dict_outer['data'].append({'name':row[1],'y':round(row[9],3),'drilldown':row[1]+' recovered'})
+            temp_dict_outer['data'].append({'name':row[1],'high':round(row[9],3),'low':0,'drilldown':row[1]+' recovered'})
         outer_data['outerData']['series'].append(temp_dict_outer)
 
         inner_data = {'innerData':[]}

@@ -1,7 +1,7 @@
 import { commonOptions } from './CommonHighchartsOptions';
 const tooltip = {
   headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-  pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+  pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.high}</b><br/>'
 };
 
 const drillUpButton = {
@@ -101,7 +101,7 @@ export const chartsConfig = {
   },
   'aggrvol': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'aggrvol',
       tab: {
         'id': 'tab1',
@@ -129,7 +129,7 @@ export const chartsConfig = {
   },
   'aggramt': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'aggramt',
       tab: {
         'id': 'tab1',
@@ -155,7 +155,7 @@ export const chartsConfig = {
   },
   'aggrvisit': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'aggrvisit',
       tab: {
         'id': 'tab1',
@@ -181,7 +181,7 @@ export const chartsConfig = {
   },
   'aggrspkcpk': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'aggrspkcpk',
       tab: {
         'id': 'tab1',
@@ -210,7 +210,7 @@ export const chartsConfig = {
   },
   'aggrrecoveredtotal': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'aggrrecoveredtotal',
       tab: {
         'id': 'tab1',
@@ -262,7 +262,7 @@ export const chartsConfig = {
   },
   'mandivolume': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'mandivolume',
       tab: {
         'id': 'tab1',
@@ -288,7 +288,7 @@ export const chartsConfig = {
   },
   'mandivisit': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'mandivisit',
       tab: {
         'id': 'tab1',
@@ -315,7 +315,7 @@ export const chartsConfig = {
   },
   'mandispkcpk': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'mandispkcpk',
       tab: {
         'id': 'tab1',
@@ -345,7 +345,7 @@ export const chartsConfig = {
   },
   'mandirecoveredtotal': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'mandirecoveredtotal',
       tab: {
         'id': 'tab1',
@@ -402,7 +402,7 @@ export const chartsConfig = {
   },
   'cropvolume': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'cropvolume',
       tab: {
         'id': 'tab1',
@@ -411,7 +411,9 @@ export const chartsConfig = {
       drillDown: true,
       inverted: true,
     },
-    xAxis: { type: 'category', max: 5 },
+    xAxis: {
+      type: 'category', max: 5,
+    },
     yAxis: {
       // tickInterval: 1000,
       title: { text: '' },
@@ -450,7 +452,6 @@ export const chartsConfig = {
       },
     },
     tooltip: tooltip,
-    credits: { enabled: false },
     series: [],
     drilldown: {
       allowPointDrilldown: false,
@@ -460,7 +461,7 @@ export const chartsConfig = {
   },
   'cropfarmercount': {
     chart: {
-      type: 'column',
+      type: 'columnrange',
       renderTo: 'cropfarmercount',
       tab: {
         'id': 'tab1',
