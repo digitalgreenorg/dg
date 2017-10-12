@@ -21,7 +21,8 @@ from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
     agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
-    agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller, code_hi
+    agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller, code_hi, \
+    remaining_crop_line
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -71,7 +72,8 @@ def get_valid_list(app_name, model_name, requested_item, farmer_number):
         if farmer_number.startswith('01'):
             id_list = set(model.objects.filter(district__state__country_id=2).values_list('id', flat=True))
         else:
-            id_list = set(model.objects.filter(district__state__country_id=1).values_list('id', flat=True))
+            # Only Bihar Crops and Mandi.
+            id_list = set(model.objects.filter(district__state_id=1).values_list('id', flat=True))
     else:
         id_list = set(model.objects.values_list('id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item)
@@ -124,12 +126,12 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     query_result = run_query(raw_query)
     if not query_result:
         if not all_crop_flag and not all_mandi_flag:
-            crop_name_list = ','.join(map(lambda crop_id: crop_in_hindi_map.get(crop_id).encode("utf-8") if crop_in_hindi_map.get(crop_id) else crop_map[crop_id].encode("utf-8"), crop_list))
+            crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
             mandi_name_list = ','.join(map(lambda mandi_id: mandi_map[mandi_id].encode("utf-8").rstrip(mandi_hi).rstrip(), mandi_list))
             no_price_message = (agg_sms_no_price_crop_mandi)%(crop_name_list, mandi_name_list)
         # If query for all Mandi
         elif all_mandi_flag:
-            crop_name_list = ','.join(map(lambda crop_id: crop_in_hindi_map.get(crop_id).encode("utf-8") if crop_in_hindi_map.get(crop_id) else crop_map[crop_id].encode("utf-8"), crop_list))
+            crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
             no_price_message = (agg_sms_no_price_all_mandi)%(crop_name_list,)
         # If query for all crops
         else:
@@ -195,7 +197,9 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     # If caller is calling first time then send crop code to them.
     if PriceInfoIncoming.objects.filter(from_number=from_number).count() == 1:
         if query_result:
-            send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller)
+            first_time_caller_message = [first_time_caller,'\n\n', crop_and_code, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+            first_time_caller_message = ''.join(first_time_caller_message)
+            send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller_message)
         else:
             send_sms(AGGREGATOR_SMS_NO, from_number, crop_and_code)
     PriceInfoLog.objects.bulk_create(price_info_log_list)
