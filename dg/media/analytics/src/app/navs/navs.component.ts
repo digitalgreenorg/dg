@@ -175,7 +175,7 @@ export class NavsComponent implements OnInit,
     let data;
     if (chart.chart.chart.dropdown) {
       this.fillMenuItemForDropDown(chart, dataList);
-      data = dataList.data[Object.keys(dataList.data)[0]];
+      data = dataList.data[dataList.defaultSelection];
     } else {
       data = dataList.data;
     }
@@ -217,7 +217,8 @@ export class NavsComponent implements OnInit,
   }
 
   private fillMenuItemForDropDown(chart, dataList): any {
-    let first_element = null;
+    // let first_element = null;
+    let default_selection = dataList.defaultSelection;
     Object.keys(dataList.data).forEach(series => {
       let dropDownItem = new DropDownItem();
       dropDownItem.text = dataList.data[series][0]['name'];
@@ -227,10 +228,11 @@ export class NavsComponent implements OnInit,
         this.exportSVGElements[0].attr({ text: dropDownItem.text + ' ' + '\u25BE' });
       };
       chart.chart.exporting.buttons.toggle.menuItems.push(dropDownItem);
-      if (first_element == null) {
-        first_element = dataList.data[series][0]['name'];
-      }
+      // if (series == default_selection) {
+      //   first_element = dataList.data[series][0]['name'];
+      // }
     });
+    let first_element = dataList.data[default_selection][0]['name'];
     chart.nativeChart.exportSVGElements[0].attr({ text: first_element + ' ' + '\u25BE' });
     chart.chart.exporting.buttons.toggle.text = first_element + ' ' + '\u25BE';
   }
