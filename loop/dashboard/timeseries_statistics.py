@@ -100,7 +100,12 @@ def crop_price_range_ts(**kwargs):
 
         final_data_list[str(index)][0]['data'].append([row['date'],row['Avg_price'],row['Max_price'],row['Min_price'],row['Avg_price']])#,row['Min_price'],row['Avg_price']
 
+    
+    df_result = df_result.reset_index().groupby('crop_id')['Quantity'].sum().reset_index().sort('Quantity', ascending=False)
+    
+    default_selection = int(df_result.iloc[0]['crop_id'])
     result_data = {}
+    result_data['defaultSelection'] = default_selection
     result_data['chartName'] = "crop_price_range_ts"
     result_data['chartType'] = "StockChart"
     result_data['data'] = final_data_list
