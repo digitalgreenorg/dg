@@ -10,8 +10,9 @@ import pandas as pd
 
 from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser, Country, State
 from loop.utils.loop_etl.group_myisam_data import *
-from loop.dashboard.timeseries_statistics import *
+from loop.dashboard.home_statistics import *
 from loop.dashboard.analytics_statistics import *
+from loop.dashboard.timeseries_statistics import *
 from constants.constants import ROLE_CHOICE_AGGREGATOR
 
 def extract_filters_request(request):
