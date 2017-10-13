@@ -8,6 +8,7 @@ from loop.utils.loop_etl.aggregation_methods import *
 from loop.models import CombinedTransaction
 from loop.utils.utility import get_init_sql_ds, join_sql_ds
 from loop.constants.constants import *
+from loop.dashboard.database_operations import *
 
 def get_grouped_data(df_result_aggregate,day,df_farmers):
     start_date = df_result_aggregate['date'].min()
@@ -40,37 +41,6 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
     data_by_grouped_days = data_by_grouped_days.round(2)
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
-
-def query_myisam(**kwargs):
-    database = DATABASES['default']['NAME']
-    username = DATABASES['default']['USER']
-    password = DATABASES['default']['PASSWORD']
-    host = DATABASES['default']['HOST']
-    port = DATABASES['default']['PORT']
-    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
-
-    # Constructing sql query
-    sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('*')
-    sql_ds['from'].append('loop_aggregated_myisam')
-    sql_q = join_sql_ds(sql_ds)
-    if(len(kwargs) > 0):
-        country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
-        if len(aggregators_list) > 0:
-            sql_ds['where'].append('aggregator_id in (' + ",".join(aggregators_list) + ")")
-        if len(mandis_list) > 0:
-            sql_ds['where'].append('mandi_id in (' + ",".join(mandis_list) + ')')
-        if len(gaddidars_list) > 0:
-            sql_ds['where'].append('gaddidar_id in (' + ",".join(gaddidars_list) + ')')
-        if start_date != None:
-            sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
-
-        sql_ds['where'].append('country_id = ' + str(country_id))
-        if(state_id) :
-            sql_ds['where'].append('state_id = ' + str(state_id))
-    sql_q = join_sql_ds(sql_ds)
-    df_result = pd.read_sql(sql_q, con=mysql_cn)
-    return df_result
 
 def get_data_from_myisam(get_total, **kwargs):
     df_result = query_myisam(**kwargs)
@@ -143,6 +113,3 @@ def get_data_from_myisam(get_total, **kwargs):
     except Exception as e:
         print 'Exception : ', e
     return dictionary#, cumm_vol_farmer
-
-def read_kwargs(Kwargs):
-    return Kwargs['country_id'], Kwargs['state_id'], Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'], Kwargs['gaddidars_list']
