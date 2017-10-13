@@ -9,6 +9,7 @@ export const commonOptions = {
   },
   plotOptions: {
     column: {
+      cropThreshold: 100,
       grouping: false,
       borderWidth: 0,
       dataLabels: {

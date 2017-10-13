@@ -13,7 +13,7 @@ def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_p
         temp_dict_outer = {'name':series_name,'data':[]}
 
         for index, row in groupby_result.iterrows():
-            temp_dict_outer['data'].append({'name':row[1],'high':int(row[2]),'low':0,'drilldown':row[1] + str(' ' + series_name)})
+            temp_dict_outer['data'].append({'name':row[1],'y':int(row[2]),'drilldown':row[1] + str(' ' + series_name)})
 
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
@@ -36,8 +36,8 @@ def createInnerdataDict(dictData, keyword):
         temp_dict_inner['name'] = key
         temp_dict_inner['id'] = key + keyword
         for k, v in value.iteritems():
-            temp_dict_inner['data'].append({'name':k,'high':round(v,2),'low':0})
-        temp_dict_inner['data'].sort(key=itemgetter('high'),reverse=True)
+            temp_dict_inner['data'].append({'name':k,'y':round(v,2)})
+        temp_dict_inner['data'].sort(key=itemgetter('y'),reverse=True)
         inner_data['innerData'].append(temp_dict_inner)
 
     return inner_data
