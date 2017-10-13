@@ -1,9 +1,22 @@
+import MySQLdb
 import pandas as pd
 import numpy as np
 from operator import itemgetter
+from dg.settings import DATABASES
 
 def read_kwargs(Kwargs):
     return Kwargs['country_id'], Kwargs['state_id'], Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'], Kwargs['gaddidars_list']
+
+def get_result(query) :
+
+    database = DATABASES['default']['NAME']
+    username = DATABASES['default']['USER']
+    password = DATABASES['default']['PASSWORD']
+    host = DATABASES['default']['HOST']
+    port = DATABASES['default']['PORT']
+    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
+    df_result = pd.read_sql(query, con=mysql_cn)
+    return df_result
 
 def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_param=None, inner_param=None, isdrillDown=False, parameter=None, series_name=None):
     final_data_list = {}

@@ -10,12 +10,6 @@ from loop.dashboard.utility_methods import *
 
 def sql_query(**kwargs):
     country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
-    database = DATABASES['default']['NAME']
-    username = DATABASES['default']['USER']
-    password = DATABASES['default']['PASSWORD']
-    host = DATABASES['default']['HOST']
-    port = DATABASES['default']['PORT']
-    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
 
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('lct.user_created_id aggregator_id, lu.name_en aggregator_name, date, crop_id, crop_name, mandi_id,\
@@ -44,17 +38,11 @@ def sql_query(**kwargs):
         sql_ds['where'].append('state_id = ' + str(state_id))
 
     query = join_sql_ds(sql_ds)
-    df_result = pd.read_sql(query, con=mysql_cn)
+    df_result = get_result(query)
     return df_result
 
 def query_myisam(**kwargs):
-    database = DATABASES['default']['NAME']
-    username = DATABASES['default']['USER']
-    password = DATABASES['default']['PASSWORD']
-    host = DATABASES['default']['HOST']
-    port = DATABASES['default']['PORT']
-    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
-
+    
     # Constructing sql query
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('*')
@@ -74,19 +62,13 @@ def query_myisam(**kwargs):
         sql_ds['where'].append('country_id = ' + str(country_id))
         if(state_id) :
             sql_ds['where'].append('state_id = ' + str(state_id))
-    sql_q = join_sql_ds(sql_ds)
-    df_result = pd.read_sql(sql_q, con=mysql_cn)
+    query = join_sql_ds(sql_ds)
+    df_result = get_result(query)
     return df_result
 
 def get_farmers_per_day(**kwargs):
     country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
-    database = DATABASES['default']['NAME']
-    username = DATABASES['default']['USER']
-    password = DATABASES['default']['PASSWORD']
-    host = DATABASES['default']['HOST']
-    port = DATABASES['default']['PORT']
-    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
-
+   
     # Constructing sql query
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('lct.date,count(distinct(lct.farmer_id)) as farmer_count')
@@ -112,18 +94,12 @@ def get_farmers_per_day(**kwargs):
         sql_ds['where'].append('state_id = ' + str(state_id))
 
     query = join_sql_ds(sql_ds)
-    df_result = pd.read_sql(query, con=mysql_cn)
+    df_result = get_result(query)
     return df_result
 
 def crop_prices_query(from_timeseries, **kwargs):
     country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
-    database = DATABASES['default']['NAME']
-    username = DATABASES['default']['USER']
-    password = DATABASES['default']['PASSWORD']
-    host = DATABASES['default']['HOST']
-    port = DATABASES['default']['PORT']
-    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
-
+   
     sql_ds = get_init_sql_ds()
     if from_timeseries:
         sql_ds['select'].append('crop_id, crop_name, date, min(price) Min_price, max(price) Max_price, avg(price) Avg_price, sum(quantity) Quantity')
@@ -155,5 +131,5 @@ def crop_prices_query(from_timeseries, **kwargs):
 
     query = join_sql_ds(sql_ds)
 
-    df_result = pd.read_sql(query, con=mysql_cn)
+    df_result = get_result(query)
     return df_result
