@@ -1,7 +1,12 @@
 .dropdown-menu, .btn {
-  background: white;
+  background: #F37B55;
 }
 
 .btn {
-  padding: 0.5rem 0.25rem;
+  padding: 0.4rem 0.35rem;
+  background: #F37B55;
+}
+
+.btn-group {
+  margin-left: 10px;
 }

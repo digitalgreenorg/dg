@@ -223,16 +223,16 @@ export class NavsComponent implements OnInit,
       dropDownItem.text = dataList.data[series][0]['name'];
       dropDownItem.data = dataList.data[series][0]['data'];
       dropDownItem.onclick = function() {
-        this.series[0].update({ data: dropDownItem.data, name: dropDownItem.text });
-        this.exportSVGElements[0].attr({ text: dropDownItem.text });
+        this.series[0].update({ data: dropDownItem.data, name: dropDownItem.text + ' ' + '\u25BE' });
+        this.exportSVGElements[0].attr({ text: dropDownItem.text + ' ' + '\u25BE' });
       };
       chart.chart.exporting.buttons.toggle.menuItems.push(dropDownItem);
       if (first_element == null) {
         first_element = dataList.data[series][0]['name'];
       }
     });
-    chart.nativeChart.exportSVGElements[0].attr({ text: first_element });
-    chart.chart.exporting.buttons.toggle.text = first_element;
+    chart.nativeChart.exportSVGElements[0].attr({ text: first_element + ' ' + '\u25BE' });
+    chart.chart.exporting.buttons.toggle.text = first_element + ' ' + '\u25BE';
   }
 
   //Empty exting data and then fill in updated data

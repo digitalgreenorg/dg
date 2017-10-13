@@ -522,6 +522,7 @@ export const chartsConfig = {
         theme: {
           'stroke-width': 1,
           stroke: '#656566',
+          padding: 8,
           r: 0,
           states: {
             hover: {
