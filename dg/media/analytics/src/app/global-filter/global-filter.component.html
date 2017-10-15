@@ -1,32 +1,19 @@
-<!-- <div class="btn-group float-right" dropdown>
-  <button dropdownToggle type="button" class="btn dropdown-toggle">
-  {{country}} <span class="caret"></span>
-  </button>
-  <ul *dropdownMenu class="dropdown-menu" role="menu">
-    <li *ngFor="let item of Dropdownitems" role="menuitem">
-      <button class="dropdown-item" (click)="updateDropdown(item)">{{item.value}}</button>
-    </li>
-  </ul>
-</div> -->
-
-
-<div class="btn-group" dropdown [autoClose]="true">
-  <button dropdownToggle type="button" class="btn dropdown-toggle" style="cursor: pointer; cursor: hand;">
-    {{country}} <span class="caret"></span>
-  </button>
-  <ul *dropdownMenu class="dropdown-menu" role="menu">
-    <li *ngFor="let item of Dropdownitems" role="menuitem" triggers="mouseover" dropdown placement="right" container="body" style="cursor: pointer; cursor: hand;">
-      <!-- class="btn-group" [autoClose]="true" -->
-      <!-- <button class="btn" (click)="updateDropdown(item)"> {{item.value}}</button>
-      <button type="button" dropdownToggle class="btn dropdown-toggle dropdown-toggle-split">
-        <span class="caret"></span>
-        <span class="sr-only"></span>
-      </button> -->
-      <a dropdownToggle class="dropdown-item dropdown-toggle" (click)="updateDropdown(item)">{{item.value}}<span class="caret"></span></a>
-      <ul *dropdownMenu class="dropdown-menu" role="menu">
-        <li *ngFor="let subItem of item.dropDownData" role="menuitem">
-          <button class="dropdown-item" (click)="updateDropdown(subItem)" style="cursor: pointer; cursor: hand;">{{subItem.value}}</button></li>
-      </ul>
-    </li>
-  </ul>
+<div class="container">
+  <div class="row">
+      <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{country}}
+        </button>
+          <ul class="dropdown-menu " role="menu" aria-labelledby="dropdownMenu">
+              <li *ngFor="let item of Dropdownitems" class="dropdown-submenu">
+                  <a dropdownToggle class="dropdown-item" (click)="updateDropdown(item)">{{item.value}}<span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li *ngFor="let subItem of item.dropDownData" class="dropdown-item">
+                          <button class="dropdown-item" (click)="updateDropdown(subItem)" style="cursor: pointer; cursor: hand;">{{subItem.value}}</button>
+                      </li>
+                  </ul>
+              </li>
+          </ul>
+      </div>
+  </div>
 </div>
