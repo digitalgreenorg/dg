@@ -1,19 +1,15 @@
-<div class="container">
-  <div class="row">
-      <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               {{country}}
         </button>
-          <ul class="dropdown-menu " role="menu" aria-labelledby="dropdownMenu">
-              <li *ngFor="let item of Dropdownitems" class="dropdown-submenu">
-                  <a dropdownToggle class="dropdown-item" (click)="updateDropdown(item)">{{item.value}}<span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                      <li *ngFor="let subItem of item.dropDownData" class="dropdown-item">
-                          <button class="dropdown-item" (click)="updateDropdown(subItem)" style="cursor: pointer; cursor: hand;">{{subItem.value}}</button>
-                      </li>
-                  </ul>
-              </li>
-          </ul>
-      </div>
-  </div>
+  <ul class="dropdown-menu " role="menu" aria-labelledby="dropdownMenu">
+    <li *ngFor="let item of Dropdownitems" class="dropdown-submenu">
+      <a dropdownToggle class="dropdown-item" (click)="updateDropdown(item)">{{item.value}}<span class="caret"></span></a>
+      <ul class="dropdown-menu">
+        <li *ngFor="let subItem of item.dropDownData" class="dropdown-item">
+          <button class="dropdown-item" (click)="updateDropdown(subItem)" style="cursor: pointer; cursor: hand;">{{subItem.value}}</button>
+        </li>
+      </ul>
+    </li>
+  </ul>
 </div>
