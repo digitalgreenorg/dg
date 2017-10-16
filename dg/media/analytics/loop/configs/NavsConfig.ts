@@ -13,7 +13,7 @@ export const navsConfig = {
       'addTab': true,
       'containers': {
         'container1': {
-          'Volume & Famers Cummulative Count': {
+          'Famers & Volume Cummulative Count': {
             'addDivs': ['cummulativeCount']
           },
         }

@@ -11,6 +11,32 @@ const drillUpButton = {
     x: 0
   }
 };
+const legend_weighted_total = {
+  enabled: true,
+  labelFormatter: function() {
+    var total = 0;
+    var total_volume = 0;
+    for (var i = this.yData.length; i--;) {
+      let volume = this.userOptions.data[i].volume;
+      total += this.yData[i] * volume;
+      total_volume += volume;
+    };
+    return this.name + ' - Total :  ' + (total / total_volume).toFixed(2);
+  },
+};
+
+const legend_total = {
+  enabled: true,
+  labelFormatter: function() {
+    var total = 0;
+    for (var i = this.yData.length; i--;) { total += this.yData[i]; };
+    return this.name + ' - Total :  ' + total;
+  }
+};
+
+const legend_enable = {
+  enabled: true,
+}
 
 export const chartsConfig = {
   'cummulativeCount': {
@@ -41,7 +67,8 @@ export const chartsConfig = {
       valueDecimals: 0
     },
     series: [],
-    drilldown: {}
+    drilldown: {},
+    legend: legend_enable
   },
   'volFarmerTS': {
     chart: {
@@ -73,6 +100,7 @@ export const chartsConfig = {
     },
     series: [],
     // drilldown: {}
+    legend: legend_enable
   },
   'cpkSpkTS': {
     chart: {
@@ -97,7 +125,8 @@ export const chartsConfig = {
       valueDecimals: 2,
       // valueSuffix: ' units'
     },
-    series: []
+    series: [],
+    legend: legend_enable
   },
   'aggrvol': {
     chart: {
@@ -126,6 +155,7 @@ export const chartsConfig = {
       series: [],
       drillUpButton: drillUpButton
     },
+    legend: legend_total,
   },
   'aggramt': {
     chart: {
@@ -152,6 +182,7 @@ export const chartsConfig = {
       series: [],
       drillUpButton: drillUpButton
     },
+    legend: legend_total
   },
   'aggrvisit': {
     chart: {
@@ -177,7 +208,8 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    },
+    legend: legend_total
   },
   'aggrspkcpk': {
     chart: {
@@ -206,7 +238,8 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    },
+    legend: legend_weighted_total,
   },
   'aggrrecoveredtotal': {
     chart: {
@@ -232,7 +265,8 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    },
+    legend: legend_total,
   },
   'aggrfarmercount': {
     chart: {
@@ -258,7 +292,7 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    }, legend: legend_total,
   },
   'mandivolume': {
     chart: {
@@ -284,7 +318,8 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    },
+    legend: legend_total,
   },
   'mandivisit': {
     chart: {
@@ -311,7 +346,8 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    },
+    legend: legend_total,
   },
   'mandispkcpk': {
     chart: {
@@ -341,7 +377,8 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    },
+    legend: legend_weighted_total
   },
   'mandirecoveredtotal': {
     chart: {
@@ -371,7 +408,8 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    },
+    legend: legend_total
   },
   'mandifarmercount': {
     chart: {
@@ -398,7 +436,8 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    },
+    legend: legend_total
   },
   'cropvolume': {
     chart: {
@@ -428,6 +467,7 @@ export const chartsConfig = {
       series: [],
       drillUpButton: drillUpButton
     },
+    legend: legend_total
   },
   'cropprices': {
     chart: {
@@ -457,7 +497,8 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: [],
       drillUpButton: drillUpButton
-    }
+    },
+    legend: legend_enable
   },
   'cropfarmercount': {
     chart: {
@@ -479,7 +520,8 @@ export const chartsConfig = {
       },
     },
     tooltip: tooltip,
-    series: []
+    series: [],
+    legend: legend_enable
   },
   'crop_price_range_ts': {
     chart: {

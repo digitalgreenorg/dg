@@ -214,6 +214,7 @@ export class NavsComponent implements OnInit,
         chart.nativeChart.showLoading(dataList['error']);
       }
     });
+    // console.log(chart);
   }
 
   private fillMenuItemForDropDown(chart, dataList): any {

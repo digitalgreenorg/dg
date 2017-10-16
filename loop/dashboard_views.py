@@ -263,7 +263,7 @@ def send_filter_data(request):
     state_id = filter_args['state_id']
     response_list = []
 
-    aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
+    aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id,is_visible=True)
     if state_id != None:
         aggregator_data = aggregator_data.filter(village__block__district__state=state_id)
     aggregator_data = aggregator_data.annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
@@ -271,17 +271,17 @@ def send_filter_data(request):
 
     aggregator_dict = {'name':'Aggregator', 'data':list(aggregator_list)}
 
-    crop_list = Crop.objects.annotate(value=F('crop_name')).values('id', 'value').order_by('value')
+    crop_list = Crop.objects.filter(is_visible=True).annotate(value=F('crop_name')).values('id', 'value').order_by('value')
     crop_dict = {'name':'Crops', 'data':list(crop_list)}
 
-    mandi_list = Mandi.objects.filter(district__state__country=country_id)
+    mandi_list = Mandi.objects.filter(district__state__country=country_id,is_visible=True)
     if state_id != None:
         mandi_list = mandi_list.filter(district__state=state_id)
     mandi_list = mandi_list.annotate(value=F('mandi_name_en')).values('id', 'value').order_by('value')
 
     mandi_dict = {'name':'Mandi', 'data':list(mandi_list)}
 
-    gaddidar_list = Gaddidar.objects.filter(mandi__district__state__country=country_id)
+    gaddidar_list = Gaddidar.objects.filter(mandi__district__state__country=country_id,is_visible=True)
     if state_id != None:
         gaddidar_list = gaddidar_list.filter(mandi__district__state=state_id)
     gaddidar_list = gaddidar_list.annotate(value=F('gaddidar_name_en')).values('id', 'value').order_by('value')
@@ -292,11 +292,11 @@ def send_filter_data(request):
     return HttpResponse(data)
 
 def get_global_filter(request) :
-    country_list = Country.objects.annotate(value=F('country_name'), isSelected=F('is_visible'), tagName=Value('country_id', output_field=CharField())).values('id', 'value', 'isSelected', 'tagName')
+    country_list = Country.objects.filter(is_visible=True).annotate(value=F('country_name'), isSelected=F('is_visible'), tagName=Value('country_id', output_field=CharField())).values('id', 'value', 'isSelected', 'tagName')
 
     for obj in country_list:
         obj['dropDown'] = True
-        state_list = State.objects.filter(country_id = obj['id']).annotate(value=F('state_name_en'), isSelected=F('is_visible'), parentId=F('country_id'), parentTag=Value('country_id', output_field=CharField()),\
+        state_list = State.objects.filter(country_id = obj['id'],is_visible=True,aggregation_state=True).annotate(value=F('state_name_en'), isSelected=F('is_visible'), parentId=F('country_id'), parentTag=Value('country_id', output_field=CharField()),\
          tagName=Value('state_id', output_field=CharField())).values('id', 'value', 'isSelected', 'parentId', 'parentTag', 'tagName')
         obj['dropDownData'] = list(state_list)
     data = json.dumps(list(country_list))

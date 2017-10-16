@@ -3,7 +3,14 @@ export const commonOptions = {
     '#F37B55',
     '#656566',
   ],
-  legend: { enabled: true },
+  // legend: {
+  //   enabled: true,
+  //   labelFormatter: function() {
+  //     var total = 0;
+  //     for (var i = this.yData.length; i--;) { total += this.yData[i]; };
+  //     return this.name + '- Total: ' + total;
+  //   }
+  // },
   credits: {
     enabled: false
   },

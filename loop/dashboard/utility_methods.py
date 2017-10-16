@@ -22,7 +22,7 @@ def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_p
     final_data_list = {}
     try:
         outer_data = {'outerData':{'series':[], 'categories':groupby_result[outer_param].tolist()}}
-        total_data = {'message' : series_name + ' : ' + str(groupby_result[parameter].sum())}
+        # total_data = {'message' : series_name + ' : ' + str(groupby_result[parameter].sum())}
         temp_dict_outer = {'name':series_name,'data':[]}
 
         for index, row in groupby_result.iterrows():
@@ -30,7 +30,7 @@ def convert_to_dict(df_result=None, groupby_result=None, graphname=None, outer_p
 
         outer_data['outerData']['series'].append(temp_dict_outer)
         final_data_list[graphname] = outer_data
-        final_data_list[graphname].update(total_data)
+        # final_data_list[graphname].update(total_data)
         if(isdrillDown):
             df_result = df_result.groupby([outer_param, inner_param])[parameter].sum().reset_index()
             mandi_groupby_data = {name:dict(zip(g[inner_param],g[parameter])) for name,g in df_result.groupby([outer_param])}
