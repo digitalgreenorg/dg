@@ -115,7 +115,7 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
 
 class MandiAdmin(admin.ModelAdmin):
     fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible', 'mandi_type')
-    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type')
+    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type','latitude','longitude')
     search_fields = ['mandi_name', 'district__district_name', 'mandi_type__mandi_type_name', 'mandi_name_en']
     list_filter = ['district__district_name', 'district__state__country', 'mandi_type', 'district__state']
 
