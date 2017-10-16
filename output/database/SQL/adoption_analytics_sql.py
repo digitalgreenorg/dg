@@ -45,19 +45,34 @@ def adoption_practice_wise_scatter(geog, id, from_date, to_date, partners):
     sql_ds['order by'].append("count")
     return join_sql_ds(sql_ds)
 
+# def adoption_repeat_adoption_practice_count(geog, id, from_date, to_date, partners):
+#     inner_sql_ds = get_init_sql_ds();
+#     inner_sql_ds['select'].append("DISTINCT person_id")
+#     inner_sql_ds['from'].append("person_adopt_practice_myisam PAPM")
+#     inner_sql_ds['force index'].append("(person_adopt_practice_myisam_village_id)")
+#     filter_partner_geog_date(inner_sql_ds,'PAPM','PAPM.date_of_adoption',geog,id,from_date,to_date,partners)
+#     inner_sql_ds['group by'].append("PAPM.person_id")
+#     inner_sql_ds['group by'].append("PAPM.video_id")
+#     inner_sql_ds['having'].append("COUNT(*) > 1")
+    
+#     sql_ds = get_init_sql_ds();
+#     sql_ds['select'].append("COUNT(*) as count")
+#     sql_ds['from'].append('(' + join_sql_ds(inner_sql_ds) + ') TAB')
+    
+#     return join_sql_ds(sql_ds)
+
 def adoption_repeat_adoption_practice_count(geog, id, from_date, to_date, partners):
     inner_sql_ds = get_init_sql_ds();
-    inner_sql_ds['select'].append("DISTINCT person_id")
+    inner_sql_ds['select'].append("PAPM.person_id AS person_id")
     inner_sql_ds['from'].append("person_adopt_practice_myisam PAPM")
-    inner_sql_ds['force index'].append("(person_adopt_practice_myisam_village_id)")
     filter_partner_geog_date(inner_sql_ds,'PAPM','PAPM.date_of_adoption',geog,id,from_date,to_date,partners)
     inner_sql_ds['group by'].append("PAPM.person_id")
     inner_sql_ds['group by'].append("PAPM.video_id")
     inner_sql_ds['having'].append("COUNT(*) > 1")
     
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("COUNT(*) as count")
-    sql_ds['from'].append('(' + join_sql_ds(inner_sql_ds) + ') TAB')
+    sql_ds['select'].append("COUNT(DISTINCT T.person_id) as count")
+    sql_ds['from'].append('(' + join_sql_ds(inner_sql_ds) + ')T')
     
     return join_sql_ds(sql_ds)
 

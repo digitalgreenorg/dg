@@ -10,7 +10,7 @@ from output.database.utility import run_query, run_query_raw, run_query_dict, \
 from copy import deepcopy
 from activities.models import Screening
 from people.models import Person
-from programs.models import Partner
+from programs.models import Partner, Project
 from videos.models import Video
 import datetime
 import json
@@ -74,9 +74,11 @@ def breadcrumbs_options(geog,id):
 def get_search_box(request):
     geog, id = get_geog_id(request);
     from_date, to_date, partner = utility.get_dates_partners(request);
+    project = utility.get_projects(request)
     search_box_params = {}
     search_box_params['partners'] = get_partner_list(geog,id, partner);
-    
+    search_box_params['projects'],search_box_params['project_wise_partner'] = get_project_list(project)
+
     if(from_date == (datetime.datetime.utcnow() - datetime.timedelta(365)).strftime('%Y-%m-%d') and to_date == (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')):
         search_box_params['is_date_selected'] = 0
     else:
@@ -175,6 +177,27 @@ def get_geog_id(request):
     else:
         return None, None
 
+#Return a dictionary of list of PROJECT_NAME,ID AND THEIR ASSOCIATE PARTNER'S ID and 
+#second dictionary of project wise partners
+def get_project_list(projects):
+    coco_projects_detail = Project.objects.values('id', 'project_name', 'associate_partner', 'project_description')
+    project_wise_partner = dict()
+    coco_projects = list()
+    project_included = dict()
+    for project in coco_projects_detail:
+        # Make dict of partner wise projects
+        if str(project['id']) not in project_wise_partner:
+            project_wise_partner[str(project['id'])] = list()
+        project_wise_partner[str(project['id'])].append(str(project['associate_partner']))
+        # Make list of all projects
+        if project['id'] not in project_included:
+            project_included[project['id']] = 1
+            project_dict = {'id':project['id'],'project_name':project['project_name'],'project_description':project['project_description']}
+            if projects:
+                if str(project['id']) not in projects:
+                    project_dict['unmarked'] = 1    
+            coco_projects.append(project_dict)  
+    return coco_projects,json.dumps(project_wise_partner)
 
 #Returns a dictionary of list of PARTNER_NAME, id
 #If partners were selected i.e. argument 'partners' is not empty,
@@ -184,10 +207,10 @@ def get_partner_list(geog, id, partners):
     if(sql):
         part_list = run_query(sql)
         filtered_partners = [x['partner_id'] for x in part_list]
-        coco_partners = Partner.objects.values_list('id', 'partner_name').order_by('partner_name')
+        coco_partners = Partner.objects.values_list('id', 'partner_name', 'full_partner_name').order_by('partner_name')
         partner_list = []
-        for id, partner_name in coco_partners:
-            partner_dict = {'partner_id': id, 'PARTNER_NAME': partner_name}
+        for id, partner_name, full_partner_name in coco_partners:
+            partner_dict = {'partner_id': id, 'PARTNER_NAME': partner_name, 'FULL_PARTNER_NAME': full_partner_name}
             if partners:
                 if str(id) not in partners:
                     partner_dict['unmarked'] = 1

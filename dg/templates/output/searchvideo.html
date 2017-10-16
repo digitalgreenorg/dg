@@ -41,7 +41,7 @@
     function doPracchange(sec,subsec,top,subtop,sub) {
     	$("#searchcontentleft").mask("Loading...");
         $.ajax({ type: "GET", 
-                url: "/analytics/practice_change/",
+                url: "/coco/analytics/practice_change/",
                 data: {"sec":sec,"subsec":subsec,"top":top,"subtop":subtop,"sub":sub},
                 success: function(json) {
                 var arr=JSON.parse(json)

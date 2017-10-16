@@ -1,5 +1,7 @@
 # Django settings for dg project.
 import os
+from dg.settings import WEBSITE_DOMAIN
+
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 ADMINS = (
@@ -62,6 +64,8 @@ LOGOUT_URL = '/'
 PERMISSION_DENIED_URL = '/denied/'
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'mezzanine.core.middleware.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -80,6 +84,8 @@ MIDDLEWARE_CLASSES = (
     # "mezzanine.core.middleware.SSLRedirectMiddleware",
     'mezzanine.pages.middleware.PageMiddleware',
     'mezzanine.core.middleware.FetchFromCacheMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 ROOT_URLCONF = 'dg.urls'
@@ -102,6 +108,7 @@ TEMPLATES = [
             os.path.join(PROJECT_PATH, 'media/coco/app'),
             os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
             os.path.join(PROJECT_PATH, 'media/'),
+            os.path.join(PROJECT_PATH, 'media/analytics/'),
             os.path.join(PROJECT_PATH, 'templates/data_upload'),
         ],
         'APP_DIRS': True,
@@ -119,40 +126,11 @@ TEMPLATES = [
                 'social.apps.django_app.context_processors.login_redirect',
                 "mezzanine.conf.context_processors.settings",
                 "mezzanine.pages.context_processors.page",
+                "dg.context_processors.admin_media",
             ],
         },
     },
 ]
-# TEMPLATE_DIRS = (
-#     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-#     # Always use forward slashes, even on Windows.
-#     # Don't forget to use absolute paths, not relative paths.
-#     os.path.join(PROJECT_PATH, 'templates/social_website'),
-#     os.path.join(PROJECT_PATH, 'templates/videokheti'),
-#     os.path.join(PROJECT_PATH, 'templates'),
-#     os.path.join(PROJECT_PATH, 'templates/output'),
-#     os.path.join(PROJECT_PATH, 'templates/static_site'),
-#     os.path.join(PROJECT_PATH, 'templates/farmerbook'),
-#     os.path.join(PROJECT_PATH, 'media/coco/app'),
-#     os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
-# 	os.path.join(PROJECT_PATH, 'media/'),
-#     os.path.join(PROJECT_PATH, 'templates/data_upload'),
-# )
-
-# TEMPLATE_CONTEXT_PROCESSORS = (
-#     "django.contrib.auth.context_processors.auth",
-#     "django.contrib.messages.context_processors.messages",
-#     "django.core.context_processors.debug",
-#     "django.core.context_processors.i18n",
-#     "django.core.context_processors.static",
-#     "django.core.context_processors.media",
-#     "django.core.context_processors.request",
-#     "django.core.context_processors.tz",
-#     'social.apps.django_app.context_processors.backends',
-#     'social.apps.django_app.context_processors.login_redirect',
-#     "mezzanine.conf.context_processors.settings",
-#     "mezzanine.pages.context_processors.page",
-# )
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -165,6 +143,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.admindocs',
     #'django.contrib.comments',
+    # 'corsheaders',
     'programs',
     'geographies',
     'people',
@@ -205,6 +184,7 @@ INSTALLED_APPS = (
     'qacoco',
     'mrppayment',
     'smart_selects',
+    'loop_ivr'
 )
 
 # Store these package names here as they may change in the future since
@@ -266,3 +246,11 @@ LOGGING = {
         },
     }
 }
+
+PRODUCT_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'solutions/')
+LOOP_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'loop/')
+COCO_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'coco/')
+TRAINING_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'training/')
+VIDEOS_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'videos/')
+LOOP_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=loop.org.digitalgreen.loop')
+TRAINING_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=org.digitalgreen.trainingapp')

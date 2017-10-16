@@ -57,7 +57,7 @@ def overview_module(request):
             i['tot_per'] = tot_per[i['id']][0]
         else:
             i['tot_per'] = 0
-            
+
         if i['id'] in tot_vil:
             i['tot_vil'] = tot_vil[i['id']][0]
         else:
@@ -78,11 +78,11 @@ def overview_module(request):
     par_geog_data['geog'] = geog_par
 
 
-    #country data is the top-data    
+    #country data is the top-data
     country_data = {}
     #Total Person Group
     country_data.update(run_query(overview_analytics_sql.overview_tot_pg(geog, id, from_date, to_date, partners))[0])
-    
+
     if(to_date):
         date_var = to_date
     else:
@@ -90,29 +90,29 @@ def overview_module(request):
     #Operational Village (Last 60 days)
     country_data.update(vil_oper = run_query(targets_sql.get_village_operational(geog, id, date_var, partners))[0]['count'])
     tot_val = views.screening_analytics.get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, ['avg_sc_per_day', 'avg_att_per_sc']);
-    #Average attendance 
+    #Average attendance
     #Average Screening
     country_data.update(avg_att = tot_val['avg_att_per_sc'])
     country_data.update(avg_scr = tot_val['avg_sc_per_day'])
-    
+
     #Adoption Rate
     country_data.update(adopt_rate = views.adoption_analytics.adoption_rate(geog, id, to_date, partners))
     #Distinct videos screened
     country_data.update(vid_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count'])
-    
+
 
     #search box params are the parameters for the search box i.e. dates, geography drop-down and partners if any
     search_box_params = views.common.get_search_box(request)
 
     get_req_url = request.META['QUERY_STRING']
-    print get_req_url
+    # print get_req_url
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
     if(geog_child != "NULL"):
         header_geog = geog_child
     else:
         header_geog = "Village"
-    
-    return render_to_response('overview_module.html', dict(search_box_params = search_box_params, \
+
+    return render(request, 'overview_module.html', dict(search_box_params = search_box_params, \
                                                            country_data = country_data, \
                                                            table_data = table_data, \
                                                            par_geog_data = par_geog_data, \
@@ -135,5 +135,4 @@ def get_parent_geog_id(geog, id):
         vls = Village.objects.filter(pk=id).values_list("village_name", "block_id")[0]
     else:
         return None, None
-    return vls    
-    
+    return vls

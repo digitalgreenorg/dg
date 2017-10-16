@@ -32,26 +32,24 @@ function table_load()
 	}
 	
 	$('#example').dataTable( {
-		"sDom":'T<"clear">lfrtip',
-		"bAutoWidth":false,
+		"sDom":'T<"bottom"B><"clear">lf<"clear">i',
+		"AutoWidth":false,
         "aaData": formated_json,
         "aoColumns": column_arr,
-        "oTableTools":{
-
-            "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
-			"aButtons": [
-	                           {
-	                               "sExtends": "copy",
-	                               "sButtonText": "Copy to Clipboard",
-	                               "sTitle":customTitle
-	                           },
-	                           {
-	                               "sExtends": "xls",
-	                               "sButtonText": "Download in Excel",
-	                               "sTitle":customTitle
-	                           }
-	                       ]
-                    }
+        "swfPath" : "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
+        "buttons": [
+        	
+        {
+            "extend": 'copyHtml5',
+            "text": 'Copy to Clipboard',
+            "title":customTitle
+        },
+        {
+        	"extend": 'excelHtml5',
+            "text": 'Download in Excel',
+            "title":customTitle
+        }
+    ]
     } );
-
+	$('.dt-buttons').css('float','right');
 }

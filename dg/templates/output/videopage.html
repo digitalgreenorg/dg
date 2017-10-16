@@ -8,7 +8,7 @@
 {% block pagetitle %}{{block.super}} Video Page{% endblock pagetitle %}
 
 {% block videobreadcrums %}
-	<a href='/analytics/video_search'>Search Videos</a> / 
+	<a href='/videos/search'>Search Videos</a> / 
 	<span style="font-weight: bold;">Video Page</span>			
 {% endblock videobreadcrums %}	
 
@@ -28,11 +28,11 @@
                         document.write("<table id='videoembedtable' cellspacing='0px' cellpadding='0'>");
                             document.write("<tr><td id='videoembedtd'>");                           
                                 document.write("<object width='100%' height='100%'>");
-                                    document.write("<param value='http://www.youtube.com/v/{{vid.youtubeid}}?fs=1&amp;hl=en_US' name='movie'>");
+                                    document.write("<param value='https://www.youtube.com/v/{{vid.youtubeid}}?fs=1&amp;hl=en_US' name='movie'>");
                                     document.write("<param value='transparent' name='wmode'>");
                                     document.write("<param value='true' name='allowFullScreen'>"); 
                                     document.write("<param value='always' name='allowscriptaccess'>");
-                                    document.write("<embed width='100%' height='400px' src='http://www.youtube.com/v/{{vid.youtubeid}}?fs=1&amp;hl=en_US' wmode='transparent' allowfullscreen='true' allowscriptaccess='always' type='application/x-shockwave-flash'>");
+                                    document.write("<embed width='100%' height='400px' src='https://www.youtube.com/v/{{vid.youtubeid}}?fs=1&amp;hl=en_US' wmode='transparent' allowfullscreen='true' allowscriptaccess='always' type='application/x-shockwave-flash'>");
                                 document.write("</object>");                            
                             document.write("</tr></td>");   
                         document.write("</table>");                      
@@ -252,7 +252,7 @@
     	google.load("visualization", "1", {packages:["corechart"]});
     	google.setOnLoadCallback(bar_chart);
     	function bar_chart() {
-    		$.getJSON('/analytics/video_screening_month_bar_data/?id={{vid.id}}', function(json){
+    		$.getJSON('/coco/analytics/video_screening_month_bar_data/?id={{vid.id}}', function(json){
     			var data = google.visualization.arrayToDataTable(json,false);
 				if(json.length>1)
 					{

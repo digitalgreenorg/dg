@@ -32,8 +32,9 @@ def home(request):
 
     return render_to_response('raw_data_analytics/output.html', {'countries': countries},
                               context_instance=RequestContext(request))
+                              
 def onrun_query(query):
-    mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
+    mysql_cn = MySQLdb.connect(host=dg.settings.DATABASES['default']['HOST'], port=dg.settings.DATABASES['default']['PORT'], user=dg.settings.DATABASES['default']['USER'],
                                    passwd=dg.settings.DATABASES['default']['PASSWORD'],
                                    db=dg.settings.DATABASES['default']['NAME'],
                                     charset = 'utf8',
@@ -66,11 +67,11 @@ def dropdown_partner(request):
             if(filter_dict[keys]):
                 sql_ds['where'].append('vcp.'+keys.lower()+'_id in ( '+ ' , '.join(str(dictVal) for dictVal in filter_dict[keys])+' )')
         sql_ds['order by'].append("P.PARTNER_NAME")
-    
-        select_query = 'select ' + ', '.join( selectVal for selectVal in sql_ds['select'] ) 
+
+        select_query = 'select ' + ', '.join( selectVal for selectVal in sql_ds['select'] )
         from_query =  ' from '+ ', '.join(fromVal for fromVal in sql_ds['from'])
         join_query =  ' inner join ' +' on '.join(joinVal for joinVal in sql_ds['join'][0])
-        where_query = ' where '+' and '.join(whereVal for whereVal in sql_ds['where']) 
+        where_query = ' where '+' and '.join(whereVal for whereVal in sql_ds['where'])
         order_query = ' order by '+', '.join(orderVal for orderVal in sql_ds['order by'])
         query = select_query+from_query+join_query+where_query+order_query
         partners = onrun_query(query)
@@ -116,10 +117,10 @@ def dropdown_video(request):
     block_selected = request.GET.getlist('block[]')
     village_selected = request.GET.getlist('village[]')
 
-    filter_dict ={'village__block__district__state__country__country_name__in':country_selected,'village__block__district__state__state_name__in':state_selected,'village__block__district__district_name__in':district_selected,'village__block__block_name__in':block_selected,'village__village_name__in':village_selected,'partner__partner_name__in':partner_selected}
+    filter_dict ={'village__block__district__state__country__country_name__in':country_selected,'village__block__district__state__state_name__in':state_selected,'partner__partner_name__in':partner_selected}
     final_dict ={}
     videos = []
-    
+
     for keys in filter_dict:
         if filter_dict[keys][0]!='':
             final_dict[keys]=filter_dict[keys]
@@ -226,7 +227,7 @@ def execute(request):
             partdict[values] = False
         else:
             partdict[values] = True
-            checked_list.append(values) 
+            checked_list.append(values)
 
     ###############################Value#################################
     valdict={'val_screening':val_screening,'val_adoption':val_adoption,'val_no_animator':val_no_animator,'val_attendance':val_attendance,'val_video_screened_num':val_video_screened_num,'val_video_produced_num':val_video_produced_num}
@@ -351,4 +352,3 @@ def execute(request):
                 return render_to_response('raw_data_analytics/result.html', {'from_date': from_date, 'to_date': to_date,
                                                                              'dataf': unicode(df, errors='ignore')},
                                           context_instance=RequestContext(request))
-    

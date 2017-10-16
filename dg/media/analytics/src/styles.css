@@ -1,0 +1,28 @@
+/* You can add global styles to this file, and also import other style files */
+.customClass.active > a {
+    background-color: #656566 !important;
+}
+
+.customClass > a {
+    background-color: #9AA0A7 !important;
+}
+a {
+    color: white !important;
+}
+.nav-tabs .nav-item {
+    margin-left: 1px;
+    margin-right: 0.5px;
+}
+
+.customClass > a:hover {
+    background-color: #9e9e9f !important;
+}
+
+.customClass.active > a:hover {
+    background-color: #656566 !important;
+
+}
+
+.nav-justified .nav-item {
+ flex:0 1 12%;   
+}

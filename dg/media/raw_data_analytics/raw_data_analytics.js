@@ -81,8 +81,8 @@ window.onload = date;
         $("#partnerId").find('option').remove();
         $("#partnerId").val('').trigger('chosen:updated');
         $("#blockId").val('').trigger("chosen:updated");
-        $('#videoId').find('option').remove();
-        $("#videoId").val('').trigger("chosen:updated");
+        /*$('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");*/
         $("#villageId").prop('disabled',true);
         $("#villageId").val('').trigger("chosen:updated");
 
@@ -93,8 +93,8 @@ window.onload = date;
         $("#partnerId").find('option').remove();
         $("#partnerId").val('').trigger('chosen:updated');
         $("#villageId").val('').trigger("chosen:updated");
-        $('#videoId').find('option').remove();
-        $("#videoId").val('').trigger("chosen:updated");
+        /*$('#videoId').find('option').remove();
+        $("#videoId").val('').trigger("chosen:updated");*/
 
     });
     $('villageId').bind("change",function () {
@@ -133,7 +133,7 @@ window.onload = date;
 
 function populate(src, prevValue) {
     if (!(jQuery("#" + src + "Id" + " option ").length != 0))
-        $.get("/raw_data_analytics/dropdown_" + src + "/", {selected: prevValue})
+        $.get("/coco/rda/dropdown_" + src + "/", {selected: prevValue})
             .always(function(){
             })
             .done(function (data) {
@@ -155,7 +155,7 @@ function populate_video(src){
         "village[]":$("#villageId").val()
     }
   if (!(jQuery("#" + src + "Id" + " option ").length != 0))
-      $.get("/raw_data_analytics/dropdown_video/", prevValue)
+      $.get("/coco/rda/dropdown_video/", prevValue)
           .done(function (data) {
               data_json = JSON.parse(data);
               for (var jsonData in data_json) {
@@ -174,7 +174,7 @@ function populate_partner(src){
         "village[]":$("#villageId").val()
 }
     if(!(jQuery("#partnerId option").length!=0))
-        $.get("/raw_data_analytics/dropdown_partner",prevValue)
+        $.get("/coco/rda/dropdown_partner",prevValue)
             .done(function(data){
                 data_json =JSON.parse(data);
                 for(var jsonData in data_json){
@@ -211,7 +211,7 @@ function dropdown_control(src){
 function validation_check() {
     var error = 0;
     var checked_partitions = [partner, country, state, district, block, village]
-    var checked_partitions_restrict = [animator, group, people, video];
+    var checked_partitions_restrict = [animator, group, people];
     var checked_values = [screening, adoption, animator_no, attendance, video_screened_no, video_produced_no,blocknum,villagenum]
     var count_partition_restrict = 0;
     var count_partition = 0;
@@ -268,8 +268,7 @@ function validation_check() {
         ((video.checked) && (video_screened_no.checked)) ||
         ((video.checked) && (video_produced_no.checked))
         ||((village.checked)&&(villagenum.checked))||
-        ((block.checked)&&(blocknum.checked)) ||
-        ((video.checked)&&(group.checked))) {
+        ((block.checked)&&(blocknum.checked)) ) {
         alert("Invalid combination of 'Value' and 'Partition' fields!! Please check");
         error = 1;
         event.preventDefault();

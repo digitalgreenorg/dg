@@ -1,19 +1,25 @@
+__author__ = 'Vikas Saini'
+
+import os
 import time
 import datetime
 import requests
+import boto
 import unicodecsv as csv
 import xml.etree.ElementTree as xml_parse
+from datetime import timedelta
 from pytz import timezone
 
 from loop.models import HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog
+    HelplineCallLog, HelplineSmsLog, Broadcast, BroadcastAudience
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, MEDIA_ROOT, \
+    ACCESS_KEY, SECRET_KEY, BROADCAST_APP_ID
 
 from loop.utils.ivr_helpline.helpline_data import CALL_STATUS_URL, CALL_REQUEST_URL, \
-    CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL
-
-HELPLINE_LOG_FILE = '%s/loop/helpline_log.log'%(MEDIA_ROOT,)
+    CALL_RESPONSE_URL, SMS_REQUEST_URL, APP_REQUEST_URL, APP_URL, HELPLINE_LOG_FILE, \
+    BROADCAST_RESPONSE_URL, BROADCAST_S3_BUCKET_NAME, BROADCAST_S3_UPLOAD_PATH, \
+    BROADCAST_PENDING_TIME, BROADCAST_AUDIO_PATH, BROADCAST_FARMER_PATH
 
 def write_log(log_file,module,log):
     curr_india_time = datetime.datetime.now(timezone('Asia/Kolkata'))
@@ -166,3 +172,143 @@ def send_acknowledge(incoming_call_obj):
 def send_voicemail(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID):
     time.sleep(2)
     connect_to_app(farmer_number,OFF_HOURS_VOICEMAIL_APP_ID)
+
+def save_broadcast_info(call_id,to_number,broadcast_obj,farmer_id,start_time,status):
+    try:
+        call_obj = BroadcastAudience(call_id=call_id,to_number=to_number,
+                farmer_id=farmer_id,broadcast=broadcast_obj,start_time=start_time,status=status)
+        call_obj.save()
+    except Exception as e:
+        # if error then log
+        module = 'save_broadcast_info'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+
+def decline_previous_broadcast(farmer_number):
+    farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
+    try:
+        BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2]).update(status=3)
+    except Exception as e:
+        module = "decline_previous_broadcast"
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+    return
+
+def validate_phone_number(number):
+    if number == '' or len(number) < 10 or len(number) > 11 or \
+        not all(digit.isdigit() for digit in number) or \
+        int(number) < 7000000000 or int(number) > 9999999999:
+        return False
+    return True
+
+def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id):
+    app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+    app_url = APP_URL%(broadcast_app_id,)
+    response_url = BROADCAST_RESPONSE_URL
+    farmer_id = farmer_info['id'] if farmer_info['id'] != '' else None
+    to_number = farmer_info['phone']
+    if not validate_phone_number(str(to_number)):
+        return
+    # Decline previous pending/DND-Failed broadcast entry for this number.
+    # This is for make consistancy so at max only one pending broadcast 
+    # message for any number and ensuring that only latest broadcast will continue.
+    decline_previous_broadcast(to_number)
+    # Here From parameter is actually user number to whom we want to connect.
+    parameters = {'From':to_number,'CallerId':from_number,'CallType':'trans','Url':app_url,'StatusCallback':response_url}
+    response = requests.post(app_request_url,data=parameters)
+    module = 'connect_to_broadcast'
+    if response.status_code == 200:
+        response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
+        call_detail = response_tree.findall('Call')[0]
+        outgoing_call_id = str(call_detail.find('Sid').text)
+        outgoing_call_time = str(call_detail.find('StartTime').text)
+        # Last parameter status 0 for pending, 1 for complete and 2 for DND failed.
+        save_broadcast_info(outgoing_call_id,to_number,broadcast_obj,farmer_id,outgoing_call_time,0)
+    elif response.status_code == 403:
+        call_start_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+        save_broadcast_info('',to_number,broadcast_obj,farmer_id,call_start_time,2)
+        # Enter in Log
+        log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
+        write_log(HELPLINE_LOG_FILE,module,log)
+
+def redirect_to_broadcast(farmer_number,from_number):
+    farmer_number_possibilities = [farmer_number, '0'+farmer_number, farmer_number.lstrip('0'), '91'+farmer_number.lstrip('0'), '+91'+farmer_number.lstrip('0')]
+    time_period = (datetime.datetime.now(timezone('Asia/Kolkata'))-timedelta(days=BROADCAST_PENDING_TIME)).replace(tzinfo=None)
+    audience_obj = BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0,2], start_time__gte=time_period).select_related('broadcast')[0]
+    farmer_info = {'id':audience_obj.farmer_id,'phone':audience_obj.to_number}
+    broadcast_obj = audience_obj.broadcast
+    try:
+        # Change broadcast_obj status to decline (3). Now new BroadcastAudience entry will 
+        # be treated as broadcast call for check status.
+        audience_obj.status = 3
+        audience_obj.save()
+    except Exception as e:
+        module = 'redirect_to_broadcast'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+    connect_to_broadcast(farmer_info,broadcast_obj,from_number,BROADCAST_APP_ID)
+
+def start_broadcast(broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id_list,from_number,broadcast_app_id):
+    # Save Broadcast Information.
+    broadcast_start_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+    try:
+        broadcast_obj = Broadcast(title=broadcast_title,audio_url=s3_audio_url,
+                        start_time=broadcast_start_time,from_number=from_number)
+        broadcast_obj.save()
+        for cluster_id in cluster_id_list:
+            broadcast_obj.cluster.add(cluster_id)
+    except Exception as e:
+        module = 'start_broadcast'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+        return
+    # Start contacting farmers.
+    for farmer_info in farmer_contact_detail:
+        connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
+        time.sleep(1)
+
+    broadcast_end_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+    try:
+        broadcast_obj.end_time = broadcast_end_time
+        broadcast_obj.save()
+    except Exception as e:
+        module = 'start_broadcast'
+        write_log(HELPLINE_LOG_FILE,module,str(e))
+
+def upload_on_s3(audio_file_path,audio_file_name,s3_bucket_name,s3_upload_path,access_permission):
+    # Create Connection with S3
+    conn = boto.connect_s3(
+            aws_access_key_id = ACCESS_KEY,
+            aws_secret_access_key = SECRET_KEY,
+            is_secure=True
+            )
+    # S3 Bucket where we want to upload file
+    bucket = conn.get_bucket(s3_bucket_name)
+    # path of file inside bucket with file name
+    s3_new_key = s3_upload_path%(audio_file_name,)
+    # Create new file inside bucket on defined path
+    key=bucket.new_key(s3_new_key)
+    # Upload content on S3
+    key.set_contents_from_filename(audio_file_path)
+    # Provide access permission to file
+    key.set_canned_acl(access_permission)
+
+def save_broadcast_audio(file_name, audio_file):
+    file_name = ''.join(file_name.split())
+    audio_file_name = file_name + '_' + str(datetime.datetime.now(timezone('Asia/Kolkata')).strftime('%Y_%m_%d_%H_%M_%S_%f')) + '.wav'
+    audio_file_path = BROADCAST_AUDIO_PATH + audio_file_name
+    with open(audio_file_path, 'wb+') as broadcast_audio:
+        for chunk in audio_file.chunks():
+            broadcast_audio.write(chunk)
+    upload_on_s3(audio_file_path,audio_file_name,
+                BROADCAST_S3_BUCKET_NAME,BROADCAST_S3_UPLOAD_PATH,
+                'public-read')
+    # delete local uploaded audio file.
+    os.remove(audio_file_path)
+    return audio_file_name
+
+def save_farmer_file(file_name, farmer_file):
+    file_name = ''.join(file_name.split())
+    farmer_file_name = file_name + "_" + str(datetime.datetime.now(timezone('Asia/Kolkata')).strftime('%Y_%m_%d_%H_%M_%S_%f')) + '.csv'
+    farmer_file_path = BROADCAST_FARMER_PATH + farmer_file_name
+    with open(farmer_file_path, 'wb+') as broadcast_farmers:
+        for chunk in farmer_file.chunks():
+            broadcast_farmers.write(chunk)
+        broadcast_farmers.close()
+    return farmer_file_path

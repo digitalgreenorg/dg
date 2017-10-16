@@ -105,6 +105,15 @@ def get_dates_partners(request):
     partner_id = request.GET.getlist('partners')
     return from_date, to_date, partner_id;
 
+#Function to get project from Request object
+def get_projects(request):
+    if(not request):
+        return []
+    project_id = []
+    if 'projects' in request.GET:
+        project_id = request.GET.getlist('projects')
+    return project_id
+
 def filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date,partners):
     if(partners):
         # filtering on partners

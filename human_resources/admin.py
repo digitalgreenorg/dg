@@ -18,14 +18,14 @@ class PlaceAdmin(admin.ModelAdmin):
 
 class KeyResponsibilityInline(admin.TabularInline):
     model = KeyResponsibility
-    extra = 10
+    extra = 40
         
 class ExperienceQualificationInline(admin.TabularInline):
     model = ExperienceQualification
-    extra = 10
+    extra = 30
     
 class JobAdmin(admin.ModelAdmin):
-    fieldsets = [(None, {'fields':['title','description','conclusion','hierarchy_num', 'geography']})]
+    fieldsets = [(None, {'fields':['title','description','conclusion','hierarchy_num', 'geography', 'key_res_content']})]
     inlines = [ExperienceQualificationInline, KeyResponsibilityInline]
     list_display = ('hierarchy_num','title', 'geography')
     search_fields = ['title']

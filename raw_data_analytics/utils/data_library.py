@@ -27,12 +27,12 @@ class data_lib():
     ilookup=None
     # Accepts options i.e. dictionary of dictionary e.g. {'partition':{'partner':'','state',''},'value':{'nScreening':True,'nAdoption':true}}
     # This function is responsible to call function for checking validity of input and functions to make dataframes according to the inputs
-    
+
     def uniqueList(self,ElementsList):
         seenValues = set()
         seenValues_add = seenValues.add
         return [elements for elements in ElementsList if not (elements in seenValues or seenValues_add(elements))]
-    
+
     def fill_data(self,options):
         if self.ilookup is None:
             self.ilookup = initialize_lookup()
@@ -137,7 +137,7 @@ class data_lib():
     # Function to accept query as a string to execute and make dataframe corresponding to that particular query and return that dataframe
     def runQuery(self, query):
         # Make connection with the database
-        mysql_cn = MySQLdb.connect(host='localhost', port=3306, user=dg.settings.DATABASES['default']['USER'],
+        mysql_cn = MySQLdb.connect(host=dg.settings.DATABASES['default']['HOST'], port=dg.settings.DATABASES['default']['PORT'], user=dg.settings.DATABASES['default']['USER'],
                                    passwd=dg.settings.DATABASES['default']['PASSWORD'],
                                    db=dg.settings.DATABASES['default']['NAME'],
                                     charset = 'utf8',

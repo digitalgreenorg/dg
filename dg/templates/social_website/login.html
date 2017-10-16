@@ -45,9 +45,9 @@
 
                         <div class="media layout-vr-xlg">
                             <div class="social-wrap">
-                                <a href="#">
-                                    <button class="facebook" onClick="goog_report_conversion({% url 'social:begin' 'facebook' %}?next={{next}})">Sign in with Facebook</button>
-                                </a>
+                                <!--<a href="#">-->
+                                    <!--<button class="facebook" onClick="goog_report_conversion({% url 'social:begin' 'facebook' %}?next={{next}})">Sign in with Facebook</button>-->
+                                <!--</a>-->
                                 
                                 <br>
                                 <a href="{%url 'social:begin' 'google-oauth2' %}?next={{next}}">
@@ -82,7 +82,7 @@
                                 {% endif %}
                                     <!-- <a href="" class="hdg-white">Forgot your password?</a> -->
                                 </div>
-                                <input type="submit" value="Sign In" class="comment-btn auth-btn"/>
+                                <input type="submit" value="Sign In" class="comment-btn auth-btn web-login-btn"/>
                             {% if next %}
                                 <input type="hidden" name="next" value="{{next}}" />
                             {% else %}

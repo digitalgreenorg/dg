@@ -1,0 +1,28 @@
+<div class="container-fluid">
+  <h5 class="text-muted">Overall</h5>
+  <hr/>
+  <div class="row">
+    <div class="col-md-3" *ngFor="let card of cardsOverall">
+      <div class="card overall-bg">
+        <div #cardTitle id={{card.id}} class="card-block">
+          <h6 class="card-title text-white">{{card.text}}</h6>
+          <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <h5 class="text-muted">Recent</h5>
+  <hr/>
+  <div class="row">
+    <div class="col-md-3" *ngFor="let card of cardsRecent">
+      <div class="card recent-bg" >
+        <div #cardTitle id={{card.id}} class="card-block">
+          <h6 class="card-title text-white">{{card.text}}</h6>
+          <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
+      </div>
+    </div>
+  </div>
+</div>
