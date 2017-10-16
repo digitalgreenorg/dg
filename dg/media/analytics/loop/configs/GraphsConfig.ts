@@ -21,7 +21,7 @@ const legend_weighted_total = {
       total += this.yData[i] * volume;
       total_volume += volume;
     };
-    return this.name + ' - Total :  ' + (total / total_volume).toFixed(2);
+    return this.name + ' - Avg :  ' + (total / total_volume).toFixed(2);
   },
 };
 
