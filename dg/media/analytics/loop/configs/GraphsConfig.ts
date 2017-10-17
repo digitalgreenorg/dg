@@ -30,7 +30,7 @@ const legend_total = {
   labelFormatter: function() {
     var total = 0;
     for (var i = this.yData.length; i--;) { total += this.yData[i]; };
-    return this.name + ' - Total :  ' + total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return this.name + ' - Total :  ' + total.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 };
 
