@@ -21,8 +21,9 @@ class Command(BaseCommand):
         # print obj.district.district_name_en
         address = u"%s,%s,%s,%s" % (obj.mandi_name_en,obj.district.district_name_en,obj.district.state.state_name_en,obj.district.state.country.country_name)
         print address
-        # if geocoder.convert(address):
-        #     try:
-        #         (self.latitude,self.longitude) = geocoder.getLatLng()
-        #     except:
-        #         pass
+        if geocoder.convert(address):
+            try:
+                print geocoder.getLatLng()
+                # (self.latitude,self.longitude) = geocoder.getLatLng()
+            except:
+                pass
