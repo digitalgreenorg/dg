@@ -228,18 +228,18 @@ function() {
         'config_हिन्दी': 'वीडियो',
         'config_Français': 'Vidéos',
         'labels_हिन्दी': {video:"वीडियो", title: "शीर्षक", video_type: "वीडियो का प्रकार", production_date: "उत्पादन की तिथि", language: "भाषा", benefit: "लाभ",
-                            village: "गाँव", production_team: "वीडियो उत्पादन टीम", category: "श्रेणी", subcategory: "उप श्रेणी", videopractice:"विडियो में दिखाई गई क्रिया",
+                            village: "गाँव", production_team: "वीडियो उत्पादन टीम", category: "श्रेणी", subcategory: "उप श्रेणी", videopractice:"विडियो में दिखाई गई क्रिया", tags: "टैग चुनें",
                             youtubeid: "यूट्यूब आईडी", reviewed_by: "द्वारा अनुमोदित", reviewer: "संगठन", approval_date: "स्वीकृति तिथि", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य", direct_beneficiaries: "सीधा लाभार्थियों",
                             self_reported_behaviour2: "Self Reported Behaviour2", self_reported_behaviour1: "Self Reported Behaviour1"
                         },
         'labels_Français': {video:"Vidéos", title: "Titre", video_type: "Type de vidéo", production_date: "Date de production", language: "Langue", benefit: "Bénéfice",
-                            village: "Villages", production_team: "Equipe de production", category: "Catégorie", subcategory: "Sous-catégorie", videopractice:"La pratique vidéo",
+                            village: "Villages", production_team: "Equipe de production", category: "Catégorie", subcategory: "Sous-catégorie", videopractice:"La pratique vidéo", tags: "Sélectionnez Tags",
                             youtubeid: "Identité Youtube", reviewed_by: "Approuvé par", reviewer: "organisation", approval_date: "Date de validation", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable", direct_beneficiaries: "Bénéficiaires directs",
                             self_reported_behaviour2: "Self Reported Behaviour2", self_reported_behaviour1: "Self Reported Behaviour1"},
         
 
         'labels_English': {video:"Video", title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village",
-                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", youtubeid: "YouTube ID", 
+                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", tags: "Select Tags", youtubeid: "YouTube ID", 
                            reviewed_by: "Approved By", reviewer: "Organization", approval_date: "Approval Date", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", 
                            physically_verifiable:"Physically Verifiable", direct_beneficiaries: "DirectBeneficiaries", srb: "Self Reported Behaviour",
                            self_reported_behaviour2: "Self Reported Behaviour2", self_reported_behaviour1: "Self Reported Behaviour1"},
@@ -253,6 +253,7 @@ function() {
         'dependent_element_div_hide': 'label_direct_beneficiaries',
         'parent_element_to_hide': 'direct_beneficiaries',
         'parent_element_label_to_hide': 'label_direct_beneficiaries',
+        'health_element_show_hide': {'#remove-table': '#remove-table', '#srf-1': '#srf-1', '#srf-2': '#srf-2', '#label_direct_beneficiaries': '#label_direct_beneficiaries'},
         'unique_together_fields': ['title', 'production_date', 'village.id'],
         'sort_field': 'title',
         'foreign_entities': {
@@ -273,6 +274,12 @@ function() {
                 "language": {
                     'placeholder': 'id_language',
                     'name_field': 'language_name'
+                }
+            },
+            'tag': {
+                "tags": {
+                    'placeholder': 'id_tags',
+                    'name_field': 'tag_name'
                 }
             },
             'category': {
@@ -434,6 +441,19 @@ function() {
         'rest_api_url': '/coco/api/v2/language/',
         'entity_name': 'language',
         'sort_field': 'language_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
+    var tag_configs = {
+        'config_English': 'Tags',
+        'config_हिन्दी': 'भाषा',
+        'config_Français': 'Tags',
+        'rest_api_url': '/coco/api/v2/tag/',
+        'entity_name': 'tag',
+        'sort_field': 'tag_name',
         'dashboard_display': {
             listing: false,
             add: false
@@ -1320,7 +1340,8 @@ function() {
         agg_variable: '2',
         upavan_variable: '3',
         menu_options_to_hide: {'.ahnn': 'ahnn', '.hnn': '.hnn', 'li.hnn': 'li.hnn'},
-        upavan_user_fields: ["#type_of_venue", "#type_of_video", "#frontlineworkerpresent", "#end_time", "#remove-table", "#srf-1", "#srf-2"],
+        srb_fields: ["#srf-1", "#srf-2", "#remove-table"],
+        upavan_user_fields: ["#type_of_venue", "#type_of_video", "#frontlineworkerpresent", "#end_time"],
         label_upavan_dict: {'#id_label_animator': 'CSP name', '#id_label_videos_screened': 'Video Name',
                               '#id_category': 'Beneficiary', '#id_dob': 'Date of Home Visit',
                              '.non': 'Beneficiary recalled the knowledge recall point?',
@@ -1426,6 +1447,7 @@ function() {
         screening: screening_configs,
         adoption: adoption_configs,
         language: language_configs,
+        tag: tag_configs,
         category: category_configs,
         parentcategory: parent_category_configs,
         subcategory: subcategory_configs,

@@ -253,6 +253,10 @@ define([
             _.each(all_configs.misc.element_to_be_hidden_for_upavan, function(val, key){
                 $f_el.find(val).addClass('hidden')
             })
+            // for srb
+            _.each(all_configs.misc.srb_fields, function(element, index) {
+                $f_el.find(element).addClass('hidden')
+            })
             //  for UPAVAN
             if (cocousertype == 4){
                 //to change labels
@@ -680,10 +684,18 @@ define([
                    this.$el.find(combination_field_to_display).trigger("chosen:updated");
                 }
                 if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length == 0){
-                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).addClass('hidden');
+                    // this.$el.find("#"+this.entity_config.dependent_element_div_hide).addClass('hidden');
+                    _.each(this.entity_config.health_element_show_hide, function(key, value) {
+                        $(key).addClass('hidden')
+                        $(value).addClass('hidden')
+                    })
                 }
                 if (this.entity_config.parent_element_to_hide == dep_el && filtered_models.length != 0){
-                    this.$el.find("#"+this.entity_config.dependent_element_div_hide).removeClass('hidden');
+                    // this.$el.find("#"+this.entity_config.dependent_element_div_hide).removeClass('hidden');
+                    _.each(this.entity_config.health_element_show_hide, function(key, value) {
+                        $(key).removeClass('hidden')
+                        $(value).removeClass('hidden')
+                    })
                 }
                 this.action_after_render_foreign_element(this.entity_config.fetch_element_that_manipulate, dep_el)
             }, this);
