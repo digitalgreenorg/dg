@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, URLSearchParams, RequestOptions } from '@angular/http';
+import { Http, URLSearchParams, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs/Rx';
+import { config } from '../../config';
 
 @Injectable()
 export class CardsService {
 
   constructor(private http: Http) { }
+  private cardUrl = config.url + "getCardGraphData/";
 
   getApiData(args): Observable<any> {
-
     let params: URLSearchParams = new URLSearchParams();
     for (let key in args.params) {
       params.set(key.toString(), args.params[key]);
@@ -19,7 +20,7 @@ export class CardsService {
 
     let requestOptions: RequestOptions = new RequestOptions();
     requestOptions.search = params;
-    return this.http.get(args.webUrl, requestOptions)
+    return this.http.get(this.cardUrl, requestOptions)
       .map(response => response.json())
       .catch(this.handleError);
   }
