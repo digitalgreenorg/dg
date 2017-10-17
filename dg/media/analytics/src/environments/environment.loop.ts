@@ -1,6 +1,5 @@
 
 import { chartsConfig, AddCommonOptions } from '../../loop/configs/GraphsConfig';
-import { tabsConfig } from '../../loop/configs/TabsConfig';
 import { cardConfig } from '../../loop/configs/CardsConfig';
 import { cardGraphConfig } from '../../loop/configs/GraphCardsConfig';
 import { navsConfig } from '../../loop/configs/NavsConfig';
@@ -12,7 +11,6 @@ export const environment = {
   // url: '/loop/',
   url: 'http://127.0.0.1:8000/loop/',
   chartsConfig: chartsConfig,
-  tabsConfig: tabsConfig,
   cardsConfig: cardConfig,
   cardGraphConfig: cardGraphConfig,
   navsConfig: navsConfig,

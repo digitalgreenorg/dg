@@ -1,5 +1,4 @@
 import { chartsConfig, AddCommonOptions } from '../../training/configs/GraphsConfig';
-import { tabsConfig } from '../../training/configs/TabsConfig';
 import { cardConfig } from '../../training/configs/CardsConfig';
 import { cardGraphConfig } from '../../training/configs/GraphCardsConfig';
 import { navsConfig } from '../../training/configs/NavsConfig';
@@ -11,11 +10,10 @@ export const environment = {
   // url: '/training/',
   url: 'http://127.0.0.1:8000/training/',
   chartsConfig: chartsConfig,
-  tabsConfig: tabsConfig,
   cardsConfig: cardConfig,
   cardGraphConfig: cardGraphConfig,
   navsConfig: navsConfig,
   filtersConfig: filtersConfig,
   generalConfig: generalConfig,
-  AddCommonOptions : AddCommonOptions
+  AddCommonOptions: AddCommonOptions
 };

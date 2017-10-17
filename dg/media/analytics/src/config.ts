@@ -7,7 +7,6 @@ export const config = {
     filterConfig : environment.filtersConfig,
     url: environment.url,
     chartsConfig: environment.chartsConfig,
-    tabsConfig: environment.tabsConfig,
     cardsConfig: environment.cardsConfig,
     navsConfig: environment.navsConfig,
     filtersConfig: environment.filtersConfig,

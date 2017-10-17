@@ -17,7 +17,6 @@ import { MyDatePickerModule } from 'mydatepicker';
 import { AppComponent } from './app.component';
 import { CardsComponent } from './cards/cards.component';
 import { FiltersComponent } from './filters/filters.component';
-import { GraphsComponent } from './graphs/graphs.component';
 import { NavsComponent } from './navs/navs.component';
 
 import { GraphsService } from './navs/navs.service';
@@ -64,7 +63,6 @@ const PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 @NgModule({
   declarations: [
     AppComponent,
-    GraphsComponent,
     FiltersComponent,
     SearchPipe,
     CardsComponent,
