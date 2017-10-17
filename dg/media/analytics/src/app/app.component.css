@@ -6,16 +6,3 @@
 .header-bg {
   background-color: #902B8C;
 }
-
-.new_footer {
-  clear: both;
-  margin: auto;
-  width: 100%;
-  height: 50px;
-  background-color: #3D3D3F;
-  padding-top: 0.2%;
-}
-
-.new_footer, .privacy, .terms-service {
-  color: white;
-}

@@ -5,7 +5,7 @@
   z-index: 1;
   top: 0;
   right: 0;
-  background-color: #3E3E40;
+  background-color: #3D3D3F !important;
   transition: 0.4s;
   padding-top: 20px;
   overflow-x: hidden;
@@ -60,10 +60,6 @@ input {
   height: 300px;
 }
 
-.btn {
-  background-color: #902B8C;
-}
-
 .red-text {
   -webkit-text-fill-color: red;
   margin-bottom: 0px;
@@ -73,10 +69,6 @@ input {
   font-size: 14px;
 }
 
-.datepicker-dimens {
-  height: 20px;
-}
-
-.margin-left {
-  margin-left: 10px;
+.white-text {
+  -webkit-text-fill-color: white;
 }
