@@ -50,7 +50,7 @@ def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(LOG_FILE,module,log)
     try:
-        price_info_incoming_obj.save()    
+        price_info_incoming_obj.save()
     except Exception as e:
         # Save Errors in Logs
         write_log(LOG_FILE,module,str(e))
@@ -83,7 +83,7 @@ def get_valid_list(app_name, model_name, requested_item, farmer_number):
     return tuple(map(int,requested_list.intersection(id_list))),0
 
 def run_query(query):
-    mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'], 
+    mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'],
         user=DATABASES['default']['USER'] ,
         passwd=DATABASES['default']['PASSWORD'],
         db=DATABASES['default']['NAME'],

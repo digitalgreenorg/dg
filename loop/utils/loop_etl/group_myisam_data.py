@@ -3,7 +3,12 @@ import MySQLdb
 import datetime, time
 import pandas as pd
 import numpy as np
+from operator import itemgetter
+from loop.utils.loop_etl.aggregation_methods import *
 from loop.models import CombinedTransaction
+from loop.utils.utility import get_init_sql_ds, join_sql_ds
+from loop.constants.constants import *
+from loop.dashboard.database_operations import *
 
 def get_grouped_data(df_result_aggregate,day,df_farmers):
     start_date = df_result_aggregate['date'].min()
@@ -21,8 +26,8 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
 
         data =  pd.Series(pd.DataFrame(df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))).sum(numeric_only=True))
 
-        data_by_grouped_days.loc[index,'amount__sum'] = data['amount']
-        data_by_grouped_days.loc[index,'quantity__sum'] = data['quantity']
+        data_by_grouped_days.loc[index,'amount__sum'] = round(data['amount'])
+        data_by_grouped_days.loc[index,'quantity__sum'] = round(data['quantity'])
         data_by_grouped_days.loc[index,'farmer_share__sum'] = data['farmer_share']
         data_by_grouped_days.loc[index,'transportation_cost__sum'] = data['transportation_cost']
         data_by_grouped_days.loc[index,'gaddidar_share__sum'] = data['gaddidar_share']
@@ -31,25 +36,15 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
         data_by_grouped_days.loc[index,'active_cluster'] = df_result_aggregate.where((df_result_aggregate['date'] > end_date) & (df_result_aggregate['date'] <= start_date))['aggregator_id'].nunique()
 
         data_by_grouped_days.loc[index,'distinct_farmer_count'] = df_farmers.where((df_farmers['date'] > end_date) & (df_farmers['date']<=start_date))['farmer_id'].nunique()
-
-    data_by_grouped_days = data_by_grouped_days.round()
+        data_by_grouped_days.loc[index, 'cpk'] = (data['transportation_cost'] + data['aggregator_incentive']) / data['quantity']
+        data_by_grouped_days.loc[index, 'spk'] = (data['gaddidar_share'] + data['farmer_share']) / (data['transportation_cost'] + data['aggregator_incentive'])
+    data_by_grouped_days = data_by_grouped_days.round(2)
     data_by_grouped_days = data_by_grouped_days.to_dict(orient='index')
     return data_by_grouped_days
 
-
-def get_data_from_myisam(get_total, country_id, state_id):
-    database = DATABASES['default']['NAME']
-    username = DATABASES['default']['USER']
-    password = DATABASES['default']['PASSWORD']
-    host = DATABASES['default']['HOST']
-    port = DATABASES['default']['PORT']
-    mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
-
-    if(int(state_id) < 0):
-        #only country filter
-        df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id), con=mysql_cn)
-    elif(int(state_id) > 0):
-        df_result = pd.read_sql("SELECT * FROM loop_aggregated_myisam where country_id = " + str(country_id) + " AND state_id = " + str(state_id), con=mysql_cn)
+def get_data_from_myisam(get_total, **kwargs):
+    df_result = query_myisam(**kwargs)
+    country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
     aggregations = {
         'quantity':{
             'quantity__sum':'sum'
@@ -71,63 +66,50 @@ def get_data_from_myisam(get_total, country_id, state_id):
         }
     }
 
-    aggregate_cumm_vol_farmer_state = {
-        'quantity':'sum',
-        'cum_distinct_farmer':'mean'
-    }
-
-    aggregate_cumm_vol_farmer = {
-        'quantity':'sum',
-        'cum_distinct_farmer':'sum'
-    }
-
-    # MyISAM table contains CT, DT, Gaddidar, AggregatorIncentive.
-    df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
-    df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
-
+    # aggregate_cumm_vol_farmer = {
+    #     'quantity':{
+    #         'quantity__sum':'sum'
+    #     },
+    #     'cum_distinct_farmer':{
+    #         'cum_vol_farmer':'mean'
+    #     }
+    # }
     cumm_vol_farmer = {}
-    if get_total == 0:
-        if(int(state_id) < 0):
-            df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('date','farmer_id').order_by('date')))
-        elif(int(state_id) > 0):
-            df_farmers = pd.DataFrame(list(CombinedTransaction.objects.filter(mandi__district__state=state_id).values('date','farmer_id').order_by('date')))
+    dictionary = {}
+    try:
+        if( len(df_result) > 0) :
+        # MyISAM table contains CT, DT, Gaddidar, AggregatorIncentive.
+            df_result_aggregate = df_result.groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
+            df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
+        else :
+            df_result_aggregate = df_result.astype(int).groupby(['date','aggregator_id','mandi_id']).agg(aggregations).reset_index()
+            df_result_aggregate.columns = df_result_aggregate.columns.droplevel(1)
 
-        dictionary = {}
-        
-        df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
-        days = ['7','15','30','60']
-        for day in days:
-            data_by_grouped_days = get_grouped_data(df_result_aggregate,day,df_farmers)
-            dictionary[day] = list(data_by_grouped_days.values())
+        if get_total == 0:
+            #df_farmers = pd.DataFrame(list(CombinedTransaction.objects.values('date','farmer_id').order_by('date')))
+            combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
 
-        # Calcualting cummulative volume and farmer count
-        df_state_cum_vol_farmer = df_result.groupby(['date', 'state_id']).agg(aggregate_cumm_vol_farmer_state).reset_index()#.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
-        # Aggregate Manually
-        df_cum_vol_farmer = pd.DataFrame(columns=('date', 'cum_distinct_farmer', 'cum_vol'))
-        index = 0
-        curr_date = df_state_cum_vol_farmer['date'][0]
-        state_wise_farmer = {}
-        cum_vol = 0
-        for i, row in df_state_cum_vol_farmer.iterrows():
-            if row['date'] == curr_date:
-                cum_vol += row['quantity']
-                state_wise_farmer[row['state_id']] = row['cum_distinct_farmer']
-            else:
-                df_cum_vol_farmer.loc[index, 'date'] = curr_date
-                df_cum_vol_farmer.loc[index, 'cum_distinct_farmer'] = sum(state_wise_farmer.values())
-                df_cum_vol_farmer.loc[index, 'cum_vol'] = cum_vol
-                index += 1
-                curr_date = row['date']
-                cum_vol += row['quantity']
-                state_wise_farmer[row['state_id']] = row['cum_distinct_farmer']
-        df_cum_vol_farmer.loc[index, 'date'] = curr_date
-        df_cum_vol_farmer.loc[index, 'cum_distinct_farmer'] = sum(state_wise_farmer.values())
-        df_cum_vol_farmer.loc[index, 'cum_vol'] = cum_vol
-        # df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
-        # df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
-        cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
-    else:
-        df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
-        df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
-        dictionary = df.to_dict(orient='index')
-    return dictionary, cumm_vol_farmer
+            if(state_id) :
+                combinedTransactionData = combinedTransactionData.filter(mandi__district__state=state_id)
+            df_farmers = pd.DataFrame(list(combinedTransactionData.values('date','farmer_id').order_by('date')))
+            df_farmers['date'] = df_farmers['date'].astype('datetime64[ns]')
+
+            days = ['15','30','60']
+            for day in days:
+                data_by_grouped_days = get_grouped_data(df_result_aggregate,day,df_farmers)
+                dictionary[day] = list(data_by_grouped_days.values())
+
+            # Calcualting cummulative volume and farmer count
+            # df_cum_vol_farmer = df_result.groupby('date').agg(aggregate_cumm_vol_farmer).reset_index()
+            # df_cum_vol_farmer.columns = df_cum_vol_farmer.columns.droplevel(1)
+            # df_cum_vol_farmer['cum_vol'] = df_cum_vol_farmer['quantity'].cumsum().round()
+            # df_cum_vol_farmer.drop('quantity',axis=1,inplace=True);
+            # cumm_vol_farmer = df_cum_vol_farmer.to_dict(orient='index')
+        else:
+            df_result_aggregate.drop(['mandi_id','aggregator_id'],axis=1,inplace=True)
+            df = pd.DataFrame(df_result_aggregate.sum(numeric_only=True))
+            dictionary = df.to_dict(orient='index')
+
+    except Exception as e:
+        print 'Exception : ', e
+    return dictionary#, cumm_vol_farmer

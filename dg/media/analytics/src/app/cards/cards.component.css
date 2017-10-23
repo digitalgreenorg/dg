@@ -1,11 +1,18 @@
 .container {
-  box-shadow: 0 0 8px grey;
+  box-shadow: 0 0 4px grey;
   padding: 15px 15px 15px 15px;
 }
+
 .container-fluid {
-  width: 90%;
-  /* box-shadow: 0 0 8px grey; */
-  padding: 0px 15px 40px 15px;
+  padding: 0px 15px 15px 15px;
+}
+
+.highcharts-yaxis-grid .highcharts-grid-line {
+  display: none;
+}
+
+.dropdown-button {
+  background: #F37B55;
 }
 
 .overall-bg {
@@ -14,4 +21,11 @@
 
 .recent-bg {
   background-color: #656566;
+}
+
+h6 {
+  font-size: 14px !important;
+}
+.text-muted {
+  margin: auto;
 }
