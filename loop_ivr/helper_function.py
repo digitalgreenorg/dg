@@ -10,7 +10,7 @@ import xml.etree.ElementTree as xml_parse
 
 from django.db.models import get_model
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES, EXOTEL_HELPLINE_NUMBER
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES, EXOTEL_HELPLINE_NUMBER, TEXTLOCAL_API_KEY
 
 from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL, CALL_REQUEST_URL, APP_REQUEST_URL, \
@@ -22,7 +22,7 @@ from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
     agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
     agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller, code_hi, \
-    remaining_crop_line
+    remaining_crop_line, TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -99,6 +99,37 @@ def send_info(to_number, content):
     while index < len(content):
         send_sms(from_number, to_number, content[index:index+1998])
         index += 1998
+        time.sleep(1)
+
+def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
+    # recipient_custom_id = subscription_log_obj.id
+    sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
+    #headers = {'content-type': 'application/json' }
+    # parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers':user_no,
+    #                 'message': sms_body, 'receipt_url': PUSH_MESSAGE_SMS_RESPONSE_URL, 'unicode': 'true',
+    #                 'custom': recipient_custom_id}
+    parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers':user_no,
+                     'message': sms_body, 'unicode': 'true'}
+    response = requests.post(sms_request_url, params=parameters)
+    response_text = json.loads(str(response.text))
+    if response_text['status'] == 'success':
+        message_id = ','.join([str(message["id"]) for message in response_text['messages']])
+        if price_info_incoming_obj != None:
+            price_info_incoming_obj.textlocal_sms_id = message_id
+    elif response_text['status'] == 'failure':
+        module = 'send_sms_using_textlocal'
+        if price_info_incoming_obj != None:
+            log = "Status Code: %s (price_info_incoming_obj_id: %s)"%(response_text['status'], str(price_info_incoming_obj.id))
+        else:
+            log = "Status Code: %s (price_info_incoming_obj_id: %s)"%(response_text['status'], str(price_info_incoming_obj))
+        write_log(LOG_FILE,module,log)
+
+def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
+    index = 0
+    content = content.replace('\n','%0A')
+    while index < len(content):
+        send_sms_using_textlocal(user_no, content[index:index+720], price_info_incoming_obj)
+        index += 720
         time.sleep(1)
 
 def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag):
@@ -190,8 +221,10 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     if len(final_result) >= 2000:
         price_info_incoming_obj.return_result_to_app = 0
         price_info_incoming_obj.info_status = 1
+        #price_info_incoming_obj.save()
+        #send_info(from_number, final_result)
+        send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
         price_info_incoming_obj.save()
-        send_info(from_number, final_result)
     else:
         price_info_incoming_obj.save()
     # If caller is calling first time then send crop code to them.
@@ -199,7 +232,9 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         if query_result:
             first_time_caller_message = [first_time_caller,'\n\n', crop_and_code, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
             first_time_caller_message = ''.join(first_time_caller_message)
-            send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller_message)
+            #send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller_message)
+            send_info_using_textlocal(from_number, first_time_caller_message)
         else:
-            send_sms(AGGREGATOR_SMS_NO, from_number, crop_and_code)
+            #send_sms(AGGREGATOR_SMS_NO, from_number, crop_and_code)
+            send_info_using_textlocal(from_number, crop_and_code)
     PriceInfoLog.objects.bulk_create(price_info_log_list)

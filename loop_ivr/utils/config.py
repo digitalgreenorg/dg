@@ -32,3 +32,6 @@ first_time_caller = 'लूप में कॉल करने के लिए
 MARKET_INFO_CALL_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/market_info_response/')
 PUSH_MESSAGE_SMS_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/push_message_sms_response/')
 MARKET_INFO_APP = '137265'
+
+SMS_SENDER_NAME = 'LOOPDG'
+TEXT_LOCAL_SINGLE_SMS_API = 'https://api.textlocal.in/send/'

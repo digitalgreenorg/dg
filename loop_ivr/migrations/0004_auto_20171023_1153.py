@@ -11,6 +11,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AddField(
+            model_name='priceinfoincoming',
+            name='textlocal_sms_id',
+            field=models.CharField(max_length=150, null=True, blank=True),
+        ),
         migrations.AlterField(
             model_name='priceinfoincoming',
             name='info_status',

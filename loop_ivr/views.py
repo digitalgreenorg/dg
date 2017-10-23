@@ -13,7 +13,8 @@ import time
 from dg.settings import EXOTEL_HELPLINE_NUMBER
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, SubscriptionLog
-from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call
+from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call, \
+    send_info_using_textlocal
 from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, helpline_hi, remaining_crop_line
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
@@ -47,7 +48,8 @@ def market_info_response(request):
                 user_no = price_info_incoming_obj.from_number
                 message = [call_failed_sms,'\n\n', crop_and_code, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
                 message = ''.join(message)
-                send_info(user_no, message)
+                #send_info(user_no, message)
+                send_info_using_textlocal(user_no, message, price_info_incoming_obj)
         # If call is completed, then check if Initial status is Not Picked, if yes then change it to No Input
         else:
             if price_info_incoming_obj != '' and price_info_incoming_obj.info_status == 4:

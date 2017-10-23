@@ -19,6 +19,7 @@ class PriceInfoIncoming(LoopModel):
     prev_query_code = models.CharField(max_length=120, null=True, blank=True)
     price_result = models.TextField(null=True, blank=True)
     return_result_to_app = models.IntegerField(choices=RETURN_RESULT, default=1)
+    textlocal_sms_id = models.CharField(max_length=150, null=True, blank=True)  #Comma Seprated Multiple SMS id
 
     def __unicode__(self):
         return "%s (%s)" % (self.from_number, self.incoming_time)
