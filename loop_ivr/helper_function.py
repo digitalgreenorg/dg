@@ -116,7 +116,7 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
     if response_text['status'] == 'success':
         message_id = ','.join([str(message["id"]) for message in response_text['messages']])
         if price_info_incoming_obj != None:
-            price_info_incoming_obj.textlocal_sms_id = message_id
+            price_info_incoming_obj.textlocal_sms_id += ',' + message_id
     elif response_text['status'] == 'failure':
         module = 'send_sms_using_textlocal'
         if price_info_incoming_obj != None:
