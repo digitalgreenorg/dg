@@ -127,7 +127,7 @@ class MandiTypeAdmin(admin.ModelAdmin):
 
 class VillageAdmin(admin.ModelAdmin):
     fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
-    list_display = ('id', 'village_name', 'block', 'village_name_en')
+    list_display = ('id', 'village_name', 'block', 'village_name_en','latitude','longitude')
     search_fields = ['village_name', 'village_name_en', 'block__block_name']
     list_filter = ['block__block_name', 'block__district__state__country']
 
