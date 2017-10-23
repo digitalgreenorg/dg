@@ -5,6 +5,7 @@ import requests
 import time
 import itertools
 import MySQLdb
+import json
 from datetime import datetime, timedelta
 import xml.etree.ElementTree as xml_parse
 
@@ -221,7 +222,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     if len(final_result) >= 2000:
         price_info_incoming_obj.return_result_to_app = 0
         price_info_incoming_obj.info_status = 1
-        #price_info_incoming_obj.save()
+        price_info_incoming_obj.save()
         #send_info(from_number, final_result)
         send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
         price_info_incoming_obj.save()
