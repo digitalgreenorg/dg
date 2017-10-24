@@ -136,10 +136,17 @@ def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
     index = 0
     content = content.replace('\n','%0A')
     while len(content) > 0:
+        # If length of content is less than 750, then send whole content once.
         if len(content) < 750:
             send_sms_using_textlocal(user_no, content, price_info_incoming_obj)
+            break
+        # If length of content is more than 750, then devide in packets of length < 750
+        # based on two new line.
         else:
             current_index = content[:750].rfind('%0A%0A')
+            # If two new line not found then devide simply in chunks of 750
+            if current_index < 0:
+                current_index = 750
             current_content = content[:current_index]
             content = content[current_index:]
             send_sms_using_textlocal(user_no, current_content, price_info_incoming_obj)
