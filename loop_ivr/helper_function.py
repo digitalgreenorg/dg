@@ -76,7 +76,11 @@ def get_valid_list(app_name, model_name, requested_item, farmer_number):
             # Only Bihar Crops and Mandi.
             id_list = set(model.objects.filter(district__state_id=1).values_list('id', flat=True))
     else:
-        id_list = set(model.objects.values_list('id', flat=True))
+        # For Fetch id of all crops 
+        #id_list = set(model.objects.values_list('id', flat=True))
+        # Only fetch id of crops which have Hindi name in database, 
+        # because we are sharing Hindi crops code as of now.
+        id_list = set(CropLanguage.objects.filter(language_id=1).values_list('crop_id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item)
     if (0 in requested_list) or (len(requested_list)==0 and model_name == 'mandi'):
         return tuple(map(int,id_list)),1
