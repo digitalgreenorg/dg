@@ -135,10 +135,15 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
 def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
     index = 0
     content = content.replace('\n','%0A')
-    while index < len(content):
-        send_sms_using_textlocal(user_no, content[index:index+720], price_info_incoming_obj)
-        index += 720
-        time.sleep(1)
+    while len(content) > 0:
+        if len(content) < 750:
+            send_sms_using_textlocal(user_no, content, price_info_incoming_obj)
+        else:
+            current_index = content[:750].rfind('%0A%0A')
+            current_content = content[:current_index]
+            content = content[current_index:]
+            send_sms_using_textlocal(user_no, current_content, price_info_incoming_obj)
+            time.sleep(.5)
 
 def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag):
     price_info_list = []
