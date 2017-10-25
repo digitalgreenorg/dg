@@ -19,4 +19,6 @@ urlpatterns = patterns('',
     # admin/logout/ should be above admin/ URL
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loopivr/admin/'}),
     (r'^admin/', include(loop_ivr_admin.urls)),
+    url(r'^wrong_code_message/', wrong_code_message),
+    url(r'^no_code_message/', no_code_message),
 )

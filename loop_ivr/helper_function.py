@@ -158,7 +158,7 @@ def get_top_selling_crop_quantity_wise(number_of_crop, from_duration):
                 .values('crop_id').annotate(total_quantity=Sum('quantity'))
                 .order_by('-total_quantity').values_list('crop_id', flat=True)[:number_of_crop])
     crop_code_names = CropLanguage.objects.filter(language_id=1, crop_id__in=crop_list).values('crop_id', 'crop_name')
-    return crop_code_names
+    return list(crop_code_names)
 
 def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag):
     price_info_list = []
