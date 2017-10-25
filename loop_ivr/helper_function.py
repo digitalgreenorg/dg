@@ -9,11 +9,11 @@ import json
 from datetime import datetime, timedelta
 import xml.etree.ElementTree as xml_parse
 
-from django.db.models import get_model
+from django.db.models import get_model, Sum
 
 from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES, EXOTEL_HELPLINE_NUMBER, TEXTLOCAL_API_KEY
 
-from loop.models import Crop, Mandi, CropLanguage
+from loop.models import Crop, Mandi, CropLanguage, CombinedTransaction
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL, CALL_REQUEST_URL, APP_REQUEST_URL, \
     APP_URL
 from loop.helpline_view import write_log
@@ -151,6 +151,14 @@ def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
             content = content[current_index:]
             send_sms_using_textlocal(user_no, current_content, price_info_incoming_obj)
             time.sleep(.5)
+
+def get_top_selling_crop_quantity_wise(number_of_crop, from_duration):
+    crop_id_list = list(CropLanguage.objects.filter(language_id=1).values_list('crop_id', flat=True))
+    crop_list = list(CombinedTransaction.objects.filter(date__gte=from_duration, crop_id__in=crop_id_list)
+                .values('crop_id').annotate(total_quantity=Sum('quantity'))
+                .order_by('-total_quantity').values_list('crop_id', flat=True)[:number_of_crop])
+    crop_code_names = CropLanguage.objects.filter(language_id=1, crop_id__in=crop_list).values('crop_id', 'crop_name')
+    return crop_code_names
 
 def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag):
     price_info_list = []
