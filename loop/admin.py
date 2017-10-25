@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.admin import SimpleListFilter
-
+from actions import export_as_csv_action
 from models import *
 
 class UserListFilter(SimpleListFilter):
@@ -82,6 +82,7 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
     list_filter = (UserListFilter,'status',
                    'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name', 'farmer__village__village_name', 'mandi__district__state__country')
     date_hierarchy = 'date'
+    actions = [export_as_csv_action("CSV Export")]
 
 
 
@@ -98,6 +99,7 @@ class DayTransportationAdmin(admin.ModelAdmin):
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = (UserListFilter, 'mandi__mandi_name', 'mandi__district__state__country')
     date_hierarchy = 'date'
+    actions = [export_as_csv_action("CSV Export")]
 
 
 class GaddidarAdmin(admin.ModelAdmin):
