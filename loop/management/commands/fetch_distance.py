@@ -1,6 +1,7 @@
 import os
 import sys
 from django.core.management.base import BaseCommand, CommandError
+from django.db.models import Q
 import pandas as pd
 from libs.distance_matrix import DistanceMatrix
 from loop.models import Mandi, Village
@@ -9,7 +10,7 @@ class Command(BaseCommand):
     help = '''This command fetches distance between source and destination. '''
 
     def handle(self,*args,**options):
-        mandi_matrix = pd.DataFrame(list(Mandi.objects.values('id','mandi_name_en','latitude','longitude').filter(district__state=1)))
+        mandi_matrix = pd.DataFrame(list(Mandi.objects.values('id','mandi_name_en','latitude','longitude').filter(district__state=1).filter(Q(latitude__isnull=False) & Q(latitude__gte=2))))
         mandi_matrix['tmp']=1
         mandi_matrix = mandi_matrix.merge(mandi_matrix,on='tmp', suffixes=('_src','_dest')).drop('tmp', axis=1)
         # print mandi_matrix.head()
