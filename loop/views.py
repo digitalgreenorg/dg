@@ -77,7 +77,7 @@ def login(request):
                     'phone_digits':loop_user[0].village.block.district.state.phone_digit,
                     'phone_start':loop_user[0].village.block.district.state.phone_start,
                     'preferred_language':loop_user[0].preferred_language.notation,
-                    'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role}))
+                    'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory}))
         else:
             admin_user = AdminUser.objects.filter(user = user)
             if user is not None and user.is_active and admin_user.count()>0:

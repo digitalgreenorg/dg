@@ -174,6 +174,7 @@ class LoopUser(LoopModel):
     preferred_language = models.ForeignKey(Language, null=True)
     days_count = models.IntegerField(default=3)
     is_visible = models.BooleanField(default=True)
+    farmer_phone_mandatory = models.BooleanField(default=True)
 
     def __unicode__(self):
         return """%s (%s)"""  % (self.name, self.phone_number)
