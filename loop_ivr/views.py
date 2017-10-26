@@ -150,7 +150,7 @@ def no_code_message(request):
         from_date = datetime.now()-timedelta(days=TOP_SELLING_CROP_WINDOW)
         top_selling_crops = get_top_selling_crop_quantity_wise(N_TOP_SELLING_CROP, from_date)
         crop_code_list = '\n'.join('%s - %s'%(crop['crop_name'].encode("utf-8").strip(), crop['crop_id']) for crop in top_selling_crops)
-        sms_content = [no_code_entered,'\n\n', crop_and_code_hi, '\n', crop_code_list, ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+        sms_content = [no_code_entered,'\n\n', crop_and_code_hi, '\n', crop_code_list, '\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
         sms_content = ''.join(sms_content)
         response = HttpResponse(sms_content, content_type='text/plain')
         return response
@@ -163,7 +163,7 @@ def wrong_code_message(request):
         from_date = datetime.now()-timedelta(days=TOP_SELLING_CROP_WINDOW)
         top_selling_crops = get_top_selling_crop_quantity_wise(N_TOP_SELLING_CROP, from_date)
         crop_code_list = '\n'.join('%s - %s'%(crop['crop_name'].encode("utf-8").strip(), crop['crop_id']) for crop in top_selling_crops)
-        sms_content = [wrong_code_entered,'\n\n', crop_and_code_hi, '\n', crop_code_list, ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+        sms_content = [wrong_code_entered,'\n\n', crop_and_code_hi, '\n', crop_code_list, '\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
         sms_content = ''.join(sms_content)
         response = HttpResponse(sms_content, content_type='text/plain')
         return response
