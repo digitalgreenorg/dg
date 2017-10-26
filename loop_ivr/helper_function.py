@@ -204,7 +204,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             no_price_message = agg_sms_no_price_available
         price_info_list.append('\n')
         price_info_list.append(no_price_message)
-        price_info_list.append(('\n\n%s')%(crop_and_code,))
+        crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+        price_info_list.append(('\n\n%s')%(crop_code_list,))
     else:
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
         for row in query_result:
@@ -264,12 +265,13 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         price_info_incoming_obj.save()
     # If caller is calling first time then send crop code to them.
     if PriceInfoIncoming.objects.filter(from_number=from_number).count() == 1:
+        crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
         if query_result:
-            first_time_caller_message = [first_time_caller,'\n\n', crop_and_code, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+            first_time_caller_message = [first_time_caller,'\n\n', crop_code_list, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
             first_time_caller_message = ''.join(first_time_caller_message)
             #send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller_message)
             send_info_using_textlocal(from_number, first_time_caller_message)
         else:
-            #send_sms(AGGREGATOR_SMS_NO, from_number, crop_and_code)
-            send_info_using_textlocal(from_number, crop_and_code)
+            #send_sms(AGGREGATOR_SMS_NO, from_number, crop_code_list)
+            send_info_using_textlocal(from_number, crop_code_list)
     PriceInfoLog.objects.bulk_create(price_info_log_list)

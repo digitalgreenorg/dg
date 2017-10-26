@@ -47,7 +47,8 @@ def market_info_response(request):
             # if call found in our database, then fetch number of caller and send SMS
             if price_info_incoming_obj != '':
                 user_no = price_info_incoming_obj.from_number
-                message = [call_failed_sms,'\n\n', crop_and_code, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+                crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+                message = [call_failed_sms,'\n\n', crop_code_list, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
                 message = ''.join(message)
                 #send_info(user_no, message)
                 send_info_using_textlocal(user_no, message, price_info_incoming_obj)
