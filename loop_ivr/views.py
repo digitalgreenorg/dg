@@ -14,7 +14,7 @@ from dg.settings import EXOTEL_HELPLINE_NUMBER
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, SubscriptionLog
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call, \
-    send_info_using_textlocal, get_top_selling_crop_quantity_wise
+    send_info_using_textlocal, get_top_selling_crop_quantity_wise, get_crop_code_list
 from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, helpline_hi, remaining_crop_line, \
     no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP
 
@@ -147,10 +147,8 @@ def no_code_message(request):
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
-        from_date = datetime.now()-timedelta(days=TOP_SELLING_CROP_WINDOW)
-        top_selling_crops = get_top_selling_crop_quantity_wise(N_TOP_SELLING_CROP, from_date)
-        crop_code_list = '\n'.join('%s - %s'%(crop['crop_name'].encode("utf-8").strip(), crop['crop_id']) for crop in top_selling_crops)
-        sms_content = [no_code_entered,'\n\n', crop_and_code_hi, '\n', crop_code_list, '\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+        crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+        sms_content = [no_code_entered,'\n\n', crop_code_list, '\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
         sms_content = ''.join(sms_content)
         response = HttpResponse(sms_content, content_type='text/plain')
         return response
@@ -160,10 +158,8 @@ def wrong_code_message(request):
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
-        from_date = datetime.now()-timedelta(days=TOP_SELLING_CROP_WINDOW)
-        top_selling_crops = get_top_selling_crop_quantity_wise(N_TOP_SELLING_CROP, from_date)
-        crop_code_list = '\n'.join('%s - %s'%(crop['crop_name'].encode("utf-8").strip(), crop['crop_id']) for crop in top_selling_crops)
-        sms_content = [wrong_code_entered,'\n\n', crop_and_code_hi, '\n', crop_code_list, '\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+        crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+        sms_content = [wrong_code_entered,'\n\n', crop_code_list, '\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
         sms_content = ''.join(sms_content)
         response = HttpResponse(sms_content, content_type='text/plain')
         return response

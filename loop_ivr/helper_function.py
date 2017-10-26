@@ -23,7 +23,8 @@ from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
     agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
     agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller, code_hi, \
-    remaining_crop_line, TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME
+    remaining_crop_line, TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, \
+    crop_and_code_hi
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -159,6 +160,12 @@ def get_top_selling_crop_quantity_wise(number_of_crop, from_duration):
                 .order_by('-total_quantity').values_list('crop_id', flat=True)[:number_of_crop])
     crop_code_names = CropLanguage.objects.filter(language_id=1, crop_id__in=crop_list).values('crop_id', 'crop_name')
     return list(crop_code_names)
+
+def get_crop_code_list(number_of_crop, selling_crop_window):
+    from_date = datetime.now()-timedelta(days=selling_crop_window)
+    top_selling_crops = get_top_selling_crop_quantity_wise(number_of_crop, from_date)
+    crop_code_list = '\n'.join('%s - %s'%(crop['crop_name'].encode("utf-8").strip(), crop['crop_id']) for crop in top_selling_crops)
+    return '\n'.join([crop_and_code_hi, crop_code_list])
 
 def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag):
     price_info_list = []
