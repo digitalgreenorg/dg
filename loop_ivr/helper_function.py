@@ -155,7 +155,7 @@ def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
 
 def get_top_selling_crop_quantity_wise(number_of_crop, from_duration):
     crop_id_list = list(CropLanguage.objects.filter(language_id=1).values_list('crop_id', flat=True))
-    crop_list = list(CombinedTransaction.objects.filter(date__gte=from_duration, crop_id__in=crop_id_list)
+    crop_list = list(CombinedTransaction.objects.filter(date__gte=from_duration, crop_id__in=crop_id_list, farmer__village__block__district__state_id=1)
                 .values('crop_id').annotate(total_quantity=Sum('quantity'))
                 .order_by('-total_quantity').values_list('crop_id', flat=True)[:number_of_crop])
     crop_code_names = CropLanguage.objects.filter(language_id=1, crop_id__in=crop_list).values('crop_id', 'crop_name')
