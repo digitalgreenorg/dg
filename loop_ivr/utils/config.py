@@ -30,7 +30,7 @@ call_failed_sms = 'नमस्ते। हमने आपको कॉल क
 remaining_crop_line = 'बाकी फसलों का कोड जानने के लिए कॉल करें:'
 first_time_caller = 'लूप में कॉल करने के लिए धन्यवाद। किसी भी फसल का रेट जानने के लिए 011-39585707 पर कॉल करें और फसल का कोड डालें।'
 no_code_entered = 'आपने फसल का कोड नही डाला है। किसी भी फसल का रेट जानने के लिए 011-39585707 पर दोबारा कॉल करें और फसल का कोड डालें।'
-wrong_code_entered = 'आपने फसल का गलत कोड डाला है। दोबारा कॉल करें और सही कोड डालें।'
+wrong_code_entered = 'आपने फसल का गलत कोड डाला है%s। दोबारा कॉल करें और सही कोड डालें।'
 
 MARKET_INFO_CALL_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/market_info_response/')
 PUSH_MESSAGE_SMS_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/push_message_sms_response/')

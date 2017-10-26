@@ -16,7 +16,7 @@ from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, SubscriptionLog
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call, \
     send_info_using_textlocal, get_top_selling_crop_quantity_wise, get_crop_code_list
 from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, helpline_hi, remaining_crop_line, \
-    no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP
+    no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, code_hi
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 
@@ -159,6 +159,19 @@ def wrong_code_message(request):
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
         crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+        call_id = str(request.GET.getlist('CallSid')[0])
+        farmer_number = str(request.GET.getlist('From')[0])
+        dg_number = str(request.GET.getlist('To')[0])
+        try:
+            price_info_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=farmer_number,
+                                        to_number=dg_number)
+            wrong_query_code = str(price_info_obj.query_code) if price_info_obj.query_code else ''
+        except Exception as e:
+            wrong_query_code = ''
+        if wrong_query_code == '':
+            wrong_code_entered = wrong_code_entered%(wrong_query_code,)
+        else:
+            wrong_code_entered = wrong_code_entered%((%s:%s)%(code_hi,wrong_query_code),)
         sms_content = [wrong_code_entered,'\n\n', crop_code_list, '\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
         sms_content = ''.join(sms_content)
         response = HttpResponse(sms_content, content_type='text/plain')
