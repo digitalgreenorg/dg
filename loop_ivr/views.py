@@ -149,7 +149,7 @@ def no_code_message(request):
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
         crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-        sms_content = [no_code_entered,'\n\n', crop_code_list, '\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+        sms_content = [no_code_entered,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
         sms_content = ''.join(sms_content)
         response = HttpResponse(sms_content, content_type='text/plain')
         return response
@@ -174,7 +174,7 @@ def wrong_code_message(request):
             wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
         else:
             wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
-        sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+        sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
         sms_content = ''.join(sms_content)
         response = HttpResponse(sms_content, content_type='text/plain')
         return response
