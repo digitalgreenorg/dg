@@ -318,6 +318,7 @@ function fill_drop_down(container, data_json, id_parameter, name_parameter, capt
 }
 //To compute aggregator, transporter, gaddidar payments table
 function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name_input) {
+  console.log(payments_data.aggregator_data);
   var aggregator_payment = payments_data.aggregator_data;
   var transport_payment = payments_data.transportation_data;
   var gaddidar_contribution_data = payments_data.gaddidar_data;
@@ -413,7 +414,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
       //TODO : DONE to be moved to below for loop where we are adding aggregator_outlier
       var net_payment = transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
 
-      aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), 0, transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
+      aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), parseFloat(quantites[i][j].toFixed(2)), 0, transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
 
       sno += 1;
     }
@@ -436,9 +437,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     if (aggregator == aggregator_incentive[i][USER_CREATED__ID].toString()) {
       for (var j = 0; j < aggregator_data_set.length; j++) {
         if (aggregator_data_set[j].indexOf(aggregator_incentive[i]['date']) != -1 && aggregator_data_set[j].indexOf(aggregator_incentive[i]['mandi__name']) != -1) {
-          aggregator_data_set[j][4] = parseFloat(aggregator_incentive[i]['amount']);
-          aggregator_data_set[j][8] = (parseFloat(aggregator_data_set[j][8]) + parseFloat(aggregator_data_set[j][4])).toFixed(2);
-          aggregator_data_set[j][11] = aggregator_incentive[i]['comment'];
+          aggregator_data_set[j][5] = parseFloat(aggregator_incentive[i]['amount']);
+          aggregator_data_set[j][9] = (parseFloat(aggregator_data_set[j][9]) + parseFloat(aggregator_data_set[j][5])).toFixed(2);
+          aggregator_data_set[j][12] = aggregator_incentive[i]['comment'];
           break;
         }
       }
@@ -446,7 +447,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   }
   //TODO: to be removed. Added fot temporary purposes.
   var data_set_length = aggregator_data_set.length;
-  aggregator_data_set.push([sno.toString(), "", "Mobile Recharge ", "", 150, "", "", "", 150, "", "", "", ""]);
+  aggregator_data_set.push([sno.toString(), "", "Mobile Recharge ", "", "", 150, "", "", "", 150, "", "", "", ""]);
 
   var gaddidar_data_set_clone = [];
   for (var i = 0; i < gaddidar_data_set.length; i++) {
@@ -470,9 +471,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     $('#aggregator_date_row').val($this.parent()[0].childNodes[1].innerHTML);
     $('#aggregator_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
     $('#aggregator_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
-    $('#aggregator_commission_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML / ($this.parent()[0].childNodes[3].innerHTML)).toFixed(2));
-    $('#aggregator_share_row').val(parseFloat($this.parent()[0].childNodes[4].innerHTML).toFixed(2));
-    $('#aggregator_comment_row').val($this.parent()[0].childNodes[9].innerHTML);
+    $('#aggregator_net_volume_row').val($this.parent()[0].childNodes[4].innerHTML);
+    $('#aggregator_commission_row').val(parseFloat($this.parent()[0].childNodes[5].innerHTML / ($this.parent()[0].childNodes[4].innerHTML)).toFixed(2));
+    $('#aggregator_share_row').val(parseFloat($this.parent()[0].childNodes[5].innerHTML).toFixed(2));
+    $('#aggregator_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
     $('#aggregator_error_div').hide();
   }
 
@@ -480,11 +482,12 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     $('#farmer_date_row').val($this.parent()[0].childNodes[1].innerHTML);
     $('#farmer_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
     $('#farmer_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
-    $('#farmer_transport_cost_row').val($this.parent()[0].childNodes[5].innerHTML);
-    $('#farmer_gaddidar_commission_row_farmer').val($this.parent()[0].childNodes[7].innerHTML);
+    $('#farmer_net_volume_row').val($this.parent()[0].childNodes[4].innerHTML);
+    $('#farmer_transport_cost_row').val($this.parent()[0].childNodes[6].innerHTML);
+    $('#farmer_gaddidar_commission_row_farmer').val($this.parent()[0].childNodes[8].innerHTML);
     $('#farmer_commission_row').val(parseFloat($this.parent()[0].childNodes[6].innerHTML / ($this.parent()[0].childNodes[3].innerHTML)).toFixed(2));
-    $('#farmer_share_row').val(parseFloat($this.parent()[0].childNodes[6].innerHTML).toFixed(2));
-    $('#farmer_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
+    $('#farmer_share_row').val(parseFloat($this.parent()[0].childNodes[7].innerHTML).toFixed(2));
+    $('#farmer_comment_row').val($this.parent()[0].childNodes[11].innerHTML);
     $('#farmer_error_div').hide();
   }
 
@@ -502,11 +505,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   $('#table2').on('click', 'tbody td', function(e) {
     $this = $(this);
     //console.log(aggregator_data_set[$this.context.parentNode.rowIndex-1][$this.context.cellIndex]);
-    if ($this.context.cellIndex === 4 && flag_edit_Table2 == true) {
+    if ($this.context.cellIndex === 5 && flag_edit_Table2 == true) {
       initializeAggregatorModal();
       $('#aggregator_modal').openModal();
       $('#aggregator_commission_row').focus();
-    } else if ($this.context.cellIndex === 6 && flag_edit_Table2 == true) {
+    } else if ($this.context.cellIndex === 7 && flag_edit_Table2 == true) {
       initializeFarmerModal();
       $('#farmer_modal').openModal();
       $('#farmer_commission_row').focus();
@@ -517,8 +520,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     if (!inputValidation($('#aggregator_commission_row'))) {
       actionOnInvalidValidation($('#aggregator_commission_row'), $('#aggregator_error_div'), $('#aggregator_error_message'));
     } else {
-      $('#aggregator_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML) * $('#aggregator_commission_row').val()).toFixed(2));
-      if ($('#aggregator_commission_row').val().trim() != '' && $('#aggregator_share_row').val().trim() != $this.parent()[0].childNodes[4].innerHTML)
+      $('#aggregator_share_row').val(parseFloat(($this.parent()[0].childNodes[4].innerHTML) * $('#aggregator_commission_row').val()).toFixed(2));
+      if ($('#aggregator_commission_row').val().trim() != '' && $('#aggregator_share_row').val().trim() != $this.parent()[0].childNodes[5].innerHTML)
         editedAggregator = 1;
     }
   });
@@ -526,8 +529,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     if (!inputValidation($('#aggregator_share_row'))) {
       actionOnInvalidValidation($('#aggregator_share_row'), $('#aggregator_error_div'), $('#aggregator_error_message'))
     } else {
-      $('#aggregator_commission_row').val(parseFloat($('#aggregator_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML)).toFixed(2));
-      if ($('#aggregator_share_row').val().trim() != '' && $('#aggregator_share_row').val().trim() != $this.parent()[0].childNodes[4].innerHTML)
+      $('#aggregator_commission_row').val(parseFloat($('#aggregator_share_row').val() / ($this.parent()[0].childNodes[4].innerHTML)).toFixed(2));
+      if ($('#aggregator_share_row').val().trim() != '' && $('#aggregator_share_row').val().trim() != $this.parent()[0].childNodes[5].innerHTML)
         editedAggregator = 1;
     }
   });
@@ -539,8 +542,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     if (!inputValidation($('#farmer_commission_row'))) {
       actionOnInvalidValidation($('#farmer_commission_row'), $('#farmer_error_div'), $('#farmer_error_message'));
     } else {
-      $('#farmer_share_row').val(parseFloat(($this.parent()[0].childNodes[3].innerHTML) * $('#farmer_commission_row').val()).toFixed(2));
-      if ($('#farmer_commission_row').val().trim() != '' && $('#farmer_share_row').val().trim() != $this.parent()[0].childNodes[6].innerHTML)
+      $('#farmer_share_row').val(parseFloat(($this.parent()[0].childNodes[4].innerHTML) * $('#farmer_commission_row').val()).toFixed(2));
+      if ($('#farmer_commission_row').val().trim() != '' && $('#farmer_share_row').val().trim() != $this.parent()[0].childNodes[7].innerHTML)
         editedFarmer = 1;
 
     }
@@ -549,8 +552,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     if (!inputValidation($('#farmer_share_row'))) {
       actionOnInvalidValidation($('#farmer_share_row'), $('#farmer_error_div'), $('#farmer_error_message'));
     } else {
-      $('#farmer_commission_row').val(parseFloat($('#farmer_share_row').val() / ($this.parent()[0].childNodes[3].innerHTML)).toFixed(2));
-      if ($('#farmer_share_row').val().trim() != '' && $('#farmer_share_row').val().trim() != $this.parent()[0].childNodes[6].innerHTML)
+      $('#farmer_commission_row').val(parseFloat($('#farmer_share_row').val() / ($this.parent()[0].childNodes[4].innerHTML)).toFixed(2));
+      if ($('#farmer_share_row').val().trim() != '' && $('#farmer_share_row').val().trim() != $this.parent()[0].childNodes[7].innerHTML)
         editedFarmer = 1;
     }
   });
@@ -610,49 +613,49 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   $('#farmer_reset_modal').on('click', function() {
     farmerResetClick = true;
 
-    $('#farmer_share_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data());
-    $('#farmer_commission_row').val(parseFloat($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2));
-    $('#farmer_comment_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 12).data());
+    $('#farmer_share_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 7).data());
+    $('#farmer_commission_row').val(parseFloat($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 7).data() / $this.parent()[0].childNodes[4].innerHTML).toFixed(2));
+    $('#farmer_comment_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 13).data());
 
   });
   $('#farmer_submit_modal').on('click', function(ev) {
     if (!inputValidation($('#farmer_commission_row'))) {
       ev.preventDefault();
-      $('#farmer_commission_row').val($this.parent()[0].childNodes[6].textContent / $this.parent()[0].childNodes[3].innerHTML);
-      $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
+      $('#farmer_commission_row').val($this.parent()[0].childNodes[7].textContent / $this.parent()[0].childNodes[4].innerHTML);
+      $('#farmer_share_row').val($this.parent()[0].childNodes[7].textContent);
       $('#farmer_commission_row').focus();
       return false;
     } else if (!inputValidation($('#farmer_share_row'))) {
       ev.preventDefault();
-      $('#farmer_commission_row').val($this.parent()[0].childNodes[6].textContent / $this.parent()[0].childNodes[3].innerHTML);
-      $('#farmer_share_row').val($this.parent()[0].childNodes[6].textContent);
+      $('#farmer_commission_row').val($this.parent()[0].childNodes[7].textContent / $this.parent()[0].childNodes[4].innerHTML);
+      $('#farmer_share_row').val($this.parent()[0].childNodes[7].textContent);
       $('#farmer_share_row').focus();
       return false;
     } else if (farmerResetClick && editedFarmer == 0) {
-      $this.parent()[0].childNodes[6].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 6).data();
-      $this.parent()[0].childNodes[10].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 12).data();
+      $this.parent()[0].childNodes[7].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 7).data();
+      $this.parent()[0].childNodes[11].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 13).data();
       delete rows_table2_farmer[$this.context.parentNode.rowIndex];
       $this.removeAttr('class');
-      $this.closest('tr').children('td:nth-child(11)')[0].className = '';
+      $this.closest('tr').children('td:nth-child(12)')[0].className = '';
       $this.addClass('editcolumn');
       farmerResetClick = false;
     } else if (editedFarmer != 0) {
 
-      $this.parent()[0].childNodes[6].innerHTML = $('#farmer_share_row').val();
-      $this.parent()[0].childNodes[10].innerHTML = $('#farmer_comment_row').val() + ' - ' + window.localStorage.name;
-      $this.parent()[0].childNodes[8].innerHTML = parseFloat(parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)).toFixed(2);
-      if ((parseFloat($this.parent()[0].childNodes[4].innerHTML) + parseFloat($this.parent()[0].childNodes[5].innerHTML)) < parseFloat($this.parent()[0].childNodes[6].innerHTML)) {
+      $this.parent()[0].childNodes[7].innerHTML = $('#farmer_share_row').val();
+      $this.parent()[0].childNodes[11].innerHTML = $('#farmer_comment_row').val() + ' - ' + window.localStorage.name;
+      $this.parent()[0].childNodes[9].innerHTML = parseFloat(parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)).toFixed(2);
+      if ((parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[6].innerHTML)) < parseFloat($this.parent()[0].childNodes[7].innerHTML)) {
 
         //  $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
         $this.removeAttr('class');
         $this.addClass('editedcelledge');
-        $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcelledge';
+        $this.closest('tr').children('td:nth-child(12)')[0].className = 'editedcelledge';
 
       } else {
         $this.removeAttr('class');
         $this.addClass('editedcell');
-        $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcell';
-        $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcell';
+        $this.closest('tr').children('td:nth-child(12)')[0].className = 'editedcell';
+        $this.closest('tr').children('td:nth-child(12)')[0].className = 'editedcell';
         // $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
       }
       var row_id = $this.context.parentNode.rowIndex;
@@ -669,9 +672,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   })
   $('#aggregator_reset_modal').on('click', function() {
     aggregatorResetClick = true;
-    $('#aggregator_share_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 4).data());
-    $('#aggregator_commission_row').val(parseFloat($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 4).data() / $this.parent()[0].childNodes[3].innerHTML).toFixed(2))
-    $('#aggregator_comment_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 11).data());
+    $('#aggregator_share_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data());
+    $('#aggregator_commission_row').val(parseFloat($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data() / $this.parent()[0].childNodes[4].innerHTML).toFixed(2))
+    $('#aggregator_comment_row').val($('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 12).data());
   });
   $('#aggregator_submit_modal').on('click', function(ev) {
     if (!inputValidation($('#aggregator_commission_row'))) {
@@ -730,7 +733,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
       var gaddidar_idDict = {};
       var aggregator_idDict = {};
       row_data['date'] = $('#table2').DataTable().cell(keys - 1, 1).data();
-      row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML;
+      row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
       mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
       row_data['mandi'] = mandi_idDict;
       aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
@@ -771,7 +774,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     }, {
       title: "Market"
     }, {
-      title: "Quantity[Q] (in Kg)"
+      title: "Quantity[Q'] (in Kg)"
+    }, {
+      title: "Quantity Post Deduction[Q] (in Kg)"
     }, {
       title: "Aggregator Payment[AP] (in Rs) (0.25*Q)"
     }, {
@@ -812,8 +817,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
           var colCount = $('#table2').dataTable().fnSettings().aoColumns.length - 1;
           for (var column = 0; column < colCount; column++)
             $('#table2').dataTable().fnSettings().aoColumns[column].bSortable = false;
-          $('#table2').find('tr td:nth-child(5)').addClass('editcolumn');
-          $('#table2').find('tr td:nth-child(7)').addClass('editcolumn');
+          $('#table2').find('tr td:nth-child(6)').addClass('editcolumn');
+          $('#table2').find('tr td:nth-child(8)').addClass('editcolumn');
           $('#aggregator_payment_tab :input')[0].disabled = true;
           $('#ToolTables_table2_0').addClass('disable-button');
           $('#payments_from_date').parent().parent().addClass('disable-button');
