@@ -82,7 +82,7 @@ def get_valid_list(app_name, model_name, requested_item, farmer_number):
         # Only fetch id of crops which have Hindi name in database, 
         # because we are sharing Hindi crops code as of now.
         id_list = set(CropLanguage.objects.filter(language_id=1).values_list('crop_id', flat=True))
-    requested_list = set(int(item) for item in requested_item.split('*') if item)
+    requested_list = set(int(item) for item in requested_item.split('*') if item.isdigit())
     if (0 in requested_list) or (len(requested_list)==0 and model_name == 'mandi'):
         return tuple(map(int,id_list)),1
     return tuple(map(int,requested_list.intersection(id_list))),0
