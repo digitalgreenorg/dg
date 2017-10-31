@@ -424,8 +424,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
       for (var j = 0; j < aggregator_data_set.length; j++) {
         if (aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
-          aggregator_data_set[j][7] += parseFloat(payments_gaddidar_contribution[i]['amount']);
-          aggregator_data_set[j][8] = parseFloat((aggregator_data_set[j][8] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
+          aggregator_data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
+          aggregator_data_set[j][9] = parseFloat((aggregator_data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
           break;
         }
       }
@@ -485,7 +485,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     $('#farmer_net_volume_row').val($this.parent()[0].childNodes[4].innerHTML);
     $('#farmer_transport_cost_row').val($this.parent()[0].childNodes[6].innerHTML);
     $('#farmer_gaddidar_commission_row_farmer').val($this.parent()[0].childNodes[8].innerHTML);
-    $('#farmer_commission_row').val(parseFloat($this.parent()[0].childNodes[6].innerHTML / ($this.parent()[0].childNodes[3].innerHTML)).toFixed(2));
+    $('#farmer_commission_row').val(parseFloat($this.parent()[0].childNodes[7].innerHTML / ($this.parent()[0].childNodes[4].innerHTML)).toFixed(2));
     $('#farmer_share_row').val(parseFloat($this.parent()[0].childNodes[7].innerHTML).toFixed(2));
     $('#farmer_comment_row').val($this.parent()[0].childNodes[11].innerHTML);
     $('#farmer_error_div').hide();
@@ -643,7 +643,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
       $this.parent()[0].childNodes[7].innerHTML = $('#farmer_share_row').val();
       $this.parent()[0].childNodes[11].innerHTML = $('#farmer_comment_row').val() + ' - ' + window.localStorage.name;
-      $this.parent()[0].childNodes[9].innerHTML = parseFloat(parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)).toFixed(2);
+      $this.parent()[0].childNodes[9].innerHTML = parseFloat(parseFloat($this.parent()[0].childNodes[6].innerHTML) + parseFloat($this.parent()[0].childNodes[5].innerHTML) - parseFloat($this.parent()[0].childNodes[8].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML)).toFixed(2);
       if ((parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[6].innerHTML)) < parseFloat($this.parent()[0].childNodes[7].innerHTML)) {
 
         //  $this.parent().css('background-color', '#E5FEB5').css('font-weight', 'bold').css('color', '#009');
@@ -690,26 +690,26 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
       $('#aggregator_commission_row').focus();
       return false;
     } else if (aggregatorResetClick && editedAggregator == 0) {
-      $this.parent()[0].childNodes[4].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 4).data();
-      $this.parent()[0].childNodes[9].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 11).data();
+      $this.parent()[0].childNodes[5].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 5).data();
+      $this.parent()[0].childNodes[10].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, 12).data();
       delete rows_table2[$this.context.parentNode.rowIndex];
       $this.removeAttr('class');
-      $this.closest('tr').children('td:nth-child(10)')[0].className = '';
+      $this.closest('tr').children('td:nth-child(11)')[0].className = '';
       $this.addClass('editcolumn');
       aggregatorResetClick = false;
     } else if (editedAggregator != 0) {
       $('#aggregator_modal').closeModal();
-      $this.parent()[0].childNodes[4].innerHTML = $('#aggregator_share_row').val();
-      $this.parent()[0].childNodes[9].innerHTML = $('#aggregator_comment_row').val() + ' - ' + window.localStorage.name;
-      $this.parent()[0].childNodes[8].innerHTML = parseFloat(parseFloat($this.parent()[0].childNodes[5].innerHTML) + parseFloat($this.parent()[0].childNodes[4].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML) - parseFloat($this.parent()[0].childNodes[6].innerHTML)).toFixed(2)
-      if (parseFloat($this.parent()[0].childNodes[4].innerHTML / $this.parent()[0].childNodes[3].innerHTML) > 0.5) {
+      $this.parent()[0].childNodes[5].innerHTML = $('#aggregator_share_row').val();
+      $this.parent()[0].childNodes[10].innerHTML = $('#aggregator_comment_row').val() + ' - ' + window.localStorage.name;
+      $this.parent()[0].childNodes[9].innerHTML = parseFloat(parseFloat($this.parent()[0].childNodes[6].innerHTML) + parseFloat($this.parent()[0].childNodes[5].innerHTML) - parseFloat($this.parent()[0].childNodes[8].innerHTML) - parseFloat($this.parent()[0].childNodes[7].innerHTML)).toFixed(2)
+      if (parseFloat($this.parent()[0].childNodes[5].innerHTML / $this.parent()[0].childNodes[4].innerHTML) > 0.5) {
         $this.removeAttr('class');
         $this.addClass('editedcelledge');
-        $this.closest('tr').children('td:nth-child(10)')[0].className = 'editedcelledge';
+        $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcelledge';
       } else {
         $this.removeAttr('class');
         $this.addClass('editedcell');
-        $this.closest('tr').children('td:nth-child(10)')[0].className = 'editedcell';
+        $this.closest('tr').children('td:nth-child(11)')[0].className = 'editedcell';
       }
       var row_id = $this.context.parentNode.rowIndex;
       rows_table2[row_id] = true;
@@ -734,11 +734,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
       var aggregator_idDict = {};
       row_data['date'] = $('#table2').DataTable().cell(keys - 1, 1).data();
       row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML;
-      mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
+      mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 11).data();
       row_data['mandi'] = mandi_idDict;
-      aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
+      aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
       row_data['aggregator'] = aggregator_idDict;
-      row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[9].innerHTML;
+      row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML;
       editedData.push(row_data);
     }
     return editedData;
@@ -751,11 +751,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
       var gaddidar_idDict = {};
       var aggregator_idDict = {};
       row_data['date'] = $('#table2').DataTable().cell(keys - 1, 1).data();
-      row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML;
-      mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
+      row_data['amount'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[7].innerHTML;
+      mandi_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 11).data();
       row_data['mandi'] = mandi_idDict;
-      row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML;
-      aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 9).data();
+      row_data['comment'] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[11].innerHTML;
+      aggregator_idDict['online_id'] = $('#table2').DataTable().cell(keys - 1, 10).data();
       row_data['aggregator'] = aggregator_idDict;
       row_data['user_created_id'] = $('#aggregator_payments :selected').val();
       row_data['user_modified_id'] = window.localStorage.user_id;
