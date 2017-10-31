@@ -35,6 +35,7 @@ class Command(BaseCommand):
 				vdc = map(int, c.find('Video').text.split(','))
 			except Exception as e:
 				vdc = []
+				import pdb;pdb.set_trace()
 				wtr.writerow(['Can not save screening without video', sc, "video not found"])
 				continue
 			try:
