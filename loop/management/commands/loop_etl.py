@@ -1,18 +1,21 @@
 import os
 import sys
-from django.core.management.base import BaseCommand, CommandError
-from dg.settings import DATABASES
-from loop.models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
-    Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
-    AggregatorShareOutliers, IncentiveParameter, IncentiveModel
 import subprocess
+from django.core.management.base import BaseCommand, CommandError
+from django.db.models import Count, Sum, Avg
+from dg.settings import DATABASES
+
 import MySQLdb
 import datetime, time
 import pandas as pd
-from django.db.models import Count, Sum, Avg
 import inspect
+
+from loop.models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
+    Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
+    AggregatorShareOutliers, IncentiveParameter, IncentiveModel
 from loop.utils.loop_etl.get_gaddidar_share import compute_gaddidar_share
 from loop.utils.loop_etl.get_aggregator_share import compute_aggregator_share
+from loop.constants.constants import *
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -38,7 +41,7 @@ class LoopStatistics():
             self.mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
             # .cursor()
 
-            df_loopuser = pd.DataFrame(list(LoopUser.objects.values('id', 'user__id', 'name_en', 'village__block__district__state__id', 'village__block__district__state__country__id')))
+            df_loopuser = pd.DataFrame(list(LoopUser.objects.filter(role = ROLE_CHOICE_AGGREGATOR).values('id', 'user__id', 'name_en', 'village__block__district__state__id', 'village__block__district__state__country__id')))
             df_loopuser.rename(columns={"user__id":"user_created__id", "name_en":"name", "village__block__district__state__id":"state_id", "village__block__district__state__country__id":"country_id"},inplace=True)
 
             print "Loop User Shape",df_loopuser.shape
@@ -82,27 +85,50 @@ class LoopStatistics():
             result.fillna(value=0,axis=1,inplace=True)
 
             # Getting new farmers who did any transaction on a particular date
-            df_farmer_count = pd.read_sql("SELECT T.date, T.country_id, T.state_id, count(T.farmer_id) as distinct_farmer_count FROM ( SELECT lct.farmer_id, ld.state_id, ls.country_id, min(lct.date) as date FROM loop_combinedtransaction lct join loop_farmer lf on lf.id = lct.farmer_id  join loop_village lv on lv.id = lf.village_id join loop_block lb on lb.id = lv.block_id join loop_district ld on ld.id=lb.district_id join loop_state ls on ls.id = ld.state_id join loop_country lc on lc.id = ls.country_id  GROUP BY lct.farmer_id) as T GROUP BY T.date, T.country_id, T.state_id",con=self.mysql_cn)
-            
+            df_farmer_count = pd.read_sql("""
+            SELECT
+                T.date,
+                T.country_id,
+                T.state_id,
+                COUNT(T.farmer_id) AS distinct_farmer_count
+            FROM
+                (SELECT
+                    ls.country_id,
+                        ls.id AS state_id,
+                        lct.farmer_id,
+                        MIN(lct.date) AS date
+                FROM
+                    loop_combinedtransaction lct
+                JOIN loop_loopuser llu ON lct.user_created_id = llu.user_id
+                JOIN loop_farmer lf ON lf.id = lct.farmer_id
+                JOIN loop_village lv ON lv.id = lf.village_id
+                JOIN loop_block lb ON lb.id = lv.block_id
+                JOIN loop_district ld ON ld.id = lb.district_id
+                JOIN loop_state ls ON ls.id = ld.state_id
+                WHERE
+                    llu.role = 2
+                GROUP BY lct.farmer_id) as T
+            GROUP BY T.date , T.country_id , T.state_id; """,con=self.mysql_cn)
+
             # Cummulating sum of farmers that were unique and did any transaction till a particular date
-            df_farmer_count['cummulative_distinct_farmer'] = df_farmer_count.groupby(by=['country_id', 'state_id'])['distinct_farmer_count'].cumsum()
+            # df_farmer_count['cummulative_distinct_farmer'] = df_farmer_count.groupby(by=['country_id'])['distinct_farmer_count'].cumsum()
+            # df_farmer_count.drop(['distinct_farmer_count'],axis=1,inplace=True)
 
-            df_farmer_count.drop(['distinct_farmer_count'],axis=1,inplace=True)
+            result = pd.merge(result,df_farmer_count,left_on=['date', 'country_id','state_id'],right_on=['date', 'country_id','state_id'],how='left')
+            result.fillna(value=0,axis=1,inplace=True)
 
-            result = pd.merge(result,df_farmer_count,left_on=['date', 'country_id', 'state_id'],right_on=['date', 'country_id', 'state_id'],how='left')
-
-            result['cummulative_distinct_farmer'] = result.groupby(by=['state_id'])['cummulative_distinct_farmer'].apply(lambda group: group.ffill())
+            # result['cummulative_distinct_farmer'] = result.groupby(by=['country_id'])['cummulative_distinct_farmer'].apply(lambda group: group.ffill())
 
             print "After adding cummulative distinct farmer ", result.shape
 
             if not result.empty:
                 values_list = []
                 for index,row in result.iterrows():
-                    values_list.append((row['date'].strftime('%Y-%m-%d %H:%M:%S'), str(row['user_created__id']), str(row['mandi__id']), str(row['gaddidar__id']), str(row['quantity__sum']), str(row['amount__sum']), str(row['transportation_cost__sum']), str(row['farmer_share__avg']), str(row['gaddidar_share_amount']), str(row['aggregator_incentive']), row['name'], row['mandi__mandi_name'], row['gaddidar__gaddidar_name'], str(row['cummulative_distinct_farmer']), str(row['country_id']), str(row['state_id'])))
+                    values_list.append((row['date'].strftime('%Y-%m-%d %H:%M:%S'), str(row['user_created__id']), str(row['mandi__id']), str(row['gaddidar__id']), str(row['quantity__sum']), str(row['amount__sum']), str(row['transportation_cost__sum']), str(row['farmer_share__avg']), str(row['gaddidar_share_amount']), str(row['aggregator_incentive']), row['name'], row['mandi__mandi_name'], row['gaddidar__gaddidar_name'], str(row['distinct_farmer_count']), str(row['country_id']), str(row['state_id'])))
 
                 print "Number of rows to be inserted : ", len(values_list)
 
-                sql_base_query = "INSERT INTO loop_aggregated_myisam (date, aggregator_id, mandi_id, gaddidar_id, quantity, amount, transportation_cost, farmer_share, gaddidar_share, aggregator_incentive, aggregator_name, mandi_name, gaddidar_name, cum_distinct_farmer, country_id, state_id) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                sql_base_query = "INSERT INTO loop_aggregated_myisam (date, aggregator_id, mandi_id, gaddidar_id, quantity, amount, transportation_cost, farmer_share, gaddidar_share, aggregator_incentive, aggregator_name, mandi_name, gaddidar_name, new_distinct_farmer, country_id, state_id) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
                 self.mysql_cn.cursor().executemany(sql_base_query, values_list)
                 self.mysql_cn.commit()

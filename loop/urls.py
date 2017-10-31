@@ -11,7 +11,7 @@ import api,api_admin
 # from api_admin import *
 
 from loop.views import *
-
+from loop.dashboard_views import *
 from loop.utils.send_log.loop_data_log import send_updated_log
 from loop.utils.send_log.loop_admin_log import send_updated_admin_log
 from loop.utils.send_log.send_extra_data import sendData
@@ -67,7 +67,6 @@ api2.register(api_admin.CropLanguageResource())
 api2.register(api_admin.VehicleLanguageResource())
 
 
-
 urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url=LOOP_PAGE)),
     url(r'^app/', RedirectView.as_view(url=LOOP_APP_PAGE)),
@@ -94,7 +93,12 @@ urlpatterns = patterns('',
     url(r'^broadcast/',broadcast),
     url(r'^broadcast_call_response/',broadcast_call_response),
     url(r'^broadcast_audio_request/',broadcast_audio_request),
-    # admin/logout/ should be above admin/ URL
+    url(r'^getCardGraphData/',get_card_graph_data),
+    url(r'^volume_aggregator/',volume_aggregator),
+    # url(r'^vol_amount_farmer/',vol_amount_farmer),
+    url(r'^graph_data', graph_data),
+    url(r'^get_filter_data/', send_filter_data),
+    url(r'^get_global_filter_data/', get_global_filter),
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loop/admin/'}),
     url(r'^admin/', include(loop_admin.urls)),
     )

@@ -104,6 +104,8 @@ def get_sql_result(query_dict):
 def get_sql_result_api(query_dict):
     res = list(run_query_raw(query_dict['query_string']))[0][0]
     data_dict = {}
+    if res is None :
+        res = 0
     # data_dict[query_dict['query_tag']] = res
     data_dict[query_dict['component']] = {
                                             'tagName':query_dict['query_tag'],

@@ -62,6 +62,7 @@ class State(LoopModel):
     crop_add = models.BooleanField(default=False)
     phone_digit = models.CharField(default=10, max_length=2, blank=True, null=True)
     phone_start = models.CharField(default=789, max_length=15, blank=True, null=True)
+    aggregation_state = models.BooleanField(default=True)
     def __unicode__(self):
         return self.state_name
 
@@ -254,7 +255,7 @@ class AdminAssignedLoopUser(LoopModel):
 
 post_save.connect(save_admin_log, sender=AdminAssignedLoopUser)
 pre_delete.connect(save_admin_log, sender = AdminAssignedLoopUser)
-        
+
 class AdminAssignedDistrict(LoopModel):
     id = models.AutoField(primary_key=True)
     admin_user = models.ForeignKey(AdminUser)

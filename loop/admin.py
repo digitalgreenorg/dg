@@ -144,8 +144,8 @@ class DistrictAdmin(admin.ModelAdmin):
     list_filter = ['state__state_name', 'state__country']
 
 class StateAdmin(admin.ModelAdmin):
-    fields = ('country',('state_name','state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start', 'is_visible')
-    list_display = ('id', 'state_name', 'country', 'state_name_en', 'helpline_number', 'crop_add', 'phone_digit', 'phone_start')
+    fields = ('country',('state_name','state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start', 'is_visible','aggregation_state')
+    list_display = ('id', 'state_name', 'country', 'state_name_en', 'helpline_number', 'crop_add', 'phone_digit', 'phone_start','aggregation_state')
     search_fields = ['state_name', 'state_name_en', 'country__country_name']
     list_filter = ['country__country_name']
 
