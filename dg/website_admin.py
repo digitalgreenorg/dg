@@ -17,14 +17,14 @@ website_admin.index_template = 'social_website/index.html'
 website_admin.login_template = 'social_website/login.html'
 website_admin.logout_template = 'social_website/home.html'
 
-website_admin.register(Activity, ActivityAdmin)
-website_admin.register(Feedback, FeedbackAdmin)
-website_admin.register(Article, ArticleAdmin)
+# website_admin.register(Activity, ActivityAdmin)
+# website_admin.register(Feedback, FeedbackAdmin)
+# website_admin.register(Article, ArticleAdmin)
 website_admin.register(Collection, CollectionAdmin)
 website_admin.register(FeaturedCollection, FeaturedCollectionAdmin)
-website_admin.register(Geography, GeographyAdmin)
-website_admin.register(Job, JobAdmin)
-website_admin.register(Member, MemberAdmin)
+# website_admin.register(Geography, GeographyAdmin)
+# website_admin.register(Job, JobAdmin)
+# website_admin.register(Member, MemberAdmin)
 website_admin.register(Partner, PartnerAdmin)
-website_admin.register(Place, PlaceAdmin)
+# website_admin.register(Place, PlaceAdmin)
 website_admin.register(ResourceVideo, ResourceVideoAdmin)
