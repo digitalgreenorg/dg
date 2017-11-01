@@ -436,6 +436,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     if (aggregator == aggregator_incentive[i][USER_CREATED__ID].toString()) {
       for (var j = 0; j < aggregator_data_set.length; j++) {
         if (aggregator_data_set[j].indexOf(aggregator_incentive[i]['date']) != -1 && aggregator_data_set[j].indexOf(aggregator_incentive[i]['mandi__name']) != -1) {
+          aggregator_data_set[j][4] = parseFloat(aggregator_incentive[i]['quantity__sum']);
           aggregator_data_set[j][5] = parseFloat(aggregator_incentive[i]['amount']);
           aggregator_data_set[j][9] = (parseFloat(aggregator_data_set[j][9]) + parseFloat(aggregator_data_set[j][5])).toFixed(2);
           aggregator_data_set[j][12] = aggregator_incentive[i]['comment'];
