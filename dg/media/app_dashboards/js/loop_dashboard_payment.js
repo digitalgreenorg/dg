@@ -175,9 +175,9 @@ function set_filterlistener() {
         aggregator_data_set_copy = aggregator_data_set.slice();
         gaddidar_data_set_copy = gaddidar_data_set.slice();
         for (var i = 0; i < aggregator_data_set_copy.length; i++) {
-          aggregator_data_set_copy[i] = aggregator_data_set_copy[i].slice(0, 9);
-          aggregator_data_set_copy[i].push(aggregator_data_set[i][11])
+          aggregator_data_set_copy[i] = aggregator_data_set_copy[i].slice(0, 10);
           aggregator_data_set_copy[i].push(aggregator_data_set[i][12])
+          aggregator_data_set_copy[i].push(aggregator_data_set[i][13])
         }
 
         for (var i = 0; i < gaddidar_data_set_copy.length; i++) {
@@ -209,7 +209,7 @@ function set_filterlistener() {
 
         var cell_format = {
           bold: 0,
-          font_size: 10,
+          font_size: 9,
           num_format: '#,##0.00',
           text_wrap: true
         }
@@ -318,7 +318,6 @@ function fill_drop_down(container, data_json, id_parameter, name_parameter, capt
 }
 //To compute aggregator, transporter, gaddidar payments table
 function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name_input) {
-  console.log(payments_data.aggregator_data);
   var aggregator_payment = payments_data.aggregator_data;
   var transport_payment = payments_data.transportation_data;
   var gaddidar_contribution_data = payments_data.gaddidar_data;
@@ -862,8 +861,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 aggregatorAjaxSuccess = 1;
                 for (var keys in rows_table2) {
 
-                  aggregator_data_set[keys - 1][4] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[4].innerHTML);
-                  aggregator_data_set[keys - 1][11] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[9].innerHTML;
+                  aggregator_data_set[keys - 1][5] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[5].innerHTML);
+                  aggregator_data_set[keys - 1][12] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML;
                 }
                 rows_table2 = [];
               },
@@ -886,8 +885,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                 alert("Success : Farmer Data");
                 farmerAjaxSuccess = 1;
                 for (var keys in rows_table2_farmer) {
-                  aggregator_data_set[keys - 1][6] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[6].innerHTML);
-                  aggregator_data_set[keys - 1][12] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[10].innerHTML;
+                  aggregator_data_set[keys - 1][7] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[7].innerHTML);
+                  aggregator_data_set[keys - 1][13] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[11].innerHTML;
                 }
                 rows_table2_farmer = [];
               },
@@ -1593,13 +1592,19 @@ function create_data_for_excel_download() {
         'total': false
       },
       {
-        'column_width': 7.64,
+        'column_width': 6.64,
         'formula': null,
-        'label': 'Quantity [Q] (in Kg)',
+        'label': "Quantity [Q'] (in Kg)",
         'total': true
       },
       {
-        'column_width': 10.64,
+        'column_width': 6.64,
+        'formula': null,
+        'label': 'Quantity Post Deduction [Q] (in Kg)',
+        'total': true
+      },
+      {
+        'column_width': 8.64,
         'formula': null,
         'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
         'total': true
@@ -1611,20 +1616,20 @@ function create_data_for_excel_download() {
         'total': true
       },
       {
-        'column_width': 10.18,
+        'column_width': 8.18,
         'formula': null,
         'label': "Farmers' Contribution [FC] (in Rs)",
         'total': true
       },
       {
-        'column_width': 10.18,
+        'column_width': 8.18,
         'formula': null,
         'label': 'Commission Agent Contribution [CAC] (in Rs)',
         'total': true
       },
       {
         'column_width': 8.73,
-        'formula': 'E + F - G - H',
+        'formula': 'F + G - H - I',
         'label': 'Total Payment (in Rs) (AP + TC - FC - CAC)',
         'total': true
       },

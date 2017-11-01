@@ -14,8 +14,8 @@ NAME_OF_SHEETS = ['Aggregator', 'Commission Agent', 'Transporter']
 CELL_ROW_VALUE = 2
 
 def write_heading_in_sheet(ws_obj, heading_str, format_str):
-    ws_obj.set_column('A:F', 10)
-    ws_obj.merge_range('A1:F1', heading_str, format_str)
+    ws_obj.set_column('A:L', 10)
+    ws_obj.merge_range('A1:L1', heading_str, format_str)
     # ws_obj.write('A1', heading_str, format_str)
     return ws_obj
 
@@ -146,13 +146,13 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
                                            format_str={'bold':1, 'font_size': 9,
                                                        'text_wrap': True})
     header_format = set_format_for_heading(workbook=workbook,
-                                           format_str={'bold':1, 'font_size': 10,
+                                           format_str={'bold':1, 'font_size': 9,
                                                        'text_wrap': True})
     row_format = set_format_for_heading(workbook=workbook,
                                         format_str=formatted_post_data.get('cell_format'))
     total_cell_format = set_format_for_heading(workbook=workbook,
                                               format_str={'bold':1, 
-                                                          'font_size': 10,
+                                                          'font_size': 9,
                                                           'num_format':'#,##0.00',
                                                           'align':'right',
                                                           'text_wrap': True})
