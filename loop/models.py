@@ -500,6 +500,21 @@ class CombinedTransaction(LoopModel):
     def __gaddidar__(self):
         return "%s" % (self.gaddidar.gaddidar_name)
 
+    def __farmer_phone__(self):
+        return "%s" % (self.validate_phone_number(self.farmer.phone))
+
+    def validate_phone_number(self, phone):
+        num_of_digits = len(phone)
+        # For India
+        if num_of_digits == 10:
+            if 7 <= int(phone[0]) <= 9:
+                return phone
+        # For Bangladesh
+        elif num_of_digits == 11:
+            if int(phone[0]) == 0 and int(phone[1]) == 1:
+                return phone
+        return ""
+
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
 

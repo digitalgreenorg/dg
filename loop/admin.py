@@ -75,7 +75,7 @@ class FarmerAdmin(admin.ModelAdmin):
     list_filter = ['village__village_name', 'village__block__district__state', 'village__block__district__state__country']
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__crop__', 'price',
+    list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__farmer_phone__', '__crop__', 'price',
                     'quantity', 'amount', 'status')
     search_fields = ['farmer__name', 'farmer__village__village_name', 'gaddidar__gaddidar_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
