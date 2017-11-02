@@ -14,6 +14,12 @@ define(function (require) {
     var monthpicker = require('libs/external/jquery.mtz.monthpicker');
     var districtTemplate = require('text!app/views/district.html');
     var blockTemplate = require('text!app/views/block.html');
+    var buttons = require('libs/external/dataTables.buttons.min');
+    var tableToolsJs = require('libs/external/jszip.min');
+    var html5Button = require('libs/external/buttons.html5.min');
+    // var buttons = require('tableExportButtons');
+    // var tableToolsJs = require('tableToolsJs');
+    // var html5Button = require('html5Button');
 
     var VrpPaymentViewController = Controller.extend({
 
