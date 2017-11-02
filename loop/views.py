@@ -249,12 +249,23 @@ def total_static_data(request):
     data = json.dumps(jsonify(chart_dict), cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
+def validate_phone_number(phone):
+    num_of_digits = len(phone)
+    # For India
+    if num_of_digits == 10:
+        if 7 <= int(phone[0]) <= 9:
+            return phone
+    # For Bangladesh
+    elif num_of_digits == 11:
+        if int(phone[0]) == 0 and int(phone[1]) == 1:
+            return phone
+    return None
 
 def calculate_inc_default(V):
     return 0.25 * V
 
 
-def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=None, aggregator_list=None):
+def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=None, aggregator_list=None, farmer_list=None):
     if aggregator_list is not None:
         user_qset = LoopUser.objects.filter(user__in=aggregator_list).values_list('id', flat=True)
     else:
@@ -264,7 +275,7 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     parameters_dictionary_for_outliers = {
         'mandi__in': mandi_list, 'aggregator__user__in': aggregator_list}
     parameters_dictionary_for_ct = {'date__gte': start_date, 'date__lte': end_date,
-                                    'mandi__in': mandi_list, 'user_created__id__in': aggregator_list}
+                                    'mandi__in': mandi_list, 'user_created__id__in': aggregator_list, 'farmer__in': farmer_list}
 
     arguments_for_ct = {}
     arguments_for_aggregator_incentive = {}
@@ -611,6 +622,22 @@ def calculate_gaddidar_share_payments(start_date, end_date, mandi_list=None, agg
                        'gaddidar_discount': round(gc_discount,3), 'comment': comment,'quantity__sum': round(CT['quantity__sum'],2)})
     return result
 
+def get_farmers_with_valid_phone_number():
+
+    all_phone_num = Farmer.objects.values('phone', 'id')
+    dict_phone_num ={}
+    for entry in all_phone_num:
+        number = validate_phone_number(entry['phone'])
+        if number not in dict_phone_num.keys():
+            dict_phone_num[number] = []
+        dict_phone_num[number].append(entry['id'])
+
+    farmer_list = []
+    for entry in all_phone_num:
+        number = validate_phone_number(entry['phone'])
+        if number is not None and len(dict_phone_num[number]) <= 3: #max 3 farmers have a phone number
+            farmer_list.append(entry['id'])
+    return farmer_list 
 
 def payments(request):
     start_date = request.GET['start_date']
@@ -661,7 +688,8 @@ def payments(request):
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
 
-    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date)
+    farmers = get_farmers_with_valid_phone_number()
+    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date, None, None, farmers)
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
