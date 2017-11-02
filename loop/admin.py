@@ -93,7 +93,7 @@ class TransporterAdmin(admin.ModelAdmin):
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__','__vehicle__',
+    list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__', '__transporter_phone__', '__vehicle__',
                     'transportation_cost', 'farmer_share', 'farmer_share_comment','transportation_cost_comment')
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = (UserListFilter, 'mandi__mandi_name', 'mandi__district__state__country')

@@ -458,6 +458,21 @@ class DayTransportation(LoopModel):
     def __mandi__(self):
         return "%s" % (self.mandi.mandi_name)
 
+    def __transporter_phone__(self):
+        return "%s" % (self.validate_phone_number(self.transportation_vehicle.transporter.transporter_phone))
+
+    def validate_phone_number(self, phone):
+        num_of_digits = len(phone)
+        # For India
+        if num_of_digits == 10:
+            if 7 <= int(phone[0]) <= 9:
+                return phone
+        # For Bangladesh
+        elif num_of_digits == 11:
+            if int(phone[0]) == 0 and int(phone[1]) == 1:
+                return phone
+        return ""
+
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
 
