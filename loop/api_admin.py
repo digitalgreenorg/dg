@@ -476,6 +476,8 @@ class LoopUserResource(BaseResource):
     assigned_mandis = fields.ListField()
 
     class Meta:
+        limit = 0
+        max_limit = 0
         queryset = LoopUser.objects.prefetch_related(
             'assigned_villages', 'assigned_mandis','user').all()
         resource_name = 'loopuser'

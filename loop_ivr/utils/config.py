@@ -7,6 +7,8 @@ AGGREGATOR_SMS_NO = '01139585707'
 mandi_hi = 'मंडी'
 indian_rupee = 'रु'
 helpline_hi = 'हेल्पलाइन'
+code_hi = 'कोड'
+crop_and_code_hi = 'फसल और उनके कोड:'
 agg_sms_initial_line = 'लूप मंडी रेट\n'
 agg_sms_crop_line = 'फसल'
 agg_sms_no_price_for_combination = 'रेट उपलब्ध नही है\n'
@@ -24,6 +26,11 @@ crop_and_code = 'फसल और उनके कोड:\n\
 परवल - 17\n\
 नेनुआ - 20\n\
 भिंडी - 22\n'
+call_failed_sms = 'नमस्ते। हमने आपको कॉल किया पर संपर्क नहीं हो पाया। किसी भी फसल का रेट जानने के लिए 011-39585707 पर दोबारा कॉल करें और फसल का कोड डालें।'
+remaining_crop_line = 'बाकी फसलों का कोड जानने के लिए कॉल करें:'
+first_time_caller = 'लूप में कॉल करने के लिए धन्यवाद। किसी भी फसल का रेट जानने के लिए 011-39585707 पर कॉल करें और फसल का कोड डालें।'
+no_code_entered = 'आपने फसल का कोड नही डाला है। किसी भी फसल का रेट जानने के लिए 011-39585707 पर दोबारा कॉल करें और फसल का कोड डालें।'
+wrong_code_entered = 'आपने फसल का गलत कोड डाला है%s। दोबारा कॉल करें और सही कोड डालें।'
 
 MARKET_INFO_CALL_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/market_info_response/')
 PUSH_MESSAGE_SMS_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/push_message_sms_response/')
@@ -31,3 +38,6 @@ MARKET_INFO_APP = '137265'
 
 SMS_SENDER_NAME = 'LOOPDG'
 TEXT_LOCAL_SINGLE_SMS_API = 'https://api.textlocal.in/send/'
+
+TOP_SELLING_CROP_WINDOW = 30
+N_TOP_SELLING_CROP = 5
