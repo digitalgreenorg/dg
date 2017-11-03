@@ -249,17 +249,11 @@ def total_static_data(request):
     data = json.dumps(jsonify(chart_dict), cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
-def validate_phone_number(phone):
-    num_of_digits = len(phone)
-    # For India
-    if num_of_digits == 10:
-        if 7 <= int(phone[0]) <= 9:
-            return phone
-    # For Bangladesh
-    elif num_of_digits == 11:
-        if int(phone[0]) == 0 and int(phone[1]) == 1:
-            return phone
-    return None
+def validate_phone_number(phone, phone_digit, phone_start):
+        if len(phone) == int(phone_digit):
+            if phone.startswith(tuple(phone_start.split(","))):
+                return phone
+        return None
 
 def calculate_inc_default(V):
     return 0.25 * V
@@ -624,19 +618,18 @@ def calculate_gaddidar_share_payments(start_date, end_date, mandi_list=None, agg
 
 def get_farmers_with_valid_phone_number():
 
-    all_phone_num = Farmer.objects.values('phone', 'id')
+    all_phone_num = Farmer.objects.values('id', 'phone', 'village__block__district__state__phone_digit', 'village__block__district__state__phone_start')
     dict_phone_num ={}
-    for entry in all_phone_num:
-        number = validate_phone_number(entry['phone'])
-        if number not in dict_phone_num.keys():
-            dict_phone_num[number] = []
-        dict_phone_num[number].append(entry['id'])
+    for farmer in all_phone_num:
+        farmer['phone'] = validate_phone_number(farmer['phone'], farmer['village__block__district__state__phone_digit'], farmer['village__block__district__state__phone_start'])
+        if farmer['phone'] not in dict_phone_num.keys():
+            dict_phone_num[farmer['phone']] = []
+        dict_phone_num[farmer['phone']].append(farmer['id'])
 
     farmer_list = []
-    for entry in all_phone_num:
-        number = validate_phone_number(entry['phone'])
-        if number is not None and len(dict_phone_num[number]) <= 3: #max 3 farmers have a phone number
-            farmer_list.append(entry['id'])
+    for farmer in all_phone_num:
+        if farmer['phone'] is not None and len(dict_phone_num[farmer['phone']]) <= 3: #max 3 farmers have same phone number
+            farmer_list.append(farmer['id'])
     return farmer_list 
 
 def payments(request):
