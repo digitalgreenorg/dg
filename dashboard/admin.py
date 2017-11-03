@@ -15,9 +15,10 @@ from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
 from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
-from videos.models import  NonNegotiable
-from videos.models import ParentCategory
+from videos.models import  NonNegotiable, VideoPractice, Category
+from videos.models import ParentCategory, SubCategory
 from programs.models import Project
+from easy_select2 import Select2Multiple, Select2
 
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
@@ -69,6 +70,11 @@ class ScreeningAdmin(admin.ModelAdmin):
                 settings.STATIC_URL + "js/qa_screening.js",
         )
 
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['tag_name']
+    search_fields = ['tag_name']
+
+
 class NonNegotiablesInline(admin.TabularInline):
     model =  NonNegotiable
     raw_id_fields = ("video",)
@@ -104,7 +110,7 @@ class DirectBeneficiariesAdmin(admin.ModelAdmin):
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline]
     fieldsets = [
-                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice', 'tags']}),
                 (None,{'fields':['village','production_team']}),
                 ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
@@ -229,9 +235,36 @@ class SubCategoryAdmin(admin.ModelAdmin):
     list_display = ('subcategory_name', 'category')
     search_fields = ['subcategory_name', 'category__category_name']
 
+
+class VideoPracticeForm(forms.ModelForm):
+    # category = forms.ModelChoiceField(queryset=Category.objects.all(), widget=Select2(select2attrs={'width': '600px'}), required=True)
+    subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), widget=Select2(select2attrs={'width': '600px'}), required=True)
+    videopractice_name = forms.ModelMultipleChoiceField(queryset=VideoPractice.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}), required=True)
+
+    model = VideoPractice
+
+    class Meta:
+        fields = ['subcategory', 'videopractice_name']
+
+
 class VideoPracticeAdmin(admin.ModelAdmin):
+    form = VideoPracticeForm
     list_display = ('videopractice_name', 'subcategory')
     search_fields = ['videopractice_name', 'subcategory__subcategory_name']
+
+    def save_model(self, request, obj, form, change):
+        cd = form.cleaned_data
+        subcategory_id = cd.get('subcategory').id
+        category_id = cd.get('category').id
+        # first the video practice as we are in the same form
+        for iterable in cd.get('videopractice_name'):
+            videopractice_obj, created = \
+                VideoPractice.objects.get_or_create(videopractice_name=iterable,
+                                                    subcategory_id=subcategory_id)
+        return
+
+
+
 
 class PracticesAdmin(admin.ModelAdmin):
     list_display = ('id', 'practice_name', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')

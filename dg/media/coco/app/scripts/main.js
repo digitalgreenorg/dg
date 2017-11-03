@@ -15,7 +15,10 @@ require.config({
         'date_picker': 'libs/bootstrap/js/bootstrap-datepicker',
         'time_picker': 'libs/bootstrap/js/bootstrap-timepicker.min',
         'jquery_cookie': 'libs/jquery.cookie',
-        'TableTools': 'libs/tabletools_media/js/dataTables.tableTools'
+        'TableTools': 'libs/tabletools_media/js/dataTables.tableTools',
+        'highcharts': 'libs/highcharts',
+        'configs': '../../../configs',
+        'highstocks': 'libs/highstocks'
     },
 
     //specifying dependencies of non-amd libraries
@@ -65,6 +68,10 @@ require.config({
             deps: ["jquery"]
         },
         'time_picker': {
+            deps: ["jquery"]
+        },
+        'highcharts': {
+            exports: "Highcharts",
             deps: ["jquery"]
         }
     }

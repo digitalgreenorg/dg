@@ -8,6 +8,7 @@ function(jquery, pass, configs, indexeddb, upload_collection, UploadView, IncDow
         events: {
             "click #sync": "sync",
             "click #inc_download": "inc_download",
+            "click #export": "export",
         },
         item_template: _.template($("#dashboard_item_template")
             .html()),

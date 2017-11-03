@@ -18,7 +18,8 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
             ":entity/list": "list",
             ":entity/add": "add",
             ":entity/edit/:id": "edit",
-            "login": "login"
+            "login": "login",
+            "analytics":"analytics"
         },
         home: function() {
             this.check_login_wrapper()
@@ -65,6 +66,9 @@ define(['jquery', 'underscore', 'backbone', 'views/app_layout', 'configs', 'auth
         },
         login: function() {
             AppLayout.render_login();
+        },
+        analytics:function(){
+            AppLayout.render_analytics();
         },
         //Check if user entered wrong entity name in url.
         entity_valid: function(entity_name){

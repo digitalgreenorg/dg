@@ -33,6 +33,7 @@ from videos.models import SubCategory
 from videos.models import VideoPractice
 from videos.models import ParentCategory
 from videos.models import DirectBeneficiaries
+from videos.models import Tag
 from activities.models import FrontLineWorkerPresent
 # Will need to changed when the location of forms.py is changed
 from dashboard.forms import AnimatorForm
@@ -452,6 +453,7 @@ class VideoResource(BaseResource):
     category = fields.ForeignKey('coco.api.CategoryResource', 'category', null=True)
     subcategory = fields.ForeignKey('coco.api.SubCategoryResource', 'subcategory', null=True)
     videopractice = fields.ToManyField('coco.api.VideoPracticeResource', 'videopractice', null=True)
+    tags = fields.ToManyField('coco.api.TagResource', 'tags', null=True)
     
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
@@ -464,6 +466,7 @@ class VideoResource(BaseResource):
     hydrate_subcategory = partial(dict_to_foreign_uri, field_name='subcategory', resource_name='subcategory')
 
     hydrate_videopractice = partial(dict_to_foreign_uri_m2m, field_name='videopractice', resource_name='videopractice')
+    hydrate_tags = partial(dict_to_foreign_uri_m2m, field_name='tags', resource_name='tag')
     hydrate_production_team = partial(dict_to_foreign_uri_m2m, field_name = 'production_team', resource_name = 'mediator')
     hydrate_direct_beneficiaries = partial(dict_to_foreign_uri_m2m, field_name = 'direct_beneficiaries', resource_name = 'directbeneficiaries')
     hydrate_partner = partial(assign_partner)
@@ -483,6 +486,9 @@ class VideoResource(BaseResource):
 
     def dehydrate_videopractice(self, bundle):
         return [{'id': iterable.id, 'name': iterable.videopractice_name} for iterable in bundle.obj.videopractice.all()]
+
+    def dehydrate_tags(self, bundle):
+        return [{'id': iterable.id, 'name': iterable.tag_name} for iterable in bundle.obj.tags.all()]
 
     def dehydrate_direct_beneficiaries(self, bundle):
         return [{'id': beneficiaries.id, 'name': beneficiaries.direct_beneficiaries_category} for beneficiaries in bundle.obj.direct_beneficiaries.all() ]
@@ -629,7 +635,16 @@ class ScreeningResource(BaseResource):
         return bundle
     
     def dehydrate_videoes_screened(self, bundle):
-        return [{'id': video.id, 'title': video.title,} for video in bundle.obj.videoes_screened.all()]
+        data = []
+        for video in bundle.obj.videoes_screened.all():
+            # for item in video.videopractice.all():
+            #     practice_obj = VideoPractice.objects.filter(id=item.id).distinct().values('id', 'videopractice_name')[0]
+            #     print practice_obj
+            data.append({'id': video.id,
+                         'title': video.title,
+                         'category_name': video.category.category_name if video.category else None,
+                         'practice_count': video.videopractice.count()})
+        return data
 
     def dehydrate_frontlineworkerpresent(self, bundle):
         return [{'id': item.id, 'frontlineworkerpresent': item.worker_type} for item in bundle.obj.frontlineworkerpresent.all()]
@@ -735,7 +750,7 @@ class PersonAdoptVideoResource(BaseResource):
         validation = ModelFormValidation(form_class = PersonAdoptPracticeForm)
         always_return_data = True
         excludes = ['time_created', 'time_modified', 'verification_status', 'non_negotiable_check', 'verified_by']
-    dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title'])
+    # dehydrate_video = partial(foreign_key_to_id, field_name='video',sub_field_names=['id','title', 'category_category_name'])
     dehydrate_village = partial(foreign_key_to_id, field_name='village',sub_field_names=['id','village_name'])
     #dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
     # dehydrate_parentcategory = partial(foreign_key_to_id, field_name='parentcategory',sub_field_names=['id','parent_category_name'])
@@ -746,6 +761,10 @@ class PersonAdoptVideoResource(BaseResource):
     hydrate_person = partial(dict_to_foreign_uri, field_name='person')
     hydrate_partner = partial(assign_partner)
     hydrate_parentcategory = partial(dict_to_foreign_uri, field_name='parentcategory')
+
+    
+    def dehydrate_video(self, bundle):
+        return {'id': bundle.obj.video.id, 'title': bundle.obj.video.title, 'category_name': bundle.obj.video.category.category_name if bundle.obj.video.category else None}
 
     def dehydrate_group(self, bundle):
         return {'id': bundle.obj.person.group.id, 'group_name': bundle.obj.person.group.group_name} if bundle.obj.person.group else {'id': None, 'group_name': None}
@@ -766,6 +785,16 @@ class LanguageResource(ModelResource):
         resource_name = 'language'
         authentication = SessionAuthentication()
         authorization = Authorization()
+
+
+class TagResource(ModelResource):    
+    class Meta:
+        max_limit = None
+        queryset = Tag.objects.all()
+        resource_name = 'tag'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
+
 
 class CategoryResource(ModelResource):    
     parent_category = fields.ForeignKey(ParentCategoryResource, 'parent_category', null=True)

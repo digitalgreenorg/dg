@@ -122,6 +122,7 @@ function() {
         'config_English': 'Villages',
         'config_हिन्दी': 'गाँव',
         'config_Français': 'Villages',
+        'list_elements_for_analytics': [{'header':'ID','element':'online_id'},{'header':'Name','element':'village_name'},{'element':'block_name'},{'element':'start_date'},{'header':'State','element':'state_name'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Name','element':'village_name'},{'element':'block_name'},{'element':'start_date'},{'header':'State','element':'state_name'}],
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'नाम','element':'village_name'},{'header':'ब्लॉक का नाम','element':'block_name'},{'header':'आरंभ होने की तिथि','element':'start_date'},{'header':'राज्य का नाम','element':'state_name'}],
         'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':'Nom','element':'village_name'},{'header':'Nom unite geographique','element':'block_name'},{'header':'Date de début','element':'start_date'},{'header':'Etat','element':'state_name'}],
@@ -131,7 +132,11 @@ function() {
             listing: true,
             add: false
         },
-        'sort_field': 'village_name'
+        'sort_field': 'village_name',
+        'xaxis' : 'Blocks',
+        'yaxis' : 'Number of villages',
+        'key' : 2,
+        'graph_type' : 'column'                
     };
 
     var mediator_configs = {
@@ -145,6 +150,7 @@ function() {
         'list_elements_हिन्दी': [{'header':'आईडी', 'element':'online_id'},{'header':'नाम','element':'name'},{'header':'नियुक्त किए गये गाँव','subelement':'village_name','element':'assigned_villages'}],
         'list_elements_Français': [{'header':'Identité', 'element':'online_id'},{'header':'Nom','element':'name'},{'header':'Villages assignés','subelement':'village_name','element':'assigned_villages'}],
         'list_elements_English': [{'header':'ID', 'element':'online_id'},{'element':'name'},{'subelement':'village_name','element':'assigned_villages'}],
+        'list_elements_for_analytics': [{'header':'ID', 'element':'online_id'},{'element':'name'},{'subelement':'village_name','element':'assigned_villages'}], 
         'add_template_name': 'mediator_add_edit_template',
         'edit_template_name': 'mediator_add_edit_template',
         'rest_api_url': '/coco/api/v2/mediator/',
@@ -228,24 +234,25 @@ function() {
         'config_हिन्दी': 'वीडियो',
         'config_Français': 'Vidéos',
         'labels_हिन्दी': {video:"वीडियो", title: "शीर्षक", video_type: "वीडियो का प्रकार", production_date: "उत्पादन की तिथि", language: "भाषा", benefit: "लाभ",
-                            village: "गाँव", production_team: "वीडियो उत्पादन टीम", category: "श्रेणी", subcategory: "उप श्रेणी", videopractice:"विडियो में दिखाई गई क्रिया",
+                            village: "गाँव", production_team: "वीडियो उत्पादन टीम", category: "श्रेणी", subcategory: "उप श्रेणी", videopractice:"विडियो में दिखाई गई क्रिया", tags: "टैग चुनें",
                             youtubeid: "यूट्यूब आईडी", reviewed_by: "द्वारा अनुमोदित", reviewer: "संगठन", approval_date: "स्वीकृति तिथि", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य", direct_beneficiaries: "सीधा लाभार्थियों",
                             self_reported_behaviour2: "Self Reported Behaviour2", self_reported_behaviour1: "Self Reported Behaviour1"
                         },
         'labels_Français': {video:"Vidéos", title: "Titre", video_type: "Type de vidéo", production_date: "Date de production", language: "Langue", benefit: "Bénéfice",
-                            village: "Villages", production_team: "Equipe de production", category: "Catégorie", subcategory: "Sous-catégorie", videopractice:"La pratique vidéo",
+                            village: "Villages", production_team: "Equipe de production", category: "Catégorie", subcategory: "Sous-catégorie", videopractice:"La pratique vidéo", tags: "Sélectionnez Tags",
                             youtubeid: "Identité Youtube", reviewed_by: "Approuvé par", reviewer: "organisation", approval_date: "Date de validation", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable", direct_beneficiaries: "Bénéficiaires directs",
                             self_reported_behaviour2: "Self Reported Behaviour2", self_reported_behaviour1: "Self Reported Behaviour1"},
         
 
         'labels_English': {video:"Video", title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village",
-                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", youtubeid: "YouTube ID", 
+                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", tags: "Select Tags", youtubeid: "YouTube ID", 
                            reviewed_by: "Approved By", reviewer: "Organization", approval_date: "Approval Date", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", 
                            physically_verifiable:"Physically Verifiable", direct_beneficiaries: "DirectBeneficiaries", srb: "Self Reported Behaviour",
                            self_reported_behaviour2: "Self Reported Behaviour2", self_reported_behaviour1: "Self Reported Behaviour1"},
         'list_elements_हिन्दी': [{'header':'आईडी', 'element':'online_id'},{'header':'शीर्षक', 'element':'title'},{'header':'गाँव','element':'village.village_name'},{'header':'उत्पादन की तिथि','element':'production_date'}],
         'list_elements_Français': [{'header':'Identité', 'element':'online_id'},{'header':'Titre', 'element':'title'},{'header':'Villages','element':'village.village_name'},{'header':'Date de production','element':'production_date'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Production Date','element':'production_date'}],
+        'list_elements_for_analytics': [{'header':'ID','element':'online_id'},{'element':'title'},{'header':'Village','element':'village.village_name'},{'header':'Production Date','element':'production_date'}],
         'add_template_name': 'video_add_edit_template',
         'edit_template_name': 'video_add_edit_template',
         'rest_api_url': '/coco/api/v2/video/',
@@ -253,8 +260,14 @@ function() {
         'dependent_element_div_hide': 'label_direct_beneficiaries',
         'parent_element_to_hide': 'direct_beneficiaries',
         'parent_element_label_to_hide': 'label_direct_beneficiaries',
+        'health_element_show_hide': {'#remove-table': '#remove-table', '#srf-1': '#srf-1', '#srf-2': '#srf-2', '#label_direct_beneficiaries': '#label_direct_beneficiaries'},
         'unique_together_fields': ['title', 'production_date', 'village.id'],
         'sort_field': 'title',
+        'xaxis' : 'Villages',
+        'yaxis' : 'Number of videos produced',
+        'key' : 2,
+        'graph_type' : 'column',
+                
         'foreign_entities': {
             'mediator': {
                 "production_team": {
@@ -273,6 +286,12 @@ function() {
                 "language": {
                     'placeholder': 'id_language',
                     'name_field': 'language_name'
+                }
+            },
+            'tag': {
+                "tags": {
+                    'placeholder': 'id_tags',
+                    'name_field': 'tag_name'
                 }
             },
             'category': {
@@ -366,7 +385,7 @@ function() {
                 subcategory: "required",
                 videopractice: "required",
                 approval_date: {
-					dateOrder: {production_date : "production_date"},
+    dateOrder: {production_date : "production_date"},
                     validateDate: true
                 },
                 youtubeid: {
@@ -398,7 +417,7 @@ function() {
                 videopractice: "Videopractice is required",
                 approval_date: {
                     validateDate: "Enter Approval Date in the form of YYYY-MM-DD",
-					dateOrder: "Approval date should be later than production date"
+    dateOrder: "Approval date should be later than production date"
                 },
                 youtubeid: {
                     maxlength: "YoutubeID should contain at most 20 characters"
@@ -440,6 +459,19 @@ function() {
         }
     };
 
+    var tag_configs = {
+        'config_English': 'Tags',
+        'config_हिन्दी': 'भाषा',
+        'config_Français': 'Tags',
+        'rest_api_url': '/coco/api/v2/tag/',
+        'entity_name': 'tag',
+        'sort_field': 'tag_name',
+        'dashboard_display': {
+            listing: false,
+            add: false
+        }
+    };
+
     var category_configs = {
         'config_English': 'Categories',
         'config_हिन्दी': 'श्रेणी',
@@ -450,8 +482,10 @@ function() {
         'dashboard_display': {
             listing: false,
             add: false
-        }
+        },
+        // 'key':2
     };
+
 
     var frontlineworkerpresent_configs = {
         'config_English': 'FrontLineWorkerPresent',
@@ -492,6 +526,7 @@ function() {
         }
     };
 
+
     var subcategory_configs = {
         'config_English': 'Sub Categories',
         'config_हिन्दी': 'उप श्रेणी',
@@ -515,6 +550,7 @@ function() {
 
     var videopractice_configs = {
         'config_English': 'Video Practices',
+        'list_elements_for_analytics': [{'header':'ID','element':'online_id'},{'element':'videopractice_name'}],
         'config_हिन्दी': 'विडियो में दिखाई गई क्रिया',
         'config_Français': 'La pratique vidéo',
         'rest_api_url': '/coco/api/v2/videopractice/',
@@ -583,6 +619,7 @@ function() {
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'नाम','element':'group_name'},{'header':'गाँव','element':'village.village_name'}],
         'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':'Nom','element':'group_name'},{'header':'Village','element':'village.village_name'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Name','element':'group_name'},{'header':'Village','element':'village.village_name'}],
+        'list_elements_for_analytics': [{'header':'ID','element':'online_id'},{'header':'Name','element':'group_name'},{'header':'Village','element':'village.village_name'}], 
         'add_template_name': 'group_add_edit_template',
         'edit_template_name': 'group_add_edit_template',
         'rest_api_url': '/coco/api/v2/group/',
@@ -695,9 +732,11 @@ function() {
             category: "Category", health_provider_present: "Health Provider Present", type_of_video: 'Type of Gathering',
             frontlineworkerpresent: 'Frontline worker present?', type_of_venue: "Type of Venue", meeting_topics: 'Topics',
         },
+
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'विडियो दिखने की तिथि','element':'date'},{'header':'मध्यस्थ','element':'animator.name'},{'header':'गाँव','element':'village.village_name'},{'header':'ग्राम संगठन जिन्होने भाग लिया','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'वीडियो जो दिखाया गया','subelement':'title','element':'videoes_screened'}],
         'list_elements_Français': [{'header':'Identité', 'element':'online_id'},{'header':'Date de projection','element':'date'},{'header':'Disséminateur','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groupe concerné','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Vidéo projectée','subelement':'title','element':'videoes_screened'}],
-        'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'},{'header':'Videos Screened','subelement':'title','element':'videoes_screened'}],
+        'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'}],
+        'list_elements_for_analytics': [{'header':'ID','element':'online_id'},{'header':'Screening Date','element':'date'},{'header':'Mediator','element':'animator.name'},{'header':'Village','element':'village.village_name'},{'header':'Groups Attended','subelement':'group_name','element':'farmer_groups_targeted'}, {'header':'Category', 'subelement': 'title', 'element':'videoes_screened'}, {'header':'Category', 'subelement': 'category_name', 'element':'videoes_screened'}],
         'add_template_name': 'screening_add_edit_template',
         'edit_template_name': 'screening_add_edit_template',
         'rest_api_url': '/coco/api/v2/screening/',
@@ -720,10 +759,14 @@ function() {
         'parent_id_for_inline': 'row7',
         'remove_attribute_field': 'select#category_row7',
         'fields_to_hide_arr_for_hnn': ["#label_health_provider_present", "#id_health_provider_present"],
+        'xaxis' : ['Village','Mediator','Video','Group', 'Category'],
+        'yaxis' : 'Number of screenings',
+        'key' : [3,2,5,4, 6],
+        'graph_type' : 'column',
         download_chunk_size: 1000,
         'unique_together_fields': ['date', 'start_time', 'village.id', 'animator.id'],
         'text_to_select_display_hack': true,
-        'text_to_select_display_hack_field_array': ['frontline_worker_present', 'type_of_venue', 'type_of_video', 'meeting_topics'],
+        'text_to_select_display_hack_field_array': ['frontline_worker_present', 'type_of_venue', 'meeting_topics'],
         afterSave: function(off_json, Offline){
             var dfd = new $.Deferred();
             var videos_shown = off_json.videoes_screened;
@@ -896,19 +939,19 @@ function() {
 
             },
             messages: {
-				date: {
-					required: 'Screening date is required',
-					validateDate: 'Enter screening date in the form of YYYY-MM-DD',
-				},
-				start_time: {
-					required: 'Screening start time is required',
-					validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
-				},
-				animator: "Mediator is required",
-				village:"Village is required",
-				videoes_screened:"Videos screened is required",
-				farmer_groups_targeted: "Groups attended is required"
-			},
+    date: {
+    required: 'Screening date is required',
+    validateDate: 'Enter screening date in the form of YYYY-MM-DD',
+    },
+    start_time: {
+    required: 'Screening start time is required',
+    validateTime: 'Enter the start time in the form of HH:MM. Use 24 hour format',
+    },
+    animator: "Mediator is required",
+    village:"Village is required",
+    videoes_screened:"Videos screened is required",
+    farmer_groups_targeted: "Groups attended is required"
+    },
 
             highlight: function(element, errorClass, validClass) {
                 $(element)
@@ -941,24 +984,17 @@ function() {
         'labels_Français': {adoption:"Adoptions", village: "Village", mediator: "Disséminateur", video: "Vidéo", groups_attended: "Groupes concernés", person: "Personne", del: "effacer", sr_no: "Serie de Numéro", date_of_adoption: "Date d'adoption", date_of_verification: "Date de vérification", member_adopt_second: "Le bénéficiaire exerce-t-il le comportement2?", member_adopt: "membre at-il adopté la pratique", recall_nonnegotiable: "Le député at rappeler les points non négociables", parentcategory: 'Catégorie',},
         'labels_English': {adoption:"Adoption", village: "Village", mediator: "Mediator", video: "Video", groups_attended: "Groups Attended", person: "Person", del: "Delete", sr_no: "Sr. No.", video: "Video", date_of_adoption: "Date of Adoption", date_of_verification: "Date of Verification", member_adopt_second: "Is the beneficiary practicing the behavior2?", member_adopt: "Did member adopt the practice", recall_nonnegotiable: "Did the member recall non-negotiable points", parentcategory: 'Category',},
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'अपनाने की तारीख','element':'date_of_adoption'},{'header':'सदस्य कि आईडी','element':'person.online_id'},{'header':'सदस्य','element':'person.person_name'},{'header':'ग्राम संगठन का नाम','element':'group.group_name'},{'header':'गाँव','element':'village.village_name'},{'header':'वीडियो','element':'video.title'}],
-        'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':"Date de vérification",'element':'date_of_adoption'},{'header':'Personne Identité','element':'person.online_id'},{'header':'Personne','element':'person.person_name'},{'header':'Groupe/groupement','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Vidéo','element':'video.title'}],
-        'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Verification Date','element':'date_of_adoption'},{'header':'Person ID','element':'person.online_id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}],
+        'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':"Date de vérification",'element':'date_of_adoption'},{'header':'Personne Identité','element':'person.online_id'},{'header':'Personne','element':'person.person_name'},{'header':'Groupe/groupement','element':'group.group_name'},{'header':'Village','element':'village.village_name'}],
+        'list_elements_English': [{'header':'ID','element':'online_id'},{'header':'Verification Date','element':'date_of_adoption'},{'header':'Person ID','element':'person.online_id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'}],
+        'list_elements_for_analytics': [{'header':'ID','element':'online_id'},{'header':'Verification Date','element':'date_of_adoption'},{'header':'Person ID','element':'person.online_id'},{'header':'Person','element':'person.person_name'},{'header':'Group','element':'group.group_name'},{'header':'Village','element':'village.village_name'},{'header':'Video','element':'video.title'}, {'header':'Category', 'element':'video.category_name'}],
         'add_template_name': 'adoption_add_template',
         'edit_template_name': 'adoption_edit_template',
         'rest_api_url': '/coco/api/v2/adoption/',
-        'entity_name': 'adoption',
+        'entity_name': 'adoption',        
         'list_var_check': 'adoption',
         'show_health_provider_present': 1,
         'fetch_element_that_manipulate': 'parentcategory',
-
-        // 'field_change_entity_name': "adoption",
-        // 'combination_display_field': '#id_group',
-        // 'combination_display_field_with_value': ['#id_parentcategory', '#id_village'],
-
         'combination_display_dict': {'#id_group': ['#id_parentcategory', '#id_village']},
-
-        // 'parent_element_to_hide': 'adopt_practice_chosen',
-        // 'parent_element_label_to_hide': 'label_id_member_adopt',
         'fetch_key_element': 'id',
         'remove_attribute_field': 'adopt_practice',
         'hide_dict': {'th#id_member_adopt': 'div#id_adopt_practice', 'th#id_label_recall_nonnegotiable': 'div#id_recall_nonnegotiable', '#label_health_provider_present': '#id_health_provider_present'},
@@ -969,9 +1005,14 @@ function() {
         'text_to_select_display_hack_field_id': 'adopt_practice',
         'text_to_select_display_hack_field_array': ['adopt_practice_second'],
         'inline_headers_for_hide_show_arr': ['th#id_member_adopt', 'th#id_recall_nonnegotiable', 'td#id_recall_nonnegotiable', 'th#id_member_adopt'],
+        'xaxis' : ['Villages','Mediator','Video','Group', 'Category'],
+        'yaxis' : 'Number of adoptions',
+        'key' : [5,3,6,4, 7],
+        'graph_type' : 'column',
+
         form_field_validation: {
             ignore: [],
-			rules: {
+    rules: {
                 person: {
                     required: true,
                     
@@ -984,23 +1025,23 @@ function() {
                 },                
                 date_of_adoption: {
                     required: true,
-					validateDate: true,
+    validateDate: true,
                 }
             },
             messages: {
-				person: {
-					required: "person is required"
-				},
-				video: {
-					required: "video is required"
-				},
+    person: {
+    required: "person is required"
+    },
+    video: {
+    required: "video is required"
+    },
                 animator: {
                     required: "Mediator is required"
                 },
-				date_of_adoption: {
-					required: "Date of Adoption is required"
-				}
-			},
+    date_of_adoption: {
+    required: "Date of Adoption is required"
+    }
+    },
             highlight: function(element, errorClass, validClass) {
                 $(element)
                     .parent('div')
@@ -1199,6 +1240,7 @@ function() {
         'list_elements_हिन्दी': [{'header':'आईडी','element':'online_id'},{'header':'सदस्य का नाम','element':'person_name'},{'header':'पिता/पति का नाम','element':'father_name'},{'header':'गाँव','element':'village.village_name'},{'header':'ग्राम संगठन का नाम','element':'group.group_name'}],
         'list_elements_Français': [{'header':'Identité','element':'online_id'},{'header':'Nom de la personne','element':'person_name'},{'header':'Nom du père','element':'father_name'},{'header':'Nom du village','element':'village.village_name'},{'header':'Groupe','element':'group.group_name'}],
         'list_elements_English': [{'header':'ID','element':'online_id'},{'element':'person_name'},{'element':'father_name'},{'element':'village.village_name'},{'element':'group.group_name'}],
+        'list_elements_for_analytics': [{'header':'ID','element':'online_id'},{'element':'person_name'},{'element':'father_name'},{'element':'village.village_name'},{'element':'group.group_name'}],
         'add_template_name': 'person_add_edit_template',
         'edit_template_name': 'person_add_edit_template',
         'rest_api_url': '/coco/api/v2/person/',
@@ -1214,7 +1256,7 @@ function() {
                 'group': {
                     'placeholder': 'id_group',
                     'name_field': 'group_name',
-					'dependency': [{
+    'dependency': [{
                         'source_form_element': 'village',
                         'dep_attr': 'village'
                     }]
@@ -1306,21 +1348,28 @@ function() {
         }
 
     };
-
+    // var overall_numbers ={
+    //     number :["Number of Village","Number of Mediator","Number of Video","Number of Group","Number of Person","Number of Screening","Number of Adoption"],
+    //     yaxis:["screening","adoption"],
+    //     xaxis:["month","week"]
+    // };
     var misc = {
         download_chunk_size: 2000,
+        overall_numbers : ["village", "group", "video", "mediator", "person", "adoption", "screening"],
         data_transfer_schema: "uploadqueue",
         agg_variable: "2",
         health_variable: "1",
         variable_dict: {'agg_variable': '2', 'health_variable': '1'},
         data_transfer_credentials_schema: "user",
         languages: ['हिन्दी', 'English', 'Français'],
+        analytics_entities : ["screening","adoption"],
         ethiopia_partners: ['moa-dg ethiopia', 'ide', 'oa', 'saa'],
         health_variable: '1',
         agg_variable: '2',
         upavan_variable: '3',
         menu_options_to_hide: {'.ahnn': 'ahnn', '.hnn': '.hnn', 'li.hnn': 'li.hnn'},
-        upavan_user_fields: ["#type_of_venue", "#type_of_video", "#frontlineworkerpresent", "#end_time", "#remove-table", "#srf-1", "#srf-2"],
+        srb_fields: ["#srf-1", "#srf-2", "#remove-table"],
+        upavan_user_fields: ["#type_of_venue", "#type_of_video", "#frontlineworkerpresent", "#end_time"],
         label_upavan_dict: {'#id_label_animator': 'CSP name', '#id_label_videos_screened': 'Video Name',
                               '#id_category': 'Beneficiary', '#id_dob': 'Date of Home Visit',
                              '.non': 'Beneficiary recalled the knowledge recall point?',
@@ -1336,7 +1385,7 @@ function() {
         element_to_be_hidden_for_upavan: {'#id_meeting_topic': '#id_meeting_topic'},
         inline_var_to_be_hidden: {'th#phy': 'td#phy_check', 'th#id_member_adopt_second': 'td#id_adopt_practice_second'},
         meta_default: 'English',
-        meta_English: {stop: "Stop",close:"close", sync: "Sync", export: 'Export Data', save: "Save and Add Another", help:"Help", logout:"Logout", download:"Downloading...",upload:"Uploading...", inprogress:"In Progress", done:"Done", edit:"Edit", 
+        meta_English: {stop: "Stop",close:"close", sync: "Sync", export: 'Export Data', save: "Save and Add Another", help:"Help", logout:"Logout", download:"Downloading...",upload:"Uploading...", inprogress:"In Progress", done:"Done", edit:"Edit",
                        delete_download:"Delete and Download Database", save_again:"Save Again", discard:"Discard", upload_total:"Data items to be uploaded", upload_done:"Data Uploaded", upload_pending:"Data pending to be uploaded",
                        error:"Error!!", upload_error:"Internet connectivity lost. Please try after sometime!", copy_clipboard:"Copy to clipboard", excel_download:"Download in excel", search: 'Search: ', enteries:"Enteries: ",total_enteries:"Total Enteries: ",
                        next:"Next", previous:"Previous", list_page_help:"For multiple column sorting, press and hold the shift key while sorting each column.",
@@ -1346,7 +1395,7 @@ function() {
                        line_7:"Sync data", line_8:"To sync data with the server, click on the sync button. While syncing, if some data is rejected by the server, you will get the opportunity to correct the data, or in case of duplicate entries, to discard it. The number in the button shows how many entries are yet to be uploaded. Clicking on the sync button will also download the database if it is not completely downloaded.",
                        line_9:"We value your feedback", line_10:"Do share your feedback by mailing us at <a href='mailto:system@digitalgreen.org'>system@digitalgreen.org</a>",
                        line_11:"Database last deleted and downloaded at", line_12:"Database last synced at",
-                       line_13:"Entries to upload"},
+                       line_13:"Entries to upload", view_analytics: "View Analytics"},
         meta_हिन्दी: {stop: "रोकें",close:"बंद करें", sync:"सिंक करें", export: 'डाटा डाउनलोड करें', save: "एक और जोड़े", help:"हेल्प", logout:"लोग आउट", download:"डाउनलोड हो रहा है...", upload:"अपलोड हो रहा है...",inprogress:"कार्य प्रगति में है", done:"कार्य समाप्त हो गया है", edit:"बदलें",
                        delete_download:"पुराना डेटा हटाएँ और नया जोड़ें ", save_again:"फिर से जोड़े", discard:"हटाये", upload_total:"अपलोड के लिए कुल डेटा", upload_done:"डेटा अपलोड हो गया है", upload_pending:"डेटा अपलोड होना बाकी है",
                        error: "त्रुटि!!", upload_error:"अभी इंटरनेट की सुविधा नही है। कृपया कुछ देर बाद प्रयास करें!",copy_clipboard:"क्लिपबोर्ड पर कॉपी करें", excel_download:"एक्सेल में डाउनलोड करें", search: "खोजें: ", enteries:"डेटा: ", total_enteries:"कुल डेटा: ",
@@ -1426,6 +1475,7 @@ function() {
         screening: screening_configs,
         adoption: adoption_configs,
         language: language_configs,
+        tag: tag_configs,
         category: category_configs,
         parentcategory: parent_category_configs,
         subcategory: subcategory_configs,

@@ -308,6 +308,8 @@
 # /
 *.pyc
 .project
+/py_env/*
+/training_env/*
 .pydevproject
 /dg/media/social_website/node_modules/*
 /dg/settings.py

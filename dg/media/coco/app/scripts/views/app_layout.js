@@ -1,5 +1,5 @@
 //The parent view containing the side panel and the content panel. It will hold all other views as subviews - dashboard view goes into the side panel and the status/list/add_edit view goes into contant panel based on current url.
-define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login', 'models/user_model', 'auth'], function(DashboardView, HeaderView, ListView, FormControllerView, StatusView, layoutmanager, LoginView, User, Auth) {
+define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_controller', 'views/status', 'layoutmanager', 'views/login','views/offline_analytics', 'models/user_model', 'auth','configs'], function(DashboardView, HeaderView, ListView, FormControllerView, StatusView, layoutmanager, LoginView, AnalyticsView, User, Auth,configs) {
 
     var AppLayout = Backbone.Layout.extend({
         template: "#page_layout",
@@ -33,6 +33,51 @@ define(['views/dashboard', 'views/app_header', 'views/list', 'views/form_control
         render_login: function() {
             var login_view = new LoginView();
             this.setView("#content", login_view);
+        },
+
+        render_analytics: function(){
+            var i;
+            var contaianerCount=1;
+            for(i=1; i<=configs.misc.analytics_entities.length; i++)
+            {
+                var entity = configs.misc.analytics_entities[i-1];
+                
+                for(j=0;j<configs[entity]['xaxis'].length;j++){
+                var analytics_view = new AnalyticsView({
+                tabId :i,
+                entities : configs.misc.analytics_entities[i-1],
+                container: 'container'+(contaianerCount++),
+                xaxis : configs[entity]['xaxis'][j],
+                j : j
+                });
+              this.setView("#content", analytics_view);
+            } 
+        }
+        nestContainer =1;
+        for(i=1; i<=configs.misc.analytics_entities.length; i++)
+            {
+            
+                var analytics_view = new AnalyticsView({
+                    tabId:3,
+                    entities : configs.misc.analytics_entities[i-1],
+                    container: 'container'+(contaianerCount++),
+                    key : [1],
+                    j:0
+                });
+             this.setView("#content", analytics_view);
+            
+        }
+        for(i=0;i<configs.misc.overall_numbers.length;i++){
+            var analytics_view = new AnalyticsView({
+                    tabId:3,
+                    entities :configs.misc.overall_numbers[i],
+                    container:'container'+(contaianerCount++),
+                    key :[0],
+                    j:0
+            });
+        this.setView("#content",analytics_view);
+            
+        }
         },
 
         render_home_view: function() {

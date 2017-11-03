@@ -19,7 +19,8 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
     <LINK rel="icon" type="image/x-icon" href="/media/coco/app/images/favicon.ico">
 
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -259,9 +260,7 @@
                                 <%=configs['misc']['meta_'+language]['sync'] %>
                                 <span class="badge" id="upload_num"><%=upload_entries%></span>
                             </button>
-                            <!-- <button type="button" disabled class="coco_export btn btn-default" id="export">
-                                <%=configs['misc']['meta_'+language]['export'] %>
-                            </button> -->
+                            
                         </div>
                     </div>
                     <p id="helptext">
@@ -326,6 +325,8 @@
                 <%if(typeof(username)!=undefined){%>
                 <li class="user-dropdown-option">Hi <%=username%>!</li>
                 <li class="user-dropdown-option"><a id="logout" style="cursor:pointer"><%= configs['misc']['meta_'+language]['logout']%></a></li>
+                <li class="user-dropdown-option"><a id="view_analytics" href="#analytics" style="cursor:pointer"><%= configs['misc']['meta_'+language]['view_analytics']%></a></li>
+
                 <%}%>
             </ul>
         </div>
@@ -420,8 +421,9 @@
                                 </td>
                             </tr>    
                         <%})%>
-        			</tbody>
-        		</table>
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -429,6 +431,7 @@
     <button style="margin-top: 20px;" disabled type="button" class="coco_export btn btn-default" id="export">
                                 <%=configs['misc']['meta_'+language]['export'] %>
                             </button>
+    <a id="analytics" href="#analytics" style="cursor:pointer" class="btn btn-small btn-primary mrg-top-20" title= "View Analytics"><%= configs['misc']['meta_'+language]['view_analytics'] %></a>
 </script>
 
 <script type="text/template" id="form_template">
@@ -486,6 +489,93 @@
 	<p id="sort-helptext" style="margin-top:50px; font-size:11px; color:grey; font-style:italic; display:none;"><%= list_page_help %>
 </script>
 
+<script  type="text/template" id="analytics_template">
+    <div id="legend">
+        <legend class=""><%= page_header %></legend>
+    </div>
+    
+    <div id="container" name = "container">
+         <div class="row">
+        <div class="col-md-12">
+            <div class="tabbable-panel">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a href="#tab_default_1" data-toggle="tab">
+                            Overview</a>
+                        </li>
+                        <li>
+                            <a href="#tab_default_2" data-toggle="tab">
+                            Screening</a>
+                        </li>
+                        <li>
+                            <a href="#tab_default_3" data-toggle="tab">
+                            Adoption</a>
+                        </li>
+                    </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_default_1">
+
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Total Number of Villages Reached</th>
+                                        <th id="container13"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Groups Reached</th>
+                                        <th id="container14"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Beneficiaries Reached</th>
+                                        <th id="container15"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Video Reached</th>
+                                        <th id="container16"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Screening</th>
+                                        <th id="container17"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Number of Adoptions</th>
+                                        <th id="container18"></th>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <div class= "col-sm-6" id="container11" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                            <div class= "col-sm-6" id="container12" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                            
+                        </div>
+                            <div class="tab-pane" id="tab_default_2">
+                                <div class= "col-sm-6 " id="container1" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container2" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container3" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container4" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+
+                                <div class= "col-sm-6 " id="container5" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                
+                            </div>
+                            <div class="tab-pane " id="tab_default_3">
+                                <div class= "col-sm-6 " id="container6" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container7" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container8" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container9" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+                                <div class= "col-sm-6 " id="container10" style="height: auto;overflow-x:scroll;overflow-y:hidden"></div>
+
+                            </div>
+                        
+                        </div>
+                </div>
+            </div>
+    </div> 
+</script>
+
 <script type="text/template" id="options_template">
     <option value=<%=id%>><%=name%></option> 
 </script>
@@ -537,7 +627,6 @@
 <script type="text/template" id="mediator_add_edit_template">
     <fieldset class="form-horizontal">
         <legend><%= mediator %></legend>
-		
         <div class="form-group">
             <label class="control-label col-sm-2"><b><%= name %></b></label>
             <div class="col-sm-4">
@@ -648,6 +737,7 @@
                 </div>
 
                 
+
 
 
 
@@ -866,6 +956,7 @@
                 <legend><%= adoption %></legend>
                 <div class="form-group">
                     <label class="control-label col-sm-2"><%= village %></label>
+
                     <div class="col-sm-4"> 
                         <select name="village" id="id_village" class="chosen-select form-control">
                             <option value="">---------- </option>
@@ -935,6 +1026,38 @@
 
                 <div class="form-group" id="id_recall_nonnegotiable">
                     <label class="control-label col-sm-2 non"><%=recall_nonnegotiable%> ?</label>
+                    <div class="col-sm-4">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_one" value="1" name="krp_one">1
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_two" value="1" name="krp_two">2
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_three" value="1" name="krp_three">3
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_four" value="1" name="krp_four">4
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="krp_five" value="1" name="krp_five">5
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" id="label_id_member_adopt"><%=member_adopt%></label>
+                    <div class="col-sm-4">
+                        <select name="adopt_practice" id="id_adopt_practice" class="chosen-select form-control">
+                            <option value='1'>Yes</option>
+                            <option value='2'>No</option>
+                            <option value='3'>Not Applicable</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="id_recall_nonnegotiable">
+                    <label class="control-label col-sm-2"><%=recall_nonnegotiable%> ?</label>
                     <div class="col-sm-4">
                         <label class="checkbox-inline">
                             <input type="checkbox" id="krp_one" value="1" name="krp_one">1
@@ -1114,6 +1237,7 @@
                 </label>
             </div>
         </td>
+
         <td>
             <div class="form-group" id="id_adopt_practice">
                 <div class="controls">
@@ -1137,9 +1261,6 @@
                 </div>
             </div>
         </td>
-        
-
-        
         
     </tr>
 </script>
@@ -1296,6 +1417,15 @@
                     </select>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><%= tags %></label>
+                <div class="col-sm-4">
+                    <select size="20" class="chosen-select form-control" id = "id_tags" name="tags" multiple>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="dis-block col-sm-2 control-label notbold"><%= youtubeid %></label>
                 <div class="col-sm-4">
@@ -1352,14 +1482,14 @@
             <div class="form-group" id="srf-1">
                 <label class="dis-block col-sm-2 control-label" style="text-align: left;margin-left:8px">1.</label>
                 <div class="col-sm-4">
-                    <input name="self_reported_behaviour1" type="text" class="form-control">
+                    <input name="self_reported_behaviour1" type="text" class="form-control" id="id_self_reported_behaviour1">
                 </div>
             </div>
 
             <div class="form-group" id="srf-2">
                 <label class="dis-block col-sm-2 control-label notbold" style="text-align: left;margin-left:8px">2.</label>
                 <div class="col-sm-4">
-                    <input name="self_reported_behaviour2" type="text" class="form-control">
+                    <input name="self_reported_behaviour2" type="text" class="form-control" id="id_self_reported_behaviour2">
                 </div>
             </div>
 
@@ -1405,7 +1535,6 @@
 <script type="text/template" id="person_add_edit_template">
         <fieldset class="form-horizontal">
             <legend><%= person %></legend>
-			
             <div class="form-group"> 
                 <label class="control-label col-sm-2"><%= name %></label>
             	<div class="col-sm-4">
@@ -1448,7 +1577,8 @@
                     <input name="phone_no" type="text" class="form-control">
                 </div>
             </div>
-			<div class="form-group"> 
+
+    <div class="form-group"> 
                 <label class="control-label col-sm-2 notbold"><%= group %></label> 
                 <div class="col-sm-4">
                     <select id = "id_group" name="group" class="chosen-select form-control">
