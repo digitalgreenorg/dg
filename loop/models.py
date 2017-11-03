@@ -61,7 +61,7 @@ class State(LoopModel):
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
     crop_add = models.BooleanField(default=False)
     phone_digit = models.CharField(default=10, max_length=2, blank=True, null=True)
-    phone_start = models.CharField(default=789, max_length=15, blank=True, null=True)
+    phone_start = models.CharField(default='7,8,9', max_length=15, blank=True, null=True)
     aggregation_state = models.BooleanField(default=True)
     def __unicode__(self):
         return self.state_name
@@ -459,18 +459,11 @@ class DayTransportation(LoopModel):
         return "%s" % (self.mandi.mandi_name)
 
     def __transporter_phone__(self):
-        return "%s" % (self.validate_phone_number(self.transportation_vehicle.transporter.transporter_phone))
+        return "%s" % (self.validate_phone_number(self.transportation_vehicle.transporter.block.district.state, self.transportation_vehicle.transporter.transporter_phone))
 
-    def validate_phone_number(self, phone):
-        num_of_digits = len(phone)
-        # For India
-        if num_of_digits == 10:
-            if 7 <= int(phone[0]) <= 9:
-                return phone
-        # For Bangladesh
-        elif num_of_digits == 11:
-            if int(phone[0]) == 0 and int(phone[1]) == 1:
-                return phone
+    def validate_phone_number(self, state, phone):
+        if len(phone) == int(state.phone_digit):
+            return phone
         return ""
 
     class Meta:
@@ -516,18 +509,11 @@ class CombinedTransaction(LoopModel):
         return "%s" % (self.gaddidar.gaddidar_name)
 
     def __farmer_phone__(self):
-        return "%s" % (self.validate_phone_number(self.farmer.phone))
+        return "%s" % (self.validate_phone_number(self.farmer.village.block.district.state, self.farmer.phone))
 
-    def validate_phone_number(self, phone):
-        num_of_digits = len(phone)
-        # For India
-        if num_of_digits == 10:
-            if 7 <= int(phone[0]) <= 9:
-                return phone
-        # For Bangladesh
-        elif num_of_digits == 11:
-            if int(phone[0]) == 0 and int(phone[1]) == 1:
-                return phone
+    def validate_phone_number(self, state, phone):
+        if len(phone) == int(state.phone_digit):
+            return phone
         return ""
 
     class Meta:
