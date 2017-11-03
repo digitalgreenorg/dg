@@ -155,7 +155,9 @@ def farmer_payments(request):
         for bundle in body.get("objects"):
             try:
                 mandi = Mandi.objects.get(id=bundle["mandi"]["online_id"])
-                user = User.objects.get(id=bundle["user_created_id"])
+                #user = User.objects.get(id=bundle["user_created_id"])
+                loop_user = LoopUser.objects.get(id=bundle["aggregator"]["online_id"])
+                user = User.objects.get(id=loop_user.user_id)
                 attempt = DayTransportation.objects.filter(date=bundle["date"], user_created=user, mandi=mandi)
                 attempt.update(farmer_share=bundle["amount"])
                 attempt.update(farmer_share_comment=bundle["comment"])
