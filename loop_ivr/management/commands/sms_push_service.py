@@ -106,10 +106,22 @@ class Command(BaseCommand):
         index = 0
         from_number = AGGREGATOR_SMS_NO
         content = content.replace('\n','%0A')
-        while index < len(content):
-            self.send_sms(subscription_id, from_number, user_no, content[index:index+720])
-            index += 720
-            time.sleep(1)
+        while len(content) > 0:
+            # If length of content is less than 750, then send whole content once.
+            if len(content) < 750:
+                self.send_sms(subscription_id, from_number, user_no, content)
+                break
+            # If length of content is more than 750, then devide in packets of length < 750
+            # based on two new line.
+            else:
+                current_index = content[:750].rfind('%0A%0A')
+                # If two new line not found then devide simply in chunks of 750
+                if current_index < 0:
+                    current_index = 750
+                current_content = content[:current_index]
+                content = content[current_index:]
+                self.send_sms(subscription_id, from_number, user_no, current_content)
+                time.sleep(.5)
 
 
     def get_price_info(self,subscription_id, user_no, crop_list, mandi_list, all_crop_flag, all_mandi_flag):
