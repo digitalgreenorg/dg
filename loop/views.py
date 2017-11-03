@@ -708,6 +708,7 @@ def dashboard_payments(request):
         user = request.user
         try:
             api_key = ApiKey.objects.get(user=user)
+            loop_user = LoopUser.objects.get(user_id=user.id)
         except ApiKey.DoesNotExist:
             api_key = ApiKey.objects.create(user=user)
             api_key.save()
@@ -715,6 +716,8 @@ def dashboard_payments(request):
         login_data['user_name'] = user.username
         login_data['user_id'] = user.id
         login_data['key'] = api_key.key
+        login_data['state'] = loop_user.village.block.district.state.state_name_en
+        login_data['country'] = loop_user.village.block.district.state.country
         return render_to_response('app_dashboards/loop_dashboard_payment.html', login_data, context_instance=context)
     else:
         return HttpResponse(status=404)

@@ -218,7 +218,7 @@ function set_filterlistener() {
           header: header_json,
           data: data_json,
           cell_format: cell_format,
-          sheet_header: 'Loop India Bihar',
+          sheet_header: 'Loop ' + localStorage.state + ' (' + localStorage.country + ')',
           sheet_footer: 'This is an automated generated sheet'
 
         }
@@ -1587,19 +1587,19 @@ function create_data_for_excel_download() {
         'total': false
       },
       {
-        'column_width': 9.64,
+        'column_width': 9,
         'formula': null,
         'label': 'Market',
         'total': false
       },
       {
-        'column_width': 6.64,
+        'column_width': 7,
         'formula': null,
         'label': "Quantity [Q'] (in Kg)",
         'total': true
       },
       {
-        'column_width': 6.64,
+        'column_width': 7,
         'formula': null,
         'label': 'Quantity Post Deduction [Q] (in Kg)',
         'total': true
