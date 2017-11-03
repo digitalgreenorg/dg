@@ -83,5 +83,3 @@ def remove_crop_outliers(ct_data, state_id, rate_deviation_threshold, deviation_
         ~combined_transactions_data.isin(outlier_merged_2)].dropna()
     combined_transactions_data = combined_transactions_data.loc[:, 'Date': 'State']
     return combined_transactions_data
-
-
