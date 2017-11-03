@@ -24,7 +24,7 @@ from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
     agg_sms_crop_line, helpline_hi, PUSH_MESSAGE_SMS_RESPONSE_URL, MONTH_NAMES, \
-    TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME
+    TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, code_hi
 
 class Command(BaseCommand):
 
@@ -128,7 +128,7 @@ class Command(BaseCommand):
                     crop_name = self.crop_in_hindi_map.get(crop).encode("utf-8") if self.crop_in_hindi_map.get(crop) else self.crop_map[crop].encode("utf-8")
                     mandi_name = self.mandi_map[mandi].encode("utf-8")
                     if crop != prev_crop:
-                        temp_str = ('\n%s: %s\n%s %s\n')%(agg_sms_crop_line,crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                        temp_str = ('\n%s: %s (%s: %s)\n\n%s %s\n')%(agg_sms_crop_line,crop_name,code_hi,str(crop),mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     else:
                         temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     price_info_list.append(temp_str)
