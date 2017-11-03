@@ -1,12 +1,12 @@
 import datetime
-
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.core.validators import MaxValueValidator
 from base_models import CocoModel
 from geographies.models import Village
 from programs.models import Partner
 from videos.models import Video
+from base_models import TYPE_OF_COCOUSER
 
 
 class FullDownloadStats(models.Model):
@@ -32,6 +32,7 @@ class CocoUser(CocoModel):
     partner = models.ForeignKey(Partner)
     villages = models.ManyToManyField(Village)
     videos = models.ManyToManyField(Video)
+    type_of_cocouser = models.IntegerField(choices=TYPE_OF_COCOUSER, null=True, blank=True, validators=[MaxValueValidator(3)])
 
     def get_villages(self):
         return self.villages.all()

@@ -153,6 +153,7 @@ class NonNegotiableForm(CocoModelForm):
         model = NonNegotiable
         exclude = ()
 
+
 class ScreeningForm(CocoModelForm):
     class Meta:
         model = Screening

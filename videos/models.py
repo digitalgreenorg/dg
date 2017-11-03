@@ -1,12 +1,24 @@
+# django imports
 from django.db import models
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import pre_delete 
+from django.db.models.signals import post_save
 from django.core.validators import MaxValueValidator
-
-from coco.data_log import delete_log, save_log
-from coco.base_models import CocoModel, STORYBASE, VIDEO_TYPE, VIDEO_GRADE, VIDEO_REVIEW, REVIEW_BY
+# app imports
+from coco.data_log import delete_log
+from coco.data_log import save_log
+from coco.base_models import CocoModel
+from coco.base_models import STORYBASE
+from coco.base_models import VIDEO_TYPE
+from coco.base_models import VIDEO_GRADE
+from coco.base_models import VIDEO_REVIEW
+from coco.base_models import REVIEW_BY
+from coco.base_models import PARENT_CATEGORY
 from geographies.models import Village
 from programs.models import Partner
-from people.models import Animator, Person
+from people.models import Animator
+from people.models import Person
+from training.log.training_log import enter_to_log
+
 
 class PracticeSector(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -57,11 +69,11 @@ class Practice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     practice_name = models.CharField(null=True, blank=True, max_length=200)
-    practice_sector = models.ForeignKey(PracticeSector, default=1) 
+    practice_sector = models.ForeignKey(PracticeSector, default=1)
     practice_subsector = models.ForeignKey(PracticeSubSector, null=True, blank=True)
     practice_topic = models.ForeignKey(PracticeTopic, null=True, blank=True)
     practice_subtopic = models.ForeignKey(PracticeSubtopic, null=True, blank=True)
-    practice_subject = models.ForeignKey(PracticeSubject, null=True, blank=True)    
+    practice_subject = models.ForeignKey(PracticeSubject, null=True, blank=True)
 
     class Meta:
         verbose_name = "Practice"
@@ -75,21 +87,52 @@ class Practice(CocoModel):
         practice_subtopic = '' if self.practice_subtopic is None else self.practice_subtopic.name
         return "%s, %s, %s, %s, %s" % (practice_sector, practice_subject, practice_subsector, practice_topic, practice_subtopic)
 
+
+class ParentCategory(CocoModel):
+    id = models.AutoField(primary_key=True)
+    parent_category_name = models.CharField(max_length=100, unique='True')
+
+    class Meta:
+        verbose_name_plural = "ParentCategory"
+
+    def __unicode__(self):
+        return self.parent_category_name
+
+
 class Category(CocoModel):
     id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=100, unique='True')
+    parent_category = models.ForeignKey(ParentCategory, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.category_name == "Agriculture":
+            self.parent_category_id=2
+        if self.category_name in ['Child Health and Nutrition', 'Nutrition-sensitive approaches', "Women's Health and Nutrition"]:
+            self.parent_category_id=1
+            return super(Category, self).save(*args, **kwargs)
 
     def get_village(self):
         return None
 
     def get_partner(self):
         return None
-    
+
     class Meta:
         verbose_name_plural = "categories"
 
     def __unicode__(self):
         return self.category_name
+
+
+class DirectBeneficiaries(models.Model):
+    """
+    Describes the direct beneficiaries of the video
+    """
+    direct_beneficiaries_category = models.CharField(max_length=80, null=True)
+    category = models.ManyToManyField(Category, blank=True)
+
+    def __unicode__(self):
+        return self.direct_beneficiaries_category
 
 class SubCategory(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -101,7 +144,7 @@ class SubCategory(CocoModel):
 
     def get_partner(self):
         return None
-    
+
     class Meta:
         verbose_name_plural = "sub categories"
 
@@ -118,7 +161,7 @@ class VideoPractice(CocoModel):
 
     def get_partner(self):
         return None
-    
+
     def __unicode__(self):
         return self.videopractice_name
 
@@ -132,11 +175,13 @@ class Language(CocoModel):
 
     def get_partner(self):
         return None
-    
+
     def __unicode__(self):
         return self.language_name
 post_save.connect(save_log, sender=Language)
 pre_delete.connect(delete_log, sender=Language)
+post_save.connect(enter_to_log, sender=Language)
+pre_delete.connect(enter_to_log,sender=Language)
 
 
 class Video(CocoModel):
@@ -151,8 +196,9 @@ class Video(CocoModel):
     village = models.ForeignKey(Village)
     production_team = models.ManyToManyField(Animator)
     category = models.ForeignKey(Category, null=True, blank=True)
+    direct_beneficiaries = models.ManyToManyField(DirectBeneficiaries, blank=True)
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
-    videopractice = models.ForeignKey(VideoPractice, null=True, blank=True)
+    videopractice = models.ManyToManyField(VideoPractice, blank=True)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     youtubeid = models.CharField(max_length=20, blank=True)
@@ -161,7 +207,9 @@ class Video(CocoModel):
     video_grade = models.CharField(max_length=1,choices=VIDEO_GRADE,null=True,blank=True)
     reviewer = models.IntegerField(verbose_name="Organisation", choices=REVIEW_BY, null=True, blank=True, validators=[MaxValueValidator(1)])
     reviewed_by = models.CharField(max_length=80, null=True, blank=True)
-    
+    self_reported_behaviour1 = models.CharField(max_length=500, null=True, blank=True)
+    self_reported_behaviour2 = models.CharField(max_length=500, null=True, blank=True)
+
     class Meta:
         unique_together = ("title", "production_date", "language", "village")
 
@@ -178,11 +226,12 @@ class NonNegotiable(CocoModel):
     video = models.ForeignKey(Video)
     non_negotiable = models.CharField(max_length=500)
     physically_verifiable = models.BooleanField(db_index=True, default=False)
-    
+
     def __unicode__(self):
         return  u'%s' % self.non_negotiable
 post_save.connect(save_log, sender=NonNegotiable)
 pre_delete.connect(delete_log, sender=NonNegotiable)
+
 
 class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)

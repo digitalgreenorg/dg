@@ -122,10 +122,10 @@ class Command(BaseCommand):
 							approval_date=ad,
 							youtubeid=yid,
 							category=category,
-							subcategory=subcategory,
-							videopractice=videopractice
+							subcategory=subcategory
 							)
 				vid.save()
+				vid.videopractice.add(videopractice)
 				jslps.new_count += 1
 			except Exception as e:
 				vid = None

@@ -38,6 +38,12 @@ class Command(BaseCommand):
         video_quality_query = '''SELECT
                 YEAR(qr.date) Year,
                 MONTHNAME(qr.date) Month,
+                gc.country_name Country,
+                gs.state_name State,
+                gd.DISTRICT_NAME District,
+                gb.BLOCK_NAME Block,
+                gv.id 'Village Id',
+                gv.VILLAGE_NAME Village,
                 qr.date Date,
                 vv.id 'Video ID',
                 vv.title 'Video Title',
@@ -57,6 +63,7 @@ class Command(BaseCommand):
                     WHEN '1' THEN 'Yes'
                     WHEN '0' THEN 'No'
                 END 'Approve for Dissemination',
+                vn.id 'Reviewer Id',
                 vn.name 'Reviewed By',
                 qr.remarks 'Remarks',
                 au.username 'Created By'
@@ -65,10 +72,20 @@ class Command(BaseCommand):
                     JOIN
                 videos_video vv ON vv.id = qr.video_id
                     JOIN
+                geographies_village gv ON gv.id = vv.village_id
+                    JOIN
+                geographies_block gb ON gb.id = gv.block_id
+                    JOIN
+                geographies_district gd ON gd.id = gb.district_id
+                    JOIN
+                geographies_state gs ON gs.id = gd.state_id
+                    JOIN
+                geographies_country gc ON gc.id = gs.country_id
+                    JOIN
                 qacoco_qareviewername vn ON vn.id = qr.qareviewername_id
                     JOIN
                 auth_user au ON qr.user_created_id = au.id
-            GROUP BY YEAR(qr.date) , MONTH(qr.date) , vv.id
+            GROUP BY YEAR(qr.date) , MONTH(qr.date) , gc.id , gs.id , gd.id , gb.id , gv.id , vv.id
             ORDER BY YEAR(qr.date) DESC , MONTH(qr.date) DESC
         '''
 
@@ -79,10 +96,12 @@ class Command(BaseCommand):
             gs.state_name State,
             gd.DISTRICT_NAME District,
             gb.BLOCK_NAME Block,
+            gv.id 'Village Id',
             gv.VILLAGE_NAME Village,
             qd.date Date,
             vv.id 'Video ID',
             vv.title 'Video Title',
+            pa.id AS 'Mediator Id',
             pa.name AS 'Mediator',
             CASE qd.pico
                 WHEN '1' THEN 'Working'
@@ -102,6 +121,7 @@ class Command(BaseCommand):
             qd.filled_dissemination,
             qd.total_score 'Total Score',
             qd.video_grade 'Video Grade',
+            vn.id 'Reviewer Id',
             vn.name AS 'Reviewed By',
             qd.remark 'Remarks',
             au.username 'Created By'
@@ -137,13 +157,16 @@ class Command(BaseCommand):
             gs.state_name State,
             gd.DISTRICT_NAME District,
             gb.BLOCK_NAME Block,
+            gv.id 'Village Id',
             gv.VILLAGE_NAME Village,
             af.verification_date 'Verification Date',
             vv.id 'Video ID',
             vv.title 'Video Title',
             pp.id 'Person ID',
             pp.person_name AS 'Person Name',
+            pa.id AS 'Mediator Id',
             pa.name AS 'Mediator',
+            vn.id AS 'Reviewer Id',
             vn.name AS 'Reviewed By',
             au.username 'Created By'
         FROM

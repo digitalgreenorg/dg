@@ -2,6 +2,15 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from human_resources.models import ExperienceQualification, Geography, Job, KeyResponsibility, Member
 
+def privacy_policy_view(request):
+    context = {
+        'header': {
+            'jsController':'Team',
+            'currentPage':'Team',
+            'loggedIn':False
+            },}
+    return render_to_response('privacy_policy_page.html', context, context_instance=RequestContext(request))
+
 def member_view(request):
     delhi_team = Member.objects.filter(place__name="Headquarters-Delhi")
     elt_team = delhi_team.filter(team="Executive Leadership Team").all().order_by('hierarchy_num')

@@ -7,13 +7,13 @@
         </div>
         {{/isOnline}}
         {{^isOnline}}
-        {{#person.thumbnailURL}}
+        {{#animator.thumbnailURL}}
         <div class="img comment-left-img">
-        <a href="http://www.digitalgreen.org/farmerbook/person/{{person.coco_id}}" target="_blank">
-            <img class="comment-avatar-thumbnail" src="{{person.thumbnailURL}}" onerror="this.src='/media/social_website/content/default.png';" alt="" />
+        <a href="/coco/farmerbook/animator/{{animator.coco_id}}" target="_blank">
+            <img class="comment-avatar-thumbnail" src="{{animator.thumbnailURL}}" onerror="this.src='/media/social_website/content/default.png';" alt="" />
         </a>
         </div>
-        {{/person.thumbnailURL}}
+        {{/animator.thumbnailURL}}
         {{/isOnline}}
         <div class="clearfix comment-left {{#isOnline}}online{{/isOnline}}{{^isOnline}}offline{{/isOnline}}">
             <div class="comment-left-carat">
@@ -24,7 +24,7 @@
                             {{user.first_name}} {{user.last_name}}
                         {{/isOnline}}
                         {{^isOnline}}
-                            {{person.name}}
+                            {{animator.name}}
                         {{/isOnline}}
                     </span>
                     <span><p class="hdg-source-lt hdg-f">{{date}}</p></span>

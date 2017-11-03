@@ -18,19 +18,12 @@ from tastypie.resources import ModelResource
 from people.models import Animator, AnimatorAssignedVillage
 
 from tastypie.authentication import BasicAuthentication, ApiKeyAuthentication
+import json
 
 
-class MediatorNotSaved(Exception):
-    pass
-
-
-class ScoreNotSaved(Exception):
-    pass
-
-
-class TrainingNotSaved(Exception):
-    pass
-
+def send_duplicate_message(obj_id):
+    response = {"error_message": {"online_id": obj_id, "error": "Duplicate"}}
+    raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     sub_fields = getattr(bundle.obj, field_name).values(*sub_field_names)
@@ -45,13 +38,13 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
             dict[sub_field] = None
     else:
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
-        dict["online_id"] = dict["id"]
+        dict["online_id"] = dict.pop("id")
     return dict
 
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    if field_dict.get('online_id'):
+    if field_dict and field_dict.get('online_id'):
         bundle.data[field_name] = "/training/api/v1/%s/%s/" % (resource_name if resource_name else field_name,
                                                                str(field_dict.get('online_id')))
     else:
@@ -209,6 +202,26 @@ class MediatorAuthorization(Authorization):
             raise NotFound("Not allowed to download Mediator")
 
 
+class TrainingAuthorization(Authorization):
+    def __init__(self, field):
+        self.training_field = field
+
+    def read_list(self, object_list, bundle):
+        trainings = Training.objects.filter(user_created_id=bundle.request.user.id).distinct()
+        kwargs = {}
+        kwargs[self.training_field] = trainings
+        return object_list.filter(**kwargs).distinct()
+
+    def read_detail(self, object_list, bundle):
+        kwargs = {}
+        kwargs[self.training_field] = Training.objects.filter(user_created_id=bundle.request.user.id).distinct()
+        obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound("Not allowed to download Trainings")
+
+
 class BaseResource(ModelResource):
 
     def full_hydrate(self, bundle):
@@ -244,7 +257,7 @@ class TrainerResource(ModelResource):
         authorization = Authorization()
         include_resource_uri = False
     dehydrate_language = partial(
-        foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
+        foreign_key_to_id, field_name='language', sub_field_names=['id'])
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
 
     def dehydrate(self, bundle):
@@ -283,12 +296,14 @@ class MediatorResource(ModelResource):
         resource_name = 'mediator'
         authorization = MediatorAuthorization()
         always_return_data = True
-        excludes = ('time_created', 'time_modified')
+        excludes = ('time_created', 'time_modified','role','total_adoptions')
         include_resource_uri = False
+
     dehydrate_partner = partial(
-        foreign_key_to_id, field_name='partner', sub_field_names=['id', 'partner_name'])
+        foreign_key_to_id, field_name='partner', sub_field_names=['id'])
     dehydrate_district = partial(
-        foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
+        foreign_key_to_id, field_name='district', sub_field_names=['id'])
+
     hydrate_assigned_villages = partial(
         dict_to_foreign_uri_m2m, field_name='assigned_villages', resource_name='village')
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
@@ -299,7 +314,7 @@ class MediatorResource(ModelResource):
         return bundle
 
     def dehydrate_assigned_villages(self, bundle):
-        return [{'id': vil.id, 'online_id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all())]
+        return [{'online_id': vil.id, 'village_name': vil.village_name} for vil in set(bundle.obj.assigned_villages.all())]
 
     def dehydrate_mediator_label(self, bundle):
         # for sending out label incase of dropdowns
@@ -316,8 +331,7 @@ class MediatorResource(ModelResource):
                 u = AnimatorAssignedVillage(animator=bundle.obj, village=vil)
                 u.save()
         else:
-            raise MediatorNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
@@ -326,8 +340,7 @@ class MediatorResource(ModelResource):
         except Exception, e:
             attempt = Animator.objects.filter(partner_id=bundle.data['partner']['online_id'], gender=bundle.data[
                                               'gender'], district_id=bundle.data['district']['online_id'], name=bundle.data['name'], phone_no = bundle.data['phone_no'])
-            raise MediatorNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
 
@@ -357,10 +370,10 @@ class QuestionResource(ModelResource):
         authorization = Authorization()
         include_resource_uri = False
     dehydrate_assessment = partial(
-        foreign_key_to_id, field_name='assessment', sub_field_names=['id', 'name'])
+        foreign_key_to_id, field_name='assessment', sub_field_names=['id'])
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
     dehydrate_language = partial(
-        foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
+        foreign_key_to_id, field_name='language', sub_field_names=['id'])
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
 
     def dehydrate(self, bundle):
@@ -368,11 +381,12 @@ class QuestionResource(ModelResource):
         return bundle
 
 
-class TrainingResource(ModelResource):
+class TrainingResource(BaseResource):
     language = fields.ForeignKey('training.api.LanguageResource', 'language')
     assessment = fields.ForeignKey(
         'training.api.AssessmentResource', 'assessment')
     trainer = fields.ToManyField('training.api.TrainerResource', 'trainer')
+    facilitator = fields.ForeignKey('training.api.TrainerResource', 'facilitator', null=True)
     participants = fields.ToManyField(
         'training.api.MediatorResource', 'participants')
     district = fields.ForeignKey(
@@ -385,32 +399,36 @@ class TrainingResource(ModelResource):
         resource_name = 'training'
         queryset = Training.objects.all()
         authentication = ApiKeyAuthentication()
-        authorization = Authorization()
+        authorization = TrainingAuthorization('id__in')
         always_return_data = True
         include_resource_uri = False
+        excludes = ('time_created', 'time_modified')
+
     hydrate_language = partial(dict_to_foreign_uri_coco, field_name='language')
     hydrate_assessment = partial(dict_to_foreign_uri, field_name='assessment')
     hydrate_trainer = partial(dict_to_foreign_uri_m2m,
                               field_name='trainer', resource_name='trainer')
+    hydrate_facilitator = partial(dict_to_foreign_uri, field_name='facilitator', resource_name='trainer')
     hydrate_participants = partial(
         dict_to_foreign_uri_m2m, field_name='participants', resource_name='mediator')
-    hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+    # hydrate_district = partial(dict_to_foreign_uri, field_name='district')
     hydrate_partner = partial(dict_to_foreign_uri, field_name='partner')
-    
+
     dehydrate_language = partial(
-        foreign_key_to_id, field_name='language', sub_field_names=['id', 'language_name'])
+        foreign_key_to_id, field_name='language', sub_field_names=['id'])
     dehydrate_assessment = partial(
-        foreign_key_to_id, field_name='assessment', sub_field_names=['id', 'name'])
+        foreign_key_to_id, field_name='assessment', sub_field_names=['id'])
     dehydrate_partner = partial(
-        foreign_key_to_id, field_name='partner', sub_field_names=['id', 'partner_name'])
-    dehydrate_district = partial(
-        foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
+        foreign_key_to_id, field_name='partner', sub_field_names=['id'])
+    # dehydrate_district = partial(
+    #     foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
+    dehydrate_facilitator = partial(foreign_key_to_id, field_name='facilitator', sub_field_names=['id'])
 
     def dehydrate_trainer(self, bundle):
-        return [{'id': trainer.id, 'name': trainer.name} for trainer in bundle.obj.trainer.all()]
+        return [{'online_id': trainer.id} for trainer in bundle.obj.trainer.all()]
 
     def dehydrate_participants(self, bundle):
-        return [{'id': mediator.id, 'name': mediator.name} for mediator in bundle.obj.participants.all()]
+        return [{'online_id': mediator.id} for mediator in bundle.obj.participants.all()]
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -419,11 +437,6 @@ class TrainingResource(ModelResource):
             bundle.data.clear()
             bundle.data['online_id'] = online_id
         return bundle
-
-    # def put_detail(self, bundle, **kwargs):
-    #     print "Entered put detail"
-    #     bundle = super(TrainingResource, self).put_detail(bundle, **kwargs)
-    #     print "Worked"
 
     def obj_create(self, bundle, **kwargs):
         trainer_list = []
@@ -449,8 +462,7 @@ class TrainingResource(ModelResource):
             trainer_list.append(bundle.data['trainer'][0]['online_id'])
             attempt = Training.objects.filter(
                 date=bundle.data['date'], trainer__in=trainer_list)
-            raise TrainingNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate in Update"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
 
@@ -483,7 +495,7 @@ class ScoreResource(ModelResource):
         queryset = Score.objects.all()
         resource_name = 'score'
         authentication = ApiKeyAuthentication()
-        authorization = Authorization()
+        authorization = TrainingAuthorization('training_id__in')
         always_return_data = True
         include_resource_uri = False
     hydrate_participant = partial(
@@ -492,11 +504,11 @@ class ScoreResource(ModelResource):
     hydrate_question = partial(dict_to_foreign_uri, field_name='question')
 
     dehydrate_participant = partial(
-        foreign_key_to_id, field_name='participant', sub_field_names=['id', 'name'])
+        foreign_key_to_id, field_name='participant', sub_field_names=['id'])
     dehydrate_training = partial(
         foreign_key_to_id, field_name='training', sub_field_names=['id'])
     dehydrate_question = partial(
-        foreign_key_to_id, field_name='question', sub_field_names=['id', 'text'])
+        foreign_key_to_id, field_name='question', sub_field_names=['id'])
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
@@ -525,8 +537,7 @@ class ScoreResource(ModelResource):
         except Exception, e:
             attempt = Score.objects.filter(training_id=bundle.data['training']['online_id'], participant_id=bundle.data['participant']['online_id'],
                                            question_id=bundle.data['question']['online_id'])
-            raise ScoreNotSaved(
-                {"online_id": int(attempt[0].id), "error": "Duplicate"})
+            send_duplicate_message(int(attempt[0].id))
         return bundle
 
 

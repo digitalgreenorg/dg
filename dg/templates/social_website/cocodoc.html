@@ -473,7 +473,7 @@
                             <li> <strong>/api/api_name/ :</strong> In order to communicate with the database using RESTful service, the url for the REST API needs to be specified in the configs.js file in the parameter 'rest_api_url'. Its not compulsory to use /api/ URL, but it is recommended. </li>
                             <li> <strong>/coco/reset_database_check/ :</strong> This URL can be changed in configs file. COCO sends a get request to this url with a parameter 'lastdownloadtimestamp'. The server sends "1" as a response if it wants the client to download the database again. </li>
                             <li> <strong>/coco/record_full_download_time/ :</strong> The URL can be changed in configs file. COCO sends a post request to this URL with start_time and end_time as the parameters. These parameters are useful for recording total database download time. </li>
-                            <li> <strong>/get_log/ :</strong> User can change this URL in configs.misc.inc_download_url. COCO sends a get request to this URL along with last_download_timestamp as a parameter. The server should send the data having timestamp later than the timestamp received from the client. </li>
+                            <li> <strong>/coco/get_log/ :</strong> User can change this URL in configs.misc.inc_download_url. COCO sends a get request to this URL along with last_download_timestamp as a parameter. The server should send the data having timestamp later than the timestamp received from the client. </li>
                         </ol>
                     </ul>
                     <h2 id="django-server">Create a Server API using Django</h2>

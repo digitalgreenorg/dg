@@ -48,7 +48,7 @@ database = custom_db_name
 
 print ("Import started : %s" %dg_gz[:-3])
 #mysql command to import db
-dumpcmd = 'mysql -u' + user_name + ' -p' + password + ' ' + database + '<' +  dg_gz[:-3]
+dumpcmd = 'mysql -u' + user_name + ' -p' + password + ' -h' + host + ' ' + database + '<' +  dg_gz[:-3]
 os.system(dumpcmd)
 
 # #set buffer size to remove previous sql and gz files

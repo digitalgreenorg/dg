@@ -7,6 +7,7 @@ from coco.data_log import delete_log, save_log
 from farmerbook.managers import VillageFarmerbookManager
 from libs.geocoder import Geocoder
 from programs.models import Partner
+from training.log.training_log import enter_to_log
 
 import logging
 
@@ -60,6 +61,8 @@ class District(CocoModel):
                 except:
                     logger.error("Geocodes not found for %s, %s" % (self.district_name, self.state.state_name))
 
+post_save.connect(enter_to_log, sender=District)
+pre_delete.connect(enter_to_log, sender=District)
 
 class Block(CocoModel):
     id = models.AutoField(primary_key=True)

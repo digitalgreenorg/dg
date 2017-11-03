@@ -1,4 +1,4 @@
-{% include "includes/header.html" %}
+{% include "internal-tools/header_training_courseware.html" %}
 {% load app_tags %}
         
         <section id="disseminationprep" role="main" class="push-top-lg">
@@ -27,10 +27,10 @@
                                 </div>
                                 <ul>
                                     {% for video in video_list %}
-                                        <li class="featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
+                                        <li class="training-courseware featured-collection-li js-featured-collection-li {% if forloop.counter == video_index %} now-playing {% endif %}">
                                             <a href="{% url 'disseminationprep' forloop.counter %}" >
                                                 <div class="featured-collection-indicator"></div>
-                                                <div class="featured-collection-title">
+                                                <div class="training-courseware featured-collection-title">
                                                     {{ video.title }}
                                                 </div>
                                             </a>
@@ -75,7 +75,7 @@
                                         </div>
                                         <div class="vid-cat-inner">
                                             <div class="vid-cat-hd">
-                                                <h3 class="hdg-green hdg-f hdg-bold">Pico Seekho</h3>
+                                                <h3 class="hdg-purple hdg-f hdg-bold">Pico Seekho</h3>
                                             </div>
                                             <div class="vid-cat-bd">
                                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -101,7 +101,7 @@
                                         </div>
                                         <div class="vid-cat-inner">
                                             <div class="vid-cat-hd">
-                                                <h3 class="hdg-green hdg-f hdg-bold">Dissemination process ...</h3>
+                                                <h3 class="hdg-purple hdg-f hdg-bold">Dissemination process ...</h3>
                                             </div>
                                             <div class="vid-cat-bd">
                                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -127,7 +127,7 @@
                                         </div>
                                         <div class="vid-cat-inner">
                                             <div class="vid-cat-hd">
-                                                <h3 class="hdg-green hdg-f hdg-bold">Adoption Verification ...</h3>
+                                                <h3 class="hdg-purple hdg-f hdg-bold">Adoption Verification ...</h3>
                                             </div>
                                             <div class="vid-cat-bd">
                                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -145,4 +145,4 @@
             </div>
         </section>
 
-{% include "includes/footer.html" %}
+{% include "internal-tools/footer_training_courseware.html" %}

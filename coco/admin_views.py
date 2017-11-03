@@ -11,6 +11,7 @@ from geographies.models import State
 from geographies.models import District
 from geographies.models import Village
 from videos.models import Video
+from base_models import TYPE_OF_COCOUSER
 import json
 
 def is_change_from(full_path):
@@ -27,6 +28,7 @@ def add_cocouser(request):
         auth_user_list = User.objects.values('id','username')
         partner_list = Partner.objects.values('id','partner_name')
         state_list = State.objects.values('id','state_name')
+        type_of_cocouser_list = [{'value':value,'showing_text':showing_text} for value,showing_text in TYPE_OF_COCOUSER]
         coco_user_id = is_change_from(request.get_full_path())
         template_variables['title'] = "Add coco user"
         if coco_user_id != '':
@@ -43,13 +45,16 @@ def add_cocouser(request):
                 current_user_villages.append({'id':village['id'],'village_name':'%s [%s] [%s] [%s]'%(village['village_name'],village['block__block_name'],village['block__district__district_name'],village['block__district__state__state_name'])})
             current_auth_user_id = coco_user_obj.user_id
             current_partner_id = coco_user_obj.partner_id
+            current_type_of_cocouser = coco_user_obj.type_of_cocouser
             template_variables['current_auth_user_id'] = current_auth_user_id
             template_variables['current_partner_id'] = current_partner_id
+            template_variables['current_type_of_cocouser'] = current_type_of_cocouser
             template_variables['current_user_videos'] = current_user_videos
             template_variables['current_user_villages'] = current_user_villages
             template_variables['title'] = "Change coco user"
         template_variables['auth_user_list'] = auth_user_list
         template_variables['partner_list'] = partner_list
+        template_variables['type_of_cocouser_list'] = type_of_cocouser_list
         template_variables['state_list'] = state_list
         template_variables['change_form_flag'] = change_form_flag
         return render_to_response('admin/coco/cocouser/change_form.html',template_variables,context)
@@ -63,6 +68,7 @@ def add_cocouser(request):
             messages.add_message(request, messages.ERROR, message)
             return HttpResponseRedirect(".")
         partner = request.POST.getlist('partner')[0]
+        type_of_cocouser = request.POST.getlist('type_of_cocouser')[0]
         villages = request.POST.getlist('village')
         if 'video' in request.POST:
             videos = request.POST.getlist('video')
@@ -85,6 +91,9 @@ def add_cocouser(request):
             if partner != coco_user_obj.partner_id:
                 coco_user_obj.partner_id = partner
                 coco_user_obj.save()
+            if type_of_cocouser != coco_user_obj.type_of_cocouser:
+                coco_user_obj.type_of_cocouser = type_of_cocouser
+                coco_user_obj.save()
             new_village_set = set(map(int,villages))
             new_video_set = set(map(int,videos))
             old_village_set = set(coco_user_obj.villages.values_list('id',flat=True))
@@ -95,13 +104,13 @@ def add_cocouser(request):
             coco_user_obj.videos.add(*list(new_video_set-old_video_set))
             if '_save' in request.POST:
                 message = "The coco user \"%s\" was changed successfully."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/'
+                redirect_to = '/coco/admin/coco/cocouser/'
             elif '_addanother' in request.POST:
                 message = "The coco user \"%s\" was changed successfully. You may add another qa coco user below."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/add/'
+                redirect_to = '/coco/admin/coco/cocouser/add/'
             elif '_continue' in request.POST:
                 message = "The coco user \"%s\" was changed successfully. You may edit it again below."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/%s/'%(coco_user_id)
+                redirect_to = '/coco/admin/coco/cocouser/%s/'%(coco_user_id)
             else:
                 return HttpResponseBadRequest("BAD REQUEST")
             messages.add_message(request, messages.SUCCESS, message)
@@ -111,7 +120,7 @@ def add_cocouser(request):
                 message = "coco user with \"%s\" User already exists. Select different User."%(CocoUser.objects.get(user_id=user).user.username)
                 messages.add_message(request, messages.ERROR, message)
                 return HttpResponseRedirect(".")
-            coco_user_obj = CocoUser(user_id=user,partner_id=partner)
+            coco_user_obj = CocoUser(user_id=user,partner_id=partner,type_of_cocouser=type_of_cocouser)
             try:
                 coco_user_obj.save()
             except Exception as e:
@@ -125,13 +134,13 @@ def add_cocouser(request):
 
             if '_save' in request.POST:
                 message = "The coco user \"%s\" was added successfully."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/'
+                redirect_to = '/coco/admin/coco/cocouser/'
             elif '_addanother' in request.POST:
                 message = "The coco user \"%s\" was added successfully. You may add another qa coco user below."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/add/'
+                redirect_to = '/coco/admin/coco/cocouser/add/'
             elif '_continue' in request.POST:
                 message = "The coco user \"%s\" was added successfully. You may edit it again below."%(coco_user_obj.user.username)
-                redirect_to = '/admin/coco/cocouser/%s/'%(coco_user_obj.id)
+                redirect_to = '/coco/admin/coco/cocouser/%s/'%(coco_user_obj.id)
             else:
                 return HttpResponseBadRequest("BAD REQUEST")
             messages.add_message(request, messages.SUCCESS, message)

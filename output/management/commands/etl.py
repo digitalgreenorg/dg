@@ -157,8 +157,7 @@ class AnalyticsSync():
                                         SELECT A.user_created_id, A.time_created, A.user_modified_id, A.time_modified, A.id, A.old_coco_id, A.name,
                                         A.gender, A.phone_no, A.partner_id, A.district_id, A.total_adoptions, B.village_id, B.start_date
                                         FROM people_animator A
-                                        JOIN people_animatorassignedvillage B on A.id=B.animator_id
-                                        AND A.time_created > DATE_ADD(Now(), Interval -1 year)""")
+                                        JOIN people_animatorassignedvillage B on A.id=B.animator_id""")
             print "Finished insert into people_animatorwisedata"
 
             # main_data_dst stores all the counts for every date , every

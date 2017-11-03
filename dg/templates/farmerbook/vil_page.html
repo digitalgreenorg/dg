@@ -224,7 +224,7 @@ function ajax_tab_click(clicked, village_id) {
 		//alert(videos_watched_html);
 		$("div#top_tabcontent").html("");
 		//alert('here in ajax tab click');
-		$("div#top_tabcontent").load('/getvideosproduced?village_id='+village_id, function(response, status, xhr) {
+		$("div#top_tabcontent").load('/coco/getvideosproduced?village_id='+village_id, function(response, status, xhr) {
 		  if (status == "error") {
 			var msg = "Sorry but there was an error: ";
 			alert(msg + xhr.status + " " + xhr.statusText);

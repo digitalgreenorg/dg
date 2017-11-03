@@ -1,0 +1,31 @@
+.container {
+  box-shadow: 0 0 4px grey;
+  padding: 15px 15px 15px 15px;
+}
+
+.container-fluid {
+  padding: 0px 15px 15px 15px;
+}
+
+.highcharts-yaxis-grid .highcharts-grid-line {
+  display: none;
+}
+
+.dropdown-button {
+  background: #F37B55;
+}
+
+.overall-bg {
+  background-color:  #7C287D;
+}
+
+.recent-bg {
+  background-color: #656566;
+}
+
+h6 {
+  font-size: 14px !important;
+}
+.text-muted {
+  margin: auto;
+}

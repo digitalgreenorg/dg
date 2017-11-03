@@ -1,7 +1,7 @@
 //This view the page header containt the branding, and the user profile - along with the username and logout action.
-define(['jquery', 'underscore', 'configs', 'layoutmanager', 'models/user_model', 'auth'],
+define(['jquery', 'underscore', 'configs', 'layoutmanager', 'models/user_model', 'auth', 'collections/upload_collection'],
 
-function(jquery, pass, configs, layoutmanager, User, Auth) {
+function(jquery, pass, configs, layoutmanager, User, Auth, upload_collection) {
 
     var HeaderView = Backbone.Layout.extend({
         template: "#page_header",
@@ -58,6 +58,7 @@ function(jquery, pass, configs, layoutmanager, User, Auth) {
         user_online: function() {
             $('#sync')
                 .removeAttr("disabled");
+            $('#export').attr('disabled', true);
             $('#offline')
                 .hide();
             $('#online')
