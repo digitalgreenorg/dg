@@ -31,7 +31,7 @@ def market_info_incoming(request):
     if request.method == 'GET':
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         if request.GET.getlist('call_source'):
-            call_source = request.GET.getlist('To')[0]
+            call_source = request.GET.getlist('call_source')[0]
         else:
             call_source = 1
         today_date = datetime.now().date()
@@ -63,7 +63,7 @@ def textlocal_market_info_incoming_sms(request):
         farmer_number = str(request.GET.getlist('sender')[0])
         farmer_number = re.sub('^91', '0', farmer_number)
         try:
-            query_code = str(request.GET.get('content')).strip('"')
+            query_code = str(request.GET.get('content')).strip()
         except Exception as e:
             query_code = ''
         current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
