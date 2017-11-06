@@ -43,7 +43,7 @@ def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call
         outgoing_call_id = str(call_detail.find('Sid').text)
         outgoing_call_time = str(call_detail.find('StartTime').text)
         price_info_incoming_obj = PriceInfoIncoming(call_id=outgoing_call_id, from_number=caller_number,
-                                        to_number=dg_number, incoming_time=outgoing_call_time)
+                                    to_number=dg_number, incoming_time=outgoing_call_time, call_source=call_source)
     else:
         # Enter in Log
         price_info_incoming_obj = PriceInfoIncoming(call_id=incoming_call_id, from_number=caller_number,

@@ -3,12 +3,14 @@
 __author__ = 'Vikas Saini'
 
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
 
 from threading import Thread
 from datetime import datetime, timedelta
+from pytz import timezone
 import time
+import re
 
 from dg.settings import EXOTEL_HELPLINE_NUMBER
 
@@ -16,7 +18,8 @@ from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, SubscriptionLog
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call, \
     send_info_using_textlocal, get_top_selling_crop_quantity_wise, get_crop_code_list
 from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, helpline_hi, remaining_crop_line, \
-    no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, code_hi
+    no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, code_hi, \
+    AGGREGATOR_SMS_NO
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 
@@ -27,13 +30,32 @@ def home(request):
 def market_info_incoming(request):
     if request.method == 'GET':
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        if request.GET.getlist('call_source'):
+            call_source = request.GET.getlist('To')[0]
+        else:
+            call_source = 1
         today_date = datetime.now().date()
         if PriceInfoIncoming.objects.filter(incoming_time__gte=today_date, from_number=to_number).count() < 10:
             time.sleep(2)
-            make_market_info_call(to_number, dg_number, incoming_time, call_id)
+            make_market_info_call(to_number, dg_number, incoming_time, call_id, call_source)
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
+
+def textlocal_market_info_incoming(request):
+    if request.method == 'GET':
+        farmer_number = str(request.GET.getlist('sender')[0])
+        dummy_incoming_request = HttpRequest()
+        current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+        dummy_incoming_request.method = 'GET'
+        dummy_incoming_request.GET['CallSid'] = 0
+        dummy_incoming_request.GET['From'] = farmer_number      # User Number
+        dummy_incoming_request.GET['To'] = AGGREGATOR_SMS_NO    # DG number
+        dummy_incoming_request.GET['StartTime'] = current_time
+        dummy_incoming_request.GET['call_source'] = 2
+        market_info_incoming(dummy_incoming_request)
+        return HttpResponse(status=200)
+    return HttpResponse(status=403)
 
 @csrf_exempt
 def market_info_response(request):

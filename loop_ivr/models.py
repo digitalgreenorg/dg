@@ -6,6 +6,7 @@ RETURN_RESULT = ((0, "No"), (1, "Yes"))
 TYPE_OF_SUBSCRIBER = ((0, "Farmer"), (1, "Aggregator"), (2, "DG"), (3, "Other"))
 STATUS = ((0, "Inactive"), (1, "Active"))
 SMS_STATUS = ((0, "Pending"), (1, "Sent"), (2, "Failed"), (3, "Failed-DND"))
+CALL_SOURCE = ((1, "Exotel Call"), (2, "Textlocal Call"), (3, "Textlocal SMS"))
 
 class PriceInfoIncoming(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -19,6 +20,7 @@ class PriceInfoIncoming(LoopModel):
     prev_query_code = models.CharField(max_length=120, null=True, blank=True)
     price_result = models.TextField(null=True, blank=True)
     return_result_to_app = models.IntegerField(choices=RETURN_RESULT, default=1)
+    call_source = models.IntegerField(choices=CALL_SOURCE, default=1)
     textlocal_sms_id = models.CharField(max_length=150, null=True, blank=True)  #Comma Seprated Multiple SMS id
 
     def __unicode__(self):
