@@ -927,7 +927,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
       var api = this.api(),
         data;
       //Total of every column
-      column_set = [3, 4, 5, 6, 7, 8];
+      column_set = [3, 4, 5, 6, 7, 8, 9];
       for (var i = 0; i < column_set.length; i++) {
         total = api.column(column_set[i]).data().reduce(function(a, b) {
           if (a === "") {
@@ -1558,7 +1558,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
         }, 0);
 
-
       // Update footer
       $(api.column(7).footer()).html(
         finalFormat(totalCost + "")
@@ -1581,31 +1580,31 @@ function create_data_for_excel_download() {
         'total': false
       },
       {
-        'column_width': 9,
+        'column_width': 8.5,
         'formula': null,
         'label': 'Date',
         'total': false
       },
       {
-        'column_width': 9,
+        'column_width': 8.18,
         'formula': null,
         'label': 'Market',
         'total': false
       },
       {
-        'column_width': 7,
+        'column_width': 7.8,
         'formula': null,
         'label': "Quantity [Q'] (in Kg)",
         'total': true
       },
       {
-        'column_width': 7,
+        'column_width': 7.8,
         'formula': null,
-        'label': 'Quantity Post Deduction [Q] (in Kg)',
+        'label': 'Quantity Post Deduction [Q] (in Kg)**',
         'total': true
       },
       {
-        'column_width': 8.64,
+        'column_width': 8,
         'formula': null,
         'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
         'total': true
@@ -1617,13 +1616,13 @@ function create_data_for_excel_download() {
         'total': true
       },
       {
-        'column_width': 8.18,
+        'column_width': 8,
         'formula': null,
         'label': "Farmers' Contribution [FC] (in Rs)",
         'total': true
       },
       {
-        'column_width': 8.18,
+        'column_width': 7.5,
         'formula': null,
         'label': 'Commission Agent Contribution [CAC] (in Rs)',
         'total': true
