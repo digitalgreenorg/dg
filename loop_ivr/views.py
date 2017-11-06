@@ -42,9 +42,10 @@ def market_info_incoming(request):
     else:
         return HttpResponse(status=403)
 
-def textlocal_market_info_incoming(request):
+def textlocal_market_info_incoming_call(request):
     if request.method == 'GET':
         farmer_number = str(request.GET.getlist('sender')[0])
+        farmer_number = re.sub('^91', '0', farmer_number)
         dummy_incoming_request = HttpRequest()
         current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
         dummy_incoming_request.method = 'GET'
@@ -56,6 +57,78 @@ def textlocal_market_info_incoming(request):
         market_info_incoming(dummy_incoming_request)
         return HttpResponse(status=200)
     return HttpResponse(status=403)
+
+def textlocal_market_info_incoming_sms(request):
+    if request.method == 'GET':
+        farmer_number = str(request.GET.getlist('sender')[0])
+        farmer_number = re.sub('^91', '0', farmer_number)
+        try:
+            query_code = str(request.GET.get('content')).strip('"')
+        except Exception as e:
+            query_code = ''
+        current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+        price_info_incoming_obj = PriceInfoIncoming(call_id=0, from_number=farmer_number, query_code=query_code,
+                                    to_number=AGGREGATOR_SMS_NO, incoming_time=current_time, call_source=3)
+        try:
+            price_info_incoming_obj.save()
+        except Exception as e:
+            # Save Errors in Logs
+            module = 'textlocal_market_info_incoming_sms'
+            write_log(LOG_FILE,module,str(e))
+            return HttpResponse(status=200)
+        if query_code == '' or query_code == None or query_code == 'None':
+            price_info_incoming_obj.info_status = 3
+            price_info_incoming_obj.save()
+            # Send No code entered message to user
+            crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+            sms_content = [no_code_entered,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+            sms_content = ''.join(sms_content)
+            send_info_using_textlocal(farmer_number, sms_content)
+            return HttpResponse(status=200)
+        query_code = query_code.split('**')
+        if len(query_code) >= 2:
+            crop_info, mandi_info = query_code[0], query_code[1]
+        elif len(query_code) == 1:
+            crop_info = query_code[0]
+            mandi_info = ''
+        else:
+            price_info_incoming_obj.info_status = 2
+            price_info_incoming_obj.save()
+            # Send Wrong code entered message to user.
+            try:
+                wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
+            except Exception as e:
+                wrong_query_code = ''
+            wrong_code_entered_message = wrong_code_entered
+            if wrong_query_code == '':
+                wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
+            else:
+                wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
+            sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+            sms_content = ''.join(sms_content)
+            send_info_using_textlocal(farmer_number, sms_content)
+            return HttpResponse(status=200)
+        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info, farmer_number)
+        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info, farmer_number)
+        if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
+            price_info_incoming_obj.info_status = 2
+            price_info_incoming_obj.save()
+            # Send Wrong code entered message to user.
+            try:
+                wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
+            except Exception as e:
+                wrong_query_code = ''
+            wrong_code_entered_message = wrong_code_entered
+            if wrong_query_code == '':
+                wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
+            else:
+                wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
+            sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+            sms_content = ''.join(sms_content)
+            send_info_using_textlocal(farmer_number, sms_content)
+            return HttpResponse(status=200)
+        Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
+        return HttpResponse(status=200)
 
 @csrf_exempt
 def market_info_response(request):

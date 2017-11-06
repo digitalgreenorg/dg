@@ -254,7 +254,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append(('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER))
     final_result = ''.join(price_info_list)
     price_info_incoming_obj.price_result = final_result
-    if len(final_result) >= 2000:
+    if len(final_result) >= 2000 or price_info_incoming_obj.call_source==3:
         price_info_incoming_obj.return_result_to_app = 0
         price_info_incoming_obj.info_status = 1
         price_info_incoming_obj.save()
