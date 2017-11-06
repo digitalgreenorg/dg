@@ -28,7 +28,7 @@ from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
-def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id):
+def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     app_id = MARKET_INFO_APP
     app_url = APP_URL%(app_id,)
@@ -47,7 +47,7 @@ def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call
     else:
         # Enter in Log
         price_info_incoming_obj = PriceInfoIncoming(call_id=incoming_call_id, from_number=caller_number,
-                                        to_number=dg_number, incoming_time=incoming_time, info_status=0)
+                                        to_number=dg_number, incoming_time=incoming_time, info_status=0, call_source=call_source)
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(LOG_FILE,module,log)
     try:
