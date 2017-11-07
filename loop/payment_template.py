@@ -202,7 +202,7 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
             #Add comment in Aggregator sheet
             if(sheet_index==0):                
                 comment_row=str(write_values.get('end') + 3)
-                ws.merge_range('A'+comment_row+':L'+comment_row, "**Quantity is deducted for farmers having incorrect mobile numbers.", row_format)
+                ws.merge_range('A'+comment_row+':L'+comment_row, "**Quantity is deducted for farmers having incorrect/unavailable mobile numbers.", row_format)
 
     except Exception as e:
         print e
