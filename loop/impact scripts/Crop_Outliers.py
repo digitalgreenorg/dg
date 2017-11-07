@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # The entire function could be divided into smaller functions but that could be done later.
-def remove_crop_outliers(ct_data, state_id, rate_deviation_threshold, deviation_factor_threshold, quantity_rate_deviation_threshold):
+def remove_crop_outliers(ct_data=None, state_id=1, rate_deviation_threshold=15, deviation_factor_threshold=0.3, quantity_rate_deviation_threshold=5):
     # Converts SQL query output in a dataframe
     daily_aggregator_market_crop_rate_query_result = list(ct_data)
     columnlist_ct = ['Date', 'Aggregator', 'Market Real', 'Crop', 'Quantity Real', 'Price', 'Amount', 'State']
