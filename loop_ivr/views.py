@@ -68,7 +68,7 @@ def textlocal_market_info_incoming_sms(request):
             query_code = ''
         current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
         price_info_incoming_obj = PriceInfoIncoming(call_id=0, from_number=farmer_number, query_code=query_code,
-                                    to_number=AGGREGATOR_SMS_NO, incoming_time=current_time, call_source=3)
+                                    to_number=AGGREGATOR_SMS_NO, incoming_time=current_time, call_source=3, info_status=0)
         try:
             price_info_incoming_obj.save()
         except Exception as e:
@@ -104,6 +104,7 @@ def textlocal_market_info_incoming_sms(request):
                 wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
             else:
                 wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
+            crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
             sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
             sms_content = ''.join(sms_content)
             send_info_using_textlocal(farmer_number, sms_content)
@@ -123,6 +124,7 @@ def textlocal_market_info_incoming_sms(request):
                 wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
             else:
                 wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
+            crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
             sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
             sms_content = ''.join(sms_content)
             send_info_using_textlocal(farmer_number, sms_content)

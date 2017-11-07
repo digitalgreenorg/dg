@@ -13,7 +13,7 @@ class LoopIVRAdmin(AdminSite):
 class PriceInfoIncomingAdmin(admin.ModelAdmin):
     list_filter = ['info_status']
     search_fields = ['from_number']
-    list_display = ('id' ,'call_id', 'from_number', 'to_number', 'incoming_time', 'info_status', 'query_code', 'prev_info_status', 'prev_query_code')
+    list_display = ('id' ,'call_id', 'from_number', 'to_number', 'incoming_time', 'call_source', 'info_status', 'query_code', 'prev_info_status', 'prev_query_code')
 
 class PriceInfoLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'price_info_incoming', 'crop', 'mandi')
