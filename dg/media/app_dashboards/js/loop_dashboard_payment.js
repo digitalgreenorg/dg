@@ -413,7 +413,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
       //TODO : DONE to be moved to below for loop where we are adding aggregator_outlier
       var net_payment = transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
 
-      aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), parseFloat(quantites[i][j].toFixed(2)), 0, transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
+      aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), 0, 0, transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), agg_id, mandis[i][j].mandi_id, "", farmer_share[i][j].farmer_share_comment]);
 
       sno += 1;
     }
