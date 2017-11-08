@@ -20,6 +20,11 @@ from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, help
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 
+import logging
+
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 def home(request):
     return HttpResponse(status=403)
@@ -204,5 +209,5 @@ def push_message_sms_response(request):
     return HttpResponse(status=200)
 
 def test_text_local(request) :
-    print request
+    logger.debug('Test_Text_local')
     return HttpResponse(status=200)
