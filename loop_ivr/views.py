@@ -202,3 +202,7 @@ def push_message_sms_response(request):
                 outgoing_obj.status = 3
             outgoing_obj.save()
     return HttpResponse(status=200)
+
+def test_text_local(request) :
+    print request
+    return HttpResponse(status=200)
