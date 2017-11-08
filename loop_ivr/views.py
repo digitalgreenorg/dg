@@ -21,7 +21,7 @@ from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, help
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 
 import logging
-
+import json
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -208,6 +208,7 @@ def push_message_sms_response(request):
             outgoing_obj.save()
     return HttpResponse(status=200)
 
+@csrf_exempt
 def test_text_local(request) :
-    logger.debug('Test_Text_local')
+    logger.debug(request.body)
     return HttpResponse(status=200)

@@ -244,6 +244,10 @@ LOGGING = {
             'handlers': ['logfile'],
             'level': 'DEBUG',
         },
+        'loop_ivr': {
+            'handlers': ['logfile'],
+            'level': 'DEBUG',
+        },
     }
 }
 
