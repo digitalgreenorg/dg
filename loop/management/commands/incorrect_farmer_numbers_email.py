@@ -118,7 +118,7 @@ class Command(BaseCommand):
         create_xlsx(workbook, data_set_all, table_properties, table_position_to_start, worksheet_name)
 
         file_to_send = []
-        file_to_send = file_to_send.append(header_dict_for_loop_email_mobile_numbers['workbook_name'] % (
+        file_to_send.append(header_dict_for_loop_email_mobile_numbers['workbook_name'] % (
             MEDIA_ROOT, '', str(from_to_date[0]), str(from_to_date[1])))
 
         # Generate District Wise Sheets.
