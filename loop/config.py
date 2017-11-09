@@ -45,6 +45,7 @@ DEFAULT_COLUMN_WIDTH = 9
 
 header_dict_for_loop_email_mobile_numbers = {
     'workbook_name': u'%s/loop/Incorrect Mobile Numbers_%s_%s to %s.xlsx',
+    'workbook_name_per_district': u'%s/loop/%s_Incorrect Mobile Numbers_%s_%s to %s.xlsx',
     'worksheet_name': u'%s_गलत मोबाइल नंबर की लिस्ट_%s to %s',
     'column_properties': [{'column_width': 3.36,
                            'header': u'क्रम',
@@ -213,4 +214,7 @@ RECIPIENTS = ['lokesh@digitalgreen.org', 'loop@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
 
+RECIPIENTS = ['vikas@digitalgreen.org']
+
+RECIPIENTS_TEMP = ['vikas@digitalgreen.org']
 
