@@ -125,9 +125,13 @@ class Command(BaseCommand):
         district_wise_query_result_data = self.district_wise_data_generator(from_to_date, aggregator_to_check_id_string)
         district_wise_data_set_all = self.district_wise_get_all_data(district_wise_query_result_data)
         district_list = District.objects.all()
+        table_properties = {'data': None, 'autofilter': False, 'banded_rows': False,
+                            'style': 'Table Style Light 15',
+                            'columns': header_dict_for_loop_email_mobile_numbers['column_properties_district_wise']}
         for district in district_list:
             structured_data_set = self.district_wise_set_filtered_structured_data(district_wise_data_set_all['All'], district)
             if structured_data_set:
+                data_set = dict()
                 data_set[district.district_name_en] = structured_data_set
                 workbook = create_workbook(header_dict_for_loop_email_mobile_numbers['workbook_name_per_district'] % (
                             MEDIA_ROOT, district.district_name_en,'', str(from_to_date[0]), str(from_to_date[1])))
