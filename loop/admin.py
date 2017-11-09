@@ -75,7 +75,7 @@ class FarmerAdmin(admin.ModelAdmin):
     list_filter = ['village__village_name', 'village__block__district__state', 'village__block__district__state__country']
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__crop__', 'price',
+    list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__farmer_phone__', '__crop__', 'price',
                     'quantity', 'amount', 'status')
     search_fields = ['farmer__name', 'farmer__village__village_name', 'gaddidar__gaddidar_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
@@ -93,7 +93,7 @@ class TransporterAdmin(admin.ModelAdmin):
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__','__vehicle__',
+    list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__', '__transporter_phone__', '__vehicle__',
                     'transportation_cost', 'farmer_share', 'farmer_share_comment','transportation_cost_comment')
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = (UserListFilter, 'mandi__mandi_name', 'mandi__district__state__country')

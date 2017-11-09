@@ -89,7 +89,12 @@ def crop_price_query(request):
                 price_info_incoming_obj.save()
             # If this request has no query code then save object as No input.
             if query_code == '' or query_code == None or query_code == 'None':
-                price_info_incoming_obj.info_status = 3
+                # If Wrong Query in 'first try' and now user didn't enter anything 
+                # then set info_status to Wrong query.
+                if price_info_incoming_obj.prev_info_status == 2:
+                    price_info_incoming_obj.info_status = 2
+                else:
+                    price_info_incoming_obj.info_status = 3
                 price_info_incoming_obj.save()
                 return HttpResponse(status=200)
         except Exception as e:
