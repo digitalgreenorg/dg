@@ -249,8 +249,3 @@ header_dict_for_transport_outlier = {
 RECIPIENTS = ['lokesh@digitalgreen.org', 'loop@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
-
-RECIPIENTS = ['vikas@digitalgreen.org']
-
-RECIPIENTS_TEMP = ['vikas@digitalgreen.org']
-
