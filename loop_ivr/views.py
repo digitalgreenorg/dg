@@ -43,6 +43,7 @@ def market_info_incoming(request):
     else:
         return HttpResponse(status=403)
 
+@csrf_exempt
 def textlocal_market_info_incoming_call(request):
     logger.debug("Reached here in View")
     logger.debug(request)
@@ -62,6 +63,7 @@ def textlocal_market_info_incoming_call(request):
         return HttpResponse(status=200)
     return HttpResponse(status=403)
 
+@csrf_exempt
 def textlocal_market_info_incoming_sms(request):
     logger.debug("Reached here in View")
     logger.debug(request)
