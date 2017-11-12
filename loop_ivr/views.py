@@ -45,8 +45,7 @@ def market_info_incoming(request):
 
 @csrf_exempt
 def textlocal_market_info_incoming_call(request):
-    logger.debug("Reached here in View")
-    logger.debug(request)
+    logger.debug("Reached here in CALL View")
     logger.debug(request.body)
     if request.method == 'POST':
         farmer_number = str(request.POST.getlist('sender')[0])
@@ -65,8 +64,9 @@ def textlocal_market_info_incoming_call(request):
 
 @csrf_exempt
 def textlocal_market_info_incoming_sms(request):
-    logger.debug("Reached here in View")
+    logger.debug("Reached here in SMS View")
     logger.debug(request)
+    logger.debug(request.body)
     if request.method == 'POST':
         farmer_number = str(request.POST.getlist('sender')[0])
         farmer_number = re.sub('^91', '0', farmer_number)
