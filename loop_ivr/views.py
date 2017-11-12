@@ -44,6 +44,7 @@ def market_info_incoming(request):
         return HttpResponse(status=403)
 
 def textlocal_market_info_incoming_call(request):
+    logger.debug("Reached here in View")
     logger.debug(request)
     # logger.debug(request.body)
     if request.method == 'GET':
@@ -62,6 +63,8 @@ def textlocal_market_info_incoming_call(request):
     return HttpResponse(status=403)
 
 def textlocal_market_info_incoming_sms(request):
+    logger.debug("Reached here in View")
+    logger.debug(request)
     if request.method == 'GET':
         farmer_number = str(request.GET.getlist('sender')[0])
         farmer_number = re.sub('^91', '0', farmer_number)
