@@ -47,9 +47,9 @@ def market_info_incoming(request):
 def textlocal_market_info_incoming_call(request):
     logger.debug("Reached here in View")
     logger.debug(request)
-    # logger.debug(request.body)
-    if request.method == 'GET':
-        farmer_number = str(request.GET.getlist('sender')[0])
+    logger.debug(request.body)
+    if request.method == 'POST':
+        farmer_number = str(request.POST.getlist('sender')[0])
         farmer_number = re.sub('^91', '0', farmer_number)
         dummy_incoming_request = HttpRequest()
         current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
@@ -67,11 +67,11 @@ def textlocal_market_info_incoming_call(request):
 def textlocal_market_info_incoming_sms(request):
     logger.debug("Reached here in View")
     logger.debug(request)
-    if request.method == 'GET':
-        farmer_number = str(request.GET.getlist('sender')[0])
+    if request.method == 'POST':
+        farmer_number = str(request.POST.getlist('sender')[0])
         farmer_number = re.sub('^91', '0', farmer_number)
         try:
-            query_code = str(request.GET.get('content')).strip()
+            query_code = str(request.POST.get('content')).strip()
         except Exception as e:
             query_code = ''
         current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
