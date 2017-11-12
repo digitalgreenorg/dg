@@ -22,7 +22,8 @@ from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, help
     AGGREGATOR_SMS_NO
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
-
+import logging
+logger = logging.getLogger(__name__)
 
 def home(request):
     return HttpResponse(status=403)
@@ -43,6 +44,8 @@ def market_info_incoming(request):
         return HttpResponse(status=403)
 
 def textlocal_market_info_incoming_call(request):
+    logger.debug(request)
+    # logger.debug(request.body)
     if request.method == 'GET':
         farmer_number = str(request.GET.getlist('sender')[0])
         farmer_number = re.sub('^91', '0', farmer_number)
@@ -186,7 +189,7 @@ def crop_price_query(request):
                 price_info_incoming_obj.save()
             # If this request has no query code then save object as No input.
             if query_code == '' or query_code == None or query_code == 'None':
-                # If Wrong Query in 'first try' and now user didn't enter anything 
+                # If Wrong Query in 'first try' and now user didn't enter anything
                 # then set info_status to Wrong query.
                 if price_info_incoming_obj.prev_info_status == 2:
                     price_info_incoming_obj.info_status = 2
