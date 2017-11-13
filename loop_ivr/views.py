@@ -68,15 +68,18 @@ def textlocal_market_info_incoming_sms(request):
     logger.debug(request)
     logger.debug(request.body)
     if request.method == 'POST':
-        farmer_number = str(request.POST.getlist('sender')[0])
+        msg_id = str(request.POST.get('msgId'))
+        farmer_number = str(request.POST.get('sender'))
         farmer_number = re.sub('^91', '0', farmer_number)
+        to_number = str(request.POST.get('inNumber'))
+
         try:
             query_code = str(request.POST.get('content')).strip()
         except Exception as e:
             query_code = ''
         current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
-        price_info_incoming_obj = PriceInfoIncoming(call_id=0, from_number=farmer_number, query_code=query_code,
-                                    to_number=AGGREGATOR_SMS_NO, incoming_time=current_time, call_source=3, info_status=0)
+        price_info_incoming_obj = PriceInfoIncoming(call_id=msg_id, from_number=farmer_number, query_code=query_code,
+                                    to_number=to_number, incoming_time=current_time, call_source=3, info_status=0)
         try:
             price_info_incoming_obj.save()
         except Exception as e:
