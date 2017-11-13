@@ -59,8 +59,8 @@ def textlocal_market_info_incoming_call(request):
         dummy_incoming_request.GET['StartTime'] = current_time
         dummy_incoming_request.GET['call_source'] = 2
         market_info_incoming(dummy_incoming_request)
-        # return HttpResponse(status=200)
-    # return HttpResponse(status=403)
+        return HttpResponse(status=200)
+    return HttpResponse(status=403)
 
 @csrf_exempt
 def textlocal_market_info_incoming_sms(request):
