@@ -314,3 +314,8 @@ def push_message_sms_response(request):
                 outgoing_obj.status = 3
             outgoing_obj.save()
     return HttpResponse(status=200)
+
+@csrf_exempt
+def test_text_local(request) :
+    logger.debug(request.body)
+    return HttpResponse(status=200)
