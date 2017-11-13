@@ -59,8 +59,8 @@ def textlocal_market_info_incoming_call(request):
         dummy_incoming_request.GET['StartTime'] = current_time
         dummy_incoming_request.GET['call_source'] = 2
         market_info_incoming(dummy_incoming_request)
-        return HttpResponse(status=200)
-    return HttpResponse(status=403)
+        # return HttpResponse(status=200)
+    # return HttpResponse(status=403)
 
 @csrf_exempt
 def textlocal_market_info_incoming_sms(request):
@@ -170,6 +170,10 @@ def market_info_response(request):
 
 def crop_price_query(request):
     # Serve only Get request
+    logger.debug("Reached here in Crop Price Query View")
+    logger.debug(request)
+    logger.debug(request.body)
+
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         # Check if request contain some input combination.
