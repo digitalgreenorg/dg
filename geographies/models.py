@@ -105,6 +105,10 @@ class JSLPS_District(CocoModel):
     district_name = models.CharField(max_length=100)
     district = models.ForeignKey(District, null=True, blank=True)
 
+    class Meta:
+        verbose_name = "JSLPS District"
+        verbose_name_plural = "JSLPS District"
+
 class JSLPS_Block(CocoModel):
     id = models.AutoField(primary_key=True)
     block_code = models.CharField(max_length=100)
@@ -112,9 +116,20 @@ class JSLPS_Block(CocoModel):
     district_code = models.CharField(max_length=100)
     block = models.ForeignKey(Block, null=True, blank=True)
 
+    class Meta:
+        verbose_name = "JSLPS Block"
+        verbose_name_plural = "JSLPS Block"
+
+
 class JSLPS_Village(CocoModel):
     id = models.AutoField(primary_key=True)
     village_code = models.CharField(max_length=100)
     village_name = models.CharField(max_length=100)
     block_code = models.CharField(max_length=100)
     Village = models.ForeignKey(Village, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "JSLPS Village"
+        verbose_name_plural = "JSLPS Village"
+
+

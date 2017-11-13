@@ -237,3 +237,10 @@ class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)
     vc = models.CharField(max_length=100)
     video = models.ForeignKey(Video, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "JSLPS Video"
+        verbose_name_plural = "JSLPS Video"
+
+    def __unicode__(self):
+        return self.vc

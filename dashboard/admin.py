@@ -266,3 +266,62 @@ class ProjectAdmin(admin.ModelAdmin):
     filter_horizontal = ('associate_partner',)
     list_display = ('id','project_name')
     search_fields = ['project_name']
+
+
+class JSLPS_AnimatorAdmin(admin.ModelAdmin):
+    list_display = ('id','animator_code', 'animator', 'user_created', 'time_created')
+    search_fields = ['id', 'animator_code']
+
+class JSLPS_AnimatorAssignedVillageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'animator', 'village', 'user_created', 'time_created']
+    search_fields = ['animator']
+
+
+class JSLPS_PersongroupAdmin(admin.ModelAdmin):
+    list_display = ['id', 'group', 'group_code', 'user_created', 'time_created']
+    search_fields = ['group']
+
+class JSLPS_PersonAdmin(admin.ModelAdmin):
+    list_display = ['id', 'person_code', 'person', 'user_created', 'time_created']
+    search_fields = ['id', 'person_code', 'person__id']
+
+
+class JSLPS_DistrictAdmin(admin.ModelAdmin):
+    list_display = ['id', 'district_code', 'district_name', 'district', 'user_created', 'time_created']
+    search_fields = ['id', 'district_code', 'district_name', 'district__id']
+
+
+class JSLPS_BlockAdmin(admin.ModelAdmin):
+    list_display = ['id', 'block_code', 'block_name', 'district_code', 'user_created', 'time_created']
+    search_fields = ['id', 'block_code', 'block_name', 'block', 'district_code']
+
+
+class JSLPS_VillageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'village_code', 'village_name', 'block_code', 'Village', 'user_created', 'time_created']
+    search_fields = ['id', 'village_code', 'village_name', 'block_code', 'Village__id']
+
+class JSLPS_VideoAdmin(admin.ModelAdmin):
+    list_display = ['id', 'vc', 'video', 'user_created', 'time_created']
+    search_fields = ['id', 'vc', 'video']
+
+
+class JSLPS_ScreeningAdmin(admin.ModelAdmin):
+    list_display = ['id', 'screenig_code', 'screening', 'user_created', 'time_created']
+    search_fields = ['id', 'screenig_code', 'screening']
+
+
+class JSLPS_AdoptionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'member_code', 'jslps_video', 'jslps_akmcode',
+                    'adoption', 'jslps_date_of_adoption', 'user_created', 'time_created']
+    search_fields = ['id', 'member_code', 'jslps_video', 'jslps_akmcode', 'jslps_akmcode', 'adoption']
+    list_filter = ['jslps_date_of_adoption']
+
+
+
+
+
+
+
+
+
+

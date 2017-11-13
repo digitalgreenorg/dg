@@ -25,6 +25,7 @@ class Command(BaseCommand):
 		tree = ET.parse('jslps_data_integration_files/screening.xml')
 		root = tree.getroot()
 		for c in root.findall('VedioScreeingMasterData'):
+			print c.find('VDO_ID').text
 			sc = c.find('VDO_ID').text
 			vc = c.find('VillageCode').text
 			ac = c.find('AKMCode').text
@@ -35,7 +36,6 @@ class Command(BaseCommand):
 				vdc = map(int, c.find('Video').text.split(','))
 			except Exception as e:
 				vdc = []
-				import pdb;pdb.set_trace()
 				wtr.writerow(['Can not save screening without video', sc, "video not found"])
 				continue
 			try:

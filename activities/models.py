@@ -22,9 +22,11 @@ from coco.base_models import TOPICS
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator
+from people.models import JSLPS_Animator
 from people.models import Person
 from people.models import PersonGroup
 from videos.models import Video
+from videos.models import JSLPS_Video
 from videos.models import ParentCategory
 
 
@@ -176,3 +178,21 @@ class JSLPS_Screening(CocoModel):
     id = models.AutoField(primary_key=True)
     screenig_code = models.CharField(max_length=100)
     screening = models.ForeignKey(Screening, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "JSLPS Screening"
+        verbose_name_plural = "JSLPS Screening"
+
+
+class JSLPS_Adoption(CocoModel):
+    id = models.AutoField(primary_key=True)
+    member_code = models.CharField(max_length=100)
+    jslps_video = models.ForeignKey(JSLPS_Video)
+    jslps_date_of_adoption = models.DateField()
+    jslps_date_of_entry = models.DateField()
+    jslps_akmcode = models.ForeignKey(JSLPS_Animator)
+    adoption = models.ForeignKey(PersonAdoptPractice, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "JSLPS Adoption"
+        verbose_name_plural = "JSLPS Adoption"

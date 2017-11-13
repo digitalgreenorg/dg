@@ -33,6 +33,13 @@ class Command(BaseCommand):
 				continue
 			da = datetime.datetime.strptime(c.find('DOA').text, '%d/%m/%Y')
 			de = datetime.datetime.strptime(c.find('DOE').text, '%d/%m/%Y')
+			ac = c.find('AKMCode').text
+			animator = JSLPS_Animator.objects.filter(animator_code = ac)
+			if len(animator) == 0:
+				wtr.writerow(['Can not save adoption without animator', ac, "animator not found"])
+				continue
+			else:
+				animator = animator[0]
 
 			try:
 				video = JSLPS_Video.objects.get(vc = vc)
@@ -46,17 +53,36 @@ class Command(BaseCommand):
 				continue
 			else:
 				person = person[0]
-				
+
+
+			print partner, video, animator
 			try:
-				pap = PersonAdoptPractice(person = person.person,
-										  video = video.video,
-										  date_of_adoption = da,
-										  partner = partner)
-				pap.save()
+				pap, created = \
+					PersonAdoptPractice.objects.get_or_create(person = person.person,
+										  					  video = video.video,
+										  					  date_of_adoption = da,
+										  					  partner = partner,
+										  					  animator=animator.animator)
 				jslps.new_count += 1
+				try:
+					obj, created = \
+						JSLPS_Adoption.objects.get_or_create(member_code=pc,
+															 jslps_video_id=video.id,
+															 jslps_date_of_adoption=da,
+															 jslps_date_of_entry=de,
+															 jslps_akmcode_id=animator.id,
+															 adoption=pap)
+				except Exception as e:
+					wtr.writerow(['Not able to save Adoption', e])
 			except Exception as e:
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
 					wtr.writerow(['Adoption not saved (video code %s)'%(str(vc)), pc, e])
 				else:
 					jslps.duplicate_count += 1
+
+
+
+			
+
+

@@ -99,17 +99,38 @@ class JSLPS_Animator(CocoModel):
     animator = models.ForeignKey(Animator, null=True, blank=True)
     assigned_villages = models.ManyToManyField(JSLPS_Village, related_name='jslps_assigned_villages', through='JSLPS_AnimatorAssignedVillage', blank=True)
 
+    class Meta:
+        verbose_name = "JSLPS Animator"
+        verbose_name_plural = "JSLPS Animator"
+
+    def __unicode__(self):
+        return self.animator_code
+
 class JSLPS_AnimatorAssignedVillage(CocoModel):
     id = models.AutoField(primary_key=True)
     animator = models.ForeignKey(JSLPS_Animator)
     village = models.ForeignKey(JSLPS_Village)
+
+    class Meta:
+        verbose_name = "JSLPS AnimatorAssignedVillage"
+        verbose_name_plural = "JSLPS AnimatorAssignedVillage"
 
 class JSLPS_Persongroup(CocoModel):
     id = models.AutoField(primary_key=True)
     group_code = models.CharField(max_length=100)
     group = models.ForeignKey(PersonGroup, null=True, blank=True)
 
+    class Meta:
+        verbose_name = "JSLPS Persongroup"
+        verbose_name_plural = "JSLPS Persongroup"
+
 class JSLPS_Person(CocoModel):
     id = models.AutoField(primary_key=True)
     person_code = models.CharField(max_length=100)
     person = models.ForeignKey(Person, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "JSLPS Person"
+        verbose_name_plural = "JSLPS Person"
+
+
