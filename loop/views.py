@@ -173,13 +173,13 @@ def filter_data(request):
 
     if(int(state_id) < 0):
         #country filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id')
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state__country=country_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state__country=country_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
     elif(int(state_id)>0):
         #state filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id')
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state=state_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state=state_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
@@ -681,8 +681,17 @@ def payments(request):
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
 
+    aggregator_incentive = []
+    aggregators = LoopUser.objects.all()
     farmers = get_farmers_with_valid_phone_number()
-    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date, None, None, farmers)
+    for aggregator in aggregators:
+        state = aggregator.village.block.district.state.state_name_en
+        agg_list = []
+        agg_list.append(aggregator.user.id)
+        if(state == 'Bihar'):
+            aggregator_incentive.extend(calculate_aggregator_incentive(start_date, end_date, None, agg_list, farmers))
+        else:
+            aggregator_incentive.extend(calculate_aggregator_incentive(start_date, end_date, None, agg_list, None))
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
@@ -701,7 +710,6 @@ def dashboard_payments(request):
         user = request.user
         try:
             api_key = ApiKey.objects.get(user=user)
-            loop_user = LoopUser.objects.get(user_id=user.id)
         except ApiKey.DoesNotExist:
             api_key = ApiKey.objects.create(user=user)
             api_key.save()
@@ -709,8 +717,6 @@ def dashboard_payments(request):
         login_data['user_name'] = user.username
         login_data['user_id'] = user.id
         login_data['key'] = api_key.key
-        login_data['state'] = loop_user.village.block.district.state.state_name_en
-        login_data['country'] = loop_user.village.block.district.state.country
         return render_to_response('app_dashboards/loop_dashboard_payment.html', login_data, context_instance=context)
     else:
         return HttpResponse(status=404)

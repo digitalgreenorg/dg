@@ -2,9 +2,10 @@
 window.onload = initialize;
 
 var language, selected_tab, selected_parameter, selected_page, country_id = 1, state_id = -1;
+var selected_aggregator_state, selected_aggregator_country;
 var days_to_average, time_series_frequency;
 //Arrays containing ids and corresponding names as were selected in the filters.
-var aggregator_ids, aggregator_names, crop_ids, crop_names, mandi_ids, mandi_names, gaddidar_ids, gaddidar_names;
+var aggregator_ids, aggregator_names, aggregator_states, aggregators_countries, crop_ids, crop_names, mandi_ids, mandi_names, gaddidar_ids, gaddidar_names;
 //Variables for second nav bar which is visible in analytics and time series tabs.
 var start_date, end_date;
 //Json for filters.
@@ -218,7 +219,7 @@ function set_filterlistener() {
           header: header_json,
           data: data_json,
           cell_format: cell_format,
-          sheet_header: 'Loop ' + localStorage.state + ' (' + localStorage.country + ')',
+          sheet_header: 'Loop ' + selected_aggregator_state + ' (' + selected_aggregator_country + ')',
           sheet_footer: 'This is an automated generated sheet'
 
         }
@@ -298,9 +299,13 @@ function get_filter_data(language, country_id) {
       transporter_for_filter = data_json.transporters;
       aggregator_ids = []
       aggregator_names = []
+      aggregator_states = []
+      aggregators_countries = []
       $.each(aggregators_for_filter,function(index,aggregator_data){
         aggregator_ids.push(aggregator_data.user__id);
         aggregator_names.push(aggregator_data.name_en);
+        aggregator_states.push(aggregator_data.village__block__district__state__state_name_en);
+        aggregators_countries.push(aggregator_data.village__block__district__state__country__country_name);
       });
     });
 }
@@ -322,6 +327,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   var transport_payment = payments_data.transportation_data;
   var gaddidar_contribution_data = payments_data.gaddidar_data;
   var aggregator_incentive = payments_data.aggregator_incentive;
+
+  var aggregator_index = aggregator_ids.indexOf(parseInt(aggregator));
+  selected_aggregator_state = aggregator_states[aggregator_index];
+  selected_aggregator_country = aggregators_countries[aggregator_index];
 
   var sno = 1;
   aggregator_data_set = [];
