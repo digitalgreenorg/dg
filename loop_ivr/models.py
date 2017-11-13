@@ -10,7 +10,7 @@ CALL_SOURCE = ((1, "Exotel Call"), (2, "Textlocal Call"), (3, "Textlocal SMS"))
 
 class PriceInfoIncoming(LoopModel):
     id = models.AutoField(primary_key=True)
-    call_id = models.CharField(max_length=100, db_index=True)
+    call_id = models.CharField(verbose_name="Call / Message Id", max_length=100, db_index=True)
     from_number = models.CharField(max_length=20, db_index=True) #User No.
     to_number = models.CharField(max_length=20)                  #DG Exotel No.
     incoming_time = models.DateTimeField()
