@@ -480,7 +480,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     $('#aggregator_date_row').val($this.parent()[0].childNodes[1].innerHTML);
     $('#aggregator_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
     $('#aggregator_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
-    $('#aggregator_net_volume_row').val($this.parent()[0].childNodes[4].innerHTML);
     $('#aggregator_commission_row').val(parseFloat($this.parent()[0].childNodes[5].innerHTML / ($this.parent()[0].childNodes[4].innerHTML)).toFixed(2));
     $('#aggregator_share_row').val(parseFloat($this.parent()[0].childNodes[5].innerHTML).toFixed(2));
     $('#aggregator_comment_row').val($this.parent()[0].childNodes[10].innerHTML);
@@ -491,7 +490,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     $('#farmer_date_row').val($this.parent()[0].childNodes[1].innerHTML);
     $('#farmer_mandi_row').val($this.parent()[0].childNodes[2].innerHTML);
     $('#farmer_volume_row').val($this.parent()[0].childNodes[3].innerHTML);
-    $('#farmer_net_volume_row').val($this.parent()[0].childNodes[4].innerHTML);
     $('#farmer_transport_cost_row').val($this.parent()[0].childNodes[6].innerHTML);
     $('#farmer_gaddidar_commission_row_farmer').val($this.parent()[0].childNodes[8].innerHTML);
     $('#farmer_commission_row').val(parseFloat($this.parent()[0].childNodes[7].innerHTML / ($this.parent()[0].childNodes[4].innerHTML)).toFixed(2));
