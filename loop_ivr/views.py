@@ -96,53 +96,41 @@ def textlocal_market_info_incoming_sms(request):
             sms_content = ''.join(sms_content)
             send_info_using_textlocal(farmer_number, sms_content)
             return HttpResponse(status=200)
-        query_code = query_code.split('**')
+        query_code = query_code.replace(" ", "").split('**')
         if len(query_code) >= 2:
             crop_info, mandi_info = query_code[0], query_code[1]
         elif len(query_code) == 1:
             crop_info = query_code[0]
             mandi_info = ''
         else:
-            price_info_incoming_obj.info_status = 2
-            price_info_incoming_obj.save()
-            # Send Wrong code entered message to user.
-            try:
-                wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
-            except Exception as e:
-                wrong_query_code = ''
-            wrong_code_entered_message = wrong_code_entered
-            if wrong_query_code == '':
-                wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
-            else:
-                wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
-            crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-            sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
-            sms_content = ''.join(sms_content)
-            send_info_using_textlocal(farmer_number, sms_content)
+            send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
             return HttpResponse(status=200)
         crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info, farmer_number)
         mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info, farmer_number)
         if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
-            price_info_incoming_obj.info_status = 2
-            price_info_incoming_obj.save()
-            # Send Wrong code entered message to user.
-            try:
-                wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
-            except Exception as e:
-                wrong_query_code = ''
-            wrong_code_entered_message = wrong_code_entered
-            if wrong_query_code == '':
-                wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
-            else:
-                wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
-            crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-            sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
-            sms_content = ''.join(sms_content)
-            send_info_using_textlocal(farmer_number, sms_content)
+            send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
             return HttpResponse(status=200)
         Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
         return HttpResponse(status=200)
-
+        
+def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
+    price_info_incoming_obj.info_status = 2
+    price_info_incoming_obj.save()
+    # Send Wrong code entered message to user.
+    try:
+        wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
+    except Exception as e:
+        wrong_query_code = ''
+    wrong_code_entered_message = wrong_code_entered
+    if wrong_query_code == '':
+        wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
+    else:
+        wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
+    crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+    sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+    sms_content = ''.join(sms_content)
+    send_info_using_textlocal(farmer_number, sms_content)
+            
 @csrf_exempt
 def market_info_response(request):
     if request.method == 'POST':
