@@ -19,7 +19,7 @@ from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, 
     send_info_using_textlocal, get_top_selling_crop_quantity_wise, get_crop_code_list
 from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, helpline_hi, remaining_crop_line, \
     no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, code_hi, \
-    AGGREGATOR_SMS_NO
+    AGGREGATOR_SMS_NO, ALL_FLAG_TRUE, ALL_FLAG_FALSE
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 import logging
@@ -74,7 +74,7 @@ def textlocal_market_info_incoming_sms(request):
         to_number = str(request.POST.get('inNumber'))
 
         try:
-            query_code = str(request.POST.get('content')).strip()
+            query_code = str(request.POST.get('content')).replace(" ", "")
         except Exception as e:
             query_code = ''
         current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
@@ -96,15 +96,14 @@ def textlocal_market_info_incoming_sms(request):
             sms_content = ''.join(sms_content)
             send_info_using_textlocal(farmer_number, sms_content)
             return HttpResponse(status=200)
-        query_code = query_code.replace(" ", "").split('**')
+            
+        query_code = query_code.split('**')
         if len(query_code) >= 2:
             crop_info, mandi_info = query_code[0], query_code[1]
         elif len(query_code) == 1:
             crop_info = query_code[0]
             mandi_info = ''
-        else:
-            send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
-            return HttpResponse(status=200)
+
         crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info, farmer_number)
         mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info, farmer_number)
         if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):

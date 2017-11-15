@@ -24,7 +24,7 @@ from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_
     agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
     agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller, code_hi, \
     remaining_crop_line, TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, \
-    crop_and_code_hi
+    crop_and_code_hi, ALL_FLAG_TRUE, ALL_FLAG_FALSE
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
@@ -84,8 +84,8 @@ def get_valid_list(app_name, model_name, requested_item, farmer_number):
         id_list = set(CropLanguage.objects.filter(language_id=1).values_list('crop_id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item.isdigit())
     if (0 in requested_list) or (len(requested_list)==0 and model_name == 'mandi'):
-        return tuple(map(int,id_list)),1
-    return tuple(map(int,requested_list.intersection(id_list))),0
+        return tuple(map(int,id_list)), ALL_FLAG_TRUE
+    return tuple(map(int,requested_list.intersection(id_list))), ALL_FLAG_FALSE
 
 def run_query(query):
     mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'],
