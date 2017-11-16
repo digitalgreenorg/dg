@@ -682,17 +682,22 @@ def payments(request):
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
 
-    aggregator_incentive = []
-    aggregators = LoopUser.objects.all()
-    farmers = get_farmers_with_valid_phone_number()
-    for aggregator in aggregators:
-        state = aggregator.village.block.district.state.state_name_en
-        agg_list = []
-        agg_list.append(aggregator.user.id)
-        if(state == 'Bihar'):
-            aggregator_incentive.extend(calculate_aggregator_incentive(start_date, end_date, None, agg_list, farmers))
-        else:
-            aggregator_incentive.extend(calculate_aggregator_incentive(start_date, end_date, None, agg_list, None))
+    date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    DATE_INCORRECT_FARMER_MODEL = datetime.datetime.strptime("2017-11-01", "%Y-%m-%d")
+    if date_start >= DATE_INCORRECT_FARMER_MODEL:
+        aggregator_incentive = []
+        aggregators = LoopUser.objects.all()
+        farmers = get_farmers_with_valid_phone_number()
+        for aggregator in aggregators:
+            state = aggregator.village.block.district.state.state_name_en
+            agg_list = []
+            agg_list.append(aggregator.user.id)
+            if(state == 'Bihar'):
+                aggregator_incentive.extend(calculate_aggregator_incentive(start_date, end_date, None, agg_list, farmers))
+            else:
+                aggregator_incentive.extend(calculate_aggregator_incentive(start_date, end_date, None, agg_list, None))
+    else:
+        aggregator_incentive = calculate_aggregator_incentive(start_date, end_date)
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
