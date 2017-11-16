@@ -50,7 +50,7 @@ class TrainingListAdmin(admin.ModelAdmin):
     list_display = ('id','date','place','trainers','assessment','language','district','trainingType','kind_of_training','participants_count','partner')
     list_filter = ['assessment','language','partner']
     date_hierarchy = 'date'
-    list_display_links = None
+    # list_display_links = None
 
 training_admin = TrainingAdmin(name='training_admin')
 
