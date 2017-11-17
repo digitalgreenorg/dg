@@ -30,8 +30,8 @@ class Command(BaseCommand):
         # print "Groups,jslps_groups"
         # call_command('jslps_groups')
         
-        # print "People,jslps_people"
-        # call_command('jslps_people_new')
+        print "People,jslps_people"
+        call_command('jslps_people_new')
 
         # print "Mediators,jslps_mediators"
         # call_command('jslps_mediator_new')
@@ -42,7 +42,7 @@ class Command(BaseCommand):
         # print "Screening and pma,jslps_screening_pma"
         # call_command('jslps_screening_pma_new')
         
-        print "Adoption,jslps_adoptions"
-        call_command('jslps_adoptions_new')
+        # print "Adoption,jslps_adoptions"
+        # call_command('jslps_adoptions_new')
 
         self.send_mail()

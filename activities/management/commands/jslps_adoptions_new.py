@@ -3,6 +3,7 @@ import unicodecsv as csv
 from datetime import datetime 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
 from people.models import *
 from programs.models import *
 from videos.models import *
@@ -23,6 +24,7 @@ class Command(BaseCommand):
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/adoption.xml')
 		root = tree.getroot()
+		user_obj = User.objects.get(username="jslps_bot")
 		for c in root.findall('AdoptionData'):
 			pc = c.find('MemberCode').text
 			try:
@@ -62,7 +64,8 @@ class Command(BaseCommand):
 										  					  video = video.video,
 										  					  date_of_adoption = da,
 										  					  partner = partner,
-										  					  animator=animator.animator)
+										  					  animator=animator.animator,
+										  					  user_created_id=user_obj.id)
 				jslps.new_count += 1
 				try:
 					obj, created = \
@@ -71,7 +74,8 @@ class Command(BaseCommand):
 															 jslps_date_of_adoption=da,
 															 jslps_date_of_entry=de,
 															 jslps_akmcode_id=animator.id,
-															 adoption=pap)
+															 adoption=pap,
+															 user_created_id=user_obj.id)
 				except Exception as e:
 					wtr.writerow(['Not able to save Adoption', e])
 			except Exception as e:

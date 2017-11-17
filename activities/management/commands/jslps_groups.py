@@ -28,14 +28,13 @@ class Command(BaseCommand):
 			vc = c.find('VillageCode').text
 		
 			try:
-				village = JSLPS_Village.objects.get(village_code = vc)
+				village = JSLPS_Village.objects.get(village_code=vc)
 				group_set = dict(PersonGroup.objects.filter(village_id = village.Village.id).values_list('id','group_name'))
 				if gn not in group_set.values():
 					try:
-						gp = PersonGroup(group_name = gn,
-									village = village.Village,
-									partner = partner)
-						gp.save()
+						gp, created = PersonGroup.objects.get_or_create(group_name = gn,
+															   village = village.Village,
+															   partner = partner)
 						jslps.new_count += 1
 						print "Group saved in old"
 					except Exception as e:
@@ -45,7 +44,9 @@ class Command(BaseCommand):
 							jslps.other_error_count += 1
 							wtr.writerow(['group save', gc, e])
 				try:			
-					group = PersonGroup.objects.filter(group_name = gn, village_id = village.Village.id).get()
+					group = \
+						PersonGroup.objects.filter(group_name=gn,
+												   village_id=village.Village.id).get()
 				except PersonGroup.DoesNotExist as e:
 					jslps.other_error_count += 1
 					wtr.writerow(['group exist', gc, e])
@@ -54,15 +55,14 @@ class Command(BaseCommand):
 					group_added = JSLPS_Persongroup.objects.values_list('group_code',flat=True)
 					#group_added = [i[0] for i in group_added]
 					if gc not in group_added:
-						jg = JSLPS_Persongroup(group_code = gc,
-											group = group)
-						jg.save()
+						jg, created = JSLPS_Persongroup.objects.get_or_create(group_code = gc,
+																	          group = group)
 				except Exception as e:
 					print gc, e
 					if "Duplicate entry" not in str(e):
 						jslps.other_error_count += 1
 						wtr.writerow(['JSLPS group', gc, e])
-			except Village.DoesNotExist as e:
+			except village.DoesNotExist as e:
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
 					wtr.writerow(['village',vc, e])

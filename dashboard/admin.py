@@ -279,7 +279,7 @@ class JSLPS_AnimatorAssignedVillageAdmin(admin.ModelAdmin):
 
 class JSLPS_PersongroupAdmin(admin.ModelAdmin):
     list_display = ['id', 'group', 'group_code', 'user_created', 'time_created']
-    search_fields = ['group']
+    search_fields = ['group__group_name']
 
 class JSLPS_PersonAdmin(admin.ModelAdmin):
     list_display = ['id', 'person_code', 'person', 'user_created', 'time_created']
