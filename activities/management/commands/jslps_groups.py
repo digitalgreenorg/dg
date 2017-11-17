@@ -2,6 +2,7 @@ import urllib2
 import unicodecsv as csv
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
 from geographies.models import *
 from people.models import *
 from programs.models import *
@@ -21,7 +22,7 @@ class Command(BaseCommand):
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/group.xml')
 		root = tree.getroot()
-
+		user_obj = User.objects.get(username="jslps_bot")
 		for c in root.findall('GroupData'):
 			gc = c.find('GroupCode').text
 			gn = unicode(c.find('Group_Name').text)
@@ -34,7 +35,8 @@ class Command(BaseCommand):
 					try:
 						gp, created = PersonGroup.objects.get_or_create(group_name = gn,
 															   village = village.Village,
-															   partner = partner)
+															   partner = partner,
+															   user_created_id=user_obj.id)
 						jslps.new_count += 1
 						print "Group saved in old"
 					except Exception as e:
