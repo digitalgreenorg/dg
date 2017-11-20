@@ -19,14 +19,11 @@ from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, 
     send_info_using_textlocal, get_top_selling_crop_quantity_wise, get_crop_code_list
 from loop_ivr.utils.config import LOG_FILE, call_failed_sms, crop_and_code, helpline_hi, remaining_crop_line, \
     no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, code_hi, \
-    AGGREGATOR_SMS_NO, ALL_FLAG_TRUE, ALL_FLAG_FALSE
+    AGGREGATOR_SMS_NO, ALL_FLAG_TRUE, ALL_FLAG_FALSE, PATTERN_REGEX, CONTAINS_ZERO
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 import logging
 logger = logging.getLogger(__name__)
-
-def home(request):
-    return HttpResponse(status=403)
 
 def market_info_incoming(request):
     if request.method == 'GET':
@@ -87,31 +84,48 @@ def textlocal_market_info_incoming_sms(request):
             module = 'textlocal_market_info_incoming_sms'
             write_log(LOG_FILE,module,str(e))
             return HttpResponse(status=200)
-        if query_code == '' or query_code == None or query_code == 'None':
-            price_info_incoming_obj.info_status = 3
-            price_info_incoming_obj.save()
-            # Send No code entered message to user
-            crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-            sms_content = [no_code_entered,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
-            sms_content = ''.join(sms_content)
-            send_info_using_textlocal(farmer_number, sms_content)
-            return HttpResponse(status=200)
-            
-        query_code = query_code.split('**')
-        if len(query_code) >= 2:
-            crop_info, mandi_info = query_code[0], query_code[1]
-        elif len(query_code) == 1:
-            crop_info = query_code[0]
-            mandi_info = ''
-
-        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info, farmer_number)
-        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info, farmer_number)
-        if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
+        if query_code == '' or query_code == 'None':
+            sms_content = [no_code_entered,'\n\n']
+            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+        elif query_code == '0':
+            sms_content = []
+            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+        elif re.search(PATTERN_REGEX, query_code) is None:
+            # send wrong query code
             send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
             return HttpResponse(status=200)
-        Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
-        return HttpResponse(status=200)
-        
+        else :
+            # send corresponding response
+            query_code = query_code.split('**')
+            all_crop_flag = False
+            all_mandi_flag = False
+
+            if len(query_code) >= 2:
+                crop_info, mandi_info = query_code[0], query_code[1]
+            elif len(query_code) == 1:
+                crop_info = query_code[0]
+                mandi_info = ''
+            if re.search(CONTAINS_ZERO,crop_info) is not None:
+                all_crop_flag=True
+            if re.search(CONTAINS_ZERO,mandi_info) is not None or mandi_info == '':
+                all_mandi_flag=True
+
+            crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
+            mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
+
+            Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
+            return HttpResponse(status=200)
+
+def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number) :
+    price_info_incoming_obj.info_status = 3
+    price_info_incoming_obj.save()
+    # Send No code entered message to user
+    crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+    sms_content = sms_content + [crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+    sms_content = ''.join(sms_content)
+    send_info_using_textlocal(farmer_number, sms_content)
+    return HttpResponse(status=200)
+
 def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
     price_info_incoming_obj.info_status = 2
     price_info_incoming_obj.save()

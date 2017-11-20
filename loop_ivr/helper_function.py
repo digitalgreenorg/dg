@@ -67,7 +67,7 @@ def send_sms(from_number,to_number,sms_body):
         log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
         write_log(LOG_FILE,module,log)
 
-def get_valid_list(app_name, model_name, requested_item, farmer_number):
+def get_valid_list(app_name, model_name, requested_item, farmer_number, all_flag=False):
     model = get_model(app_name, model_name)
     if model_name == 'mandi':
         # If call from Bangladesh then return Mandi of Bangladesh
@@ -83,9 +83,10 @@ def get_valid_list(app_name, model_name, requested_item, farmer_number):
         # because we are sharing Hindi crops code as of now.
         id_list = set(CropLanguage.objects.filter(language_id=1).values_list('crop_id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item.isdigit())
-    if (0 in requested_list) or (len(requested_list)==0 and model_name == 'mandi'):
-        return tuple(map(int,id_list)), ALL_FLAG_TRUE
-    return tuple(map(int,requested_list.intersection(id_list))), ALL_FLAG_FALSE
+    if all_flag :
+        return tuple(map(int,id_list))
+    else :
+        return tuple(map(int,requested_list.intersection(id_list)))
 
 def run_query(query):
     mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'],

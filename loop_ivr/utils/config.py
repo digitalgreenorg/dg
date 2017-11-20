@@ -46,3 +46,6 @@ TOP_SELLING_CROP_WINDOW = 30
 N_TOP_SELLING_CROP = 5
 ALL_FLAG_TRUE = 1
 ALL_FLAG_FALSE = 0
+
+PATTERN_REGEX = r'^([1-9]([0-9]*)[*, **]*)*$|^([0][*]{2}([1-9][*]?)+)$|^([1-9][0-9]*[*]{0,1})+[*]{2}[0]$'
+CONTAINS_ZERO = r'^[0]$'
