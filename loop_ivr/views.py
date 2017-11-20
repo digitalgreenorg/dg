@@ -200,44 +200,44 @@ def crop_price_query(request):
                 price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
                                         to_number=dg_number, incoming_time=incoming_time, query_code=query_code)
                 price_info_incoming_obj.save()
-            # If this request has no query code then save object as No input.
-            if query_code == '' or query_code == None or query_code == 'None':
-                # If Wrong Query in 'first try' and now user didn't enter anything
-                # then set info_status to Wrong query.
-                if price_info_incoming_obj.prev_info_status == 2:
-                    price_info_incoming_obj.info_status = 2
-                else:
-                    price_info_incoming_obj.info_status = 3
-                price_info_incoming_obj.save()
-                return HttpResponse(status=200)
+                
         except Exception as e:
             module = 'crop_info'
             log = "Call Id: %s Error: %s"%(str(call_id),str(e))
             write_log(LOG_FILE,module,log)
             return HttpResponse(status=404)
-        query_code = query_code.split('**')
-        # If query code is not in correct format
-        #if len(query_code) != 2:
-        #    price_info_incoming_obj.info_status = 2
-        #    price_info_incoming_obj.save()
-        #    return HttpResponse(status=404)
-        if len(query_code) >= 2:
-            crop_info, mandi_info = query_code[0], query_code[1]
-        elif len(query_code) == 1:
-            crop_info = query_code[0]
-            mandi_info = ''
-        else:
-            price_info_incoming_obj.info_status = 2
-            price_info_incoming_obj.save()
-            return HttpResponse(status=404)
-        crop_list, all_crop_flag = get_valid_list('loop', 'crop', crop_info, farmer_number)
-        mandi_list, all_mandi_flag = get_valid_list('loop', 'mandi', mandi_info, farmer_number)
-        if (all_crop_flag and all_mandi_flag) or (not crop_list) or (not mandi_list):
-            price_info_incoming_obj.info_status = 2
-            price_info_incoming_obj.save()
-            return HttpResponse(status=404)
-        Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
-        return HttpResponse(status=200)
+
+        if query_code == '' or query_code == 'None':
+            sms_content = [no_code_entered,'\n\n']
+            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+        elif query_code == '0':
+            sms_content = []
+            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+        elif re.search(PATTERN_REGEX, query_code) is None:
+            # send wrong query code
+            send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+            return HttpResponse(status=200)
+        else :
+            # send corresponding response
+            query_code = query_code.split('**')
+            all_crop_flag = False
+            all_mandi_flag = False
+
+            if len(query_code) >= 2:
+                crop_info, mandi_info = query_code[0], query_code[1]
+            elif len(query_code) == 1:
+                crop_info = query_code[0]
+                mandi_info = ''
+            if re.search(CONTAINS_ZERO,crop_info) is not None:
+                all_crop_flag=True
+            if re.search(CONTAINS_ZERO,mandi_info) is not None or mandi_info == '':
+                all_mandi_flag=True
+
+            crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
+            mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
+
+            Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
+            return HttpResponse(status=200)
     return HttpResponse(status=403)
 
 def crop_price_sms_content(request):
