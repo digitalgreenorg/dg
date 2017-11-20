@@ -87,9 +87,11 @@ def textlocal_market_info_incoming_sms(request):
         if query_code == '' or query_code == 'None':
             sms_content = [no_code_entered,'\n\n']
             send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            return HttpResponse(status=200)
         elif query_code == '0':
             sms_content = []
             send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            return HttpResponse(status=200)
         elif re.search(PATTERN_REGEX, query_code) is None:
             # send wrong query code
             send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
@@ -124,7 +126,6 @@ def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_numb
     sms_content = sms_content + [crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
     sms_content = ''.join(sms_content)
     send_info_using_textlocal(farmer_number, sms_content)
-    return HttpResponse(status=200)
 
 def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
     price_info_incoming_obj.info_status = 2
@@ -200,7 +201,7 @@ def crop_price_query(request):
                 price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
                                         to_number=dg_number, incoming_time=incoming_time, query_code=query_code)
                 price_info_incoming_obj.save()
-                
+
         except Exception as e:
             module = 'crop_info'
             log = "Call Id: %s Error: %s"%(str(call_id),str(e))
