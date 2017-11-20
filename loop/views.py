@@ -48,7 +48,10 @@ from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
 from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
 
 import pandas as pd
-
+from training.management.databases.utility import *
+from loop.management.commands.get_sql_queries import *
+import MySQLdb
+from dg.settings import DATABASES
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 
@@ -77,7 +80,7 @@ def login(request):
                     'phone_digits':loop_user[0].village.block.district.state.phone_digit,
                     'phone_start':loop_user[0].village.block.district.state.phone_start,
                     'preferred_language':loop_user[0].preferred_language.notation,
-                    'country':loop_user[0].village.block.district.state.country.country_name}))
+                    'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory,'state':loop_user[0].village.block.district.state.state_name}))
         else:
             admin_user = AdminUser.objects.filter(user = user)
             if user is not None and user.is_active and admin_user.count()>0:
@@ -97,7 +100,7 @@ def login(request):
                  'phone_digits':admin_user[0].state.phone_digit,
                  'phone_start':admin_user[0].state.phone_start,
                  'preferred_language':admin_user[0].preferred_language.notation}))
-                
+
             #return HttpResponse("0", status=401)
     else:
         return HttpResponse("0", status=403)
@@ -109,7 +112,8 @@ def home(request):
 
 
 def dashboard(request):
-    return render(request, 'app_dashboards/loop_dashboard.html')
+    return render(request, 'analytics/dist/loop/index.html')
+    # return render(request, 'app_dashboards/loop_dashboard.html')
 
 
 @csrf_exempt
@@ -151,7 +155,8 @@ def farmer_payments(request):
         for bundle in body.get("objects"):
             try:
                 mandi = Mandi.objects.get(id=bundle["mandi"]["online_id"])
-                user = User.objects.get(id=bundle["user_created_id"])
+                loop_user = LoopUser.objects.get(id=bundle["aggregator"]["online_id"])
+                user = User.objects.get(id=loop_user.user_id)
                 attempt = DayTransportation.objects.filter(date=bundle["date"], user_created=user, mandi=mandi)
                 attempt.update(farmer_share=bundle["amount"])
                 attempt.update(farmer_share_comment=bundle["comment"])
@@ -179,7 +184,7 @@ def filter_data(request):
         mandis = Mandi.objects.filter(district__state=state_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state=state_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
-    
+
     # villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
     crops_lang = CropLanguage.objects.values('crop_id', 'crop_name', 'language_id')
@@ -189,7 +194,7 @@ def filter_data(request):
             crops_language[obj['language_id']] = list()
         crops_language[obj['language_id']].append({'id': obj['crop_id'],
                                             'crop_name': obj['crop_name']})
-    
+
     # transporters = Transporter.objects.values('id', 'transporter_name')
     data_dict = {'aggregators': list(aggregators), 'crops': list(crops),
                  'mandis': list(mandis), 'gaddidars': list(gaddidars), 'croplanguage': crops_language}
@@ -216,7 +221,7 @@ def jsonify(data):
         for i, item in enumerate(data):
             data[strr(i)] = jsonify(data[i])
         return data
-    
+
     elif type(data).__module__=='numpy':
         data = data.tolist()
         return data
@@ -368,14 +373,13 @@ def crop_language_data(request):
     return HttpResponse(data)
 
 
-def recent_graphs_data(request):
-    country_id = request.GET['country_id'] #To be fetched from request
-    state_id = request.GET['state_id']
-    aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id, state_id)
+# def recent_graphs_data(request):
+#     country_id = request.GET['country_id'] #To be fetched from request
+#     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id)
 
-    chart_dict = {'aggregated_result': aggregated_result, 'cummulative_vol_farmer': cummulative_vol_farmer}
-    data = json.dumps(jsonify(chart_dict), cls=DjangoJSONEncoder)
-    return HttpResponse(data)
+#     chart_dict = {'aggregated_result': aggregated_result, 'cummulative_vol_farmer': cummulative_vol_farmer}
+#     data = json.dumps(chart_dict, cls=DjangoJSONEncoder)
+#     return HttpResponse(data)
 
 
 def data_for_drilldown_graphs(request):

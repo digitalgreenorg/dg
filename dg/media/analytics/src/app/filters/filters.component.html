@@ -1,7 +1,7 @@
 <div id="mySidenav" #mySidenav class="sidenav sideNav-font">
   <perfect-scrollbar class="parent-scrollbar">
     <div #sideNavContent class="container">
-      <div class="row">
+      <div class="row white-text">
         <div class="col-8">
           <label class="text-left no-margin sideNav-font">Filters</label>
         </div>
@@ -37,14 +37,13 @@
       <div class="row">
         <div class="col-sm-12">
           <a *ngFor='let filter_name of filter_list'>
-            <div class="row">
+            <div class="row" (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand;" style="cursor: pointer; cursor: hand;">
               <div class="col-3">
-                  <label >{{ filter_name.heading }}</label>
+                <label>{{ filter_name.heading }}</label>
               </div>
-              <div class="col-7" >
-                  <label class="float-right" (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand">
-                    <!-- <strong>&#x021FE;</strong> -->
-                    <strong>{{filter_name.show_icon}}</strong>
+              <div class="col-7">
+                <label class="float-right">
+                    <strong style="font-size:18px;">{{filter_name.show_icon}}</strong>
                   </label>
               </div>
             </div>
@@ -52,7 +51,7 @@
               <div class="form-group row" [id]="filter_name.heading">
                 <h6 class="col-sm-12">
                   <span class="checkbox">
-                    <label><input id={{filter_name.heading}} type="checkbox" checked="checked" [(ngModel)]="filter_name.select_all" (change)="select_all(filter_name)"> Select All</label>
+                    <label><input id={{filter_name.heading}} type="checkbox" checked="checked" [(ngModel)]="filter_name.select_all" (change)="selectAll(filter_name)"> Select All</label>
                   </span>
                 </h6>
                 <div class="col-sm-12">
@@ -72,10 +71,11 @@
           </a>
         </div>
       </div>
-      <div class="row">
+      <div class="row white-text">
         <div class="col-sm-12">
           <div class="text-center">
-            <button class="btn btn-sx btn-submit" (click)="applyFilters()">Apply Filters</button>
+            <button class="btn btn-sx" (click)="applyFilters()"
+            [ngStyle]="{'background-color' : generalConfig.applyFilterButton}" >Apply Filters</button>
           </div>
         </div>
       </div>
@@ -83,10 +83,11 @@
   </perfect-scrollbar>
 </div>
 
-<div class="container " style="height: 70px;">
-  <div class="row" style="-webkit-text-fill-color: white">
-    <div class="col-md-1">
-      <span style="font-size:15px;cursor:pointer" (click)="openNav()">&#9776;</span>
+<div class="container">
+  <div style="-webkit-text-fill-color: white">
+    <div class="float-right">
+      <!-- &#9776; -->
+      <span style="cursor:pointer" (click)="openNav()">&#926;</span>
     </div>
   </div>
 </div>

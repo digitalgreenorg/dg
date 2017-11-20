@@ -49,11 +49,11 @@ class LoopUserAssignedVillages(admin.StackedInline):
 
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
-    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
-    list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en', 'days_count')
+    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible','farmer_phone_mandatory')
+    list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en', 'days_count','farmer_phone_mandatory')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country', 'village__block__district__state', 'village__block__district', 'role']
-    list_editable = ['days_count']
+    list_editable = ['days_count','farmer_phone_mandatory']
 
 class AdminAssignedDistricts(admin.StackedInline):
     model = AdminAssignedDistrict
@@ -75,7 +75,7 @@ class FarmerAdmin(admin.ModelAdmin):
     list_filter = ['village__village_name', 'village__block__district__state', 'village__block__district__state__country']
 
 class CombinedTransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__crop__', 'price',
+    list_display = ('id', 'date', '__mandi__','__gaddidar__', '__aggregator__', '__farmer__', '__farmer_phone__', '__crop__', 'price',
                     'quantity', 'amount', 'status')
     search_fields = ['farmer__name', 'farmer__village__village_name', 'gaddidar__gaddidar_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
@@ -93,7 +93,7 @@ class TransporterAdmin(admin.ModelAdmin):
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__','__vehicle__',
+    list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__', '__transporter_phone__', '__vehicle__',
                     'transportation_cost', 'farmer_share', 'farmer_share_comment','transportation_cost_comment')
     search_fields = ['user_created__username', 'mandi__mandi_name']
     list_filter = (UserListFilter, 'mandi__mandi_name', 'mandi__district__state__country')
@@ -144,8 +144,8 @@ class DistrictAdmin(admin.ModelAdmin):
     list_filter = ['state__state_name', 'state__country']
 
 class StateAdmin(admin.ModelAdmin):
-    fields = ('country',('state_name','state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start', 'is_visible')
-    list_display = ('id', 'state_name', 'country', 'state_name_en', 'helpline_number', 'crop_add', 'phone_digit', 'phone_start')
+    fields = ('country',('state_name','state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start', 'is_visible','aggregation_state')
+    list_display = ('id', 'state_name', 'country', 'state_name_en', 'helpline_number', 'crop_add', 'phone_digit', 'phone_start','aggregation_state')
     search_fields = ['state_name', 'state_name_en', 'country__country_name']
     list_filter = ['country__country_name']
 

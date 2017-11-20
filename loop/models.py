@@ -61,7 +61,8 @@ class State(LoopModel):
     helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
     crop_add = models.BooleanField(default=False)
     phone_digit = models.CharField(default=10, max_length=2, blank=True, null=True)
-    phone_start = models.CharField(default=789, max_length=15, blank=True, null=True)
+    phone_start = models.CharField(default='7,8,9', max_length=15, blank=True, null=True)
+    aggregation_state = models.BooleanField(default=True)
     def __unicode__(self):
         return self.state_name
 
@@ -174,6 +175,7 @@ class LoopUser(LoopModel):
     preferred_language = models.ForeignKey(Language, null=True)
     days_count = models.IntegerField(default=3)
     is_visible = models.BooleanField(default=True)
+    farmer_phone_mandatory = models.BooleanField(default=True)
 
     def __unicode__(self):
         return """%s (%s)"""  % (self.name, self.phone_number)
@@ -253,7 +255,7 @@ class AdminAssignedLoopUser(LoopModel):
 
 post_save.connect(save_admin_log, sender=AdminAssignedLoopUser)
 pre_delete.connect(save_admin_log, sender = AdminAssignedLoopUser)
-        
+
 class AdminAssignedDistrict(LoopModel):
     id = models.AutoField(primary_key=True)
     admin_user = models.ForeignKey(AdminUser)
@@ -457,6 +459,14 @@ class DayTransportation(LoopModel):
     def __mandi__(self):
         return "%s" % (self.mandi.mandi_name)
 
+    def __transporter_phone__(self):
+        return "%s" % (self.validate_phone_number(self.transportation_vehicle.transporter.block.district.state, self.transportation_vehicle.transporter.transporter_phone))
+
+    def validate_phone_number(self, state, phone):
+        if len(phone) == int(state.phone_digit):
+            return phone
+        return ""
+
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
 
@@ -498,6 +508,14 @@ class CombinedTransaction(LoopModel):
 
     def __gaddidar__(self):
         return "%s" % (self.gaddidar.gaddidar_name)
+
+    def __farmer_phone__(self):
+        return "%s" % (self.validate_phone_number(self.farmer.village.block.district.state, self.farmer.phone))
+
+    def validate_phone_number(self, state, phone):
+        if len(phone) == int(state.phone_digit):
+            return phone
+        return ""
 
     class Meta:
         unique_together = ("date", "user_created", "timestamp")
