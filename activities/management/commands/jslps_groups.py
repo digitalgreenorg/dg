@@ -58,7 +58,8 @@ class Command(BaseCommand):
 					#group_added = [i[0] for i in group_added]
 					if gc not in group_added:
 						jg, created = JSLPS_Persongroup.objects.get_or_create(group_code = gc,
-																	          group = group)
+																	          group = group,
+																	          user_created_id=user_obj.id)
 				except Exception as e:
 					print gc, e
 					if "Duplicate entry" not in str(e):
