@@ -30,11 +30,11 @@ class Command(BaseCommand):
         # print "Groups,jslps_groups"
         # call_command('jslps_groups')
         
-        print "People,jslps_people"
-        call_command('jslps_people_new')
+        # print "People,jslps_people"
+        # call_command('jslps_people_new')
 
-        # print "Mediators,jslps_mediators"
-        # call_command('jslps_mediator_new')
+        print "Mediators,jslps_mediators"
+        call_command('jslps_mediator_new')
 
         # print "Videos and Non negotiable,jslps_videos_nn"
         # call_command('jslps_videos_nn_new')
