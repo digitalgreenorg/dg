@@ -57,7 +57,7 @@ class Command(BaseCommand):
 															 district_name = dn,
 										                     district = district,
 										                     user_created_id=user_obj.id)
-					jd.user_created_id=uer_obj.id
+					jd.user_created_id=user_obj.id
 					jd.save()
 					print dc, "District Saved in JSLPS_District Table"
 			except Exception as e:
