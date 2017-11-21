@@ -40,6 +40,46 @@ def market_info_incoming(request):
     else:
         return HttpResponse(status=403)
 
+def crop_price_query(request):
+    # Serve only Get request
+    logger.debug("Reached here in Crop Price Query View")
+    logger.debug(request)
+    logger.debug(request.body)
+
+    if request.method == 'GET':
+        call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
+        # Check if request contain some input combination.
+        try:
+            query_code = str(request.GET.get('digits')).strip('"')
+        except Exception as e:
+            query_code = ''
+        # Check if its retry or first time request.
+        try:
+            # Search if this request generated in second try.
+            price_info_incoming_obj = PriceInfoIncoming.objects.filter(call_id=call_id,from_number=farmer_number,
+                                        to_number=dg_number)
+            # If it is second try, then take this object else create new object.
+            if len(price_info_incoming_obj) > 0:
+                price_info_incoming_obj = price_info_incoming_obj[0]
+                price_info_incoming_obj.prev_query_code = price_info_incoming_obj.query_code
+                price_info_incoming_obj.prev_info_status = price_info_incoming_obj.info_status
+                price_info_incoming_obj.query_code = query_code
+                # If it is retry then set status to pending and remaining code will change this according to input.
+                price_info_incoming_obj.info_status = 0
+                price_info_incoming_obj.save()
+            else:
+                price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
+                                        to_number=dg_number, incoming_time=incoming_time, query_code=query_code)
+                price_info_incoming_obj.save()
+
+        except Exception as e:
+            module = 'crop_info'
+            log = "Call Id: %s Error: %s"%(str(call_id),str(e))
+            write_log(LOG_FILE,module,log)
+            return HttpResponse(status=404)
+        return make_response_crop_query(price_info_incoming_obj, query_code, farmer_number)
+    return HttpResponse(status=403)
+
 @csrf_exempt
 def textlocal_market_info_incoming_call(request):
     logger.debug("Reached here in CALL View")
@@ -84,39 +124,40 @@ def textlocal_market_info_incoming_sms(request):
             module = 'textlocal_market_info_incoming_sms'
             write_log(LOG_FILE,module,str(e))
             return HttpResponse(status=200)
-        if query_code == '' or query_code == 'None':
+        return make_response_crop_query(price_info_incoming_obj, query_code, farmer_number)
+
+def make_response_crop_query(price_info_incoming_obj, query_code, farmer_number):
+    if query_code == '' or query_code == 'None':
             sms_content = [no_code_entered,'\n\n']
             send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-            return HttpResponse(status=200)
-        elif query_code == '0':
-            sms_content = []
-            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-            return HttpResponse(status=200)
-        elif re.search(PATTERN_REGEX, query_code) is None:
-            # send wrong query code
-            send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
-            return HttpResponse(status=200)
-        else :
-            # send corresponding response
-            query_code = query_code.split('**')
-            all_crop_flag = False
-            all_mandi_flag = False
+    elif query_code == '0':
+        sms_content = []
+        send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+    elif re.search(PATTERN_REGEX, query_code) is None:
+        # send wrong query code
+        send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+        return HttpResponse(status=200)
+    else :
+        # send corresponding response
+        query_code = query_code.split('**')
+        all_crop_flag = False
+        all_mandi_flag = False
 
-            if len(query_code) >= 2:
-                crop_info, mandi_info = query_code[0], query_code[1]
-            elif len(query_code) == 1:
-                crop_info = query_code[0]
-                mandi_info = ''
-            if re.search(CONTAINS_ZERO,crop_info) is not None:
-                all_crop_flag=True
-            if re.search(CONTAINS_ZERO,mandi_info) is not None or mandi_info == '':
-                all_mandi_flag=True
+        if len(query_code) >= 2:
+            crop_info, mandi_info = query_code[0], query_code[1]
+        elif len(query_code) == 1:
+            crop_info = query_code[0]
+            mandi_info = ''
+        if re.search(CONTAINS_ZERO,crop_info) is not None:
+            all_crop_flag=True
+        if re.search(CONTAINS_ZERO,mandi_info) is not None or mandi_info == '':
+            all_mandi_flag=True
 
-            crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
-            mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
+        crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
+        mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
 
-            Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
-            return HttpResponse(status=200)
+        Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
+        return HttpResponse(status=200)
 
 def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number) :
     price_info_incoming_obj.info_status = 3
@@ -168,78 +209,6 @@ def market_info_response(request):
                 price_info_incoming_obj.info_status = 3
                 price_info_incoming_obj.save()
     return HttpResponse(status=200)
-
-
-def crop_price_query(request):
-    # Serve only Get request
-    logger.debug("Reached here in Crop Price Query View")
-    logger.debug(request)
-    logger.debug(request.body)
-
-    if request.method == 'GET':
-        call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
-        # Check if request contain some input combination.
-        try:
-            query_code = str(request.GET.get('digits')).strip('"')
-        except Exception as e:
-            query_code = ''
-        # Check if its retry or first time request.
-        try:
-            # Search if this request generated in second try.
-            price_info_incoming_obj = PriceInfoIncoming.objects.filter(call_id=call_id,from_number=farmer_number,
-                                        to_number=dg_number)
-            # If it is second try, then take this object else create new object.
-            if len(price_info_incoming_obj) > 0:
-                price_info_incoming_obj = price_info_incoming_obj[0]
-                price_info_incoming_obj.prev_query_code = price_info_incoming_obj.query_code
-                price_info_incoming_obj.prev_info_status = price_info_incoming_obj.info_status
-                price_info_incoming_obj.query_code = query_code
-                # If it is retry then set status to pending and remaining code will change this according to input.
-                price_info_incoming_obj.info_status = 0
-                price_info_incoming_obj.save()
-            else:
-                price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
-                                        to_number=dg_number, incoming_time=incoming_time, query_code=query_code)
-                price_info_incoming_obj.save()
-
-        except Exception as e:
-            module = 'crop_info'
-            log = "Call Id: %s Error: %s"%(str(call_id),str(e))
-            write_log(LOG_FILE,module,log)
-            return HttpResponse(status=404)
-
-        if query_code == '' or query_code == 'None':
-            sms_content = [no_code_entered,'\n\n']
-            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-        elif query_code == '0':
-            sms_content = []
-            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-        elif re.search(PATTERN_REGEX, query_code) is None:
-            # send wrong query code
-            send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
-            return HttpResponse(status=200)
-        else :
-            # send corresponding response
-            query_code = query_code.split('**')
-            all_crop_flag = False
-            all_mandi_flag = False
-
-            if len(query_code) >= 2:
-                crop_info, mandi_info = query_code[0], query_code[1]
-            elif len(query_code) == 1:
-                crop_info = query_code[0]
-                mandi_info = ''
-            if re.search(CONTAINS_ZERO,crop_info) is not None:
-                all_crop_flag=True
-            if re.search(CONTAINS_ZERO,mandi_info) is not None or mandi_info == '':
-                all_mandi_flag=True
-
-            crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
-            mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
-
-            Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
-            return HttpResponse(status=200)
-    return HttpResponse(status=403)
 
 def crop_price_sms_content(request):
     if request.method == 'HEAD':
