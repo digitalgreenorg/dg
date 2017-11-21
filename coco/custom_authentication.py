@@ -1,7 +1,7 @@
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.models import ApiKey
 from django.http import HttpResponse
-from django.contrib.auth.models import User
+
 
 
 
