@@ -1,7 +1,7 @@
 'use strict';
 
 requirejs.config({
-    baseUrl: '/media/social_website/scripts/',
+    baseUrl: '/media/social_website/build/',
 
     paths: {
         framework: 'libs/framework',
@@ -14,7 +14,7 @@ requirejs.config({
         'datatables.net-buttons':'libs/external/dataTables.buttons.min',
         'datatables':'libs/external/buttons.html5.min',
         jszip:'libs/external/jszip.min',
-        TableTools: 'libs/external/dataTables.tableTools',
+        //TableTools: 'libs/external/dataTables.tableTools',
     },
     shim: {
         'bootstrap_modal': {
