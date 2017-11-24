@@ -213,12 +213,12 @@ function mrp_payment_goclicked()
                     {
                     "extend": 'copyHtml5',
                     "text": 'Copy to Clipboard',
-                    "title": 'MRP Payment'
+                    "title": 'MRP Payment ' + block_name + ' ' + sdate + ' - '+ edate,
                     },
                     {
                     "extend": 'csvHtml5',
                     "text": 'Download in CSV',
-                    "title":'MRP Payment'
+                    "title":'MRP Payment ' + block_name + ' ' + sdate + ' - '+ edate,
                     }
                 ]
                 });
