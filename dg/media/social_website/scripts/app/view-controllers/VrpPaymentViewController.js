@@ -6,11 +6,13 @@ define(function (require) {
     var jQ = require('libs/external/jquery.blockUI');
     var Select2 = require('libs/external/select2');
     var HighChart = require('libs/external/highcharts');
-    var datatables = require('datatables');
+    var datatables = require('datatables.net');
     var DistrictDataFeed = require('app/libs/DistrictDataFeed');
     var BlockDataFeed = require('app/libs/BlockDataFeed');
     var VrpPaymentDataFeed = require('app/libs/VrpPaymentDataFeed');
-    var tableTools = require('TableTools');
+    var buttonsJS = require('datatables.net-buttons');
+    var jsZip = require('jszip');
+    var buttonsHtml5=require('datatables');
     var monthpicker = require('libs/external/jquery.mtz.monthpicker');
     var districtTemplate = require('text!app/views/district.html');
     var blockTemplate = require('text!app/views/block.html');
@@ -249,9 +251,9 @@ define(function (require) {
 
             jQuery(references.$starExplanation).removeClass('hidden');
             references.$reportTable.DataTable({
-                "sDom": 'T<"clear">lfrtip',
+                "dom": 'B<"clear">lfrtip',
                 destroy: true,
-                "bAutoWidth": false,
+                "AutoWidth": false,
                 "aoColumns": [
                     {sTitle: "S.No", sClass: "a-center"},
                     {sTitle: "Name"},
@@ -264,10 +266,22 @@ define(function (require) {
                     {sTitle: "Total Amount (Rs)", sClass: "a-center"}
                 ],
                 "aaData": renderData['report'],   //aaData takes array_table_values and push data in the table.
-                "oTableTools": {
-                    "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls_pdf.swf"
-                }
+                "swfPath" : "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
+                "buttons": [
+            
+                    {
+                    "extend": 'copyHtml5',
+                    "text": 'Copy to Clipboard',
+                    "title": 'VRP Payment'
+                    },
+                    {
+                    "extend": 'csvHtml5',
+                    "text": 'Download in CSV',
+                    "title":'VRP Payment'
+                    }
+                ]
             });
+            $('.dt-buttons').css('float','right');
         },
 
         setInputParam: function (key, value, disableCacheClearing) {
