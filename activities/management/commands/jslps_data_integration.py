@@ -24,25 +24,25 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options): 
         
-        # print "Geography,jslps_geo"
-        # call_command('jslps_geo')
+        print "Geography,jslps_geo"
+        call_command('jslps_geo')
 
-        # print "Groups,jslps_groups"
-        # call_command('jslps_groups')
+        print "Groups,jslps_groups"
+        call_command('jslps_groups')
         
-        # print "People,jslps_people"
-        # call_command('jslps_people_new')
+        print "People,jslps_people"
+        call_command('jslps_people_new')
 
         print "Mediators,jslps_mediators"
         call_command('jslps_mediator_new')
 
-        # print "Videos and Non negotiable,jslps_videos_nn"
-        # call_command('jslps_videos_nn_new')
+        print "Videos and Non negotiable,jslps_videos_nn"
+        call_command('jslps_videos_nn_new')
         
         # print "Screening and pma,jslps_screening_pma"
         # call_command('jslps_screening_pma_new')
         
-        # print "Adoption,jslps_adoptions"
-        # call_command('jslps_adoptions_new')
+        print "Adoption,jslps_adoptions"
+        call_command('jslps_adoptions_new')
 
         self.send_mail()

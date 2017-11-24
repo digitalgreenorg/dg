@@ -93,7 +93,7 @@ class Command(BaseCommand):
 														   block = block,
 														   district_code=dc,
 														   user_created_id=user_obj.id)
-					jb.user_created_id=uer_obj.id
+					jb.user_created_id=user_obj.id
 					jb.save()
 					print bc, "block saved in JSLPS_block table"
 			except Exception as e:

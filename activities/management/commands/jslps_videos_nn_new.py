@@ -115,7 +115,7 @@ class Command(BaseCommand):
 
 			try:
 				vid, created = \
-					Video.objects.get_or_creat(title = vn,
+					Video.objects.get_or_create(title = vn,
 											   video_type = vt,
 											   language = language,
 											   benefit = benefit,
@@ -125,7 +125,7 @@ class Command(BaseCommand):
 											   approval_date=ad,
 											   youtubeid=yid,
 											   category=category,
-											   subcategory=subcategory
+											   subcategory=subcategory,
 											   )
 				vid.videopractice.add(videopractice)
 				jslps.new_count += 1
@@ -144,7 +144,7 @@ class Command(BaseCommand):
 				vid.save()
 				jslps_video_list = JSLPS_Video.objects.filter(vc=vdc)
 				if len(jslps_video_list) == 0:
-					jslps_video = JSLPS_Video(vc=vdc,video=vid)
+					jslps_video = JSLPS_Video(vc=vdc,video=vid, user_created_id=user_obj.id)
 					jslps_video.save()
 				else:
 					jslps_video = jslps_video_list[0]
@@ -160,7 +160,7 @@ class Command(BaseCommand):
 					vid.save()
 					jslps_video_list = JSLPS_Video.objects.filter(vc=vdc,video=vid)
 					if len(jslps_video_list) == 0:
-						jslps_video = JSLPS_Video(vc=vdc,video=vid)
+						jslps_video = JSLPS_Video(vc=vdc,video=vid, user_created_id=user_obj.id)
 						jslps_video.save()
 					else:
 						jslps_video = jslps_video_list[0]
