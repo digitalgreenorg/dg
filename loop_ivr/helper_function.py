@@ -24,11 +24,11 @@ from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_
     agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
     agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller, code_hi, \
     remaining_crop_line, TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, \
-    crop_and_code_hi
+    crop_and_code_hi, ALL_FLAG_TRUE, ALL_FLAG_FALSE
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 
-def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id):
+def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     app_id = MARKET_INFO_APP
     app_url = APP_URL%(app_id,)
@@ -43,11 +43,11 @@ def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call
         outgoing_call_id = str(call_detail.find('Sid').text)
         outgoing_call_time = str(call_detail.find('StartTime').text)
         price_info_incoming_obj = PriceInfoIncoming(call_id=outgoing_call_id, from_number=caller_number,
-                                        to_number=dg_number, incoming_time=outgoing_call_time)
+                                    to_number=dg_number, incoming_time=outgoing_call_time, call_source=call_source)
     else:
         # Enter in Log
         price_info_incoming_obj = PriceInfoIncoming(call_id=incoming_call_id, from_number=caller_number,
-                                        to_number=dg_number, incoming_time=incoming_time, info_status=0)
+                                        to_number=dg_number, incoming_time=incoming_time, info_status=0, call_source=call_source)
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(LOG_FILE,module,log)
     try:
@@ -67,7 +67,7 @@ def send_sms(from_number,to_number,sms_body):
         log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
         write_log(LOG_FILE,module,log)
 
-def get_valid_list(app_name, model_name, requested_item, farmer_number):
+def get_valid_list(app_name, model_name, requested_item, farmer_number, all_flag=False):
     model = get_model(app_name, model_name)
     if model_name == 'mandi':
         # If call from Bangladesh then return Mandi of Bangladesh
@@ -83,9 +83,10 @@ def get_valid_list(app_name, model_name, requested_item, farmer_number):
         # because we are sharing Hindi crops code as of now.
         id_list = set(CropLanguage.objects.filter(language_id=1).values_list('crop_id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item.isdigit())
-    if (0 in requested_list) or (len(requested_list)==0 and model_name == 'mandi'):
-        return tuple(map(int,id_list)),1
-    return tuple(map(int,requested_list.intersection(id_list))),0
+    if all_flag :
+        return tuple(map(int,id_list))
+    else :
+        return tuple(map(int,requested_list.intersection(id_list)))
 
 def run_query(query):
     mysql_cn = MySQLdb.connect(host=DATABASES['default']['HOST'], port=DATABASES['default']['PORT'],
@@ -135,6 +136,7 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
 
 def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
     index = 0
+    # Replace ascii next line with textlocal next line identifier (i.e. %0A)
     content = content.replace('\n','%0A')
     while len(content) > 0:
         # If length of content is less than 750, then send whole content once.
@@ -254,7 +256,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append(('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER))
     final_result = ''.join(price_info_list)
     price_info_incoming_obj.price_result = final_result
-    if len(final_result) >= 2000:
+    if len(final_result) >= 2000 or price_info_incoming_obj.call_source==3:
         price_info_incoming_obj.return_result_to_app = 0
         price_info_incoming_obj.info_status = 1
         price_info_incoming_obj.save()
