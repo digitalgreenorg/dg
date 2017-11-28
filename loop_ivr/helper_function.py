@@ -197,11 +197,10 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
     result = run_query(query)
     dataframe = remove_crop_outliers(ct_data = result)
-    print dataframe
-
+    # print dataframe
 
     query_result = run_query(raw_query)
-    # print query_result
+    print query_result
     if not query_result:
         if not all_crop_flag and not all_mandi_flag:
             crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))

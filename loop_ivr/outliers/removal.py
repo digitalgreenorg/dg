@@ -1,54 +1,43 @@
 import pandas as pd
 import numpy as np
+from loop_ivr.outliers.common_functions import *
 
-def compute_mean(group):
-    Av_Rate = group.Amount.sum()/group.Quantity_Real.sum()
-    return Av_Rate
-
-def compute_total_q(group):
-    Total_Quantity = group.Quantity_Real.sum()
-    return Total_Quantity
-
-def compute_deviation(group):
-    group['Deviation'] = abs(group.Price - group.Av_Rate)
-    return group
-
-def compute_std(group):
-    std = np.sqrt(((np.square(group.Deviation)*group.Quantity_Real).sum())/group.Quantity_Real.sum())
-    return std
-
-def compute_max_deviation(group):
-    Max_Deviation = group.Deviation.max()
-    return Max_Deviation
-
-def compute_ratios(group):
-    group['D/Av'] = group['Deviation'] / group['Av_Rate']
-    group['D/STD'] = group['Deviation'] / group['STD']
-    group['Deviation_Factor'] = group['D/Av'] * group['D/STD']
-    group['STD/Av'] = group['STD'] / group['Av_Rate']
-    group['Flag'] = 0
-    group['Compute'] = 1
-    return group
+group_by_list = ['Date', 'Market_Real', 'Crop']
+columnlist_ct = ['Date', 'Aggregator', 'Market_Real', 'Crop', 'Quantity_Real', 'Price', 'Amount']
 
 def remove_crop_outliers(ct_data=None):
     daily_aggregator_market_crop_rate_query_result = list(ct_data)
 
-    columnlist_ct = ['Date', 'Aggregator', 'Market_Real', 'Crop', 'Quantity_Real', 'Price', 'Amount']
     combined_transactions_data = pd.DataFrame(daily_aggregator_market_crop_rate_query_result)
     combined_transactions_data['Date'] = pd.to_datetime(combined_transactions_data['Date'])
 
+    combined_transactions_data = call_methods(combined_transactions_data)
+
+    combined_transactions_data.to_csv("final_data_after_outliers.csv")
+
+    # ct_data = combined_transactions_data[(combined_transactions_data['D/STD'] > 1.3)]
+    # if ct_data is not
+
+    combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
+    combined_transactions_data = combined_transactions_data[columnlist_ct]
+    combined_transactions_data = call_methods(combined_transactions_data)
+
+    combined_transactions_data.to_csv("final_data_after_outliers_1.csv")
+    return combined_transactions_data
+
+def call_methods(combined_transactions_data):
     combined_transactions_data = get_statistics(combined_transactions_data)
     combined_transactions_data = raise_flags(combined_transactions_data)
 
     combined_transactions_data = combined_transactions_data[(combined_transactions_data['Flag']==1) | (combined_transactions_data['Flag']==5)]
 
     #Arranging dataframe according to crop, market and date
-    combined_transactions_data = combined_transactions_data.groupby(['Date', 'Market_Real', 'Crop']).apply(lambda x: x.sort_values(['Crop','Market_Real','Date'],ascending=[True,True,False])).reset_index(drop=True)
+    combined_transactions_data = combined_transactions_data.groupby(group_by_list).apply(lambda x: x.sort_values(['Crop','Market_Real','Date'],ascending=[True,True,False])).reset_index(drop=True)
 
     return combined_transactions_data
 
+
 def get_statistics(combined_transactions_data):
-    group_by_list = ['Date', 'Market_Real', 'Crop']
 
     ct_data_with_mean = combined_transactions_data.groupby(group_by_list).apply(compute_mean).reset_index(name='Av_Rate')
     combined_transactions_data = combined_transactions_data.merge(ct_data_with_mean,how='left',on=group_by_list)
