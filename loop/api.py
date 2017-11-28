@@ -389,14 +389,15 @@ class FarmerResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
         return bundle
+
     def is_phone_valid(self,bundle):
         village = Village.objects.get(id=bundle.data['village']['online_id'])
         state = State.objects.get(id=village__block__district__state__id)
         phone = bundle.data['phone']
-        validLength =False
+        validPhoneString =False
         if len(phone) == int(state.phone_digit):
             if phone.startswith(tuple(state.phone_start.split(","))):
-                validLength=True
+                validPhoneString = True
         duplicateCount = Farmer.objects.filter(phone=phone).count()
         if duplicateCount<=3 and validLength:
             return True
