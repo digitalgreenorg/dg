@@ -18,7 +18,7 @@ from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL, CALL_REQUEST_
     APP_URL
 from loop.helpline_view import write_log
 
-from loop_ivr.utils.marketinfo import raw_sql
+from loop_ivr.utils.marketinfo import raw_sql, get_query
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
     agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
@@ -26,6 +26,8 @@ from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_
     remaining_crop_line, TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, \
     crop_and_code_hi, ALL_FLAG_TRUE, ALL_FLAG_FALSE
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
+
+from loop_ivr.outliers.removal import remove_crop_outliers
 
 
 def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
@@ -77,9 +79,9 @@ def get_valid_list(app_name, model_name, requested_item, farmer_number, all_flag
             # Only Bihar Crops and Mandi.
             id_list = set(model.objects.filter(district__state_id=1).values_list('id', flat=True))
     else:
-        # For Fetch id of all crops 
+        # For Fetch id of all crops
         #id_list = set(model.objects.values_list('id', flat=True))
-        # Only fetch id of crops which have Hindi name in database, 
+        # Only fetch id of crops which have Hindi name in database,
         # because we are sharing Hindi crops code as of now.
         id_list = set(CropLanguage.objects.filter(language_id=1).values_list('crop_id', flat=True))
     requested_list = set(int(item) for item in requested_item.split('*') if item.isdigit())
@@ -191,7 +193,15 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append('\n')
     today_date = datetime.now()
     raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],) if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
+
+    query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
+    result = run_query(query)
+    dataframe = remove_crop_outliers(ct_data = result)
+    print dataframe
+
+
     query_result = run_query(raw_query)
+    # print query_result
     if not query_result:
         if not all_crop_flag and not all_mandi_flag:
             crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
