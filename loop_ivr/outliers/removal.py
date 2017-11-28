@@ -15,12 +15,19 @@ def remove_crop_outliers(ct_data=None):
 
     combined_transactions_data.to_csv("final_data_after_outliers.csv")
 
-    # ct_data = combined_transactions_data[(combined_transactions_data['D/STD'] > 1.3)]
-    # if ct_data is not
+    for recursion_counter in range(0,4):
+        combined_transactions_data.fillna(0,inplace=True)
+        ct_data = combined_transactions_data[(combined_transactions_data['D/STD'] > 1.3)]
+        if ct_data is not None:
+            combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
+            combined_transactions_data = combined_transactions_data[columnlist_ct]
+            combined_transactions_data = call_methods(combined_transactions_data)
+        else:
+            break
 
-    combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
-    combined_transactions_data = combined_transactions_data[columnlist_ct]
-    combined_transactions_data = call_methods(combined_transactions_data)
+    # combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
+    # combined_transactions_data = combined_transactions_data[columnlist_ct]
+    # combined_transactions_data = call_methods(combined_transactions_data)
 
     combined_transactions_data.to_csv("final_data_after_outliers_1.csv")
     return combined_transactions_data
