@@ -274,7 +274,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     # If caller is calling first time then send crop code to them.
     if PriceInfoIncoming.objects.filter(from_number=from_number).count() == 1:
         crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-        if query_result:
+        if result and not dataframe.empty:
             first_time_caller_message = [first_time_caller,'\n\n', crop_code_list, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
             first_time_caller_message = ''.join(first_time_caller_message)
             #send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller_message)
