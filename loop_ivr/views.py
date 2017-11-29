@@ -185,7 +185,7 @@ def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
     sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
     sms_content = ''.join(sms_content)
     send_info_using_textlocal(farmer_number, sms_content)
-            
+
 @csrf_exempt
 def market_info_response(request):
     if request.method == 'POST':
@@ -284,9 +284,4 @@ def push_message_sms_response(request):
             elif status == 'failed_dnd':
                 outgoing_obj.status = 3
             outgoing_obj.save()
-    return HttpResponse(status=200)
-
-@csrf_exempt
-def test_text_local(request) :
-    logger.debug(request.body)
     return HttpResponse(status=200)

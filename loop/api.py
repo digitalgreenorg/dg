@@ -110,11 +110,13 @@ class BlockAuthorization(Authorization):
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
         kwargs = {}
+        userObject = AdminUser.objects.filter(user_id=bundle.request.user.id)
+        if userObject:
+            return True
         kwargs[self.block_field] = LoopUser.objects.get(
             user_id=bundle.request.user.id).village.block
         obj = object_list.filter(**kwargs).distinct()
-        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
-        if obj or userObject.role == 1:
+        if obj:
             return True
         else:
             raise NotFound("Not allowed to download Block")
@@ -184,10 +186,13 @@ class DayTransportationAuthorization(Authorization):
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
+        #import pdb;pdb.set_trace()
+        userObject = AdminUser.objects.filter(user_id=bundle.request.user.id)
+        if userObject:
+            return True
         obj = object_list.filter(
             user_created_id=bundle.request.user.id).distinct()
-        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
-        if obj or userObject.role == 1:
+        if obj:
             return True
         else:
             raise NotFound("Not allowed to download Transportations")
@@ -814,10 +819,14 @@ class DayTransportationResource(BaseResource):
     hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def obj_create(self, bundle, request=None, **kwargs):
+        #import pdb;pdb.set_trace()
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
-        user = LoopUser.objects.get(user__username=bundle.request.user)
+        #for payments
         if "aggregator" in bundle.data.keys():
             user = LoopUser.objects.get(id=bundle.data["aggregator"]["online_id"])
+        else:
+        #for aggregator app
+            user = LoopUser.objects.get(user__username=bundle.request.user)
         transportationvehicle = TransportationVehicle.objects.get(
             id=bundle.data["transportation_vehicle"]["online_id"])
         attempt = DayTransportation.objects.filter(date=bundle.data[

@@ -19,7 +19,7 @@ class UserListFilter(SimpleListFilter):
         """
         list_tuple = []
         for user in LoopUser.objects.all():
-            list_tuple.append((user.user_id, user.name))
+            list_tuple.append((user.user_id, user.name_en))
         return list_tuple
 
     def queryset(self, request, queryset):
