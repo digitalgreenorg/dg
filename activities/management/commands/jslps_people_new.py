@@ -103,7 +103,8 @@ class Command(BaseCommand):
 					jslps_person, created = \
 						JSLPS_Person.objects.get_or_create(person_code=pc,
 														   person=person,
-														   user_created_id=user_obj.id
+														   user_created_id=user_obj.id,
+														   activity="LIVELIHOOD"
 														   )
 				else:
 					jslps_person = jslps_person_list[0]
@@ -118,7 +119,8 @@ class Command(BaseCommand):
 						jslps_person, created = \
 							JSLPS_Person.objects.get_or_create(person_code=pc,
 															   person=person,
-															   user_created_id=user_obj.id
+															   user_created_id=user_obj.id,
+															   activity="LIVELIHOOD"
 															   )
 					else:
 						jslps_person = jslps_person_list[0]
@@ -127,4 +129,10 @@ class Command(BaseCommand):
 							jslps_person.save()
 				else:
 					wtr.writerow(['Person not saved and duplicate also not exist',pc, "not saved"])
+
+		JSLPS_Person.objects.filter(person_code__in=data_list).update(activity="LIVELIHOOD")
+
+
+
+
 			
