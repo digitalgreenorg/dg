@@ -10,6 +10,7 @@ TYPE_OF_ROLE = (
 ACTIVITY_CHOICES = (
     ('MKSP', 'MKSP'),
     ('LIVELIHOOD', 'LIVELIHOOD'),
+    ('GOTARY', 'GOTARY'),
 )
 
 DAY_CHOICES = (

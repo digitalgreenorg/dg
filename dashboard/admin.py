@@ -298,8 +298,10 @@ class JSLPS_PersongroupAdmin(admin.ModelAdmin):
 
 
 class JSLPS_PersonAdmin(admin.ModelAdmin):
-    list_display = ['id', 'person_code', 'person', 'user_created', 'time_created']
+    list_display = ['id', 'person_code', 'person', 'user_created',
+                    'time_created', 'activity']
     search_fields = ['id', 'person_code', 'person__id']
+    list_filter = ['activity']
 
     def _person(self, obj):
         return "%s:%s" % (obj.person.id, obj.person.person_name)
@@ -344,8 +346,9 @@ class JSLPS_VillageAdmin(admin.ModelAdmin):
 
 class JSLPS_VideoAdmin(admin.ModelAdmin):
     list_display = ['id', 'vc', 'user_created', 'time_created',
-                    '_video']
-    search_fields = ['id', 'vc', 'video']
+                    '_video', 'activity']
+    search_fields = ['id', 'vc']
+    list_filter = ['activity']
 
     def _video(self, obj):
         return "%s:%s" % (obj.video.id, obj.video.title)
@@ -360,6 +363,7 @@ class JSLPS_ScreeningAdmin(admin.ModelAdmin):
                     'screening', '_village', '_dg_screening_id',
                     'user_created', 'time_created']
     search_fields = ['id', 'screenig_code', 'activity', 'screening__village__block__block_name']
+    list_filter = ['activity']
 
     def _dg_screening_id(self, obj):
         return obj.screening.id

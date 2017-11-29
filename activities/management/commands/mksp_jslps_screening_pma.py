@@ -170,13 +170,16 @@ class Command(BaseCommand):
 		for c in root.findall('VedioScreeingMemberDataMKSP'):
 			sc = c.find('VDO_ID').text
 			pc = c.find('MemberId').text
+			try:
+				pc = pc.split('-')[-1]
+			except Exception as e:
+				pc = pc
 			error = 0
 			try:
 				screening = JSLPS_Screening.objects.get(screenig_code = sc)
 				person = JSLPS_Person.objects.get(person_code = pc)
 
 			except (JSLPS_Screening.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
-				print e
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
 					wtrr.writerow(['pma Screening', sc, 'pma Person', pc, e])

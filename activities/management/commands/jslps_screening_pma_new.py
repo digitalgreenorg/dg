@@ -3,6 +3,7 @@ import unicodecsv as csv
 from datetime import datetime 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
 from geographies.models import *
 from people.models import *
 from programs.models import *
@@ -24,9 +25,11 @@ class Command(BaseCommand):
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/screening.xml')
 		root = tree.getroot()
+		user_obj = User.objects.get(username="jslps_bot")
+		data_list = []
 		for c in root.findall('VedioScreeingMasterData'):
-			print c.find('VDO_ID').text
 			sc = c.find('VDO_ID').text
+			data_list .append(sc)
 			vc = c.find('VillageCode').text
 			ac = c.find('AKMCode').text
 			sd = datetime.datetime.strptime(c.find('ScreeningDate').text, '%d/%m/%Y')
@@ -105,8 +108,10 @@ class Command(BaseCommand):
 					screening.save()
 				jslps_screening_list = JSLPS_Screening.objects.filter(screenig_code=sc)
 				if len(jslps_screening_list) == 0:
-					jslps_screening = JSLPS_Screening(screenig_code=sc,screening=screening)
-					jslps_screening.save()
+					jslps_screening, created = \
+						JSLPS_Screening.objects.get_or_create(screenig_code=sc,
+															  screening=screening,
+															  user_created_id=user_obj.id)
 				else:
 					jslps_screening = jslps_screening_list[0]
 					jslps_screening.screening = screening
@@ -127,8 +132,10 @@ class Command(BaseCommand):
 						screening.save()
 					jslps_screening_list = JSLPS_Screening.objects.filter(screenig_code=sc,screening=screening)
 					if len(jslps_screening_list) == 0:
-						jslps_screening = JSLPS_Screening(screenig_code=sc,screening=screening)
-						jslps_screening.save()
+						jslps_screening, created = \
+							JSLPS_Screening(screenig_code=sc,
+											screening=screening,
+											user_created_id=user_obj.id)
 					else:
 						jslps_screening = jslps_screening_list[0]
 						if jslps_screening.screening == None:
@@ -137,6 +144,8 @@ class Command(BaseCommand):
 				else:
 					wtr.writerow(['Screening not saved and duplicate also not exist',sc, "not saved"])
 
+
+		JSLPS_Screening.objects.filter(screenig_code__in=data_list).update(activity="LIVELIHOOD")
 
 		#saving pma
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMemberData?pUsername=admin&pPassword=JSLPSSRI')

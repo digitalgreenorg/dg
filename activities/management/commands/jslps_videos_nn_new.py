@@ -25,27 +25,29 @@ class Command(BaseCommand):
 		tree = ET.parse('jslps_data_integration_files/video.xml')
 		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
+		data_list = []
 		for c in root.findall('VedioMasterData'):
 			vdc = c.find('VideoID').text
+			data_list.append(vdc)
 			vn = c.find('VideoTitle').text
 			vt = int(c.find('VideoType').text)
 			if c.find('Category') is not None: 
 				cg = int(c.find('Category').text)
 			else:
 				cg = None
-				wtr.writerow(['Can not save video without category',vdc,'title', vn, e])
+				wtr.writerow(['Can not save video without category',vdc,'title', vn])
 				continue
 			if c.find('SubCategory') is not None: 
 				scg = int(c.find('SubCategory').text)
 			else:
 				scg = None
-				wtr.writerow(['Can not save video without SubCategory',vdc,'title', vn, e])
+				wtr.writerow(['Can not save video without SubCategory',vdc,'title', vn])
 				continue
 			if c.find('Practice') is not None: 
 				vp = int(c.find('Practice').text)
 			else:
 				vp = None
-				wtr.writerow(['Can not save video without Practice',vdc,'title', vn, e])
+				wtr.writerow(['Can not save video without Practice',vdc,'title', vn])
 				continue
 			if c.find('YouTubeID') is not None: 
 				yid = c.find('YouTubeID').text
@@ -170,6 +172,7 @@ class Command(BaseCommand):
 				else:
 					wtr.writerow(['Video not saved and duplicate also not exist', vdc,'title', vn, e])		
 
+		JSLPS_Video.objects.filter(vc__in=data_list).update(activity="LIVELIHOOD")
 
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
