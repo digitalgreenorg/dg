@@ -26,7 +26,8 @@ from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_
     remaining_crop_line, TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, \
     crop_and_code_hi, ALL_FLAG_TRUE, ALL_FLAG_FALSE
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
-
+import pandas as pd
+import random
 
 def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
@@ -189,9 +190,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append(agg_sms_initial_line)
     price_info_list.append(AGGREGATOR_SMS_NO)
     price_info_list.append('\n')
-    today_date = datetime.now()
-    raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],) if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
-    query_result = run_query(raw_query)
+    query_result = get_raw_crop_data(crop_list, mandi_list)
     if not query_result:
         if not all_crop_flag and not all_mandi_flag:
             crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
@@ -277,3 +276,32 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             #send_sms(AGGREGATOR_SMS_NO, from_number, crop_code_list)
             send_info_using_textlocal(from_number, crop_code_list)
     PriceInfoLog.objects.bulk_create(price_info_log_list)
+
+
+def get_raw_crop_data(crop_list, mandi_list):
+    today_date = datetime.now()
+    raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],)\
+                if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
+    
+    a = datetime(2016, 01, 01)
+    datelist = pd.date_range(a, a + timedelta(days=30))
+    mandi_list = [random.randint(1, 10) for i in range(0, 31)]
+    crop_list = [random.randint(1, 10) for i in range(0, 31)]
+    Avg_Rate = [round(random.uniform(1, 10), 2) for i in range(0, 31)]
+    STD = [round(random.uniform(1, 10), 2) for i in range(0, 31)]
+    df = pd.DataFrame(
+                {
+                    'Date':datelist,
+                    'Mandi':mandi_list,
+                    'Crop':crop_list,
+                    'Avg_Rate':Avg_Rate,
+                    'STD':STD
+                }
+            )
+    df = df.groupby(['Date', 'Mandi', 'Crop']).apply(lambda x: x.sort_values(['Crop','Mandi','Date'],\
+                        ascending=[True,True,False])).reset_index(drop=True)
+
+    for index,row in df.iterrows():
+        print row['Date'], row['Mandi'], row['Crop'], row['Avg_Rate'], row['STD']
+    return run_query(raw_query)
+
