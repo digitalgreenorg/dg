@@ -10,33 +10,37 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):	
 
 		#GEOGRAPHIES ADD
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportMasterDataMKSP?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/geo.xml", 'w')
+		xml_file = open("jslps_data_integration_files/mksp_geo.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
-
-		csv_file = open('jslps_data_integration_files/geo_error.csv', 'wb')
+		village_data_list = []
+		block_data_list = []
+		district_data_list = []
+		csv_file = open('jslps_data_integration_files/mksp_geo_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/geo.xml')
+		tree = ET.parse('jslps_data_integration_files/mksp_geo.xml')
 		root = tree.getroot()
-		state = State.objects.get(id = 2)
+		state = State.objects.get(id=2)
 		user_obj = User.objects.get(username="jslps_bot")
-		for c in root.findall('MasterData'):
+		for c in root.findall('MasterDataMKSP'):
 			dc = c.find('DistrictCode').text
 			dn = unicode(c.find('DistrictName').text)
 			bc = c.find('BlockCode').text
 			bn = unicode(c.find('BlockName').text)
 			vc = c.find('VillageCode').text
 			vn = unicode(c.find('VillageName').text)
-			
+			village_data_list.append(vc)
+			block_data_list.append(bc)
+			district_data_list.append(dc)
 			#District
-			district_set = dict(District.objects.filter(state_id = 2).values_list('id','district_name'))
+			district_set = dict(District.objects.filter(state_id=2).values_list('id','district_name'))
 			if dn not in district_set.values():
 				try:
 					dist, created = \
 						District.objects.get_or_create(district_name = dn,
-													   state = state)
+													   state=state)
 					jslps.new_count += 1
 					print dc, "District Saved in DG Table"
 				except Exception as e:
@@ -56,7 +60,7 @@ class Command(BaseCommand):
 						JSLPS_District.objects.get_or_create(district_code = dc,
 															 district_name = dn,
 										                     district = district,
-										                     activity='LIVELIHOOD',
+										                     activity='MKSP',
 										                     user_created_id=user_obj.id)
 					jd.user_created_id=user_obj.id
 					jd.save()
@@ -71,8 +75,8 @@ class Command(BaseCommand):
 			block_set = dict(Block.objects.filter(district_id = district.id).values_list('id','block_name'))
 			if bn not in block_set.values():
 				try:
-					blck, created = Block.objects.get_or_create(block_name = bn,
-																district = district)
+					blck, created = Block.objects.get_or_create(block_name=bn,
+																district=district)
 					jslps.new_count += 1
 					print bc, "block saved in DG table"
 				except Exception as e:
@@ -93,7 +97,7 @@ class Command(BaseCommand):
 														   block_name = bn,
 														   block = block,
 														   district_code=dc,
-														   activity='LIVELIHOOD',
+														   activity='MKSP',
 														   user_created_id=user_obj.id)
 					jb.user_created_id=user_obj.id
 					jb.save()
@@ -111,7 +115,7 @@ class Command(BaseCommand):
 					vil, created = Village.objects.get_or_create(village_name = vn,
 																 block = block)
 					jslps.new_count += 1
-					print vc, "village saved in geaography_village table"
+					print vc, "village saved in geaography_village table", vil.id
 				except Exception as e:
 					print vc, e
 					if "Duplicate entry" in str(e):
@@ -131,7 +135,7 @@ class Command(BaseCommand):
 															 Village = village,
 															 user_created_id=user_obj.id,
 															 block_code=bc,
-															 activity='LIVELIHOOD'
+															 activity='MKSP'
 															)
 
 					print vc, "village saved in JSLPS_VILLAGE Table"
@@ -139,5 +143,9 @@ class Command(BaseCommand):
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
 					wtr.writerow(['JSLPS village',vc, e, c])
+
+		JSLPS_Village.objects.filter(village_code__in=village_data_list).update(activity="MKSP")
+		JSLPS_District.objects.filter(district_code__in=district_data_list).update(activity="MKSP")
+		JSLPS_Block.objects.filter(block_code__in=block_data_list).update(activity="MKSP")
 
 

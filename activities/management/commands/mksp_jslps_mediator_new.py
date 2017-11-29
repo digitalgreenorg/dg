@@ -11,43 +11,43 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportAKMData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportAKMDataMKSP?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/mediator.xml", 'w')
+		xml_file = open("jslps_data_integration_files/mksp_mediator.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		partner = Partner.objects.get(id = 24)
-		csv_file = open('jslps_data_integration_files/mediator_error.csv', 'wb')
+		partner = Partner.objects.get(id=24)
+		animator_data_list = []
+		csv_file = open('jslps_data_integration_files/mksp_mediator_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/mediator.xml')
+		tree = ET.parse('jslps_data_integration_files/mksp_mediator.xml')
 		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
-		data_list = []
-
-		for c in root.findall('AKMData'):
+		print len(root.findall('AKMDataMKSP'))
+		for c in root.findall('AKMDataMKSP'):
 			ac = c.find('AKM_ID').text
 			an = unicode(c.find('AKMName').text)
 			gender = c.find('Gender').text
 			vc = c.find('VillageCode').text
 			dc = c.find('DistrictCode').text
-			data_list.append(ac)
+			animator_data_list.append(ac)
 			if c.find('PhoneNo') is not None:
 				phone = c.find('PhoneNo').text
 			else:
 				phone = ''
 			error = 0
 			try:
-				district = JSLPS_District.objects.get(district_code = dc)
+				district = JSLPS_District.objects.get(district_code=dc)
 			except JSLPS_District.DoesNotExist as e:
-				wtr.writerow(['JSLPS district not exist '+str(ac), dc, e])
+				wtr.writerow(['JSLPS district not exist '+str(ac), dc, e, c])
 				continue
 			
 			try:
-				village_list = [JSLPS_Village.objects.get(village_code = vc)]
+				village_list = [JSLPS_Village.objects.get(village_code=vc)]
 			except Exception as e:
 				village_list = []
-				wtr.writerow(['village not exist '+str(ac), vc, e])
+				wtr.writerow(['village not exist '+str(ac), vc, e, c])
 
 			try:
 				animator, created = \
@@ -80,8 +80,9 @@ class Command(BaseCommand):
 					jslps_animator, created = \
 						JSLPS_Animator.objects.get_or_create(animator_code=ac,
 															 animator=animator,
-															 activity="LIVELIHOOD",
-															 user_created_id=user_obj.id)
+															 user_created_id=user_obj.id,
+															 activity='MKSP'
+															 )
 				else:
 					jslps_animator = jslps_animator_list[0]
 					jslps_animator.animator = animator
@@ -112,7 +113,7 @@ class Command(BaseCommand):
 						jslps_animator, created = \
 							JSLPS_Animator.objects.get_or_create(animator_code=ac,
 																 animator=animator,
-																 activity="LIVELIHOOD",
+																 activity='MKSP',
 																 user_created_id=user_obj.id)
 					else:
 						jslps_animator = jslps_animator_list[0]
@@ -122,8 +123,10 @@ class Command(BaseCommand):
 				else:
 					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])
 			
-		JSLPS_Animator.objects.filter(animator_code__in=data_list).update(activity='LIVELIHOOD')
-		
+
+		JSLPS_Animator.objects.filter(animator_code__in=animator_data_list).update(activity='MKSP')
+
+
 		#add camera operator to mediator table
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportCameraOperatorMaster?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
@@ -136,13 +139,13 @@ class Command(BaseCommand):
 		wtrr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/mediator_co.xml')
 		root = tree.getroot()
-		new_data_list = []
+		camera_lst = []
 		for c in root.findall('CameraOperatorMasterData'):
 			ac = c.find('CameraOperatorID').text
 			an = unicode(c.find('CameraOperatorName').text)
 			gender = 'F'
 			dc = c.find('DistrictCode').text
-			new_data_list.append(ac)
+			camera_lst.append(ac)
 			try:
 				district = JSLPS_District.objects.get(district_code = dc)
 			except JSLPS_District.DoesNotExist as e:
@@ -170,7 +173,7 @@ class Command(BaseCommand):
 					jslps_animator, created = \
 						JSLPS_Animator.objects.get_or_create(animator_code=ac,
 									   						 animator=animator,
-									   						 activity="LIVELIHOOD",
+									   						 activity='MKSP',
 									   						 user_created_id=user_obj.id)
 				else:
 					jslps_animator = jslps_animator_list[0]
@@ -188,8 +191,8 @@ class Command(BaseCommand):
 						jslps_animator, created = \
 						JSLPS_Animator.objects.get_or_create(animator_code=ac,
 									   						 animator=animator,
-									   						 activity="LIVELIHOOD",
-									   						 user_created_id=user_obj.id)
+									   						 user_created_id=user_obj.id,
+									   						 activity='MKSP')
 					else:
 						jslps_animator = jslps_animator_list[0]
 						if jslps_animator.animator == None:
@@ -198,4 +201,6 @@ class Command(BaseCommand):
 				else:
 					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])
 
-		JSLPS_Animator.objects.filter(animator_code__in=new_data_list).update(activity='LIVELIHOOD')
+		JSLPS_Animator.objects.filter(animator_code__in=camera_lst).update(activity='LIVELIHOOD')
+
+

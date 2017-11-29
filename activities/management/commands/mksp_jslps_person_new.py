@@ -11,21 +11,26 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationDataMKSP?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/person.xml", 'w')
+		xml_file = open("jslps_data_integration_files/mksp_person.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
 		user_obj = User.objects.get(username="jslps_bot")
-		csv_file = open('jslps_data_integration_files/person_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/mksp_person_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/person.xml')
+		tree = ET.parse('jslps_data_integration_files/mksp_person.xml')
 		root = tree.getroot()
 		data_list = []
-		for c in root.findall('SRIRegistrationData'):
+		for c in root.findall('SRIRegistrationDataMKSP'):
 			pc = c.find('MemID').text
+			# Mem Id coming as combination
+			try:
+				pc = c.split('-')[-1]
+			except Exception as e:
+				pc = pc
 			pn = unicode(c.find('MemberName').text)
 			data_list.append(pc)
 			if c.find('FatherName') is not None:
@@ -61,14 +66,15 @@ class Command(BaseCommand):
 
 			if error == 1:
 				try:
-					person, created = Person.objects.get_or_create(person_name = pn,
-														  father_name = pfn,
-														  age = age,
-														  phone_no = phone,
-														  gender = gender,
-														  village = village.Village,
-														  partner = partner,
-														  user_created_id=user_obj.id)
+					person, created = \
+						Person.objects.get_or_create(person_name = pn,
+													 father_name = pfn,
+													 age = age,
+													 phone_no = phone,
+													 gender = gender,
+													 village = village.Village,
+													 partner = partner,
+													 user_created_id=user_obj.id)
 					jslps.new_count += 1
 				except Exception as e:
 					person = None
@@ -79,15 +85,16 @@ class Command(BaseCommand):
 						jslps.duplicate_count += 1
 			else:
 				try:
-					person, created = Person.objects.get_or_create(person_name = pn,
-														  father_name = pfn,
-														  age = age,
-														  phone_no = phone,
-														  gender = gender,
-														  village = village.Village,
-														  group = group.group,
-														  partner = partner,
-														  user_created_id=user_obj.id)
+					person, created = \
+						Person.objects.get_or_create(person_name = pn,
+													 father_name = pfn,
+													 age = age,
+													 phone_no = phone,
+													 gender = gender,
+													 village = village.Village,
+													 group = group.group,
+													 partner = partner,
+													 user_created_id=user_obj.id)
 					jslps.new_count += 1
 				except Exception as e:
 					person = None
@@ -103,7 +110,8 @@ class Command(BaseCommand):
 					jslps_person, created = \
 						JSLPS_Person.objects.get_or_create(person_code=pc,
 														   person=person,
-														   user_created_id=user_obj.id
+														   user_created_id=user_obj.id,
+														   activity="MKSP"
 														   )
 				else:
 					jslps_person = jslps_person_list[0]
@@ -118,7 +126,8 @@ class Command(BaseCommand):
 						jslps_person, created = \
 							JSLPS_Person.objects.get_or_create(person_code=pc,
 															   person=person,
-															   user_created_id=user_obj.id
+															   user_created_id=user_obj.id,
+															   activity="MKSP"
 															   )
 					else:
 						jslps_person = jslps_person_list[0]
@@ -127,4 +136,6 @@ class Command(BaseCommand):
 							jslps_person.save()
 				else:
 					wtr.writerow(['Person not saved and duplicate also not exist',pc, "not saved"])
-			
+
+		JSLPS_Person.objects.filter(person_code__in=data_list).update(activity="MKSP")
+

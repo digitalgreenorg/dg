@@ -11,19 +11,20 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGroupData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGroupDataMKSP?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/group.xml", 'w')
+		xml_file = open("jslps_data_integration_files/mksp_group.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
-		data_list = []
+
 		partner = Partner.objects.get(id = 24)
-		csv_file = open('jslps_data_integration_files/group_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/mksp_group_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/group.xml')
+		tree = ET.parse('jslps_data_integration_files/mksp_group.xml')
 		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
-		for c in root.findall('GroupData'):
+		data_list = []
+		for c in root.findall('GroupDataMKSP'):
 			gc = c.find('GroupCode').text
 			gn = unicode(c.find('Group_Name').text)
 			vc = c.find('VillageCode').text
@@ -33,10 +34,11 @@ class Command(BaseCommand):
 				group_set = dict(PersonGroup.objects.filter(village_id = village.Village.id).values_list('id','group_name'))
 				if gn not in group_set.values():
 					try:
-						gp, created = PersonGroup.objects.get_or_create(group_name = gn,
-															   village = village.Village,
-															   partner = partner,
-															   user_created_id=user_obj.id)
+						gp, created = \
+							PersonGroup.objects.get_or_create(group_name = gn,
+															  village = village.Village,
+															  partner = partner,
+															  user_created_id=user_obj.id)
 						jslps.new_count += 1
 						print "Group saved in old"
 					except Exception as e:
@@ -59,7 +61,8 @@ class Command(BaseCommand):
 					if gc not in group_added:
 						jg, created = JSLPS_Persongroup.objects.get_or_create(group_code = gc,
 																	          group = group,
-																	          user_created_id=user_obj.id)
+																	          user_created_id=user_obj.id,
+																	          activity="MKSP")
 				except Exception as e:
 					print gc, e
 					if "Duplicate entry" not in str(e):
@@ -70,4 +73,4 @@ class Command(BaseCommand):
 					jslps.other_error_count += 1
 					wtr.writerow(['village',vc, e])
 
-		JSLPS_Persongroup.objects.filter(group_code__in=data_list).update(activity="LIVELIHOOD")
+		JSLPS_Persongroup.objects.filter(group_code__in=data_list).update(activity="MKSP")

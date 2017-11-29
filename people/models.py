@@ -5,6 +5,7 @@ from coco.data_log import delete_log, save_log
 from coco.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES, TYPE_OF_ROLE
 from farmerbook.managers import FarmerbookManager
 from geographies.models import *
+from coco.base_models import ACTIVITY_CHOICES
 from programs.models import Partner
 from training.log.training_log import enter_to_log
 
@@ -98,6 +99,7 @@ class JSLPS_Animator(CocoModel):
     animator_code = models.CharField(max_length=100)
     animator = models.ForeignKey(Animator, null=True, blank=True)
     assigned_villages = models.ManyToManyField(JSLPS_Village, related_name='jslps_assigned_villages', through='JSLPS_AnimatorAssignedVillage', blank=True)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = "JSLPS Animator"
@@ -110,6 +112,7 @@ class JSLPS_AnimatorAssignedVillage(CocoModel):
     id = models.AutoField(primary_key=True)
     animator = models.ForeignKey(JSLPS_Animator)
     village = models.ForeignKey(JSLPS_Village)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = "JSLPS AnimatorAssignedVillage"
@@ -119,6 +122,7 @@ class JSLPS_Persongroup(CocoModel):
     id = models.AutoField(primary_key=True)
     group_code = models.CharField(max_length=100)
     group = models.ForeignKey(PersonGroup, null=True, blank=True)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = "JSLPS Persongroup"
@@ -128,6 +132,7 @@ class JSLPS_Person(CocoModel):
     id = models.AutoField(primary_key=True)
     person_code = models.CharField(max_length=100)
     person = models.ForeignKey(Person, null=True, blank=True)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = "JSLPS Person"

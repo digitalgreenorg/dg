@@ -2,7 +2,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
 
-from coco.base_models import CocoModel
+from coco.base_models import CocoModel, ACTIVITY_CHOICES
 from coco.data_log import delete_log, save_log
 from farmerbook.managers import VillageFarmerbookManager
 from libs.geocoder import Geocoder
@@ -104,6 +104,7 @@ class JSLPS_District(CocoModel):
     district_code = models.CharField(max_length=100)
     district_name = models.CharField(max_length=100)
     district = models.ForeignKey(District, null=True, blank=True)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = "JSLPS District"
@@ -115,6 +116,7 @@ class JSLPS_Block(CocoModel):
     block_name = models.CharField(max_length=100)
     district_code = models.CharField(max_length=100)
     block = models.ForeignKey(Block, null=True, blank=True)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = "JSLPS Block"
@@ -127,6 +129,7 @@ class JSLPS_Village(CocoModel):
     village_name = models.CharField(max_length=100)
     block_code = models.CharField(max_length=100)
     Village = models.ForeignKey(Village, null=True, blank=True)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = "JSLPS Village"
