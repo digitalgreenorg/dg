@@ -30,6 +30,8 @@ def remove_crop_outliers(ct_data=None):
     # combined_transactions_data = call_methods(combined_transactions_data)
 
     combined_transactions_data.to_csv("final_data_after_outliers_1.csv")
+    combined_transactions_data = combined_transactions_data.groupby(group_by_list).agg({'Av_Rate':['mean'], 'STD' : ['mean']}).reset_index()
+    combined_transactions_data.columns = combined_transactions_data.columns.droplevel(level=1)
     return combined_transactions_data
 
 def call_methods(combined_transactions_data):

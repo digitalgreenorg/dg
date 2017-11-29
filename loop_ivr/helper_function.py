@@ -191,17 +191,15 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append(agg_sms_initial_line)
     price_info_list.append(AGGREGATOR_SMS_NO)
     price_info_list.append('\n')
-    today_date = datetime.now()
-    raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],) if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
+    # today_date = datetime.now()
+    # raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],) if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
+    # query_result = run_query(raw_query)
 
     query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
     result = run_query(query)
     dataframe = remove_crop_outliers(ct_data = result)
-    # print dataframe
 
-    query_result = run_query(raw_query)
-    print query_result
-    if not query_result:
+    if (not result) or dataframe.empty:
         if not all_crop_flag and not all_mandi_flag:
             crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
             mandi_name_list = ','.join(map(lambda mandi_id: mandi_map[mandi_id].encode("utf-8").rstrip(mandi_hi).rstrip(), mandi_list))
@@ -219,8 +217,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         price_info_list.append(('\n\n%s')%(crop_code_list,))
     else:
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
-        for row in query_result:
-            crop, mandi, date, min_price, max_price, mean = row['crop'], row['mandi'], row['date'], int(row['minp']), int(row['maxp']), int(row['mean'])
+        for index, row in dataframe.iterrows():
+            crop, mandi, date, Av_Rate, STD = row['Crop'], row['Market_Real'], row['Date'], round(row['Av_Rate']), int(row['STD'])
             if crop != prev_crop or mandi != prev_mandi:
                 if not all_crop_flag and not all_mandi_flag:
                     crop_mandi_comb.append((crop,mandi))
@@ -235,13 +233,12 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                     temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                 price_info_list.append(temp_str)
                 prev_crop, prev_mandi = crop, mandi
-            if max_price-min_price >= 2:
-                min_price = mean-1
-                max_price = mean+1
-            if min_price != max_price:
+            if STD == 0:
+                temp_str = ('%s %s: %s %s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(Av_Rate))
+            elif STD < 3:
+                min_price = Av_Rate - STD
+                max_price = Av_Rate + STD
                 temp_str = ('%s %s: %s %s-%s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(min_price),str(max_price))
-            else:
-                temp_str = ('%s %s: %s %s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(max_price))
             price_info_list.append(temp_str)
     # Save combination of crop and mandi for which data is not present in query on if query not for all mandi and crops.
     if not all_crop_flag and not all_mandi_flag:
@@ -251,7 +248,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                 price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
                             crop_id=crop, mandi_id=mandi)
                 price_info_log_list.append(price_info_log_obj)
-                if query_result:
+                if result and (not dataframe.empty):
                     crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                     mandi_name = mandi_map[mandi].encode("utf-8")
                     if crop != prev_crop:
@@ -269,7 +266,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
         price_info_incoming_obj.return_result_to_app = 0
         price_info_incoming_obj.info_status = 1
         price_info_incoming_obj.save()
-        #send_info(from_number, final_result)
+        # send_info(from_number, final_result)
         send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
         price_info_incoming_obj.save()
     else:
@@ -283,6 +280,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             #send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller_message)
             send_info_using_textlocal(from_number, first_time_caller_message)
         else:
+            pass
             #send_sms(AGGREGATOR_SMS_NO, from_number, crop_code_list)
             send_info_using_textlocal(from_number, crop_code_list)
     PriceInfoLog.objects.bulk_create(price_info_log_list)
