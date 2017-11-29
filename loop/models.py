@@ -114,7 +114,7 @@ class Village(LoopModel):
     village_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.village_name, self.block.block_name)
+        return "%s (%s) (%s) (%s)" % (self.village_name_en, self.block.block_name_en, self.block.district.district_name_en, self.block.district.state.state_name_en)
 
     class Meta:
         unique_together = ("village_name", "block")
