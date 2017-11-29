@@ -26,7 +26,6 @@ class Command(BaseCommand):
 		root = tree.getroot()
 		data_list = []
 		for c in root.findall('GoatryVideoData'):
-			import pdb;pdb.set_trace()
 			vdc = c.find('VideoID').text
 			vn = c.find('VideoTitle').text
 			vt = int(c.find('VideoType').text)
