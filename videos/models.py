@@ -13,6 +13,7 @@ from coco.base_models import VIDEO_GRADE
 from coco.base_models import VIDEO_REVIEW
 from coco.base_models import REVIEW_BY
 from coco.base_models import PARENT_CATEGORY
+from coco.base_models import ACTIVITY_CHOICES
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator
@@ -237,6 +238,7 @@ class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)
     vc = models.CharField(max_length=100)
     video = models.ForeignKey(Video, null=True, blank=True)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = "JSLPS Video"
