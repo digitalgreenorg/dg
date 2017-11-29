@@ -26,14 +26,11 @@ from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_
     remaining_crop_line, TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, \
     crop_and_code_hi, ALL_FLAG_TRUE, ALL_FLAG_FALSE
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
-<<<<<<< HEAD
 import pandas as pd
 import random
-=======
 
 from loop_ivr.outliers.removal import remove_crop_outliers
 
->>>>>>> origin/outlier_removal_loop
 
 def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
