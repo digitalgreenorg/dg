@@ -293,6 +293,13 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                                                                                                Sum('amount'),
                                                                                                Count('farmer_id',
                                                                                                      distinct=True))
+
+    #Checking if we need to apply incorrect farmer phone model on payment data
+    date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    DATE_INCORRECT_FARMER_PHONE_MODEL = datetime.datetime.strptime("2017-11-15", "%Y-%m-%d")
+    if date_start >= DATE_INCORRECT_FARMER_PHONE_MODEL:
+        combined_ct_queryset = combined_ct_queryset.filter(date__gte=F('farmer__correct_phone_date'))
+
     result = []
     daily_pay_list = []
 

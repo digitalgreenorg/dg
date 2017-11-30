@@ -1760,7 +1760,6 @@ function get_payments_data() {
       'start_date': payments_start_date,
       'end_date': payments_to_date,
       'aggregator_id': aggregator_id
-      'state': selected_aggregator_state
     }).done(function(data) {
       hideLoader();
       $('#aggregator_payment_tab').show();
