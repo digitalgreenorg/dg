@@ -262,15 +262,21 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append(('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER))
     final_result = ''.join(price_info_list)
     price_info_incoming_obj.price_result = final_result
-    if len(final_result) >= 2000 or price_info_incoming_obj.call_source==3:
-        price_info_incoming_obj.return_result_to_app = 0
-        price_info_incoming_obj.info_status = 1
-        price_info_incoming_obj.save()
-        # send_info(from_number, final_result)
-        send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
-        price_info_incoming_obj.save()
-    else:
-        price_info_incoming_obj.save()
+
+    price_info_incoming_obj.return_result_to_app = 0
+    price_info_incoming_obj.info_status = 1
+    price_info_incoming_obj.save()
+    send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
+
+    # if len(final_result) >= 2000 or price_info_incoming_obj.call_source==3:
+    #     price_info_incoming_obj.return_result_to_app = 0
+    #     price_info_incoming_obj.info_status = 1
+    #     price_info_incoming_obj.save()
+    #     # send_info(from_number, final_result)
+    #     send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
+    #     price_info_incoming_obj.save()
+    # else:
+    #     price_info_incoming_obj.save()
     # If caller is calling first time then send crop code to them.
     if PriceInfoIncoming.objects.filter(from_number=from_number).count() == 1:
         crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)

@@ -189,7 +189,7 @@ def crop_price_query(request):
             price_info_incoming_obj = PriceInfoIncoming.objects.filter(call_id=call_id,from_number=farmer_number,
                                         to_number=dg_number)
             # If it is second try, then take this object else create new object.
-            if len(price_info_incoming_obj) > 0:
+            if price_info_incoming_obj.count() > 0:
                 price_info_incoming_obj = price_info_incoming_obj[0]
                 price_info_incoming_obj.prev_query_code = price_info_incoming_obj.query_code
                 price_info_incoming_obj.prev_info_status = price_info_incoming_obj.info_status
