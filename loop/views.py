@@ -57,11 +57,20 @@ HELPLINE_NUMBER = "01139595953"
 
 @csrf_exempt
 def recruitment(request):
-    body = str(request.body)
+    body = json.loads(request.body)
+    #body = str(request.body)
     if request.method == 'POST':
+
         try:
             file = open("testfile.txt","a") 
-            file.write(body)
+            for bundle in body:
+                try:
+                    lat = bundle["lat"]
+                    lng = bundle["lng"]
+                    timestamp = bundle["timestamp"]
+                except:
+                    return HttpResponse(json.dumps({'message': '500, JSON Format Error'}), status=500)
+                file.write(lat+" "+lng+" "+timestamp+"\n")
             file.write("\n\n\n\n\n\n\n\n")
             file.close()
         except:
