@@ -174,13 +174,13 @@ def filter_data(request):
 
     if(int(state_id) < 0):
         #country filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id')
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state__country=country_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state__country=country_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
     elif(int(state_id)>0):
         #state filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id')
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state=state_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state=state_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
@@ -250,12 +250,17 @@ def total_static_data(request):
     data = json.dumps(jsonify(chart_dict), cls=DjangoJSONEncoder)
     return HttpResponse(data)
 
+def validate_phone_number(phone, phone_digit, phone_start):
+        if len(phone) == int(phone_digit):
+            if phone.startswith(tuple(phone_start.split(","))):
+                return phone
+        return None
 
 def calculate_inc_default(V):
     return 0.25 * V
 
 
-def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=None, aggregator_list=None):
+def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=None, aggregator_list=None, farmer_list=None):
     if aggregator_list is not None:
         user_qset = LoopUser.objects.filter(user__in=aggregator_list).values_list('id', flat=True)
     else:
@@ -265,7 +270,7 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
     parameters_dictionary_for_outliers = {
         'mandi__in': mandi_list, 'aggregator__user__in': aggregator_list}
     parameters_dictionary_for_ct = {'date__gte': start_date, 'date__lte': end_date,
-                                    'mandi__in': mandi_list, 'user_created__id__in': aggregator_list}
+                                    'mandi__in': mandi_list, 'user_created__id__in': aggregator_list, 'farmer__in': farmer_list}
 
     arguments_for_ct = {}
     arguments_for_aggregator_incentive = {}
@@ -612,6 +617,21 @@ def calculate_gaddidar_share_payments(start_date, end_date, mandi_list=None, agg
                        'gaddidar_discount': round(gc_discount,3), 'comment': comment,'quantity__sum': round(CT['quantity__sum'],2)})
     return result
 
+def get_farmers_with_valid_phone_number():
+
+    all_phone_num = Farmer.objects.values('id', 'phone', 'village__block__district__state__phone_digit', 'village__block__district__state__phone_start')
+    dict_phone_num ={}
+    for farmer in all_phone_num:
+        farmer['phone'] = validate_phone_number(farmer['phone'], farmer['village__block__district__state__phone_digit'], farmer['village__block__district__state__phone_start'])
+        if farmer['phone'] not in dict_phone_num.keys():
+            dict_phone_num[farmer['phone']] = []
+        dict_phone_num[farmer['phone']].append(farmer['id'])
+
+    farmer_list = []
+    for farmer in all_phone_num:
+        if farmer['phone'] is not None and len(dict_phone_num[farmer['phone']]) <= 3: #max 3 farmers have same phone number
+            farmer_list.append(farmer['id'])
+    return farmer_list 
 
 def payments(request):
     start_date = request.GET['start_date']
@@ -662,7 +682,22 @@ def payments(request):
 
     gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
 
-    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date)
+    date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    DATE_INCORRECT_FARMER_MODEL = datetime.datetime.strptime("2017-11-01", "%Y-%m-%d")
+    if date_start >= DATE_INCORRECT_FARMER_MODEL:
+        aggregator_incentive = []
+        aggregators = LoopUser.objects.all()
+        farmers = get_farmers_with_valid_phone_number()
+        for aggregator in aggregators:
+            state = aggregator.village.block.district.state.state_name_en
+            agg_list = []
+            agg_list.append(aggregator.user.id)
+            if(state == 'Bihar'):
+                aggregator_incentive.extend(calculate_aggregator_incentive(start_date, end_date, None, agg_list, farmers))
+            else:
+                aggregator_incentive.extend(calculate_aggregator_incentive(start_date, end_date, None, agg_list, None))
+    else:
+        aggregator_incentive = calculate_aggregator_incentive(start_date, end_date)
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
