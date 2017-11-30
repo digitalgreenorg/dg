@@ -46,54 +46,6 @@
   </li>
 </ul>
 {% endblock %} {% block content %}
-<div id="loader" class="center">
-  <div class="preloader-wrapper active">
-    <div class="spinner-layer spinner-blue">
-      <div class="circle-clipper left">
-        <div class="circle"></div>
-      </div>
-      <div class="gap-patch">
-        <div class="circle"></div>
-      </div>
-      <div class="circle-clipper right">
-        <div class="circle"></div>
-      </div>
-    </div>
-    <div class="spinner-layer spinner-red">
-      <div class="circle-clipper left">
-        <div class="circle"></div>
-      </div>
-      <div class="gap-patch">
-        <div class="circle"></div>
-      </div>
-      <div class="circle-clipper right">
-        <div class="circle"></div>
-      </div>
-    </div>
-    <div class="spinner-layer spinner-yellow">
-      <div class="circle-clipper left">
-        <div class="circle"></div>
-      </div>
-      <div class="gap-patch">
-        <div class="circle"></div>
-      </div>
-      <div class="circle-clipper right">
-        <div class="circle"></div>
-      </div>
-    </div>
-    <div class="spinner-layer spinner-green">
-      <div class="circle-clipper left">
-        <div class="circle"></div>
-      </div>
-      <div class="gap-patch">
-        <div class="circle"></div>
-      </div>
-      <div class="circle-clipper right">
-        <div class="circle"></div>
-      </div>
-    </div>
-  </div>
-</div>
 <div id="modal1" class="modal">
   <div class="modal-content">
     <h4>Invalid Date Range</h4>
@@ -104,22 +56,75 @@
   </div>
 </div>
 <div id="payments_div" hide>
-  <div class="row">
-    <div class="input-field col s4 m2 offset-m3">
-      <label for="payments_from_date">From Date</label>
-      <input id="payments_from_date" placeholder="From Date" type="text" class="datepicker black-text">
+  <div class="row valign-wrapper">
+    <div class="col s5 m5">
+      <div class="input-field col s6 m4 offset-m2">
+        <label for="payments_from_date">From Date</label>
+        <input id="payments_from_date" placeholder="From Date" type="text" class="datepicker black-text">
+      </div>
+      <div class="input-field col s6 m4 offset-m1">
+        <label for="payments_to_date">To Date</label>
+        <input id="payments_to_date" placeholder="To Date" type="text" class="datepicker black-text">
+      </div>
     </div>
-    <div class="input-field col s4 m2">
-      <label for="payments_to_date">To Date</label>
-      <input id="payments_to_date" placeholder="To Date" type="text" class="datepicker black-text">
-    </div>
-    <a class="col s4 m2 waves-effect waves-light grey darken-3 white-text btn" onclick="get_payments_data()">GET DATA</a>
-  </div>
-  <div class="row" id="aggregator_payment_tab">
-    <div class="input-field col s8 m4 offset-m3">
+    <div class="input-field col s5 m3">
       <select id="aggregator_payments" class="initialized"></select>
     </div>
-    <a class="col s4 m2 waves-effect waves-light btn grey darken-3 white-text" id="download-payment-sheet">Download</a>
+    <div class="col s2 m4">
+      <a class="col s4 m4 offset-m1 waves-effect waves-light grey darken-3 white-text btn" onclick="get_payments_data()">GET DATA</a>
+      <a class="col s4 m4 offset-s1 offset-m1 waves-effect waves-light btn grey darken-3 white-text" id="download_payment_sheet">Download</a>
+    </div>
+  </div>
+  <div id="loader" class="center">
+    <div class="preloader-wrapper active">
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" id="aggregator_payment_tab">
+    
     <div id="aggregator_payment_details">
       <table style="width:100%">
         <tr id="outliers">
