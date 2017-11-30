@@ -147,11 +147,15 @@ def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
 
 @csrf_exempt
 def market_info_response(request):
+    logger.debug("Reached here in Market Info Response View")
+    logger.debug(request)
+    logger.debug(request.body)
+
     if request.method == 'POST':
         status = str(request.POST.getlist('Status')[0])
         outgoing_call_id = str(request.POST.getlist('CallSid')[0])
         price_info_incoming_obj = PriceInfoIncoming.objects.filter(call_id=outgoing_call_id).order_by('-id')
-        price_info_incoming_obj = price_info_incoming_obj[0] if len(price_info_incoming_obj) > 0 else ''
+        price_info_incoming_obj = price_info_incoming_obj[0] if price_info_incoming_obj.count() > 0 else ''
         # If call failed then send acknowledgement to user
         if status != 'completed':
             # if call found in our database, then fetch number of caller and send SMS
@@ -183,7 +187,6 @@ def crop_price_query(request):
             query_code = str(request.GET.get('digits')).strip('"')
         except Exception as e:
             query_code = ''
-        logger.debug("Query_code : " + query_code)
         # Check if its retry or first time request.
         try:
             # Search if this request generated in second try.
