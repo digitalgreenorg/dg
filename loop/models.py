@@ -271,6 +271,7 @@ class Gaddidar(LoopModel):
     gaddidar_name = models.CharField(max_length=100)
     gaddidar_phone = models.CharField(max_length=13)
     mandi = models.ForeignKey(Mandi)
+    mandis = models.ManyToManyField(Mandi,through="GaddidarAssignedMandi",related_name="assigned_all_mandis",blank=True)
     is_visible = models.BooleanField(default=True)
     gaddidar_name_en = models.CharField(max_length=100)
     discount_criteria = models.IntegerField(choices=DISCOUNT_CRITERIA, default=0)
@@ -280,6 +281,9 @@ class Gaddidar(LoopModel):
     def __unicode__(self):
         return self.gaddidar_name
 
+    def get_mandis(self):
+        return self.mandis.all()
+
     class Meta:
         unique_together = ("gaddidar_phone", "gaddidar_name","mandi")
 
@@ -288,6 +292,13 @@ pre_delete.connect(save_log, sender=Gaddidar)
 post_save.connect(save_admin_log, sender=Gaddidar)
 pre_delete.connect(save_admin_log, sender = Gaddidar)
 
+class GaddidarAssignedMandi(LoopModel):
+    """docstring for GaddidarAssignedMandi"""
+    id = models.AutoField(primary_key=True)
+    gaddidar = models.ForeignKey(Gaddidar)
+    mandi = models.ForeignKey(Mandi)
+    is_visible = models.BooleanField(default=True)
+        
 class Farmer(LoopModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
