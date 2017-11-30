@@ -56,6 +56,19 @@ from dg.settings import DATABASES
 HELPLINE_NUMBER = "01139595953"
 
 @csrf_exempt
+def recruitment(request):
+    body = str(request.body)
+    if request.method == 'POST':
+        try:
+            file = open("testfile.txt","a") 
+            file.write(body)
+            file.write("\n\n\n\n\n\n\n\n")
+            file.close()
+        except:
+            return HttpResponse(json.dumps({'message': '500, error'}), status=500)
+    return HttpResponse(json.dumps({'message': '200, successfully saved'}), status=200)
+
+@csrf_exempt
 def login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -150,6 +163,7 @@ def download_data_workbook(request):
 
 @csrf_exempt
 def farmer_payments(request):
+    import pdb;pdb.set_trace()
     body = json.loads(request.body)
     if request.method == 'PATCH':
         for bundle in body.get("objects"):
@@ -1020,3 +1034,5 @@ def broadcast_audio_request(request):
         return audio_url_response
     else:
         return HttpResponse(status=200)
+
+

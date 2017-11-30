@@ -101,4 +101,5 @@ urlpatterns = patterns('',
     url(r'^get_global_filter_data/', get_global_filter),
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loop/admin/'}),
     url(r'^admin/', include(loop_admin.urls)),
+    url(r'^direction/',recruitment),
     )
