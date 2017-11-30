@@ -242,6 +242,10 @@ def crop_price_query(request):
     return HttpResponse(status=403)
 
 def crop_price_sms_content(request):
+    logger.debug("Reached here in Crop Price SMS Content")
+    logger.debug(request)
+    logger.debug(request.body)
+
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
@@ -264,6 +268,10 @@ def crop_price_sms_content(request):
     return HttpResponse(status=403)
 
 def no_code_message(request):
+    logger.debug("Reached here in NO CODE MESSAGE")
+    logger.debug(request)
+    logger.debug(request.body)
+
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
@@ -275,6 +283,10 @@ def no_code_message(request):
     return HttpResponse(status=403)
 
 def wrong_code_message(request):
+    logger.debug("Reached here in WRONG CODE MESSAGE")
+    logger.debug(request)
+    logger.debug(request.body)
+
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
