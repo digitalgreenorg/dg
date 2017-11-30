@@ -297,6 +297,7 @@ class Farmer(LoopModel):
         max_length=500, default=None, null=True, blank=True)
     village = models.ForeignKey(Village)
     is_visible = models.BooleanField(default=True)
+    correct_phone_date=models.DateField(default=None,auto_now=False,null=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.village.village_name)
