@@ -128,6 +128,7 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
                 price_info_incoming_obj.textlocal_sms_id = message_id
             else:
                 price_info_incoming_obj.textlocal_sms_id += ',' + message_id
+            price_info_incoming_obj.save()
     elif response_text['status'] == 'failure':
         module = 'send_sms_using_textlocal'
         if price_info_incoming_obj != None:
