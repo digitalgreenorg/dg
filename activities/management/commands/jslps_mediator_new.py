@@ -23,7 +23,6 @@ class Command(BaseCommand):
 		tree = ET.parse('jslps_data_integration_files/mediator.xml')
 		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
-		data_list = []
 
 		for c in root.findall('AKMData'):
 			ac = c.find('AKM_ID').text
@@ -31,7 +30,6 @@ class Command(BaseCommand):
 			gender = c.find('Gender').text
 			vc = c.find('VillageCode').text
 			dc = c.find('DistrictCode').text
-			data_list.append(ac)
 			if c.find('PhoneNo') is not None:
 				phone = c.find('PhoneNo').text
 			else:
@@ -198,4 +196,3 @@ class Command(BaseCommand):
 				else:
 					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])
 
-		JSLPS_Animator.objects.filter(animator_code__in=new_data_list).update(activity='LIVELIHOOD')

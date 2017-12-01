@@ -345,7 +345,7 @@ class JSLPS_VillageAdmin(admin.ModelAdmin):
     _village.short_description = "COCO-DB-Village-ID"
 
 class JSLPS_VideoAdmin(admin.ModelAdmin):
-    list_display = ['id', 'vc', 'user_created', 'time_created',
+    list_display = ['id', 'vc', 'title', 'user_created', 'time_created',
                     '_video', 'activity']
     search_fields = ['id', 'vc']
     list_filter = ['activity']
@@ -372,6 +372,9 @@ class JSLPS_ScreeningAdmin(admin.ModelAdmin):
         return "%s: %s: %s" % (obj.screening.village.village_name,
                                obj.screening.village.block.block_name,
                                obj.screening.village.block.district.district_name)
+
+    def has_add_permission(self, request):
+        return False
 
 
 class JSLPS_AdoptionAdmin(admin.ModelAdmin):

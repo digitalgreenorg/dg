@@ -236,6 +236,7 @@ pre_delete.connect(delete_log, sender=NonNegotiable)
 
 class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=200, null=True)
     vc = models.CharField(max_length=100)
     video = models.ForeignKey(Video, null=True, blank=True)
     activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)

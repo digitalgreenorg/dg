@@ -24,6 +24,7 @@ class Command(BaseCommand):
 		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
 		data_list = []
+		print len(root.findall('GroupDataMKSP'))
 		for c in root.findall('GroupDataMKSP'):
 			gc = c.find('GroupCode').text
 			gn = unicode(c.find('Group_Name').text)

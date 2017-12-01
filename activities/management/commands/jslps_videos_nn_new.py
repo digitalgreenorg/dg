@@ -144,11 +144,16 @@ class Command(BaseCommand):
 				vid.save()
 				vid.production_team.add(camera_operator.animator)
 				vid.save()
-				jslps_video_list = JSLPS_Video.objects.filter(vc=vdc)
+				jslps_video_list = JSLPS_Video.objects.filter(vc=vdc, title=vn)
 				if len(jslps_video_list) == 0:
-					jslps_video = JSLPS_Video(vc=vdc,video=vid, user_created_id=user_obj.id)
-					jslps_video.save()
+					jslps_video, created = \
+						JSLPS_Video.objects.get_or_create(title=vn,
+														  vc=vdc,
+														  video=vid,
+														  user_created_id=user_obj.id,
+														  activity="LIVELIHOOD")
 				else:
+					jslps_video_list.update(activity="LIVELIHOOD")
 					jslps_video = jslps_video_list[0]
 					jslps_video.video = vid
 					jslps_video.save()
@@ -160,11 +165,16 @@ class Command(BaseCommand):
 					vid.save()
 					vid.production_team.add(camera_operator.animator)
 					vid.save()
-					jslps_video_list = JSLPS_Video.objects.filter(vc=vdc,video=vid)
+					jslps_video_list = JSLPS_Video.objects.filter(vc=vdc, title=vn, video=vid)
 					if len(jslps_video_list) == 0:
-						jslps_video = JSLPS_Video(vc=vdc,video=vid, user_created_id=user_obj.id)
-						jslps_video.save()
+						jslps_video, created = \
+						JSLPS_Video.objects.get_or_create(title=vn,
+														  vc=vdc,
+														  video=vid,
+														  user_created_id=user_obj.id,
+														  activity="LIVELIHOOD")
 					else:
+						jslps_video_list.update(activity="LIVELIHOOD")
 						jslps_video = jslps_video_list[0]
 						if jslps_video.video == None:
 							jslps_video.video = vid

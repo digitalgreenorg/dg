@@ -16,18 +16,17 @@ class Command(BaseCommand):
 		xml_file = open("jslps_data_integration_files/group.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
-		data_list = []
 		partner = Partner.objects.get(id = 24)
 		csv_file = open('jslps_data_integration_files/group_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/group.xml')
 		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
+		print len(root.findall('GroupData'))
 		for c in root.findall('GroupData'):
 			gc = c.find('GroupCode').text
 			gn = unicode(c.find('Group_Name').text)
 			vc = c.find('VillageCode').text
-			data_list.append(gc)
 			try:
 				village = JSLPS_Village.objects.get(village_code=vc)
 				group_set = dict(PersonGroup.objects.filter(village_id = village.Village.id).values_list('id','group_name'))
@@ -59,7 +58,8 @@ class Command(BaseCommand):
 					if gc not in group_added:
 						jg, created = JSLPS_Persongroup.objects.get_or_create(group_code = gc,
 																	          group = group,
-																	          user_created_id=user_obj.id)
+																	          user_created_id=user_obj.id,
+																	          activity="LIVELIHOOD")
 				except Exception as e:
 					print gc, e
 					if "Duplicate entry" not in str(e):
@@ -70,4 +70,3 @@ class Command(BaseCommand):
 					jslps.other_error_count += 1
 					wtr.writerow(['village',vc, e])
 
-		JSLPS_Persongroup.objects.filter(group_code__in=data_list).update(activity="LIVELIHOOD")

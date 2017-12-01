@@ -1,6 +1,5 @@
 import urllib2
 import unicodecsv as csv
-from datetime import datetime 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
@@ -52,7 +51,9 @@ class Command(BaseCommand):
 				yid = c.find('YouTubeID').text
 			else:
 				yid = ''
+
 			if c.find('ProductionDate') is not None:
+				from datetime import datetime 
 				pd = datetime.strptime(c.find('ProductionDate').text, '%d/%m/%Y')
 			else:
 				pd = None
@@ -114,7 +115,6 @@ class Command(BaseCommand):
 				wtr.writerow(['Can not save video without practice',vdc,'title', vn, e])
 				continue
 
-			import pdb;pdb.set_trace()
 			try:
 				vid, created = \
 					Video.objects.get_or_create(title = vn,
@@ -144,13 +144,16 @@ class Command(BaseCommand):
 				vid.save()
 				vid.production_team.add(camera_operator.animator)
 				vid.save()
-				jslps_video_list = JSLPS_Video.objects.filter(vc=vdc)
+				jslps_video_list = JSLPS_Video.objects.filter(title=vn, vc=vdc)
 				if len(jslps_video_list) == 0:
 					jslps_video, created = \
-							JSLPS_Video.get_or_create(vc=vdc,
-													  video=vid,
-													  user_created_id=user_obj.id)
+							JSLPS_Video.objects.get_or_create(title=vn,
+															  vc=vdc,
+															  video=vid,
+															  user_created_id=user_obj.id,
+															  activity="GOTARY")
 				else:
+					jslps_video_list.update(activity="GOTARY")
 					jslps_video = jslps_video_list[0]
 					jslps_video.video = vid
 					jslps_video.save()
@@ -162,13 +165,16 @@ class Command(BaseCommand):
 					vid.save()
 					vid.production_team.add(camera_operator.animator)
 					vid.save()
-					jslps_video_list = JSLPS_Video.objects.filter(vc=vdc,video=vid)
+					jslps_video_list = JSLPS_Video.objects.filter(title=vn, vc=vn, video=vid)
 					if len(jslps_video_list) == 0:
 						jslps_video, created = \
 							JSLPS_Video.get_or_create(vc=vdc,
+													  title=vn,
 													  video=vid,
-													  user_created_id=user_obj.id)
+													  user_created_id=user_obj.id,
+													  activity="GOTARY")
 					else:
+						jslps_video_list.update(activity="GOTARY")
 						jslps_video = jslps_video_list[0]
 						if jslps_video.video == None:
 							jslps_video.video = vid
@@ -176,8 +182,7 @@ class Command(BaseCommand):
 				else:
 					wtr.writerow(['Video not saved and duplicate also not exist', vdc,'title', vn, e])		
 
-		import pdb;pdb.set_trace()
-		JSLPS_Video.objects.filter(vn__in=data_list).update(activity="GOTARY")
+		JSLPS_Video.objects.filter(vc__in=data_list).update(activity="GOTARY")
 
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGotaryNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
@@ -192,7 +197,7 @@ class Command(BaseCommand):
 		tree = ET.parse('jslps_data_integration_files/goatary_nonnego.xml')
 		root = tree.getroot()
 
-		for c in root.findall('GetExportGotaryNon_NegotiableMasterData'):
+		for c in root.findall('GotaryNon_NegotiableMasterData'):
 			nn_c = c.find('Non_NegotiablesID').text
 			vdc = int(c.find('VideoId').text)
 			nn_n = c.find('Non_NegotiablesName').text
@@ -202,7 +207,7 @@ class Command(BaseCommand):
 			else:
 				vr = True
 			try:
-				video = JSLPS_Video.objects.get(vc = vdc)
+				video = JSLPS_Video.objects.filter(activity="GOTARY").get(vc = vdc)
 			except Exception as e:
 				wtr.writerow(['Video Not Found',vdc, e])
 				continue
@@ -211,8 +216,8 @@ class Command(BaseCommand):
 			if len(nonnego_already_list) == 0:
 				try:
 					nn = NonNegotiable(video_id = video.video_id,
-								   non_negotiable = nn_n,
-								   physically_verifiable = vr)
+								   	   non_negotiable = nn_n,
+								   	   physically_verifiable = vr)
 					nn.save()
 					jslps.new_count += 1
 				except Exception as e:

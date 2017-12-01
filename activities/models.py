@@ -24,6 +24,7 @@ from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator
 from people.models import JSLPS_Animator
+from people.models import JSLPS_Person
 from people.models import Person
 from people.models import PersonGroup
 from videos.models import Video
@@ -179,11 +180,23 @@ class JSLPS_Screening(CocoModel):
     id = models.AutoField(primary_key=True)
     screenig_code = models.CharField(max_length=100)
     screening = models.ForeignKey(Screening, null=True, blank=True)
+    farmers_attendance = models.ManyToManyField(JSLPS_Person,
+                                                through='JSLPS_PersonMeetingAttendance',
+                                                blank=True)
     activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = "JSLPS Screening"
         verbose_name_plural = "JSLPS Screening"
+
+
+class JSLPS_PersonMeetingAttendance(CocoModel):
+    screening = models.ForeignKey(JSLPS_Screening)
+    person = models.ForeignKey(JSLPS_Person)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
+    
+    def __unicode__(self):
+        return  u'%s' % (self.id)
 
 
 class JSLPS_Adoption(CocoModel):

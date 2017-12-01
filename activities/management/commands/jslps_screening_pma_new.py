@@ -26,10 +26,8 @@ class Command(BaseCommand):
 		tree = ET.parse('jslps_data_integration_files/screening.xml')
 		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
-		data_list = []
 		for c in root.findall('VedioScreeingMasterData'):
 			sc = c.find('VDO_ID').text
-			data_list .append(sc)
 			vc = c.find('VillageCode').text
 			ac = c.find('AKMCode').text
 			sd = datetime.datetime.strptime(c.find('ScreeningDate').text, '%d/%m/%Y')
@@ -144,9 +142,6 @@ class Command(BaseCommand):
 				else:
 					wtr.writerow(['Screening not saved and duplicate also not exist',sc, "not saved"])
 
-
-		JSLPS_Screening.objects.filter(screenig_code__in=data_list).update(activity="LIVELIHOOD")
-
 		#saving pma
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMemberData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
@@ -160,6 +155,7 @@ class Command(BaseCommand):
 		root = tree.getroot()
 
 		for c in root.findall('VedioScreeingMemberData'):
+			print len(root.findall('VedioScreeingMemberData'))
 			sc = c.find('VDO_ID').text
 			pc = c.find('MemberId').text
 			
@@ -177,12 +173,14 @@ class Command(BaseCommand):
 			else:
 				person = person[0]
 
+			import pdb
+			pdb.set_trace()
 			pma_already_exist = PersonMeetingAttendance.objects.filter(screening_id = screening.screening.id,person_id=person.person.id)
 			if len(pma_already_exist) == 0:
 				try:
-					pma = PersonMeetingAttendance(screening = screening.screening,
-													person = person.person)
-					pma.save()
+					pma, created = \
+						PersonMeetingAttendance.objects.get_or_create(screening = screening.screening,
+																	  person = person.person)
 					jslps.new_count += 1
 				except Exception as e:
 					wtrr.writerow(['Error in saving attendance (scr_id=%s)'%(str(sc)), pc, e])

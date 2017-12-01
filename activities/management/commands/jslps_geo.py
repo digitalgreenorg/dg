@@ -89,14 +89,12 @@ class Command(BaseCommand):
 				#block_added = [i[0] for i in block_added]
 
 				if bc not in block_added:
-					jb = JSLPS_Block.objects.get_or_create(block_code = bc,
+					jb, created = JSLPS_Block.objects.get_or_create(block_code = bc,
 														   block_name = bn,
 														   block = block,
 														   district_code=dc,
 														   activity='LIVELIHOOD',
 														   user_created_id=user_obj.id)
-					jb.user_created_id=user_obj.id
-					jb.save()
 					print bc, "block saved in JSLPS_block table"
 			except Exception as e:
 				print bc, e
@@ -113,7 +111,6 @@ class Command(BaseCommand):
 					jslps.new_count += 1
 					print vc, "village saved in geaography_village table"
 				except Exception as e:
-					print vc, e
 					if "Duplicate entry" in str(e):
 						jslps.duplicate_count += 1
 					else:
@@ -126,7 +123,7 @@ class Command(BaseCommand):
 				#village_added = [i[0] for i in village_added]
 
 				if vc not in village_added:
-					jv = JSLPS_Village.objects.get_or_create(village_code = vc,
+					jv, created = JSLPS_Village.objects.get_or_create(village_code = vc,
 															 village_name = vn,
 															 Village = village,
 															 user_created_id=user_obj.id,
