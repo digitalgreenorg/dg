@@ -1566,9 +1566,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     }
   });
 
-  aggregator_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary";
-  gaddidar_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details";
-  transporter_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details";
+  aggregator_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary_" + getCurrentTime();
+  gaddidar_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details_" + getCurrentTime();
+  transporter_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details_" + getCurrentTime();
   create_data_for_excel_download();
 }
 
@@ -1745,6 +1745,14 @@ function getFormattedDate(aggregator_id) {
   var fromDate = new Date(payments_start_date);
   var toDate = new Date(payments_to_date);
   var str = name + "(" + aggregator_id + ")" + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
+  return str;
+}
+
+function getCurrentTime() {
+  var now = new Date();
+  var date = now.getDate()+"-"+(now.getMonth()+1)+"-"+now.getFullYear();
+  var time = now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+  var str = "(" + date + " " + time + ")";
   return str;
 }
 
