@@ -45,7 +45,7 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
     update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio, \
     redirect_to_broadcast, save_farmer_file
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
-from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
+from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME, DATE_INCORRECT_FARMER_PHONE_MODEL
 
 import pandas as pd
 from training.management.databases.utility import *
@@ -296,7 +296,6 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
 
     #Checking if we need to apply incorrect farmer phone model on payment data
     date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-    DATE_INCORRECT_FARMER_PHONE_MODEL = datetime.datetime.strptime("2017-11-15", "%Y-%m-%d")
     if date_start >= DATE_INCORRECT_FARMER_PHONE_MODEL:
         combined_ct_queryset = combined_ct_queryset.filter(date__gte=F('farmer__correct_phone_date'))
 

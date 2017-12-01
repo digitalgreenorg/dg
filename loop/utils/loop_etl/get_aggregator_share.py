@@ -2,14 +2,13 @@ from loop.models import AggregatorIncentive, AggregatorShareOutliers, CombinedTr
 from django.db.models import Count, Sum, Avg
 import inspect
 import datetime
-from loop.constants.constants import MODEL_TYPES_DAILY_PAY
+from loop.constants.constants import MODEL_TYPES_DAILY_PAY, DATE_INCORRECT_FARMER_PHONE_MODEL
 import pandas as pd
 
 def calculate_inc_default(V):
     return 0.25*V
 
 def compute_aggregator_share():
-    DATE_INCORRECT_FARMER_PHONE_MODEL = datetime.datetime.strptime("2017-11-15", "%Y-%m-%d")
     ai_queryset = AggregatorIncentive.objects.all()
     aso_queryset = AggregatorShareOutliers.objects.all()
     combined_ct_queryset = CombinedTransaction.objects.filter(Q(date__lt=DATE_INCORRECT_FARMER_PHONE_MODEL) | Q(date__gte=F(farmer__correct_phone_date))).values(
