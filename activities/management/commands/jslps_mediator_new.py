@@ -119,8 +119,7 @@ class Command(BaseCommand):
 							jslps_animator.save()
 				else:
 					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])
-			
-		JSLPS_Animator.objects.filter(animator_code__in=data_list).update(activity='LIVELIHOOD')
+
 		
 		#add camera operator to mediator table
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportCameraOperatorMaster?pUsername=admin&pPassword=JSLPSSRI')
