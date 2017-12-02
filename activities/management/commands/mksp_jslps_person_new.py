@@ -28,11 +28,12 @@ class Command(BaseCommand):
 			pc = c.find('MemID').text
 			# Mem Id coming as combination
 			try:
-				pc = c.split('-')[-1]
+				pc = pc.split('-')[-1]
+				data_list.append(pc)
 			except Exception as e:
 				pc = pc
+			print pc
 			pn = unicode(c.find('MemberName').text)
-			data_list.append(pc)
 			if c.find('FatherName') is not None:
 				pfn = unicode(c.find('FatherName').text)
 			else:
@@ -105,7 +106,7 @@ class Command(BaseCommand):
 						jslps.duplicate_count += 1
 
 			if person != None:
-				jslps_person_list = JSLPS_Person.objects.filter(person_code=pc)
+				jslps_person_list = JSLPS_Person.objects.filter(person_code=pc, person=person)
 				if len(jslps_person_list) == 0:
 					jslps_person, created = \
 						JSLPS_Person.objects.get_or_create(person_code=pc,
