@@ -15,21 +15,21 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):
 		
 		partner = Partner.objects.get(id = 24)
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGoatryVideoScreening?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/screening.xml", 'w')
+		xml_file = open("jslps_data_integration_files/gotary_screening.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('jslps_data_integration_files/screening_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/gotary_screening_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/screening.xml')
+		tree = ET.parse('jslps_data_integration_files/gotary_screening.xml')
 		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
-		for c in root.findall('VedioScreeingMasterData'):
+		for c in root.findall('GoatryVideoScreeningData'):
 			sc = c.find('VDO_ID').text
 			vc = c.find('VillageCode').text
-			ac = c.find('AKMCode').text
+			ac = c.find('APSCode').text
 			sd = datetime.datetime.strptime(c.find('ScreeningDate').text, '%d/%m/%Y')
 			st = datetime.datetime.strptime(c.find('start_time').text, '%H:%M:%S')
 			#et = datetime.datetime.strptime(c.find('End_time').text, '%H:%M:%S')
@@ -61,7 +61,7 @@ class Command(BaseCommand):
 			groups = []
 			videos = []
 			for v in vdc:
-				vid = JSLPS_Video.objects.get(vc = v, activity="LIVELIHOOD")
+				vid = JSLPS_Video.objects.filter(vc = v, activity="GOTARY")
 				if len(vid) > 0:
 					videos.append(vid[0].video)
 			if len(videos) == 0:
@@ -79,12 +79,12 @@ class Command(BaseCommand):
 									animator = animator.animator,
 									partner = partner)
 				if len(scr_already_exist) == 0:
-					screening = Screening(date = sd,
-										start_time = st,
-										village = village.Village,
-										animator = animator.animator,
-										partner = partner)
-					screening.save()
+					screening, created = \
+						Screening.objects.get_or_create(date=sd,
+														start_time=st,
+														village=village.Village,
+														animator=animator.animator,
+														partner=partner)
 					jslps.new_count += 1
 				else:
 					screening = None
@@ -104,13 +104,15 @@ class Command(BaseCommand):
 				for i in videos:
 					screening.videoes_screened.add(i)
 					screening.save()
-				jslps_screening_list = JSLPS_Screening.objects.filter(screenig_code=sc)
+				jslps_screening_list = \
+					JSLPS_Screening.objects.filter(screenig_code=sc,
+												   activity="GOTARY")
 				if len(jslps_screening_list) == 0:
 					jslps_screening, created = \
 						JSLPS_Screening.objects.get_or_create(screenig_code=sc,
 															  screening=screening,
 															  user_created_id=user_obj.id,
-															  activity="LIVELIHOOD")
+															  activity="GOTARY")
 				else:
 					jslps_screening = jslps_screening_list[0]
 					jslps_screening.screening = screening
@@ -135,7 +137,7 @@ class Command(BaseCommand):
 							JSLPS_Screening.objects.get_or_create(screenig_code=sc,
 																  screening=screening,
 																  user_created_id=user_obj.id,
-																  activity="LIVELIHOOD")
+																  activity="GOTARY")
 					else:
 						jslps_screening = jslps_screening_list[0]
 						if jslps_screening.screening == None:
@@ -147,28 +149,31 @@ class Command(BaseCommand):
 		#saving pma
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMemberData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/pma.xml", 'w')
+		xml_file = open("jslps_data_integration_files/gotary_pma.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('jslps_data_integration_files/pma_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/gotary_pma_error.csv', 'wb')
 		wtrr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/pma.xml')
+		tree = ET.parse('jslps_data_integration_files/gotary_pma.xml')
 		root = tree.getroot()
 
-		for c in root.findall('VedioScreeingMemberData'):
-			print len(root.findall('VedioScreeingMemberData'))
+		for c in root.findall('GoatryVedioScreeingMemberData'):
 			sc = c.find('VDO_ID').text
 			pc = c.find('MemberId').text
+			vill= c.find('VillageCode').text
 			
-			screening = JSLPS_Screening.objects.filter(screenig_code = sc, activity="LIVELIHOOD")
+			screening = \
+				JSLPS_Screening.objects.filter(screenig_code=sc,
+											  activity="GOTARY",
+											  village=vill)
 			if len(screening) == 0:
 				wtrr.writerow(['Screening not exist', sc, "Screening not found"])
 				continue
 			else:
 				screening = screening[0]
 
-			person = JSLPS_Person.objects.filter(person_code = pc)
+			person = JSLPS_Person.objects.filter(person_code=pc)
 			if len(person) == 0:
 				wtrr.writerow(['person not exist', pc, "Person not found"])
 				continue
@@ -176,12 +181,14 @@ class Command(BaseCommand):
 				person = person[0]
 
 		
-			pma_already_exist = PersonMeetingAttendance.objects.filter(screening_id = screening.screening.id,person_id=person.person.id)
+			pma_already_exist = \
+				PersonMeetingAttendance.objects.filter(screening_id=screening.screening.id,
+													   person_id=person.person.id)
 			if len(pma_already_exist) == 0:
 				try:
 					pma, created = \
-						PersonMeetingAttendance.objects.get_or_create(screening = screening.screening,
-																	  person = person.person)
+						PersonMeetingAttendance.objects.get_or_create(screening=screening.screening,
+																	  person=person.person)
 					jslps.new_count += 1
 				except Exception as e:
 					wtrr.writerow(['Error in saving attendance (scr_id=%s)'%(str(sc)), pc, e])

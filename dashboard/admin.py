@@ -299,7 +299,7 @@ class JSLPS_PersongroupAdmin(admin.ModelAdmin):
 
 class JSLPS_PersonAdmin(admin.ModelAdmin):
     list_display = ['id', 'person_code', 'person', 'user_created',
-                    'time_created', 'activity']
+                    'time_created', 'activity', '_person']
     search_fields = ['id', 'person_code', 'person__id']
     list_filter = ['activity']
 
@@ -338,22 +338,30 @@ class JSLPS_VillageAdmin(admin.ModelAdmin):
                     'user_created', 'time_created', '_village', 'activity']
     search_fields = ['id', 'village_code', 'village_name', 'block_code', 'Village__id']
     list_filter = ['activity']
+    readonly_fields = list_display
 
     def _village(self, obj):
         return "%s:%s" % (obj.Village.id, obj.Village.village_name)
     _village.allow_tags = True
     _village.short_description = "COCO-DB-Village-ID"
 
+    def has_add_permission(self, request):
+        return False
+
 class JSLPS_VideoAdmin(admin.ModelAdmin):
     list_display = ['id', 'vc', 'title', 'user_created', 'time_created',
                     '_video', 'activity']
-    search_fields = ['id', 'vc']
+    search_fields = ['id', 'vc', 'title']
     list_filter = ['activity']
+    readonly_fields = list_display
 
     def _video(self, obj):
         return "%s:%s" % (obj.video.id, obj.video.title)
     _video.allow_tags = True
     _video.short_description = "COCO-DB-Video-ID"
+
+    def has_add_permission(self, request):
+        return False
 
 
 
@@ -364,6 +372,7 @@ class JSLPS_ScreeningAdmin(admin.ModelAdmin):
                     'user_created', 'time_created']
     search_fields = ['id', 'screenig_code', 'activity', 'screening__village__block__block_name']
     list_filter = ['activity']
+    readonly_fields = list_display
 
     def _dg_screening_id(self, obj):
         return obj.screening.id
@@ -382,6 +391,11 @@ class JSLPS_AdoptionAdmin(admin.ModelAdmin):
                     'adoption', 'jslps_date_of_adoption', 'user_created', 'time_created']
     search_fields = ['id', 'member_code', 'jslps_video', 'jslps_akmcode', 'jslps_akmcode', 'adoption']
     list_filter = ['jslps_date_of_adoption']
+
+    readonly_fields = list_display
+
+    def has_add_permission(self, request):
+        return False
 
 
 

@@ -51,10 +51,10 @@ class Command(BaseCommand):
 				videos = []
 				for v in vdc:
 					try:
-						vid = JSLPS_Video.objects.get(vc = v)
+						print v, vdc , "kjghdfkgdkls"
+						vid = JSLPS_Video.objects.get(vc = v, activity="MKSP")
 						videos.append(vid.video)
 					except JSLPS_Video.DoesNotExist as e:
-						print v, e
 						if "Duplicate entry" not in str(e):
 							jslps.other_error_count += 1
 							wtr.writerow(['scr id',sc,'video not exist',v, e])
@@ -83,19 +83,19 @@ class Command(BaseCommand):
 												 partner=partner)
 					
 					if len(scr_already_exist) == 0:
-						scr = Screening(date=sd,
-										start_time=st,
-										village=village.Village,
-										animator=animator.animator,
-										partner=partner)
-						scr.save()
+						scr, created = \
+							Screening.objects.get_or_create(date=sd,
+															start_time=st,
+															village=village.Village,
+															animator=animator.animator,
+															partner=partner)
 						jslps.new_count += 1
 						print "Screening saved in old::::", scr_already_exist, scr
 						obj,created = \
-						JSLPS_Screening.objects.get_or_create(screenig_code = sc,
-															  screening = screening,
-															  activity="MKSP",
-															  user_created_id=user_obj.id)
+							JSLPS_Screening.objects.get_or_create(screenig_code = sc,
+																  screening = screening,
+																  activity="MKSP",
+																  user_created_id=user_obj.id)
 						print "JSLPS_MKSP_Screening saved in new::::"
 				except Exception as e:
 					print e
@@ -140,11 +140,10 @@ class Command(BaseCommand):
 					#sc_added = [i[0] for i in sc_added]
 					if sc not in sc_added:
 						try:
-							sj = JSLPS_Screening(screenig_code = sc,
-												 screening = screening,
-												 activity="MKSP",
-												 user_created_id=user_obj.id)
-							sj.save()
+							sj = JSLPS_Screening.objects.get_or_create(screenig_code = sc,
+																	   screening = screening,
+																	   activity="MKSP",
+																	   user_created_id=user_obj.id)
 							print "JSLPS-MKSP Screening saved"
 						except Exception as e:
 							print sc, e
@@ -170,14 +169,30 @@ class Command(BaseCommand):
 		for c in root.findall('VedioScreeingMemberDataMKSP'):
 			sc = c.find('VDO_ID').text
 			pc = c.find('MemberId').text
+			print pc
 			try:
+				gc = pc.split('-')[0]
 				pc = pc.split('-')[-1]
 			except Exception as e:
 				pc = pc
+				gc = None
 			error = 0
 			try:
-				screening = JSLPS_Screening.objects.get(screenig_code = sc)
-				person = JSLPS_Person.objects.get(person_code = pc)
+				screening = JSLPS_Screening.objects.get(screenig_code=sc, activity="MKSP")
+				if gc is not None:
+					try:
+						group_obj = JSLPS_Persongroup.objects.get(group_code=gc).group.id
+
+					except JSLPS_Persongroup.DoesNotExist as e:
+						jslps.other_error_count += 1
+						wtrr.writerow(['pma JSLPS_Persongroup', sc, 'pma Person', pc, e])
+						
+					try:
+						person =  JSLPS_Person.objects.filter(person_code=pc, activity="MKSP",
+														   person__group_id=group_obj).latest('id')
+					except (JSLPS_Person.DoesNotExist, JSLPS_Person.MultipleObjectsReturned) as e:
+						jslps.other_error_count += 1
+						wtrr.writerow(['pma JSLPS_Person', sc, 'pma Person', pc, e])
 
 			except (JSLPS_Screening.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
 				if "Duplicate entry" not in str(e):
