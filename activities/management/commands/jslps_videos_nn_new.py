@@ -198,8 +198,6 @@ class Command(BaseCommand):
 		root = tree.getroot()
 
 		for c in root.findall('VedioNon_NegotiableMasterData'):
-			import pdb
-			pdb.set_trace()
 			nn_c = c.find('Non_NegotiablesID').text
 			vdc = int(c.find('VideoId').text)
 			nn_n = c.find('Non_NegotiablesName').text
