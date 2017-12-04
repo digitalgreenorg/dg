@@ -1607,7 +1607,7 @@ function create_data_for_excel_download() {
       {
         'column_width': 8,
         'formula': null,
-        'label': 'Aggregator Payment [AP] (in Rs) (0.25*Q)',
+        'label': 'Aggregator Payment [AP] (in Rs)##',
         'total': true
       },
       {
