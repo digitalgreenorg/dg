@@ -204,10 +204,11 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
                 comment_row=str(write_values.get('end') + 3)
                 ws.merge_range('A'+comment_row+':L'+comment_row, "**Quantity is deducted for farmers having incorrect/unavailable mobile numbers.", row_format)
                 ap_formula_row = write_values.get('end') + 4
-                ws.merge_range('A'+str(ap_formula_row)+':C'+str(ap_formula_row), "##AP calculation formula", row_format)
-                ws.merge_range('D'+str(ap_formula_row)+':L'+str(ap_formula_row), " = 0.2*Q ; Q<=2000", row_format)
-                ws.merge_range('D'+str(ap_formula_row+1)+':L'+str(ap_formula_row+1), " = 0.2*2000 + 0.1*(Q-2000) ; Q>2000", row_format)
-
+                ws.merge_range('A'+str(ap_formula_row)+':D'+str(ap_formula_row), "##AP calculation formula (Bihar)", row_format)
+                ws.merge_range('E'+str(ap_formula_row)+':L'+str(ap_formula_row), " = 0.2*Q ; Q<=2000", row_format)
+                ws.merge_range('E'+str(ap_formula_row+1)+':L'+str(ap_formula_row+1), " = 0.2*2000 + 0.1*(Q-2000) ; Q>2000", row_format)
+                ws.merge_range('A'+str(ap_formula_row+2)+':D'+str(ap_formula_row+2), "##AP calculation formula (Maharashtra)", row_format)
+                ws.merge_range('E'+str(ap_formula_row+2)+':L'+str(ap_formula_row+2), " = 0.25*Q", row_format)
 
     except Exception as e:
         print e
