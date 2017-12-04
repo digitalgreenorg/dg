@@ -1,5 +1,5 @@
 from loop.models import AggregatorIncentive, AggregatorShareOutliers, CombinedTransaction, IncentiveParameter, LoopUser, IncentiveModel
-from django.db.models import Count, Sum, Avg
+from django.db.models import Count, Sum, Avg, Q, F
 import inspect
 import datetime
 from loop.constants.constants import MODEL_TYPES_DAILY_PAY, INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE
