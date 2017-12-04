@@ -45,7 +45,7 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
     update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio, \
     redirect_to_broadcast, save_farmer_file
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
-from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
+from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME, INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE
 
 import pandas as pd
 from training.management.databases.utility import *
@@ -174,13 +174,13 @@ def filter_data(request):
 
     if(int(state_id) < 0):
         #country filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id')
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state__country=country_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state__country=country_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
     elif(int(state_id)>0):
         #state filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id')
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state=state_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state=state_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
@@ -293,6 +293,12 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                                                                                                Sum('amount'),
                                                                                                Count('farmer_id',
                                                                                                      distinct=True))
+
+    #Checking if we need to apply incorrect farmer phone model on payment data
+    date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    if date_start >= INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE:
+        combined_ct_queryset = combined_ct_queryset.filter(date__gte=F('farmer__correct_phone_date'))
+
     result = []
     daily_pay_list = []
 
