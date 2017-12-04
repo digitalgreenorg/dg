@@ -11,7 +11,7 @@ def calculate_inc_default(V):
 def compute_aggregator_share():
     ai_queryset = AggregatorIncentive.objects.all()
     aso_queryset = AggregatorShareOutliers.objects.all()
-    combined_ct_queryset = CombinedTransaction.objects.filter(Q(date__lt=INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE) | Q(date__gte=F(farmer__correct_phone_date))).values(
+    combined_ct_queryset = CombinedTransaction.objects.filter(Q(date__lt=INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE) | Q(date__gte=F('farmer__correct_phone_date'))).values(
         'date', 'user_created_id', 'mandi').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
                                                                        Count('farmer_id', distinct=True))
     aggregator_incentive_result = []
