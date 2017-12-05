@@ -370,11 +370,11 @@ class FarmerResource(BaseResource):
         try:
             attempt = Farmer.objects.filter(id=bundle.data['online_id'])
 
-            if attempt.correct_phone_date is None and self.is_phone_valid(bundle):
+            if attempt[0].correct_phone_date is None and self.is_phone_valid(bundle):
                 date = datetime.datetime.now()
                 time = date.strftime('%Y-%m-%d %H:%M:%S')
                 bundle.data['correct_phone_date'] = time
-            elif attempt.correct_phone_date is not None and not self.is_phone_valid(bundle):
+            elif attempt[0].correct_phone_date is not None and not self.is_phone_valid(bundle):
                 bundle.data['correct_phone_date'] = None
                 
             bundle = super(FarmerResource, self).obj_update(bundle, **kwargs)
