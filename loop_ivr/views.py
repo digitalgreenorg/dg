@@ -7,7 +7,10 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from threading import Thread
+
 from datetime import datetime, timedelta
+from pytz import timezone
+
 import time
 
 from dg.settings import EXOTEL_HELPLINE_NUMBER
@@ -188,6 +191,23 @@ def wrong_code_message(request):
 @csrf_exempt
 def push_message_sms_response(request):
     if request.method == 'POST':
+        current_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+        status = str(request.POST.get('status'))
+        custom_id = str(request.POST.get('customID'))  # id of row in MySQL
+        outgoing_obj = SubscriptionLog.objects.filter(id=custom_id)
+        outgoing_obj = outgoing_obj[0] if len(outgoing_obj) > 0 else ''
+        if outgoing_obj:
+            if status == 'U':
+                outgoing_obj.status = 0
+            elif status == 'D':
+                outgoing_obj.status = 1
+            else:
+                outgoing_obj.status = 2
+            outgoing_obj.status_code = status
+            outgoing_obj.receipt_time = current_time
+            outgoing_obj.save()
+    return HttpResponse(status=200)
+    '''
         status = str(request.POST.getlist('Status')[0])
         outgoing_sms_id = str(request.POST.getlist('SmsSid')[0])
         outgoing_obj = SubscriptionLog.objects.filter(sms_id=outgoing_sms_id)
@@ -202,3 +222,4 @@ def push_message_sms_response(request):
                 outgoing_obj.status = 3
             outgoing_obj.save()
     return HttpResponse(status=200)
+    '''

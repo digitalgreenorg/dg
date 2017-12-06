@@ -4,6 +4,7 @@ import time
 import datetime
 import requests
 import itertools
+import json
 import xml.etree.ElementTree as xml_parse
 
 from datetime import timedelta
@@ -11,7 +12,7 @@ from pytz import timezone
 
 from django.core.management.base import BaseCommand
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, EXOTEL_HELPLINE_NUMBER, TEXTLOCAL_API_KEY
 
 from loop.models import Crop, Mandi, CropLanguage
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL
@@ -22,7 +23,8 @@ from loop_ivr.helper_function import get_valid_list, run_query
 from loop_ivr.utils.marketinfo import raw_sql
 from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
     agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
-    agg_sms_crop_line, helpline_hi, PUSH_MESSAGE_SMS_RESPONSE_URL, MONTH_NAMES
+    agg_sms_crop_line, helpline_hi, PUSH_MESSAGE_SMS_RESPONSE_URL, MONTH_NAMES, \
+    TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, code_hi
 
 class Command(BaseCommand):
 
@@ -41,6 +43,33 @@ class Command(BaseCommand):
 
 
     def send_sms(self,subscription_id, from_number,user_no,sms_body):
+        current_time = datetime.datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+        subscription_log_obj = SubscriptionLog(subscription_id=subscription_id, date=current_time)
+        try:
+            subscription_log_obj.save()
+        except Exception as e:
+            module = 'push_message_send_sms'
+            log = "Status Code: %s (subscription_id: %s) (Exception: %s)"%('Failed', str(subscription_id), str(e))
+            write_log(LOG_FILE,module,log)
+            return
+        recipient_custom_id = subscription_log_obj.id
+        sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
+        headers = {'content-type': 'application/json' }
+        parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers':user_no,
+                        'message': sms_body, 'receipt_url': PUSH_MESSAGE_SMS_RESPONSE_URL, 'unicode': 'true',
+                        'custom': recipient_custom_id}
+        response = requests.post(sms_request_url, params=parameters)
+        response_text = json.loads(str(response.text))
+        if response_text['status'] == 'success':
+            message_id = ','.join([str(message["id"]) for message in response_text['messages']])
+            subscription_log_obj.sms_id = message_id
+            subscription_log_obj.save()
+        elif response_text['status'] == 'failure':
+            error_codes = ','.join([str(error["code"]) for error in response_text['errors']])
+            subscription_log_obj.status = 2
+            subscription_log_obj.status_code = error_codes
+            subscription_log_obj.save()
+        '''
         sms_request_url = SMS_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
         parameters = {'From':from_number,'To':user_no,'Body':sms_body,'Priority':'high','EncodingType':'unicode','StatusCallback':PUSH_MESSAGE_SMS_RESPONSE_URL}
         response = requests.post(sms_request_url,data=parameters)
@@ -70,15 +99,29 @@ class Command(BaseCommand):
             module = 'push_message_send_sms'
             log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
             write_log(LOG_FILE,module,log)
+        '''
 
 
     def send_info(self,subscription_id, user_no, content):
         index = 0
         from_number = AGGREGATOR_SMS_NO
-        while index < len(content):
-            self.send_sms(subscription_id, from_number, user_no, content[index:index+1998])
-            index += 1998
-            time.sleep(1)
+        content = content.replace('\n','%0A')
+        while len(content) > 0:
+            # If length of content is less than 750, then send whole content once.
+            if len(content) < 750:
+                self.send_sms(subscription_id, from_number, user_no, content)
+                break
+            # If length of content is more than 750, then devide in packets of length < 750
+            # based on two new line.
+            else:
+                current_index = content[:750].rfind('%0A%0A')
+                # If two new line not found then devide simply in chunks of 750
+                if current_index < 0:
+                    current_index = 750
+                current_content = content[:current_index]
+                content = content[current_index:]
+                self.send_sms(subscription_id, from_number, user_no, current_content)
+                time.sleep(.5)
 
 
     def get_price_info(self,subscription_id, user_no, crop_list, mandi_list, all_crop_flag, all_mandi_flag):
@@ -97,7 +140,7 @@ class Command(BaseCommand):
                     crop_name = self.crop_in_hindi_map.get(crop).encode("utf-8") if self.crop_in_hindi_map.get(crop) else self.crop_map[crop].encode("utf-8")
                     mandi_name = self.mandi_map[mandi].encode("utf-8")
                     if crop != prev_crop:
-                        temp_str = ('\n%s: %s\n%s %s\n')%(agg_sms_crop_line,crop_name,mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                        temp_str = ('\n%s: %s (%s: %s)\n\n%s %s\n')%(agg_sms_crop_line,crop_name,code_hi,str(crop),mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     else:
                         temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     price_info_list.append(temp_str)

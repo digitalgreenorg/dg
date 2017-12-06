@@ -3,7 +3,7 @@ from django.contrib.admin.sites import AdminSite
 from django.contrib.admin import SimpleListFilter
 
 from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, Subscriber, Subscription, \
-	SubscriptionLog
+    SubscriptionLog
 
 class LoopIVRAdmin(AdminSite):
 
@@ -19,13 +19,14 @@ class PriceInfoLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'price_info_incoming', 'crop', 'mandi')
 
 class SubscriberAdmin(admin.ModelAdmin):
-	list_display = ('id', 'name', 'phone_no', 'type_of_subscriber', 'status')
+    list_display = ('id', 'name', 'phone_no', 'type_of_subscriber', 'status')
 
 class SubscriptionAdmin(admin.ModelAdmin):
-	list_display = ('id', 'subscriber', 'start_date', 'subscription_code', 'status')
+    list_display = ('id', 'subscriber', 'start_date', 'subscription_code', 'status')
 
 class SubscriptionLogAdmin(admin.ModelAdmin):
-	list_display = ('id', 'subscription', 'date', 'sms_id', 'status')
+    list_display = ('id', 'subscription', 'date', 'sms_id', 'status', 'status_code', 'receipt_time')
+    list_filter = ['status']
 
 loop_ivr_admin = LoopIVRAdmin(name='loop_ivr_admin')
 
