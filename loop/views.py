@@ -622,11 +622,14 @@ def calculate_gaddidar_share_payments(start_date, end_date, mandi_list=None, agg
 def payments(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
+    aggregator_id = request.GET['aggregator_id']
     filter_args = {}
     if (start_date != ""):
         filter_args["date__gte"] = start_date
     if (end_date != ""):
         filter_args["date__lte"] = end_date
+    if (aggregator_id != ""):
+        filter_args["user_created__id"] = aggregator_id
 
     aggregator_data = CombinedTransaction.objects.filter(**filter_args).annotate(
         mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en')).values(
@@ -666,9 +669,9 @@ def payments(request):
         'mandi__mandi_name', 'farmer_share', 'id', 'farmer_share_comment', 'transportation_cost_comment', 'mandi__id',
         'transportation_vehicle__id', 'timestamp').order_by('date').annotate(Sum('transportation_cost'))
 
-    gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
+    gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date,None, [aggregator_id])
 
-    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date)
+    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date, None, [aggregator_id])
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
