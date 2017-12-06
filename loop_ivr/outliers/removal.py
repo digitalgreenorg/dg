@@ -11,7 +11,7 @@ def remove_crop_outliers(ct_data=None):
 
     combined_transactions_data = pd.DataFrame(daily_aggregator_market_crop_rate_query_result)
     combined_transactions_data['Date'] = pd.to_datetime(combined_transactions_data['Date'])
-
+    before_outlier_df = combined_transactions_data
     combined_transactions_data = call_methods(combined_transactions_data)
 
     # combined_transactions_data.to_csv("final_data_after_outliers.csv")
@@ -31,7 +31,8 @@ def remove_crop_outliers(ct_data=None):
     # combined_transactions_data = call_methods(combined_transactions_data)
 
     combined_transactions_data.fillna(0,inplace=True)
-
+    after_outlier_df = combined_transactions_data[columnlist_ct]
+    get_difference_dataframe(before_outlier_df, after_outlier_df)
     # combined_transactions_data.to_csv("final_data_after_outliers_1.csv")
     combined_transactions_data = combined_transactions_data.groupby(group_by_list).agg({'Av_Rate':['mean'], 'STD' : ['mean']}).reset_index()
     combined_transactions_data.columns = combined_transactions_data.columns.droplevel(level=1)
@@ -42,11 +43,13 @@ def remove_crop_outliers(ct_data=None):
     return combined_transactions_data
 
 def call_methods(combined_transactions_data):
+    # combined_transactions_data.to_csv('Ct_data_raw.csv', index=False)
     combined_transactions_data = get_statistics(combined_transactions_data)
+    # write_to_csv(combined_transactions_data)
     combined_transactions_data = raise_flags(combined_transactions_data)
-
+    # write_to_csv(combined_transactions_data)
     combined_transactions_data = combined_transactions_data[(combined_transactions_data['Flag']==1) | (combined_transactions_data['Flag']==5)]
-
+    # write_to_csv(combined_transactions_data)
     return combined_transactions_data
 
 
@@ -67,7 +70,7 @@ def get_statistics(combined_transactions_data):
 
     ct_with_std = combined_transactions_data.groupby(group_by_list).apply(compute_std).reset_index(name= 'STD')
     combined_transactions_data = combined_transactions_data.merge(ct_with_std,how='left',on=group_by_list)
-
+    
     combined_transactions_data = compute_ratios(combined_transactions_data)
     return combined_transactions_data
 
@@ -121,3 +124,25 @@ def raise_flags(combined_transactions_data):
     combined_transactions_data.loc[(combined_transactions_data['STD'] > 9), 'Flag'] = 4
     # combined_transactions_data.to_csv("check_5.csv")
     return combined_transactions_data
+
+
+def write_to_csv(df):
+    with open('Ct_data_raw.csv', 'a') as f:
+        df.to_csv(f, index=False)
+
+def get_difference_dataframe(df1, df2):
+    df = pd.concat([df1, df2])
+    df = df.reset_index(drop=True)
+    df_gpby = df.groupby(list(df.columns))
+    idx = [x[0] for x in df_gpby.groups.values() if len(x) == 1]
+
+    writer = pd.ExcelWriter('comparative_outliers.xlsx', engine='xlsxwriter')
+
+    # Convert the dataframe to an XlsxWriter Excel object.
+    df.reindex(idx)[columnlist_ct].to_excel(writer, sheet_name='Outliers')
+    df1[columnlist_ct].to_excel(writer, sheet_name='Before Outliers')
+    df2[columnlist_ct].to_excel(writer, sheet_name='After Outliers')
+    # Close the Pandas Excel writer and output the Excel file.
+    writer.save()
+
+    # df.reindex(idx)[columnlist_ct].to_csv('comparative_outliers.csv')
