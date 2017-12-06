@@ -1775,8 +1775,6 @@ function get_payments_data() {
       $("#aggregator_payment_details").show();
       payments_data = JSON.parse(data);
 
-      console.log(payments_data);
-
       outliers_data = payments_data.outlier_data;
       outliers_transport_data = payments_data.outlier_transport_data;
       outlier_daily_data = payments_data.outlier_daily_data;
