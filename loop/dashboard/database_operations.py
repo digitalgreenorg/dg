@@ -49,7 +49,8 @@ def query_myisam(**kwargs):
     sql_ds['from'].append('loop_aggregated_myisam')
     sql_q = join_sql_ds(sql_ds)
     if(len(kwargs) > 0):
-        country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list = read_kwargs(kwargs)
+        country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, \
+        gaddidars_list, district_list = read_kwargs(kwargs)
         if len(aggregators_list) > 0:
             sql_ds['where'].append('aggregator_id in (' + ",".join(aggregators_list) + ")")
         if len(mandis_list) > 0:
@@ -58,7 +59,6 @@ def query_myisam(**kwargs):
             sql_ds['where'].append('gaddidar_id in (' + ",".join(gaddidars_list) + ')')
         if start_date != None:
             sql_ds['where'].append('date between \'' + start_date + '\' and \'' + end_date + '\'')
-
         sql_ds['where'].append('country_id = ' + str(country_id))
         if(state_id) :
             sql_ds['where'].append('state_id = ' + str(state_id))

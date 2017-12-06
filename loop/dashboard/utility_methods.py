@@ -5,7 +5,8 @@ from operator import itemgetter
 from dg.settings import DATABASES
 
 def read_kwargs(Kwargs):
-    return Kwargs['country_id'], Kwargs['state_id'], Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'], Kwargs['gaddidars_list']
+    return Kwargs['country_id'], Kwargs['state_id'], Kwargs['start_date'], Kwargs['end_date'], Kwargs['aggregators_list'],Kwargs['mandis_list'],Kwargs['crops_list'],\
+     Kwargs['gaddidars_list'], Kwargs['district_list']
 
 def get_result(query) :
 
