@@ -64,7 +64,7 @@ class State(LoopModel):
     phone_start = models.CharField(default='7,8,9', max_length=15, blank=True, null=True)
     aggregation_state = models.BooleanField(default=True)
     def __unicode__(self):
-        return self.state_name
+        return self.state_name_en
 
     class Meta:
         unique_together = ("state_name","country")
@@ -80,7 +80,7 @@ class District(LoopModel):
     district_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.district_name, self.state.state_name)
+        return "%s (%s)" % (self.district_name_en, self.state.state_name_en)
 
     class Meta:
         unique_together = ("district_name", "state")
@@ -94,7 +94,7 @@ class Block(LoopModel):
     block_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.block_name, self.district.district_name)
+        return "%s (%s)" % (self.block_name_en, self.district.district_name_en)
 
     class Meta:
         unique_together = ("block_name", "district")
@@ -112,7 +112,7 @@ class Village(LoopModel):
     village_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.village_name, self.block.block_name)
+        return "%s (%s)" % (self.village_name_en, self.block.block_name_en)
 
     class Meta:
         unique_together = ("village_name", "block")
@@ -148,7 +148,7 @@ class Mandi(LoopModel):
 
 
     def __unicode__(self):
-        return "%s (%s)" % (self.mandi_name, self.district.district_name)
+        return "%s (%s)" % (self.mandi_name_en, self.district.district_name_en)
 
     class Meta:
         unique_together = ("mandi_name", "district",)

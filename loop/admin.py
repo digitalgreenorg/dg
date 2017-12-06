@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.admin import SimpleListFilter
-
+from actions import export_as_csv_action
 from models import *
 
 class UserListFilter(SimpleListFilter):
@@ -80,8 +80,9 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
     search_fields = ['farmer__name', 'farmer__village__village_name', 'gaddidar__gaddidar_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
     list_filter = (UserListFilter,'status',
-                   'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name', 'farmer__village__village_name', 'mandi__district__state__country')
+                   'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name', 'farmer__village__village_name', 'mandi__district__state','mandi__district__state__country')
     date_hierarchy = 'date'
+    actions = [export_as_csv_action("CSV Export")]
 
 
 
@@ -90,14 +91,16 @@ class TransporterAdmin(admin.ModelAdmin):
                     'transporter_phone', '__block__')
     search_fields = ['transporter_name', 'transporter_phone']
     list_filter = ['block__district__state__country', 'block__district__state']
+    actions = [export_as_csv_action("CSV Export")]
 
 
 class DayTransportationAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', '__aggregator__','__mandi__','__transporter__', '__transporter_phone__', '__vehicle__',
                     'transportation_cost', 'farmer_share', 'farmer_share_comment','transportation_cost_comment')
     search_fields = ['user_created__username', 'mandi__mandi_name']
-    list_filter = (UserListFilter, 'mandi__mandi_name', 'mandi__district__state__country')
+    list_filter = (UserListFilter, 'mandi__mandi_name','mandi__district__state', 'mandi__district__state__country')
     date_hierarchy = 'date'
+    actions = [export_as_csv_action("CSV Export")]
 
 
 class GaddidarAdmin(admin.ModelAdmin):
@@ -118,6 +121,7 @@ class MandiAdmin(admin.ModelAdmin):
     list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type')
     search_fields = ['mandi_name', 'district__district_name', 'mandi_type__mandi_type_name', 'mandi_name_en']
     list_filter = ['district__district_name', 'district__state__country', 'mandi_type', 'district__state']
+    actions = [export_as_csv_action("CSV Export")]
 
 class MandiTypeAdmin(admin.ModelAdmin):
     fields = ('mandi_type_name', 'mandi_category', 'type_description')
@@ -130,24 +134,28 @@ class VillageAdmin(admin.ModelAdmin):
     list_display = ('id', 'village_name', 'block', 'village_name_en')
     search_fields = ['village_name', 'village_name_en', 'block__block_name']
     list_filter = ['block__block_name', 'block__district__state__country']
+    actions = [export_as_csv_action("CSV Export")]
 
 class BlockAdmin(admin.ModelAdmin):
     fields = ('district',('block_name','block_name_en'),'is_visible')
     list_display = ('id', 'block_name', 'district', 'block_name_en')
     search_fields = ['block_name', 'block_name_en', 'district__district_name']
     list_filter = ['district__district_name', 'district__state__country']
+    actions = [export_as_csv_action("CSV Export")]
 
 class DistrictAdmin(admin.ModelAdmin):
     fields = ('state',('district_name','district_name_en'),'is_visible')
     list_display = ('id', 'district_name', 'state', 'district_name_en')
     search_fields = ['district_name', 'district_name_en', 'state__state_name']
     list_filter = ['state__state_name', 'state__country']
+    actions = [export_as_csv_action("CSV Export")]
 
 class StateAdmin(admin.ModelAdmin):
     fields = ('country',('state_name','state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start', 'is_visible','aggregation_state')
     list_display = ('id', 'state_name', 'country', 'state_name_en', 'helpline_number', 'crop_add', 'phone_digit', 'phone_start','aggregation_state')
     search_fields = ['state_name', 'state_name_en', 'country__country_name']
     list_filter = ['country__country_name']
+    actions = [export_as_csv_action("CSV Export")]
 
 class CropAdmin(admin.ModelAdmin):
     list_display = ('id', 'crop_name')
