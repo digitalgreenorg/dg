@@ -622,11 +622,14 @@ def calculate_gaddidar_share_payments(start_date, end_date, mandi_list=None, agg
 def payments(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
+    aggregator_id = request.GET['aggregator_id']
     filter_args = {}
     if (start_date != ""):
         filter_args["date__gte"] = start_date
     if (end_date != ""):
         filter_args["date__lte"] = end_date
+    if (aggregator_id != ""):
+        filter_args["user_created__id"] = aggregator_id
 
     aggregator_data = CombinedTransaction.objects.filter(**filter_args).annotate(
         mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en')).values(
