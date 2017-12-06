@@ -669,9 +669,9 @@ def payments(request):
         'mandi__mandi_name', 'farmer_share', 'id', 'farmer_share_comment', 'transportation_cost_comment', 'mandi__id',
         'transportation_vehicle__id', 'timestamp').order_by('date').annotate(Sum('transportation_cost'))
 
-    gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
+    gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date,None, [aggregator_id])
 
-    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date)
+    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date, None, [aggregator_id])
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
