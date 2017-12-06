@@ -69,13 +69,13 @@ class Command(BaseCommand):
 				try:
 					person, created = \
 						Person.objects.get_or_create(person_name = pn,
-												     father_name = pfn,
-												     village = village.Village,
-												  	 )
-					person.age=age
+													 father_name = pfn,
+													 partner=partner,
+													 gender=gender,
+													 village = village.Village,
+													 )
+					person.age = age
 					person.phone_no = phone
-					person.partner=partner
-					person.gender = gender
 					person.user_created_id = user_obj.id
 					person.save()
 					jslps.new_count += 1
@@ -90,13 +90,13 @@ class Command(BaseCommand):
 				try:
 					person, created = \
 						Person.objects.get_or_create(person_name = pn,
-												     father_name = pfn,
-												     village = village.Village,
-												  	 )
-					person.age=age
+													 father_name = pfn,
+													 partner=partner,
+													 gender=gender,
+													 village = village.Village,
+													 )
+					person.age = age
 					person.phone_no = phone
-					person.partner=partner
-					person.gender = gender
 					person.user_created_id = user_obj.id
 					person.save()
 					jslps.new_count += 1

@@ -24,17 +24,17 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options): 
         
-        print "Geography,jslps_geo"
-        call_command('jslps_geo')
+        # print "Geography,jslps_geo"
+        # call_command('jslps_geo')
 
-        print "Geography,jslps_geo"
-        call_command('mksp_jslps_geo')
+        # print "Geography,jslps_geo"
+        # call_command('mksp_jslps_geo')
 
-        print "Groups,jslps_groups"
-        call_command('jslps_groups')
+        # print "Groups,jslps_groups"
+        # call_command('jslps_groups')
 
-        print "Groups,jslps_groups"
-        call_command('mksp_jslps_groups')
+        # print "Groups,jslps_groups"
+        # call_command('mksp_jslps_groups')
         
         print "People,jslps_people"
         call_command('jslps_people_new')
@@ -45,17 +45,17 @@ class Command(BaseCommand):
         print "People,jslps_people"
         call_command('mksp_jslps_person_new')
 
-        print "Mediators,jslps_mediators"
-        call_command('jslps_mediator_new')
+        # print "Mediators,jslps_mediators"
+        # call_command('jslps_mediator_new')
 
-        print "Mediators,jslps_mediators"
-        call_command('mksp_jslps_mediator_new')
+        # print "Mediators,jslps_mediators"
+        # call_command('mksp_jslps_mediator_new')
 
-        print "Videos and Non negotiable,jslps_videos_nn"
-        call_command('jslps_videos_nn_new')
+        # print "Videos and Non negotiable,jslps_videos_nn"
+        # call_command('jslps_videos_nn_new')
 
-        print "Videos and Non negotiable,jslps_videos_nn"
-        call_command('jslps_videogoatry')
+        # print "Videos and Non negotiable,jslps_videos_nn"
+        # call_command('jslps_videogoatry')
         
         # print "Screening and pma,jslps_screening_pma"
         # call_command('jslps_screening_pma_new')
