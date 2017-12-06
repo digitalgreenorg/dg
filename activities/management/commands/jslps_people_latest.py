@@ -11,7 +11,7 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationDataNew?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/person.xml", 'w')
 		xml_file.write(contents)

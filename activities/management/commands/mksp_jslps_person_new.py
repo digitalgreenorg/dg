@@ -69,13 +69,15 @@ class Command(BaseCommand):
 				try:
 					person, created = \
 						Person.objects.get_or_create(person_name = pn,
-													 father_name = pfn,
-													 age = age,
-													 phone_no = phone,
-													 gender = gender,
-													 village = village.Village,
-													 partner = partner,
-													 user_created_id=user_obj.id)
+												     father_name = pfn,
+												     village = village.Village,
+												  	 )
+					person.age=age
+					person.phone_no = phone
+					person.partner=partner
+					person.gender = gender
+					person.user_created_id = user_obj.id
+					person.save()
 					jslps.new_count += 1
 				except Exception as e:
 					person = None
@@ -88,14 +90,15 @@ class Command(BaseCommand):
 				try:
 					person, created = \
 						Person.objects.get_or_create(person_name = pn,
-													 father_name = pfn,
-													 age = age,
-													 phone_no = phone,
-													 gender = gender,
-													 village = village.Village,
-													 group = group.group,
-													 partner = partner,
-													 user_created_id=user_obj.id)
+												     father_name = pfn,
+												     village = village.Village,
+												  	 )
+					person.age=age
+					person.phone_no = phone
+					person.partner=partner
+					person.gender = gender
+					person.user_created_id = user_obj.id
+					person.save()
 					jslps.new_count += 1
 				except Exception as e:
 					person = None
