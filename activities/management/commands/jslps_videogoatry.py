@@ -199,7 +199,7 @@ class Command(BaseCommand):
 
 		for c in root.findall('GotaryNon_NegotiableMasterData'):
 			nn_c = c.find('Non_NegotiablesID').text
-			vdc = int(c.find('VideoId').text)
+			vdc = c.find('VideoID').text
 			nn_n = c.find('Non_NegotiablesName').text
 			vr = c.find('Verification').text
 			if vr == 'false':
