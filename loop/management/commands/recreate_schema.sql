@@ -12,16 +12,19 @@ CREATE TABLE `loop_aggregated_myisam`(
   `farmer_share` decimal(10,3),
   `gaddidar_share` decimal(10,3),
   `aggregator_incentive` decimal(10,3),
-  `aggregator_name` varchar(50) NOT NULL,
-  `mandi_name` varchar(50) NOT NULL,
-  `gaddidar_name` varchar(50) NOT NULL,
+  `aggregator_name` varchar(255) NOT NULL,
+  `mandi_name` varchar(255) NOT NULL,
+  `gaddidar_name` varchar(255) NOT NULL,
   `new_distinct_farmer` int unsigned NOT NULL,
   `country_id` int unsigned NOT NULL,
   `state_id` int unsigned NOT NULL,
+  `district_id` int unsigned NOT NULL,
   PRIMARY KEY(`id`)
-)ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 ;
+)ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
 
 CREATE INDEX loop_aggregated_myisam_date ON loop_aggregated_myisam(date);
 CREATE INDEX loop_aggregated_myisam_date_aggregator_mandi ON loop_aggregated_myisam(date,aggregator_id,mandi_id);
 CREATE INDEX loop_aggregated_myisam_date_aggregator_mandi_gaddidar ON loop_aggregated_myisam(date,aggregator_id,mandi_id,gaddidar_id);
 CREATE INDEX loop_aggregated_myisam_date_country ON loop_aggregated_myisam(date,country_id);
+CREATE INDEX loop_aggregated_myisam_date_country_state ON loop_aggregated_myisam(date,country_id,state_id);
+CREATE INDEX loop_aggregated_myisam_date_country_state_district ON loop_aggregated_myisam(date,country_id,state_id,district_id);
