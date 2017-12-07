@@ -23,7 +23,7 @@ export const filtersConfig = {
   },
   'filter4': {
     name: 'Gaddidar',
-    show: true,
+    show: false,
     expand: false,
     initialLoad: true
   },
