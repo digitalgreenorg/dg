@@ -20,7 +20,9 @@ def sql_query(**kwargs):
     sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
     sql_ds['join'].append(['loop_farmer lf', 'lf.id = lct.farmer_id'])
     sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id and lu.role = ' + str(ROLE_CHOICE_AGGREGATOR)])
-    sql_ds['join'].append(['loop_district ld', 'ld.id = lm.district_id'])
+    sql_ds['join'].append(['loop_village lv','lv.id = lu.village_id'])
+    sql_ds['join'].append(['loop_block lb','lb.id = lv.block_id'])
+    sql_ds['join'].append(['loop_district ld', 'ld.id = lb.district_id'])
     sql_ds['join'].append(['loop_state ls', 'ls.id = ld.state_id'])
     sql_ds['join'].append(['loop_country lc', 'lc.id = ls.country_id'])
 
@@ -44,7 +46,7 @@ def sql_query(**kwargs):
     return df_result
 
 def query_myisam(**kwargs):
-    
+
     # Constructing sql query
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('*')
@@ -73,7 +75,7 @@ def query_myisam(**kwargs):
 def get_farmers_per_day(**kwargs):
     country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list,\
      gaddidars_list, district_list = read_kwargs(kwargs)
-   
+
     # Constructing sql query
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('lct.date,count(distinct(lct.farmer_id)) as farmer_count')
@@ -82,7 +84,9 @@ def get_farmers_per_day(**kwargs):
     sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
     sql_ds['join'].append(['loop_farmer lf', 'lf.id = lct.farmer_id'])
     sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id and lu.role = ' + str(ROLE_CHOICE_AGGREGATOR)])
-    sql_ds['join'].append(['loop_district ld', 'ld.id = lm.district_id'])
+    sql_ds['join'].append(['loop_village lv','lv.id = lu.village_id'])
+    sql_ds['join'].append(['loop_block lb','lb.id = lv.block_id'])
+    sql_ds['join'].append(['loop_district ld', 'ld.id = lb.district_id'])
     sql_ds['join'].append(['loop_state ls', 'ls.id = ld.state_id'])
     sql_ds['join'].append(['loop_country lc', 'lc.id = ls.country_id'])
     sql_ds['group by'].append('date')
@@ -107,7 +111,7 @@ def get_farmers_per_day(**kwargs):
 def crop_prices_query(from_timeseries, **kwargs):
     country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list,\
      gaddidars_list, district_list = read_kwargs(kwargs)
-   
+
     sql_ds = get_init_sql_ds()
     if from_timeseries:
         sql_ds['select'].append('crop_id, crop_name, date, min(price) Min_price, max(price) Max_price, avg(price) Avg_price, sum(quantity) Quantity')
@@ -120,7 +124,9 @@ def crop_prices_query(from_timeseries, **kwargs):
     sql_ds['join'].append(['loop_mandi lm', 'lm.id = lct.mandi_id'])
     sql_ds['join'].append(['loop_crop lcrp', 'lcrp.id = lct.crop_id'])
     sql_ds['join'].append(['loop_loopuser lu', 'lu.user_id = lct.user_created_id and lu.role = ' + str(ROLE_CHOICE_AGGREGATOR)])
-    sql_ds['join'].append(['loop_district ld', 'ld.id = lm.district_id'])
+    sql_ds['join'].append(['loop_village lv','lv.id = lu.village_id'])
+    sql_ds['join'].append(['loop_block lb','lb.id = lv.block_id'])
+    sql_ds['join'].append(['loop_district ld', 'ld.id = lb.district_id'])
     sql_ds['join'].append(['loop_state ls', 'ls.id = ld.state_id'])
     sql_ds['join'].append(['loop_country lc', 'lc.id = ls.country_id'])
 
@@ -131,7 +137,7 @@ def crop_prices_query(from_timeseries, **kwargs):
     if len(district_list) > 0:
         sql_ds['where'].append('ld.id in (' + ",".join(district_list) + ')')
     if len(gaddidars_list) > 0:
-        sql_ds['where'].append('gaddidar_id in (' + ",".join(gaddidars_list) + ')')
+        sql_ds['where'].append('lct.gaddidar_id in (' + ",".join(gaddidars_list) + ')')
     if len(crops_list) > 0:
         sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
     sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
