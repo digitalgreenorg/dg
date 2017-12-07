@@ -67,6 +67,7 @@ def recent_graphs_data(**kwargs):
     kwargs['aggregator_list'] = []
     kwargs['gaddidar_list'] = []
     kwargs['mandi_list'] = []
+    kwargs['district_list'] = []
 
     aggregated_result = get_data_from_myisam(0, **kwargs)
     # aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, **kwargs)
@@ -123,6 +124,7 @@ def overall_graph_data(**filter_args):
     filter_args['aggregator_list'] = []
     filter_args['gaddidar_list'] = []
     filter_args['mandi_list'] = []
+    filter_args['district_list'] = []
     combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
     loopUserData = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
 
@@ -290,8 +292,8 @@ def send_filter_data(request):
     gaddidar_dict = {'name':'Gaddidar','data':list(gaddidar_list)}
 
     # Get District List
-    district_id_list = LoopUser.objects.all().values_list('village__block__district', flat=True).distinct()
-    district_list = District.objects.filter(id__in=district_id_list, state__country=country_id)
+    district_id_list = LoopUser.objects.values_list('village__block__district', flat=True).distinct()
+    district_list = District.objects.filter(id__in=district_id_list, state__country=country_id, is_visible = True)
     if state_id != None:
         district_list = district_list.filter(state=state_id)
     district_list = district_list.annotate(value=F('district_name_en')).values('id', 'value').order_by('value')
