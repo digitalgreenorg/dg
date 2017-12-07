@@ -8,7 +8,7 @@ import json
 import math
 import pandas as pd
 
-from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser, Country, State
+from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser, Country, State, District
 from loop.dashboard.home_statistics import *
 from loop.dashboard.analytics_statistics import *
 from loop.dashboard.timeseries_statistics import *
@@ -41,6 +41,7 @@ def extract_filters_request(request):
     mandis_list = request.GET.getlist('Mandi')
     crops_list = request.GET.getlist('Crops')
     gaddidars_list = request.GET.getlist('Gaddidar')
+    district_list = request.GET.getlist('District')
 
     filter_args = {}
     filter_args['cardName'] = cardName
@@ -51,6 +52,7 @@ def extract_filters_request(request):
     filter_args['mandis_list'] = mandis_list
     filter_args['crops_list'] = crops_list
     filter_args['gaddidars_list'] = gaddidars_list
+    filter_args['district_list'] = district_list
     filter_args['state_id'] = state_id
 
     return filter_args
@@ -65,6 +67,7 @@ def recent_graphs_data(**kwargs):
     kwargs['aggregator_list'] = []
     kwargs['gaddidar_list'] = []
     kwargs['mandi_list'] = []
+    kwargs['district_list'] = []
 
     aggregated_result = get_data_from_myisam(0, **kwargs)
     # aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, **kwargs)
@@ -121,6 +124,7 @@ def overall_graph_data(**filter_args):
     filter_args['aggregator_list'] = []
     filter_args['gaddidar_list'] = []
     filter_args['mandi_list'] = []
+    filter_args['district_list'] = []
     combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
     loopUserData = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
 
@@ -287,7 +291,15 @@ def send_filter_data(request):
     gaddidar_list = gaddidar_list.annotate(value=F('gaddidar_name_en')).values('id', 'value').order_by('value')
     gaddidar_dict = {'name':'Gaddidar','data':list(gaddidar_list)}
 
-    response_list.extend([aggregator_dict, crop_dict, mandi_dict, gaddidar_dict])
+    # Get District List
+    district_id_list = LoopUser.objects.values_list('village__block__district', flat=True).distinct()
+    district_list = District.objects.filter(id__in=district_id_list, state__country=country_id, is_visible = True)
+    if state_id != None:
+        district_list = district_list.filter(state=state_id)
+    district_list = district_list.annotate(value=F('district_name_en')).values('id', 'value').order_by('value')
+    district_dict = {'name':'District', 'data':list(district_list)}
+
+    response_list.extend([district_dict, aggregator_dict, crop_dict, mandi_dict, gaddidar_dict])
     data = json.dumps(response_list)
     return HttpResponse(data)
 
