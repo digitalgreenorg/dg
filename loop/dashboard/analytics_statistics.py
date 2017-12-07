@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from operator import itemgetter
 from loop.constants.constants import *
-from loop.models import CombinedTransaction
 from loop.utils.loop_etl.aggregation_methods import *
 from loop.utils.utility import get_init_sql_ds, join_sql_ds
 from loop.dashboard.database_operations import *
