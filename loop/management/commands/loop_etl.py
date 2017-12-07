@@ -51,7 +51,7 @@ class LoopStatistics():
 
             print "Combined Transaction Shape",df_ct.shape
 
-            df_ct = pd.merge(df_ct,df_loopuser,left_on='user_created__id',right_on='user_created__id',how='left')
+            df_ct = pd.merge(df_ct,df_loopuser,left_on='user_created__id',right_on='user_created__id') #,how='left'
 
             df_dt = pd.DataFrame(list(DayTransportation.objects.values('date','user_created__id','mandi__id').order_by('date').annotate(Sum('transportation_cost'),Avg('farmer_share'))))
 
