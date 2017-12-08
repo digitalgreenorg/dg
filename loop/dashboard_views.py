@@ -8,7 +8,7 @@ import json
 import math
 import pandas as pd
 
-from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser, Country, State, District
+from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser, Country, State, District, Partner
 from loop.dashboard.home_statistics import *
 from loop.dashboard.analytics_statistics import *
 from loop.dashboard.timeseries_statistics import *
@@ -311,5 +311,35 @@ def get_global_filter(request) :
         state_list = State.objects.filter(country_id = obj['id'],is_visible=True,aggregation_state=True).annotate(value=F('state_name_en'), isSelected=F('is_visible'), parentId=F('country_id'), parentTag=Value('country_id', output_field=CharField()),\
          tagName=Value('state_id', output_field=CharField())).values('id', 'value', 'isSelected', 'parentId', 'parentTag', 'tagName')
         obj['dropDownData'] = list(state_list)
-    data = json.dumps(list(country_list))
-    return HttpResponse(data)
+
+    partners_list = get_orm_result_for_partner()
+    country_dict = {'name':'Country', 'data':list(country_list)}
+    partners_dict = {'name':'Partner', 'data':list(partners_list)}
+    result = []
+    result.extend([country_dict,partners_dict])
+    return HttpResponse(json.dumps(result))
+
+def get_orm_result_for_partner(country_id=1, state_id=None):
+    result = []
+
+    partners_list = LoopUser.objects.filter(partner__is_visible=True, role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
+    if state_id:
+        partners_list = partners_list.filter(village__block__district__state=state_id)
+
+    partners_list = partners_list.annotate(value=F('partner__name'),tagName=Value('partner_id', output_field=CharField())).values('partner__id','value','tagName').distinct()
+    partners_list = partners_list.annotate(id=F('partner__id')).values('id','value','tagName')
+
+    all_dummy_partner = {'id':0,'tagName':'partner_id','value':'All'}
+    result.append(all_dummy_partner)
+    result.extend(list(partners_list))
+    return result
+
+
+def get_partners_list(request):
+    filter_args = extract_filters_request(request)
+    country_id = filter_args['country_id']
+    state_id = filter_args['state_id']
+
+    result = get_orm_result_for_partner(country_id, state_id)
+
+    return HttpResponse(json.dumps(result))
