@@ -32,6 +32,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='loopuser',
             name='partner',
-            field=models.ForeignKey(default=None, to='loop.Partner', null=True),
+            field=models.ForeignKey(default=None, blank=True, to='loop.Partner', null=True),
         ),
     ]

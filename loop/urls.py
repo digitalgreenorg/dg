@@ -99,6 +99,7 @@ urlpatterns = patterns('',
     url(r'^graph_data', graph_data),
     url(r'^get_filter_data/', send_filter_data),
     url(r'^get_global_filter_data/', get_global_filter),
+    url(r'^get_partners_list/', get_partners_list),
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loop/admin/'}),
     url(r'^admin/', include(loop_admin.urls)),
     )

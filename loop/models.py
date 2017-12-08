@@ -161,7 +161,7 @@ pre_delete.connect(save_admin_log, sender = Mandi)
 class Partner(LoopModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    is_visible = models.BooleanField(default=True)
+    is_visible = models.BooleanField(verbose_name="Is Active",default=True)
     start_date = models.DateField()
 
     def __unicode__(self):
@@ -184,9 +184,9 @@ class LoopUser(LoopModel):
     name_en = models.CharField(max_length=100)
     preferred_language = models.ForeignKey(Language, null=True)
     days_count = models.IntegerField(default=3)
-    is_visible = models.BooleanField(default=True)
+    is_visible = models.BooleanField(verbose_name="Is Active", default=True)
     farmer_phone_mandatory = models.BooleanField(default=True)
-    partner = models.ForeignKey(Partner,default=None,null=True)
+    partner = models.ForeignKey(Partner, default=None, null=True, blank=True)
 
     def __unicode__(self):
         return """%s (%s)"""  % (self.name_en, self.phone_number)
