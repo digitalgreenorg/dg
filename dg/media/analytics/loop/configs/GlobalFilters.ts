@@ -1,12 +1,16 @@
 export const globalFiltersConfig = {
     'filter0': {
-        name: 'Geography',
+        name: 'Country',
         show: true,
-        child: true
+        child: true,
+        data:[],
+        default:''
     },
     'filter1': {
         name: 'Partner',
         show: true,
-        child: true
+        child: false,
+        data:[],
+        default:''
     },
 }

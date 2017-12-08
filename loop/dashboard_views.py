@@ -28,6 +28,10 @@ def extract_filters_request(request):
         state_id = str(request.GET.get('state_id'))
     else :
         state_id = None
+    if 'partner_id' in request.GET:
+        partner_id = str(request.GET.get('partner_id')) if str(request.GET.get('partner_id')) != '0' else None
+    else:
+        partner_id = None
 
     if 'start_date' in request.GET and 'end_date' in request.GET:
         start_date = str(request.GET['start_date'])
@@ -54,6 +58,7 @@ def extract_filters_request(request):
     filter_args['gaddidars_list'] = gaddidars_list
     filter_args['district_list'] = district_list
     filter_args['state_id'] = state_id
+    filter_args['partner_id'] = partner_id
 
     return filter_args
 
@@ -117,7 +122,7 @@ def generate_res_recent(key, placeHolder, tagName, value):
 
 
 def overall_graph_data(**filter_args):
-    country_id = filter_args['country_id'] #To be fetched from request
+    country_id = filter_args['country_id']
     state_id = filter_args['state_id']
     filter_args['start_date'] = None
     filter_args['end_date'] = None
@@ -125,12 +130,15 @@ def overall_graph_data(**filter_args):
     filter_args['gaddidar_list'] = []
     filter_args['mandi_list'] = []
     filter_args['district_list'] = []
+    partner_id = filter_args['partner_id']
     combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
     loopUserData = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
 
     if state_id:
         combinedTransactionData = combinedTransactionData.filter(mandi__district__state=state_id)
         loopUserData = loopUserData.filter(village__block__district__state=state_id)
+    if partner_id:
+        loopUserData = loopUserData.filter(partner=partner_id)
 
     total_farmers_reached = combinedTransactionData.values('farmer').distinct().count()
     total_cluster_reached = loopUserData.count()

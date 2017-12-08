@@ -5,7 +5,7 @@ import { cardGraphConfig } from '../../loop/configs/GraphCardsConfig';
 import { navsConfig } from '../../loop/configs/NavsConfig';
 import { filtersConfig } from '../../loop/configs/FiltersConfig';
 import { generalConfig } from '../../loop/configs/GeneralConfig';
-
+import { globalFiltersConfig } from '../../loop/configs/GlobalFilters'
 export const environment = {
   production: true,
   // url: '/loop/',
@@ -16,5 +16,6 @@ export const environment = {
   navsConfig: navsConfig,
   filtersConfig: filtersConfig,
   generalConfig: generalConfig,
-  AddCommonOptions : AddCommonOptions
+  AddCommonOptions : AddCommonOptions,
+  GlobalFiltersConfig : globalFiltersConfig,
 };
