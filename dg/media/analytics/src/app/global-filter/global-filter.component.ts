@@ -18,6 +18,7 @@ export class GlobalFilterComponent implements OnInit {
     private _globalfiltersharedService: GlobalFilterSharedService) { }
 
   ngOnInit() {
+    // Listening global filter
     this._globalfilter.getData().subscribe(data => {
       data.forEach(element => {
         this.Dropdownitems.push(element);
