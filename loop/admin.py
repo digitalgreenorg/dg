@@ -19,7 +19,7 @@ class UserListFilter(SimpleListFilter):
         """
         list_tuple = []
         for user in LoopUser.objects.all():
-            list_tuple.append((user.user_id, user.name))
+            list_tuple.append((user.user_id, user.name_en))
         return list_tuple
 
     def queryset(self, request, queryset):
@@ -52,7 +52,7 @@ class LoopUserAdmin(admin.ModelAdmin):
     fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible','farmer_phone_mandatory')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en', 'days_count','farmer_phone_mandatory')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
-    list_filter = ['village__block__district__state__country', 'village__block__district__state', 'village__block__district', 'role']
+    list_filter = ['village__block__district__state__country', 'village__block__district__state__state_name_en', 'village__block__district__district_name_en', 'role']
     list_editable = ['days_count','farmer_phone_mandatory']
 
 class AdminAssignedDistricts(admin.StackedInline):
@@ -80,7 +80,7 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
     search_fields = ['farmer__name', 'farmer__village__village_name', 'gaddidar__gaddidar_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
     list_filter = (UserListFilter,'status',
-                   'crop__crop_name', 'mandi__mandi_name','gaddidar__gaddidar_name', 'farmer__village__village_name', 'mandi__district__state__country')
+                   'crop__crop_name', 'mandi__mandi_name_en','gaddidar__gaddidar_name_en', 'farmer__village__village_name_en','mandi__district__state__state_name_en', 'mandi__district__state__country')
     date_hierarchy = 'date'
 
 
@@ -235,6 +235,9 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
     list_filter = ('broadcast','status')
     search_fields = ['to_number']
 
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ('id','name')
+
 loop_admin = LoopAdmin(name='loop_admin')
 
 loop_admin.index_template = 'social_website/index.html'
@@ -279,3 +282,4 @@ loop_admin.register(Broadcast,BroadcastAdmin)
 loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
 loop_admin.register(VehicleLanguage)
 loop_admin.register(MandiType, MandiTypeAdmin)
+loop_admin.register(Partner, PartnerAdmin)
