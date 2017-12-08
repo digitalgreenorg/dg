@@ -52,7 +52,7 @@ class LoopUserAdmin(admin.ModelAdmin):
     fields = ('user','role',('name','name_en'),'phone_number','village','partner','mode','preferred_language','days_count','is_visible','farmer_phone_mandatory')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en', 'days_count','farmer_phone_mandatory','partner')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
-    list_filter = ['village__block__district__state__country', 'village__block__district__state__state_name_en', 'village__block__district__district_name_en', 'role']
+    list_filter = ['village__block__district__state__country', 'village__block__district__state__state_name_en', 'village__block__district__district_name_en', 'role', 'partner']
     list_editable = ['days_count','farmer_phone_mandatory','partner']
 
 class AdminAssignedDistricts(admin.StackedInline):
