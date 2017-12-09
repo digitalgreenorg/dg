@@ -52,6 +52,18 @@ export class GlobalFilterComponent implements OnInit {
     if (item.parentTag) {
       global_filter[item.parentTag] = item.parentId;
     }
+    // Handling Partner Dropdown as per the Geography selection
+    if(filterName == 'filter0') {
+      this._globalfilter.getData('get_partners_list/').subscribe(data => {
+        console.log('data =>', data);
+        Object.keys(this.globalFiltersConfig).forEach(obj => {
+          if(this.globalFiltersConfig[obj].name == 'Partner') {
+            console.log(this.globalFiltersConfig[obj].data, 'will be deleted');
+            this.globalFiltersConfig[obj].data = data;
+          }
+        });
+      })
+    }
     this._globalfiltersharedService.publishData();
     // this._sharedService.publishData(global_filter);
   }
