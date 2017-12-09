@@ -4,6 +4,8 @@ import { GlobalFilterService } from './global-filter.service'
 import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
+import { } from '..'
+import { config } from '../../config';
 
 @Component({
   selector: 'app-global-filter',
@@ -13,7 +15,7 @@ import { GlobalFilterSharedService } from '../global-filter/global-filter-shared
 export class GlobalFilterComponent implements OnInit {
   Dropdownitems: GlobalFilter[] = [];
   country: string = '';
-
+  private globalFiltersConfig = config.globalFiltersConfig;
   constructor(private _globalfilter: GlobalFilterService, private _sharedService: SharedService,
     private _globalfiltersharedService: GlobalFilterSharedService) { }
 
@@ -21,21 +23,27 @@ export class GlobalFilterComponent implements OnInit {
     // Listening global filter
     this._globalfilter.getData().subscribe(data => {
       data.forEach(element => {
-        this.Dropdownitems.push(element);
-
-        if ('country_id' in global_filter) {
-          if (element.id == global_filter['country_id']) {
-            this.country = element.value;
+        // console.log(element);
+        Object.keys(this.globalFiltersConfig).forEach(obj => {
+          if(this.globalFiltersConfig[obj].name == element.name) {
+            this.globalFiltersConfig[obj].data = element.data;
+            this.globalFiltersConfig[obj].default = element.data[0].value;
           }
-        } else {
-          this.country = this.Dropdownitems[0].value;
-        }
+        });
       });
+      // Check iframe working or not
     });
+
   }
 
-  updateDropdown(item) {
-    this.country = item.value;
+  updateDropdown(item, filterName) {
+    
+    Object.keys(this.globalFiltersConfig).forEach(obj => {
+      if(obj == filterName) {
+        this.globalFiltersConfig[obj].default = item.value;
+      }
+    });
+    
     for (const prop of Object.keys(global_filter)) {
       delete global_filter[prop];
     }
@@ -44,8 +52,24 @@ export class GlobalFilterComponent implements OnInit {
     if (item.parentTag) {
       global_filter[item.parentTag] = item.parentId;
     }
+    // Handling Partner Dropdown as per the Geography selection
+    if(filterName == 'filter0') {
+      this._globalfilter.getData('get_partners_list/').subscribe(data => {
+        console.log('data =>', data);
+        Object.keys(this.globalFiltersConfig).forEach(obj => {
+          if(this.globalFiltersConfig[obj].name == 'Partner') {
+            console.log(this.globalFiltersConfig[obj].data, 'will be deleted');
+            this.globalFiltersConfig[obj].data = data;
+          }
+        });
+      })
+    }
     this._globalfiltersharedService.publishData();
     // this._sharedService.publishData(global_filter);
+  }
+
+  getDictKeys(dict): any {
+    return Object.keys(dict);
   }
 
 }

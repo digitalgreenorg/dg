@@ -11,5 +11,6 @@ export const config = {
     navsConfig: environment.navsConfig,
     filtersConfig: environment.filtersConfig,
     generalConfig: environment.generalConfig,
-    AddCommonOptions : environment.AddCommonOptions
+    AddCommonOptions : environment.AddCommonOptions,
+    globalFiltersConfig:environment.GlobalFiltersConfig,
 }
