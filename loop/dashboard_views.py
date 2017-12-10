@@ -139,9 +139,11 @@ def overall_graph_data(**filter_args):
         loopUserData = loopUserData.filter(village__block__district__state=state_id)
     if partner_id:
         loopUserData = loopUserData.filter(partner=partner_id)
+        loopUserWithPartner = loopUserData.values_list('user__id',flat=True)
+        combinedTransactionData = combinedTransactionData.filter(user_created_id__in=loopUserWithPartner)
 
     total_farmers_reached = combinedTransactionData.values('farmer').distinct().count()
-    total_cluster_reached = loopUserData.count()
+    total_cluster_reached = combinedTransactionData.values('user_created_id').distinct().count()
 
     aggregated_result = get_data_from_myisam(1, **filter_args)
     # aggregated_result, cum_vol_farmer = get_data_from_myisam(1, **filter_args)
