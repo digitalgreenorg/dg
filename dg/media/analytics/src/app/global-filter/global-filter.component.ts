@@ -14,7 +14,7 @@ import { config } from '../../config';
 export class GlobalFilterComponent implements OnInit {
   Dropdownitems: GlobalFilter[] = [];
   country: string = '';
-  private globalFiltersConfig = config.globalFiltersConfig;
+  globalFiltersConfig = config.globalFiltersConfig;
   constructor(private _globalfilter: GlobalFilterService, private _sharedService: SharedService,
     private _globalfiltersharedService: GlobalFilterSharedService) { }
 
