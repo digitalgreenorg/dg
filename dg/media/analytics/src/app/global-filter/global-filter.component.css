@@ -3,7 +3,7 @@
 }
 
 .btn {
-  padding: 0.4rem 0.35rem;
+  padding: 0.3rem 0.2rem;
   background: #F37B55;
 }
 
@@ -61,4 +61,12 @@ a.dropdown-item {
   -webkit-border-radius: 6px 0 6px 6px;
   -moz-border-radius: 6px 0 6px 6px;
   border-radius: 6px 0 6px 6px;
+}
+
+.row {
+  padding-top:2px;
+}
+
+.col {
+  padding-right:2px;
 }
