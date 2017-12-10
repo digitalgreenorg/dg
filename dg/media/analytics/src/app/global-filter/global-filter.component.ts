@@ -23,7 +23,6 @@ export class GlobalFilterComponent implements OnInit {
     // Listening global filter
     this._globalfilter.getData().subscribe(data => {
       data.forEach(element => {
-        // console.log(element);
         Object.keys(this.globalFiltersConfig).forEach(obj => {
           if(this.globalFiltersConfig[obj].name == element.name) {
             this.globalFiltersConfig[obj].data = element.data;
@@ -38,9 +37,12 @@ export class GlobalFilterComponent implements OnInit {
 
   updateDropdown(item, filterName) {
     
-    Object.keys(this.globalFiltersConfig).forEach(obj => {
-      if(obj == filterName) {
-        this.globalFiltersConfig[obj].default = item.value;
+    Object.keys(this.globalFiltersConfig).forEach(key => {
+      let globalFilterConfigObj = this.globalFiltersConfig[key];
+      if(key == filterName) {
+        globalFilterConfigObj.default = item.value;
+      } else if(globalFilterConfigObj.dependencies) {
+        globalFilterConfigObj.default = globalFilterConfigObj.data[0].value
       }
     });
     
@@ -55,10 +57,8 @@ export class GlobalFilterComponent implements OnInit {
     // Handling Partner Dropdown as per the Geography selection
     if(filterName == 'filter0') {
       this._globalfilter.getData('get_partners_list/').subscribe(data => {
-        console.log('data =>', data);
         Object.keys(this.globalFiltersConfig).forEach(obj => {
           if(this.globalFiltersConfig[obj].name == 'Partner') {
-            console.log(this.globalFiltersConfig[obj].data, 'will be deleted');
             this.globalFiltersConfig[obj].data = data;
           }
         });

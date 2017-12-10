@@ -4,13 +4,15 @@ export const globalFiltersConfig = {
         show: true,
         child: true,
         data:[],
-        default:''
+        default:'',
+        dependencies:false
     },
     'filter1': {
         name: 'Partner',
         show: true,
         child: false,
         data:[],
-        default:''
+        default:'',
+        dependencies:true
     },
 }
