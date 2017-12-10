@@ -4,7 +4,6 @@ import { GlobalFilterService } from './global-filter.service'
 import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
-import { } from '..'
 import { config } from '../../config';
 
 @Component({
@@ -24,7 +23,7 @@ export class GlobalFilterComponent implements OnInit {
     this._globalfilter.getData().subscribe(data => {
       data.forEach(element => {
         Object.keys(this.globalFiltersConfig).forEach(obj => {
-          if(this.globalFiltersConfig[obj].name == element.name) {
+          if (this.globalFiltersConfig[obj].name == element.name) {
             this.globalFiltersConfig[obj].data = element.data;
             this.globalFiltersConfig[obj].default = element.data[0].value;
           }
@@ -36,18 +35,19 @@ export class GlobalFilterComponent implements OnInit {
   }
 
   updateDropdown(item, filterName) {
-    
+
     Object.keys(this.globalFiltersConfig).forEach(key => {
       let globalFilterConfigObj = this.globalFiltersConfig[key];
-      if(key == filterName) {
+      if (key == filterName) {
         globalFilterConfigObj.default = item.value;
-      } else if(globalFilterConfigObj.dependencies) {
-        globalFilterConfigObj.default = globalFilterConfigObj.data[0].value
+      } else if (globalFilterConfigObj.dependent) {
+        globalFilterConfigObj.default = globalFilterConfigObj.data[0].value;
       }
     });
-    
-    for (const prop of Object.keys(global_filter)) {
-      delete global_filter[prop];
+    if (!this.globalFiltersConfig[filterName].dependent) {
+      for (const prop of Object.keys(global_filter)) {
+        delete global_filter[prop];
+      }
     }
     global_filter[item.tagName] = item.id;
     // TODO : if Dropdown level more than 2 => handling
@@ -55,10 +55,10 @@ export class GlobalFilterComponent implements OnInit {
       global_filter[item.parentTag] = item.parentId;
     }
     // Handling Partner Dropdown as per the Geography selection
-    if(filterName == 'filter0') {
+    if (filterName == 'filter0') {
       this._globalfilter.getData('get_partners_list/').subscribe(data => {
         Object.keys(this.globalFiltersConfig).forEach(obj => {
-          if(this.globalFiltersConfig[obj].name == 'Partner') {
+          if (this.globalFiltersConfig[obj].name == 'Partner') {
             this.globalFiltersConfig[obj].data = data;
           }
         });
