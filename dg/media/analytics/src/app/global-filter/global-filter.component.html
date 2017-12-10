@@ -1,15 +1,17 @@
-<div *ngFor="let item of getDictKeys(globalFiltersConfig)" class="dropdown">
-  <button class="btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{globalFiltersConfig[item].default}}
-        </button>
-  <ul class="dropdown-menu " role="menu" aria-labelledby="dropdownMenu">
-    <li *ngFor="let i of getDictKeys(globalFiltersConfig[item].data)" class="dropdown-submenu">
-      <a dropdownToggle class="dropdown-item" (click)="updateDropdown(globalFiltersConfig[item].data[i], item)">{{globalFiltersConfig[item].data[i]['value']}}<span class="caret"></span></a>
-      <ul class="dropdown-menu" *ngIf="globalFiltersConfig[item].child">
-        <li *ngFor="let subItem of globalFiltersConfig[item].data[i]['dropDownData']" class="dropdown-item">
-          <button class="dropdown-item" (click)="updateDropdown(subItem, item)" style="cursor: pointer; cursor: hand;">{{subItem.value}}</button>
-        </li>
-      </ul>
-    </li>
-  </ul>
+<div class="row">
+  <div *ngFor="let item of getDictKeys(globalFiltersConfig)" class="dropdown col">
+    <button class="btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{globalFiltersConfig[item].default}}
+          </button>
+    <ul class="dropdown-menu " role="menu" aria-labelledby="dropdownMenu">
+      <li *ngFor="let i of getDictKeys(globalFiltersConfig[item].data)" class="dropdown-submenu">
+        <a dropdownToggle class="dropdown-item" (click)="updateDropdown(globalFiltersConfig[item].data[i], item)">{{globalFiltersConfig[item].data[i]['value']}}<span class="caret"></span></a>
+        <ul class="dropdown-menu" *ngIf="globalFiltersConfig[item].child">
+          <li *ngFor="let subItem of globalFiltersConfig[item].data[i]['dropDownData']" class="dropdown-item">
+            <button class="dropdown-item" (click)="updateDropdown(subItem, item)" style="cursor: pointer; cursor: hand;">{{subItem.value}}</button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </div>
