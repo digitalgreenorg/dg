@@ -21,6 +21,8 @@ from models import *
 import datetime
 import time
 
+from loop_ivr.helper_function import send_sms_using_textlocal
+
 class AssignedMandiNotSaved(Exception):
     pass
 
@@ -1056,7 +1058,10 @@ class CombinedTransactionResource(BaseResource):
         user = LoopUser.objects.get(user__username=bundle.request.user)
         attempt = CombinedTransaction.objects.filter(date=bundle.data[
                                                      "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+        
         if attempt.count() < 1:
+            if bundle.data["status"]==1:
+                self.send_farmer_message(bundle)
             bundle = super(CombinedTransactionResource,self).obj_create(bundle, **kwargs)
         else:
             send_duplicate_message(int(attempt[0].id))
@@ -1069,6 +1074,8 @@ class CombinedTransactionResource(BaseResource):
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
 
         try:
+            if(bundle.data["status"]==1):
+                self.send_farmer_message(bundle)
             bundle = super(CombinedTransactionResource,
                            self).obj_update(bundle, **kwargs)
         except Exception, e:
@@ -1111,3 +1118,10 @@ class CombinedTransactionResource(BaseResource):
             return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
         except NotFound:
             return http.Http404()
+
+    def send_farmer_message(self,bundle):
+        #import pdb; pdb.set_trace()
+        farmer = Farmer.objects.filter(id=bundle.data["farmer"]["online_id"])
+        if farmer.count()>0:
+            send_sms_using_textlocal(farmer[0].phone,"apple",None)
+
