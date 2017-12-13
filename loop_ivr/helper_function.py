@@ -7,6 +7,7 @@ import itertools
 import MySQLdb
 import json
 from datetime import datetime, timedelta
+from pytz import timezone
 import xml.etree.ElementTree as xml_parse
 
 from django.db.models import get_model, Sum
