@@ -1125,3 +1125,7 @@ class CombinedTransactionResource(BaseResource):
         if farmer.count()>0:
             send_sms_using_textlocal(farmer[0].phone,"apple",None)
 
+
+    def create_message(self,bundle):
+        pass
+
