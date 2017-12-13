@@ -22,6 +22,7 @@ class PriceInfoIncoming(LoopModel):
     return_result_to_app = models.IntegerField(choices=RETURN_RESULT, default=1)
     call_source = models.IntegerField(choices=CALL_SOURCE, default=1)
     textlocal_sms_id = models.TextField(null=True, blank=True)  #Comma Seprated Multiple SMS id
+    server_response_time = models.DateTimeField(verbose_name="Time at which server makes API call to textlocal", blank=True, null=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.from_number, self.incoming_time)

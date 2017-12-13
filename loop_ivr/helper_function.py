@@ -142,6 +142,9 @@ def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
     # Replace ascii next line with textlocal next line identifier (i.e. %0A)
     content = content.replace('\n','%0A')
     while len(content) > 0:
+        if price_info_incoming_obj != None:
+            price_info_incoming_obj.server_response_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+            price_info_incoming_obj.save()
         # If length of content is less than 750, then send whole content once.
         if len(content) < 750:
             send_sms_using_textlocal(user_no, content, price_info_incoming_obj)
