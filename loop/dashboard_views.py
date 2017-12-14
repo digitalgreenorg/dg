@@ -275,11 +275,14 @@ def send_filter_data(request):
     filter_args = extract_filters_request(request)
     country_id = filter_args['country_id']
     state_id = filter_args['state_id']
+    partner_id = filter_args['partner_id']
     response_list = []
 
     aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id,is_visible=True)
     if state_id != None:
         aggregator_data = aggregator_data.filter(village__block__district__state=state_id)
+    if partner_id != None:
+        aggregator_data = aggregator_data.filter(partner=partner_id)
     aggregator_data = aggregator_data.annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
     aggregator_list = aggregator_data.annotate(id=F('user_id')).values('id', 'value')
 

@@ -30,12 +30,55 @@ export class GlobalFilterComponent implements OnInit {
         });
       });
       // Check iframe working or not
-    });
 
+      if ('country_id' in global_filter) {
+        Object.keys(this.globalFiltersConfig).forEach(key => {
+          let globalFilterConfigObj = this.globalFiltersConfig[key];
+          if(globalFilterConfigObj.name == 'Country') {
+            if('state_id' in global_filter) {
+              for (let data of globalFilterConfigObj.data) {
+                for (let s_data of data.dropDownData) {
+                  if(s_data.id == global_filter['state_id']) {
+                    this.globalFiltersConfig[key].default = s_data.value
+                  }
+                }
+              }
+            } else {
+              for (let data of globalFilterConfigObj.data) {
+                if(data.id == global_filter['country_id']) {
+                  this.globalFiltersConfig[key].default = data.value
+                }
+              }
+            }
+
+            // Handling Partner Filter
+            if (key == 'filter0') {
+              this._globalfilter.getData('get_partners_list/').subscribe(data => {
+                console.log(data);
+                Object.keys(this.globalFiltersConfig).forEach(obj => {
+                  if (this.globalFiltersConfig[obj].name == 'Partner') {
+                    this.globalFiltersConfig[obj].data = data;
+                    // Handling default value in Partner DropDown
+                    if('partner_id' in global_filter) {
+                      for (let data of this.globalFiltersConfig[obj].data) {
+                        if(data.id == global_filter['partner_id']) {
+                          this.globalFiltersConfig[obj].default = data.value
+                        }
+                      }
+                    }
+                  }
+                });
+              })
+            }
+          }
+          
+        });
+      }
+    });
   }
 
   updateDropdown(item, filterName) {
-
+    console.log(item, filterName);
     Object.keys(this.globalFiltersConfig).forEach(key => {
       let globalFilterConfigObj = this.globalFiltersConfig[key];
       if (key == filterName) {
