@@ -5,6 +5,7 @@ import { SharedService } from '../shared.service';
 import { global_filter } from '../app.component';
 import { GlobalFilterSharedService } from '../global-filter/global-filter-shared.service';
 import { config } from '../../config';
+import { globalFiltersConfig } from '../../../training/configs/GlobalFilters';
 
 @Component({
   selector: 'app-global-filter',
@@ -30,12 +31,47 @@ export class GlobalFilterComponent implements OnInit {
         });
       });
       // Check iframe working or not
-    });
 
+      Object.keys(this.globalFiltersConfig).forEach(key => {
+        let defaultFlag = false;
+        if(!this.globalFiltersConfig[key].dependent) {
+          for (let data of this.globalFiltersConfig[key].data) {
+            if(data.dropDown) {
+              for (let innerData of data.dropDownData) {
+                if(innerData.tagName in global_filter) {
+                  if(innerData.id == global_filter[innerData.tagName]) {
+                    defaultFlag = true;
+                    this.globalFiltersConfig[key].default = innerData.value;
+                  }
+                }
+              }
+            }
+            if(data.tagName in global_filter){
+              if(!defaultFlag) {
+                if (data.id == global_filter[data.tagName]) {
+                  defaultFlag = true;
+                  this.globalFiltersConfig[key].default = data.value;
+                }
+              }
+            }
+          }
+        } else {
+          // We need to send Async Request.
+          this._globalfilter.getData('get_partners_list/').subscribe(data => {
+            this.globalFiltersConfig[key].data = data;
+            for (let obj in data) {
+              if(data[obj].tagName in global_filter && data[obj].id == global_filter[data[obj].tagName]) {
+                defaultFlag = true;
+                this.globalFiltersConfig[key].default = data[obj].value;
+              }
+            }
+          })
+        }
+      });
+    });
   }
 
   updateDropdown(item, filterName) {
-
     Object.keys(this.globalFiltersConfig).forEach(key => {
       let globalFilterConfigObj = this.globalFiltersConfig[key];
       if (key == filterName) {
