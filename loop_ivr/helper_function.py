@@ -222,7 +222,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     else:
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
         for index, row in dataframe.iterrows():
-            crop, mandi, date, Av_Rate, STD = row['Crop'], row['Market_Real'], row['Date'], round(row['Av_Rate']), int(row['STD'])
+            crop, mandi, date, Av_Rate, STD = row['Crop'], row['Market_Real'], row['Date'], round(row['Av_Ratemean']), int(row['STDmean'])
             if crop != prev_crop or mandi != prev_mandi:
                 if not all_crop_flag and not all_mandi_flag:
                     crop_mandi_comb.append((crop,mandi))
