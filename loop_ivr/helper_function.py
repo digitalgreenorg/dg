@@ -222,7 +222,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     else:
         prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
         for index, row in dataframe.iterrows():
-            crop, mandi, date, Av_Rate, STD = row['Crop'], row['Market_Real'], row['Date'], round(row['Av_Ratemean']), int(row['STDmean'])
+            crop, mandi, date, Av_Rate, STD, PriceMax, PriceMin = row['Crop'], row['Market_Real'], row['Date'], row['Av_Ratemean'], row['STDmean'], row['Pricemax'], row['Pricemin']
+            delta = PriceMax - PriceMin
             if crop != prev_crop or mandi != prev_mandi:
                 if not all_crop_flag and not all_mandi_flag:
                     crop_mandi_comb.append((crop,mandi))
@@ -237,12 +238,27 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                     temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                 price_info_list.append(temp_str)
                 prev_crop, prev_mandi = crop, mandi
-            if STD == 0:
+            if delta < 1:
+                Av_Rate = round(Av_Rate)
                 temp_str = ('%s %s: %s %s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(Av_Rate))
-            elif STD < 3:
-                min_price = Av_Rate - STD
-                max_price = Av_Rate + STD
+            elif 1 <= delta <=2:
+                if STD <= delta * 0.4:
+                    Av_Rate = round(Av_Rate)
+                    temp_str = ('%s %s: %s %s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(Av_Rate))
+                else:
+                    max_price = round(PriceMax)
+                    min_price = round(PriceMin)
+                    temp_str = ('%s %s: %s %s-%s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(min_price),str(max_price))
+            elif delta > 2:
+                min_price = round(PriceMin) - 1
+                max_price = round(PriceMax) + 1
                 temp_str = ('%s %s: %s %s-%s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(min_price),str(max_price))
+            # if STD == 0:
+            #     temp_str = ('%s %s: %s %s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(Av_Rate))
+            # elif STD < 3:
+            #     min_price = Av_Rate - STD
+            #     max_price = Av_Rate + STD
+            #     temp_str = ('%s %s: %s %s-%s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(min_price),str(max_price))
             price_info_list.append(temp_str)
     # Save combination of crop and mandi for which data is not present in query on if query not for all mandi and crops.
     if not all_crop_flag and not all_mandi_flag:
