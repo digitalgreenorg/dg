@@ -201,12 +201,13 @@ def crop_price_query(request):
             # If it is second try, then take this object else create new object.
             if price_info_incoming_obj.count() > 0:
                 price_info_incoming_obj = price_info_incoming_obj[0]
-                price_info_incoming_obj.prev_query_code = price_info_incoming_obj.query_code
-                price_info_incoming_obj.prev_info_status = price_info_incoming_obj.info_status
-                price_info_incoming_obj.query_code = query_code
-                # If it is retry then set status to pending and remaining code will change this according to input.
-                price_info_incoming_obj.info_status = 0
-                price_info_incoming_obj.save()
+                if price_info_incoming_obj.prev_query_code is None:
+                    price_info_incoming_obj.prev_query_code = price_info_incoming_obj.query_code
+                    price_info_incoming_obj.prev_info_status = price_info_incoming_obj.info_status
+                    price_info_incoming_obj.query_code = query_code
+                    # If it is retry then set status to pending and remaining code will change this according to input.
+                    price_info_incoming_obj.info_status = 0
+                    price_info_incoming_obj.save()
             else:
                 price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
                                         to_number=dg_number, incoming_time=incoming_time, query_code=query_code)
