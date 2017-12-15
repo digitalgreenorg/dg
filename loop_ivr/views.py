@@ -67,9 +67,7 @@ def textlocal_market_info_incoming_call(request):
 @csrf_exempt
 def textlocal_market_info_incoming_sms(request):
     logger.debug("Reached here in SMS View")
-    # logger.debug(request)
     logger.debug(request.body)
-    print request.body
     if request.method == 'POST':
         msg_id = str(request.POST.get('msgId'))
         farmer_number = str(request.POST.get('sender'))
