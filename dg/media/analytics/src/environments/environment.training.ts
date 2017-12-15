@@ -4,6 +4,7 @@ import { cardGraphConfig } from '../../training/configs/GraphCardsConfig';
 import { navsConfig } from '../../training/configs/NavsConfig';
 import { filtersConfig } from '../../training/configs/FiltersConfig';
 import { generalConfig } from '../../training/configs/GeneralConfig';
+import { globalFiltersConfig } from '../../loop/configs/GlobalFilters';
 
 export const environment = {
   production: true,
@@ -15,5 +16,7 @@ export const environment = {
   navsConfig: navsConfig,
   filtersConfig: filtersConfig,
   generalConfig: generalConfig,
-  AddCommonOptions: AddCommonOptions
+  AddCommonOptions: AddCommonOptions,
+  GlobalFiltersConfig: globalFiltersConfig,
+
 };

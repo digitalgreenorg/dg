@@ -18,6 +18,9 @@ import json
 from django.contrib.auth.models import User
 from models import *
 
+import datetime
+import time
+
 class AssignedMandiNotSaved(Exception):
     pass
 
@@ -351,6 +354,12 @@ class FarmerResource(BaseResource):
         village = Village.objects.get(id=bundle.data["village"]["online_id"])
         attempt = Farmer.objects.filter(
             phone=bundle.data['phone'], name=bundle.data['name'], village=village)
+        if self.is_phone_valid(bundle):
+            date = datetime.datetime.now()
+            time = date.strftime('%Y-%m-%d %H:%M:%S')
+            bundle.data['correct_phone_date'] = '2015-11-27'
+        else:
+            bundle.data['correct_phone_date'] = None
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
@@ -359,8 +368,17 @@ class FarmerResource(BaseResource):
 
     def obj_update(self, bundle, request=None, **kwargs):
         try:
+            attempt = Farmer.objects.filter(id=bundle.data['online_id'])
+
+            if attempt[0].correct_phone_date is None and self.is_phone_valid(bundle):
+                date = datetime.datetime.now()
+                time = date.strftime('%Y-%m-%d %H:%M:%S')
+                bundle.data['correct_phone_date'] = time
+            elif attempt[0].correct_phone_date is not None and not self.is_phone_valid(bundle):
+                bundle.data['correct_phone_date'] = None
+                
             bundle = super(FarmerResource, self).obj_update(bundle, **kwargs)
-        except Exception, e:
+        except Exception as e:
             village = Village.objects.get(id=bundle.data["village"]["online_id"])
             attempt = Farmer.objects.filter(
                 phone=bundle.data['phone'], name=bundle.data['name'], village=village)
@@ -371,6 +389,21 @@ class FarmerResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
         return bundle
+
+    def is_phone_valid(self,bundle):
+        village = Village.objects.get(id=bundle.data['village']['online_id'])
+        state = State.objects.get(id=village.block.district.state.id)
+        phone = bundle.data['phone']
+        validPhoneString =False
+        if len(phone) == int(state.phone_digit):
+            if phone.startswith(tuple(state.phone_start.split(","))):
+                validPhoneString = True
+        duplicateCount = Farmer.objects.filter(phone=phone).count()
+        if duplicateCount <= 3 and validPhoneString:
+            return True
+        return False
+
+
 
 
 class LoopUserResource(BaseResource):
