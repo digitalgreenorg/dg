@@ -286,7 +286,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_incoming_obj.return_result_to_app = 0
     price_info_incoming_obj.info_status = 1
     price_info_incoming_obj.save()
-    # send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
+    send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
 
     # if len(final_result) >= 2000 or price_info_incoming_obj.call_source==3:
     #     price_info_incoming_obj.return_result_to_app = 0
