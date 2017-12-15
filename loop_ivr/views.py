@@ -187,8 +187,6 @@ def crop_price_query(request):
     # Serve only Get request
     logger.debug("Reached here in Crop Price Query View")
     logger.debug(request)
-    logger.debug(request.body)
-
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         # Check if request contain some input combination.
