@@ -26,6 +26,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 def market_info_incoming(request):
+    """
+    When user calls on textlocal or exotel number and the call is disconnected by the platform
+    """
+    logger.debug("Reached here in Initial call view")
+    logger.debug(request.body)
     if request.method == 'GET':
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         if request.GET.getlist('call_source'):
@@ -44,6 +49,7 @@ def market_info_incoming(request):
 def textlocal_market_info_incoming_call(request):
     logger.debug("Reached here in CALL View")
     logger.debug(request.body)
+    print request.body
     if request.method == 'POST':
         farmer_number = str(request.POST.getlist('sender')[0])
         farmer_number = re.sub('^91', '0', farmer_number)
@@ -62,8 +68,9 @@ def textlocal_market_info_incoming_call(request):
 @csrf_exempt
 def textlocal_market_info_incoming_sms(request):
     logger.debug("Reached here in SMS View")
-    logger.debug(request)
+    # logger.debug(request)
     logger.debug(request.body)
+    print request.body
     if request.method == 'POST':
         msg_id = str(request.POST.get('msgId'))
         farmer_number = str(request.POST.get('sender'))
