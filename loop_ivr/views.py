@@ -30,8 +30,8 @@ def market_info_incoming(request):
     When user calls on textlocal or exotel number and the call is disconnected by the platform
     """
     logger.debug("Reached here in Initial call view")
-    logger.debug(request.body)
     if request.method == 'GET':
+        logger.debug(request.GET)
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         if request.GET.getlist('call_source'):
             call_source = request.GET.getlist('call_source')[0]
@@ -49,7 +49,6 @@ def market_info_incoming(request):
 def textlocal_market_info_incoming_call(request):
     logger.debug("Reached here in CALL View")
     logger.debug(request.body)
-    print request.body
     if request.method == 'POST':
         farmer_number = str(request.POST.getlist('sender')[0])
         farmer_number = re.sub('^91', '0', farmer_number)
