@@ -187,6 +187,7 @@ def crop_price_query(request):
     # Serve only Get request
     logger.debug("Reached here in Crop Price Query View")
     logger.debug(request)
+    logger.debug("==============================================")
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         # Check if request contain some input combination.
@@ -255,7 +256,7 @@ def crop_price_query(request):
 def crop_price_sms_content(request):
     logger.debug("Reached here in Crop Price SMS Content")
     logger.debug(request)
-    logger.debug(request.body)
+    logger.debug("==============================================")
 
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
@@ -274,6 +275,7 @@ def crop_price_sms_content(request):
             else:
                 response = HttpResponse(status=200, content_type='text/plain')
         except Exception as e:
+            logger.debug(e)
             response = HttpResponse(status=200, content_type='text/plain')
         return response
     return HttpResponse(status=403)
@@ -281,8 +283,7 @@ def crop_price_sms_content(request):
 def no_code_message(request):
     logger.debug("Reached here in NO CODE MESSAGE")
     logger.debug(request)
-    logger.debug(request.body)
-
+    logger.debug("==============================================")
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
@@ -296,8 +297,7 @@ def no_code_message(request):
 def wrong_code_message(request):
     logger.debug("Reached here in WRONG CODE MESSAGE")
     logger.debug(request)
-    logger.debug(request.body)
-
+    logger.debug("==============================================")
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
