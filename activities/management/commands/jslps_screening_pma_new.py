@@ -61,7 +61,7 @@ class Command(BaseCommand):
 			groups = []
 			videos = []
 			for v in vdc:
-				vid = JSLPS_Video.objects.get(vc = v, activity="LIVELIHOOD")
+				vid = JSLPS_Video.objects.filter(vc = v, activity="LIVELIHOOD")
 				if len(vid) > 0:
 					videos.append(vid[0].video)
 			if len(videos) == 0:

@@ -36,7 +36,7 @@ class Command(BaseCommand):
 			da = datetime.datetime.strptime(c.find('DOA').text, '%d/%m/%Y')
 			de = datetime.datetime.strptime(c.find('DOE').text, '%d/%m/%Y')
 			ac = c.find('AKMCode').text
-			animator = JSLPS_Animator.objects.filter(animator_code = ac)
+			animator = JSLPS_Animator.objects.filter(animator_code = ac, activity="LIVELIHOOD")
 			if len(animator) == 0:
 				wtr.writerow(['Can not save adoption without animator', ac, "animator not found"])
 				continue
@@ -44,26 +44,23 @@ class Command(BaseCommand):
 				animator = animator[0]
 
 			try:
-				video = JSLPS_Video.objects.get(vc = vc)
+				video = JSLPS_Video.objects.get(vc = vc, activity="LIVELIHOOD")
 			except Exception as e:
 				wtr.writerow(['video not exist', vc, e])
 				continue
 			
-			person = JSLPS_Person.objects.filter(person_code = pc)
+			person = JSLPS_Person.objects.filter(person_code = pc, activity="LIVELIHOOD")
 			if len(person) == 0:
 				wtr.writerow(['person not exist', pc, "Person not found"])
 				continue
 			else:
 				person = person[0]
-
-
-			print partner, video, animator
 			try:
 				pap, created = \
-					PersonAdoptPractice.objects.get_or_create(person = person.person,
-										  					  video = video.video,
+					PersonAdoptPractice.objects.get_or_create(person=person.person,
+										  					  video=video.video,
 										  					  date_of_adoption = da,
-										  					  partner = partner,
+										  					  partner=partner,
 										  					  animator=animator.animator,
 										  					  user_created_id=user_obj.id)
 				jslps.new_count += 1
