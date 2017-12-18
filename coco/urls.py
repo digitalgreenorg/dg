@@ -9,6 +9,7 @@ from api import DistrictResource, LanguageResource, MediatorResource, NonNegotia
 from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data
 
 from dg.base_settings import COCO_PAGE
+from dg.ap_admin import ap_admin
 from dg.coco_admin import coco_admin
 
 from coco.data_log import send_updated_log
@@ -60,6 +61,7 @@ urlpatterns = patterns('',
     # admin/logout/ should be above admin/ URL
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/coco/admin/'}),
     url(r'^admin/', include(coco_admin.urls)),
+    url(r'^apadmin/', include(ap_admin.urls)),
     (r'coco/', coco_v2),
     (r'^get_log/?$', send_updated_log),
     (r'^analytics/', include(output.urls)),

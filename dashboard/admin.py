@@ -16,8 +16,9 @@ from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
 from videos.models import  NonNegotiable
-from videos.models import ParentCategory
+from videos.models import ParentCategory, Video
 from programs.models import Project
+from easy_select2 import Select2Multiple, Select2
 
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
@@ -266,3 +267,21 @@ class ProjectAdmin(admin.ModelAdmin):
     filter_horizontal = ('associate_partner',)
     list_display = ('id','project_name')
     search_fields = ['project_name']
+
+
+class VideoForm(forms.ModelForm):
+    video = forms.ModelChoiceField(queryset=None, widget=Select2(select2attrs={'width': '600px'}),required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(VideoForm, self).__init__(*args, **kwargs)
+        self.fields['video'].queryset = Video.objects.filter(partner_id=50)
+
+
+class APVideoAdmin(admin.ModelAdmin):
+
+    form = VideoForm
+    list_display = ['id', 'short_video_title', 'video_short_name', 'video_short_regionalname', 'bluefrog_practice']
+    search_fields = ['id', 'video', 'video_short_name', 'video_short_regionalname', 'bluefrog_practice']
+    list_editable = ['video_short_name', 'video_short_regionalname', 'bluefrog_practice']
+
+

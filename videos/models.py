@@ -18,6 +18,7 @@ from programs.models import Partner
 from people.models import Animator
 from people.models import Person
 from training.log.training_log import enter_to_log
+from django.template.defaultfilters import truncatechars
 
 
 class PracticeSector(CocoModel):
@@ -237,3 +238,21 @@ class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)
     vc = models.CharField(max_length=100)
     video = models.ForeignKey(Video, null=True, blank=True)
+
+
+class APVideo(CocoModel):
+    video = models.ForeignKey(Video, null=True, blank=True)
+    video_short_name = models.CharField(max_length=40)
+    video_short_regionalname = models.CharField(max_length=40)
+    bluefrog_practice = models.CharField(max_length=40)
+
+    
+    @property
+    def short_video_title(self):
+        return truncatechars(self.video.title, 50)
+
+
+    def __unicode__(self):
+        return """%s:%s:%s""" % (str(self.id), self.video.title, self.video_short_name)
+
+
