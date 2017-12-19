@@ -16,13 +16,13 @@ class Command(BaseCommand):
 		xml_file = open("jslps_data_integration_files/group.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
-		partner = Partner.objects.get(id = 24)
+		partner = Partner.objects.get(id=24)
 		csv_file = open('jslps_data_integration_files/group_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/group.xml')
 		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
-		print len(root.findall('GroupData'))
+
 		for c in root.findall('GroupData'):
 			gc = c.find('GroupCode').text
 			gn = unicode(c.find('Group_Name').text)
@@ -69,4 +69,6 @@ class Command(BaseCommand):
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
 					wtr.writerow(['village',vc, e])
+
+		csv_file.close()
 

@@ -62,7 +62,6 @@ class Command(BaseCommand):
 					jd.save()
 					print dc, "District Saved in JSLPS_District Table"
 			except Exception as e:
-				print dc, e
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
 					wtr.writerow(['JSLPS district',dc, e, c])
@@ -136,5 +135,6 @@ class Command(BaseCommand):
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
 					wtr.writerow(['JSLPS village',vc, e, c])
+		csv_file.close()
 
 

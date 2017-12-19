@@ -23,7 +23,7 @@ class Command(BaseCommand):
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/person.xml')
 		root = tree.getroot()
-		print len(root.findall('SRIRegistrationData'))
+
 		for c in root.findall('SRIRegistrationData'):
 			pc = c.find('MemID').text
 			pn = unicode(c.find('MemberName').text)
@@ -86,6 +86,7 @@ class Command(BaseCommand):
 													 father_name = pfn,
 													 partner=partner,
 													 gender=gender,
+													 group=group.group,
 													 village = village.Village,
 													 )
 					person.age = age
@@ -103,7 +104,7 @@ class Command(BaseCommand):
 
 			if person != None:
 				jslps_person_list = JSLPS_Person.objects.filter(person_code=pc)
-				if len(jslps_person_list) == 0:
+				if jslps_person_list.count() == 0:
 					jslps_person, created = \
 						JSLPS_Person.objects.get_or_create(person_code=pc,
 														   person=person,
@@ -116,10 +117,10 @@ class Command(BaseCommand):
 					jslps_person.save()
 			else:
 				person_list = Person.objects.filter(person_name = pn,father_name = pfn,village = village.Village)
-				if len(person_list) != 0:
+				if person_list.count() != 0:
 					person = person_list[0]
 					jslps_person_list = JSLPS_Person.objects.filter(person_code=pc,person=person)
-					if len(jslps_person_list) == 0:
+					if jslps_person_list.count() == 0:
 						jslps_person, created = \
 							JSLPS_Person.objects.get_or_create(person_code=pc,
 															   person=person,
@@ -133,6 +134,8 @@ class Command(BaseCommand):
 							jslps_person.save()
 				else:
 					wtr.writerow(['Person not saved and duplicate also not exist',pc, "not saved"])
+
+		csv_file.close()
 
 
 

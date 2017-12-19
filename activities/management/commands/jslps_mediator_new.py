@@ -96,7 +96,7 @@ class Command(BaseCommand):
 										gender=gender,
 										partner=partner,
 										district=district.district)
-				if len(animator_list) != 0:
+				if animator_list.count() != 0:
 					animator = animator_list[0]
 					assigned_villages = AnimatorAssignedVillage.objects.filter(animator=animator).values_list('village_id', flat=True)
 					for village in village_list:
@@ -106,7 +106,7 @@ class Command(BaseCommand):
 																		  village=village.Village,
 																		  user_created_id=user_obj.id)
 					jslps_animator_list = JSLPS_Animator.objects.filter(animator_code=ac,animator=animator)
-					if len(jslps_animator_list) == 0:
+					if jslps_animator_list.count() == 0:
 						jslps_animator, created = \
 							JSLPS_Animator.objects.get_or_create(animator_code=ac,
 																 animator=animator,
@@ -128,7 +128,6 @@ class Command(BaseCommand):
 		xml_file.write(contents)
 		xml_file.close()
 
-		partner = Partner.objects.get(id = 24)
 		csv_file = open('jslps_data_integration_files/mediator_co_error.csv', 'wb')
 		wtrr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/mediator_co.xml')
@@ -163,7 +162,7 @@ class Command(BaseCommand):
 
 			if animator != None:
 				jslps_animator_list = JSLPS_Animator.objects.filter(animator_code=ac)
-				if len(jslps_animator_list) == 0:
+				if jslps_animator_list.count() == 0:
 					jslps_animator, created = \
 						JSLPS_Animator.objects.get_or_create(animator_code=ac,
 									   						 animator=animator,
@@ -178,10 +177,10 @@ class Command(BaseCommand):
 														gender=gender,
 														partner=partner,
 														district=district.district)
-				if len(animator_list) != 0:
+				if animator_list.count() != 0:
 					animator = animator_list[0]
 					jslps_animator_list = JSLPS_Animator.objects.filter(animator_code=ac,animator=animator)
-					if len(jslps_animator_list) == 0:
+					if jslps_animator_list.count() == 0:
 						jslps_animator, created = \
 						JSLPS_Animator.objects.get_or_create(animator_code=ac,
 									   						 animator=animator,
@@ -194,4 +193,7 @@ class Command(BaseCommand):
 							jslps_animator.save()
 				else:
 					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])
+
+		csv_file.close()
+
 

@@ -23,7 +23,7 @@ class Command(BaseCommand):
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/person.xml')
 		root = tree.getroot()
-		print len(root.findall('SRIRegistrationData'))
+
 		for c in root.findall('SRIRegistrationData'):
 			pc = c.find('MemID').text
 			pn = unicode(c.find('MemberName').text)
@@ -87,6 +87,7 @@ class Command(BaseCommand):
 													 partner=partner,
 													 gender=gender,
 													 village = village.Village,
+													 group=group.group
 													 )
 					person.age = age
 					person.phone_no = phone
@@ -133,6 +134,8 @@ class Command(BaseCommand):
 							jslps_person.save()
 				else:
 					wtr.writerow(['Person not saved and duplicate also not exist',pc, "not saved"])
+
+		csv_file.close()
 
 
 

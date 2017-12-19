@@ -51,8 +51,8 @@ class Command(BaseCommand):
 			else:
 				animator = animator[0]
 
-			village = JSLPS_Village.objects.filter(village_code = vc)
-			if len(village) == 0:
+			village = JSLPS_Village.objects.filter(village_code=vc)
+			if village.count() == 0:
 				wtr.writerow(['Can not save screening without village', sc, "village not found"])
 				continue
 			else:
@@ -61,15 +61,15 @@ class Command(BaseCommand):
 			groups = []
 			videos = []
 			for v in vdc:
-				vid = JSLPS_Video.objects.filter(vc = v, activity="GOTARY")
-				if len(vid) > 0:
+				vid = JSLPS_Video.objects.filter(vc=v, activity="GOTARY")
+				if vid.count() > 0:
 					videos.append(vid[0].video)
 			if len(videos) == 0:
 				wtr.writerow(['Can not save screening without video', sc, "video not found"])
 				continue
 			for g in gc:
-				grp = JSLPS_Persongroup.objects.filter(group_code = g)
-				if len(grp) > 0:
+				grp = JSLPS_Persongroup.objects.filter(group_code=g)
+				if grp.count() > 0:
 					groups.append(grp[0].group)
 
 			try:
@@ -100,14 +100,12 @@ class Command(BaseCommand):
 			if screening != None:
 				for i in groups:
 					screening.farmer_groups_targeted.add(i)
-					screening.save()
 				for i in videos:
 					screening.videoes_screened.add(i)
-					screening.save()
 				jslps_screening_list = \
 					JSLPS_Screening.objects.filter(screenig_code=sc,
 												   activity="GOTARY")
-				if len(jslps_screening_list) == 0:
+				if jslps_screening_list.count() == 0:
 					jslps_screening, created = \
 						JSLPS_Screening.objects.get_or_create(screenig_code=sc,
 															  screening=screening,
@@ -123,16 +121,14 @@ class Command(BaseCommand):
 														  village = village.Village,
 														  animator = animator.animator,
 														  partner = partner)
-				if len(screening_list) != 0:
+				if screening_list.count() != 0:
 					screening = screening_list[0]
 					for i in groups:
 						screening.farmer_groups_targeted.add(i)
-						screening.save()
 					for i in videos:
 						screening.videoes_screened.add(i)
-						screening.save()
 					jslps_screening_list = JSLPS_Screening.objects.filter(screenig_code=sc,screening=screening)
-					if len(jslps_screening_list) == 0:
+					if jslps_screening_list.count() == 0:
 						jslps_screening, created = \
 							JSLPS_Screening.objects.get_or_create(screenig_code=sc,
 																  screening=screening,
@@ -145,6 +141,7 @@ class Command(BaseCommand):
 							jslps_screening.save()
 				else:
 					wtr.writerow(['Screening not saved and duplicate also not exist',sc, "not saved"])
+		csv_file.close()
 
 		#saving pma
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGoatryVedioScreeingMember?pUsername=admin&pPassword=JSLPSSRI')
@@ -165,16 +162,16 @@ class Command(BaseCommand):
 			
 			screening = \
 				JSLPS_Screening.objects.filter(screenig_code=sc,
-											  activity="GOTARY",
-											  village=vill)
-			if len(screening) == 0:
+											   activity="GOTARY",
+											   screening__village=vill)
+			if screening.count() == 0:
 				wtrr.writerow(['Screening not exist', sc, "Screening not found"])
 				continue
 			else:
 				screening = screening[0]
 
 			person = JSLPS_Person.objects.filter(person_code=pc)
-			if len(person) == 0:
+			if person.count() == 0:
 				wtrr.writerow(['person not exist', pc, "Person not found"])
 				continue
 			else:
@@ -184,7 +181,7 @@ class Command(BaseCommand):
 			pma_already_exist = \
 				PersonMeetingAttendance.objects.filter(screening_id=screening.screening.id,
 													   person_id=person.person.id)
-			if len(pma_already_exist) == 0:
+			if pma_already_exist.count() == 0:
 				try:
 					pma, created = \
 						PersonMeetingAttendance.objects.get_or_create(screening=screening.screening,

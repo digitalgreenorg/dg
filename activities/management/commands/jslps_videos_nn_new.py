@@ -145,7 +145,7 @@ class Command(BaseCommand):
 				vid.production_team.add(camera_operator.animator)
 				vid.save()
 				jslps_video_list = JSLPS_Video.objects.filter(vc=vdc, title=vn)
-				if len(jslps_video_list) == 0:
+				if jslps_video_list.count() == 0:
 					jslps_video, created = \
 						JSLPS_Video.objects.get_or_create(title=vn,
 														  vc=vdc,
@@ -184,6 +184,8 @@ class Command(BaseCommand):
 
 		JSLPS_Video.objects.filter(vc__in=data_list).update(activity="LIVELIHOOD")
 
+		csv_file.close()
+
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
@@ -191,7 +193,6 @@ class Command(BaseCommand):
 		xml_file.write(contents)
 		xml_file.close()
 
-		partner = Partner.objects.get(id = 24)
 		csv_file = open('jslps_data_integration_files/nonnego_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/nonnego.xml')
@@ -227,3 +228,7 @@ class Command(BaseCommand):
 				nonnego_already = nonnego_already_list[0]
 				nonnego_already.physically_verifiable = vr
 				nonnego_already.save()
+		
+		csv_file.close()
+
+

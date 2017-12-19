@@ -184,6 +184,8 @@ class Command(BaseCommand):
 
 		JSLPS_Video.objects.filter(vc__in=data_list).update(activity="GOTARY")
 
+		csv_file.close()
+
 		#saving non-negotiables
 		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGotaryNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
@@ -191,7 +193,6 @@ class Command(BaseCommand):
 		xml_file.write(contents)
 		xml_file.close()
 
-		partner = Partner.objects.get(id = 24)
 		csv_file = open('jslps_data_integration_files/goatary_nonnego_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/goatary_nonnego.xml')
@@ -227,3 +228,6 @@ class Command(BaseCommand):
 				nonnego_already = nonnego_already_list[0]
 				nonnego_already.physically_verifiable = vr
 				nonnego_already.save()
+
+		csv_file.close()
+
