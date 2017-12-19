@@ -222,9 +222,11 @@ def crop_price_query(request):
         if query_code == '' or query_code == 'None':
             sms_content = [no_code_entered,'\n\n']
             send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            return HttpResponse(status=200)
         elif query_code == '0':
             sms_content = []
             send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            return HttpResponse(status=200)
         elif re.search(PATTERN_REGEX, query_code) is None:
             # send wrong query code
             send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
