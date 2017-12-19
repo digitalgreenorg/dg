@@ -159,7 +159,7 @@ def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
             current_content = content[:current_index]
             content = content[current_index:]
             send_sms_using_textlocal(user_no, current_content, price_info_incoming_obj)
-            time.sleep(.5)
+            time.sleep(1)
 
 def get_top_selling_crop_quantity_wise(number_of_crop, from_duration):
     crop_id_list = list(CropLanguage.objects.filter(language_id=1).values_list('crop_id', flat=True))
