@@ -69,10 +69,10 @@ class Command(BaseCommand):
 						JSLPS_Adoption.objects.get_or_create(member_code=pc,
 															 jslps_video_id=video.id,
 															 jslps_date_of_adoption=da,
-															 jslps_date_of_entry=de,
 															 jslps_akmcode_id=animator.id,
 															 adoption=pap,
-															 user_created_id=user_obj.id)
+															 user_created_id=user_obj.id
+															 )
 				except Exception as e:
 					wtr.writerow(['Not able to save Adoption', e])
 			except Exception as e:

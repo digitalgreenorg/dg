@@ -157,7 +157,6 @@ class Command(BaseCommand):
 		root = tree.getroot()
 
 		for c in root.findall('VedioScreeingMemberData'):
-			print len(root.findall('VedioScreeingMemberData'))
 			sc = c.find('VDO_ID').text
 			pc = c.find('MemberId').text
 			

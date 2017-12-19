@@ -45,7 +45,7 @@ class Command(BaseCommand):
 				gc = []
 
 			animator = JSLPS_Animator.objects.filter(animator_code = ac)
-			if len(animator) == 0:
+			if not animator:
 				wtr.writerow(['Can not save screening without animator', sc, "animator not found"])
 				continue
 			else:
@@ -74,17 +74,17 @@ class Command(BaseCommand):
 
 			try:
 				scr_already_exist = Screening.objects.filter(date = sd,
-									start_time = st,
-									village = village.Village,
-									animator = animator.animator,
-									partner = partner)
-				if len(scr_already_exist) == 0:
-					screening, created = \
-						Screening.objects.get_or_create(date=sd,
-														start_time=st,
-														village=village.Village,
-														animator=animator.animator,
-														partner=partner)
+															 start_time = st,
+															 village = village.Village,
+															 animator = animator.animator,
+															 partner = partner)
+				if scr_already_exist.count() == 0:
+					screening = Screening(date=sd,
+										  start_time=st,
+										  village=village.Village,
+										  animator=animator.animator,
+										  partner=partner)
+					screening.save()
 					jslps.new_count += 1
 				else:
 					screening = None
@@ -119,10 +119,10 @@ class Command(BaseCommand):
 					jslps_screening.save()
 			else:
 				screening_list = Screening.objects.filter(date = sd,
-									start_time = st,
-									village = village.Village,
-									animator = animator.animator,
-									partner = partner)
+														  start_time = st,
+														  village = village.Village,
+														  animator = animator.animator,
+														  partner = partner)
 				if len(screening_list) != 0:
 					screening = screening_list[0]
 					for i in groups:
@@ -147,7 +147,7 @@ class Command(BaseCommand):
 					wtr.writerow(['Screening not saved and duplicate also not exist',sc, "not saved"])
 
 		#saving pma
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioScreeingMemberData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGoatryVedioScreeingMember?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/gotary_pma.xml", 'w')
 		xml_file.write(contents)
@@ -192,3 +192,7 @@ class Command(BaseCommand):
 					jslps.new_count += 1
 				except Exception as e:
 					wtrr.writerow(['Error in saving attendance (scr_id=%s)'%(str(sc)), pc, e])
+
+		csv_file.close()
+
+
