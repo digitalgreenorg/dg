@@ -1,3 +1,80 @@
+var models = [
+  {
+    start_date: '2015-11-01',
+    geography: {
+      India: ['Bihar']
+    },
+    aggregator_data_set: [
+      {
+        title: "S No",
+        visible: true,
+        col_const: "SNO",
+        calc_function: "payment_summary_basics",
+        default_val: 0
+      },
+      {
+        title: "Date",
+        visible: true,
+        col_const: "DATE",
+        calc_function: "payment_summary_basics",
+        default_val: " "
+      },
+      {
+        title: "Quantity Post Deduction",
+        visible: true,
+        col_const: "QUANTITY_POST_DEDUCTION",
+        calc_function: "aggregator_incentive_details",
+        default_val: 0
+      },
+      {
+        title: "Mandi ID",
+        visible: false,
+        col_const: "MANDI_ID",
+        calc_function: "payment_summary_basics",
+        default_val: 0
+      }
+    ],
+    net_quantity_const: "QUANTITY_POST_DEDUCTION"
+  },
+  {
+    start_date: '2016-11-01',
+    geography: {
+      India: ["Maharashtra"]
+    },
+    aggregator_data_set: [
+      {
+        title: "S No",
+        visible: true,
+        col_const: "SNO",
+        calc_function: "payment_summary_basics",
+        default_val: 0
+      },
+      {
+        title: "Date",
+        visible: true,
+        col_const: "DATE",
+        calc_function: null,
+        default_val: " "
+      },
+      {
+        title: "Quantity",
+        visible: false,
+        col_const: "QUANTITY",
+        calc_function: null,
+        default_val: 0
+      },
+      {
+        title: "Mandi ID",
+        visible: true,
+        col_const: "MANDI_ID",
+        calc_function: null,
+        default_val: 0
+      }
+    ],
+    net_quantity_const: "QUANTITY"
+  }
+];
+
 /* This file should contain all the JS for Loop dashboard */
 window.onload = initialize;
 
@@ -131,7 +208,7 @@ function initialize() {
   initialLoadComplete = true;
   set_filterlistener();
   hidePaymentDetails();
-  hideLoader();
+  hideLoader(); 
 }
 
 function showLoader() {
@@ -378,180 +455,116 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   var gaddidar_contribution_data = payments_data.gaddidar_data;
   var aggregator_incentive = payments_data.aggregator_incentive;
 
-  PAYMENT_SUMMARY.SNO = 0;
-  PAYMENT_SUMMARY.DATE = 1;
-  PAYMENT_SUMMARY.MANDI_NAME = 2;
-  PAYMENT_SUMMARY.QUANTITY = 3;
-  PAYMENT_SUMMARY.QUANTITY_POST_DEDUCTION = 4;
-  PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE = 5;
-  PAYMENT_SUMMARY.TRANSPORT_COST = 6;
-  PAYMENT_SUMMARY.FARMER_SHARE = 7;
-  PAYMENT_SUMMARY.GADDIDAR_SHARE = 8;
-  PAYMENT_SUMMARY.NET_PAYMENT = 9;
-  PAYMENT_SUMMARY.AGGREGATOR_COMMENT = 10;
-  PAYMENT_SUMMARY.FARMER_COMMENT = 11;
-  PAYMENT_SUMMARY.AGG_ID = 12;
-  PAYMENT_SUMMARY.MANDI_ID = 13;
-  PAYMENT_SUMMARY.NET_QUANTITY = 4;
+  var max_model_start_date = null;
+  var model_ID = -1
 
-  COMMISSION_AGENT_DETAILS.DATE = 0;
-  COMMISSION_AGENT_DETAILS.GADDIDAR_NAME = 1;
-  COMMISSION_AGENT_DETAILS.MANDI_NAME = 2;
-  COMMISSION_AGENT_DETAILS.QUANTITY = 3;
-  COMMISSION_AGENT_DETAILS.GADDIDAR_DISCOUNT_RATE = 4;
-  COMMISSION_AGENT_DETAILS.GADDIDAR_COMMISSION = 5;
-  COMMISSION_AGENT_DETAILS.MANDI_ID = 7;
-  COMMISSION_AGENT_DETAILS.GADDIDAR_ID = 8;
-  COMMISSION_AGENT_DETAILS.AGG_ID = 9;
-  COMMISSION_AGENT_DETAILS.GADDIDAR_COMMENT = 6;
-  COMMISSION_AGENT_DETAILS.AMOUNT = 10;
-  COMMISSION_AGENT_DETAILS.GADDIDAR_DISCOUNT_CRITERIA = 11;
+  for(var i=0; i < models.length; i++) {
+    if(models[i]["geography"][selected_aggregator_country].indexOf(selected_aggregator_state) != -1) {
+      if(max_model_start_date == null || (new Date(payments_start_date) - new Date(models[i]["start_date"]) > 0 && new Date(models[i]["start_date"]) - new Date(max_model_start_date) > 0)) {
+        max_model_start_date = models[i]["start_date"];
+        model_ID = i;
+      }
+    }
+  }
 
-  TRANSPORTER_DETAILS.DATE = 0;
-  TRANSPORTER_DETAILS.MANDI_NAME = 1;
-  TRANSPORTER_DETAILS.TRANSPORTER_NAME = 2;
-  TRANSPORTER_DETAILS.TRANSPORTER_PHONE = 3;
-  TRANSPORTER_DETAILS.VEHICLE_TYPE = 4;
-  TRANSPORTER_DETAILS.VEHICLE_NUMBER = 5;
-  TRANSPORTER_DETAILS.TRANSPORT_COST = 6
-  TRANSPORTER_DETAILS.TRANSPORTER_COMMENT = 7;
-  TRANSPORTER_DETAILS.MANDI_ID = 8;
-  TRANSPORTER_DETAILS.TRANSPORTATION_VEHICLE_ID = 9;
-  TRANSPORTER_DETAILS.TIMESTAMP = 10;
-  TRANSPORTER_DETAILS.ROW_ID = 11;
+  var payment_model = models[model_ID];
 
-  var sno = 1;
+  var default_aggregator_data_set = [];
+  var default_gaddidar_data_set = [];
+  var default_transporter_data_set = [];
+
+  var aggregator_data_table_columns = [];
+  var gaddidar_data_table_columns = [];
+  var transporter_data_table_columns = [];
+
   aggregator_data_set = [];
   gaddidar_data_set = [];
   transporter_data_set = [];
+
+  for(var i=0; i < payment_model["aggregator_data_set"].length; i++) {
+    default_aggregator_data_set.push(payment_model["aggregator_data_set"][i]["default_val"]);
+    PAYMENT_SUMMARY[payment_model["aggregator_data_set"][i]["col_const"]] = i;
+    aggregator_data_table_columns.push({
+      title: payment_model["aggregator_data_set"][i]["title"],
+      visible: payment_model["aggregator_data_set"][i]["visible"]
+    });
+  }
+  PAYMENT_SUMMARY["NET_QUANTITY"] = PAYMENT_SUMMARY[payment_model["net_quantity_const"]];
+
+  for(var i = 0; i < aggregator_incentive.length; i++) {
+    aggregator_data_set.push(default_aggregator_data_set);
+  }
+  
+  for(var i=0; i < payment_model["gaddidar_data_set"].length; i++) {
+    default_gaddidar_data_set.push(payment_model["gaddidar_data_set"][i]["default_val"]);
+    COMMISSION_AGENT_DETAILS[payment_model["gaddidar_data_set"][i]["col_const"]] = i;
+    gaddidar_data_table_columns.push({
+      title: payment_model["gaddidar_data_set"][i]["title"],
+      visible: payment_model["gaddidar_data_set"][i]["visible"]
+    });
+  }
+
+  for(var i = 0; i < aggregator_payment.length; i++) {
+    gaddidar_data_set.push(default_gaddidar_data_set);
+  }
+
+  for(var i=0; i < payment_model["transporter_data_set"].length; i++) {
+    default_transporter_data_set.push(payment_model["transporter_data_set"][i]["default_val"]);
+    TRANSPORTER_DETAILS[payment_model["transporter_data_set"][i]["col_const"]] = i;
+    transporter_data_table_columns.push({
+      title: payment_model["transporter_data_set"][i]["title"],
+      visible: payment_model["transporter_data_set"][i]["visible"]
+    });
+  }
+
+  for(var i = 0; i < transport_payment.length; i++) {
+    transporter_data_set.push(default_transporter_data_set);
+  }
+  
   var dates = [];
   var mandis = [];
   var quantites = [];
   var gaddidar_amount = [];
-  // var farmers = [];
   var transport_cost = [];
   var farmer_share = [];
-  var aggregator_payment_length = aggregator_payment.length;
-  for (var i = 0; i < aggregator_payment_length; i++) {
-    if (aggregator == aggregator_payment[i][USER_CREATED__ID].toString()) {
-      var date_index = dates.indexOf(aggregator_payment[i]['date']);
-      if (date_index == -1) {
-        dates.push(aggregator_payment[i]['date']);
-        mandis.push([]);
-        quantites.push([]);
-        gaddidar_amount.push([]);
-        // farmers.push([]);
-        transport_cost.push([]);
-        farmer_share.push([]);
-        date_index = dates.indexOf(aggregator_payment[i]['date']);
-      }
-      var mandi_index = mandis[date_index].map(function(e) {
-        return e.mandi_name;
-      }).indexOf(aggregator_payment[i]['mandi__mandi_name']);
-      if (mandi_index == -1) {
-        mandis[date_index].push({
-          mandi_name: aggregator_payment[i]['mandi__mandi_name'],
-          mandi_id: aggregator_payment[i][MANDI__ID]
-        });
-        quantites[date_index].push(0);
-        //gaddidar_amount[date_index].push(0);
-        // farmers[date_index].push(0);
-        transport_cost[date_index].push(0);
-        farmer_share[date_index].push({
-          farmer_share_amount: 0,
-          farmer_share_comment: null
-        });
-        mandi_index = mandis[date_index].map(function(e) {
-          return e.mandi_name;
-        }).indexOf(aggregator_payment[i]['mandi__mandi_name']);
-      }
-      quantites[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM];
-      //gaddidar_amount[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM] * aggregator_payment[i]['gaddidar__commission'];
-      // farmers[date_index][mandi_index] += aggregator_payment[i]['farmer__count'];
-      gaddidar_data_set.push([aggregator_payment[i]['date'], aggregator_payment[i]['gaddidar__gaddidar_name'], aggregator_payment[i]['mandi__mandi_name'], parseFloat(aggregator_payment[i][QUANTITY__SUM].toFixed(2)), 0, 0, " ", aggregator_payment[i][MANDI__ID], aggregator_payment[i][GADDIDAR__ID], agg_id, parseFloat(aggregator_payment[i][AMOUNT__SUM].toFixed(2)), aggregator_payment[i]['gaddidar__discount_criteria']]);
+  //var net_payment = [];
 
+  //basics + gaddidar_data_set 
+  for (var i = 0; i < aggregator_payment.length; i++) {
+    var date_index = dates.indexOf(aggregator_payment[i]['date']);
+    if (date_index == -1) {
+      dates.push(aggregator_payment[i]['date']);
+      mandis.push([]);
+      quantites.push([]);
+      gaddidar_amount.push([]);
+      transport_cost.push([]);
+      farmer_share.push([]);
+      date_index = dates.indexOf(aggregator_payment[i]['date']);
     }
-  }
-
-  var gaddidar_contribution_data_length = gaddidar_contribution_data.length;
-  for (var i = 0; i < gaddidar_contribution_data_length; i++) {
-    if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
-      for (var j = 0; j < gaddidar_data_set.length; j++) {
-        if (gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 &&
-          gaddidar_data_set[j].indexOf(payments_gaddidar_contribution[i]['gaddidar__name']) != -1) {
-          gaddidar_data_set[j][4] = parseFloat(payments_gaddidar_contribution[i]['gaddidar_discount']);
-          gaddidar_data_set[j][5] = parseFloat(payments_gaddidar_contribution[i]['amount']);
-          gaddidar_data_set[j][6] = payments_gaddidar_contribution[i]['comment'];
-        }
-      }
-    }
-  }
-
-  var transport_payment_length = transport_payment.length;
-  for (var i = 0; i < transport_payment_length; i++) {
-    if (aggregator == transport_payment[i][USER_CREATED__ID].toString()) {
-      date_index = dates.indexOf(transport_payment[i]['date']);
+    var mandi_index = mandis[date_index].map(function(e) {
+      return e.mandi_name;
+    }).indexOf(aggregator_payment[i]['mandi__mandi_name']);
+    if (mandi_index == -1) {
+      mandis[date_index].push({
+        mandi_name: aggregator_payment[i]['mandi__mandi_name'],
+        mandi_id: aggregator_payment[i][MANDI__ID]
+      });
+      quantites[date_index].push(0);
+      gaddidar_amount[date_index].push(0);
+      transport_cost[date_index].push(0);
+      farmer_share[date_index].push({
+        farmer_share_amount: 0,
+        farmer_share_comment: null
+      });
       mandi_index = mandis[date_index].map(function(e) {
         return e.mandi_name;
-      }).indexOf(transport_payment[i]['mandi__mandi_name']);
-      transport_cost[date_index][mandi_index] += transport_payment[i]['transportation_cost__sum'];
-      farmer_share[date_index][mandi_index].farmer_share_amount = transport_payment[i]['farmer_share'];
-      farmer_share[date_index][mandi_index].farmer_share_comment = transport_payment[i]['farmer_share_comment'];
-
-      transporter_data_set.push([transport_payment[i]['date'], transport_payment[i]['mandi__mandi_name'], transport_payment[i]['transportation_vehicle__transporter__transporter_name'],
-        transport_payment[i]['transportation_vehicle__transporter__transporter_phone'], transport_payment[i]['transportation_vehicle__vehicle__vehicle_name'], transport_payment[i]['transportation_vehicle__vehicle_number'], parseFloat(transport_payment[i]['transportation_cost__sum'].toFixed(2)), transport_payment[i]['transportation_cost_comment'], transport_payment[i]['mandi__id'], transport_payment[i]['transportation_vehicle__id'], transport_payment[i]['timestamp'], i
-      ]);
+      }).indexOf(aggregator_payment[i]['mandi__mandi_name']);
     }
-  }
-  var total_volume = 0;
-  var total_payment = 0;
-  for (var i = 0; i < dates.length; i++) {
-    for (var j = 0; j < mandis[i].length; j++) {
-      //TODO : DONE to be moved to below for loop where we are adding aggregator_outlier
-      var net_payment = transport_cost[i][j] - farmer_share[i][j].farmer_share_amount;
-
-      aggregator_data_set.push([sno.toString(), dates[i], mandis[i][j].mandi_name, parseFloat(quantites[i][j].toFixed(2)), 0, 0, transport_cost[i][j], farmer_share[i][j].farmer_share_amount, 0, parseFloat(net_payment.toFixed(2)), "", farmer_share[i][j].farmer_share_comment, agg_id, mandis[i][j].mandi_id]);
-
-      sno += 1;
-    }
+    quantites[date_index][mandi_index] += aggregator_payment[i][QUANTITY__SUM];
+    gaddidar_data_set[i][COMMISSION_AGENT_DETAILS.DATE] = aggregator_payment[i]['date'];    
   }
 
-  for (var i = 0; i < gaddidar_contribution_data_length; i++) {
-    if (aggregator == payments_gaddidar_contribution[i][USER_CREATED__ID].toString()) {
-      for (var j = 0; j < aggregator_data_set.length; j++) {
-        if (aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['date']) != -1 && aggregator_data_set[j].indexOf(payments_gaddidar_contribution[i]['mandi__name']) != -1) {
-          aggregator_data_set[j][8] += parseFloat(payments_gaddidar_contribution[i]['amount']);
-          aggregator_data_set[j][9] = parseFloat((aggregator_data_set[j][9] - parseFloat(payments_gaddidar_contribution[i]['amount'])).toFixed(2));
-          break;
-        }
-      }
-    }
-  }
 
-  var aggregator_incentive_length = aggregator_incentive.length;
-  for (var i = 0; i < aggregator_incentive_length; i++) {
-    if (aggregator == aggregator_incentive[i][USER_CREATED__ID].toString()) {
-      for (var j = 0; j < aggregator_data_set.length; j++) {
-        if (aggregator_data_set[j].indexOf(aggregator_incentive[i]['date']) != -1 && aggregator_data_set[j].indexOf(aggregator_incentive[i]['mandi__name']) != -1) {
-          aggregator_data_set[j][4] = parseFloat(aggregator_incentive[i]['quantity__sum']);
-          aggregator_data_set[j][5] = parseFloat(aggregator_incentive[i]['amount']);
-          aggregator_data_set[j][9] = (parseFloat(aggregator_data_set[j][9]) + parseFloat(aggregator_data_set[j][5])).toFixed(2);
-          aggregator_data_set[j][PAYMENT_SUMMARY.AGGREGATOR_COMMENT] = aggregator_incentive[i]['comment'];
-          break;
-        }
-      }
-    }
-  }
-  //TODO: to be removed. Added fot temporary purposes.
-  var data_set_length = aggregator_data_set.length;
-  aggregator_data_set.push([sno.toString(), "", "Mobile Recharge ", "", "", 150, "", "", "", 150, "", "", "", ""]);
-
-  var gaddidar_data_set_clone = [];
-  for (var i = 0; i < gaddidar_data_set.length; i++) {
-    gaddidar_data_set_clone.push(gaddidar_data_set[i].slice());
-    if (gaddidar_data_set[i][11] == 1)
-      gaddidar_data_set_clone[i][4] = parseFloat(gaddidar_data_set_clone[i][4]) * 100 + '%';
-  }
   $(window).on('beforeunload', function() {
     if (superEditMode == 1)
       return "You have Unsaved Changes";
@@ -865,39 +878,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   $('#table2').DataTable({
     destroy: true,
     data: aggregator_data_set,
-    columns: [{
-      title: "S No"
-    }, {
-      title: "Date"
-    }, {
-      title: "Market"
-    }, {
-      title: "Quantity[Q'] (in Kg)"
-    }, {
-      title: "Quantity Post Deduction[Q] (in Kg)"
-    }, {
-      title: "Aggregator Payment[AP] (in Rs) (0.25*Q)"
-    }, {
-      title: "Transport Cost[TC] (in Rs)"
-    }, {
-      title: "Farmers' Contribution[FC] (in Rs)"
-    }, {
-      title: "Commission Agent Contribution[CAC] (in Rs)"
-    }, {
-      title: "Total Payment(in Rs) (AP + TC - FC - CAC)"
-    }, {
-      title: "Aggregator Comment",
-      defaultContent: " "
-    }, {
-      title: "Farmer Comment",
-      defaultContent: " "
-    }, {
-      title: "Aggregator Id",
-      visible: false
-    }, {
-      title: "Mandi Id",
-      visible: false
-    }],
+    columns: aggregator_data_table_columns,
     "dom": paymentTableDom,
     "pageLength": 1000,
     "oTableTools": {
