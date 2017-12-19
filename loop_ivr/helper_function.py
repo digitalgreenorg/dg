@@ -310,3 +310,31 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             #send_sms(AGGREGATOR_SMS_NO, from_number, crop_code_list)
             send_info_using_textlocal(from_number, crop_code_list)
     PriceInfoLog.objects.bulk_create(price_info_log_list)
+
+
+def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number) :
+    price_info_incoming_obj.info_status = 3
+    price_info_incoming_obj.save()
+    # Send No code entered message to user
+    crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+    sms_content = sms_content + [crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+    sms_content = ''.join(sms_content)
+    send_info_using_textlocal(farmer_number, sms_content)
+
+def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
+    price_info_incoming_obj.info_status = 2
+    price_info_incoming_obj.save()
+    # Send Wrong code entered message to user.
+    try:
+        wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
+    except Exception as e:
+        wrong_query_code = ''
+    wrong_code_entered_message = wrong_code_entered
+    if wrong_query_code == '':
+        wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
+    else:
+        wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
+    crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+    sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+    sms_content = ''.join(sms_content)
+    send_info_using_textlocal(farmer_number, sms_content)
