@@ -4,6 +4,14 @@ from dg.settings import MEDIA_ROOT, CURRENT_DOMAIN
 LOG_FILE = '%s/loop/loop_ivr_log.log'%(MEDIA_ROOT,)
 AGGREGATOR_SMS_NO = '01139585707'
 
+
+loop_receipt = unicode('लूप रसीद', "utf-8")
+kisan = unicode('किसान', "utf-8")
+jamakarta = unicode('जमाकर्ता', "utf-8")
+kilo = unicode('किलो', "utf-8")
+kul_rashi = unicode('कुल राशि', "utf-8")
+rupee = unicode('रु', "utf-8")
+
 mandi_hi = 'मंडी'
 indian_rupee = 'रु'
 helpline_hi = 'हेल्पलाइन'

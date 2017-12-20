@@ -489,6 +489,8 @@ class CombinedTransaction(LoopModel):
     timestamp = models.CharField(max_length=25)
     is_visible = models.BooleanField(default=True)
     payment_date = models.DateField(auto_now=False, null=True, blank=True)
+    payment_sms = models.BooleanField(default=0)
+    payment_sms_id = models.CharField(max_length=15, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (
@@ -728,3 +730,12 @@ class BroadcastAudience(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (self.to_number, self.broadcast)
+
+class CTSmsLog(LoopModel):
+    id = models.AutoField(primary_key=True)
+    sms_body = models.CharField(max_length=300, blank=True, null=True)
+    test_local_id = models.CharField(max_length=20, blank=True, null=True)
+    farmer_no = models.CharField(max_length=13, blank=True, null=True)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.farmer_no, self.sms_body)
