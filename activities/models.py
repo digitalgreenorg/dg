@@ -204,7 +204,6 @@ class JSLPS_Adoption(CocoModel):
     member_code = models.CharField(max_length=100)
     jslps_video = models.ForeignKey(JSLPS_Video)
     jslps_date_of_adoption = models.DateField()
-    jslps_date_of_entry = models.DateField()
     jslps_akmcode = models.ForeignKey(JSLPS_Animator)
     adoption = models.ForeignKey(PersonAdoptPractice, null=True, blank=True)
     activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
