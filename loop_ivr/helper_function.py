@@ -20,12 +20,7 @@ from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL, CALL_REQUEST_
 from loop.helpline_view import write_log
 
 from loop_ivr.utils.marketinfo import raw_sql, get_query
-from loop_ivr.utils.config import LOG_FILE, AGGREGATOR_SMS_NO, mandi_hi, indian_rupee, \
-    agg_sms_initial_line, agg_sms_no_price_for_combination, agg_sms_no_price_available, \
-    agg_sms_crop_line, helpline_hi, MARKET_INFO_CALL_RESPONSE_URL, MARKET_INFO_APP, MONTH_NAMES, \
-    agg_sms_no_price_all_mandi, agg_sms_no_price_crop_mandi, crop_and_code, first_time_caller, code_hi, \
-    remaining_crop_line, TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, \
-    crop_and_code_hi, ALL_FLAG_TRUE, ALL_FLAG_FALSE
+from loop_ivr.utils.config import *
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 from loop_ivr.outliers.removal import remove_crop_outliers
