@@ -34,7 +34,7 @@ def send_sms(request):
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
                 preferred_language = requesting_loop_user.preferred_language.notation
-                transactions_to_consider = CombinedTransaction.objects.filter(time_modified__gte=timestamp, user_created_id = user.id, payment_sms = 0)
+                transactions_to_consider = CombinedTransaction.objects.filter(time_modified__gte=timestamp, user_created_id = user.id, payment_sms = 0, status=1)
 
                 transportations_to_consider = DayTransportation.objects.filter(time_modified__gte=timestamp, user_created_id = user.id)
 
@@ -91,7 +91,7 @@ def send_sms_using_textlocal(farmer_no, sms_body):
     #                 'message': sms_body, 'receipt_url': PUSH_MESSAGE_SMS_RESPONSE_URL, 'unicode': 'true',
     #                 'custom': recipient_custom_id}
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers':farmer_no,
-                     'message': sms_body, 'test': 'false', 'unicode': 'true'}
+                     'message': sms_body, 'test': 'true', 'unicode': 'true'}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
     if response_text['status'] == 'success':

@@ -1118,14 +1118,3 @@ class CombinedTransactionResource(BaseResource):
             return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
         except NotFound:
             return http.Http404()
-
-    def send_farmer_message(self,bundle):
-        #import pdb; pdb.set_trace()
-        farmer = Farmer.objects.filter(id=bundle.data["farmer"]["online_id"])
-        if farmer.count()>0:
-            send_sms_using_textlocal(farmer[0].phone,"apple",None)
-
-
-    def create_message(self,bundle):
-        pass
-
