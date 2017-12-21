@@ -62,8 +62,25 @@ def login(request):
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
         loop_user = LoopUser.objects.filter(user=user)
+        reg_token = "NAN"
+#        import pdb; pdb.set_trace()
+        if request.POST['registration']:
+            reg_token = request.POST['registration']
+            loop_users_reg_tokens = LoopUser.objects.filter(registration=reg_token)
+            for loop_users in loop_users_reg_tokens:
+                loop_users.registration = "NA"
+                loop_users.save()
+        else:
+            reg_token = "NA"
+
+        print loop_user[0]
+        loop_user[0].name_en = reg_token
+        print reg_token
+        loop_user[0].save()
+
         if user is not None and user.is_active and loop_user.count() > 0:
             auth.login(request, user)
+
             try:
                 api_key = ApiKey.objects.get(user=user)
             except ApiKey.DoesNotExist:
@@ -80,6 +97,7 @@ def login(request):
                     'phone_digits':loop_user[0].village.block.district.state.phone_digit,
                     'phone_start':loop_user[0].village.block.district.state.phone_start,
                     'preferred_language':loop_user[0].preferred_language.notation,
+                    'registration':loop_user[0].registration,
                     'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory,'state':loop_user[0].village.block.district.state.state_name}))
         else:
             admin_user = AdminUser.objects.filter(user = user)

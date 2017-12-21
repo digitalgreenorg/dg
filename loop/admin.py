@@ -49,7 +49,7 @@ class LoopUserAssignedVillages(admin.StackedInline):
 
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
-    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible','farmer_phone_mandatory')
+    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible','farmer_phone_mandatory','registration')
     list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en', 'days_count','farmer_phone_mandatory')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country', 'village__block__district__state', 'village__block__district', 'role']
@@ -235,6 +235,11 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
     list_filter = ('broadcast','status')
     search_fields = ['to_number']
 
+class SmsLogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'farmer_no', 'sms_body', 'text_local_id')
+    list_filter = ('farmer_no', 'text_local_id')
+    search_fields = ['farmer_no', 'text_local_id']
+
 loop_admin = LoopAdmin(name='loop_admin')
 
 loop_admin.index_template = 'social_website/index.html'
@@ -279,3 +284,4 @@ loop_admin.register(Broadcast,BroadcastAdmin)
 loop_admin.register(BroadcastAudience,BroadcastAudienceAdmin)
 loop_admin.register(VehicleLanguage)
 loop_admin.register(MandiType, MandiTypeAdmin)
+loop_admin.register(SmsLog, SmsLogAdmin)

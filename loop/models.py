@@ -176,6 +176,7 @@ class LoopUser(LoopModel):
     days_count = models.IntegerField(default=3)
     is_visible = models.BooleanField(default=True)
     farmer_phone_mandatory = models.BooleanField(default=True)
+    registration = models.CharField(max_length=200, default="", null=True, blank=True)
 
     def __unicode__(self):
         return """%s (%s)"""  % (self.name, self.phone_number)
@@ -297,7 +298,9 @@ class Farmer(LoopModel):
         max_length=500, default=None, null=True, blank=True)
     village = models.ForeignKey(Village)
     is_visible = models.BooleanField(default=True)
-    correct_phone_date=models.DateField(default=None,auto_now=False,null=True)
+    correct_phone_date = models.DateField(default=None,auto_now=False,null=True)
+    registration_sms = models.BooleanField(default=False)
+    registration_sms_id = models.CharField(max_length=15, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.village.village_name)
@@ -489,7 +492,7 @@ class CombinedTransaction(LoopModel):
     timestamp = models.CharField(max_length=25)
     is_visible = models.BooleanField(default=True)
     payment_date = models.DateField(auto_now=False, null=True, blank=True)
-    payment_sms = models.BooleanField(default=0)
+    payment_sms = models.BooleanField(default=False)
     payment_sms_id = models.CharField(max_length=15, null=True, blank=True)
 
     def __unicode__(self):
@@ -731,10 +734,10 @@ class BroadcastAudience(LoopModel):
     def __unicode__(self):
         return "%s (%s)" % (self.to_number, self.broadcast)
 
-class CTSmsLog(LoopModel):
+class SmsLog(LoopModel):
     id = models.AutoField(primary_key=True)
     sms_body = models.CharField(max_length=300, blank=True, null=True)
-    test_local_id = models.CharField(max_length=20, blank=True, null=True)
+    text_local_id = models.CharField(max_length=20, blank=True, null=True)
     farmer_no = models.CharField(max_length=13, blank=True, null=True)
 
     def __unicode__(self):
