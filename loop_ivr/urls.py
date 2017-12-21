@@ -21,4 +21,6 @@ urlpatterns = patterns('',
     (r'^admin/', include(loop_ivr_admin.urls)),
     url(r'^wrong_code_message/?$', wrong_code_message),
     url(r'^no_code_message/?$', no_code_message),
+    url(r'^market_info_tlocal_call/?$', textlocal_market_info_incoming_call),
+    url(r'^market_info_tlocal_sms/?$', textlocal_market_info_incoming_sms),
 )

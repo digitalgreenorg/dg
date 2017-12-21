@@ -34,10 +34,18 @@ wrong_code_entered = 'आपने फसल का गलत कोड डा�
 
 MARKET_INFO_CALL_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/market_info_response/')
 PUSH_MESSAGE_SMS_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loopivr/push_message_sms_response/')
+# For production
 MARKET_INFO_APP = '137265'
+# For Development
+# MARKET_INFO_APP = '140902'
 
 SMS_SENDER_NAME = 'LOOPDG'
 TEXT_LOCAL_SINGLE_SMS_API = 'https://api.textlocal.in/send/'
 
 TOP_SELLING_CROP_WINDOW = 30
 N_TOP_SELLING_CROP = 5
+ALL_FLAG_TRUE = 1
+ALL_FLAG_FALSE = 0
+
+PATTERN_REGEX = r'^([1-9]([0-9]*)[*, **]*)*$|^([0][*]{2}([1-9][*]?)+)$|^([1-9][0-9]*[*]{0,1})+[*]{2}[0]$'
+CONTAINS_ZERO = r'^[0]$'
