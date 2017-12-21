@@ -64,7 +64,7 @@ class State(LoopModel):
     phone_start = models.CharField(default='7,8,9', max_length=15, blank=True, null=True)
     aggregation_state = models.BooleanField(default=True)
     def __unicode__(self):
-        return self.state_name
+        return self.state_name_en
 
     class Meta:
         unique_together = ("state_name","country")
@@ -80,7 +80,7 @@ class District(LoopModel):
     district_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.district_name, self.state.state_name)
+        return "%s (%s)" % (self.district_name_en, self.state.state_name_en)
 
     class Meta:
         unique_together = ("district_name", "state")
@@ -94,7 +94,7 @@ class Block(LoopModel):
     block_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.block_name, self.district.district_name)
+        return "%s (%s)" % (self.block_name_en, self.district.district_name_en)
 
     class Meta:
         unique_together = ("block_name", "district")
@@ -112,7 +112,7 @@ class Village(LoopModel):
     village_name_en = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.village_name, self.block.block_name)
+        return "%s (%s)" % (self.village_name_en, self.block.block_name_en)
 
     class Meta:
         unique_together = ("village_name", "block")
@@ -148,7 +148,7 @@ class Mandi(LoopModel):
 
 
     def __unicode__(self):
-        return "%s (%s)" % (self.mandi_name, self.district.district_name)
+        return "%s (%s)" % (self.mandi_name_en, self.district.district_name_en)
 
     class Meta:
         unique_together = ("mandi_name", "district",)
@@ -157,6 +157,16 @@ post_save.connect(save_log, sender=Mandi)
 pre_delete.connect(save_log, sender=Mandi)
 post_save.connect(save_admin_log, sender = Mandi)
 pre_delete.connect(save_admin_log, sender = Mandi)
+
+class Partner(LoopModel):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    is_visible = models.BooleanField(verbose_name="Is Active",default=True)
+    start_date = models.DateField()
+
+    def __unicode__(self):
+        return "%s" % (self.name)
+
 
 class LoopUser(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -174,11 +184,12 @@ class LoopUser(LoopModel):
     name_en = models.CharField(max_length=100)
     preferred_language = models.ForeignKey(Language, null=True)
     days_count = models.IntegerField(default=3)
-    is_visible = models.BooleanField(default=True)
+    is_visible = models.BooleanField(verbose_name="Is Active", default=True)
     farmer_phone_mandatory = models.BooleanField(default=True)
+    partner = models.ForeignKey(Partner, default=None, null=True, blank=True)
 
     def __unicode__(self):
-        return """%s (%s)"""  % (self.name, self.phone_number)
+        return """%s (%s)"""  % (self.name_en, self.phone_number)
 
     def get_villages(self):
         return self.assigned_villages.all()
@@ -278,7 +289,7 @@ class Gaddidar(LoopModel):
     is_prime = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.gaddidar_name
+        return self.gaddidar_name_en
 
     class Meta:
         unique_together = ("gaddidar_phone", "gaddidar_name","mandi")
@@ -300,10 +311,10 @@ class Farmer(LoopModel):
     correct_phone_date=models.DateField(default=None,auto_now=False,null=True)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.name, self.village.village_name)
+        return "%s (%s)" % (self.name, self.village.village_name_en)
 
     def __village__(self):
-        return "%s" % (self.village.village_name)
+        return "%s" % (self.village.village_name_en)
 
     class Meta:
         unique_together = ("phone", "name", "village")
@@ -364,7 +375,7 @@ class Transporter(LoopModel):
         return "%s" % (self.transporter_name)
 
     def __block__(self):
-        return "%s" % (self.block.block_name)
+        return "%s" % (self.block.block_name_en)
 
     class Meta:
         unique_together = ("transporter_name", "transporter_phone",)
@@ -446,10 +457,10 @@ class DayTransportation(LoopModel):
     timestamp = models.CharField(max_length=25)
 
     def __unicode__(self):
-        return "%s - %s (%s)" % (LoopUser.objects.get(user=self.user_created).name, self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
+        return "%s - %s (%s)" % (LoopUser.objects.get(user=self.user_created).name_en, self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
 
     def __aggregator__(self):
-        return "%s" % (LoopUser.objects.get(user=self.user_created).name)
+        return "%s" % (LoopUser.objects.get(user=self.user_created).name_en)
 
     def __transporter__(self):
         return "%s" % (self.transportation_vehicle.transporter.transporter_name)
@@ -492,11 +503,11 @@ class CombinedTransaction(LoopModel):
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (
-            self.farmer.name, self.crop.crop_name, self.mandi.mandi_name,
-            LoopUser.objects.get(user=self.user_created).name)
+            self.farmer.name, self.crop.crop_name, self.mandi.mandi_name_en,
+            LoopUser.objects.get(user=self.user_created).name_en)
 
     def __aggregator__(self):
-        return "%s" % (LoopUser.objects.get(user=self.user_created).name)
+        return "%s" % (LoopUser.objects.get(user=self.user_created).name_en)
 
     def __farmer__(self):
         return "%s" % (self.farmer.name)
@@ -505,10 +516,10 @@ class CombinedTransaction(LoopModel):
         return "%s" % (self.crop.crop_name)
 
     def __mandi__(self):
-        return "%s" % (self.mandi.mandi_name)
+        return "%s" % (self.mandi.mandi_name_en)
 
     def __gaddidar__(self):
-        return "%s" % (self.gaddidar.gaddidar_name)
+        return "%s" % (self.gaddidar.gaddidar_name_en)
 
     def __farmer_phone__(self):
         return "%s" % (self.validate_phone_number(self.farmer.village.block.district.state, self.farmer.phone))
@@ -553,7 +564,7 @@ class GaddidarShareOutliers(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (
-            self.gaddidar.gaddidar_name, self.mandi.mandi_name)
+            self.gaddidar.gaddidar_name_en, self.mandi.mandi_name_en)
 
     def __aggregator__(self):
         return "%s" % (self.aggregator.name)
