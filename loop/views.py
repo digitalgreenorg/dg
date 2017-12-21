@@ -62,21 +62,11 @@ def login(request):
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
         loop_user = LoopUser.objects.filter(user=user)
-        reg_token = "NAN"
-#        import pdb; pdb.set_trace()
+        reg_token = None
         if request.POST['registration']:
             reg_token = request.POST['registration']
-            loop_users_reg_tokens = LoopUser.objects.filter(registration=reg_token)
-            for loop_users in loop_users_reg_tokens:
-                loop_users.registration = "NA"
-                loop_users.save()
-        else:
-            reg_token = "NA"
-
-        print loop_user[0]
-        loop_user[0].name_en = reg_token
-        print reg_token
-        loop_user[0].save()
+            LoopUser.objects.filter(registration=reg_token).update(registration=None)
+        loop_user.update(registration=reg_token)
 
         if user is not None and user.is_active and loop_user.count() > 0:
             auth.login(request, user)
