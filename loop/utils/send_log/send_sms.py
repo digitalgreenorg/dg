@@ -106,7 +106,7 @@ def send_sms_using_textlocal(farmer_no, sms_body):
     #                 'message': sms_body, 'receipt_url': PUSH_MESSAGE_SMS_RESPONSE_URL, 'unicode': 'true',
     #                 'custom': recipient_custom_id}
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
-                  'message': sms_body, 'test': 'true', 'unicode': 'true'}
+                  'message': sms_body, 'test': 'false', 'unicode': 'true'}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
     if response_text['status'] == 'success':
