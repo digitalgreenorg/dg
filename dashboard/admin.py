@@ -16,7 +16,7 @@ from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
 from videos.models import  NonNegotiable
-from videos.models import ParentCategory, Video
+from videos.models import *
 from programs.models import Project
 from easy_select2 import Select2Multiple, Select2
 
@@ -271,10 +271,28 @@ class ProjectAdmin(admin.ModelAdmin):
 
 class VideoForm(forms.ModelForm):
     video = forms.ModelChoiceField(queryset=None, widget=Select2(select2attrs={'width': '600px'}),required=True)
+    bluefrog_practice = forms.ModelMultipleChoiceField(queryset=BluefrogPractice.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
+    bluefrog_subcategory = forms.ModelChoiceField(queryset=BluefrogSubcategory.objects.all(), widget=Select2(select2attrs={'width': '600px'}),required=True)
+    districtscreening = forms.ModelMultipleChoiceField(queryset=DistrictScreening.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
 
     def __init__(self, *args, **kwargs):
         super(VideoForm, self).__init__(*args, **kwargs)
         self.fields['video'].queryset = Video.objects.filter(partner_id=50)
+
+
+
+class BluefrogSubcategoryAdmin(admin.ModelAdmin):
+    list_display = ['crop_id', 'crop_name', 'crop_name_telgu']
+    search_fields = ['crop_id', 'crop_name', 'crop_name_telgu']
+
+
+class BluefrogPracticeAdmin(admin.ModelAdmin):
+    list_display = ['practice_id', 'practice_method_name', 'practice_method_name_telgu']
+    search_fields = ['practice_id', 'practice_method_name', 'practice_method_name_telgu']
+
+
+class DistrictScreeningAdmin(admin.ModelAdmin):
+    list_display = ['id', 'districtscreening_id', 'districtscreening_name']
 
 
 class APVideoAdmin(admin.ModelAdmin):
@@ -282,6 +300,6 @@ class APVideoAdmin(admin.ModelAdmin):
     form = VideoForm
     list_display = ['id', 'short_video_title', 'video_short_name', 'video_short_regionalname', 'bluefrog_practice']
     search_fields = ['id', 'video', 'video_short_name', 'video_short_regionalname', 'bluefrog_practice']
-    list_editable = ['video_short_name', 'video_short_regionalname', 'bluefrog_practice']
+    # list_editable = ['video_short_name', 'video_short_regionalname', 'bluefrog_practice']
 
 

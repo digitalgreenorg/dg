@@ -240,11 +240,39 @@ class JSLPS_Video(CocoModel):
     video = models.ForeignKey(Video, null=True, blank=True)
 
 
+
+class BluefrogSubcategory(models.Model):
+    crop_id = models.CharField(max_length=10, null=True)
+    crop_name = models.CharField(max_length=255, null=True)
+    crop_name_telgu = models.CharField(max_length=255, null=True)
+
+    def __unicode__(self):
+        return  """%s""" % self.crop_name
+
+
+class BluefrogPractice(models.Model):
+    practice_id = models.CharField(max_length=10, null=True)
+    practice_method_name = models.CharField(max_length=255, null=True)
+    practice_method_name_telgu = models.CharField(max_length=255, null=True)
+
+    def __unicode__(self):
+        return  """%s""" % self.practice_method_name
+
+class DistrictScreening(models.Model):
+    districtscreening_id = models.CharField(max_length=10, null=True)
+    districtscreening_name = models.CharField(max_length=255, null=True)
+
+    def __unicode__(self):
+        return  """%s""" % self.districtscreening_name
+
+
 class APVideo(CocoModel):
     video = models.ForeignKey(Video, null=True, blank=True)
     video_short_name = models.CharField(max_length=40)
     video_short_regionalname = models.CharField(max_length=40)
-    bluefrog_practice = models.CharField(max_length=40)
+    bluefrog_subcategory = models.ForeignKey(BluefrogSubcategory, null=True, blank=True)
+    districtscreening = models.ManyToManyField(DistrictScreening, blank=True)
+    bluefrog_practice = models.ManyToManyField(BluefrogPractice, blank=True)
 
     
     @property
@@ -254,5 +282,13 @@ class APVideo(CocoModel):
 
     def __unicode__(self):
         return """%s:%s:%s""" % (str(self.id), self.video.title, self.video_short_name)
+
+
+
+
+
+
+
+
 
 
