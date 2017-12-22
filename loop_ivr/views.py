@@ -178,7 +178,8 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
                 return HttpResponse(status=404)
             else:
                 Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
-            return HttpResponse(status=200)
+                return HttpResponse(status=200)
+        return HttpResponse(status=403)
 
 @csrf_exempt
 def market_info_response(request):
