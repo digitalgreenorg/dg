@@ -67,7 +67,7 @@ def textlocal_market_info_incoming_call(request):
 
 @csrf_exempt
 def textlocal_market_info_incoming_sms(request):
-    
+
     logger.debug("Reached here in SMS View")
     logger.debug(request.body)
     if request.method == 'POST':
@@ -91,11 +91,12 @@ def textlocal_market_info_incoming_sms(request):
             write_log(LOG_FILE,module,str(e))
             return HttpResponse(status=200)
 
-        # Creating and sending message on the basis of Query Code. 
+        # Creating and sending message on the basis of Query Code.
         response = handle_query_code(query_code, price_info_incoming_obj, farmer_number)
         return response
     return HttpResponse(status=403)
 
+@csrf_exempt
 def crop_price_query(request):
     # Serve only Get request
     logger.debug("Reached here in Crop Price Query View")
@@ -134,7 +135,7 @@ def crop_price_query(request):
             write_log(LOG_FILE,module,log)
             return HttpResponse(status=404)
 
-        # Creating and sending message on the basis of Query Code. 
+        # Creating and sending message on the basis of Query Code.
         response = handle_query_code(query_code, price_info_incoming_obj, farmer_number)
         return response
     return HttpResponse(status=403)
@@ -145,15 +146,15 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
         if query_code == '' or query_code == 'None':
             sms_content = [no_code_entered,'\n\n']
             send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-            return HttpResponse(status=200)
+            return HttpResponse(status=204)
         elif query_code == '0':
             sms_content = []
             send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-            return HttpResponse(status=200)
+            return HttpResponse(status=204)
         elif re.search(PATTERN_REGEX, query_code) is None:
             # send wrong query code
             send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
-            return HttpResponse(status=200)
+            return HttpResponse(status=204)
         else :
             # send corresponding response
             query_code = query_code.split('**')
@@ -172,9 +173,9 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
 
             crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
             mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
-
             if len(crop_list) == 0:
                 send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+                return HttpResponse(status=204)
             else:
                 Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
             return HttpResponse(status=200)
