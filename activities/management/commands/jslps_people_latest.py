@@ -24,7 +24,7 @@ class Command(BaseCommand):
 		tree = ET.parse('jslps_data_integration_files/person.xml')
 		root = tree.getroot()
 
-		for c in root.findall('SRIRegistrationData'):
+		for c in root.findall('SRIRegistrationDataNew'):
 			pc = c.find('MemID').text
 			pn = unicode(c.find('MemberName').text)
 			if c.find('FatherName') is not None:
