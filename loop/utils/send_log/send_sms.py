@@ -1,5 +1,6 @@
 import json
 from dg.settings import TEXTLOCAL_API_KEY
+from loop.config import transaction_sms
 from loop.models import CombinedTransaction, DayTransportation
 from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, loop_receipt, kisan, jamakarta
 from django.db.models import Count, Sum, Avg, Q, F
@@ -43,37 +44,9 @@ def send_sms(request):
                 transportations_to_consider = DayTransportation.objects.filter(time_modified__gte=timestamp,
                                                                                user_created_id=user.id)
 
-                # transactions_to_consider_grouped = transactions_to_consider.values('date', 'farmer', 'farmer__name' ,'farmer__phone', 'mandi', 'mandi__mandi_name', 'crop', 'crop__crop_name' ,'price').annotate(Sum('quantity'),Sum('amount'))
+                transactions_sms(requesting_loop_user, transactions_to_consider)
+                transportations_sms(requesting_loop_user, transportations_to_consider)
 
-                single_farmer_date_message = {}
-                transactions_list = []
-                for transaction in transactions_to_consider:
-                    transactions_list.append(transaction)
-                    if (transaction.date, transaction.farmer.phone,
-                        transaction.farmer.id) not in single_farmer_date_message.keys():
-                        single_farmer_date_message[
-                            (transaction.date, transaction.farmer.phone, transaction.farmer.id)] = {
-                            (transaction.crop.crop_name, transaction.price): {'quantity':transaction.quantity, 'amount':transaction.amount}}
-                        single_farmer_date_message[
-                            (transaction.date, transaction.farmer.phone, transaction.farmer.id)]['transaction_id'] = [transaction.id]
-                    else:
-                        farmer_level_transaction = single_farmer_date_message[(transaction.date, transaction.farmer.phone, transaction.farmer.id)]
-
-                        if (transaction.crop.crop_name, transaction.price) in farmer_level_transaction:
-                            farmer_level_transaction[(transaction.crop.crop_name, transaction.price)]['quantity'] += transaction.quantity
-                            farmer_level_transaction[(transaction.crop.crop_name, transaction.price)]['amount'] += transaction.amount
-                        else:
-                            farmer_level_transaction[(transaction.crop.crop_name, transaction.price)] = {'quantity': transaction.quantity, 'amount':transaction.amount}
-                        single_farmer_date_message[
-                            (transaction.date, transaction.farmer.phone, transaction.farmer.id)]['transaction_id'].append(transaction.id)
-                for key, value in single_farmer_date_message.iteritems():
-                    farmer_no = key[1]
-                    farmer_name = str(key[2])
-                    message = make_sms(key, farmer_name, requesting_loop_user.name_en, value)
-                    sms_response = send_sms_using_textlocal(farmer_no, message)
-                    if sms_response['status'] == "success":
-                        transaction_to_update = transactions_to_consider.filter(id__in=single_farmer_date_message[key]['transaction_id'])
-                        transaction_to_update.update(payment_sms=True, payment_sms_id=sms_response['messages'][0]['id'])
             except Exception as e:
                 print e
                 # raise UserDoesNotExist(
@@ -81,8 +54,69 @@ def send_sms(request):
 
     return HttpResponse("0")
 
+def transactions_sms(user, transactions, language):
+    try:
+        single_farmer_date_message = {}
+        transactions_list = []
+        for transaction in transactions:
+            transactions_list.append(transaction)
+            if (transaction.date, transaction.farmer.phone,
+                transaction.farmer.id) not in single_farmer_date_message.keys():
+                single_farmer_date_message[
+                    (transaction.date, transaction.farmer.phone, transaction.farmer.id)] = {
+                    (transaction.crop.crop_name, transaction.price): {'quantity': transaction.quantity,
+                                                                      'amount': transaction.amount}}
+                single_farmer_date_message[
+                    (transaction.date, transaction.farmer.phone, transaction.farmer.id)]['transaction_id'] = [
+                    transaction.id]
+            else:
+                farmer_level_transaction = single_farmer_date_message[
+                    (transaction.date, transaction.farmer.phone, transaction.farmer.id)]
 
-def make_sms(key, farmer_name, aggregator, value):
+                if (transaction.crop.crop_name, transaction.price) in farmer_level_transaction:
+                    farmer_level_transaction[(transaction.crop.crop_name, transaction.price)][
+                        'quantity'] += transaction.quantity
+                    farmer_level_transaction[(transaction.crop.crop_name, transaction.price)][
+                        'amount'] += transaction.amount
+                else:
+                    farmer_level_transaction[(transaction.crop.crop_name, transaction.price)] = {
+                    'quantity': transaction.quantity, 'amount': transaction.amount}
+                single_farmer_date_message[
+                    (transaction.date, transaction.farmer.phone, transaction.farmer.id)]['transaction_id'].append(
+                    transaction.id)
+        for key, value in single_farmer_date_message.iteritems():
+            farmer_no = key[1]
+            farmer_name = str(key[2])
+            message = make_transaction_sms(key, farmer_name, user.name_en, value, language)
+            sms_response = send_sms_using_textlocal(farmer_no, message)
+            if sms_response['status'] == "success":
+                transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
+                transaction_to_update.update(payment_sms=True, payment_sms_id=sms_response['messages'][0]['id'])
+    except Exception as e:
+        print e
+
+def transportations_sms(user, transportations):
+    return "heelo"
+
+
+
+def make_transaction_sms(key, farmer_name, aggregator, value, language):
+#    message = "hello we are testing"
+    # print "_________________________________"
+    # print key
+    # print "#################################"
+    # print value
+    # farmer_name = unicode(key[2], "utf-8")
+    #    print "hellp"
+    #    aggregator_name = unicode(aggregator)
+    #    print message
+    message = ('%s (%s)\n%s - %s\n%s - %s') % (transaction_sms['loop_receipt'][language], str(key[0]), transaction_sms['farmer'][language], str(key[2]), transaction_sms['aggregator']['language'], aggregator)
+    for row, detail in value.iteritems():
+        if type(row) == 'tuple' and len(row) == 2:
+            message = ('%s\n%s: %s x %s=%s')%(message, row[0], str(row[1]), str(detail['quantity']), str(detail['amount']))
+    return message
+
+def make_transportation_sms(key, farmer_name, aggregator, value):
 #    message = "hello we are testing"
     # print "_________________________________"
     # print key

@@ -18,6 +18,8 @@ CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
 BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
 MANDI_CATEGORY = ((0,"Wholesale Market"), (1,"Retail Market"), (2,"Individual Entity"))
+PERSON_TYPE = ((0, 'Farmer'), (1, 'Transporter'))
+SMS_STATUS = ((0, 'Fail'), (1, 'Success'))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -447,6 +449,8 @@ class DayTransportation(LoopModel):
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
     timestamp = models.CharField(max_length=25)
+    payment_sms = models.BooleanField(default=False)
+    payment_sms_id = models.CharField(max_length=15, null=True, blank=True)
 
     def __unicode__(self):
         return "%s - %s (%s)" % (LoopUser.objects.get(user=self.user_created).name, self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
@@ -738,7 +742,9 @@ class SmsLog(LoopModel):
     id = models.AutoField(primary_key=True)
     sms_body = models.CharField(max_length=300, blank=True, null=True)
     text_local_id = models.CharField(max_length=20, blank=True, null=True)
-    farmer_no = models.CharField(max_length=13, blank=True, null=True)
+    contact_no = models.CharField(max_length=13, blank=True, null=True)
+    person_type = models.IntegerField(choices=PERSON_TYPE, default=0)
+    status = models.IntegerField(choices=SMS_STATUS, default=0)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.farmer_no, self.sms_body)
+        return "%s (%s)" % (self.contact_no, self.sms_body)

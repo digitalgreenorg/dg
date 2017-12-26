@@ -246,6 +246,19 @@ header_dict_for_transport_outlier = {
     ]
 }
 
+transaction_sms = {
+                    'farmer':{'hi':"किसान".encode(encoding='utf-8'), 'en':"Farmer", 'bn':"কৃষকের".encode(encoding='utf-8'), 'mr':"शेतकऱ्यांची".encode(encoding='utf-8')},
+                    'aggregator':{'hi':"", 'en':"Farmer", 'bn':"", 'mr':""},
+                    'currency':{'hi':"", 'en':"Farmer", 'bn':"", 'mr':""},
+                    'date':{'hi':"", 'en':"Farmer", 'bn':"", 'mr':""},
+                    'loop_receipt':{'hi':"लूप-रसीद".encode(encoding='utf-8'), 'en': "Loop Receipt", 'bn':"লুপ রশিদ".encode(encoding='utf-8'), 'mr':"लूप-पावती".encode(encoding='utf-8')},
+                    'total':{'hi':"", 'en':"", 'bn':"", 'mr':""},
+                    'bracket_open':{'default':'('},
+                    'bracket_close':{'default':')'},
+
+}
+
+
 RECIPIENTS = ['lokesh@digitalgreen.org', 'loop@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
