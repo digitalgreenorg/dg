@@ -181,6 +181,7 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
                 price_info_incoming_obj.save()
                 return HttpResponse(status=404)
             else:
+                logger.debug("CROP LIST NOT EMPTY")
                 Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
                 return HttpResponse(status=200)
         return HttpResponse(status=403)
