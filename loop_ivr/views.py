@@ -172,16 +172,12 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
 
             crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
             mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
-            logger.debug(crop_list)
-            logger.debug("=================")
             if len(crop_list) == 0:
                 # send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
-                logger.debug("CROP LIST EMPTY")
                 price_info_incoming_obj.info_status = 2
                 price_info_incoming_obj.save()
                 return HttpResponse(status=404)
             else:
-                logger.debug("CROP LIST NOT EMPTY")
                 Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
                 return HttpResponse(status=200)
         return HttpResponse(status=403)
