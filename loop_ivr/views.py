@@ -30,7 +30,6 @@ def market_info_incoming(request):
     """
     When user calls on textlocal or exotel number and the call is disconnected by the platform
     """
-    logger.debug("Reached here in Initial call view")
     if request.method == 'GET':
         logger.debug(request.GET)
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
@@ -67,7 +66,6 @@ def textlocal_market_info_incoming_call(request):
 
 @csrf_exempt
 def textlocal_market_info_incoming_sms(request):
-
     logger.debug("Reached here in SMS View")
     logger.debug(request.body)
     if request.method == 'POST':
@@ -99,9 +97,6 @@ def textlocal_market_info_incoming_sms(request):
 @csrf_exempt
 def crop_price_query(request):
     # Serve only Get request
-    logger.debug("Reached here in Crop Price Query View")
-    logger.debug(request)
-    logger.debug("==============================================")
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         # Check if request contain some input combination.
@@ -142,7 +137,6 @@ def crop_price_query(request):
 
 
 def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
-
         if query_code == '' or query_code == 'None':
             sms_content = [no_code_entered,'\n\n']
             send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
@@ -210,10 +204,6 @@ def market_info_response(request):
     return HttpResponse(status=200)
 
 def crop_price_sms_content(request):
-    logger.debug("Reached here in Crop Price SMS Content")
-    logger.debug(request)
-    logger.debug("==============================================")
-
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
@@ -237,9 +227,6 @@ def crop_price_sms_content(request):
     return HttpResponse(status=403)
 
 def no_code_message(request):
-    logger.debug("Reached here in NO CODE MESSAGE")
-    logger.debug(request)
-    logger.debug("==============================================")
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
@@ -251,9 +238,6 @@ def no_code_message(request):
     return HttpResponse(status=403)
 
 def wrong_code_message(request):
-    logger.debug("Reached here in WRONG CODE MESSAGE")
-    logger.debug(request)
-    logger.debug("==============================================")
     if request.method == 'HEAD':
         return HttpResponse(status=200, content_type='text/plain')
     if request.method == 'GET':
