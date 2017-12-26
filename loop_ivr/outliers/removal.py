@@ -7,40 +7,43 @@ final_group_by = ['Crop','Market_Real','Date']
 columnlist_ct = ['Date', 'Aggregator', 'Market_Real', 'Crop', 'Quantity_Real', 'Price', 'Amount']
 
 def remove_crop_outliers(ct_data=None):
-    daily_aggregator_market_crop_rate_query_result = list(ct_data)
+    try:
+        daily_aggregator_market_crop_rate_query_result = list(ct_data)
 
-    combined_transactions_data = pd.DataFrame(daily_aggregator_market_crop_rate_query_result)
-    combined_transactions_data['Date'] = pd.to_datetime(combined_transactions_data['Date'])
+        combined_transactions_data = pd.DataFrame(daily_aggregator_market_crop_rate_query_result)
+        combined_transactions_data['Date'] = pd.to_datetime(combined_transactions_data['Date'])
 
-    combined_transactions_data = call_methods(combined_transactions_data)
+        combined_transactions_data = call_methods(combined_transactions_data)
 
-    # combined_transactions_data.to_csv("final_data_after_outliers.csv")
+        # combined_transactions_data.to_csv("final_data_after_outliers.csv")
 
-    for recursion_counter in range(0,3):
+        for recursion_counter in range(0,3):
+            combined_transactions_data.fillna(0,inplace=True)
+            ct_data = combined_transactions_data[(combined_transactions_data['D/STD'] > 1.3)]
+            if ct_data is not None:
+                combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
+                combined_transactions_data = combined_transactions_data[columnlist_ct]
+                combined_transactions_data = call_methods(combined_transactions_data)
+            else:
+                break
+
+        # combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
+        # combined_transactions_data = combined_transactions_data[columnlist_ct]
+        # combined_transactions_data = call_methods(combined_transactions_data)
+
         combined_transactions_data.fillna(0,inplace=True)
-        ct_data = combined_transactions_data[(combined_transactions_data['D/STD'] > 1.3)]
-        if ct_data is not None:
-            combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
-            combined_transactions_data = combined_transactions_data[columnlist_ct]
-            combined_transactions_data = call_methods(combined_transactions_data)
-        else:
-            break
 
-    # combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
-    # combined_transactions_data = combined_transactions_data[columnlist_ct]
-    # combined_transactions_data = call_methods(combined_transactions_data)
+        # combined_transactions_data.to_csv("final_data_after_outliers_1.csv")
+        combined_transactions_data = combined_transactions_data.groupby(group_by_list).agg({'Av_Rate':['mean'], 'STD' : ['mean'], 'Price':['max','min']}).reset_index()
+        combined_transactions_data.columns = ["".join(agg) for agg in combined_transactions_data.columns.ravel()]
+        # combined_transactions_data.columns = combined_transactions_data.columns.droplevel(level=1)
 
-    combined_transactions_data.fillna(0,inplace=True)
+        #Arranging dataframe according to crop, market and date
+        combined_transactions_data = combined_transactions_data.groupby(final_group_by).apply(lambda x: x.sort_values(['Crop','Market_Real','Date'],ascending=[True,True,False])).reset_index(drop=True)
 
-    # combined_transactions_data.to_csv("final_data_after_outliers_1.csv")
-    combined_transactions_data = combined_transactions_data.groupby(group_by_list).agg({'Av_Rate':['mean'], 'STD' : ['mean'], 'Price':['max','min']}).reset_index()
-    combined_transactions_data.columns = ["".join(agg) for agg in combined_transactions_data.columns.ravel()]
-    # combined_transactions_data.columns = combined_transactions_data.columns.droplevel(level=1)
-
-    #Arranging dataframe according to crop, market and date
-    combined_transactions_data = combined_transactions_data.groupby(final_group_by).apply(lambda x: x.sort_values(['Crop','Market_Real','Date'],ascending=[True,True,False])).reset_index(drop=True)
-
-    return combined_transactions_data
+        return combined_transactions_data
+    except Exception as e:
+        return None
 
 def call_methods(combined_transactions_data):
     combined_transactions_data = get_statistics(combined_transactions_data)

@@ -30,9 +30,7 @@ def market_info_incoming(request):
     """
     When user calls on textlocal or exotel number and the call is disconnected by the platform
     """
-    logger.debug("Reached here in Initial call view")
     if request.method == 'GET':
-        logger.debug(request.GET)
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         if request.GET.getlist('call_source'):
             call_source = request.GET.getlist('call_source')[0]
@@ -67,7 +65,6 @@ def textlocal_market_info_incoming_call(request):
 
 @csrf_exempt
 def textlocal_market_info_incoming_sms(request):
-
     logger.debug("Reached here in SMS View")
     logger.debug(request.body)
     if request.method == 'POST':
@@ -99,9 +96,6 @@ def textlocal_market_info_incoming_sms(request):
 @csrf_exempt
 def crop_price_query(request):
     # Serve only Get request
-    logger.debug("Reached here in Crop Price Query View")
-    logger.debug(request)
-    logger.debug("==============================================")
     if request.method == 'GET':
         call_id, farmer_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         # Check if request contain some input combination.
@@ -122,7 +116,7 @@ def crop_price_query(request):
                     price_info_incoming_obj.prev_info_status = price_info_incoming_obj.info_status
                     price_info_incoming_obj.query_code = query_code
                     # If it is retry then set status to pending and remaining code will change this according to input.
-                    price_info_incoming_obj.info_status = 0
+                    # price_info_incoming_obj.info_status = 0
                     price_info_incoming_obj.save()
             else:
                 price_info_incoming_obj = PriceInfoIncoming(call_id=call_id, from_number=farmer_number,
@@ -142,18 +136,23 @@ def crop_price_query(request):
 
 
 def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
-
         if query_code == '' or query_code == 'None':
-            sms_content = [no_code_entered,'\n\n']
-            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            # sms_content = [no_code_entered,'\n\n']
+            # send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            price_info_incoming_obj.info_status = 3
+            price_info_incoming_obj.save()
             return HttpResponse(status=404)
         elif query_code == '0':
-            sms_content = []
-            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            # sms_content = []
+            # send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            price_info_incoming_obj.info_status = 3
+            price_info_incoming_obj.save()
             return HttpResponse(status=404)
         elif re.search(PATTERN_REGEX, query_code) is None:
             # send wrong query code
-            send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+            # send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+            price_info_incoming_obj.info_status = 2
+            price_info_incoming_obj.save()
             return HttpResponse(status=404)
         else :
             # send corresponding response
@@ -174,7 +173,9 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
             crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
             mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
             if len(crop_list) == 0:
-                send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+                # send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+                price_info_incoming_obj.info_status = 2
+                price_info_incoming_obj.save()
                 return HttpResponse(status=404)
             else:
                 Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
@@ -185,7 +186,7 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
 def market_info_response(request):
     logger.debug("Reached here in Market Info Response View")
     logger.debug(request)
-    logger.debug(request.body)
+    logger.debug(request.POST)
 
     if request.method == 'POST':
         status = str(request.POST.getlist('Status')[0])
@@ -194,6 +195,7 @@ def market_info_response(request):
         price_info_incoming_obj = price_info_incoming_obj[0] if price_info_incoming_obj.count() > 0 else ''
         # If call failed then send acknowledgement to user
         if status != 'completed':
+            logger.debug(status)
             # if call found in our database, then fetch number of caller and send SMS
             if price_info_incoming_obj != '':
                 user_no = price_info_incoming_obj.from_number
@@ -204,79 +206,78 @@ def market_info_response(request):
                 send_info_using_textlocal(user_no, message, price_info_incoming_obj)
         # If call is completed, then check if Initial status is Not Picked, if yes then change it to No Input
         else:
-            if price_info_incoming_obj != '' and price_info_incoming_obj.info_status == 4:
-                price_info_incoming_obj.info_status = 3
-                price_info_incoming_obj.save()
+            if price_info_incoming_obj != '':
+                if price_info_incoming_obj.info_status == 2:  #WRONG QUERY
+                    send_wrong_query_sms_content(price_info_incoming_obj, price_info_incoming_obj.from_number)
+                elif price_info_incoming_obj.info_status == 3:  #NO INPUT
+                    if price_info_incoming_obj.prev_info_status != None and price_info_incoming_obj.prev_info_status == 2:
+                        send_wrong_query_sms_content(price_info_incoming_obj, price_info_incoming_obj.from_number, str(price_info_incoming_obj.prev_query_code))
+                    else:
+                        sms_content = [no_code_entered,'\n\n']
+                        send_crop_code_sms_content(price_info_incoming_obj, sms_content, price_info_incoming_obj.from_number)
+                elif price_info_incoming_obj.info_status == 4:
+                    price_info_incoming_obj.info_status = 3
+                    price_info_incoming_obj.save()
     return HttpResponse(status=200)
 
-def crop_price_sms_content(request):
-    logger.debug("Reached here in Crop Price SMS Content")
-    logger.debug(request)
-    logger.debug("==============================================")
-
-    if request.method == 'HEAD':
-        return HttpResponse(status=200, content_type='text/plain')
-    if request.method == 'GET':
-        call_id = str(request.GET.getlist('CallSid')[0])
-        farmer_number = str(request.GET.getlist('From')[0])
-        dg_number = str(request.GET.getlist('To')[0])
-        try:
-            price_info_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=farmer_number,
-                                        to_number=dg_number)
-            if price_info_obj.return_result_to_app == 1:
-                sms_content = price_info_obj.price_result
-                price_info_obj.info_status = 1
-                price_info_obj.save()
-                response = HttpResponse(sms_content, content_type='text/plain')
-            else:
-                response = HttpResponse(status=200, content_type='text/plain')
-        except Exception as e:
-            logger.debug(e)
-            response = HttpResponse(status=200, content_type='text/plain')
-        return response
-    return HttpResponse(status=403)
-
-def no_code_message(request):
-    logger.debug("Reached here in NO CODE MESSAGE")
-    logger.debug(request)
-    logger.debug("==============================================")
-    if request.method == 'HEAD':
-        return HttpResponse(status=200, content_type='text/plain')
-    if request.method == 'GET':
-        crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-        sms_content = [no_code_entered,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
-        sms_content = ''.join(sms_content)
-        response = HttpResponse(sms_content, content_type='text/plain')
-        return response
-    return HttpResponse(status=403)
-
-def wrong_code_message(request):
-    logger.debug("Reached here in WRONG CODE MESSAGE")
-    logger.debug(request)
-    logger.debug("==============================================")
-    if request.method == 'HEAD':
-        return HttpResponse(status=200, content_type='text/plain')
-    if request.method == 'GET':
-        crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-        call_id = str(request.GET.getlist('CallSid')[0])
-        farmer_number = str(request.GET.getlist('From')[0])
-        dg_number = str(request.GET.getlist('To')[0])
-        try:
-            price_info_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=farmer_number,
-                                        to_number=dg_number)
-            wrong_query_code = str(price_info_obj.query_code) if price_info_obj.query_code else ''
-        except Exception as e:
-            wrong_query_code = ''
-        wrong_code_entered_message = wrong_code_entered
-        if wrong_query_code == '':
-            wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
-        else:
-            wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
-        sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
-        sms_content = ''.join(sms_content)
-        response = HttpResponse(sms_content, content_type='text/plain')
-        return response
-    return HttpResponse(status=403)
+# def crop_price_sms_content(request):
+#     if request.method == 'HEAD':
+#         return HttpResponse(status=200, content_type='text/plain')
+#     if request.method == 'GET':
+#         call_id = str(request.GET.getlist('CallSid')[0])
+#         farmer_number = str(request.GET.getlist('From')[0])
+#         dg_number = str(request.GET.getlist('To')[0])
+#         try:
+#             price_info_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=farmer_number,
+#                                         to_number=dg_number)
+#             if price_info_obj.return_result_to_app == 1:
+#                 sms_content = price_info_obj.price_result
+#                 price_info_obj.info_status = 1
+#                 price_info_obj.save()
+#                 response = HttpResponse(sms_content, content_type='text/plain')
+#             else:
+#                 response = HttpResponse(status=200, content_type='text/plain')
+#         except Exception as e:
+#             logger.debug(e)
+#             response = HttpResponse(status=200, content_type='text/plain')
+#         return response
+#     return HttpResponse(status=403)
+#
+# def no_code_message(request):
+#     if request.method == 'HEAD':
+#         return HttpResponse(status=200, content_type='text/plain')
+#     if request.method == 'GET':
+#         crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+#         sms_content = [no_code_entered,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+#         sms_content = ''.join(sms_content)
+#         response = HttpResponse(sms_content, content_type='text/plain')
+#         return response
+#     return HttpResponse(status=403)
+#
+# def wrong_code_message(request):
+#     if request.method == 'HEAD':
+#         return HttpResponse(status=200, content_type='text/plain')
+#     if request.method == 'GET':
+#         crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+#         call_id = str(request.GET.getlist('CallSid')[0])
+#         farmer_number = str(request.GET.getlist('From')[0])
+#         dg_number = str(request.GET.getlist('To')[0])
+#         try:
+#             price_info_obj = PriceInfoIncoming.objects.get(call_id=call_id, from_number=farmer_number,
+#                                         to_number=dg_number)
+#             wrong_query_code = str(price_info_obj.query_code) if price_info_obj.query_code else ''
+#         except Exception as e:
+#             wrong_query_code = ''
+#         wrong_code_entered_message = wrong_code_entered
+#         if wrong_query_code == '':
+#             wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
+#         else:
+#             wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
+#         sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+#         sms_content = ''.join(sms_content)
+#         response = HttpResponse(sms_content, content_type='text/plain')
+#         return response
+#     return HttpResponse(status=403)
 
 @csrf_exempt
 def push_message_sms_response(request):

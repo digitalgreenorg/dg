@@ -198,7 +198,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     result = run_query(query)
     dataframe = remove_crop_outliers(ct_data = result)
 
-    if (not result) or dataframe.empty:
+    if (not result) or dataframe == None or dataframe.empty:
         if not all_crop_flag and not all_mandi_flag:
             crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
             mandi_name_list = ','.join(map(lambda mandi_id: mandi_map[mandi_id].encode("utf-8").rstrip(mandi_hi).rstrip(), mandi_list))
@@ -283,15 +283,6 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_incoming_obj.save()
     send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
 
-    # if len(final_result) >= 2000 or price_info_incoming_obj.call_source==3:
-    #     price_info_incoming_obj.return_result_to_app = 0
-    #     price_info_incoming_obj.info_status = 1
-    #     price_info_incoming_obj.save()
-    #     # send_info(from_number, final_result)
-    #     send_info_using_textlocal(from_number, final_result, price_info_incoming_obj)
-    #     price_info_incoming_obj.save()
-    # else:
-    #     price_info_incoming_obj.save()
     # If caller is calling first time then send crop code to them.
     if PriceInfoIncoming.objects.filter(from_number=from_number).count() == 1:
         crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
@@ -304,26 +295,30 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             pass
             #send_sms(AGGREGATOR_SMS_NO, from_number, crop_code_list)
             send_info_using_textlocal(from_number, crop_code_list)
-    PriceInfoLog.objects.bulk_create(price_info_log_list)
+    # PriceInfoLog.objects.bulk_create(price_info_log_list)
 
 
 def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number) :
-    price_info_incoming_obj.info_status = 3
-    price_info_incoming_obj.save()
     # Send No code entered message to user
     crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
     sms_content = sms_content + [crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
     sms_content = ''.join(sms_content)
-    send_info_using_textlocal(farmer_number, sms_content)
 
-def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
-    price_info_incoming_obj.info_status = 2
+    price_info_incoming_obj.price_result = sms_content
+    price_info_incoming_obj.info_status = 3
     price_info_incoming_obj.save()
+
+    send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
+
+def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_code = None) :
     # Send Wrong code entered message to user.
-    try:
-        wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
-    except Exception as e:
-        wrong_query_code = ''
+    if query_code == None:
+        try:
+            wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
+        except Exception as e:
+            wrong_query_code = ''
+    else:
+        wrong_query_code = query_code
     wrong_code_entered_message = wrong_code_entered
     if wrong_query_code == '':
         wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
@@ -332,4 +327,9 @@ def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
     crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
     sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
     sms_content = ''.join(sms_content)
-    send_info_using_textlocal(farmer_number, sms_content)
+
+    price_info_incoming_obj.price_result = sms_content
+    price_info_incoming_obj.info_status = 2
+    price_info_incoming_obj.save()
+
+    send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
