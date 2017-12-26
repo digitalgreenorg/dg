@@ -137,16 +137,16 @@ def crop_price_query(request):
 
 def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
         if query_code == '' or query_code == 'None':
-            sms_content = [no_code_entered,'\n\n']
-            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            # sms_content = [no_code_entered,'\n\n']
+            # send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
             return HttpResponse(status=404)
         elif query_code == '0':
-            sms_content = []
-            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            # sms_content = []
+            # send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
             return HttpResponse(status=404)
         elif re.search(PATTERN_REGEX, query_code) is None:
             # send wrong query code
-            send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+            # send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
             return HttpResponse(status=404)
         else :
             # send corresponding response
@@ -167,7 +167,7 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
             crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
             mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
             if len(crop_list) == 0:
-                send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+                # send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
                 return HttpResponse(status=404)
             else:
                 Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
@@ -197,9 +197,15 @@ def market_info_response(request):
                 send_info_using_textlocal(user_no, message, price_info_incoming_obj)
         # If call is completed, then check if Initial status is Not Picked, if yes then change it to No Input
         else:
-            if price_info_incoming_obj != '' and price_info_incoming_obj.info_status == 4:
-                price_info_incoming_obj.info_status = 3
-                price_info_incoming_obj.save()
+            if price_info_incoming_obj != '':
+                if price_info_incoming_obj.info_status == 2:  #WRONG QUERY
+                    send_wrong_query_sms_content(price_info_incoming_obj, price_info_incoming_obj.from_number)
+                elif price_info_incoming_obj.info_status == 3:  #NO INPUT
+                    sms_content = [no_code_entered,'\n\n']
+                    send_crop_code_sms_content(price_info_incoming_obj, sms_content, price_info_incoming_obj.from_number)
+                elif price_info_incoming_obj.info_status == 4:
+                    price_info_incoming_obj.info_status = 3
+                    price_info_incoming_obj.save()
     return HttpResponse(status=200)
 
 def crop_price_sms_content(request):

@@ -314,7 +314,7 @@ def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_numb
     crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
     sms_content = sms_content + [crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
     sms_content = ''.join(sms_content)
-    send_info_using_textlocal(farmer_number, sms_content)
+    send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
 
 def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
     price_info_incoming_obj.info_status = 2
@@ -332,4 +332,4 @@ def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
     crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
     sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
     sms_content = ''.join(sms_content)
-    send_info_using_textlocal(farmer_number, sms_content)
+    send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
