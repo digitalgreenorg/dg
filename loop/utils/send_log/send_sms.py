@@ -87,7 +87,7 @@ def transactions_sms(user, transactions, language):
         for key, value in single_farmer_date_message.iteritems():
             farmer_no = key[1]
             farmer_name = str(key[2])
-            message = make_transaction_sms(key, farmer_name, user.name_en, value, language)
+            message = make_transaction_sms(key, farmer_name, user.name, value, language)
             sms_response = send_sms_using_textlocal(farmer_no, message)
             print sms_response
             if sms_response['status'] == "success":
@@ -111,10 +111,19 @@ def make_transaction_sms(key, farmer_name, aggregator, value, language):
     #    print "hellp"
     #    aggregator_name = unicode(aggregator)
     #    print message
-    message = ('%s (%s)\n%s - %s\n%s - %s') % (transaction_sms['loop_receipt'][language], str(key[0]), transaction_sms['farmer'][language], str(key[2]), transaction_sms['aggregator']['language'], aggregator)
+    print "yoyoyoyyo"
+    print language
+    print transaction_sms['farmer'][language].encode('utf-8')
+    print transaction_sms['loop_receipt'][language].encode('utf-8')
+    # print transaction_sms['aggregator'][language]
+    # message = ('%s %s \n %s %s\n %s %s') % (transaction_sms['loop_receipt'][language].encode('utf-8'), str(key[0]), transaction_sms['farmer'][language].encode('utf-8'), str(key[2]), transaction_sms['aggregator'][language].encode('utf-8'), str(aggregator))
+    message = ('%s %s \n%s %s\n%s %s') % (transaction_sms['loop_receipt'][language].encode('utf-8'), str(key[0]), transaction_sms['farmer'][language].encode('utf-8'), str(key[2]), transaction_sms['aggregator'][language].encode('utf-8'), aggregator.encode('utf-8'))
+    print "_+_+_+_+_++_+_+_+_+_+_+_+_+_+__"
+    print value
     for row, detail in value.iteritems():
         if type(row) == 'tuple' and len(row) == 2:
-            message = ('%s\n%s: %s x %s=%s')%(message, row[0], str(row[1]), str(detail['quantity']), str(detail['amount']))
+            message = ('%s\n%s: %s x %s=%s')%(message, str(row[0]), str(row[1]), str(detail['quantity']), str(detail['amount']))
+    print message
     return message
 
 def make_transportation_sms(key, farmer_name, aggregator, value):
@@ -141,7 +150,7 @@ def send_sms_using_textlocal(farmer_no, sms_body):
     #                 'message': sms_body, 'receipt_url': PUSH_MESSAGE_SMS_RESPONSE_URL, 'unicode': 'true',
     #                 'custom': recipient_custom_id}
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
-                  'message': sms_body, 'test': 'false', 'unicode': 'true'}
+                  'message': sms_body, 'test': 'true', 'unicode': 'true'}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
     if response_text['status'] == 'success':
