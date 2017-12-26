@@ -125,7 +125,13 @@ def make_transaction_sms(key, farmer_name, aggregator, value, language):
         print len(row)
         if type(row) == 'tuple' and len(row) == 2:
             print "I m inside IF"
+            print message
+            print str(row[0])
+            print str(row[1])
+            print str(detail['quantity'])
+            print str(detail['amount'])
             message = ('%s\n%s: %s x %s=%s')%(message, str(row[0]), str(row[1]), str(detail['quantity']), str(detail['amount']))
+            print message
     print message
     return message
 
