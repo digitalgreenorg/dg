@@ -137,22 +137,28 @@ def crop_price_query(request):
 
 def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
         if query_code == '' or query_code == 'None':
-            # sms_content = [no_code_entered,'\n\n']
-            # send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-            price_info_incoming_obj.info_status = 3
-            price_info_incoming_obj.save()
+            if price_info_incoming_obj.call_source == 3:
+                sms_content = [no_code_entered,'\n\n']
+                send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            else:
+                price_info_incoming_obj.info_status = 3
+                price_info_incoming_obj.save()
             return HttpResponse(status=404)
         elif query_code == '0':
-            # sms_content = []
-            # send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-            price_info_incoming_obj.info_status = 3
-            price_info_incoming_obj.save()
+            if price_info_incoming_obj.call_source == 3:
+                sms_content = []
+                send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+            else:
+                price_info_incoming_obj.info_status = 3
+                price_info_incoming_obj.save()
             return HttpResponse(status=404)
         elif re.search(PATTERN_REGEX, query_code) is None:
             # send wrong query code
-            # send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
-            price_info_incoming_obj.info_status = 2
-            price_info_incoming_obj.save()
+            if price_info_incoming_obj.call_source == 3:
+                send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+            else:
+                price_info_incoming_obj.info_status = 2
+                price_info_incoming_obj.save()
             return HttpResponse(status=404)
         else :
             # send corresponding response
@@ -173,9 +179,11 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
             crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
             mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
             if len(crop_list) == 0:
-                # send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
-                price_info_incoming_obj.info_status = 2
-                price_info_incoming_obj.save()
+                if price_info_incoming_obj.call_source == 3:
+                    send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+                else:
+                    price_info_incoming_obj.info_status = 2
+                    price_info_incoming_obj.save()
                 return HttpResponse(status=404)
             else:
                 Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
@@ -195,7 +203,6 @@ def market_info_response(request):
         price_info_incoming_obj = price_info_incoming_obj[0] if price_info_incoming_obj.count() > 0 else ''
         # If call failed then send acknowledgement to user
         if status != 'completed':
-            logger.debug(status)
             # if call found in our database, then fetch number of caller and send SMS
             if price_info_incoming_obj != '':
                 user_no = price_info_incoming_obj.from_number
