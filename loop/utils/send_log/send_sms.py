@@ -89,6 +89,7 @@ def transactions_sms(user, transactions, language):
             farmer_name = str(key[2])
             message = make_transaction_sms(key, farmer_name, user.name_en, value, language)
             sms_response = send_sms_using_textlocal(farmer_no, message)
+            print sms_response
             if sms_response['status'] == "success":
                 transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
                 transaction_to_update.update(payment_sms=True, payment_sms_id=sms_response['messages'][0]['id'])
