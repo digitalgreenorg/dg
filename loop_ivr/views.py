@@ -31,7 +31,6 @@ def market_info_incoming(request):
     When user calls on textlocal or exotel number and the call is disconnected by the platform
     """
     if request.method == 'GET':
-        logger.debug(request.GET)
         call_id, to_number, dg_number, incoming_time = fetch_info_of_incoming_call(request)
         if request.GET.getlist('call_source'):
             call_source = request.GET.getlist('call_source')[0]
@@ -179,7 +178,7 @@ def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
 def market_info_response(request):
     logger.debug("Reached here in Market Info Response View")
     logger.debug(request)
-    logger.debug(request.body)
+    logger.debug(request.POST)
 
     if request.method == 'POST':
         status = str(request.POST.getlist('Status')[0])
