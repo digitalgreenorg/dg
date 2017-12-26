@@ -63,7 +63,7 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
         loop_user = LoopUser.objects.filter(user=user)
         reg_token = None
-        if request.POST['registration']:
+        if 'registration' in request.POST and request.POST['registration']:
             reg_token = request.POST['registration']
             LoopUser.objects.filter(registration=reg_token).update(registration=None)
         loop_user.update(registration=reg_token)
