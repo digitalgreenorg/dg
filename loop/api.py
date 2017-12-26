@@ -1060,8 +1060,8 @@ class CombinedTransactionResource(BaseResource):
                                                      "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
         
         if attempt.count() < 1:
-            if bundle.data["status"]==1:
-                self.send_farmer_message(bundle)
+            # if bundle.data["status"]==1:
+            #     self.send_farmer_message(bundle)
             bundle = super(CombinedTransactionResource,self).obj_create(bundle, **kwargs)
         else:
             send_duplicate_message(int(attempt[0].id))
@@ -1074,8 +1074,8 @@ class CombinedTransactionResource(BaseResource):
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
 
         try:
-            if(bundle.data["status"]==1):
-                self.send_farmer_message(bundle)
+            # if(bundle.data["status"]==1):
+            #     self.send_farmer_message(bundle)
             bundle = super(CombinedTransactionResource,
                            self).obj_update(bundle, **kwargs)
         except Exception, e:
