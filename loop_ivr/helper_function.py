@@ -316,14 +316,17 @@ def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_numb
     sms_content = ''.join(sms_content)
     send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
 
-def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number) :
+def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_code=None) :
     price_info_incoming_obj.info_status = 2
     price_info_incoming_obj.save()
     # Send Wrong code entered message to user.
-    try:
-        wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
-    except Exception as e:
-        wrong_query_code = ''
+    if query_code == None:
+        try:
+            wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
+        except Exception as e:
+            wrong_query_code = ''
+    else:
+        wrong_query_code = query_code
     wrong_code_entered_message = wrong_code_entered
     if wrong_query_code == '':
         wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
