@@ -210,7 +210,7 @@ def market_info_response(request):
                 if price_info_incoming_obj.info_status == 2:  #WRONG QUERY
                     send_wrong_query_sms_content(price_info_incoming_obj, price_info_incoming_obj.from_number)
                 elif price_info_incoming_obj.info_status == 3:  #NO INPUT
-                    if price_info_incoming_obj.prev_info_status != None && price_info_incoming_obj.prev_info_status == 2:
+                    if price_info_incoming_obj.prev_info_status != None and price_info_incoming_obj.prev_info_status == 2:
                         send_wrong_query_sms_content(price_info_incoming_obj, price_info_incoming_obj.from_number, price_info_incoming_obj.prev_query_code)
                     else:
                         sms_content = [no_code_entered,'\n\n']
