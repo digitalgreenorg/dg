@@ -247,11 +247,11 @@ header_dict_for_transport_outlier = {
 }
 
 transaction_sms = {
-                    'farmer':{'hi':"किसान".encode(encoding='utf-8'), 'en':"Farmer", 'bn':"কৃষকের".encode(encoding='utf-8'), 'mr':"शेतकऱ्यांची".encode(encoding='utf-8')},
+                    'farmer':{'hi': unicode('किसान', 'utf-8'), 'en':"Farmer", 'bn': unicode('কৃষকের','utf-8'), 'mr': unicode("शेतकऱ्यांची",'utf-8')},
                     'aggregator':{'hi':"", 'en':"Farmer", 'bn':"", 'mr':""},
                     'currency':{'hi':"", 'en':"Farmer", 'bn':"", 'mr':""},
                     'date':{'hi':"", 'en':"Farmer", 'bn':"", 'mr':""},
-                    'loop_receipt':{'hi':"लूप-रसीद".encode(encoding='utf-8'), 'en': "Loop Receipt", 'bn':"লুপ রশিদ".encode(encoding='utf-8'), 'mr':"लूप-पावती".encode(encoding='utf-8')},
+                    'loop_receipt':{'hi':unicode("लूप-रसीद", 'utf-8'), 'en': "Loop Receipt", 'bn':unicode("লুপ রশিদ",'utf-8'), 'mr':unicode("लूप-पावती",'utf-8')},
                     'total':{'hi':"", 'en':"", 'bn':"", 'mr':""},
                     'bracket_open':{'default':'('},
                     'bracket_close':{'default':')'},
