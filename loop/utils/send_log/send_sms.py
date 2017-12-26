@@ -44,8 +44,8 @@ def send_sms(request):
                 transportations_to_consider = DayTransportation.objects.filter(time_modified__gte=timestamp,
                                                                                user_created_id=user.id)
 
-                transactions_sms(requesting_loop_user, transactions_to_consider)
-                transportations_sms(requesting_loop_user, transportations_to_consider)
+                transactions_sms(requesting_loop_user, transactions_to_consider, preferred_language)
+                transportations_sms(requesting_loop_user, transportations_to_consider, preferred_language)
 
             except Exception as e:
                 print e
@@ -96,7 +96,7 @@ def transactions_sms(user, transactions, language):
     except Exception as e:
         print e
 
-def transportations_sms(user, transportations):
+def transportations_sms(user, transportations, language):
     return "heelo"
 
 
