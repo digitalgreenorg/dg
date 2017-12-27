@@ -24,6 +24,8 @@ from loop_ivr.utils.config import *
 from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 from loop_ivr.outliers.removal import remove_crop_outliers
+import logging
+logger = logging.getLogger(__name__)
 
 def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
@@ -190,7 +192,12 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append(AGGREGATOR_SMS_NO)
     price_info_list.append('\n')
 
+    logger.debug(price_info_list)
+    # print price_info_list
+
     query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
+    logger.debug("-------------------Query--------------")
+    logger.debug(query)
     result = run_query(query)
     dataframe = remove_crop_outliers(ct_data = result)
 
