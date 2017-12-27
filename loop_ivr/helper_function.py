@@ -193,13 +193,11 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append('\n')
 
     query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
-    logger.debug("-------------------Query--------------")
     result = run_query(query)
     dataframe = remove_crop_outliers(ct_data = result)
-    logger.debug(dataframe)
 
     try:
-        if (not result) or dataframe.empty or dataframe == None:
+        if (not result) or dataframe.empty or dataframe is None:
             if not all_crop_flag and not all_mandi_flag:
                 crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
                 mandi_name_list = ','.join(map(lambda mandi_id: mandi_map[mandi_id].encode("utf-8").rstrip(mandi_hi).rstrip(), mandi_list))
@@ -258,7 +256,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                     price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
                                 crop_id=crop, mandi_id=mandi)
                     # price_info_log_list.append(price_info_log_obj)
-                    if result and (not dataframe.empty):
+                    if result and dataframe is not None and (not dataframe.empty):
                         crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                         mandi_name = mandi_map[mandi].encode("utf-8")
                         if crop != prev_crop:
