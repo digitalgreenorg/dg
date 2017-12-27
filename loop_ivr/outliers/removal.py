@@ -15,8 +15,6 @@ def remove_crop_outliers(ct_data=None):
 
         combined_transactions_data = call_methods(combined_transactions_data)
 
-        # combined_transactions_data.to_csv("final_data_after_outliers.csv")
-
         for recursion_counter in range(0,3):
             combined_transactions_data.fillna(0,inplace=True)
             ct_data = combined_transactions_data[(combined_transactions_data['D/STD'] > 1.3)]
@@ -55,7 +53,6 @@ def call_methods(combined_transactions_data):
 
 
 def get_statistics(combined_transactions_data):
-
     ct_data_with_mean = combined_transactions_data.groupby(group_by_list).apply(compute_mean).reset_index(name='Av_Rate')
     combined_transactions_data = combined_transactions_data.merge(ct_data_with_mean,how='left',on=group_by_list)
 
