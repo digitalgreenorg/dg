@@ -25,7 +25,6 @@ from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 from loop_ivr.outliers.removal import remove_crop_outliers
 
-
 def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     app_id = MARKET_INFO_APP
@@ -199,7 +198,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     logger.debug("DATAFRAME")
     logger.debug(dataframe)
 
-    if (not result) or dataframe == None or dataframe.empty:
+    if (not result) or dataframe.empty:
         if not all_crop_flag and not all_mandi_flag:
             crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
             mandi_name_list = ','.join(map(lambda mandi_id: mandi_map[mandi_id].encode("utf-8").rstrip(mandi_hi).rstrip(), mandi_list))
@@ -307,27 +306,24 @@ def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_numb
 
 def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_code = None) :
     # Send Wrong code entered message to user.
-    try:
-        if query_code == None:
-            try:
-                wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
-            except Exception as e:
-                wrong_query_code = ''
-        else:
-            wrong_query_code = query_code
-        wrong_code_entered_message = wrong_code_entered
-        if wrong_query_code == '':
-            wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
-        else:
-            wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
-        crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-        sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
-        sms_content = ''.join(sms_content)
+    if query_code == None:
+        try:
+            wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
+        except Exception as e:
+            wrong_query_code = ''
+    else:
+        wrong_query_code = query_code
+    wrong_code_entered_message = wrong_code_entered
+    if wrong_query_code == '':
+        wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
+    else:
+        wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
+    crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+    sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+    sms_content = ''.join(sms_content)
 
-        price_info_incoming_obj.price_result = sms_content
-        price_info_incoming_obj.info_status = 2
-        price_info_incoming_obj.save()
+    price_info_incoming_obj.price_result = sms_content
+    price_info_incoming_obj.info_status = 2
+    price_info_incoming_obj.save()
 
-        send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
-    except Exception as e:
-        logger.debug(e)
+    send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
