@@ -291,8 +291,6 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             #send_sms(AGGREGATOR_SMS_NO, from_number, crop_code_list)
             send_info_using_textlocal(from_number, crop_code_list)
 
-    # PriceInfoLog.objects.bulk_create(price_info_log_list)
-
 def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number) :
     # Send No code entered message to user
     crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
