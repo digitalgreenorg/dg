@@ -132,6 +132,7 @@ class JSLPS_Person(CocoModel):
     id = models.AutoField(primary_key=True)
     person_code = models.CharField(max_length=100)
     person = models.ForeignKey(Person, null=True, blank=True)
+    group = models.ForeignKey(JSLPS_Persongroup, null=True, blank=True)
     activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
 
     class Meta:

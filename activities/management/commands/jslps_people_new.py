@@ -86,11 +86,11 @@ class Command(BaseCommand):
 													 father_name = pfn,
 													 partner=partner,
 													 gender=gender,
-													 group=group.group,
 													 village = village.Village,
 													 )
 					person.age = age
 					person.phone_no = phone
+					person.group=group.group
 					person.user_created_id = user_obj.id
 					person.save()
 					jslps.new_count += 1
@@ -105,12 +105,22 @@ class Command(BaseCommand):
 			if person != None:
 				jslps_person_list = JSLPS_Person.objects.filter(person_code=pc)
 				if jslps_person_list.count() == 0:
-					jslps_person, created = \
-						JSLPS_Person.objects.get_or_create(person_code=pc,
-														   person=person,
-														   user_created_id=user_obj.id,
-														   activity="LIVELIHOOD"
-														   )
+					if group is not None:
+						jslps_person, created = \
+							JSLPS_Person.objects.get_or_create(person_code=pc,
+															   person=person,
+															   user_created_id=user_obj.id,
+															   activity="LIVELIHOOD"
+															   )
+						jslps_person.group=group.group
+						jslps_person.save()
+					else:
+						jslps_person, created = \
+							JSLPS_Person.objects.get_or_create(person_code=pc,
+															   person=person,
+															   user_created_id=user_obj.id,
+															   activity="LIVELIHOOD",
+															   )
 				else:
 					jslps_person = jslps_person_list[0]
 					jslps_person.person = person
@@ -121,12 +131,22 @@ class Command(BaseCommand):
 					person = person_list[0]
 					jslps_person_list = JSLPS_Person.objects.filter(person_code=pc,person=person)
 					if jslps_person_list.count() == 0:
-						jslps_person, created = \
-							JSLPS_Person.objects.get_or_create(person_code=pc,
-															   person=person,
-															   user_created_id=user_obj.id,
-															   activity="LIVELIHOOD"
-															   )
+						if group is not None:
+							jslps_person, created = \
+								JSLPS_Person.objects.get_or_create(person_code=pc,
+																   person=person,
+																   user_created_id=user_obj.id,
+																   activity="LIVELIHOOD"
+																   )
+							jslps_person.group=group.group
+							jslps_person.save()
+						else:
+							jslps_person, created = \
+								JSLPS_Person.objects.get_or_create(person_code=pc,
+																   person=person,
+																   user_created_id=user_obj.id,
+																   activity="LIVELIHOOD",
+																   )
 					else:
 						jslps_person = jslps_person_list[0]
 						if jslps_person.person == None:

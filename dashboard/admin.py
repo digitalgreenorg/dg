@@ -298,15 +298,23 @@ class JSLPS_PersongroupAdmin(admin.ModelAdmin):
 
 
 class JSLPS_PersonAdmin(admin.ModelAdmin):
-    list_display = ['id', 'person_code', 'person', 'user_created',
+    list_display = ['id', 'person_code', 'person', '_group_code', 'user_created',
                     'time_created', 'activity', '_person']
-    search_fields = ['id', 'person_code', 'person__id']
+    search_fields = ['id', 'person_code', 'person__id', 'group__group_code']
     list_filter = ['activity']
 
     def _person(self, obj):
         return "%s:%s" % (obj.person.id, obj.person.person_name)
     _person.allow_tags = True
     _person.short_description = "COCO-DB-Person-ID"
+
+    def _group_code(self, obj):
+        if obj.group:
+            return "%s" % obj.group.group_code
+        else:
+            return  obj.group 
+    _group_code.allow_tags = True
+    _group_code.short_description = "PersonGroup-Code"
 
 
 class JSLPS_DistrictAdmin(admin.ModelAdmin):

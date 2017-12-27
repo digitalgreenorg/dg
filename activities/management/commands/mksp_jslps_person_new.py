@@ -32,7 +32,6 @@ class Command(BaseCommand):
 				data_list.append(pc)
 			except Exception as e:
 				pc = pc
-			print pc
 			pn = unicode(c.find('MemberName').text)
 			if c.find('FatherName') is not None:
 				pfn = unicode(c.find('FatherName').text)
@@ -98,6 +97,7 @@ class Command(BaseCommand):
 					person.age = age
 					person.phone_no = phone
 					person.user_created_id = user_obj.id
+					person.group=group.group
 					person.save()
 					jslps.new_count += 1
 				except Exception as e:
@@ -111,12 +111,22 @@ class Command(BaseCommand):
 			if person != None:
 				jslps_person_list = JSLPS_Person.objects.filter(person_code=pc, person=person)
 				if len(jslps_person_list) == 0:
-					jslps_person, created = \
-						JSLPS_Person.objects.get_or_create(person_code=pc,
-														   person=person,
-														   user_created_id=user_obj.id,
-														   activity="MKSP"
-														   )
+					if group is not None:
+						jslps_person, created = \
+							JSLPS_Person.objects.get_or_create(person_code=pc,
+															   person=person,
+															   user_created_id=user_obj.id,
+															   activity="MKSP",
+															   group=group
+															   )
+					else:
+						jslps_person, created = \
+							JSLPS_Person.objects.get_or_create(person_code=pc,
+															   person=person,
+															   user_created_id=user_obj.id,
+															   activity="MKSP",
+															   )
+
 				else:
 					jslps_person = jslps_person_list[0]
 					jslps_person.person = person
@@ -125,14 +135,23 @@ class Command(BaseCommand):
 				person_list = Person.objects.filter(person_name = pn,father_name = pfn,village = village.Village)
 				if len(person_list) != 0:
 					person = person_list[0]
-					jslps_person_list = JSLPS_Person.objects.filter(person_code=pc,person=person)
+					jslps_person_list = JSLPS_Person.objects.filter(person_code=pc, person=person)
 					if len(jslps_person_list) == 0:
-						jslps_person, created = \
-							JSLPS_Person.objects.get_or_create(person_code=pc,
-															   person=person,
-															   user_created_id=user_obj.id,
-															   activity="MKSP"
-															   )
+						if group is not None:
+							jslps_person, created = \
+								JSLPS_Person.objects.get_or_create(person_code=pc,
+																   person=person,
+																   user_created_id=user_obj.id,
+																   activity="MKSP",
+																   group=group
+																   )
+						else:
+							jslps_person, created = \
+								JSLPS_Person.objects.get_or_create(person_code=pc,
+																   person=person,
+																   user_created_id=user_obj.id,
+																   activity="MKSP",
+																   )
 					else:
 						jslps_person = jslps_person_list[0]
 						if jslps_person.person == None:
