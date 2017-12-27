@@ -146,15 +146,7 @@
         <div>
           <table id="table2" class="stripe">
             <tfoot>
-              <tr>
-                <th colspan="3" align="left">Total:</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+              <tr id="payment_sheet">
               </tr>
             </tfoot>
           </table>
@@ -163,10 +155,7 @@
         <div style="display:none">
           <table id="table3" class="stripe">
             <tfoot>
-              <tr>
-                <th colspan="3" align="left">Total:</th>
-                <th colspan="2"></th>
-                <th colspan="1"></th>
+              <tr id="commission_agent_details">
               </tr>
             </tfoot>
           </table>
@@ -175,9 +164,7 @@
         <div style="display:none">
           <table id="table4" class="stripe">
             <tfoot>
-              <tr>
-                <th colspan="6">Total:</th>
-                <th></th>
+              <tr id="transporter_details">
               </tr>
             </tfoot>
           </table>
@@ -482,6 +469,7 @@
 </div>
 {% endblock %} {% block script %}
 <!-- ?1 after js represents js version for refreshing cached version of javascript-->
+<script src="{% static 'app_dashboards/js/payment_config.js?2' %}"></script>
 <script src="{% static 'app_dashboards/js/loop_dashboard_payment.js?2' %}"></script>
 <script>
   window.localStorage.name = '{{user_name}}';

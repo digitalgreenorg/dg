@@ -201,6 +201,14 @@ def filter_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
+def admin_assigned_loopusers_data(request):
+    user_id = request.GET.get('user_id')
+    admin_user = AdminUser.objects.get(user__id = user_id)
+    aggregators = admin_user.assigned_loopusers.all().values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
+    data_dict = {'aggregators': list(aggregators)}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)
+
 def jsonify(data):
     if isinstance(data, dict):
         json_data = dict()
