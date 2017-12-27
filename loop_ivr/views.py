@@ -136,63 +136,62 @@ def crop_price_query(request):
 
 
 def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
-    logger.debug("HANDLING QUERY CODE")
-        if query_code == '' or query_code == 'None':
-            if price_info_incoming_obj.call_source == 3:
-                sms_content = [no_code_entered,'\n\n']
-                send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-            else:
-                price_info_incoming_obj.info_status = 3
-                price_info_incoming_obj.save()
-            return HttpResponse(status=404)
-        elif query_code == '0':
-            if price_info_incoming_obj.call_source == 3:
-                sms_content = []
-                send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
-            else:
-                price_info_incoming_obj.info_status = 3
-                price_info_incoming_obj.save()
-            return HttpResponse(status=404)
-        elif re.search(PATTERN_REGEX, query_code) is None:
-            # send wrong query code
-            if price_info_incoming_obj.call_source == 3:
-                send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
-            else:
-                price_info_incoming_obj.info_status = 2
-                price_info_incoming_obj.save()
-            return HttpResponse(status=404)
-        else :
-            try:
-                # send corresponding response
-                query_code = query_code.split('**')
-                all_crop_flag = False
-                all_mandi_flag = False
+    if query_code == '' or query_code == 'None':
+        if price_info_incoming_obj.call_source == 3:
+            sms_content = [no_code_entered,'\n\n']
+            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+        else:
+            price_info_incoming_obj.info_status = 3
+            price_info_incoming_obj.save()
+        return HttpResponse(status=404)
+    elif query_code == '0':
+        if price_info_incoming_obj.call_source == 3:
+            sms_content = []
+            send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number)
+        else:
+            price_info_incoming_obj.info_status = 3
+            price_info_incoming_obj.save()
+        return HttpResponse(status=404)
+    elif re.search(PATTERN_REGEX, query_code) is None:
+        # send wrong query code
+        if price_info_incoming_obj.call_source == 3:
+            send_wrong_query_sms_content(price_info_incoming_obj, farmer_number)
+        else:
+            price_info_incoming_obj.info_status = 2
+            price_info_incoming_obj.save()
+        return HttpResponse(status=404)
+    else :
+        try:
+            # send corresponding response
+            query_code = query_code.split('**')
+            all_crop_flag = False
+            all_mandi_flag = False
 
-                if len(query_code) >= 2:
-                    crop_info, mandi_info = query_code[0], query_code[1]
-                elif len(query_code) == 1:
-                    crop_info = query_code[0]
-                    mandi_info = ''
-                if re.search(CONTAINS_ZERO,crop_info) is not None:
-                    all_crop_flag = True
-                if re.search(CONTAINS_ZERO,mandi_info) is not None or mandi_info == '':
-                    all_mandi_flag = True
+            if len(query_code) >= 2:
+                crop_info, mandi_info = query_code[0], query_code[1]
+            elif len(query_code) == 1:
+                crop_info = query_code[0]
+                mandi_info = ''
+            if re.search(CONTAINS_ZERO,crop_info) is not None:
+                all_crop_flag = True
+            if re.search(CONTAINS_ZERO,mandi_info) is not None or mandi_info == '':
+                all_mandi_flag = True
 
-                crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
-                mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
-                if len(crop_list) == 0:
-                    if price_info_incoming_obj.call_source == 3:
-                        send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_code)
-                    else:
-                        price_info_incoming_obj.info_status = 2
-                        price_info_incoming_obj.save()
-                    return HttpResponse(status=404)
+            crop_list = get_valid_list('loop', 'crop', crop_info, farmer_number, all_crop_flag)
+            mandi_list = get_valid_list('loop', 'mandi', mandi_info, farmer_number, all_mandi_flag)
+            if len(crop_list) == 0:
+                if price_info_incoming_obj.call_source == 3:
+                    send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_code)
                 else:
-                    Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
-                    return HttpResponse(status=200)
-            except Exception as e:
-                logger.debug(e)
-        return HttpResponse(status=403)
+                    price_info_incoming_obj.info_status = 2
+                    price_info_incoming_obj.save()
+                return HttpResponse(status=404)
+            else:
+                Thread(target=get_price_info, args=[farmer_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag]).start()
+                return HttpResponse(status=200)
+        except Exception as e:
+            logger.debug(e)
+    return HttpResponse(status=403)
 
 @csrf_exempt
 def market_info_response(request):
