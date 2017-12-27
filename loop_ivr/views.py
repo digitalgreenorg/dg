@@ -136,6 +136,7 @@ def crop_price_query(request):
 
 
 def handle_query_code(query_code, price_info_incoming_obj, farmer_number):
+    logger.debug("HANDLING QUERY CODE")
     if query_code == '' or query_code == 'None':
         if price_info_incoming_obj.call_source == 3:
             sms_content = [no_code_entered,'\n\n']

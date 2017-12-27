@@ -190,11 +190,10 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append(agg_sms_initial_line)
     price_info_list.append(AGGREGATOR_SMS_NO)
     price_info_list.append('\n')
-    # today_date = datetime.now()
-    # raw_query = raw_sql.last_three_trans.format('(%s)'%(crop_list[0],) if len(crop_list) == 1 else crop_list, '(%s)'%(mandi_list[0],) if len(mandi_list) == 1 else mandi_list, tuple((today_date-timedelta(days=day)).strftime('%Y-%m-%d') for day in range(0,3)))
-    # query_result = run_query(raw_query)
 
     query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
+    logger.debug("QUERY")
+    logger.debug(query)
     result = run_query(query)
     dataframe = remove_crop_outliers(ct_data = result)
     logger.debug("DATAFRAME")
