@@ -197,6 +197,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
     result = run_query(query)
     dataframe = remove_crop_outliers(ct_data = result)
+    logger.debug("DATAFRAME")
+    logger.debug(dataframe)
 
     if (not result) or dataframe == None or dataframe.empty:
         if not all_crop_flag and not all_mandi_flag:
@@ -248,12 +250,6 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                 min_price = round(PriceMin) - 1
                 max_price = round(PriceMax) + 1
                 temp_str = ('%s %s: %s %s-%s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(min_price),str(max_price))
-            # if STD == 0:
-            #     temp_str = ('%s %s: %s %s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(Av_Rate))
-            # elif STD < 3:
-            #     min_price = Av_Rate - STD
-            #     max_price = Av_Rate + STD
-            #     temp_str = ('%s %s: %s %s-%s\n')%(date.strftime('%d'),MONTH_NAMES[int(date.strftime('%m'))],indian_rupee,str(min_price),str(max_price))
             price_info_list.append(temp_str)
     # Save combination of crop and mandi for which data is not present in query on if query not for all mandi and crops.
     if not all_crop_flag and not all_mandi_flag:
@@ -274,6 +270,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                         temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     price_info_list.append(temp_str)
                     price_info_list.append(agg_sms_no_price_for_combination)
+
     price_info_list.append(('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER))
     final_result = ''.join(price_info_list)
     price_info_incoming_obj.price_result = final_result
@@ -292,7 +289,6 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             #send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller_message)
             send_info_using_textlocal(from_number, first_time_caller_message)
         else:
-            pass
             #send_sms(AGGREGATOR_SMS_NO, from_number, crop_code_list)
             send_info_using_textlocal(from_number, crop_code_list)
     # PriceInfoLog.objects.bulk_create(price_info_log_list)
