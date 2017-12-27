@@ -173,7 +173,7 @@ def get_crop_code_list(number_of_crop, selling_crop_window):
 
 def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, all_crop_flag, all_mandi_flag):
     price_info_list = []
-    price_info_log_list = []
+    # price_info_log_list = []
     crop_mandi_comb = []
     crop_map = dict()
     mandi_map = dict()
@@ -192,14 +192,13 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     price_info_list.append(AGGREGATOR_SMS_NO)
     price_info_list.append('\n')
 
-    logger.debug(price_info_list)
-    # print price_info_list
-
     query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
     logger.debug("-------------------Query--------------")
     logger.debug(query)
     result = run_query(query)
     dataframe = remove_crop_outliers(ct_data = result)
+    logger.debug(dataframe)
+
 
     if (not result) or dataframe.empty or dataframe == None:
         if not all_crop_flag and not all_mandi_flag:
@@ -225,9 +224,9 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             if crop != prev_crop or mandi != prev_mandi:
                 if not all_crop_flag and not all_mandi_flag:
                     crop_mandi_comb.append((crop,mandi))
-                price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
-                                    crop_id=crop, mandi_id=mandi)
-                price_info_log_list.append(price_info_log_obj)
+                # price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
+                                    # crop_id=crop, mandi_id=mandi)
+                # price_info_log_list.append(price_info_log_obj)
                 crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                 mandi_name = mandi_map[mandi].encode("utf-8")
                 if crop != prev_crop:
@@ -259,7 +258,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             if (crop,mandi) not in crop_mandi_comb:
                 price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
                             crop_id=crop, mandi_id=mandi)
-                price_info_log_list.append(price_info_log_obj)
+                # price_info_log_list.append(price_info_log_obj)
                 if result and (not dataframe.empty):
                     crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                     mandi_name = mandi_map[mandi].encode("utf-8")
