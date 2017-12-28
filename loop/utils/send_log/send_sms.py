@@ -140,7 +140,7 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             print message
 
             # print "*************************************"
-            message = ('%s\n%s: %s')%(message, transaction_sms['helpline_no'][language], helpline_num)
+            message = ('%s\n%s: %s')%(message, transaction_sms['helpline_no'][language].encode('utf-8'), helpline_num)
             if farmer_no in ['8826883595', '9810253264', '9013623264']:
                 sms_response = send_sms_using_textlocal(farmer_no, message)
                 # print sms_response
