@@ -112,7 +112,7 @@ class Command(BaseCommand):
 															   user_created_id=user_obj.id,
 															   activity="LIVELIHOOD"
 															   )
-						jslps_person.group=group.group
+						jslps_person.group=group
 						jslps_person.save()
 					else:
 						jslps_person, created = \
@@ -138,7 +138,7 @@ class Command(BaseCommand):
 																   user_created_id=user_obj.id,
 																   activity="LIVELIHOOD"
 																   )
-							jslps_person.group=group.group
+							jslps_person.group=group
 							jslps_person.save()
 						else:
 							jslps_person, created = \
