@@ -37,11 +37,11 @@ def send_sms(request):
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
                 preferred_language = requesting_loop_user.preferred_language.notation
-                transactions_to_consider = CombinedTransaction.objects.filter(time_modified__gte=timestamp,
+                transactions_to_consider = CombinedTransaction.objects.filter(
                                                                               user_created_id=user.id, payment_sms=0,
                                                                               status=1)
 
-                transportations_to_consider = DayTransportation.objects.filter(time_modified__gte=timestamp,
+                transportations_to_consider = DayTransportation.objects.filter(
                                                                                user_created_id=user.id)
 
                 helpline_no = requesting_loop_user.village.block.district.state.helpline_number
