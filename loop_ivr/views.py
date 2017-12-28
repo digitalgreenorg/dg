@@ -18,7 +18,7 @@ from loop_ivr.models import PriceInfoIncoming, PriceInfoLog, SubscriptionLog
 from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, make_market_info_call, \
     send_info_using_textlocal, get_top_selling_crop_quantity_wise, get_crop_code_list, send_crop_code_sms_content, \
     send_wrong_query_sms_content
-from loop_ivr.utils.config import LOG_FILE, agg_sms_initial_line, call_failed_sms, helpline_hi, remaining_crop_line, \
+from loop_ivr.utils.config import LOG_FILE, agg_sms_initial_line, call_failed_sms, remaining_crop_line, \
     no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, code_hi, \
     AGGREGATOR_SMS_NO, ALL_FLAG_TRUE, ALL_FLAG_FALSE, PATTERN_REGEX, CONTAINS_ZERO
 
