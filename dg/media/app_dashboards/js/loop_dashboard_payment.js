@@ -67,6 +67,7 @@ var PAYMENT_SUMMARY = {
   QUANTITY : null,
   QUANTITY_POST_DEDUCTION : null,
   AGGREGATOR_INCENTIVE : null,
+  FARMER_SHARE_IN_AGGREGATOR_INCENTIVE: null,
   TRANSPORT_COST : null,
   FARMER_SHARE : null,
   GADDIDAR_SHARE : null,
@@ -254,6 +255,16 @@ var calc_functions = {
           break;
         }
       }
+    }
+  },
+  farmer_share_in_aggregator_incentive_half: function() {
+    for (var i = 0; i < aggregator_data_set.length; i++) {
+      aggregator_data_set[i][PAYMENT_SUMMARY.FARMER_SHARE_IN_AGGREGATOR_INCENTIVE] = (aggregator_data_set[i][PAYMENT_SUMMARY.QUANTITY]/2);
+    }
+  },
+  farmer_share_in_aggregator_incentive_one_fourth: function() {
+    for (var i = 0; i < aggregator_data_set.length; i++) {
+      aggregator_data_set[i][PAYMENT_SUMMARY.FARMER_SHARE_IN_AGGREGATOR_INCENTIVE] = (aggregator_data_set[i][PAYMENT_SUMMARY.QUANTITY]/4);
     }
   }
 };
@@ -555,12 +566,12 @@ function fill_drop_down(container, data_json, id_parameter, name_parameter, capt
 //To compute the payment model to be used for the aggregator
 function get_payment_model() {
   var max_model_start_date = null;
-  var model_ID = -1;
+  var model_ID = 0;
 
-  for(var i=0; i < models.length; i++) {
+  for(var i=1; i < models.length; i++) {
     if(models[i]["geography"][selected_aggregator_country]) {
       if(models[i]["geography"][selected_aggregator_country].indexOf(selected_aggregator_state) != -1) {
-        if(max_model_start_date == null || (new Date(payments_start_date) - new Date(models[i]["start_date"]) > 0 && new Date(models[i]["start_date"]) - new Date(max_model_start_date) > 0)) {
+        if(max_model_start_date == null || (new Date(payments_start_date) - new Date(models[i]["start_date"]) >= 0 && new Date(models[i]["start_date"]) - new Date(max_model_start_date) > 0)) {
           max_model_start_date = models[i]["start_date"];
           model_ID = i;
         }
@@ -1765,7 +1776,7 @@ function getFormattedDate(aggregator_id) {
     "July", "Aug", "Sept", "Oct", "Nov", "Dec"
   ];
   var aggregator_index = aggregator_ids.indexOf(parseInt(aggregator_id));
-  var name = aggregator_names[aggregator_index];
+  var name = (aggregator_names[aggregator_index]).replace('.', '');
   var fromDate = new Date(payments_start_date);
   var toDate = new Date(payments_to_date);
   var str = name + "(" + aggregator_id + ")" + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
