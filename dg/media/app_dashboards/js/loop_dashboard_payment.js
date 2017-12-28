@@ -695,6 +695,15 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   calculate_data_for_table("aggregator_data_set");
   calculate_data_for_table("gaddidar_data_set");
   calculate_data_for_table("transporter_data_set"); 
+
+  //Adding mobile recharge entry for aggregator in Payment Sheet
+  aggregator_data_set.push(default_aggregator_data_set.slice());
+  var aggregator_data_set_length = aggregator_data_set.length;
+  aggregator_data_set[aggregator_data_set_length-1][PAYMENT_SUMMARY.SNO] = aggregator_data_set_length.toString();
+  aggregator_data_set[aggregator_data_set_length-1][PAYMENT_SUMMARY.MANDI_NAME] = "Mobile Recharge";
+  aggregator_data_set[aggregator_data_set_length-1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat("150").toFixed(2);
+  aggregator_data_set[aggregator_data_set_length-1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat("150").toFixed(2);
+
   
   //gaddidar data clone
   var gaddidar_data_set_clone = [];
