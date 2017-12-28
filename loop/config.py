@@ -246,15 +246,16 @@ header_dict_for_transport_outlier = {
 }
 
 transaction_sms = {
-    'farmer': {'hi': u'किसान', 'en': "Farmer", 'bn': unicode('কৃষকের', 'utf-8'), 'mr': unicode("शेतकऱ्यांची", 'utf-8')},
-    'aggregator': {'hi': u'Jamakarta', 'en': "Farmer", 'bn': "", 'mr': ""},
-    'currency': {'hi': "", 'en': "Farmer", 'bn': "", 'mr': ""},
+    'farmer': {'hi': u'किसान', 'en': u"Farmer", 'bn': u'কৃষকের', 'mr': u'शेतकऱ्यांची'},
+    'aggregator': {'hi': u'जमाकर्ता', 'en': u"Aggregator", 'bn': u"जमाकर्ता", 'mr': u"जमाकर्ता"},
+    'currency': {'hi': u"₹", 'en': u'Rs', 'bn': u"৳", 'mr': u'₹'},
     'date': {'hi': "", 'en': "Farmer", 'bn': "", 'mr': ""},
-    'loop_receipt': {'hi': u'लूप-रसीद', 'en': "Loop Receipt", 'bn': unicode("লুপ রশিদ", 'utf-8'),
-                     'mr': unicode("लूप-पावती", 'utf-8')},
-    'total': {'hi': "", 'en': "", 'bn': "", 'mr': ""},
+    'loop_receipt': {'hi': u'लूप-रसीद', 'en': u'Loop Receipt', 'bn': u'লুপ রশিদ',
+                     'mr': u'लूप-पावती'},
+    'total': {'hi': u'कुल राशि', 'en': u'Total', 'bn': u'মোট', 'mr': u'एकूण रक्कम'},
     'bracket_open': {'default': '('},
     'bracket_close': {'default': ')'},
+    'helpline_no':{'hi': u'हेल्पलाइन नं.', 'en':u'Helpline No.', 'bn':u'হেল্পলাইন নম্বর', 'mr':u'मदतीसाठी संपर्क: '}
 
 }
 

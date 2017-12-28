@@ -44,8 +44,10 @@ def send_sms(request):
                 transportations_to_consider = DayTransportation.objects.filter(time_modified__gte=timestamp,
                                                                                user_created_id=user.id)
 
+                helpline_no = requesting_loop_user.village.block.district.state.helpline_number
+
                 transactions_sms(requesting_loop_user, transactions_to_consider, preferred_language,
-                                 transportations_to_consider)
+                                 transportations_to_consider, helpline_no)
                 transportations_sms(requesting_loop_user, transportations_to_consider, preferred_language)
 
             except Exception as e:
@@ -56,7 +58,7 @@ def send_sms(request):
     return HttpResponse("0")
 
 
-def transactions_sms(user, transactions, language, transportations):
+def transactions_sms(user, transactions, language, transportations, helpline_num):
     try:
         single_farmer_date_message = {}
         transactions_list = []
@@ -135,6 +137,7 @@ def transactions_sms(user, transactions, language, transportations):
             # print message
 
             # print "*************************************"
+            message = ('%s\n%s: %s')%(message, transaction_sms['helpline_no'][language], helpline_num)
             sms_response = send_sms_using_textlocal(farmer_no, message)
             # print sms_response
             if sms_response['status'] == "success":
