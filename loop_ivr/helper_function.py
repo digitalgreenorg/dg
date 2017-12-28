@@ -12,7 +12,7 @@ import xml.etree.ElementTree as xml_parse
 
 from django.db.models import get_model, Sum
 
-from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES, EXOTEL_HELPLINE_NUMBER, TEXTLOCAL_API_KEY
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES, TEXTLOCAL_API_KEY
 
 from loop.models import Crop, Mandi, CropLanguage, CombinedTransaction
 from loop.utils.ivr_helpline.helpline_data import SMS_REQUEST_URL, CALL_REQUEST_URL, APP_REQUEST_URL, \
@@ -142,7 +142,7 @@ def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
         price_info_incoming_obj.save()
     while len(content) > 0:
         # If length of content is less than 750, then send whole content once.
-        if len(content) < 750:
+        if len(unicode(content,'utf-8')) < 400:
             send_sms_using_textlocal(user_no, content, price_info_incoming_obj)
             break
         # If length of content is more than 750, then devide in packets of length < 750
@@ -188,9 +188,9 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     for crop in crop_in_hindi:
         crop_in_hindi_map[crop['crop_id']] = crop['crop_name']
     # Fetching price from DB
-    price_info_list.append(agg_sms_initial_line)
-    price_info_list.append(AGGREGATOR_SMS_NO)
-    price_info_list.append('\n')
+    price_info_list.append(agg_sms_initial_line_with_content)
+    # price_info_list.append(AGGREGATOR_SMS_NO)
+    # price_info_list.append('\n')
 
     query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
     result = run_query(query)
@@ -205,7 +205,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             # If query for all Mandi
             elif all_mandi_flag:
                 crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
-                no_price_message = (agg_sms_no_price_all_mandi)%(crop_name_list,)
+                no_price_message = ('%s : %s') % (fasal,(agg_sms_no_price_all_mandi % (crop_name_list,)))
             # If query for all crops
             else:
                 no_price_message = agg_sms_no_price_available
@@ -227,7 +227,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                     crop_name = crop_in_hindi_map.get(crop).encode("utf-8") if crop_in_hindi_map.get(crop) else crop_map[crop].encode("utf-8")
                     mandi_name = mandi_map[mandi].encode("utf-8")
                     if crop != prev_crop:
-                        temp_str = ('\n%s: %s (%s: %s)\n\n%s %s\n')%(agg_sms_crop_line,crop_name,code_hi,str(crop),mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                        temp_str = ('\n%s: %s (%s: %s)\n\n%s %s\n')%(fasal,crop_name,code_hi,str(crop),mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     else:
                         temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                     price_info_list.append(temp_str)
@@ -261,14 +261,14 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
                         mandi_name = mandi_map[mandi].encode("utf-8")
                         if crop != prev_crop:
                             prev_crop = crop
-                            temp_str = ('\n%s: %s (%s: %s)\n\n%s %s\n')%(agg_sms_crop_line,crop_name,code_hi,str(crop),mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
+                            temp_str = ('\n%s: %s (%s: %s)\n\n%s %s\n')%(fasal,crop_name,code_hi,str(crop),mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                         else:
                             prev_mandi = mandi
                             temp_str = ('\n%s %s\n')%(mandi_name.rstrip(mandi_hi).rstrip(),mandi_hi)
                         price_info_list.append(temp_str)
                         price_info_list.append(agg_sms_no_price_for_combination)
 
-        price_info_list.append(('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER))
+        # price_info_list.append(('\n%s: %s')%(helpline_hi, EXOTEL_HELPLINE_NUMBER))
         final_result = ''.join(price_info_list)
 
         price_info_incoming_obj.price_result = final_result
@@ -283,7 +283,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     if PriceInfoIncoming.objects.filter(from_number=from_number).count() == 1:
         crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
         if result and not dataframe.empty:
-            first_time_caller_message = [first_time_caller,'\n\n', crop_code_list, '\n',('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+            first_time_caller_message = [first_time_caller,'\n\n', crop_code_list, '\n', remaining_crop_line]
             first_time_caller_message = ''.join(first_time_caller_message)
             #send_sms(AGGREGATOR_SMS_NO, from_number, first_time_caller_message)
             send_info_using_textlocal(from_number, first_time_caller_message)
@@ -294,7 +294,7 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
 def send_crop_code_sms_content(price_info_incoming_obj, sms_content, farmer_number) :
     # Send No code entered message to user
     crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-    sms_content = sms_content + [crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+    sms_content = sms_content + [crop_code_list, '\n\n', remaining_crop_line]
     sms_content = ''.join(sms_content)
 
     price_info_incoming_obj.price_result = sms_content
@@ -307,7 +307,7 @@ def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_c
     # Send Wrong code entered message to user.
     if query_code == None:
         try:
-            wrong_query_code = str(price_info_incoming_obj.query_code) if price_info_incoming_obj.query_code else ''
+            wrong_query_code = str(price_info_incoming_obj.query_code[0]) if price_info_incoming_obj.query_code else ''
         except Exception as e:
             wrong_query_code = ''
     else:
@@ -316,9 +316,9 @@ def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_c
     if wrong_query_code == '':
         wrong_code_entered_message = wrong_code_entered_message%(wrong_query_code,)
     else:
-        wrong_code_entered_message = wrong_code_entered_message%((' (%s:%s)')%(code_hi,wrong_query_code),)
+        wrong_code_entered_message = wrong_code_entered_message % ('(%s)' % wrong_query_code[0])
     crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-    sms_content = [wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', ('%s\n%s')%(remaining_crop_line, EXOTEL_HELPLINE_NUMBER)]
+    sms_content = [agg_sms_initial_line, wrong_code_entered_message,'\n\n', crop_code_list, '\n\n', remaining_crop_line]
     sms_content = ''.join(sms_content)
 
     price_info_incoming_obj.price_result = sms_content
