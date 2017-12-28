@@ -55,7 +55,7 @@ def send_sms(request):
                 # raise UserDoesNotExist(
                 # 'User with id: ' + str(user.id) + 'does not exist')
 
-    return HttpResponse("0")
+    return
 
 
 def transactions_sms(user, transactions, language, transportations, helpline_num):
