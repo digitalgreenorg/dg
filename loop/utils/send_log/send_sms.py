@@ -77,33 +77,38 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
 
                 farmer_specific_transportations = transportations.filter(date=transaction.date,
                                                                          mandi=transaction.mandi.id)
+
+                print "_____________________________"
+                print farmer_specific_transportations
+                print "&&&&&&&&&&&&&&&&&&&&&&&&"
+
                 for farmer_specific_transport in farmer_specific_transportations:
-#                    print single_farmer_date_message
+                    print single_farmer_date_message
                     if 'transport' not in single_farmer_date_message[(transaction.date, transaction.farmer.phone,
                                                                       transaction.farmer.name)].keys():
-#                        print 'inside if'
+                        print 'inside if'
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'] = {
                             transaction.mandi.mandi_name_en: [(
                                                                   farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
                                                                   farmer_specific_transport.transportation_cost)]}
-#                        print "done if"
+                        print "done if"
                     elif transaction.mandi.mandi_name_en in single_farmer_date_message[
                         (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport']:
-#                        print "inside elif"
+                        print "inside elif"
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'][
                             transaction.mandi.mandi_name_en].append((
                             farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
                             farmer_specific_transport.transportation_cost))
                     else:
-#                        print "inside else"
+                        print "inside else"
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'][
                             transaction.mandi.mandi_name_en] = [(
                             farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
                             farmer_specific_transport.transportation_cost)]
- #               print 'done for'
+                print 'done for'
             else:
                 farmer_level_transaction = single_farmer_date_message[
                     (transaction.date, transaction.farmer.phone, transaction.farmer.name)]
@@ -126,8 +131,8 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
         for key, value in single_farmer_date_message.iteritems():
             # print "______________________________________________________"
             # print "NEW FARMER CASE =================" + str(key[1])
-            # print key
-            # print value
+            print key
+            print value
 #            print key
             farmer_no = key[1]
             farmer_name = key[2].encode('utf-8')
