@@ -181,7 +181,7 @@ class Command(BaseCommand):
 														   person__group_id=group_obj).latest('id')
 					except (JSLPS_Person.DoesNotExist, JSLPS_Person.MultipleObjectsReturned) as e:
 						jslps.other_error_count += 1
-						wtrr.writerow(['pma JSLPS_Person', sc, 'pma Person', pc, e])
+						wtrr.writerow(['JSLPS_SCRID', sc, 'JSLPS_GROUP', gc, 'pma Person', pc, e])
 
 			except (JSLPS_Screening.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
 				if "Duplicate entry" not in str(e):

@@ -34,7 +34,7 @@ class Command(BaseCommand):
 			st = datetime.datetime.strptime(c.find('start_time').text, '%H:%M:%S')
 			#et = datetime.datetime.strptime(c.find('End_time').text, '%H:%M:%S')
 			try:
-				vdc = map(int, c.find('Video').text.split(','))
+				vdc = c.find('Video').text
 			except Exception as e:
 				vdc = []
 				wtr.writerow(['Can not save screening without video', sc, "video not found"])
@@ -60,10 +60,9 @@ class Command(BaseCommand):
 
 			groups = []
 			videos = []
-			for v in vdc:
-				vid = JSLPS_Video.objects.filter(vc=v, activity="GOTARY")
-				if vid.count() > 0:
-					videos.append(vid[0].video)
+			vid = JSLPS_Video.objects.filter(vc=vdc, activity="GOTARY")
+			if vid.count() > 0:
+				videos.append(vid[0].video)
 			if len(videos) == 0:
 				wtr.writerow(['Can not save screening without video', sc, "video not found"])
 				continue
@@ -158,37 +157,52 @@ class Command(BaseCommand):
 		for c in root.findall('GoatryVedioScreeingMemberData'):
 			sc = c.find('VDO_ID').text
 			pc = c.find('MemberId').text
+			gc = c.find('GroupCode').text
 			vill= c.find('VillageCode').text
-			
-			screening = \
-				JSLPS_Screening.objects.filter(screenig_code=sc,
-											   activity="GOTARY",
-											   screening__village=vill)
-			if screening.count() == 0:
-				wtrr.writerow(['Screening not exist', sc, "Screening not found"])
-				continue
-			else:
-				screening = screening[0]
 
-			person = JSLPS_Person.objects.filter(person_code=pc)
-			if person.count() == 0:
-				wtrr.writerow(['person not exist', pc, "Person not found"])
-				continue
-			else:
-				person = person[0]
+			error = 0
+			try:
+				screening = JSLPS_Screening.objects.filter(screenig_code=sc, activity="GOTARY")
+				if screening.count() == 0:
+					wtrr.writerow(['Screening not exist', sc, "Screening not found"])
+					continue
+				else:
+					screening = screening[0]
+					if gc is not None:
+						try:
+							group_obj = JSLPS_Persongroup.objects.get(group_code=gc).group.id
 
-		
-			pma_already_exist = \
-				PersonMeetingAttendance.objects.filter(screening_id=screening.screening.id,
-													   person_id=person.person.id)
-			if pma_already_exist.count() == 0:
-				try:
-					pma, created = \
-						PersonMeetingAttendance.objects.get_or_create(screening=screening.screening,
-																	  person=person.person)
-					jslps.new_count += 1
-				except Exception as e:
-					wtrr.writerow(['Error in saving attendance (scr_id=%s)'%(str(sc)), pc, e])
+						except JSLPS_Persongroup.DoesNotExist as e:
+							jslps.other_error_count += 1
+							wtrr.writerow(['pma JSLPS_Persongroup', sc, 'pma Person', pc, e])
+							
+						try:
+							person =  JSLPS_Person.objects.filter(person_code=pc,
+															   person__group_id=group_obj).latest('id')
+
+							try:
+								pma_already_exist = PersonMeetingAttendance.objects.filter(screening_id = screening.screening.id,person_id=person.person.id)
+								if len(pma_already_exist) == 0:
+									pma = PersonMeetingAttendance(screening=screening.screening,
+																 person=person.person)
+									pma.save()
+									jslps.new_count += 1
+									print "PMA saved in old"
+							except Exception as e:
+								if "Duplicate entry" in str(e):
+									jslps.duplicate_count += 1
+								else:
+									jslps.other_error_count += 1
+									wtrr.writerow(['Error in saving attendance (scr_id=%s)'%(str(sc)), pc, e])
+						except (JSLPS_Person.DoesNotExist, JSLPS_Person.MultipleObjectsReturned) as e:
+							jslps.other_error_count += 1
+							wtrr.writerow(['JSLPS_SCRID', sc, 'JSLPS_GROUP', gc, 'pma Person', pc, e])
+
+			except (JSLPS_Screening.DoesNotExist, JSLPS_Person.DoesNotExist) as e:
+				if "Duplicate entry" not in str(e):
+					jslps.other_error_count += 1
+					wtrr.writerow(['pma Screening', sc, 'group', gc, 'pma Person', pc, e])
+				error = 1
 
 		csv_file.close()
 
