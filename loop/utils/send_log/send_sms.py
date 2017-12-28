@@ -52,8 +52,6 @@ def send_sms(request):
 
             except Exception as e:
                 print e
-                # raise UserDoesNotExist(
-                # 'User with id: ' + str(user.id) + 'does not exist')
 
     return
 
@@ -137,14 +135,17 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             farmer_no = key[1]
             farmer_name = key[2].encode('utf-8')
             message = make_transaction_sms(key, farmer_name, user.name, value, language)
-#            print message
+            print message
             message = make_transaction_vehicle_sms(message, value['transport'])
-            # print message
+            print message
 
             # print "*************************************"
             message = ('%s\n%s: %s')%(message, transaction_sms['helpline_no'][language], helpline_num)
-            sms_response = send_sms_using_textlocal(farmer_no, message)
-            # print sms_response
+            if farmer_no in ['8826883595', '9810253264', '9013623264']:
+                sms_response = send_sms_using_textlocal(farmer_no, message)
+                # print sms_response
+            else:
+                print "all done HURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRAAAAAAAAAAAAAAAYYYYYYYYYYYYY"
             if sms_response['status'] == "success":
                 print "We are successful"
                 transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
