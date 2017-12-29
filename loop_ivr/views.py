@@ -20,7 +20,7 @@ from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, 
     send_wrong_query_sms_content
 from loop_ivr.utils.config import LOG_FILE, agg_sms_initial_line, call_failed_sms, remaining_crop_line, \
     no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, code_hi, \
-    AGGREGATOR_SMS_NO, ALL_FLAG_TRUE, ALL_FLAG_FALSE, PATTERN_REGEX, CONTAINS_ZERO
+    AGGREGATOR_SMS_NO, ALL_FLAG_TRUE, ALL_FLAG_FALSE, PATTERN_REGEX, CONTAINS_ZERO, EXOTEL_MI_LINE
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 import logging
@@ -56,7 +56,7 @@ def textlocal_market_info_incoming_call(request):
         dummy_incoming_request.method = 'GET'
         dummy_incoming_request.GET['CallSid'] = 0
         dummy_incoming_request.GET['From'] = farmer_number      # User Number
-        dummy_incoming_request.GET['To'] = EXOTEL_HELPLINE_NUMBER    # DG number
+        dummy_incoming_request.GET['To'] = EXOTEL_MI_LINE    # DG number
         dummy_incoming_request.GET['StartTime'] = current_time
         dummy_incoming_request.GET['call_source'] = 2
         market_info_incoming(dummy_incoming_request)
