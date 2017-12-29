@@ -1,13 +1,11 @@
+__author__ = 'Lokesh'
+
 import json
 from dg.settings import TEXTLOCAL_API_KEY
 from loop.config import transaction_sms
 from loop.models import CombinedTransaction, DayTransportation
 from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, loop_receipt, kisan, jamakarta
 from django.db.models import Count, Sum, Avg, Q, F
-
-
-__author__ = 'Lokesh'
-
 import requests
 from django.db.models import get_model
 from django.forms.models import model_to_dict
@@ -37,12 +35,12 @@ def send_sms(request):
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
                 preferred_language = requesting_loop_user.preferred_language.notation
-                transactions_to_consider = CombinedTransaction.objects.filter(
+                transactions_to_consider = CombinedTransaction.objects.filter(time_modified__gte=timestamp,
                                                                               user_created_id=user.id, payment_sms=0,
                                                                               status=1)
 
                 transportations_to_consider = DayTransportation.objects.filter(
-                                                                               user_created_id=user.id)
+                    user_created_id=user.id)
 
                 helpline_no = requesting_loop_user.village.block.district.state.helpline_number
 
@@ -52,8 +50,7 @@ def send_sms(request):
 
             except Exception as e:
                 print e
-
-    return
+    return HttpResponse("0")
 
 
 def transactions_sms(user, transactions, language, transportations, helpline_num):
@@ -76,37 +73,27 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                 farmer_specific_transportations = transportations.filter(date=transaction.date,
                                                                          mandi=transaction.mandi.id)
 
-                print "_____________________________"
-                print farmer_specific_transportations
-                print "&&&&&&&&&&&&&&&&&&&&&&&&"
-
                 for farmer_specific_transport in farmer_specific_transportations:
-                    print single_farmer_date_message
                     if 'transport' not in single_farmer_date_message[(transaction.date, transaction.farmer.phone,
                                                                       transaction.farmer.name)].keys():
-                        print 'inside if'
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'] = {
                             transaction.mandi.mandi_name_en: [(
                                                                   farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
                                                                   farmer_specific_transport.transportation_cost)]}
-                        print "done if"
                     elif transaction.mandi.mandi_name_en in single_farmer_date_message[
                         (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport']:
-                        print "inside elif"
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'][
                             transaction.mandi.mandi_name_en].append((
                             farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
                             farmer_specific_transport.transportation_cost))
                     else:
-                        print "inside else"
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'][
                             transaction.mandi.mandi_name_en] = [(
-                            farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
-                            farmer_specific_transport.transportation_cost)]
-                print 'done for'
+                                                                    farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
+                                                                    farmer_specific_transport.transportation_cost)]
             else:
                 farmer_level_transaction = single_farmer_date_message[
                     (transaction.date, transaction.farmer.phone, transaction.farmer.name)]
@@ -120,51 +107,37 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                     farmer_level_transaction[(transaction.crop.crop_name, transaction.price)] = {
                         'quantity': transaction.quantity, 'amount': transaction.amount}
 
-#                print farmer_level_transaction
                 single_farmer_date_message[
                     (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transaction_id'].append(
                     transaction.id)
 
-        print len(single_farmer_date_message)
         for key, value in single_farmer_date_message.iteritems():
-            # print "______________________________________________________"
-            # print "NEW FARMER CASE =================" + str(key[1])
-            print key
-            print value
-#            print key
             farmer_no = key[1]
             farmer_name = key[2].encode('utf-8')
             message = make_transaction_sms(key, farmer_name, user.name, value, language)
-            print message
             message = make_transaction_vehicle_sms(message, value['transport'])
-            print message
-
-            # print "*************************************"
-            message = ('%s\n%s: %s')%(message, transaction_sms['helpline_no'][language].encode('utf-8'), helpline_num)
-            if farmer_no in ['8826883595', '9810253264', '9013623264']:
-                sms_response = send_sms_using_textlocal(farmer_no, message)
-                # print sms_response
-            else:
-                print "all done HURRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRAAAAAAAAAAAAAAAYYYYYYYYYYYYY"
+            helpline_num.encode('utf-8')
+            message = ('%s\n%s: %s') % (
+            message, transaction_sms['helpline_no'][language].encode('utf-8'), helpline_num.encode('utf-8'))
+            sms_response = send_sms_using_textlocal(farmer_no, message)
             if sms_response['status'] == "success":
-                print "We are successful"
                 transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
-                transaction_to_update.update(payment_sms=False, payment_sms_id=sms_response['messages'][0]['id'])
+                transaction_to_update.update(payment_sms=True, payment_sms_id=sms_response['messages'][0]['id'])
+                status_code=1
+
+            SmsLog = get_model('loop', 'SmsLog')
+            smslog_obj = SmsLog(sms_body=message, text_local_id=sms_response['messages'][0]['id'], contact_no=farmer_no, person_type=0, status=status_code)
+            smslog_obj.save()
+
     except Exception as e:
         print e
 
 
 def make_transaction_vehicle_sms(message, vehicle_details):
-    # print "inside mtvs"
-    # print vehicle_details
-    # print message
     for entry in vehicle_details:
-        # print entry
         message = ('%s\n%s') % (message, entry.encode('utf-8'))
         for vehicle in vehicle_details[entry]:
-            # print vehicle
             message = ('%s \n%s:%s') % (message, vehicle[0].encode('utf-8'), str(vehicle[1]))
-
     return message
 
 
@@ -173,54 +146,18 @@ def transportations_sms(user, transportations, language):
 
 
 def make_transaction_sms(key, farmer_name, aggregator, value, language):
-    # message = "hello we are testing"
-    # print "_________________________________"
-    # print key
-    # print "#################################"
-    # print value
-    # farmer_name = unicode(key[2], "utf-8")
-    # print "hellp"
-    #    aggregator_name = unicode(aggregator)
-    #    print message
-    # print "yoyoyoyyo"
-    # print language
-    # print transaction_sms['farmer'][language].encode('utf-8')
-    # print transaction_sms['loop_receipt'][language].encode('utf-8')
-    # print transaction_sms['aggregator'][language]
-    # message = ('%s %s \n %s %s\n %s %s') % (transaction_sms['loop_receipt'][language].encode('utf-8'), str(key[0]), transaction_sms['farmer'][language].encode('utf-8'), str(key[2]), transaction_sms['aggregator'][language].encode('utf-8'), str(aggregator))
     message = ('%s %s \n%s %s\n%s %s') % (transaction_sms['loop_receipt'][language].encode('utf-8'), str(key[0]),
                                           transaction_sms['farmer'][language].encode('utf-8'), farmer_name,
                                           transaction_sms['aggregator'][language].encode('utf-8'),
                                           aggregator.encode('utf-8'))
-    # print "_+_+_+_+_++_+_+_+_+_+_+_+_+_+__"
-    # print value
     for row, detail in value.iteritems():
-        # print type(row)
-        # print len(row)
         if isinstance(row, tuple) and len(row) == 2:
-            # print "I m inside IF"
-            # print message
-            # print row[0].encode('utf-8')
-            # print str(row[1])
-            # print str(detail['quantity'])
-            # print str(detail['amount'])
             message = ('%s\n%s: %s x %s=%s') % (
                 message, row[0].encode('utf-8'), str(row[1]), str(detail['quantity']), str(detail['amount']))
-    #         print message
-    # print message
     return message
 
 
 def make_transportation_sms(key, farmer_name, aggregator, value):
-    # message = "hello we are testing"
-    # print "_________________________________"
-    # print key
-    # print "#################################"
-    # print value
-    # farmer_name = unicode(key[2], "utf-8")
-    # print "hellp"
-    #    aggregator_name = unicode(aggregator)
-    #    print message
     message = ('%s (%s)\n%s - %s\n%s - %s') % (
         "Loop Receipt", str(key[0]), "Kisan", str(key[2]), "Jamakarta", aggregator)
     for row, detail in value.iteritems():
@@ -232,18 +169,14 @@ def make_transportation_sms(key, farmer_name, aggregator, value):
 
 def send_sms_using_textlocal(farmer_no, sms_body):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    # headers = {'content-type': 'application/json' }
-    # parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers':user_no,
-    # 'message': sms_body, 'receipt_url': PUSH_MESSAGE_SMS_RESPONSE_URL, 'unicode': 'true',
-    # 'custom': recipient_custom_id}
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true'}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
     if response_text['status'] == 'success':
         print "we are happy"
-        #        print response_text
-        message_id = ','.join([str(message["id"]) for message in response_text['messages']])
+        # print response_text
+        #        message_id = ','.join([str(message["id"]) for message in response_text['messages']])
         # if price_info_incoming_obj != None:
         #     if price_info_incoming_obj.textlocal_sms_id == None:
         #         price_info_incoming_obj.textlocal_sms_id = message_id
@@ -251,7 +184,7 @@ def send_sms_using_textlocal(farmer_no, sms_body):
         #         price_info_incoming_obj.textlocal_sms_id += ',' + message_id
     elif response_text['status'] == 'failure':
         print "we are sad"
-    #        print response_text
+    # print response_text
     # module = 'send_sms_using_textlocal'
     # if price_info_incoming_obj != None:
     #     log = "Status Code: %s (price_info_incoming_obj_id: %s)"%(response_text['status'], str(price_info_incoming_obj.id))
