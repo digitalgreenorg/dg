@@ -186,9 +186,9 @@ class IncentiveParameterAdmin(admin.ModelAdmin):
     list_display = ('notation','parameter_name', 'notation_equivalent')
 
 class HelplineExpertAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'phone_number', 'email_id', 'expert_status')
-    list_filter = ('expert_status',)
-    search_fields = ['name', 'phone_number', 'email_id', 'expert_status']
+    list_display = ('id', 'name', 'phone_number', 'email_id', 'expert_status', 'state')
+    list_filter = ('expert_status','state')
+    search_fields = ['name', 'phone_number', 'email_id', 'expert_status', 'state']
 
 class HelplineIncomingAdmin(admin.ModelAdmin):
     list_display = ('id', 'from_number', 'to_number', 'call_status', 'incoming_time', 'last_incoming_time', 'resolved_time', 'recording_url', 'resolved_by', 'acknowledge_user')

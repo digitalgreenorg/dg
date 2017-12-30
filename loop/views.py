@@ -733,7 +733,7 @@ def helpline_incoming(request):
                 module = 'helpline_incoming (New Call)'
                 write_log(HELPLINE_LOG_FILE, module, str(e))
                 return HttpResponse(status=500)
-            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
             # Initiate Call if Expert is available
             if len(expert_obj) > 0:
                 make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
@@ -765,7 +765,7 @@ def helpline_incoming(request):
             if call_status != '' and call_status['response_code'] == 200 and (
                 call_status['status'] in ('ringing', 'in-progress')):
                 return HttpResponse(status=200)
-            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
             # Initiate Call if Expert is available
             if len(expert_obj) > 0:
                 make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
@@ -845,7 +845,7 @@ def helpline_call_response(request):
                     make_call = 1
             if make_call == 1:
                 # Find next expert
-                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1))
+                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number))
                 try:
                     expert_numbers = expert_numbers[expert_numbers.index(expert_obj) + 1:]
                 except Exception as e:

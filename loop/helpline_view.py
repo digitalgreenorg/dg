@@ -72,6 +72,7 @@ def get_info_through_api(outgoing_call_id):
     if call_status['response_code'] == 200:
         # Search latest pending Incoming object
         incoming_obj = HelplineIncoming.objects.filter(from_number=call_status['to'],call_status=0).order_by('-id')
+        # Check if State filter is required or not.
         expert_obj = HelplineExpert.objects.filter(phone_number=call_status['from'])
         if len(incoming_obj) > 0 and len(expert_obj) > 0:
             incoming_obj = incoming_obj[0]
