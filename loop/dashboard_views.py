@@ -8,7 +8,7 @@ import json
 import math
 import pandas as pd
 
-from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser, Country, State, District
+from loop.models import CombinedTransaction, Farmer, Crop, Mandi, Gaddidar, LoopUser, Country, State, District, Partner
 from loop.dashboard.home_statistics import *
 from loop.dashboard.analytics_statistics import *
 from loop.dashboard.timeseries_statistics import *
@@ -28,6 +28,10 @@ def extract_filters_request(request):
         state_id = str(request.GET.get('state_id'))
     else :
         state_id = None
+    if 'partner_id' in request.GET:
+        partner_id = str(request.GET.get('partner_id')) if str(request.GET.get('partner_id')) != '0' else None
+    else:
+        partner_id = None
 
     if 'start_date' in request.GET and 'end_date' in request.GET:
         start_date = str(request.GET['start_date'])
@@ -54,6 +58,7 @@ def extract_filters_request(request):
     filter_args['gaddidars_list'] = gaddidars_list
     filter_args['district_list'] = district_list
     filter_args['state_id'] = state_id
+    filter_args['partner_id'] = partner_id
 
     return filter_args
 
@@ -117,7 +122,7 @@ def generate_res_recent(key, placeHolder, tagName, value):
 
 
 def overall_graph_data(**filter_args):
-    country_id = filter_args['country_id'] #To be fetched from request
+    country_id = filter_args['country_id']
     state_id = filter_args['state_id']
     filter_args['start_date'] = None
     filter_args['end_date'] = None
@@ -125,15 +130,20 @@ def overall_graph_data(**filter_args):
     filter_args['gaddidar_list'] = []
     filter_args['mandi_list'] = []
     filter_args['district_list'] = []
+    partner_id = filter_args['partner_id']
     combinedTransactionData = CombinedTransaction.objects.filter(mandi__district__state__country=country_id)
     loopUserData = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
 
     if state_id:
         combinedTransactionData = combinedTransactionData.filter(mandi__district__state=state_id)
         loopUserData = loopUserData.filter(village__block__district__state=state_id)
+    if partner_id:
+        loopUserData = loopUserData.filter(partner=partner_id)
+        loopUserWithPartner = loopUserData.values_list('user__id',flat=True)
+        combinedTransactionData = combinedTransactionData.filter(user_created_id__in=loopUserWithPartner)
 
     total_farmers_reached = combinedTransactionData.values('farmer').distinct().count()
-    total_cluster_reached = loopUserData.count()
+    total_cluster_reached = combinedTransactionData.values('user_created_id').distinct().count()
 
     aggregated_result = get_data_from_myisam(1, **filter_args)
     # aggregated_result, cum_vol_farmer = get_data_from_myisam(1, **filter_args)
@@ -265,11 +275,14 @@ def send_filter_data(request):
     filter_args = extract_filters_request(request)
     country_id = filter_args['country_id']
     state_id = filter_args['state_id']
+    partner_id = filter_args['partner_id']
     response_list = []
 
     aggregator_data = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id,is_visible=True)
     if state_id != None:
         aggregator_data = aggregator_data.filter(village__block__district__state=state_id)
+    if partner_id != None:
+        aggregator_data = aggregator_data.filter(partner=partner_id)
     aggregator_data = aggregator_data.annotate(value=F('name_en')).values('user_id', 'value').distinct().order_by('value')
     aggregator_list = aggregator_data.annotate(id=F('user_id')).values('id', 'value')
 
@@ -311,5 +324,35 @@ def get_global_filter(request) :
         state_list = State.objects.filter(country_id = obj['id'],is_visible=True,aggregation_state=True).annotate(value=F('state_name_en'), isSelected=F('is_visible'), parentId=F('country_id'), parentTag=Value('country_id', output_field=CharField()),\
          tagName=Value('state_id', output_field=CharField())).values('id', 'value', 'isSelected', 'parentId', 'parentTag', 'tagName')
         obj['dropDownData'] = list(state_list)
-    data = json.dumps(list(country_list))
-    return HttpResponse(data)
+
+    partners_list = get_orm_result_for_partner()
+    country_dict = {'name':'Country', 'data':list(country_list)}
+    partners_dict = {'name':'Partner', 'data':list(partners_list)}
+    result = []
+    result.extend([country_dict,partners_dict])
+    return HttpResponse(json.dumps(result))
+
+def get_orm_result_for_partner(country_id=1, state_id=None):
+    result = []
+
+    partners_list = LoopUser.objects.filter(partner__is_visible=True, role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id)
+    if state_id:
+        partners_list = partners_list.filter(village__block__district__state=state_id)
+
+    partners_list = partners_list.annotate(value=F('partner__name'),tagName=Value('partner_id', output_field=CharField())).values('partner__id','value','tagName').distinct()
+    partners_list = partners_list.annotate(id=F('partner__id')).values('id','value','tagName')
+
+    all_dummy_partner = {'id':0,'tagName':'partner_id','value':'All'}
+    result.append(all_dummy_partner)
+    result.extend(list(partners_list))
+    return result
+
+
+def get_partners_list(request):
+    filter_args = extract_filters_request(request)
+    country_id = filter_args['country_id']
+    state_id = filter_args['state_id']
+
+    result = get_orm_result_for_partner(country_id, state_id)
+
+    return HttpResponse(json.dumps(result))

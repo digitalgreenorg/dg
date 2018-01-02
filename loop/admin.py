@@ -20,7 +20,7 @@ class UserListFilter(SimpleListFilter):
         """
         list_tuple = []
         for user in LoopUser.objects.all():
-            list_tuple.append((user.user_id, user.name))
+            list_tuple.append((user.user_id, user.name_en))
         return list_tuple
 
     def queryset(self, request, queryset):
@@ -53,16 +53,15 @@ class LoopUserAssignedVillages(admin.StackedInline):
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = (
-    'user', 'role', ('name', 'name_en'), 'phone_number', 'village', 'mode', 'preferred_language', 'days_count',
+    'user', 'role', ('name', 'name_en'), 'phone_number', 'village', 'partner', 'mode', 'preferred_language', 'days_count',
     'is_visible', 'farmer_phone_mandatory', 'registration','show_farmer_share','percent_farmer_share')
     list_display = (
-    '__user__', 'name', 'role', 'phone_number', 'village', 'name_en', 'days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share')
+    '__user__', 'name', 'role', 'phone_number', 'village', 'name_en', 'days_count', 'farmer_phone_mandatory', 'partner' ,'show_farmer_share','percent_farmer_share')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name',
                      'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country', 'village__block__district__state',
-                   'village__block__district', 'role']
-    list_editable = ['days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share']
-
+                   'village__block__district', 'role', 'partner']
+    list_editable = ['days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share', 'partner']
 
 class AdminAssignedDistricts(admin.StackedInline):
     model = AdminAssignedDistrict
@@ -279,12 +278,13 @@ class BroadcastAudienceAdmin(admin.ModelAdmin):
     list_filter = ('broadcast', 'status')
     search_fields = ['to_number']
 
-
 class SmsLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'contact_no', 'sms_body', 'text_local_id', 'person_type', 'status')
     list_filter = ('contact_no', 'text_local_id', 'status')
     search_fields = ['contact_no', 'text_local_id', 'status']
 
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ('id','name')
 
 loop_admin = LoopAdmin(name='loop_admin')
 
@@ -331,3 +331,4 @@ loop_admin.register(BroadcastAudience, BroadcastAudienceAdmin)
 loop_admin.register(VehicleLanguage)
 loop_admin.register(MandiType, MandiTypeAdmin)
 loop_admin.register(SmsLog, SmsLogAdmin)
+loop_admin.register(Partner, PartnerAdmin)
