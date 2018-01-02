@@ -9,7 +9,7 @@ from django.db.models import Q
 
 from loop_ivr.models import PriceInfoIncoming, SubscriptionLog, Subscription
 
-from loop_ivr.utils.config import string_for_no_rate_query
+from loop_ivr.utils.config import agg_sms_no_price_for_combination#, string_for_no_rate_query
 
 from dg.settings import EMAIL_HOST_USER, team_contact
 
@@ -20,10 +20,11 @@ class Command(BaseCommand):
                         successfully_sent_subscription, yesterday_unique_call_count,
                         yeseterday_unique_subscriber_caller):
         from_email = EMAIL_HOST_USER
+        # to_email = ['abhisheklodha@digitalgreen.org']
         to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
                     'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
                     'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'vikas@digitalgreen.org',
-                    'melbin@digitalgreen.org', 'erica@digitalgreen.org']
+                    'melbin@digitalgreen.org', 'erica@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
         body_content = ['Dear Team,<br/><br/>Here are daily stats for market information line:<br/><br/>',
                 '<b>Push Messaging Market Information Line:<br/><br/></b>',
                 'Total subscribers: %s<br/>Subscribers who received SMS: %s<br/><br/>'%(total_subscription, successfully_sent_subscription),
@@ -50,7 +51,7 @@ class Command(BaseCommand):
         # Active callers are who called in last fifteen days.
         active_caller_count = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,incoming_time__lt=today_date,from_number__in=last_fifteen_day_caller_no).exclude(from_number__in=team_contact).values_list('from_number', flat=True).distinct().count()
         # Responses with market rate.
-        yesterday_call_count_with_market_rate = PriceInfoIncoming.objects.filter(~Q(price_result__contains=string_for_no_rate_query),incoming_time__gte=yesterday_date,
+        yesterday_call_count_with_market_rate = PriceInfoIncoming.objects.filter(~Q(price_result__contains=agg_sms_no_price_for_combination),incoming_time__gte=yesterday_date,
                                         incoming_time__lt=today_date,info_status=1).exclude(from_number__in=team_contact).count()
         if yesterday_call_count > 0:
             percent_calls_with_market_rate = round((yesterday_call_count_with_market_rate*100.0) / yesterday_call_count,2)
