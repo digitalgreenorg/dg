@@ -88,7 +88,9 @@ def login(request):
                     'phone_start':loop_user[0].village.block.district.state.phone_start,
                     'preferred_language':loop_user[0].preferred_language.notation,
                     'registration':loop_user[0].registration,
-                    'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory,'state':loop_user[0].village.block.district.state.state_name}))
+                    'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,
+                    'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory,'state':loop_user[0].village.block.district.state.state_name,
+                    'show_farmer_share':loop_user[0].show_farmer_share,'percent_farmer_share':loop_user[0].percent_farmer_share}))
         else:
             admin_user = AdminUser.objects.filter(user = user)
             if user is not None and user.is_active and admin_user.count()>0:
@@ -690,7 +692,7 @@ def payments(request):
     return HttpResponse(data)
 
 @login_required()
-@user_passes_test(lambda u: u.groups.filter(name='Loop Payment').count() > 0,
+@user_passes_test(lambda u: u.groups.filter(name='Loop Payment').count() > 0 and AdminUser.objects.filter(user_id=u.id).count()>0,
                   login_url=PERMISSION_DENIED_URL)
 def dashboard_payments(request):
     if request.method == 'GET':

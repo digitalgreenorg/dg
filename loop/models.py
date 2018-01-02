@@ -179,6 +179,8 @@ class LoopUser(LoopModel):
     is_visible = models.BooleanField(default=True)
     farmer_phone_mandatory = models.BooleanField(default=True)
     registration = models.CharField(max_length=200, default="", null=True, blank=True)
+    show_farmer_share = models.BooleanField(default=True)
+    percent_farmer_share = models.FloatField(default=0.0)
 
     def __unicode__(self):
         return """%s (%s)"""  % (self.name, self.phone_number)
