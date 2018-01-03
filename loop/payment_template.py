@@ -14,8 +14,8 @@ NAME_OF_SHEETS = ['Aggregator', 'Commission Agent', 'Transporter']
 CELL_ROW_VALUE = 2
 
 def write_heading_in_sheet(ws_obj, heading_str, format_str):
-    ws_obj.set_column('A:F', 10)
-    ws_obj.merge_range('A1:F1', heading_str, format_str)
+    ws_obj.set_column('A:L', 10)
+    ws_obj.merge_range('A1:L1', heading_str, format_str)
     # ws_obj.write('A1', heading_str, format_str)
     return ws_obj
 
@@ -146,13 +146,13 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
                                            format_str={'bold':1, 'font_size': 9,
                                                        'text_wrap': True})
     header_format = set_format_for_heading(workbook=workbook,
-                                           format_str={'bold':1, 'font_size': 10,
+                                           format_str={'bold':1, 'font_size': 9,
                                                        'text_wrap': True})
     row_format = set_format_for_heading(workbook=workbook,
                                         format_str=formatted_post_data.get('cell_format'))
     total_cell_format = set_format_for_heading(workbook=workbook,
                                               format_str={'bold':1, 
-                                                          'font_size': 10,
+                                                          'font_size': 9,
                                                           'num_format':'#,##0.00',
                                                           'align':'right',
                                                           'text_wrap': True})
@@ -198,6 +198,17 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
                                     cell_value_from_headers.get('cell_value'),
                                     cell_value_from_headers.get('formula_list'),
                                     row_format)
+
+            #Add comment in Aggregator sheet
+            if(sheet_index==0):                
+                comment_row=str(write_values.get('end') + 3)
+                ws.merge_range('A'+comment_row+':L'+comment_row, "**Quantity is deducted for farmers having incorrect/unavailable mobile numbers.", row_format)
+                ap_formula_row = write_values.get('end') + 4
+                ws.merge_range('A'+str(ap_formula_row)+':D'+str(ap_formula_row), "##AP calculation formula (Bihar)", row_format)
+                ws.merge_range('E'+str(ap_formula_row)+':L'+str(ap_formula_row), " = 0.2*Q ; Q<=2000", row_format)
+                ws.merge_range('E'+str(ap_formula_row+1)+':L'+str(ap_formula_row+1), " = 0.2*2000 + 0.1*(Q-2000) ; Q>2000", row_format)
+                ws.merge_range('A'+str(ap_formula_row+2)+':D'+str(ap_formula_row+2), "##AP calculation formula (Maharashtra)", row_format)
+                ws.merge_range('E'+str(ap_formula_row+2)+':L'+str(ap_formula_row+2), " = 0.25*Q", row_format)
 
     except Exception as e:
         print e

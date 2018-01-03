@@ -3,7 +3,7 @@
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" (click)="isCollapsed = !isCollapsed">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="col-5 collapse navbar-collapse" [collapse]="isCollapsed">
+  <div class="col-6 collapse navbar-collapse" [collapse]="isCollapsed">
     <a href="http://www.digitalgreen.org" target="_blank"><img src="/media/Output/Images/dg_logo.png" alt="DG" class="dg_logo"/></a>
     <ul class="navbar-nav">
       <li class="nav-item" *ngFor="let nav of getDictKeys(toggleNav);">
@@ -11,10 +11,10 @@
       </li>
     </ul>
     <div *ngIf="generalConfig.show_global_filter_on_nav">
-    <app-global-filter></app-global-filter>
+      <app-global-filter></app-global-filter>
+    </div>
   </div>
-  </div>
-  <a class="navbar-brand col-2 text-center" href="{{ generalConfig.baseUrl }}"><img src="{{generalConfig.logoPath}}" alt="{{generalConfig.title}}" style="height:22px;"></a>
+  <a class="navbar-brand col-1 text-center" href="{{ generalConfig.baseUrl }}"><img src="{{generalConfig.logoPath}}" alt="{{generalConfig.title}}" style="height:22px;margin-left:-100%"></a>
   <div class="col-sm-12 col-md-5" [hidden]="!showFilters">
     <app-filters></app-filters>
   </div>

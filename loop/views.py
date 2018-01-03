@@ -45,7 +45,7 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
     update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio, \
     redirect_to_broadcast, save_farmer_file
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
-from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME
+from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME, INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE
 
 import pandas as pd
 from training.management.databases.utility import *
@@ -62,8 +62,15 @@ def login(request):
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
         loop_user = LoopUser.objects.filter(user=user)
+        reg_token = None
+        if 'registration' in request.POST and request.POST['registration']:
+            reg_token = request.POST['registration']
+            LoopUser.objects.filter(registration=reg_token).update(registration=None)
+        loop_user.update(registration=reg_token)
+
         if user is not None and user.is_active and loop_user.count() > 0:
             auth.login(request, user)
+
             try:
                 api_key = ApiKey.objects.get(user=user)
             except ApiKey.DoesNotExist:
@@ -80,7 +87,10 @@ def login(request):
                     'phone_digits':loop_user[0].village.block.district.state.phone_digit,
                     'phone_start':loop_user[0].village.block.district.state.phone_start,
                     'preferred_language':loop_user[0].preferred_language.notation,
-                    'country':loop_user[0].village.block.district.state.country.country_name}))
+                    'registration':loop_user[0].registration,
+                    'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,
+                    'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory,'state':loop_user[0].village.block.district.state.state_name,
+                    'show_farmer_share':loop_user[0].show_farmer_share,'percent_farmer_share':loop_user[0].percent_farmer_share}))
         else:
             admin_user = AdminUser.objects.filter(user = user)
             if user is not None and user.is_active and admin_user.count()>0:
@@ -174,13 +184,13 @@ def filter_data(request):
 
     if(int(state_id) < 0):
         #country filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id')
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state__country=country_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state__country=country_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
     elif(int(state_id)>0):
         #state filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id')
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state=state_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state=state_id).values(
         'id', 'gaddidar_name', 'gaddidar_name_en')
@@ -293,6 +303,12 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                                                                                                Sum('amount'),
                                                                                                Count('farmer_id',
                                                                                                      distinct=True))
+
+    #Checking if we need to apply incorrect farmer phone model on payment data
+    date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    if date_start >= INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE:
+        combined_ct_queryset = combined_ct_queryset.filter(date__gte=F('farmer__correct_phone_date'))
+
     result = []
     daily_pay_list = []
 
@@ -616,11 +632,14 @@ def calculate_gaddidar_share_payments(start_date, end_date, mandi_list=None, agg
 def payments(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
+    aggregator_id = request.GET['aggregator_id']
     filter_args = {}
     if (start_date != ""):
         filter_args["date__gte"] = start_date
     if (end_date != ""):
         filter_args["date__lte"] = end_date
+    if (aggregator_id != ""):
+        filter_args["user_created__id"] = aggregator_id
 
     aggregator_data = CombinedTransaction.objects.filter(**filter_args).annotate(
         mandi__mandi_name=F('mandi__mandi_name_en'), gaddidar__gaddidar_name=F('gaddidar__gaddidar_name_en')).values(
@@ -660,9 +679,9 @@ def payments(request):
         'mandi__mandi_name', 'farmer_share', 'id', 'farmer_share_comment', 'transportation_cost_comment', 'mandi__id',
         'transportation_vehicle__id', 'timestamp').order_by('date').annotate(Sum('transportation_cost'))
 
-    gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date)
+    gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date,None, [aggregator_id])
 
-    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date)
+    aggregator_incentive = calculate_aggregator_incentive(start_date, end_date, None, [aggregator_id])
 
     chart_dict = {'outlier_daily_data': list(outlier_daily_data), 'outlier_data': list(outlier_data),
                   'outlier_transport_data': list(
@@ -673,7 +692,7 @@ def payments(request):
     return HttpResponse(data)
 
 @login_required()
-@user_passes_test(lambda u: u.groups.filter(name='Loop Payment').count() > 0,
+@user_passes_test(lambda u: u.groups.filter(name='Loop Payment').count() > 0 and AdminUser.objects.filter(user_id=u.id).count()>0,
                   login_url=PERMISSION_DENIED_URL)
 def dashboard_payments(request):
     if request.method == 'GET':

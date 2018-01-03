@@ -165,6 +165,87 @@ query_for_incorrect_phone_all_per_aggregator = '''SELECT
                             ORDER BY Aggregator ASC, CAST(Mobile_Number AS signed) ASC'''
 
 
+query_for_incorrect_phone_all_per_district = '''SELECT 
+                District_name,
+                Aggregator,
+                Village,
+                Farmer_ID,
+                Farmer,
+                t1.Farmer_Frequency,
+                Mobile_Number,
+                t3.Mobile_Frequency
+            FROM
+                (SELECT 
+                    ld.id d_id,
+                        ld.district_name_en District_name,
+                        lct.user_created_id,
+                        farmer_id f_id,
+                        COUNT(DISTINCT (date)) Farmer_Frequency
+                FROM
+                    loop_combinedtransaction lct
+                JOIN loop_farmer lf ON lf.id = lct.farmer_id
+                JOIN loop_village lv ON lv.id = lf.village_id
+                JOIN loop_block lb ON lb.id = lv.block_id
+                JOIN loop_district ld ON ld.id = lb.district_id
+                WHERE
+                    lct.date BETWEEN \'%s\' AND \'%s\'
+                GROUP BY d_id , lct.user_created_id , farmer_id
+                HAVING Farmer_Frequency > 0) t1
+                    JOIN
+                (SELECT 
+                    ld.id d_id,
+                        ld.district_name_en,
+                        ll.name Aggregator,
+                        ll.id Loop_user_id,
+                        ll.user_id user_id,
+                        lv.village_name Village,
+                        lf.id Farmer_ID,
+                        lf.name Farmer,
+                        lf.phone Mobile_Number
+                FROM
+                    loop_loopuser ll
+                JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
+                JOIN loop_farmer lf ON lf.village_id = llv.village_id
+                JOIN loop_village lv ON lf.village_id = lv.id
+                JOIN loop_block lb ON lb.id = lv.block_id
+                JOIN loop_district ld ON ld.id = lb.district_id
+                WHERE
+                    ll.role = 2 %s) t2 ON t1.f_id = t2.Farmer_ID
+                    AND t1.user_created_id = t2.user_id
+                    AND t1.d_id = t2.d_id
+                    JOIN
+                (SELECT 
+                    ld.id d_id,
+                        ld.district_name_en,
+                        ll.user_id Loop_user,
+                        lf.phone Phone_no,
+                        COUNT(lf.phone) Mobile_Frequency
+                FROM
+                    loop_loopuser ll
+                JOIN loop_loopuserassignedvillage llv ON ll.id = llv.loop_user_id
+                JOIN loop_farmer lf ON lf.village_id = llv.village_id
+                JOIN loop_village lv ON lf.village_id = lv.id
+                JOIN loop_block lb ON lb.id = lv.block_id
+                JOIN loop_district ld ON ld.id = lb.district_id
+                WHERE
+                    llv.loop_user_id <> 22
+                        AND lf.id IN (SELECT 
+                            farmer_id
+                        FROM
+                            loop_combinedtransaction ct
+                        WHERE
+                            user_created_id = ll.user_id
+                                AND date BETWEEN \'%s\' AND \'%s\')
+                GROUP BY d_id , ll.user_id , lf.phone) t3 ON t2.Mobile_Number = t3.Phone_no
+                    AND t3.Loop_user = t2.user_id
+                    AND t3.d_id = t2.d_id
+            HAVING (t3.Mobile_Frequency > 1)
+                OR (t3.Mobile_Frequency = 1
+                AND (Mobile_Number <= 7000000000
+                OR Mobile_Number >= 9999999999))
+            ORDER BY District_name ASC , Aggregator ASC , CAST(Mobile_Number AS SIGNED) ASC
+''' 
+
 query_for_farmer_transaction_all_single_aggregator = '''
                                   SELECT
                                 t1.Agg,

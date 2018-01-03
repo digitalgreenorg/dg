@@ -41,8 +41,8 @@ class LoopStatistics():
             self.mysql_cn = MySQLdb.connect(host=host, port=port, user=username, passwd=password, db=database, charset='utf8', use_unicode=True)
             # .cursor()
 
-            df_loopuser = pd.DataFrame(list(LoopUser.objects.filter(role = ROLE_CHOICE_AGGREGATOR).values('id', 'user__id', 'name_en', 'village__block__district__state__id', 'village__block__district__state__country__id')))
-            df_loopuser.rename(columns={"user__id":"user_created__id", "name_en":"name", "village__block__district__state__id":"state_id", "village__block__district__state__country__id":"country_id"},inplace=True)
+            df_loopuser = pd.DataFrame(list(LoopUser.objects.filter(role = ROLE_CHOICE_AGGREGATOR).values('id', 'user__id', 'name_en', 'village__block__district__id','village__block__district__state__id', 'village__block__district__state__country__id','partner_id')))
+            df_loopuser.rename(columns={"user__id":"user_created__id", "name_en":"name","village__block__district__id":"district_id", "village__block__district__state__id":"state_id", "village__block__district__state__country__id":"country_id"},inplace=True)
 
             print "Loop User Shape",df_loopuser.shape
 
@@ -51,7 +51,7 @@ class LoopStatistics():
 
             print "Combined Transaction Shape",df_ct.shape
 
-            df_ct = pd.merge(df_ct,df_loopuser,left_on='user_created__id',right_on='user_created__id',how='left')
+            df_ct = pd.merge(df_ct,df_loopuser,left_on='user_created__id',right_on='user_created__id') #,how='left'
 
             df_dt = pd.DataFrame(list(DayTransportation.objects.values('date','user_created__id','mandi__id').order_by('date').annotate(Sum('transportation_cost'),Avg('farmer_share'))))
 
@@ -124,11 +124,11 @@ class LoopStatistics():
             if not result.empty:
                 values_list = []
                 for index,row in result.iterrows():
-                    values_list.append((row['date'].strftime('%Y-%m-%d %H:%M:%S'), str(row['user_created__id']), str(row['mandi__id']), str(row['gaddidar__id']), str(row['quantity__sum']), str(row['amount__sum']), str(row['transportation_cost__sum']), str(row['farmer_share__avg']), str(row['gaddidar_share_amount']), str(row['aggregator_incentive']), row['name'], row['mandi__mandi_name'], row['gaddidar__gaddidar_name'], str(row['distinct_farmer_count']), str(row['country_id']), str(row['state_id'])))
+                    values_list.append((row['date'].strftime('%Y-%m-%d %H:%M:%S'), str(row['user_created__id']), str(row['mandi__id']), str(row['gaddidar__id']), str(row['quantity__sum']), str(row['amount__sum']), str(row['transportation_cost__sum']), str(row['farmer_share__avg']), str(row['gaddidar_share_amount']), str(row['aggregator_incentive']), row['name'], row['mandi__mandi_name'], row['gaddidar__gaddidar_name'], str(row['distinct_farmer_count']), str(row['country_id']), str(row['state_id']),str(row['district_id']),str(row['partner_id'])))
 
                 print "Number of rows to be inserted : ", len(values_list)
 
-                sql_base_query = "INSERT INTO loop_aggregated_myisam (date, aggregator_id, mandi_id, gaddidar_id, quantity, amount, transportation_cost, farmer_share, gaddidar_share, aggregator_incentive, aggregator_name, mandi_name, gaddidar_name, new_distinct_farmer, country_id, state_id) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                sql_base_query = "INSERT INTO loop_aggregated_myisam (date, aggregator_id, mandi_id, gaddidar_id, quantity, amount, transportation_cost, farmer_share, gaddidar_share, aggregator_incentive, aggregator_name, mandi_name, gaddidar_name, new_distinct_farmer, country_id, state_id, district_id, partner_id) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
                 self.mysql_cn.cursor().executemany(sql_base_query, values_list)
                 self.mysql_cn.commit()
