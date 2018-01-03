@@ -31,8 +31,7 @@ var BANGLA_ID = 3;
 
 var KG = " Kg";
 
-//var TIME_DIFF_THIRTY_DAYS = 2592000000;
-var TIME_DIFF_THIRTY_DAYS = 5184000000;
+var TIME_DIFF_THIRTY_DAYS = 2592000000;
 
 var VOLUME = "volume",
   MANDI = "mandi",
@@ -883,6 +882,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     } else if (farmerResetClick && editedFarmer == 0) {
       $this.parent()[0].childNodes[PAYMENT_SUMMARY.FARMER_SHARE].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, PAYMENT_SUMMARY.FARMER_SHARE).data();
       $this.parent()[0].childNodes[PAYMENT_SUMMARY.FARMER_COMMENT].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, PAYMENT_SUMMARY.FARMER_COMMENT).data();
+      $this.parent()[0].childNodes[PAYMENT_SUMMARY.NET_PAYMENT].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, PAYMENT_SUMMARY.NET_PAYMENT).data();
       delete rows_table2_farmer[$this.context.parentNode.rowIndex];
       $this.removeAttr('class');
       $this.closest('tr').children('td:nth-child('+(PAYMENT_SUMMARY.FARMER_COMMENT+1)+')')[0].className = '';
@@ -940,6 +940,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     } else if (aggregatorResetClick && editedAggregator == 0) {
       $this.parent()[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE).data();
       $this.parent()[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_COMMENT].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, PAYMENT_SUMMARY.AGGREGATOR_COMMENT).data();
+      $this.parent()[0].childNodes[PAYMENT_SUMMARY.NET_PAYMENT].innerHTML = $('#table2').DataTable().cell($this.context.parentNode.rowIndex - 1, PAYMENT_SUMMARY.NET_PAYMENT).data();
       delete rows_table2[$this.context.parentNode.rowIndex];
       $this.removeAttr('class');
       $this.closest('tr').children('td:nth-child('+(PAYMENT_SUMMARY.AGGREGATOR_COMMENT+1)+')')[0].className = '';
