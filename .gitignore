@@ -322,3 +322,4 @@ training_env/*
 .idea/
 /scripts/*.sql
 /scripts/*.gz
+/dg/media/social_website/uploads/loop/loop_ivr_log.log

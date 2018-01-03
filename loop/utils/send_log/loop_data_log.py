@@ -202,7 +202,7 @@ def send_updated_log(request):
                 timestamp__gt=timestamp, entry_table__in=['Mandi'])
             for mrow in mandi_list_queryset:
                 try:
-                    if Mandi.objects.get(id=mrow.model_id).mandi in mandis:
+                    if Mandi.objects.get(id=mrow.model_id) in mandis:
                         list_rows.append(mrow)
                 except:
                     pass

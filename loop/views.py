@@ -62,8 +62,15 @@ def login(request):
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
         loop_user = LoopUser.objects.filter(user=user)
+        reg_token = None
+        if 'registration' in request.POST and request.POST['registration']:
+            reg_token = request.POST['registration']
+            LoopUser.objects.filter(registration=reg_token).update(registration=None)
+        loop_user.update(registration=reg_token)
+
         if user is not None and user.is_active and loop_user.count() > 0:
             auth.login(request, user)
+
             try:
                 api_key = ApiKey.objects.get(user=user)
             except ApiKey.DoesNotExist:
@@ -80,7 +87,10 @@ def login(request):
                     'phone_digits':loop_user[0].village.block.district.state.phone_digit,
                     'phone_start':loop_user[0].village.block.district.state.phone_start,
                     'preferred_language':loop_user[0].preferred_language.notation,
-                    'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory,'state':loop_user[0].village.block.district.state.state_name}))
+                    'registration':loop_user[0].registration,
+                    'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,
+                    'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory,'state':loop_user[0].village.block.district.state.state_name,
+                    'show_farmer_share':loop_user[0].show_farmer_share,'percent_farmer_share':loop_user[0].percent_farmer_share}))
         else:
             admin_user = AdminUser.objects.filter(user = user)
             if user is not None and user.is_active and admin_user.count()>0:
@@ -690,7 +700,7 @@ def payments(request):
     return HttpResponse(data)
 
 @login_required()
-@user_passes_test(lambda u: u.groups.filter(name='Loop Payment').count() > 0,
+@user_passes_test(lambda u: u.groups.filter(name='Loop Payment').count() > 0 and AdminUser.objects.filter(user_id=u.id).count()>0,
                   login_url=PERMISSION_DENIED_URL)
 def dashboard_payments(request):
     if request.method == 'GET':
