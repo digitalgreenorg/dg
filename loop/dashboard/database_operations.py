@@ -37,9 +37,9 @@ def sql_query(**kwargs):
     if len(crops_list) > 0:
         sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
     sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
-    sql_ds['where'].append('country_id = ' + str(country_id))
+    sql_ds['where'].append('lc.id = ' + str(country_id))
     if state_id:
-        sql_ds['where'].append('state_id = ' + str(state_id))
+        sql_ds['where'].append('ls.id = ' + str(state_id))
     if partner_id != None:
         sql_ds['where'].append('lu.partner_id = '+ str(partner_id))
 
@@ -104,9 +104,9 @@ def get_farmers_per_day(**kwargs):
     if len(district_list) > 0:
         sql_ds['where'].append('ld.id in (' + ",".join(district_list) + ')')
     sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
-    sql_ds['where'].append('country_id = ' + str(country_id))
+    sql_ds['where'].append('lc.id = ' + str(country_id))
     if state_id:
-        sql_ds['where'].append('state_id = ' + str(state_id))
+        sql_ds['where'].append('ls.id = ' + str(state_id))
     if partner_id != None:
         sql_ds['where'].append('lu.partner_id = '+ str(partner_id))
 
@@ -147,9 +147,9 @@ def crop_prices_query(from_timeseries, **kwargs):
     if len(crops_list) > 0:
         sql_ds['where'].append('lcrp.id in (' + ",".join(crops_list) + ')')
     sql_ds['where'].append('lct.date between \'' + start_date + '\' and \'' + end_date + '\'')
-    sql_ds['where'].append('country_id = ' + str(country_id))
+    sql_ds['where'].append('lc.id = ' + str(country_id))
     if state_id:
-        sql_ds['where'].append('state_id = ' + str(state_id))
+        sql_ds['where'].append('ls.id = ' + str(state_id))
     if partner_id != None:
         sql_ds['where'].append('lu.partner_id = '+ str(partner_id))
 
