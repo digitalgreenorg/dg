@@ -52,13 +52,6 @@ class LoopUserAssignedVillages(admin.StackedInline):
 
 class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
-<<<<<<< HEAD
-    fields = ('user','role',('name','name_en'),'phone_number','village','mode','preferred_language','days_count','is_visible')
-    list_display = ('__user__','name', 'role', 'phone_number', 'village', 'name_en', 'days_count')
-    search_fields = ['name', 'name_en', 'phone_number', 'village__village_name', 'village__block__district__state__country__country_name']
-    list_filter = ['village__block__district__state__country', 'village__block__district__state__state_name_en', 'village__block__district__district_name_en', 'role']
-    list_editable = ['days_count']
-=======
     fields = (
     'user', 'role', ('name', 'name_en'), 'phone_number', 'village', 'partner', 'mode', 'preferred_language', 'days_count',
     'is_visible', 'farmer_phone_mandatory', 'registration','show_farmer_share','percent_farmer_share')
@@ -69,7 +62,6 @@ class LoopUserAdmin(admin.ModelAdmin):
     list_filter = ['village__block__district__state__country', 'village__block__district__state',
                    'village__block__district', 'role', 'partner']
     list_editable = ['days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share', 'partner']
->>>>>>> origin/master
 
 class AdminAssignedDistricts(admin.StackedInline):
     model = AdminAssignedDistrict
@@ -137,13 +129,8 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
 
 
 class MandiAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
     fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible', 'mandi_type')
     list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type','latitude','longitude')
-=======
-    fields = ('district', ('mandi_name', 'mandi_name_en'), ('latitude', 'longitude'), 'is_visible', 'mandi_type')
-    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type')
->>>>>>> origin/master
     search_fields = ['mandi_name', 'district__district_name', 'mandi_type__mandi_type_name', 'mandi_name_en']
     list_filter = ['district__district_name', 'district__state__country', 'mandi_type', 'district__state']
 
@@ -156,13 +143,8 @@ class MandiTypeAdmin(admin.ModelAdmin):
 
 
 class VillageAdmin(admin.ModelAdmin):
-<<<<<<< HEAD
     fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
     list_display = ('id', 'village_name', 'block', 'village_name_en','latitude','longitude')
-=======
-    fields = ('block', ('village_name', 'village_name_en'), ('latitude', 'longitude'), 'is_visible')
-    list_display = ('id', 'village_name', 'block', 'village_name_en')
->>>>>>> origin/master
     search_fields = ['village_name', 'village_name_en', 'block__block_name']
     list_filter = ['block__block_name', 'block__district__state__country']
 
