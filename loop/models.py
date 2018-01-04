@@ -645,8 +645,8 @@ class HelplineExpert(LoopModel):
     phone_number = models.CharField(max_length=20, unique=True)
     email_id = models.CharField(max_length=50)
     expert_status = models.IntegerField(choices=EXPERT_STATUS, default=1)
-    state = models.ForeignKey(State)
-    
+    state = models.ForeignKey(State, null=True, blank=True)
+
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.phone_number)
 
