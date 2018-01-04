@@ -13,6 +13,7 @@ import api,api_admin
 from loop.views import *
 from loop.dashboard_views import *
 from loop.utils.send_log.loop_data_log import send_updated_log
+from loop.utils.send_log.send_sms import send_sms
 from loop.utils.send_log.loop_admin_log import send_updated_admin_log
 from loop.utils.send_log.send_extra_data import sendData
 
@@ -74,6 +75,7 @@ urlpatterns = patterns('',
     url(r'^api/', include(api2.urls)),
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
+    url(r'^send_sms/', send_sms),
     url(r'^get_admin_log/', send_updated_admin_log),
     url(r'^get_extra_data/',sendData),
     url(r'^analytics/$', dashboard),
@@ -100,6 +102,7 @@ urlpatterns = patterns('',
     url(r'^get_filter_data/', send_filter_data),
     url(r'^admin_assigned_loopusers_data/', admin_assigned_loopusers_data),
     url(r'^get_global_filter_data/', get_global_filter),
+    url(r'^get_partners_list/', get_partners_list),
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loop/admin/'}),
     url(r'^admin/', include(loop_admin.urls)),
     )

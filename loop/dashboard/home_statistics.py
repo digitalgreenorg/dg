@@ -43,7 +43,7 @@ def get_grouped_data(df_result_aggregate,day,df_farmers):
 
 def get_data_from_myisam(get_total, **kwargs):
     df_result = query_myisam(**kwargs)
-    country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list, district_list = read_kwargs(kwargs)
+    country_id, state_id, start_date, end_date, aggregators_list, mandis_list, crops_list, gaddidars_list, district_list, partner_id = read_kwargs(kwargs)
     aggregations = {
         'quantity':{
             'quantity__sum':'sum'

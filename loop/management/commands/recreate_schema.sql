@@ -19,6 +19,7 @@ CREATE TABLE `loop_aggregated_myisam`(
   `country_id` int unsigned NOT NULL,
   `state_id` int unsigned NOT NULL,
   `district_id` int unsigned NOT NULL,
+  `partner_id` int unsigned NOT NULL,
   PRIMARY KEY(`id`)
 )ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
 
