@@ -90,7 +90,7 @@ def login(request):
                     'registration':loop_user[0].registration,
                     'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,
                     'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory,'state':loop_user[0].village.block.district.state.state_name,
-                    'show_farmer_share':loop_user[0].show_farmer_share,'percent_farmer_share':loop_user[0].percent_farmer_share}))
+                    'show_farmer_share':loop_user[0].show_farmer_share,'percent_farmer_share':loop_user[0].percent_farmer_share,'server_sms':loop_user[0].village.block.district.state.country.server_sms}))
         else:
             admin_user = AdminUser.objects.filter(user = user)
             if user is not None and user.is_active and admin_user.count()>0:

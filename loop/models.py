@@ -46,6 +46,7 @@ class Country(LoopModel):
     id = models.AutoField(primary_key=True)
     country_name = models.CharField(max_length=50)
     is_visible = models.BooleanField(default=True)
+    server_sms = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.country_name
