@@ -582,18 +582,20 @@ function initialize_table_constants(table) {
 
 function calculate_data_for_table(table_data) {
   for(var i=0; i < payment_model[table_data].length; i++) {
-    if(payment_model[table_data][i]["dependency"]) {
-      for(var j=0; j < payment_model[table_data][i]["dependency"].length; j++) {
-        if(!executed_calc_functions.has(payment_model[table_data][i]["dependency"][j])) {
-          calc_functions[payment_model[table_data][i]["dependency"][j]]();
-          executed_calc_functions.add(payment_model[table_data][i]["dependency"][j]);
+    for (var calc_func in payment_model[table_data][i]["calc_function"]) {
+      if (payment_model[table_data][i]["calc_function"][calc_func]) {
+        for (var j=0; j < payment_model[table_data][i]["calc_function"][calc_func].length; j++) {
+          if(!executed_calc_functions.has(payment_model[table_data][i]["calc_function"][calc_func][j])) {
+            calc_functions[payment_model[table_data][i]["calc_function"][calc_func][j]]();
+            executed_calc_functions.add(payment_model[table_data][i]["calc_function"][calc_func][j]);
+          }
         }
       }
+      if (!executed_calc_functions.has(payment_model[table_data][i]["calc_function"][calc_func])) {
+        calc_functions[calc_func]();
+        executed_calc_functions.add(calc_func);
+      }
     }
-    if(payment_model[table_data][i]["calc_function"] && !executed_calc_functions.has(payment_model[table_data][i]["calc_function"])) {
-      calc_functions[payment_model[table_data][i]["calc_function"]]();
-      executed_calc_functions.add(payment_model[table_data][i]["calc_function"]);
-    }    
   }
 }
 //To compute aggregator, transporter, gaddidar payments table
@@ -602,8 +604,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   transport_payment = payments_data.transportation_data;
   gaddidar_contribution_data = payments_data.gaddidar_data;
   aggregator_incentive = payments_data.aggregator_incentive;
-
-  //selected_aggregator_country = 'Bangladesh';
 
   payment_model = get_payment_model();
 
@@ -630,10 +630,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   for(var i=0; i < payment_model["aggregator_data_set"].length; i++) {
     default_aggregator_data_set.push(payment_model["aggregator_data_set"][i]["default_val"]);
     PAYMENT_SUMMARY[payment_model["aggregator_data_set"][i]["col_const"]] = i;
-    aggregator_data_table_columns.push({
-      title: payment_model["aggregator_data_set"][i]["title"],
-      visible: payment_model["aggregator_data_set"][i]["visible"]
-    });
+    aggregator_data_table_columns.push(payment_model["aggregator_data_set"][i]["data_table_properties"]);
     if(payment_model["aggregator_data_set"][i]["total"] == true) {
       aggregator_data_table_totals.push(i);
     }
@@ -647,10 +644,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   for(var i=0; i < payment_model["gaddidar_data_set"].length; i++) {
     default_gaddidar_data_set.push(payment_model["gaddidar_data_set"][i]["default_val"]);
     COMMISSION_AGENT_DETAILS[payment_model["gaddidar_data_set"][i]["col_const"]] = i;
-    gaddidar_data_table_columns.push({
-      title: payment_model["gaddidar_data_set"][i]["title"],
-      visible: payment_model["gaddidar_data_set"][i]["visible"]
-    });
+    gaddidar_data_table_columns.push(payment_model["gaddidar_data_set"][i]["data_table_properties"]);
     if(payment_model["gaddidar_data_set"][i]["total"] == true) {
       gaddidar_data_table_totals.push(i);
     }
@@ -663,10 +657,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
   for(var i=0; i < payment_model["transporter_data_set"].length; i++) {
     default_transporter_data_set.push(payment_model["transporter_data_set"][i]["default_val"]);
     TRANSPORTER_DETAILS[payment_model["transporter_data_set"][i]["col_const"]] = i;
-    transporter_data_table_columns.push({
-      title: payment_model["transporter_data_set"][i]["title"],
-      visible: payment_model["transporter_data_set"][i]["visible"]
-    });
+    transporter_data_table_columns.push(payment_model["transporter_data_set"][i]["data_table_properties"]);
     if(payment_model["transporter_data_set"][i]["total"] == true) {
       transporter_data_table_totals.push(i);
     }
@@ -1023,10 +1014,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     aggregator_table_created = true;
   }
 
-  $('#payment_sheet').html("");
-  $('<th>Total:</th>').appendTo('#payment_sheet');
+  $('#payment_summary_details').html("");
+  $('<th>Total:</th>').appendTo('#payment_summary_details');
   for (var i = 1; i < aggregator_data_table_columns.length; i++) {
-    $('<th></th>').appendTo('#payment_sheet');
+    $('<th></th>').appendTo('#payment_summary_details');
   }
 
   aggregator_table = $('#table2').DataTable({
