@@ -167,6 +167,9 @@ def transportations_sms(user, transportations, language):
         VehicleLanguage = get_model('loop', 'VehicleLanguage')
         Language = get_model('loop', 'Language')
         for dt in transportations:
+            lang_code = Language.objects.get(notation=language)
+            lang_vehicle = VehicleLanguage.objects.get(vehicle = dt.transportation_vehicle.vehicle, language=lang_code.id)
+
             if (dt.transportation_vehicle.transporter.transporter_name,
                 dt.transportation_vehicle.transporter.transporter_phone,
                 dt.date) in single_transporter_details.keys():
@@ -175,9 +178,6 @@ def transportations_sms(user, transportations, language):
                     dt.transportation_vehicle.transporter.transporter_name,
                     dt.transportation_vehicle.transporter.transporter_phone,
                     dt.date)]
-
-                lang_code = Language.objects.get(notation=language)
-                lang_vehicle = VehicleLanguage.objects.get(vehicle = dt.transportation_vehicle.vehicle, language=lang_code.id)
 
                 transporter_wise_data['dt'].append(
                     (dt.mandi.mandi_name, lang_vehicle.vehicle_name, dt.transportation_cost))
