@@ -67,9 +67,14 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             if (transaction.date, transaction.farmer.phone,
                 transaction.farmer.name) not in single_farmer_date_message.keys():
 
+                CropLanguage = get_model('loop', 'CropLanguage')
+                Language = get_model('loop', 'Language')
+                lang_code = Language.objects.get(notation=language)
+                language_crop = CropLanguage.objects.get(crop=transaction.crop, language=lang_code.id)
+
                 single_farmer_date_message[
                     (transaction.date, transaction.farmer.phone, transaction.farmer.name)] = {
-                    (transaction.crop.crop_name, transaction.price): {'quantity': transaction.quantity,
+                    (language_crop.crop_name, transaction.price): {'quantity': transaction.quantity,
                                                                       'amount': transaction.amount}}
                 single_farmer_date_message[
                     (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transaction_id'] = [
@@ -79,25 +84,27 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                                                                          mandi=transaction.mandi.id)
 
                 for farmer_specific_transport in farmer_specific_transportations:
+                    VehicleLanguage = get_model(VehicleLanguage)
+                    language_vehicle = VehicleLanguage.objects.get(vehicle = farmer_specific_transport.transportation_vehicle.vehicle, language=lang_code.id)
                     if 'transport' not in single_farmer_date_message[(transaction.date, transaction.farmer.phone,
                                                                       transaction.farmer.name)].keys():
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'] = {
-                            transaction.mandi.mandi_name_en: [(
-                                                                  farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
+                            transaction.mandi.mandi_name: [(
+                                                                  language_vehicle.vehicle_name,
                                                                   farmer_specific_transport.transportation_cost)]}
-                    elif transaction.mandi.mandi_name_en in single_farmer_date_message[
+                    elif transaction.mandi.mandi_name in single_farmer_date_message[
                         (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport']:
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'][
-                            transaction.mandi.mandi_name_en].append((
-                            farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
+                            transaction.mandi.mandi_name].append((
+                             language_vehicle.vehicle_name,
                             farmer_specific_transport.transportation_cost))
                     else:
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'][
-                            transaction.mandi.mandi_name_en] = [(
-                                                                    farmer_specific_transport.transportation_vehicle.vehicle.vehicle_name_en,
+                            transaction.mandi.mandi_name] = [(
+                                                                    language_vehicle.vehicle_name,
                                                                     farmer_specific_transport.transportation_cost)]
             else:
                 farmer_level_transaction = single_farmer_date_message[
