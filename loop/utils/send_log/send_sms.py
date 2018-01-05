@@ -71,6 +71,8 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
 
                 CropLanguage = get_model('loop', 'CropLanguage')
                 Language = get_model('loop', 'Language')
+                VehicleLanguage = get_model('loop', 'VehicleLanguage')
+
                 lang_code = Language.objects.get(notation=language)
                 language_crop = CropLanguage.objects.get(crop=transaction.crop, language=lang_code.id)
 
@@ -86,7 +88,6 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                                                                          mandi=transaction.mandi.id)
 
                 for farmer_specific_transport in farmer_specific_transportations:
-                    VehicleLanguage = get_model(VehicleLanguage)
                     language_vehicle = VehicleLanguage.objects.get(vehicle = farmer_specific_transport.transportation_vehicle.vehicle, language=lang_code.id)
                     if 'transport' not in single_farmer_date_message[(transaction.date, transaction.farmer.phone,
                                                                       transaction.farmer.name)].keys():
