@@ -42,11 +42,13 @@ def send_sms(request):
 
                 transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0)
 
+                transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id)
+
                 helpline_no = requesting_loop_user.village.block.district.state.helpline_number
 
                 Thread(target=transactions_sms,
                 args=[requesting_loop_user, transactions_to_consider, preferred_language,
-                transportations_to_consider, helpline_no]).start()
+                transportations_to_consider_for_ct, helpline_no]).start()
 
                 # transactions_sms(requesting_loop_user, transactions_to_consider, preferred_language,
                 # transportations_to_consider, helpline_no)
@@ -88,6 +90,8 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                     language_vehicle = VehicleLanguage.objects.get(vehicle = farmer_specific_transport.transportation_vehicle.vehicle, language=lang_code.id)
                     if 'transport' not in single_farmer_date_message[(transaction.date, transaction.farmer.phone,
                                                                       transaction.farmer.name)].keys():
+                        single_farmer_date_message[
+                            (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'] = {}
                         single_farmer_date_message[
                             (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transport'] = {
                             transaction.mandi.mandi_name: [(
