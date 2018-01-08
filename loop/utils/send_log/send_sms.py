@@ -85,7 +85,8 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
 
                 farmer_specific_transportations = transportations.filter(date=transaction.date,
                                                                          mandi=transaction.mandi.id)
-
+                print "Transportations Record"
+                print farmer_specific_transportations
                 for farmer_specific_transport in farmer_specific_transportations:
                     language_vehicle = VehicleLanguage.objects.get(
                         vehicle=farmer_specific_transport.transportation_vehicle.vehicle, language=lang_code.id)
