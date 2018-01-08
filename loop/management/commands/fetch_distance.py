@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
 import pandas as pd
 from libs.distance_matrix import DistanceMatrix
-from loop.models import Mandi, Village, LoopUserAssignedVillage, LoopUserAssignedMandi
+from loop.models import Mandi, Village, LoopUserAssignedVillage, LoopUserAssignedMandi, LoopUser
 
 class Command(BaseCommand):
     help = '''This command fetches distance between source and destination. '''
@@ -15,7 +15,10 @@ class Command(BaseCommand):
 
         # print assigned_mandis.head()
 
-        assigned_villages = pd.DataFrame(list(LoopUserAssignedVillage.objects.values('loop_user__id','village__village_name_en', 'village__id','village__latitude','village__longitude').filter(loop_user__village__block__district=1).filter(Q(village__latitude__isnull=False) & Q(village__latitude__gte=2))))
+        # assigned_villages = pd.DataFrame(list(LoopUserAssignedVillage.objects.values('loop_user__id','village__village_name_en', 'village__id','village__latitude','village__longitude').filter(loop_user__village__block__district=1).filter(Q(village__latitude__isnull=False) & Q(village__latitude__gte=2))))
+        assigned_villages = pd.DataFrame(list(LoopUser.objects.values('id','village__village_name_en', 'village__id','village__latitude','village__longitude').filter(village__block__district=1).filter(Q(village__latitude__isnull=False) & Q(village__latitude__gte=2))))
+
+        assigned_villages.rename(columns={"id":"loop_user__id"},inplace=True)
         # print assigned_villages.head()
 
         mandi_village_matrix = assigned_mandis.merge(assigned_villages, on='loop_user__id')
