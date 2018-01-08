@@ -11,11 +11,11 @@ class Command(BaseCommand):
 
     def handle(self,*args,**options):
         # mandi_matrix = pd.DataFrame(list(Mandi.objects.values('id','mandi_name_en','latitude','longitude').filter(district__state=1).filter(Q(latitude__isnull=False) & Q(latitude__gte=2))))
-        assigned_mandis = pd.DataFrame(list(LoopUserAssignedMandi.objects.values('loop_user__id','loop_user__name_en','mandi__mandi_name_en','mandi__latitude','mandi__longitude').filter(loop_user__village__block__district=1).filter(Q(mandi__latitude__isnull=False) & Q(mandi__latitude__gte=2))))
+        assigned_mandis = pd.DataFrame(list(LoopUserAssignedMandi.objects.values('loop_user__user__id','loop_user__id','loop_user__name_en','mandi__mandi_name_en','mandi__id','mandi__latitude','mandi__longitude').filter(loop_user__village__block__district=1).filter(Q(mandi__latitude__isnull=False) & Q(mandi__latitude__gte=2))))
 
         # print assigned_mandis.head()
 
-        assigned_villages = pd.DataFrame(list(LoopUserAssignedVillage.objects.values('loop_user__id','village__village_name_en','village__latitude','village__longitude').filter(loop_user__village__block__district=1).filter(Q(village__latitude__isnull=False) & Q(village__latitude__gte=2))))
+        assigned_villages = pd.DataFrame(list(LoopUserAssignedVillage.objects.values('loop_user__id','village__village_name_en', 'village__id','village__latitude','village__longitude').filter(loop_user__village__block__district=1).filter(Q(village__latitude__isnull=False) & Q(village__latitude__gte=2))))
         # print assigned_villages.head()
 
         mandi_village_matrix = assigned_mandis.merge(assigned_villages, on='loop_user__id')
