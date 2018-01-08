@@ -88,13 +88,14 @@ class FarmerAdmin(admin.ModelAdmin):
 class CombinedTransactionAdmin(admin.ModelAdmin):
     list_display = (
     'id', 'date', '__mandi__', '__gaddidar__', '__aggregator__', '__farmer__', '__farmer_phone__', '__crop__', 'price',
-    'quantity', 'amount', 'status')
+    'quantity', 'amount', 'status', 'payment_sms', 'payment_sms_id')
     search_fields = ['farmer__name', 'farmer__village__village_name', 'gaddidar__gaddidar_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
     list_filter = (UserListFilter, 'status',
                    'crop__crop_name', 'mandi__mandi_name', 'gaddidar__gaddidar_name', 'farmer__village__village_name',
                    'mandi__district__state__country')
     date_hierarchy = 'date'
+    list_editable = ['payment_sms', 'status']
 
 
 class TransporterAdmin(admin.ModelAdmin):
