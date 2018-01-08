@@ -136,7 +136,7 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             farmer_name = key[2].encode('utf-8')
             message = make_transaction_sms(key, farmer_name, user.name, value, language)
             print value
-            if value['transport']:
+            if 'transport' in value.keys():
                 message = make_transaction_vehicle_sms(message, value['transport'])
 
             helpline_num.encode('utf-8')
