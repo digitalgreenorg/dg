@@ -555,7 +555,7 @@ class CombinedTransaction(LoopModel):
     is_visible = models.BooleanField(default=True)
     payment_date = models.DateField(auto_now=False, null=True, blank=True)
     payment_sms = models.IntegerField(
-        default=0)  #0-None, 1-SMS initiated, 2-SMS fired, 3-SMS delivered, 4-SMS undelivered, 5-pending en route, 6-invalid no., 7-expired, 8-pushed to network en route, 9-DND block
+        default=0)  #0-None, 1-SMS initiated form DG, 2-SMS fired from DG, 3-SMS delivered, 4-SMS undelivered, 5-pending en route, 6-invalid no., 7-expired, 8-pushed to network en route, 9-DND block
     payment_sms_id = models.CharField(max_length=15, null=True, blank=True)
 
     def __unicode__(self):

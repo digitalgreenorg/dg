@@ -265,7 +265,7 @@ def make_transportation_sms(key, farmer_name, aggregator, value):
 def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
-                  'message': sms_body, 'test': 'true', 'unicode': 'true', 'custom':custom_id, 'receipt_url': RECEIPT_URL}
+                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
     if response_text['status'] == 'success':
@@ -277,6 +277,7 @@ def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
 
 def sms_receipt_from_txtlcl(request):
     if request.method == 'POST':
+        print "INSIDE RESPONSE PROCESS FUNCTION"
         SmsLog = get_model('loop', 'SmsLog')
         transactions_from_smslog = SmsLog.objects.get(id=request.POST['customID'])
         print transactions_from_smslog.model_ids
