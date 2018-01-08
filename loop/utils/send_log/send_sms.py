@@ -157,14 +157,13 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             sms_response = send_sms_using_textlocal(farmer_no, message, smslog_obj.id)
 
             print sms_response
+            import pdb;
+            pdb.set_trace()
             if sms_response['status'] == "success":
                 transaction_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
                 status_code = 1
                 sms_id = sms_response['messages'][0]['id']
-            import pdb;
-            pdb.set_trace()
             smslog_obj.text_local_id = sms_id
-#            smslog_obj['text_local_id']=sms_id
             smslog_obj.status = status_code
             smslog_obj.save()
 
