@@ -132,10 +132,13 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             farmer_no = key[1]
             farmer_name = key[2].encode('utf-8')
             message = make_transaction_sms(key, farmer_name, user.name, value, language)
-            message = make_transaction_vehicle_sms(message, value['transport'])
+            if value['transport']:
+                message = make_transaction_vehicle_sms(message, value['transport'])
+
             helpline_num.encode('utf-8')
             message = ('%s\n%s: %s') % (
-                message, sms_text['helpline_no'][language].encode('utf-8'), helpline_num.encode('utf-8'))
+            message, sms_text['helpline_no'][language].encode('utf-8'), helpline_num.encode('utf-8'))
+
             status_code = 0
             sms_id = None
 
@@ -145,6 +148,10 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             smslog_obj = SmsLog(sms_body=message, contact_no=farmer_no, person_type=0, model_ids = str(single_farmer_date_message[key]['transaction_id']))
             smslog_obj.save()
 
+            print "-----------------"
+            print farmer_no
+            print message
+            print "*****************"
             sms_response = send_sms_using_textlocal(farmer_no, message, smslog_obj.id)
 
             if sms_response['status'] == "success":
