@@ -50,7 +50,6 @@ class Country(LoopModel):
     id = models.AutoField(primary_key=True)
     country_name = models.CharField(max_length=50)
     is_visible = models.BooleanField(default=True)
-    server_sms = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.country_name
@@ -70,6 +69,7 @@ class State(LoopModel):
     phone_digit = models.CharField(default=10, max_length=2, blank=True, null=True)
     phone_start = models.CharField(default='7,8,9', max_length=15, blank=True, null=True)
     aggregation_state = models.BooleanField(default=True)
+    server_sms = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.state_name_en

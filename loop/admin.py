@@ -165,18 +165,18 @@ class DistrictAdmin(admin.ModelAdmin):
 
 class StateAdmin(admin.ModelAdmin):
     fields = ('country', ('state_name', 'state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start',
-              'is_visible', 'aggregation_state')
+              'is_visible', 'aggregation_state', 'server_sms')
     list_display = (
     'id', 'state_name', 'country', 'state_name_en', 'helpline_number', 'crop_add', 'phone_digit', 'phone_start',
-    'aggregation_state')
+    'aggregation_state', 'server_sms')
     search_fields = ['state_name', 'state_name_en', 'country__country_name']
     list_filter = ['country__country_name']
+    list_editable = ['server_sms']
 
 class CountryAdmin(admin.ModelAdmin):
-    fields = ('contry_name','is_visible','server_sms')
-    list_display = ('id', 'country_name','server_sms')
+    fields = ('contry_name','is_visible')
+    list_display = ('id', 'country_name')
     search_fields = ['country_name']
-    list_editable=['server_sms']
 
 class CropAdmin(admin.ModelAdmin):
     list_display = ('id', 'crop_name')
