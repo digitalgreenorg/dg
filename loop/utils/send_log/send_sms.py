@@ -6,7 +6,7 @@ import json
 from dg.settings import TEXTLOCAL_API_KEY
 from loop.config import sms_text
 from loop.models import CombinedTransaction, DayTransportation
-from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, loop_receipt, kisan, jamakarta
+from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME
 from django.db.models import Count, Sum, Avg, Q, F
 import requests
 from django.db.models import get_model
