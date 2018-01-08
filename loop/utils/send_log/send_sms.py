@@ -63,6 +63,8 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
     try:
         single_farmer_date_message = {}
         transactions_list = []
+        import pdb;
+        pdb.set_trace()
         for transaction in transactions:
             transactions_list.append(transaction)
             if (transaction.date, transaction.farmer.phone,
