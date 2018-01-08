@@ -172,6 +172,11 @@ class StateAdmin(admin.ModelAdmin):
     search_fields = ['state_name', 'state_name_en', 'country__country_name']
     list_filter = ['country__country_name']
 
+class CountryAdmin(admin.ModelAdmin):
+    fields = ('contry_name','is_visible','server_sms')
+    list_display = ('id', 'country_name','server_sms')
+    search_fields = ['country_name']
+    list_editable=['server_sms']
 
 class CropAdmin(admin.ModelAdmin):
     list_display = ('id', 'crop_name')
@@ -293,7 +298,7 @@ loop_admin.login_template = 'social_website/login.html'
 loop_admin.logout_template = 'social_website/home.html'
 
 loop_admin.register(Village, VillageAdmin)
-loop_admin.register(Country)
+loop_admin.register(Country,CountryAdmin)
 loop_admin.register(AdminUser, AdminUserAdmin)
 loop_admin.register(Block, BlockAdmin)
 loop_admin.register(District, DistrictAdmin)
