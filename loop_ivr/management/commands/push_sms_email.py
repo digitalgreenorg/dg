@@ -21,18 +21,22 @@ class Command(BaseCommand):
                 total_correct_queries_count, correct_queries_resolved_count, correct_queries_via_sms_count,
                 correct_queries_via_call_count):
         from_email = EMAIL_HOST_USER
-        to_email = ['sujit@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
+        to_email = ['sujit@digitalgreen.org']
         # to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
         #             'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
         #             'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'vikas@digitalgreen.org',
         #             'melbin@digitalgreen.org', 'erica@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
         
-        body_content = ['''Dear Team, 
-                            <html>
+        body_content = ['''Dear Team''',
+                            '''<html>
                                 <head>
                                     <style>
-                                        table, th, td { 
+                                        tr, td { 
                                             border : 0.3px solid black;
+                                            border-spacing : 0;
+                                            padding : 10px;
+                                        }
+                                        table {
                                             border-spacing : 0;
                                         }
                                     </style>
