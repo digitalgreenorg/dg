@@ -163,7 +163,9 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                 status_code = 1
                 sms_id = sms_response['messages'][0]['id']
 
-            smslog_obj.update(text_local_id=sms_id, status=status_code)
+            smslog_obj['text_local_id']=sms_id
+            smslog_obj['status']=status_code
+            smslog_obj.save()
 
     except Exception as e:
         print e
@@ -230,8 +232,10 @@ def transportations_sms(user, transportations, language):
                 status_code = 1
                 sms_id = sms_response['messages'][0]['id']
 
-                smslog_obj.update(text_local_id=sms_id, status=status_code)
+                smslog_obj['text_local_id']=sms_id
+                smslog_obj['status']=status_code
                 smslog_obj.save()
+
     except Exception as e:
         print e
 
