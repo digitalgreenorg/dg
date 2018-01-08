@@ -63,8 +63,6 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
     try:
         single_farmer_date_message = {}
         transactions_list = []
-        import pdb;
-        pdb.set_trace()
         for transaction in transactions:
             transactions_list.append(transaction)
             if (transaction.date, transaction.farmer.phone,
@@ -162,9 +160,11 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                 transaction_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
                 status_code = 1
                 sms_id = sms_response['messages'][0]['id']
-
-            smslog_obj['text_local_id']=sms_id
-            smslog_obj['status']=status_code
+            import pdb;
+            pdb.set_trace()
+            smslog_obj.text_local_id = sms_id
+#            smslog_obj['text_local_id']=sms_id
+            smslog_obj.status = status_code
             smslog_obj.save()
 
     except Exception as e:
