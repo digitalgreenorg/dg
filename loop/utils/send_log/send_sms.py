@@ -5,8 +5,9 @@ __author__ = 'Lokesh'
 import json
 from dg.settings import TEXTLOCAL_API_KEY
 from loop.config import sms_text
-from loop.models import CombinedTransaction, DayTransportation
-from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, loop_receipt, kisan, jamakarta
+from loop.models import CombinedTransaction, DayTransportation, SMS_STATE
+from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, loop_receipt, kisan, jamakarta, \
+    RECEIPT_URL
 from django.db.models import Count, Sum, Avg, Q, F
 import requests
 from django.db.models import get_model
@@ -22,39 +23,39 @@ class UserDoesNotExist(Exception):
 
 @csrf_exempt
 def send_sms(request):
-    # if request.method == 'POST':
-    #     apikey = request.POST['ApiKey']
-    #     timestamp = request.POST['timestamp']
-    #     if timestamp:
-    #         try:
-    #             apikey_object = ApiKey.objects.get(key=apikey)
-    #             user = apikey_object.user
-    #         except Exception:
-    #             return HttpResponse("-1", status=401)
-    #         LoopUser = get_model('loop', 'LoopUser')
-    #         CombinedTransaction = get_model('loop', 'CombinedTransaction')
-    #         DayTransportation = get_model('loop', 'DayTransportation')
-    #         try:
-    #             requesting_loop_user = LoopUser.objects.get(user_id=user.id)
-    #             preferred_language = requesting_loop_user.preferred_language.notation
-    #             transactions_to_consider = CombinedTransaction.objects.filter(user_created_id=user.id, payment_sms=0,
-    #                                                                           status=1)
+    if request.method == 'POST':
+        apikey = request.POST['ApiKey']
+        timestamp = request.POST['timestamp']
+        if timestamp:
+            try:
+                apikey_object = ApiKey.objects.get(key=apikey)
+                user = apikey_object.user
+            except Exception:
+                return HttpResponse("-1", status=401)
+            LoopUser = get_model('loop', 'LoopUser')
+            CombinedTransaction = get_model('loop', 'CombinedTransaction')
+            DayTransportation = get_model('loop', 'DayTransportation')
+            try:
+                requesting_loop_user = LoopUser.objects.get(user_id=user.id)
+                preferred_language = requesting_loop_user.preferred_language.notation
+                transactions_to_consider = CombinedTransaction.objects.filter(user_created_id=user.id, payment_sms=0,
+                                                                              status=1)
 
-    #             transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0)
+                transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0)
 
-    #             transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id)
+#                transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id)
 
-    #             helpline_no = requesting_loop_user.village.block.district.state.helpline_number
+                helpline_no = requesting_loop_user.village.block.district.state.helpline_number
 
-    #             Thread(target=transactions_sms,
-    #                    args=[requesting_loop_user, transactions_to_consider, preferred_language,
-    #                          transportations_to_consider_for_ct, helpline_no]).start()
+                # Thread(target=transactions_sms,
+                #        args=[requesting_loop_user, transactions_to_consider, preferred_language,
+                #              transportations_to_consider_for_ct, helpline_no]).start()
 
-    #             Thread(target=transportations_sms,
-    #                    args=[requesting_loop_user, transportations_to_consider, preferred_language]).start()
+                Thread(target=transportations_sms,
+                       args=[requesting_loop_user, transportations_to_consider, preferred_language]).start()
 
-    #         except Exception as e:
-    #             print e
+            except Exception as e:
+                print e
     return HttpResponse("0")
 
 
@@ -135,19 +136,23 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             helpline_num.encode('utf-8')
             message = ('%s\n%s: %s') % (
                 message, sms_text['helpline_no'][language].encode('utf-8'), helpline_num.encode('utf-8'))
-            sms_response = send_sms_using_textlocal(farmer_no, message)
             status_code = 0
             sms_id = None
+
+            transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
+            transaction_to_update.update(payment_sms=SMS_STATE['S'][0])
+            SmsLog = get_model('loop', 'SmsLog')
+            smslog_obj = SmsLog(sms_body=message, contact_no=farmer_no, person_type=0, model_ids = str(single_farmer_date_message[key]['transaction_id']))
+            smslog_obj.save()
+
+            sms_response = send_sms_using_textlocal(farmer_no, message, smslog_obj.id)
+
             if sms_response['status'] == "success":
-                transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
-                transaction_to_update.update(payment_sms=True, payment_sms_id=sms_response['messages'][0]['id'])
+                transaction_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
                 status_code = 1
                 sms_id = sms_response['messages'][0]['id']
 
-            SmsLog = get_model('loop', 'SmsLog')
-            smslog_obj = SmsLog(sms_body=message, text_local_id=sms_id, contact_no=farmer_no, person_type=0,
-                                status=status_code)
-            smslog_obj.save()
+            smslog_obj.update(text_local_id=sms_id, status=status_code)
 
     except Exception as e:
         print e
@@ -200,19 +205,22 @@ def transportations_sms(user, transportations, language):
                     elements[1].encode('utf-8'), sms_text['ka kiraya'][language].encode('utf-8'),
                     sms_text['currency'][language].encode('utf-8'),
                     str(elements[2]))
-            sms_response = send_sms_using_textlocal(transporter_num, message)
+
+            SmsLog = get_model('loop', 'SmsLog')
+            smslog_obj = SmsLog(sms_body=message, contact_no=transporter_num, person_type=1)
+            smslog_obj.save()
+
+            sms_response = send_sms_using_textlocal(transporter_num, message, smslog_obj.id)
             status_code = 0
             sms_id = None
             if sms_response['status'] == "success":
                 transportations_to_update = transportations.filter(id__in=single_transporter_details[entity]['dt_id'])
-                transportations_to_update.update(payment_sms=True, payment_sms_id=sms_response['messages'][0]['id'])
+                transportations_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
                 status_code = 1
                 sms_id = sms_response['messages'][0]['id']
 
-            SmsLog = get_model('loop', 'SmsLog')
-            smslog_obj = SmsLog(sms_body=message, text_local_id=sms_id, contact_no=transporter_num, person_type=1,
-                                status=status_code)
-            smslog_obj.save()
+                smslog_obj.update(text_local_id=sms_id, status=status_code)
+                smslog_obj.save()
     except Exception as e:
         print e
 
@@ -239,10 +247,10 @@ def make_transportation_sms(key, farmer_name, aggregator, value):
     return message
 
 
-def send_sms_using_textlocal(farmer_no, sms_body):
+def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
-                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':'LOOP-RECEIPT'}
+                  'message': sms_body, 'test': 'true', 'unicode': 'true', 'custom':custom_id, 'receipt_url': RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
     if response_text['status'] == 'success':
@@ -250,3 +258,15 @@ def send_sms_using_textlocal(farmer_no, sms_body):
     elif response_text['status'] == 'failure':
         print "SMS sending failed"
     return response_text
+
+
+def sms_receipt_from_txtlcl(request):
+    if request.method == 'POST':
+        SmsLog = get_model('loop', 'SmsLog')
+        transactions_from_smslog = SmsLog.objects.get(id=request.POST['customID'])
+        print transactions_from_smslog.model_ids
+        transactions_list = list(transactions_from_smslog)
+        print transactions_list
+        print request.POST['status']
+
+

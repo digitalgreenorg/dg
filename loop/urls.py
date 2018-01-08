@@ -13,7 +13,7 @@ import api,api_admin
 from loop.views import *
 from loop.dashboard_views import *
 from loop.utils.send_log.loop_data_log import send_updated_log
-from loop.utils.send_log.send_sms import send_sms
+from loop.utils.send_log.send_sms import send_sms, sms_receipt_from_txtlcl
 from loop.utils.send_log.loop_admin_log import send_updated_admin_log
 from loop.utils.send_log.send_extra_data import sendData
 
@@ -76,6 +76,7 @@ urlpatterns = patterns('',
     url(r'^login/', login),
     url(r'^get_log/', send_updated_log),
     url(r'^send_sms/', send_sms),
+    url(r'rcpt_response/', sms_receipt_from_txtlcl),
     url(r'^get_admin_log/', send_updated_admin_log),
     url(r'^get_extra_data/',sendData),
     url(r'^analytics/$', dashboard),
