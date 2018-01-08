@@ -129,8 +129,8 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
 
 
 class MandiAdmin(admin.ModelAdmin):
-    fields = ('district', ('mandi_name', 'mandi_name_en'), ('latitude', 'longitude'), 'is_visible', 'mandi_type')
-    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type')
+    fields = ('district',('mandi_name','mandi_name_en'),('latitude','longitude'),'is_visible', 'mandi_type')
+    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type','latitude','longitude')
     search_fields = ['mandi_name', 'district__district_name', 'mandi_type__mandi_type_name', 'mandi_name_en']
     list_filter = ['district__district_name', 'district__state__country', 'mandi_type', 'district__state']
 
@@ -143,8 +143,8 @@ class MandiTypeAdmin(admin.ModelAdmin):
 
 
 class VillageAdmin(admin.ModelAdmin):
-    fields = ('block', ('village_name', 'village_name_en'), ('latitude', 'longitude'), 'is_visible')
-    list_display = ('id', 'village_name', 'block', 'village_name_en')
+    fields = ('block',('village_name','village_name_en'),('latitude','longitude'),'is_visible')
+    list_display = ('id', 'village_name', 'block', 'village_name_en','latitude','longitude')
     search_fields = ['village_name', 'village_name_en', 'block__block_name']
     list_filter = ['block__block_name', 'block__district__state__country']
 
