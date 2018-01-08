@@ -37,7 +37,7 @@ def market_info_incoming(request):
         else:
             call_source = 1
         today_date = datetime.now().date()
-        if PriceInfoIncoming.objects.filter(incoming_time__gte=today_date, from_number=to_number).count() < 2:
+        if PriceInfoIncoming.objects.filter(incoming_time__gte=today_date, from_number=to_number).count() < 10:
             time.sleep(2)
             make_market_info_call(to_number, dg_number, incoming_time, call_id, call_source)
         else:
