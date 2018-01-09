@@ -74,7 +74,7 @@ def get_info_through_api(outgoing_call_id):
         incoming_obj = HelplineIncoming.objects.filter(from_number=call_status['to'],call_status=0).order_by('-id')
         # Check if State filter is required or not.
         expert_obj = HelplineExpert.objects.filter(phone_number=call_status['from'])
-        if len(incoming_obj) > 0 and len(expert_obj) > 0:
+        if incoming_obj.count() > 0 and expert_obj.count() > 0:
             incoming_obj = incoming_obj[0]
             expert_obj = expert_obj[0]
             to_number = call_status['to']
@@ -100,7 +100,7 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_u
     call_response_url = CALL_RESPONSE_URL
     from_number = from_number_obj.phone_number
     # CallType is either Transactional or Promotional
-    parameters = {'From':from_number,'To':to_number,'CallerId':EXOTEL_HELPLINE_NUMBER,'CallType':'trans','StatusCallback':call_response_url}
+    parameters = {'From':from_number,'To':to_number,'CallerId':to_number,'CallType':'trans','StatusCallback':call_response_url}
     response = requests.post(call_request_url,data=parameters)
     module = 'make_helpline_call'
     if response.status_code == 200:
