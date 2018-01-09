@@ -51,7 +51,7 @@ class Command(BaseCommand):
 				videos = []
 				for v in vdc:
 					try:
-						vid = JSLPS_Video.objects.get(vc = v, activity="MKSP")
+						vid = JSLPS_Video.objects.get(vc = v)
 						videos.append(vid.video)
 					except JSLPS_Video.DoesNotExist as e:
 						if "Duplicate entry" not in str(e):
