@@ -7,10 +7,8 @@ from django.core.management.base import BaseCommand
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q
 
-from loop_ivr.models import PriceInfoIncoming, SubscriptionLog, Subscription
+from loop_ivr.models import PriceInfoIncoming
 from loop.models import Farmer, LoopUser
-
-from loop_ivr.utils.config import agg_sms_no_price_for_combination#, string_for_no_rate_query
 
 from dg.settings import EMAIL_HOST_USER, team_contact
 
@@ -21,13 +19,14 @@ class Command(BaseCommand):
                 total_correct_queries_count, correct_queries_resolved_count, correct_queries_via_sms_count,
                 correct_queries_via_call_count):
         from_email = EMAIL_HOST_USER
-        to_email = ['sujit@digitalgreen.org']
+        to_email = ['sujit@digitalgreen.org', 'abhisheklodha@digitalgreen.org', 'aditya@digitalgreen.org']
+
         # to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
         #             'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
         #             'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'vikas@digitalgreen.org',
         #             'melbin@digitalgreen.org', 'erica@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
         
-        body_content = ['''Dear Team''',
+        body_content = ['''Dear Team <br/><br/>''',
                             '''<html>
                                 <head>
                                     <style>
@@ -42,6 +41,7 @@ class Command(BaseCommand):
                                     </style>
                                 </head>
                                 <body>
+                                    <i>How We are doing at user engagement?</i>
                                     <table>
                                         <tbody>
                                             <tr>
@@ -63,6 +63,7 @@ class Command(BaseCommand):
                                         </tbody>
                                     </table>
                                     <br></br>
+                                    <i>Are we able to meet users requirements? </i>
                                     <table>
                                         <tbody>
                                             <tr>
@@ -91,7 +92,8 @@ class Command(BaseCommand):
                                 </body></html>'''%(active_caller_count, active_loop_farmer_count,
                 active_non_loop_farmer_count, active_aggregators_count, total_queries_count,
                 total_correct_queries_count, correct_queries_resolved_count, correct_queries_via_sms_count,
-                correct_queries_via_call_count)]
+                correct_queries_via_call_count), 
+                '<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thanks you.']
         body = ''.join(body_content)
         msg = EmailMultiAlternatives(email_subject, body, from_email, to_email)
         msg.content_subtype = "html"
@@ -111,7 +113,7 @@ class Command(BaseCommand):
 
         last_sixteen_day_caller_no = list(PriceInfoIncoming.objects.filter(incoming_time__gte=sixteen_day_back_date,incoming_time__lt=one_day_before_yesterday_date).exclude(from_number__in=team_contact).values_list('from_number',flat=True))
 
-        email_subject = 'Loop Market Information Summary for %s'%(yesterday_date.strftime("%Y-%m-%d"),)
+        email_subject = 'Loop Mandi Master - Daily Metrics: %s'%(yesterday_date.strftime("%Y-%m-%d"),)
 
         # Active Users excluding DG staff
         active_caller_object = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,incoming_time__lt=today_date,from_number__in=last_fifteen_day_caller_no).exclude(from_number__in=team_contact).values_list('from_number', flat=True).distinct()
@@ -135,13 +137,15 @@ class Command(BaseCommand):
          active_aggregators_count_y = active_user_info(yesterday_active_caller_object, last_sixteen_day_caller_no,\
                                                     loop_farmer_list, loop_aggregators_list)
         # Active user info content
-        active_caller_count_content = get_active_user_comp_info(active_caller_count, active_aggregators_count_y)
+        active_caller_count_content = get_active_user_comp_info(active_caller_count, active_caller_count_y)
         active_loop_farmer_count_content = get_active_user_comp_info(active_loop_farmer_count, active_loop_farmer_count_y)
         active_non_loop_farmer_count_content = get_active_user_comp_info(active_non_loop_farmer_count, active_non_loop_farmer_count_y)
         active_aggregators_count_content = get_active_user_comp_info(active_aggregators_count, active_aggregators_count_y)
 
         # Total Queries
         total_queries_count = active_caller_object.count()
+        total_queries_sms_count = active_caller_object.filter(call_source=3).count()
+        total_queries_call_count = active_caller_object.filter(call_source__in=[1, 2]).count()
 
         # Total Correct Queries
         total_correct_queries_obj = active_caller_object.filter(info_status=1)
@@ -158,9 +162,9 @@ class Command(BaseCommand):
         
 
         per_total_correct_queries_content = get_total_queries_content(total_correct_queries_count, total_queries_count)
-        per_correct_queries_resolved_content = get_total_queries_content(correct_queries_resolved_count, total_queries_count)
-        per_correct_queries_via_sms_content = get_total_queries_content(correct_queries_via_sms_count, total_queries_count)
-        per_correct_queries_via_call_content = get_total_queries_content(correct_queries_via_call_count, total_queries_count)
+        per_correct_queries_resolved_content = get_total_queries_content(correct_queries_resolved_count, total_correct_queries_count)
+        per_correct_queries_via_sms_content = get_total_queries_content(correct_queries_via_sms_count, total_queries_sms_count)
+        per_correct_queries_via_call_content = get_total_queries_content(correct_queries_via_call_count, total_queries_call_count)
 
 
         self.send_mail(email_subject, active_caller_count_content, active_loop_farmer_count_content,
@@ -189,14 +193,21 @@ def active_user_info(active_caller_object, last_fifteen_day_caller_no, loop_farm
 def get_active_user_comp_info(active_user_today_info, active_user_yesterday_info) :
     res = str(active_user_today_info)
     diff = active_user_today_info - active_user_yesterday_info
-    if diff >= 0 :
-        res = res + '( %s '%(round(float(diff) / active_user_today_info * 100)) + r' % up DoD)'
+    
+    if active_user_yesterday_info == 0 :
+        res = res + r' ( - % up DoD)'
     else :
-        res = res + '( %s '%(round(float(abs(diff)) / active_user_today_info * 100)) + r' % down DoD)'
+        if diff >= 0 :
+            res = res + ' ( %s '%(round(float(diff) / active_user_yesterday_info * 100)) + r' % up DoD)'
+        else :
+            res = res + ' ( %s '%(round(float(abs(diff)) / active_user_yesterday_info * 100)) + r' % down DoD)'
 
     return res
 
 def get_total_queries_content(total_correct_info, total_count_info) :
-    per_total_correct_info = round(float(total_correct_info) / total_count_info * 100, 2)
+    if total_correct_info > 0 :
+        per_total_correct_info = round(float(total_correct_info) / total_count_info * 100)
+    else :
+        per_total_correct_info = 0
     res = str(per_total_correct_info) + r'% ' + '(%s out of %s)'%(total_correct_info, total_count_info)
     return res
