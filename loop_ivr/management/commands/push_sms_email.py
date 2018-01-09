@@ -63,7 +63,7 @@ class Command(BaseCommand):
                                         </tbody>
                                     </table>
                                     <br></br>
-                                    <i>Are we able to meet users requirements? </i>
+                                    <i>Are we able to meet users' requirements? </i>
                                     <table>
                                         <tbody>
                                             <tr>
