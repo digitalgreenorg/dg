@@ -14,8 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='helplineexpert',
             name='state',
-            field=models.ForeignKey(default=0, to='loop.State'),
-            preserve_default=False,
+            field=models.ForeignKey(blank=True, to='loop.State', null=True),
         ),
         migrations.AlterField(
             model_name='loopuser',

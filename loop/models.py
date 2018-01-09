@@ -18,6 +18,8 @@ CALL_STATUS = ((0, "Pending"),  (1, "Resolved"), (2, "Declined"))
 EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
 BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
 MANDI_CATEGORY = ((0,"Wholesale Market"), (1,"Retail Market"), (2,"Individual Entity"))
+PERSON_TYPE = ((0, 'Farmer'), (1, 'Transporter'))
+SMS_STATUS = ((0, 'Fail'), (1, 'Success'))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -186,6 +188,9 @@ class LoopUser(LoopModel):
     days_count = models.IntegerField(default=3)
     is_visible = models.BooleanField(verbose_name="Is Active", default=True)
     farmer_phone_mandatory = models.BooleanField(default=True)
+    registration = models.CharField(max_length=200, default="", null=True, blank=True)
+    show_farmer_share = models.BooleanField(default=True)
+    percent_farmer_share = models.FloatField(default=0.0)
     partner = models.ForeignKey(Partner, default=None, null=True, blank=True)
 
     def __unicode__(self):
@@ -308,7 +313,9 @@ class Farmer(LoopModel):
         max_length=500, default=None, null=True, blank=True)
     village = models.ForeignKey(Village)
     is_visible = models.BooleanField(default=True)
-    correct_phone_date=models.DateField(default=None,auto_now=False,null=True)
+    correct_phone_date = models.DateField(default=None,auto_now=False,null=True)
+    registration_sms = models.BooleanField(default=False)
+    registration_sms_id = models.CharField(max_length=15, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.village.village_name_en)
@@ -455,6 +462,8 @@ class DayTransportation(LoopModel):
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
     timestamp = models.CharField(max_length=25)
+    payment_sms = models.BooleanField(default=False)
+    payment_sms_id = models.CharField(max_length=15, null=True, blank=True)
 
     def __unicode__(self):
         return "%s - %s (%s)" % (LoopUser.objects.get(user=self.user_created).name_en, self.transportation_vehicle.transporter.transporter_name, self.transportation_vehicle.vehicle.vehicle_name)
@@ -500,6 +509,8 @@ class CombinedTransaction(LoopModel):
     timestamp = models.CharField(max_length=25)
     is_visible = models.BooleanField(default=True)
     payment_date = models.DateField(auto_now=False, null=True, blank=True)
+    payment_sms = models.BooleanField(default=False)
+    payment_sms_id = models.CharField(max_length=15, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s) (%s) (%s)" % (
@@ -645,8 +656,8 @@ class HelplineExpert(LoopModel):
     phone_number = models.CharField(max_length=20, unique=True)
     email_id = models.CharField(max_length=50)
     expert_status = models.IntegerField(choices=EXPERT_STATUS, default=1)
-    state = models.ForeignKey(State)
-    
+    state = models.ForeignKey(State, null=True, blank=True)
+
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.phone_number)
 
@@ -740,3 +751,14 @@ class BroadcastAudience(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (self.to_number, self.broadcast)
+
+class SmsLog(LoopModel):
+    id = models.AutoField(primary_key=True)
+    sms_body = models.CharField(max_length=300, blank=True, null=True)
+    text_local_id = models.CharField(max_length=20, blank=True, null=True)
+    contact_no = models.CharField(max_length=13, blank=True, null=True)
+    person_type = models.IntegerField(choices=PERSON_TYPE, default=0)
+    status = models.IntegerField(choices=SMS_STATUS, default=0)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.contact_no, self.sms_body)

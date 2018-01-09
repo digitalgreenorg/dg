@@ -50,7 +50,7 @@ def get_status(call_id):
     call_status_url = CALL_STATUS_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID,call_id)
     response = requests.get(call_status_url)
     call_status = dict()
-    # Status code 200 if API call is successful, 429 if Too many request 
+    # Status code 200 if API call is successful, 429 if Too many request
     if response.status_code == 200:
         response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
         call_detail = response_tree.findall('Call')[0]
@@ -84,13 +84,13 @@ def get_info_through_api(outgoing_call_id):
 def update_incoming_acknowledge_user(incoming_call_obj,acknowledge_user):
     if acknowledge_user == 0:
         incoming_call_obj.acknowledge_user = 0
-    else:    
+    else:
         incoming_call_obj.acknowledge_user += 1
     try:
         incoming_call_obj.save()
     except Exception as e:
         module = 'update_incoming_acknowledge_user'
-        write_log(HELPLINE_LOG_FILE,module,str(e))     
+        write_log(HELPLINE_LOG_FILE,module,str(e))
 
 # When we do not want to acknowledge User in case of call is not successfull
 # then acknowledge_user parameter is more than 1
@@ -112,7 +112,7 @@ def make_helpline_call(incoming_call_obj,from_number_obj,to_number,acknowledge_u
         save_call_log(outgoing_call_id,from_number,to_number,1,outgoing_call_time)
         outgoing_obj = HelplineOutgoing(call_id=outgoing_call_id,incoming_call=incoming_call_obj,outgoing_time=outgoing_call_time,from_number=from_number_obj,to_number=to_number)
         try:
-            outgoing_obj.save()    
+            outgoing_obj.save()
         except Exception as e:
             # Save Errors in Logs
             write_log(HELPLINE_LOG_FILE,module,str(e))
@@ -135,7 +135,7 @@ def send_helpline_sms(from_number,to_number,sms_body):
         module = 'send_helpline_sms'
         log = "Status Code: %s (Parameters: %s)"%(str(response.status_code),parameters)
         write_log(HELPLINE_LOG_FILE,module,log)
- 
+
 def connect_to_app(to_number,app_id):
     app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
     app_url = APP_URL%(app_id,)
@@ -144,7 +144,7 @@ def connect_to_app(to_number,app_id):
     module = 'connect_to_app'
     log = "App Id: %s Status Code: %s (Response text: %s)"%(app_id,str(response.status_code),str(response.text))
     write_log(HELPLINE_LOG_FILE,module,log)
-    
+
 def fetch_info_of_incoming_call(request):
     call_id = str(request.GET.getlist('CallSid')[0])
     farmer_number = str(request.GET.getlist('From')[0])
@@ -209,7 +209,7 @@ def connect_to_broadcast(farmer_info,broadcast_obj,from_number,broadcast_app_id)
     if not validate_phone_number(str(to_number)):
         return
     # Decline previous pending/DND-Failed broadcast entry for this number.
-    # This is for make consistancy so at max only one pending broadcast 
+    # This is for make consistancy so at max only one pending broadcast
     # message for any number and ensuring that only latest broadcast will continue.
     decline_previous_broadcast(to_number)
     # Here From parameter is actually user number to whom we want to connect.
@@ -237,7 +237,7 @@ def redirect_to_broadcast(farmer_number,from_number):
     farmer_info = {'id':audience_obj.farmer_id,'phone':audience_obj.to_number}
     broadcast_obj = audience_obj.broadcast
     try:
-        # Change broadcast_obj status to decline (3). Now new BroadcastAudience entry will 
+        # Change broadcast_obj status to decline (3). Now new BroadcastAudience entry will
         # be treated as broadcast call for check status.
         audience_obj.status = 3
         audience_obj.save()
