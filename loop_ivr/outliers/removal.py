@@ -30,15 +30,14 @@ def remove_crop_outliers(ct_data=None):
         # combined_transactions_data = call_methods(combined_transactions_data)
 
         combined_transactions_data.fillna(0,inplace=True)
-
         # combined_transactions_data.to_csv("final_data_after_outliers_1.csv")
-        combined_transactions_data = combined_transactions_data.groupby(group_by_list).agg({'Av_Rate':['mean'], 'STD' : ['mean'], 'Price':['max','min']}).reset_index()
+        combined_transactions_data = combined_transactions_data.groupby(group_by_list).agg({'Av_Rate':['mean'], 'STD' : ['mean'], 'Price':['max','min'],'Total_Quantity':['sum']}).reset_index()
         combined_transactions_data.columns = ["".join(agg) for agg in combined_transactions_data.columns.ravel()]
         # combined_transactions_data.columns = combined_transactions_data.columns.droplevel(level=1)
 
         #Arranging dataframe according to crop, market and date
-        combined_transactions_data = combined_transactions_data.groupby(final_group_by).apply(lambda x: x.sort_values(['Crop','Market_Real','Date'],ascending=[True,True,False])).reset_index(drop=True)
-
+        # combined_transactions_data = combined_transactions_data.groupby(final_group_by).apply(lambda x: x.sort_values(['Crop','Market_Real','Date'],ascending=[True,True,False])).reset_index(drop=True)
+        combined_transactions_data = combined_transactions_data.sort_values(['Crop','Market_Real','Date','Total_Quantitysum'],ascending=[True,True,False,False])
         return combined_transactions_data
     except Exception as e:
         return None

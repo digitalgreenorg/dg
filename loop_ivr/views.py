@@ -20,7 +20,7 @@ from loop_ivr.helper_function import get_valid_list, send_info, get_price_info, 
     send_wrong_query_sms_content
 from loop_ivr.utils.config import LOG_FILE, agg_sms_initial_line, call_failed_sms, remaining_crop_line, \
     no_code_entered, wrong_code_entered, crop_and_code_hi, TOP_SELLING_CROP_WINDOW, N_TOP_SELLING_CROP, code_hi, \
-    AGGREGATOR_SMS_NO, ALL_FLAG_TRUE, ALL_FLAG_FALSE, PATTERN_REGEX, CONTAINS_ZERO, EXOTEL_MI_LINE
+    AGGREGATOR_SMS_NO, ALL_FLAG_TRUE, ALL_FLAG_FALSE, PATTERN_REGEX, CONTAINS_ZERO, EXOTEL_MI_LINE, LIMIT_EXCEEDED
 
 from loop.helpline_view import fetch_info_of_incoming_call, write_log
 import logging
@@ -40,6 +40,11 @@ def market_info_incoming(request):
         if PriceInfoIncoming.objects.filter(incoming_time__gte=today_date, from_number=to_number).count() < 10:
             time.sleep(2)
             make_market_info_call(to_number, dg_number, incoming_time, call_id, call_source)
+        else:
+            crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+            message = [LIMIT_EXCEEDED, '\n\n', crop_code_list, '\n', remaining_crop_line]
+            message = ''.join(message)
+            send_info_using_textlocal(to_number, message)
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=403)
