@@ -6,11 +6,20 @@ A) Each model has the following parameters:
   2. geography - specifies the geography in which the model is to be implemented
                - it is defined as key-value pairs with key being a country and value being a list of states
   3. aggregator_data_set - specifies the parameters required for "payment summary" table
+                            (i) data_table_properties - specifies all parameters of data table columns provided to DataTable constructor
+                            (ii) col_const - constant used for the particular column in code for calculations
+                            (iii) calc_function - it is defined as key-value pairs with key being the calculation function to be used to get values for the column and value being a list of dependencies (also calc functions) of the given func
+                            (iv) default_val - specifies the default data value for the column
+                            (v) total - a boolean specifying if the total value is to be displayed for the column
+                         - it is a list of objects with each object specifying a column in the table
+                         - all the visible columns must be listed before the invisible columns
+
   4. gaddidar_data_set - specifies the parameters required for "commision agent details" table
   5. transporter_data_set - specifies the parameters required for "transporter details" table
   6. net_quantity_const - specifies which quantity constant is to be used for calculation of aggregator incentive
                         - eg. QUANTITY, QUANTITY_POST_DEDUCTION
   7. header_dict - specifies excel parameters for downloaded payment sheet
+  8. the first model is the default model; add new models at the end of list
 */
 
 var models = [
