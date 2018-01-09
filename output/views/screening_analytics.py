@@ -28,7 +28,13 @@ def screening_module(request):
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
 
-    return render(request, 'screening_module.html',dict(search_box_params = search_box_params,
+    
+    if  "/coco/jslps/analytics/" in request.get_full_path():
+        template = 'jslps_screening_module.html'
+    else:
+        template = 'screening_module.html'
+
+    return render(request, template, dict(search_box_params = search_box_params,
                                                           tot_scr=tot_val['tot_scr'],
                                                           tot_att=tot_val['dist_att'],
                                                           avg_scr=tot_val['avg_sc_per_day'],

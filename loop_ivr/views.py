@@ -42,7 +42,8 @@ def market_info_incoming(request):
             make_market_info_call(to_number, dg_number, incoming_time, call_id, call_source)
         else:
             crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
-            message = [LIMIT_EXCEEDED, crop_code_list, remaining_crop_line]
+            message = [LIMIT_EXCEEDED, '\n\n', crop_code_list, '\n', remaining_crop_line]
+            message = ''.join(message)
             send_info_using_textlocal(to_number, message)
         return HttpResponse(status=200)
     else:
