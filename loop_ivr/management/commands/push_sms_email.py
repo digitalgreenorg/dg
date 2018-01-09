@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
         # to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
         #             'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
-        #             'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'vikas@digitalgreen.org',
+        #             'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'sujit@digitalgreen.org',
         #             'melbin@digitalgreen.org', 'erica@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
         
         body_content = ['''Dear Team <br/><br/>''',
@@ -101,8 +101,8 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
-        # today_date = datetime.now().date()
-        today_date = datetime(2017, 11, 1).date()
+        today_date = datetime.now().date()
+        # today_date = datetime(2017, 11, 1).date()
         yesterday_date = today_date-timedelta(days=1)
         one_day_before_yesterday_date = yesterday_date - timedelta(days=1)
         fifteen_day_back_date = today_date-timedelta(days=16)
