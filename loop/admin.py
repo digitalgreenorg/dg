@@ -61,7 +61,7 @@ class LoopUserAdmin(admin.ModelAdmin):
                      'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country', 'village__block__district__state',
                    'village__block__district', 'role', 'partner']
-    list_editable = ['days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share', 'partner']
+    list_editable = ['days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share', 'partner', 'role']
 
 class AdminAssignedDistricts(admin.StackedInline):
     model = AdminAssignedDistrict
