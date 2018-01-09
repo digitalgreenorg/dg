@@ -15,6 +15,7 @@ from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from tastypie.models import ApiKey
+import ast
 
 
 class UserDoesNotExist(Exception):
@@ -284,16 +285,17 @@ def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
         print "SMS sending failed"
     return response_text
 
-
+@csrf_exempt
 def sms_receipt_from_txtlcl(request):
     print "I am here"
     if request.method == 'POST':
         print "INSIDE RESPONSE PROCESS FUNCTION"
         SmsLog = get_model('loop', 'SmsLog')
         transactions_from_smslog = SmsLog.objects.get(id=request.POST['customID'])
-        print transactions_from_smslog.model_ids
-        transactions_list = list(transactions_from_smslog)
-        print transactions_list
+        trans = ast.literal_eval(transactions_from_smslog.model_ids)
+        CombinedTransaction = get_model('loop', 'CombinedTransaction')
+        transactions = CombinedTransaction.objects.filter(id__in=trans)
+        transactions.update(payment_sms=SMS_STATE[request.POST['status']][0])
         print request.POST['status']
 
 
