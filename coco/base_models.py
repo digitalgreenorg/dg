@@ -7,6 +7,12 @@ TYPE_OF_ROLE = (
 	(0, 'Animator'),
 )
 
+ACTIVITY_CHOICES = (
+    ('MKSP', 'MKSP'),
+    ('LIVELIHOOD', 'LIVELIHOOD'),
+    ('GOTARY', 'GOTARY'),
+)
+
 DAY_CHOICES = (
                 ('Monday', 'Monday'),
                 ('Tuesday', 'Tuesday'),

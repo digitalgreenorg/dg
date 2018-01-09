@@ -11,7 +11,7 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationDataNew?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/person.xml", 'w')
 		xml_file.write(contents)
@@ -24,7 +24,7 @@ class Command(BaseCommand):
 		tree = ET.parse('jslps_data_integration_files/person.xml')
 		root = tree.getroot()
 
-		for c in root.findall('SRIRegistrationData'):
+		for c in root.findall('SRIRegistrationDataNew'):
 			pc = c.find('MemID').text
 			pn = unicode(c.find('MemberName').text)
 			if c.find('FatherName') is not None:
@@ -88,9 +88,9 @@ class Command(BaseCommand):
 													 gender=gender,
 													 village = village.Village,
 													 )
+					person.group=group.group
 					person.age = age
 					person.phone_no = phone
-					person.group=group.group
 					person.user_created_id = user_obj.id
 					person.save()
 					jslps.new_count += 1
@@ -104,7 +104,7 @@ class Command(BaseCommand):
 
 			if person != None:
 				jslps_person_list = JSLPS_Person.objects.filter(person_code=pc)
-				if jslps_person_list.count() == 0:
+				if len(jslps_person_list) == 0:
 					if group is not None:
 						jslps_person, created = \
 							JSLPS_Person.objects.get_or_create(person_code=pc,
@@ -127,10 +127,10 @@ class Command(BaseCommand):
 					jslps_person.save()
 			else:
 				person_list = Person.objects.filter(person_name = pn,father_name = pfn,village = village.Village)
-				if person_list.count() != 0:
+				if len(person_list) != 0:
 					person = person_list[0]
 					jslps_person_list = JSLPS_Person.objects.filter(person_code=pc,person=person)
-					if jslps_person_list.count() == 0:
+					if len(jslps_person_list) == 0:
 						if group is not None:
 							jslps_person, created = \
 								JSLPS_Person.objects.get_or_create(person_code=pc,
