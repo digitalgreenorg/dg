@@ -814,7 +814,7 @@ class BroadcastAudience(LoopModel):
 
 class SmsLog(LoopModel):
     id = models.AutoField(primary_key=True)
-    sms_body = models.CharField(max_length=300, blank=True, null=True)
+    sms_body = models.CharField(max_length=1000,null=True,blank=True)
     text_local_id = models.CharField(max_length=20, blank=True, null=True)
     contact_no = models.CharField(max_length=13, blank=True, null=True)
     person_type = models.IntegerField(choices=PERSON_TYPE, default=0)

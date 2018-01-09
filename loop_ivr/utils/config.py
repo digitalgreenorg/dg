@@ -44,7 +44,7 @@ MARKET_INFO_APP = '137265'
 SMS_SENDER_NAME = 'LOOPDG'
 TEXT_LOCAL_SINGLE_SMS_API = 'https://api.textlocal.in/send/'
 
-RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/rcpt_response')
+RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/rcpt_response/')
 
 TOP_SELLING_CROP_WINDOW = 30
 N_TOP_SELLING_CROP = 5

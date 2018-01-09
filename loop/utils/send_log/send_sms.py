@@ -61,6 +61,7 @@ def send_sms(request):
 
 def transactions_sms(user, transactions, language, transportations, helpline_num):
     try:
+        
         single_farmer_date_message = {}
         transactions_list = []
         for transaction in transactions:
@@ -145,9 +146,12 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             sms_id = None
 
             transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
-            transaction_to_update.update(payment_sms=SMS_STATE['S'][0])
+            #transaction_to_update.update(payment_sms=SMS_STATE['S'][0])
+            for trans in transaction_to_update:
+                trans.payment_sms=SMS_STATE['S'][0]
+                trans.save()
             SmsLog = get_model('loop', 'SmsLog')
-            smslog_obj = SmsLog(sms_body=message, contact_no=farmer_no, person_type=0, model_ids = str(single_farmer_date_message[key]['transaction_id']))
+            smslog_obj = SmsLog(sms_body=message ,contact_no=farmer_no, person_type=0, model_ids = str(single_farmer_date_message[key]['transaction_id']))
             smslog_obj.save()
 
             print "-----------------"
@@ -157,12 +161,16 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             sms_response = send_sms_using_textlocal(farmer_no, message, smslog_obj.id)
 
             print sms_response
-            import pdb;
-            pdb.set_trace()
+            
             if sms_response['status'] == "success":
                 status_code = 1
                 sms_id = sms_response['messages'][0]['id']
-                transaction_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
+                for trans in transaction_to_update:
+                    trans.payment_sms=SMS_STATE['F'][0]
+                    trans.payment_sms_id=sms_response['messages'][0]['id']
+                    trans.save()
+                #transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
+                #transaction_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
 
             smslog_obj.text_local_id = sms_id
             smslog_obj.status = status_code
@@ -265,6 +273,7 @@ def make_transportation_sms(key, farmer_name, aggregator, value):
 
 def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
+    import pdb;pdb.set_trace()
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
