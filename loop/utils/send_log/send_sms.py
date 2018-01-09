@@ -274,7 +274,7 @@ def make_transportation_sms(key, farmer_name, aggregator, value):
 
 def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    import pdb;pdb.set_trace()
+    #import pdb;pdb.set_trace()
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
@@ -289,6 +289,7 @@ def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
 def sms_receipt_from_txtlcl(request):
     print "I am here"
     if request.method == 'POST':
+	import pdb;pdb.set_trace()
         print "INSIDE RESPONSE PROCESS FUNCTION"
         SmsLog = get_model('loop', 'SmsLog')
         transactions_from_smslog = SmsLog.objects.get(id=request.POST['customID'])
@@ -297,5 +298,5 @@ def sms_receipt_from_txtlcl(request):
         transactions = CombinedTransaction.objects.filter(id__in=trans)
         transactions.update(payment_sms=SMS_STATE[request.POST['status']][0])
         print request.POST['status']
-
+    return HttpResponse("0")
 
