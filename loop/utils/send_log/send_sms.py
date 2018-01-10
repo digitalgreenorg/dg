@@ -38,6 +38,7 @@ def send_sms(request):
             DayTransportation = get_model('loop', 'DayTransportation')
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
+#                if requesting_loop_user.village.block.district.state
                 preferred_language = requesting_loop_user.preferred_language.notation
                 transactions_to_consider = CombinedTransaction.objects.filter(user_created_id=user.id, payment_sms=0,
                                                                               status=1)
@@ -48,9 +49,9 @@ def send_sms(request):
 
                 helpline_no = requesting_loop_user.village.block.district.state.helpline_number
 
-                # Thread(target=transactions_sms,
-                #        args=[requesting_loop_user, transactions_to_consider, preferred_language,
-                #              transportations_to_consider_for_ct, helpline_no]).start()
+                Thread(target=transactions_sms,
+                       args=[requesting_loop_user, transactions_to_consider, preferred_language,
+                             transportations_to_consider_for_ct, helpline_no]).start()
 
                 Thread(target=transportations_sms,
                        args=[requesting_loop_user, transportations_to_consider, preferred_language]).start()
@@ -228,7 +229,6 @@ def transportations_sms(user, transportations, language):
                     elements[1].encode('utf-8'), sms_text['ka kiraya'][language].encode('utf-8'),
                     sms_text['currency'][language].encode('utf-8'),
                     str(elements[2]))
-            import pdb;pdb.set_trace()
             transportations_to_update = transportations.filter(id__in=single_transporter_details[entity]['dt_id'])
             for trans in transportations_to_update:
                 trans.payment_sms=SMS_STATE['S'][0]
@@ -281,7 +281,6 @@ def make_transportation_sms(key, farmer_name, aggregator, value):
 
 def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    #import pdb;pdb.set_trace()
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
@@ -296,7 +295,6 @@ def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
 def sms_receipt_from_txtlcl(request):
     print "I am here"
     if request.method == 'POST':
-	import pdb;pdb.set_trace()
         print "INSIDE RESPONSE PROCESS FUNCTION"
         SmsLog = get_model('loop', 'SmsLog')
         transactions_from_smslog = SmsLog.objects.get(id=request.POST['customID'])
