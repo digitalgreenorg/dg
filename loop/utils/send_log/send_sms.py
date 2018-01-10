@@ -21,6 +21,9 @@ import ast
 class UserDoesNotExist(Exception):
     pass
 
+@csrf_exempt
+def deprecated_send_sms(request):
+    return HttpResponse("0")
 
 @csrf_exempt
 def send_sms(request):
