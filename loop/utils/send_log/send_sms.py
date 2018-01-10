@@ -38,26 +38,27 @@ def send_sms(request):
             DayTransportation = get_model('loop', 'DayTransportation')
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
-#                if requesting_loop_user.village.block.district.state
-                preferred_language = requesting_loop_user.preferred_language.notation
-                transactions_to_consider = CombinedTransaction.objects.filter(user_created_id=user.id, payment_sms=0,
-                                                                              status=1)
+                if requesting_loop_user.village.block.district.state.country.country_name == 'India':
+                    preferred_language = requesting_loop_user.preferred_language.notation
+                    transactions_to_consider = CombinedTransaction.objects.filter(user_created_id=user.id, payment_sms=0,
+                                                                                  status=1)
 
-                transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0)
+                    transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0)
 
-                transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id)
+                    transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id)
 
-                helpline_no = requesting_loop_user.village.block.district.state.helpline_number
+                    helpline_no = requesting_loop_user.village.block.district.state.helpline_number
 
-                Thread(target=transactions_sms,
-                       args=[requesting_loop_user, transactions_to_consider, preferred_language,
-                             transportations_to_consider_for_ct, helpline_no]).start()
+                    Thread(target=transactions_sms,
+                           args=[requesting_loop_user, transactions_to_consider, preferred_language,
+                                 transportations_to_consider_for_ct, helpline_no]).start()
 
-                Thread(target=transportations_sms,
-                       args=[requesting_loop_user, transportations_to_consider, preferred_language]).start()
-
+                    Thread(target=transportations_sms,
+                           args=[requesting_loop_user, transportations_to_consider, preferred_language]).start()
+                else:
+                    return HttpResponse("0")
             except Exception as e:
-                print e
+                pass
     return HttpResponse("0")
 
 
@@ -148,7 +149,6 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             sms_id = None
 
             transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
-            #transaction_to_update.update(payment_sms=SMS_STATE['S'][0])
             for trans in transaction_to_update:
                 trans.payment_sms=SMS_STATE['S'][0]
                 trans.save()
@@ -156,14 +156,7 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             smslog_obj = SmsLog(sms_body=message ,contact_no=farmer_no, person_type=0, model_ids = str(single_farmer_date_message[key]['transaction_id']))
             smslog_obj.save()
 
-            print "-----------------"
-            print farmer_no
-            print message
-            print "*****************"
             sms_response = send_sms_using_textlocal(farmer_no, message, smslog_obj.id)
-
-            print sms_response
-            
             if sms_response['status'] == "success":
                 status_code = 1
                 sms_id = sms_response['messages'][0]['id']
@@ -171,8 +164,6 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                     trans.payment_sms=SMS_STATE['F'][0]
                     trans.payment_sms_id=sms_response['messages'][0]['id']
                     trans.save()
-                #transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
-                #transaction_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
 
             smslog_obj.text_local_id = sms_id
             smslog_obj.status = status_code
@@ -220,7 +211,6 @@ def transportations_sms(user, transportations, language):
                 'dt_id': [dt.id]}
 
         for entity in single_transporter_details:
-            # print entity
             transporter_num = entity[1]
             message = ('%s (%s)') % (sms_text['loop_receipt'][language].encode('utf-8'), entity[2])
             for elements in single_transporter_details[entity]['dt']:
@@ -242,16 +232,16 @@ def transportations_sms(user, transportations, language):
             sms_id = None
 
             if sms_response['status'] == "success":
+                status_code = 1
+                sms_id = sms_response['messages'][0]['id']
                 for trans in transportations_to_update:
                     trans.payment_sms=SMS_STATE['F'][0]
                     trans.payment_sms_id=sms_response['messages'][0]['id']
                     trans.save()
-                #transportations_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
-                status_code = 1
-                sms_id = sms_response['messages'][0]['id']
-                smslog_obj.text_local_id=sms_id
-                smslog_obj.status=status_code
-                smslog_obj.save()
+
+            smslog_obj.text_local_id=sms_id
+            smslog_obj.status=status_code
+            smslog_obj.save()
 
     except Exception as e:
         print e
@@ -293,15 +283,19 @@ def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
 
 @csrf_exempt
 def sms_receipt_from_txtlcl(request):
-    print "I am here"
     if request.method == 'POST':
-        print "INSIDE RESPONSE PROCESS FUNCTION"
         SmsLog = get_model('loop', 'SmsLog')
-        transactions_from_smslog = SmsLog.objects.get(id=request.POST['customID'])
-        trans = ast.literal_eval(transactions_from_smslog.model_ids)
-        CombinedTransaction = get_model('loop', 'CombinedTransaction')
-        transactions = CombinedTransaction.objects.filter(id__in=trans)
-        transactions.update(payment_sms=SMS_STATE[request.POST['status']][0])
-        print request.POST['status']
+        entries_from_smslog = SmsLog.objects.get(id=request.POST['customID'])
+        if entries_from_smslog.person_type == 0:
+            entries = ast.literal_eval(entries_from_smslog.model_ids)
+            CombinedTransaction = get_model('loop', 'CombinedTransaction')
+            transactions = CombinedTransaction.objects.filter(id__in=entries)
+            transactions.update(payment_sms=SMS_STATE[request.POST['status']][0])
+        elif entries_from_smslog.person_type == 1:
+            entries = ast.literal_eval(entries_from_smslog.model_ids)
+            DayTransportation = get_model('loop', 'DayTransportation')
+            day_transportations = DayTransportation.objects.filter(id__in=entries)
+            day_transportations.update(payment_sms=SMS_STATE[request.POST['status']][0])
+
     return HttpResponse("0")
 
