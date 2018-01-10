@@ -228,7 +228,7 @@ def transportations_sms(user, transportations, language):
                     elements[1].encode('utf-8'), sms_text['ka kiraya'][language].encode('utf-8'),
                     sms_text['currency'][language].encode('utf-8'),
                     str(elements[2]))
-            import pdb;pdb.set_trace()
+            #import pdb;pdb.set_trace()
             transportations_to_update = transportations.filter(id__in=single_transporter_details[entity]['dt_id'])
             for trans in transportations_to_update:
                 trans.payment_sms=SMS_STATE['S'][0]
