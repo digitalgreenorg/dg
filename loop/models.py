@@ -205,6 +205,7 @@ class LoopUser(LoopModel):
     show_farmer_share = models.BooleanField(default=True)
     percent_farmer_share = models.FloatField(default=0.0)
     partner = models.ForeignKey(Partner, default=None, null=True, blank=True)
+    version = models.CharField(max_length=10, blank=True, null=True, default="0")
 
     def __unicode__(self):
         return """%s (%s)""" % (self.name_en, self.phone_number)
