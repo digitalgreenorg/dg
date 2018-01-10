@@ -296,7 +296,7 @@ def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
 def sms_receipt_from_txtlcl(request):
     print "I am here"
     if request.method == 'POST':
-	import pdb;pdb.set_trace()
+	#import pdb;pdb.set_trace()
         print "INSIDE RESPONSE PROCESS FUNCTION"
         SmsLog = get_model('loop', 'SmsLog')
         transactions_from_smslog = SmsLog.objects.get(id=request.POST['customID'])
