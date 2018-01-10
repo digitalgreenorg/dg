@@ -68,6 +68,11 @@ def login(request):
         if 'registration' in request.POST and request.POST['registration']:
             reg_token = request.POST['registration']
             LoopUser.objects.filter(registration=reg_token).update(registration=None)
+
+        if 'version' in request.POST and request.POST['registration']:
+            reg_token = request.POST['registration']
+            LoopUser.objects.filter(registration=reg_token).update(registration=None)
+
         loop_user.update(registration=reg_token)
 
         if user is not None and user.is_active and loop_user.count() > 0:
