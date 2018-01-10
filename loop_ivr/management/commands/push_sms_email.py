@@ -151,7 +151,8 @@ class Command(BaseCommand):
         email_subject = 'Loop Mandi Master - Daily Metrics: %s'%(yesterday_date.strftime("%Y-%m-%d"),)
 
         # Active Users excluding DG staff
-        active_caller_object = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,incoming_time__lt=today_date,from_number__in=last_fifteen_day_caller_no).exclude(from_number__in=team_contact)
+        # from_number__in=last_fifteen_day_caller_no
+        active_caller_object = PriceInfoIncoming.objects.filter(incoming_time__gte=yesterday_date,incoming_time__lt=today_date).exclude(from_number__in=team_contact)
         active_caller_count_object = active_caller_object.values_list('from_number', flat=True).distinct()
         # active_caller_count = active_caller_object.count()
 
