@@ -1,36 +1,34 @@
 import urllib2
 import unicodecsv as csv
-from datetime import * 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from geographies.models import *
 from people.models import *
 from programs.models import *
 from videos.models import *
+from activities.models import *
 import jslps_data_integration as jslps
 
 class Command(BaseCommand):
 	def handle(self, *args, **options):
-		#saving videos
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		
+		partner = Partner.objects.get(id = 24)
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGoatryVideoData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/video.xml", 'w')
+		xml_file = open("jslps_data_integration_files/video_goatary.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
-
-		partner = Partner.objects.get(id=24)
-		csv_file = open('jslps_data_integration_files/videos_error.csv', 'wb')
-		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/video.xml')
-		root = tree.getroot()
 		user_obj = User.objects.get(username="jslps_bot")
+		csv_file = open('jslps_data_integration_files/video_goatary_error.csv', 'wb')
+		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
+		tree = ET.parse('jslps_data_integration_files/video_goatary.xml')
+		root = tree.getroot()
 		data_list = []
-		for c in root.findall('VedioMasterData'):
+		for c in root.findall('GoatryVideoData'):
 			vdc = c.find('VideoID').text
-			data_list.append(vdc)
 			vn = c.find('VideoTitle').text
 			vt = int(c.find('VideoType').text)
+			data_list.append(vn)
 			if c.find('Category') is not None: 
 				cg = int(c.find('Category').text)
 			else:
@@ -53,7 +51,9 @@ class Command(BaseCommand):
 				yid = c.find('YouTubeID').text
 			else:
 				yid = ''
+
 			if c.find('ProductionDate') is not None:
+				from datetime import datetime 
 				pd = datetime.strptime(c.find('ProductionDate').text, '%d/%m/%Y')
 			else:
 				pd = None
@@ -74,19 +74,19 @@ class Command(BaseCommand):
 			pro_team = c.find('ProductionTeam').text.split(',')
 
 			try:
-				village = JSLPS_Village.objects.get(village_code=vc)
+				village = JSLPS_Village.objects.get(village_code = vc)
 			except Exception as e:
 				wtr.writerow(['Can not save video without village',vdc,'title', vn, e])
 				continue
 
 			try:
-				language = Language.objects.get(id=ln)
+				language = Language.objects.get(id = ln)
 			except Exception as e:
 				wtr.writerow(['Can not save video without language',vdc,'title', vn, e])
 				continue
 
 			try:
-				facililator = JSLPS_Animator.objects.get(animator_code=pro_team[0])
+				facililator = JSLPS_Animator.objects.get(animator_code = pro_team[0])
 			except Exception as e:
 				facililator = JSLPS_Animator.objects.get(animator_code = str(4))
 			try:
@@ -118,17 +118,17 @@ class Command(BaseCommand):
 			try:
 				vid, created = \
 					Video.objects.get_or_create(title = vn,
-											   video_type = vt,
-											   language = language,
-											   benefit = benefit,
-											   production_date = pd,
-											   village_id = village.Village.id,
-											   partner = partner,
-											   approval_date=ad,
-											   youtubeid=yid,
-											   category=category,
-											   subcategory=subcategory,
-											   )
+												video_type = vt,
+												language = language,
+												benefit = benefit,
+												production_date = pd,
+												village_id = village.Village.id,
+												partner = partner,
+												approval_date=ad,
+												youtubeid=yid,
+												category=category,
+												subcategory=subcategory
+												)
 				vid.videopractice.add(videopractice)
 				jslps.new_count += 1
 			except Exception as e:
@@ -144,16 +144,16 @@ class Command(BaseCommand):
 				vid.save()
 				vid.production_team.add(camera_operator.animator)
 				vid.save()
-				jslps_video_list = JSLPS_Video.objects.filter(vc=vdc, title=vn)
-				if jslps_video_list.count() == 0:
+				jslps_video_list = JSLPS_Video.objects.filter(title=vn, vc=vdc)
+				if len(jslps_video_list) == 0:
 					jslps_video, created = \
-						JSLPS_Video.objects.get_or_create(title=vn,
-														  vc=vdc,
-														  video=vid,
-														  user_created_id=user_obj.id,
-														  activity="LIVELIHOOD")
+							JSLPS_Video.objects.get_or_create(title=vn,
+															  vc=vdc,
+															  video=vid,
+															  user_created_id=user_obj.id,
+															  activity="GOTARY")
 				else:
-					jslps_video_list.update(activity="LIVELIHOOD")
+					jslps_video_list.update(activity="GOTARY")
 					jslps_video = jslps_video_list[0]
 					jslps_video.video = vid
 					jslps_video.save()
@@ -165,16 +165,16 @@ class Command(BaseCommand):
 					vid.save()
 					vid.production_team.add(camera_operator.animator)
 					vid.save()
-					jslps_video_list = JSLPS_Video.objects.filter(vc=vdc, title=vn, video=vid)
+					jslps_video_list = JSLPS_Video.objects.filter(title=vn, vc=vn, video=vid)
 					if len(jslps_video_list) == 0:
 						jslps_video, created = \
-						JSLPS_Video.objects.get_or_create(title=vn,
-														  vc=vdc,
-														  video=vid,
-														  user_created_id=user_obj.id,
-														  activity="LIVELIHOOD")
+							JSLPS_Video.get_or_create(vc=vdc,
+													  title=vn,
+													  video=vid,
+													  user_created_id=user_obj.id,
+													  activity="GOTARY")
 					else:
-						jslps_video_list.update(activity="LIVELIHOOD")
+						jslps_video_list.update(activity="GOTARY")
 						jslps_video = jslps_video_list[0]
 						if jslps_video.video == None:
 							jslps_video.video = vid
@@ -182,25 +182,25 @@ class Command(BaseCommand):
 				else:
 					wtr.writerow(['Video not saved and duplicate also not exist', vdc,'title', vn, e])		
 
-		JSLPS_Video.objects.filter(vc__in=data_list).update(activity="LIVELIHOOD")
+		JSLPS_Video.objects.filter(vc__in=data_list).update(activity="GOTARY")
 
 		csv_file.close()
 
 		#saving non-negotiables
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGotaryNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/nonnego.xml", 'w')
+		xml_file = open("jslps_data_integration_files/goatary_nonnego.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
-		csv_file = open('jslps_data_integration_files/nonnego_error.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/goatary_nonnego_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/nonnego.xml')
+		tree = ET.parse('jslps_data_integration_files/goatary_nonnego.xml')
 		root = tree.getroot()
 
-		for c in root.findall('VedioNon_NegotiableMasterData'):
+		for c in root.findall('GotaryNon_NegotiableMasterData'):
 			nn_c = c.find('Non_NegotiablesID').text
-			vdc = int(c.find('VideoId').text)
+			vdc = c.find('VideoID').text
 			nn_n = c.find('Non_NegotiablesName').text
 			vr = c.find('Verification').text
 			if vr == 'false':
@@ -208,7 +208,7 @@ class Command(BaseCommand):
 			else:
 				vr = True
 			try:
-				video = JSLPS_Video.objects.get(vc = vdc)
+				video = JSLPS_Video.objects.filter(activity="GOTARY").get(vc = vdc)
 			except Exception as e:
 				wtr.writerow(['Video Not Found',vdc, e])
 				continue
@@ -216,10 +216,10 @@ class Command(BaseCommand):
 									non_negotiable__iexact = nn_n)
 			if len(nonnego_already_list) == 0:
 				try:
-					nn, created = \
-						NonNegotiable.objects.get_or_create(video_id = video.video_id,
-														    non_negotiable = nn_n,
-														    physically_verifiable = vr)
+					nn = NonNegotiable(video_id = video.video_id,
+								   	   non_negotiable = nn_n,
+								   	   physically_verifiable = vr)
+					nn.save()
 					jslps.new_count += 1
 				except Exception as e:
 					wtr.writerow(['NonNegotiable not saved',nn_c, e])
@@ -228,7 +228,6 @@ class Command(BaseCommand):
 				nonnego_already = nonnego_already_list[0]
 				nonnego_already.physically_verifiable = vr
 				nonnego_already.save()
-		
-		csv_file.close()
 
+		csv_file.close()
 

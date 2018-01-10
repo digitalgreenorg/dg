@@ -174,6 +174,8 @@ def practice_options(sec, subsec, top, subtop, sub):
 def get_geog_id(request):
     if "id" in request.GET and 'geog' in request.GET:
         return request.GET['geog'].upper(),int(request.GET['id'])
+    if  "/coco/jslps/analytics/" in request.get_full_path():
+        return "STATE", 2
     else:
         return None, None
 
