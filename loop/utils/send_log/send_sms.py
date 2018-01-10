@@ -48,12 +48,12 @@ def send_sms(request):
 
                 helpline_no = requesting_loop_user.village.block.district.state.helpline_number
 
-                Thread(target=transactions_sms,
-                       args=[requesting_loop_user, transactions_to_consider, preferred_language,
-                             transportations_to_consider_for_ct, helpline_no]).start()
+                # Thread(target=transactions_sms,
+                #        args=[requesting_loop_user, transactions_to_consider, preferred_language,
+                #              transportations_to_consider_for_ct, helpline_no]).start()
 
-                # Thread(target=transportations_sms,
-                #        args=[requesting_loop_user, transportations_to_consider, preferred_language]).start()
+                Thread(target=transportations_sms,
+                       args=[requesting_loop_user, transportations_to_consider, preferred_language]).start()
 
             except Exception as e:
                 print e
@@ -228,7 +228,11 @@ def transportations_sms(user, transportations, language):
                     elements[1].encode('utf-8'), sms_text['ka kiraya'][language].encode('utf-8'),
                     sms_text['currency'][language].encode('utf-8'),
                     str(elements[2]))
-
+            import pdb;pdb.set_trace()
+            transportations_to_update = transportations.filter(id__in=single_transporter_details[entity]['dt_id'])
+            for trans in transportations_to_update:
+                trans.payment_sms=SMS_STATE['S'][0]
+                trans.save()
             SmsLog = get_model('loop', 'SmsLog')
             smslog_obj = SmsLog(sms_body=message, contact_no=transporter_num, person_type=1)
             smslog_obj.save()
@@ -236,14 +240,17 @@ def transportations_sms(user, transportations, language):
             sms_response = send_sms_using_textlocal(transporter_num, message, smslog_obj.id)
             status_code = 0
             sms_id = None
+
             if sms_response['status'] == "success":
-                transportations_to_update = transportations.filter(id__in=single_transporter_details[entity]['dt_id'])
-                transportations_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
+                for trans in transportations_to_update:
+                    trans.payment_sms=SMS_STATE['F'][0]
+                    trans.payment_sms_id=sms_response['messages'][0]['id']
+                    trans.save()
+                #transportations_to_update.update(payment_sms=SMS_STATE['F'][0], payment_sms_id=sms_response['messages'][0]['id'])
                 status_code = 1
                 sms_id = sms_response['messages'][0]['id']
-
-                smslog_obj['text_local_id']=sms_id
-                smslog_obj['status']=status_code
+                smslog_obj.text_local_id=sms_id
+                smslog_obj.status=status_code
                 smslog_obj.save()
 
     except Exception as e:
