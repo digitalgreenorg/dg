@@ -667,7 +667,7 @@ var models = [
       {
         data_table_properties: {
           title: "S No",
-          visible: true,
+          visible: true
         },
         col_const: "SNO",
         calc_function: {
