@@ -271,7 +271,7 @@ def jsonify(data):
 
     elif isinstance(data, list):
         for i, item in enumerate(data):
-            data[strr(i)] = jsonify(data[i])
+            data[str(i)] = jsonify(data[i])
         return data
 
     elif type(data).__module__ == 'numpy':
