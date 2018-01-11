@@ -227,7 +227,7 @@ def transportations_sms(user, transportations, language):
                 trans.payment_sms=SMS_STATE['S'][0]
                 trans.save()
             SmsLog = get_model('loop', 'SmsLog')
-            smslog_obj = SmsLog(sms_body=message, contact_no=transporter_num, person_type=1)
+            smslog_obj = SmsLog(sms_body=message, contact_no=transporter_num, person_type=1,model_ids = str(single_transporter_details[entity]['dt_id']))
             smslog_obj.save()
 
             sms_response = send_sms_using_textlocal(transporter_num, message, smslog_obj.id)
