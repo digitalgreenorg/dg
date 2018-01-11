@@ -538,6 +538,7 @@ function get_aggregators_for_districts() {
       } else {
         fill_drop_down($('#aggregator_payments'), aggregators_for_admin, 'user__id', 'name', 'Aggregator', 'id');
       }
+      $('.button-collapse1').sideNav('hide');
     });
 }
 
@@ -583,7 +584,7 @@ function get_districts_for_filter(state) {
 function fill_district_filter(data_json) {
   filter_remove_elements($('#districts'));
   $.each(data_json, function(index, data) {
-    create_filter($('#districts'), data.id, data.district_name_en, true);
+    create_filter($('#districts'), data.id, data.district_name_en);
   });
 }
 
@@ -591,11 +592,11 @@ function filter_remove_elements(tbody_obj) {
   tbody_obj.empty();
 }
 //To enter data for district filter dynamically
-function create_filter(tbody_obj, id, name, checked) {
+function create_filter(tbody_obj, id, name) {
   var row = $('<tr>');
   var td_name = $('<td>').html(name);
   row.append(td_name);
-  var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" value = "' + name + '" /><label for="' + name + id + '"></label>';
+  var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" value = "' + name + '" /><label for="' + name + id + '"></label>';
   var td_checkbox = $('<td>').html(checkbox_html);
   row.append(td_checkbox);
   tbody_obj.append(row);
