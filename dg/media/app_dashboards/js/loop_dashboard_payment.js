@@ -4,6 +4,7 @@ window.onload = initialize;
 var language, country_id = 1, state_id = -1;
 var selected_aggregator_state, selected_aggregator_country;
 //Arrays containing ids and corresponding names as were selected in the filters.
+var admin_assigned_aggregator_ids;
 var aggregator_ids, aggregator_names, aggregator_states, aggregators_countries, crop_ids, crop_names, mandi_ids, mandi_names, gaddidar_ids, gaddidar_names;
 var district_ids, district_names;
 //Json for filters.
@@ -516,17 +517,16 @@ function get_aggregators_for_districts() {
       district_names.push(district_div.getAttribute('value'));
     }
   });
-  console.log(district_ids);
   $.get("/loop/aggregator_data_for_districts/", {
       'district_ids[]': district_ids
     })
     .done(function(data) {
       var data_json = JSON.parse(data);
       aggregators_for_admin = data_json.aggregators;
-      aggregator_ids = []
-      aggregator_names = []
-      aggregator_states = []
-      aggregators_countries = []
+      aggregator_ids = [];
+      aggregator_names = [];
+      aggregator_states = [];
+      aggregators_countries = [];
       $.each(aggregators_for_admin,function(index,aggregator_data){
         aggregator_ids.push(aggregator_data.user__id);
         aggregator_names.push(aggregator_data.name_en);
@@ -548,11 +548,13 @@ function get_admin_assigned_loopuser_data() {
     .done(function(data) {
       var data_json = JSON.parse(data);
       aggregators_for_admin = data_json.aggregators;
-      aggregator_ids = []
-      aggregator_names = []
-      aggregator_states = []
-      aggregators_countries = []
+      admin_assigned_aggregator_ids = [];
+      aggregator_ids = [];
+      aggregator_names = [];
+      aggregator_states = [];
+      aggregators_countries = [];
       $.each(aggregators_for_admin,function(index,aggregator_data){
+        admin_assigned_aggregator_ids.push(aggregator_data.user__id);
         aggregator_ids.push(aggregator_data.user__id);
         aggregator_names.push(aggregator_data.name_en);
         aggregator_states.push(aggregator_data.village__block__district__state__state_name_en);
@@ -1060,7 +1062,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     return editedDataFarmer;
   }
   var paymentTableDom = '<"clear">rtip'
-  if (new Date() - new Date(payments_to_date) <= TIME_DIFF_THIRTY_DAYS){
+  if (new Date() - new Date(payments_to_date) <= TIME_DIFF_THIRTY_DAYS && admin_assigned_aggregator_ids.indexOf(parseInt(aggregator)) > -1){
     paymentTableDom = 'T<"clear">rtip'
   }
 
