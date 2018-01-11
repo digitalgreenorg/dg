@@ -20,12 +20,13 @@ class Command(BaseCommand):
                 correct_queries_via_call_count, total_queries_count_content, total_queries_via_sms_content, 
                 total_queries_via_call_content, queries_per_person_content, top_users_content, matrix_date):
         from_email = EMAIL_HOST_USER
-        to_email = ['sujit@digitalgreen.org', 'abhisheklodha@digitalgreen.org', 'divish@digitalgreen.org']
+        # to_email = ['sujit@digitalgreen.org', 'aditya@digitalgreen.org', 'abhisheklodha@digitalgreen.org',
+        #              'divish@digitalgreen.org']
         
-        # to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
-        #             'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
-        #             'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'sujit@digitalgreen.org',
-        #             'melbin@digitalgreen.org', 'erica@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
+        to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
+                    'vinay@digitalgreen.org', 'divish@digitalgreen.org', 'ashok@digitalgreen.org',
+                    'bipin@digitalgreen.org', 'lokesh@digitalgreen.org', 'sujit@digitalgreen.org',
+                    'melbin@digitalgreen.org', 'erica@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
         
         body_content = ['''Dear Team <br/><br/>Daily Metrics: <b>(%s)</b><br>'''%(matrix_date),
                             '''<html>
@@ -246,7 +247,7 @@ def active_user_info(active_caller_object, last_fifteen_day_caller_no, loop_farm
     active_caller_count = active_caller_object.distinct().count()
 
     # Daily Active Loop Farmers 
-    active_loop_farmer_count = active_caller_object.filter(from_number__in=loop_farmer_list).distinct().count()
+    active_loop_farmer_count = active_caller_object.filter(from_number__in=loop_farmer_list).exclude(from_number__in=loop_aggregators_list).distinct().count()
 
     # Daily Active Non-Loop Farmers
     active_non_loop_farmer_count = active_caller_object.exclude(from_number__in=loop_farmer_list).exclude(from_number__in=loop_aggregators_list).distinct().count()
