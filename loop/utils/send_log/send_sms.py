@@ -6,8 +6,8 @@ import json
 from dg.settings import TEXTLOCAL_API_KEY
 from loop.config import sms_text
 from loop.models import CombinedTransaction, DayTransportation, SMS_STATE
-from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, loop_receipt, kisan, jamakarta, \
-    RECEIPT_URL
+from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, RECEIPT_URL
+
 from django.db.models import Count, Sum, Avg, Q, F
 import requests
 from django.db.models import get_model
@@ -301,4 +301,3 @@ def sms_receipt_from_txtlcl(request):
             day_transportations.update(payment_sms=SMS_STATE[request.POST['status']][0])
 
     return HttpResponse("0")
-
