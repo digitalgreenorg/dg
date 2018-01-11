@@ -49,6 +49,8 @@ def make_market_info_call(caller_number, dg_number, incoming_time, incoming_call
                                         to_number=dg_number, incoming_time=incoming_time, info_status=0, call_source=call_source)
         log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
         write_log(LOG_FILE,module,log)
+        if response.status_code == 403:
+            send_info_using_textlocal(caller_number, DND_MESSAGE, price_info_incoming_obj)
     try:
         price_info_incoming_obj.save()
     except Exception as e:
