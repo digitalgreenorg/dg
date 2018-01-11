@@ -23,6 +23,7 @@ A) Each model has the following parameters:
 */
 
 var models = [
+  // default model
   {
     start_date: '',
     geography: {
@@ -658,6 +659,7 @@ var models = [
       ]
     }
   },
+  // model for India from start of program
   {
     start_date: '2015-11-27',
     geography: {
@@ -677,329 +679,438 @@ var models = [
         total: false
       },
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Quantity[Q] (in Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Quantity[Q] (in Kg)",
+          visible: true
+        },
         col_const: "QUANTITY",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Aggregator Payment[AP] (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Aggregator Payment[AP] (in Rs)",
+          visible: true
+        },
         col_const: "AGGREGATOR_INCENTIVE",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Transport Cost[TC] (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Transport Cost[TC] (in Rs)",
+          visible: true
+        },
         col_const: "TRANSPORT_COST",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Farmers' Contribution[FC] (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Farmers' Contribution[FC] (in Rs)",
+          visible: true
+        },
         col_const: "FARMER_SHARE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Commission Agent Contribution[CAC] (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Contribution[CAC] (in Rs)",
+          visible: true
+        },
         col_const: "GADDIDAR_SHARE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Total Payment(in Rs) (AP + TC - FC - CAC)",
-        visible: true,
+        data_table_properties: {
+          title: "Total Payment(in Rs) (AP + TC - FC - CAC)",
+          visible: true
+        },
         col_const: "NET_PAYMENT",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Aggregator Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Aggregator Comment",
+          visible: true
+        },
         col_const: "AGGREGATOR_COMMENT",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Farmer Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Farmer Comment",
+          visible: true
+        },
         col_const: "FARMER_COMMENT",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Aggregator Id",
-        visible: false,
+        data_table_properties: {
+          title: "Aggregator Id",
+          visible: false
+        },
         col_const: "AGG_ID",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
-        default_val: "",
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
+        default_val: " ",
         total: false
       }
     ],
     gaddidar_data_set: [
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
+        default_val: " ",
         total: false
       },
       {
-        title: "Commission Agent",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent",
+          visible: true
+        },
         col_const: "GADDIDAR_NAME",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Quantity[Q] (in Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Quantity[Q] (in Kg)",
+          visible: true
+        },
         col_const: "QUANTITY",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Commission Agent Discount[CAD] (in Rs/Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Discount[CAD] (in Rs/Kg)",
+          visible: true
+        },
         col_const: "GADDIDAR_DISCOUNT",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)",
+          visible: true
+        },
         col_const: "GADDIDAR_COMMISSION",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Comment",
+          visible: true
+        },
         col_const: "GADDIDAR_COMMENT",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Gaddidar Id",
-        visible: false,
+        data_table_properties: {
+          title: "Gaddidar Id",
+          visible: false
+        },
         col_const: "GADDIDAR_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Aggregator Id",
-        visible: false,
+        data_table_properties: {
+          title: "Aggregator Id",
+          visible: false
+        },
         col_const: "AGG_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Amount",
-        visible: false,
+        data_table_properties: {
+          title: "Amount",
+          visible: false
+        },
         col_const: "AMOUNT",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Discount Criteria",
-        visible: false,
+        data_table_properties: {
+          title: "Discount Criteria",
+          visible: false
+        },
         col_const: "GADDIDAR_DISCOUNT_CRITERIA",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       }
     ],
     transporter_data_set: [
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Transporter",
-        visible: true,
+        data_table_properties: {
+          title: "Transporter",
+          visible: true
+        },
         col_const: "TRANSPORTER_NAME",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Phone Number",
-        visible: true,
+        data_table_properties: {
+          title: "Phone Number",
+          visible: true
+        },
         col_const: "TRANSPORTER_PHONE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Vehicle Type",
-        visible: true,
+        data_table_properties: {
+          title: "Vehicle Type",
+          visible: true
+        },
         col_const: "VEHICLE_TYPE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Vehicle Number",
-        visible: true,
+        data_table_properties: {
+          title: "Vehicle Number",
+          visible: true
+        },
         col_const: "VEHICLE_NUMBER",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Transport Cost (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Transport Cost (in Rs)",
+          visible: true
+        },
         col_const: "TRANSPORT_COST",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Comment",
+          visible: true
+        },
         col_const: "TRANSPORTER_COMMENT",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Transportation Vehicle Id",
-        visible: false,
+        data_table_properties: {
+          title: "Transportation Vehicle Id",
+          visible: false
+        },
         col_const: "TRANSPORTATION_VEHICLE_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Timestamp",
-        visible: false,
+        data_table_properties: {
+          title: "Timestamp",
+          visible: false
+        },
         col_const: "TIMESTAMP",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "RowId",
-        visible: false,
+        data_table_properties: {
+          title: "RowId",
+          visible: false
+        },
         col_const: "ROW_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       }
@@ -1167,6 +1278,7 @@ var models = [
       ]
     }
   },
+  // model for Bihar from 16/11/2017
   {
     start_date: '2017-11-16',
     geography: {
@@ -1176,7 +1288,7 @@ var models = [
       {
         data_table_properties: {
           title: "S No",
-          visible: true,
+          visible: true
         },
         col_const: "SNO",
         calc_function: {
@@ -1186,338 +1298,450 @@ var models = [
         total: false
       },
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Quantity[Q'] (in Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Quantity[Q'] (in Kg)",
+          visible: true
+        },
         col_const: "QUANTITY",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Quantity Post Deduction[Q] (in Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Quantity Post Deduction[Q] (in Kg)",
+          visible: true
+        },
         col_const: "QUANTITY_POST_DEDUCTION",
-        calc_function: "quantity_post_deduction",
-        dependency: null,
+        calc_function: {
+          "quantity_post_deduction": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Aggregator Payment[AP] (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Aggregator Payment[AP] (in Rs)",
+          visible: true
+        },
         col_const: "AGGREGATOR_INCENTIVE",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Transport Cost[TC] (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Transport Cost[TC] (in Rs)",
+          visible: true
+        },
         col_const: "TRANSPORT_COST",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Farmers' Contribution[FC] (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Farmers' Contribution[FC] (in Rs)",
+          visible: true
+        },
         col_const: "FARMER_SHARE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Commission Agent Contribution[CAC] (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Contribution[CAC] (in Rs)",
+          visible: true
+        },
         col_const: "GADDIDAR_SHARE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Total Payment(in Rs) (AP + TC - FC - CAC)",
-        visible: true,
+        data_table_properties: {
+          title: "Total Payment(in Rs) (AP + TC - FC - CAC)",
+          visible: true
+        },
         col_const: "NET_PAYMENT",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Aggregator Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Aggregator Comment",
+          visible: true
+        },
         col_const: "AGGREGATOR_COMMENT",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Farmer Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Farmer Comment",
+          visible: true
+        },
         col_const: "FARMER_COMMENT",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Aggregator Id",
-        visible: false,
+        data_table_properties: {
+          title: "Aggregator Id",
+          visible: false
+        },
         col_const: "AGG_ID",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
-        default_val: "",
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
+        default_val: " ",
         total: false
       }
     ],
     gaddidar_data_set: [
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
+        default_val: " ",
         total: false
       },
       {
-        title: "Commission Agent",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent",
+          visible: true
+        },
         col_const: "GADDIDAR_NAME",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Quantity[Q] (in Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Quantity[Q] (in Kg)",
+          visible: true
+        },
         col_const: "QUANTITY",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Commission Agent Discount[CAD] (in Rs/Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Discount[CAD] (in Rs/Kg)",
+          visible: true
+        },
         col_const: "GADDIDAR_DISCOUNT",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)",
+          visible: true
+        },
         col_const: "GADDIDAR_COMMISSION",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Comment",
+          visible: true
+        },
         col_const: "GADDIDAR_COMMENT",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Gaddidar Id",
-        visible: false,
+        data_table_properties: {
+          title: "Gaddidar Id",
+          visible: false
+        },
         col_const: "GADDIDAR_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Aggregator Id",
-        visible: false,
+        data_table_properties: {
+          title: "Aggregator Id",
+          visible: false
+        },
         col_const: "AGG_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Amount",
-        visible: false,
+        data_table_properties: {
+          title: "Amount",
+          visible: false
+        },
         col_const: "AMOUNT",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Discount Criteria",
-        visible: false,
+        data_table_properties: {
+          title: "Discount Criteria",
+          visible: false
+        },
         col_const: "GADDIDAR_DISCOUNT_CRITERIA",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       }
     ],
     transporter_data_set: [
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Transporter",
-        visible: true,
+        data_table_properties: {
+          title: "Transporter",
+          visible: true
+        },
         col_const: "TRANSPORTER_NAME",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Phone Number",
-        visible: true,
+        data_table_properties: {
+          title: "Phone Number",
+          visible: true
+        },
         col_const: "TRANSPORTER_PHONE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Vehicle Type",
-        visible: true,
+        data_table_properties: {
+          title: "Vehicle Type",
+          visible: true
+        },
         col_const: "VEHICLE_TYPE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Vehicle Number",
-        visible: true,
+        data_table_properties: {
+          title: "Vehicle Number",
+          visible: true
+        },
         col_const: "VEHICLE_NUMBER",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Transport Cost (in Rs)",
-        visible: true,
+        data_table_properties: {
+          title: "Transport Cost (in Rs)",
+          visible: true
+        },
         col_const: "TRANSPORT_COST",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Comment",
+          visible: true
+        },
         col_const: "TRANSPORTER_COMMENT",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Transportation Vehicle Id",
-        visible: false,
+        data_table_properties: {
+          title: "Transportation Vehicle Id",
+          visible: false
+        },
         col_const: "TRANSPORTATION_VEHICLE_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Timestamp",
-        visible: false,
+        data_table_properties: {
+          title: "Timestamp",
+          visible: false
+        },
         col_const: "TIMESTAMP",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "RowId",
-        visible: false,
+        data_table_properties: {
+          title: "RowId",
+          visible: false
+        },
         col_const: "ROW_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       }
@@ -1691,6 +1915,7 @@ var models = [
       ]
     }
   },
+  // model for Bangladesh from start of program
   {
     start_date: '2015-11-27',
     geography: {
@@ -1698,347 +1923,462 @@ var models = [
     },
     aggregator_data_set: [
       {
-        title: "S No",
-        visible: true,
+        data_table_properties: {
+          title: "S No",
+          visible: true
+        },
         col_const: "SNO",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Quantity[Q] (in Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Quantity[Q] (in Kg)",
+          visible: true
+        },
         col_const: "QUANTITY",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Aggregator Payment[AP] (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Aggregator Payment[AP] (in ৳)",
+          visible: true
+        },
         col_const: "AGGREGATOR_INCENTIVE",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Farmer Contribution in Aggregator Payment (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Farmer Contribution in Aggregator Payment (in ৳)",
+          visible: true
+        },
         col_const: "FARMER_SHARE_IN_AGGREGATOR_INCENTIVE",
-        calc_function: "farmer_share_in_aggregator_incentive_half",
-        dependency: ["aggregator_data"],
+        calc_function: {
+          "farmer_share_in_aggregator_incentive_half": ["aggregator_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Transport Cost[TC] (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Transport Cost[TC] (in ৳)",
+          visible: true
+        },
         col_const: "TRANSPORT_COST",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Farmers' Contribution[FC] (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Farmers' Contribution[FC] (in ৳)",
+          visible: true
+        },
         col_const: "FARMER_SHARE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Commission Agent Contribution[CAC] (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Contribution[CAC] (in ৳)",
+          visible: true
+        },
         col_const: "GADDIDAR_SHARE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Total Payment(in ৳) (AP + TC - FC - CAC)",
-        visible: true,
+        data_table_properties: {
+          title: "Total Payment(in ৳) (AP + TC - FC - CAC)",
+          visible: true
+        },
         col_const: "NET_PAYMENT",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Aggregator Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Aggregator Comment",
+          visible: true
+        },
         col_const: "AGGREGATOR_COMMENT",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Farmer Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Farmer Comment",
+          visible: true
+        },
         col_const: "FARMER_COMMENT",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Aggregator Id",
-        visible: false,
+        data_table_properties: {
+          title: "Aggregator Id",
+          visible: false
+        },
         col_const: "AGG_ID",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
-        default_val: "",
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
+        default_val: " ",
         total: false
       }
     ],
     gaddidar_data_set: [
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
+        default_val: " ",
         total: false
       },
       {
-        title: "Commission Agent",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent",
+          visible: true
+        },
         col_const: "GADDIDAR_NAME",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Quantity[Q] (in Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Quantity[Q] (in Kg)",
+          visible: true
+        },
         col_const: "QUANTITY",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Commission Agent Discount[CAD] (in ৳/Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Discount[CAD] (in Rs/Kg)",
+          visible: true
+        },
         col_const: "GADDIDAR_DISCOUNT",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Commission Agent Contribution[CAC] (in ৳) (Q*CAD)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)",
+          visible: true
+        },
         col_const: "GADDIDAR_COMMISSION",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Comment",
+          visible: true
+        },
         col_const: "GADDIDAR_COMMENT",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Gaddidar Id",
-        visible: false,
+        data_table_properties: {
+          title: "Gaddidar Id",
+          visible: false
+        },
         col_const: "GADDIDAR_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Aggregator Id",
-        visible: false,
+        data_table_properties: {
+          title: "Aggregator Id",
+          visible: false
+        },
         col_const: "AGG_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Amount",
-        visible: false,
+        data_table_properties: {
+          title: "Amount",
+          visible: false
+        },
         col_const: "AMOUNT",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Discount Criteria",
-        visible: false,
+        data_table_properties: {
+          title: "Discount Criteria",
+          visible: false
+        },
         col_const: "GADDIDAR_DISCOUNT_CRITERIA",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       }
     ],
     transporter_data_set: [
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Transporter",
-        visible: true,
+        data_table_properties: {
+          title: "Transporter",
+          visible: true
+        },
         col_const: "TRANSPORTER_NAME",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Phone Number",
-        visible: true,
+        data_table_properties: {
+          title: "Phone Number",
+          visible: true
+        },
         col_const: "TRANSPORTER_PHONE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Vehicle Type",
-        visible: true,
+        data_table_properties: {
+          title: "Vehicle Type",
+          visible: true
+        },
         col_const: "VEHICLE_TYPE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Vehicle Number",
-        visible: true,
+        data_table_properties: {
+          title: "Vehicle Number",
+          visible: true
+        },
         col_const: "VEHICLE_NUMBER",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Transport Cost (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Transport Cost (in Rs)",
+          visible: true
+        },
         col_const: "TRANSPORT_COST",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Comment",
+          visible: true
+        },
         col_const: "TRANSPORTER_COMMENT",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Transportation Vehicle Id",
-        visible: false,
+        data_table_properties: {
+          title: "Transportation Vehicle Id",
+          visible: false
+        },
         col_const: "TRANSPORTATION_VEHICLE_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Timestamp",
-        visible: false,
+        data_table_properties: {
+          title: "Timestamp",
+          visible: false
+        },
         col_const: "TIMESTAMP",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "RowId",
-        visible: false,
+        data_table_properties: {
+          title: "RowId",
+          visible: false
+        },
         col_const: "ROW_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       }
@@ -2212,6 +2552,7 @@ var models = [
       ]
     }
   },
+  // model for Bangladesh from 16/12/2017
   {
     start_date: '2017-12-16',
     geography: {
@@ -2219,347 +2560,462 @@ var models = [
     },
     aggregator_data_set: [
       {
-        title: "S No",
-        visible: true,
+        data_table_properties: {
+          title: "S No",
+          visible: true
+        },
         col_const: "SNO",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Quantity[Q] (in Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Quantity[Q] (in Kg)",
+          visible: true
+        },
         col_const: "QUANTITY",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Aggregator Payment[AP] (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Aggregator Payment[AP] (in ৳)",
+          visible: true
+        },
         col_const: "AGGREGATOR_INCENTIVE",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Farmer Contribution in Aggregator Payment (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Farmer Contribution in Aggregator Payment (in ৳)",
+          visible: true
+        },
         col_const: "FARMER_SHARE_IN_AGGREGATOR_INCENTIVE",
-        calc_function: "farmer_share_in_aggregator_incentive_one_fourth",
-        dependency: ["aggregator_data"],
+        calc_function: {
+          "farmer_share_in_aggregator_incentive_one_fourth": ["aggregator_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Transport Cost[TC] (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Transport Cost[TC] (in ৳)",
+          visible: true
+        },
         col_const: "TRANSPORT_COST",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Farmers' Contribution[FC] (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Farmers' Contribution[FC] (in ৳)",
+          visible: true
+        },
         col_const: "FARMER_SHARE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Commission Agent Contribution[CAC] (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Contribution[CAC] (in ৳)",
+          visible: true
+        },
         col_const: "GADDIDAR_SHARE",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Total Payment(in ৳) (AP + TC - FC - CAC)",
-        visible: true,
+        data_table_properties: {
+          title: "Total Payment(in ৳) (AP + TC - FC - CAC)",
+          visible: true
+        },
         col_const: "NET_PAYMENT",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Aggregator Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Aggregator Comment",
+          visible: true
+        },
         col_const: "AGGREGATOR_COMMENT",
-        calc_function: "aggregator_incentive",
-        dependency: null,
+        calc_function: {
+          "aggregator_incentive": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Farmer Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Farmer Comment",
+          visible: true
+        },
         col_const: "FARMER_COMMENT",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Aggregator Id",
-        visible: false,
+        data_table_properties: {
+          title: "Aggregator Id",
+          visible: false
+        },
         col_const: "AGG_ID",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "aggregator_data",
-        dependency: ["gaddidar_data", "gaddidar_amount", "transporter_data"],
-        default_val: "",
+        calc_function: {
+          "aggregator_data": ["gaddidar_data", "gaddidar_amount", "transporter_data"]
+        },
+        default_val: " ",
         total: false
       }
     ],
     gaddidar_data_set: [
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
+        default_val: " ",
         total: false
       },
       {
-        title: "Commission Agent",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent",
+          visible: true
+        },
         col_const: "GADDIDAR_NAME",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Quantity[Q] (in Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Quantity[Q] (in Kg)",
+          visible: true
+        },
         col_const: "QUANTITY",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Commission Agent Discount[CAD] (in ৳/Kg)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Discount[CAD] (in Rs/Kg)",
+          visible: true
+        },
         col_const: "GADDIDAR_DISCOUNT",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Commission Agent Contribution[CAC] (in ৳) (Q*CAD)",
-        visible: true,
+        data_table_properties: {
+          title: "Commission Agent Contribution[CAC] (in Rs) (Q*CAD)",
+          visible: true
+        },
         col_const: "GADDIDAR_COMMISSION",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Comment",
+          visible: true
+        },
         col_const: "GADDIDAR_COMMENT",
-        calc_function: "gaddidar_commission",
-        dependency: null,
+        calc_function: {
+          "gaddidar_commission": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Gaddidar Id",
-        visible: false,
+        data_table_properties: {
+          title: "Gaddidar Id",
+          visible: false
+        },
         col_const: "GADDIDAR_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Aggregator Id",
-        visible: false,
+        data_table_properties: {
+          title: "Aggregator Id",
+          visible: false
+        },
         col_const: "AGG_ID",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Amount",
-        visible: false,
+        data_table_properties: {
+          title: "Amount",
+          visible: false
+        },
         col_const: "AMOUNT",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Discount Criteria",
-        visible: false,
+        data_table_properties: {
+          title: "Discount Criteria",
+          visible: false
+        },
         col_const: "GADDIDAR_DISCOUNT_CRITERIA",
-        calc_function: "gaddidar_data",
-        default_val: null,
+        calc_function: {
+          "gaddidar_data": null
+        },
         default_val: 0,
         total: false
       }
     ],
     transporter_data_set: [
       {
-        title: "Date",
-        visible: true,
+        data_table_properties: {
+          title: "Date",
+          visible: true
+        },
         col_const: "DATE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Market",
-        visible: true,
+        data_table_properties: {
+          title: "Market",
+          visible: true
+        },
         col_const: "MANDI_NAME",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Transporter",
-        visible: true,
+        data_table_properties: {
+          title: "Transporter",
+          visible: true
+        },
         col_const: "TRANSPORTER_NAME",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Phone Number",
-        visible: true,
+        data_table_properties: {
+          title: "Phone Number",
+          visible: true
+        },
         col_const: "TRANSPORTER_PHONE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Vehicle Type",
-        visible: true,
+        data_table_properties: {
+          title: "Vehicle Type",
+          visible: true
+        },
         col_const: "VEHICLE_TYPE",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Vehicle Number",
-        visible: true,
+        data_table_properties: {
+          title: "Vehicle Number",
+          visible: true
+        },
         col_const: "VEHICLE_NUMBER",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Transport Cost (in ৳)",
-        visible: true,
+        data_table_properties: {
+          title: "Transport Cost (in Rs)",
+          visible: true
+        },
         col_const: "TRANSPORT_COST",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: true
       },
       {
-        title: "Comment",
-        visible: true,
+        data_table_properties: {
+          title: "Comment",
+          visible: true
+        },
         col_const: "TRANSPORTER_COMMENT",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "Mandi Id",
-        visible: false,
+        data_table_properties: {
+          title: "Mandi Id",
+          visible: false
+        },
         col_const: "MANDI_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Transportation Vehicle Id",
-        visible: false,
+        data_table_properties: {
+          title: "Transportation Vehicle Id",
+          visible: false
+        },
         col_const: "TRANSPORTATION_VEHICLE_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: 0,
         total: false
       },
       {
-        title: "Timestamp",
-        visible: false,
+        data_table_properties: {
+          title: "Timestamp",
+          visible: false
+        },
         col_const: "TIMESTAMP",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       },
       {
-        title: "RowId",
-        visible: false,
+        data_table_properties: {
+          title: "RowId",
+          visible: false
+        },
         col_const: "ROW_ID",
-        calc_function: "transporter_data",
-        dependency: null,
+        calc_function: {
+          "transporter_data": null
+        },
         default_val: " ",
         total: false
       }

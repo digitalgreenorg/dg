@@ -628,7 +628,7 @@ function get_payment_model() {
     for (var i = 1; i < models.length; i++) {
         if (models[i]["geography"][selected_aggregator_country]) {
             if (models[i]["geography"][selected_aggregator_country].indexOf(selected_aggregator_state) != -1) {
-                if (max_model_start_date == null || (new Date(payments_start_date) - new Date(models[i]["start_date"]) >= 0 && new Date(models[i]["start_date"]) - new Date(max_model_start_date) > 0)) {
+                if (new Date(payments_start_date) - new Date(models[i]["start_date"]) >= 0 && (max_model_start_date == null || new Date(models[i]["start_date"]) - new Date(max_model_start_date) > 0)) {
                     max_model_start_date = models[i]["start_date"];
                     model_ID = i;
                 }
@@ -662,6 +662,7 @@ function calculate_data_for_table(table_data) {
         }
     }
 }
+
 //To compute aggregator, transporter, gaddidar payments table
 function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name_input) {
     aggregator_payment = payments_data.aggregator_data;
