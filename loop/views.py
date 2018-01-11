@@ -20,7 +20,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, AdminUser
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, AdminUser, District
 
 import loop.utils.send_log.loop_data_log as loop_log
 import loop.utils.send_log.loop_admin_log as admin_log
@@ -215,6 +215,20 @@ def admin_assigned_loopusers_data(request):
     user_id = request.GET.get('user_id')
     admin_user = AdminUser.objects.get(user__id = user_id)
     aggregators = admin_user.assigned_loopusers.all().values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
+    data_dict = {'aggregators': list(aggregators)}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)
+
+def districts_for_state(request):
+    state = request.GET.get('state')
+    districts = District.objects.filter(state__state_name_en=state).values('id', 'district_name_en')
+    data_dict = {'districts': list(districts)}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)
+
+def aggregator_data_for_districts(request):
+    district_ids = request.GET.getlist('district_ids[]')
+    aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__in=district_ids).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
     data_dict = {'aggregators': list(aggregators)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
@@ -711,10 +725,12 @@ def dashboard_payments(request):
         except ApiKey.DoesNotExist:
             api_key = ApiKey.objects.create(user=user)
             api_key.save()
+        admin_user = AdminUser.objects.get(user = user)
         login_data = dict()
         login_data['user_name'] = user.username
         login_data['user_id'] = user.id
         login_data['key'] = api_key.key
+        login_data['state'] = admin_user.state
         return render_to_response('app_dashboards/loop_dashboard_payment.html', login_data, context_instance=context)
     else:
         return HttpResponse(status=404)

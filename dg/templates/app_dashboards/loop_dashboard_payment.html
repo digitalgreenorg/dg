@@ -29,11 +29,16 @@
           <li class="active" id="logout_tab"><a class="white-text" href="{% url 'logout' %}?next=/loop/analytics/">SIGN OUT</a></li>
         </ul>
       </div>
-      <ul class="side-nav" id="page-navigation">
-        <li><a href="/loop/analytics/">LOOP Dashboard</a></li>
-        <li><a href="{% url 'logout' %}?next=/loop/analytics/">SIGN OUT</a></li>
-      </ul>
-    </div>
+      <div class="col s1 initialized" id="filters_nav" style="float:right;">
+        <ul class="hide-on-med-and-down">
+          <ul class="right">
+            <li>
+              <a data-activates="mobile-demo" class="button-collapse1"><img src="{% static 'app_dashboards/images/ic_filter_list.png' %}"/></a>
+            </li>
+          </ul>
+        </ul>
+      </div>
+    </div>    
   </nav>
 </div>
 <ul class="side-nav" id="mobile-demo">
@@ -41,7 +46,24 @@
   <li class="no-padding not-hoverable">
     <ul class="collapsible collapsible-accordion">
       <li class="bold not-hoverable">
-      </li>
+        <a class="collapsible-header  waves-effect waves-black">Districts</a>
+        <div class="collapsible-body" style="display: none;">
+          <table class="filter-table centered">
+            <thead>
+              <tr>
+                <th class="center grey-text text-lighten-1">Select/Unselect</th>
+                <th>
+                  <input type="checkbox" class="black" id="district_all" checked="checked" />
+                  <label for="district_all"></label>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="districts">
+            </tbody>
+          </table>
+        </div>
+      </li>      
+      <li><a id="get_filter_data_button" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger">APPLY FILTER</a></li>
     </ul>
   </li>
 </ul>
@@ -475,6 +497,7 @@
   window.localStorage.name = '{{user_name}}';
   window.localStorage.akey = '{{key}}';
   window.localStorage.user_id = '{{user_id}}';
+  window.localStorage.state = '{{state}}';
   globalApi = '{{key}}';
   window.localStorage.login_timestamp = new Date().getTime();
 </script>

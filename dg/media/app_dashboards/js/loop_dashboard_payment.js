@@ -5,6 +5,7 @@ var language, country_id = 1, state_id = -1;
 var selected_aggregator_state, selected_aggregator_country;
 //Arrays containing ids and corresponding names as were selected in the filters.
 var aggregator_ids, aggregator_names, aggregator_states, aggregators_countries, crop_ids, crop_names, mandi_ids, mandi_names, gaddidar_ids, gaddidar_names;
+var district_ids, district_names;
 //Json for filters.
 var aggregators_for_filter, aggregators_for_admin, mandis_for_filter, gaddidars_for_filter, crops_for_filter, croplanguage_for_filter, transporter_for_filter;
 //Variables for payments tab.
@@ -278,11 +279,12 @@ function initialize() {
   });
   $(".button-collapse1").sideNav();
   get_admin_assigned_loopuser_data();
-  //get_filter_data(language, country_id);
+  get_districts_for_filter(window.localStorage.state);
   initialLoadComplete = true;
   set_filterlistener();
   hidePaymentDetails();
   hideLoader(); 
+  $("#filters_nav").removeClass('hide');
 }
 
 function showLoader() {
@@ -477,6 +479,24 @@ function set_filterlistener() {
       $('#payments_to_date').val('');
     }
   });
+
+  $('#district_all').on('change', function(e) {
+    if (this.checked) {
+      $('#districts').children().each(function() {
+        var aggregators_all = $(this).children()[1].firstChild;
+        aggregators_all.checked = true;
+      });
+    } else {
+      $('#districts').children().each(function() {
+        var aggregators_all = $(this).children()[1].firstChild;
+        aggregators_all.checked = false;
+      });
+    }
+  });
+
+  $('#get_filter_data_button').click(function() {
+    get_aggregators_for_districts();
+  });
 }
 
 function hidePaymentDetails() {
@@ -485,35 +505,38 @@ function hidePaymentDetails() {
   $('#aggregator_payment_details').hide();
 }
 
-//To make a call when filters are changed
-function get_filter_data(language, country_id) {
-  $.get("/loop/filter_data/", {
-      language: language,
-      'country_id': country_id,
-      'state_id': state_id
+function get_aggregators_for_districts() {
+  district_ids = [];
+  district_names = [];
+
+  $('#districts').children().each(function() {
+    var district_div = $(this).children()[1].firstChild;
+    if (district_div.checked) {
+      district_ids.push(district_div.getAttribute('data'));
+      district_names.push(district_div.getAttribute('value'));
+    }
+  });
+  console.log(district_ids);
+  $.get("/loop/aggregator_data_for_districts/", {
+      'district_ids[]': district_ids
     })
     .done(function(data) {
       var data_json = JSON.parse(data);
-      aggregators_for_filter = data_json.aggregators;
-      mandis_for_filter = data_json.mandis;
-      gaddidars_for_filter = data_json.gaddidars;
-      crops_for_filter = data_json.crops;
-      croplanguage_for_filter = data_json.croplanguage;
-      transporter_for_filter = data_json.transporters;
+      aggregators_for_admin = data_json.aggregators;
       aggregator_ids = []
       aggregator_names = []
       aggregator_states = []
       aggregators_countries = []
-      $.each(aggregators_for_filter,function(index,aggregator_data){
+      $.each(aggregators_for_admin,function(index,aggregator_data){
         aggregator_ids.push(aggregator_data.user__id);
         aggregator_names.push(aggregator_data.name_en);
         aggregator_states.push(aggregator_data.village__block__district__state__state_name_en);
         aggregators_countries.push(aggregator_data.village__block__district__state__country__country_name);
       });
       if (language == ENGLISH_LANGUAGE) {
-        fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name_en', 'Aggregator', 'id');
+        fill_drop_down($('#aggregator_payments'), aggregators_for_admin, 'user__id', 'name_en', 'Aggregator', 'id');
       } else {
-        fill_drop_down($('#aggregator_payments'), aggregators_for_filter, 'user__id', 'name', 'Aggregator', 'id');
+        fill_drop_down($('#aggregator_payments'), aggregators_for_admin, 'user__id', 'name', 'Aggregator', 'id');
       }
     });
 }
@@ -541,6 +564,39 @@ function get_admin_assigned_loopuser_data() {
         fill_drop_down($('#aggregator_payments'), aggregators_for_admin, 'user__id', 'name', 'Aggregator', 'id');
       }
     });
+}
+
+function get_districts_for_filter(state) {
+  $.get("/loop/districts_for_state/", {
+      'state': state
+    })
+    .done(function(data) {
+      var data_json = JSON.parse(data);
+      var districts_for_filter = data_json.districts;
+      fill_district_filter(districts_for_filter);
+    });
+}
+
+//To make district list for side filter
+function fill_district_filter(data_json) {
+  filter_remove_elements($('#districts'));
+  $.each(data_json, function(index, data) {
+    create_filter($('#districts'), data.id, data.district_name_en, true);
+  });
+}
+
+function filter_remove_elements(tbody_obj) {
+  tbody_obj.empty();
+}
+//To enter data for district filter dynamically
+function create_filter(tbody_obj, id, name, checked) {
+  var row = $('<tr>');
+  var td_name = $('<td>').html(name);
+  row.append(td_name);
+  var checkbox_html = '<input type="checkbox" class="black" data=' + id + ' id="' + name + id + '" checked="checked" value = "' + name + '" /><label for="' + name + id + '"></label>';
+  var td_checkbox = $('<td>').html(checkbox_html);
+  row.append(td_checkbox);
+  tbody_obj.append(row);
 }
 
 // To fill aggregator drop down on Payment page
