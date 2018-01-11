@@ -48,9 +48,9 @@ def send_sms(request):
 
                 helpline_no = requesting_loop_user.village.block.district.state.helpline_number
 
-                # Thread(target=transactions_sms,
-                #        args=[requesting_loop_user, transactions_to_consider, preferred_language,
-                #              transportations_to_consider_for_ct, helpline_no]).start()
+                Thread(target=transactions_sms,
+                       args=[requesting_loop_user, transactions_to_consider, preferred_language,
+                             transportations_to_consider_for_ct, helpline_no]).start()
 
                 Thread(target=transportations_sms,
                        args=[requesting_loop_user, transportations_to_consider, preferred_language]).start()
