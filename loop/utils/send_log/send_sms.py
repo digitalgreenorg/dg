@@ -92,8 +92,6 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
 
                 farmer_specific_transportations = transportations.filter(date=transaction.date,
                                                                          mandi=transaction.mandi.id)
-                print "Transportations Record"
-                print farmer_specific_transportations
                 for farmer_specific_transport in farmer_specific_transportations:
                     language_vehicle = VehicleLanguage.objects.get(
                         vehicle=farmer_specific_transport.transportation_vehicle.vehicle, language=lang_code.id)
@@ -140,7 +138,6 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             farmer_no = key[1]
             farmer_name = key[2].encode('utf-8')
             message = make_transaction_sms(key, farmer_name, user.name, value, language)
-            print value
             if 'transport' in value.keys():
                 message = make_transaction_vehicle_sms(message, value['transport'])
 
@@ -173,7 +170,7 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             smslog_obj.save()
 
     except Exception as e:
-        print e
+        pass
 
 
 def make_transaction_vehicle_sms(message, vehicle_details):
@@ -278,10 +275,6 @@ def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
-    if response_text['status'] == 'success':
-        print "SMS sent successfully"
-    elif response_text['status'] == 'failure':
-        print "SMS sending failed"
     return response_text
 
 @csrf_exempt
