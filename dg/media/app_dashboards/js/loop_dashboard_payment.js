@@ -363,9 +363,9 @@ function prepare_data_set_for_excel_download(data_set_copy, data_set_name, data_
     for (var i = 0; i < data_set.length; i++) {
         data_set_copy.push([]);
         for (var j = 0; j < payment_model[data_set_name].length; j++) {
-            if (payment_model[data_set_name][j]["visible"] == true) {
-                data_set_copy[i].push(data_set[i][j]);
-            }
+          if ( payment_model[data_set_name][j]["data_table_properties"]["visible"] == true) {
+              data_set_copy[i].push(data_set[i][j]);
+          }
         }
     }
     return data_set_copy;
@@ -545,6 +545,9 @@ function get_aggregators_for_districts() {
                 fill_drop_down($('#aggregator_payments'), aggregators_for_admin, 'user__id', 'name', 'Aggregator', 'id');
             }
             $('.button-collapse1').sideNav('hide');
+            $('#payments_from_date').val('');
+            $('#payments_to_date').val('');
+            hidePaymentDetails();
         });
 }
 
