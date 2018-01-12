@@ -490,13 +490,13 @@ function set_filterlistener() {
     $('#district_all').on('change', function (e) {
         if (this.checked) {
             $('#districts').children().each(function () {
-                var aggregators_all = $(this).children()[1].firstChild;
-                aggregators_all.checked = true;
+                var districtss_all = $(this).children()[1].firstChild;
+                districts_all.checked = true;
             });
         } else {
             $('#districts').children().each(function () {
-                var aggregators_all = $(this).children()[1].firstChild;
-                aggregators_all.checked = false;
+                var districts_all = $(this).children()[1].firstChild;
+                districts_all.checked = false;
             });
         }
     });
