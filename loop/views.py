@@ -231,8 +231,6 @@ def filter_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
-<<<<<<< HEAD
-=======
 def admin_assigned_loopusers_data(request):
     user_id = request.GET.get('user_id')
     admin_user = AdminUser.objects.get(user__id = user_id)
@@ -254,7 +252,6 @@ def aggregator_data_for_districts(request):
     data_dict = {'aggregators': list(aggregators)}
     data = json.dumps(data_dict)
     return HttpResponse(data)
->>>>>>> origin/master
 
 def jsonify(data):
     if isinstance(data, dict):
