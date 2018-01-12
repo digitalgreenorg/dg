@@ -240,10 +240,15 @@ var calc_functions = {
                 if (aggregator_data_set[j].indexOf(aggregator_incentive[i]['date']) != -1 && aggregator_data_set[j].indexOf(aggregator_incentive[i]['mandi__name']) != -1) {
                     aggregator_data_set[j][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat(aggregator_incentive[i]['amount']);
                     aggregator_data_set[j][PAYMENT_SUMMARY.AGGREGATOR_COMMENT] = aggregator_incentive[i]['comment'];
-                    aggregator_data_set[j][PAYMENT_SUMMARY.NET_PAYMENT] = (parseFloat(aggregator_data_set[j][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE]) + parseFloat(aggregator_data_set[j][PAYMENT_SUMMARY.TRANSPORT_COST]) - parseFloat(aggregator_data_set[j][PAYMENT_SUMMARY.GADDIDAR_SHARE]) - parseFloat(aggregator_data_set[j][PAYMENT_SUMMARY.FARMER_SHARE])).toFixed(2);
                     break;
                 }
             }
+        }
+    },
+
+    net_payment: function () {
+        for (var i = 0; i < aggregator_data_set.length; i++) {
+            aggregator_data_set[i][PAYMENT_SUMMARY.NET_PAYMENT] = (parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE]) + parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.TRANSPORT_COST]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.GADDIDAR_SHARE]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.FARMER_SHARE])).toFixed(2);   
         }
     },
 
@@ -490,13 +495,13 @@ function set_filterlistener() {
     $('#district_all').on('change', function (e) {
         if (this.checked) {
             $('#districts').children().each(function () {
-                var aggregators_all = $(this).children()[1].firstChild;
-                aggregators_all.checked = true;
+                var districtss_all = $(this).children()[1].firstChild;
+                districts_all.checked = true;
             });
         } else {
             $('#districts').children().each(function () {
-                var aggregators_all = $(this).children()[1].firstChild;
-                aggregators_all.checked = false;
+                var districts_all = $(this).children()[1].firstChild;
+                districts_all.checked = false;
             });
         }
     });
@@ -649,16 +654,17 @@ function initialize_table_constants(table) {
 
 function calculate_data_for_table(table_data) {
     for (var i = 0; i < payment_model[table_data].length; i++) {
-        for (var calc_func in payment_model[table_data][i]["calc_function"]) {
-            if (payment_model[table_data][i]["calc_function"][calc_func]) {
-                for (var j = 0; j < payment_model[table_data][i]["calc_function"][calc_func].length; j++) {
-                    if (!executed_calc_functions.has(payment_model[table_data][i]["calc_function"][calc_func][j])) {
-                        calc_functions[payment_model[table_data][i]["calc_function"][calc_func][j]]();
-                        executed_calc_functions.add(payment_model[table_data][i]["calc_function"][calc_func][j]);
+        var calc_function_param = payment_model[table_data][i]["calc_function"];
+        for (var calc_func in calc_function_param) {
+            if (calc_function_param[calc_func]) {
+                for (var j = 0; j < calc_function_param[calc_func].length; j++) {
+                    if (!executed_calc_functions.has(calc_function_param[calc_func][j])) {
+                        calc_functions[calc_function_param[calc_func][j]]();
+                        executed_calc_functions.add(calc_function_param[calc_func][j]);
                     }
                 }
             }
-            if (!executed_calc_functions.has(payment_model[table_data][i]["calc_function"][calc_func])) {
+            if (!executed_calc_functions.has(calc_function_param[calc_func])) {
                 calc_functions[calc_func]();
                 executed_calc_functions.add(calc_func);
             }
@@ -695,6 +701,14 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     initialize_table_constants(COMMISSION_AGENT_DETAILS);
     initialize_table_constants(TRANSPORTER_DETAILS);
 
+    executed_calc_functions.clear();
+    dates = [];
+    mandis = [];
+    quantites = [];
+    gaddidar_amount = [];
+    transport_cost = [];
+    farmer_share = [];
+
     for (var i = 0; i < payment_model["aggregator_data_set"].length; i++) {
         default_aggregator_data_set.push(payment_model["aggregator_data_set"][i]["default_val"]);
         PAYMENT_SUMMARY[payment_model["aggregator_data_set"][i]["col_const"]] = i;
@@ -705,10 +719,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     }
     PAYMENT_SUMMARY["NET_QUANTITY"] = PAYMENT_SUMMARY[payment_model["net_quantity_const"]];
 
-    for (var i = 0; i < aggregator_incentive.length; i++) {
-        aggregator_data_set.push(default_aggregator_data_set.slice());
-    }
-
     for (var i = 0; i < payment_model["gaddidar_data_set"].length; i++) {
         default_gaddidar_data_set.push(payment_model["gaddidar_data_set"][i]["default_val"]);
         COMMISSION_AGENT_DETAILS[payment_model["gaddidar_data_set"][i]["col_const"]] = i;
@@ -716,10 +726,6 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         if (payment_model["gaddidar_data_set"][i]["total"] == true) {
             gaddidar_data_table_totals.push(i);
         }
-    }
-
-    for (var i = 0; i < aggregator_payment.length; i++) {
-        gaddidar_data_set.push(default_gaddidar_data_set.slice());
     }
 
     for (var i = 0; i < payment_model["transporter_data_set"].length; i++) {
@@ -731,17 +737,23 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         }
     }
 
+    for (var i = 0; i < aggregator_payment.length; i++) {
+        gaddidar_data_set.push(default_gaddidar_data_set.slice());
+    }
+
     for (var i = 0; i < transport_payment.length; i++) {
         transporter_data_set.push(default_transporter_data_set.slice());
     }
 
-    executed_calc_functions.clear();
-    dates = [];
-    mandis = [];
-    quantites = [];
-    gaddidar_amount = [];
-    transport_cost = [];
-    farmer_share = [];
+    //calculating dates and mandis structures to determine len of aggregator_data_set
+    calc_functions["gaddidar_data"]();
+    executed_calc_functions.add("gaddidar_data");
+
+    for (var i = 0; i < dates.length; i++) {
+        for (var j = 0; j < mandis[i].length; j++) {
+            aggregator_data_set.push(default_aggregator_data_set.slice());
+        }
+    }
 
     calculate_data_for_table("aggregator_data_set");
     calculate_data_for_table("gaddidar_data_set");

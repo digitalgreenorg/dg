@@ -144,7 +144,7 @@ var models = [
         },
         col_const: "NET_PAYMENT",
         calc_function: {
-          "aggregator_incentive": null
+          "net_payment": ["aggregator_data", "aggregator_incentive"]
         },
         default_val: 0,
         total: true
@@ -769,7 +769,7 @@ var models = [
         },
         col_const: "NET_PAYMENT",
         calc_function: {
-          "aggregator_incentive": null
+          "net_payment": ["aggregator_data", "aggregator_incentive"]
         },
         default_val: 0,
         total: true
@@ -1400,7 +1400,7 @@ var models = [
         },
         col_const: "NET_PAYMENT",
         calc_function: {
-          "aggregator_incentive": null
+          "net_payment": ["aggregator_data", "aggregator_incentive"]
         },
         default_val: 0,
         total: true
@@ -2037,7 +2037,7 @@ var models = [
         },
         col_const: "NET_PAYMENT",
         calc_function: {
-          "aggregator_incentive": null
+          "net_payment": ["aggregator_data", "aggregator_incentive"]
         },
         default_val: 0,
         total: true
@@ -2674,7 +2674,7 @@ var models = [
         },
         col_const: "NET_PAYMENT",
         calc_function: {
-          "aggregator_incentive": null
+          "net_payment": ["aggregator_data", "aggregator_incentive"]
         },
         default_val: 0,
         total: true
