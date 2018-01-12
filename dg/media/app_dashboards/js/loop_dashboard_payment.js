@@ -240,10 +240,15 @@ var calc_functions = {
                 if (aggregator_data_set[j].indexOf(aggregator_incentive[i]['date']) != -1 && aggregator_data_set[j].indexOf(aggregator_incentive[i]['mandi__name']) != -1) {
                     aggregator_data_set[j][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat(aggregator_incentive[i]['amount']);
                     aggregator_data_set[j][PAYMENT_SUMMARY.AGGREGATOR_COMMENT] = aggregator_incentive[i]['comment'];
-                    aggregator_data_set[j][PAYMENT_SUMMARY.NET_PAYMENT] = (parseFloat(aggregator_data_set[j][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE]) + parseFloat(aggregator_data_set[j][PAYMENT_SUMMARY.TRANSPORT_COST]) - parseFloat(aggregator_data_set[j][PAYMENT_SUMMARY.GADDIDAR_SHARE]) - parseFloat(aggregator_data_set[j][PAYMENT_SUMMARY.FARMER_SHARE])).toFixed(2);
                     break;
                 }
             }
+        }
+    },
+
+    net_payment: function () {
+        for (var i = 0; i < aggregator_data_set.length; i++) {
+            aggregator_data_set[i][PAYMENT_SUMMARY.NET_PAYMENT] = (parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE]) + parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.TRANSPORT_COST]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.GADDIDAR_SHARE]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.FARMER_SHARE])).toFixed(2);   
         }
     },
 
