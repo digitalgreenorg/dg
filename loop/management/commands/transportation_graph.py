@@ -2,6 +2,7 @@ import os
 import sys
 import pandas as pd
 import csv
+import matplotlib.pyplot as plt
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q, Count, Sum, Avg
@@ -28,4 +29,25 @@ class Command(BaseCommand):
         df_dt_distance = pd.merge(df_dt,df_distance,left_on=['user_created_id','mandi__id'],right_on=['user_created_id','mandi__id'],how='left')
 
         df_dt_distance.dropna(inplace=True)
+        df_dt_distance['distance_km'] = df_dt_distance['distance'].str.split(' ').str[0].astype('float64')
         print df_dt_distance.head()
+        # print df_dt_distance.dtypes
+
+        df_dt_distance_pickup = df_dt_distance[(df_dt_distance['vehicle_id']==4) & (df_dt_distance['distance_km'] < 100)]
+        # df_dt_distance_pickup = df_dt_distance[(df_dt_distance['vehicle_id']==4) & (df_dt_distance['distance_km']==3.5)]
+        # df_dt_distance_pickup = df_dt_distance
+
+        df_dt_distance_pickup_frequency = df_dt_distance_pickup.groupby(['user_created_id','distance_km','transportation_cost__sum']).agg({'mandi__id':'count'}).reset_index()
+        df_dt_distance_pickup_frequency.rename(columns={'mandi__id':'frequency'},inplace=True)
+        print df_dt_distance_pickup_frequency
+
+        df_dt_distance_pickup_frequency.plot(use_index=False,kind='scatter',x='distance_km',y='frequency',figsize=(18,8),s=df_dt_distance_pickup_frequency['frequency']*5, xticks=df_dt_distance_pickup_frequency['distance_km'])
+        plt.xticks(rotation=90)
+        plt.show()
+
+        # df_dt_distance_pickup = df_dt_distance_pickup.groupby(['mandi__id','distance_km','vehicle_id']).agg({'transportation_cost__sum':['mean','median']}).reset_index()
+        # df_dt_distance_pickup.columns = ["".join(row) for row in df_dt_distance_pickup.columns.ravel()]
+        # print df_dt_distance_pickup.count()
+        # plot_mean = df_dt_distance_pickup.plot(use_index=False,kind='scatter',x='distance_km',y='transportation_cost__summean',figsize=(18,8), color='Red', label='Mean')
+        # df_dt_distance_pickup.plot(use_index=False,kind='scatter',x='distance_km',y='transportation_cost__summedian',figsize=(18,8), color='DarkGreen', label='Median', ax=plot_mean)
+        # plt.show()
