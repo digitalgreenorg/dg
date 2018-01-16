@@ -54,14 +54,14 @@ class LoopUserAdmin(admin.ModelAdmin):
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = (
     'user', 'role', ('name', 'name_en'), 'phone_number', 'village', 'partner', 'mode', 'preferred_language', 'days_count',
-    'is_visible', 'farmer_phone_mandatory', 'registration','show_farmer_share','percent_farmer_share')
+    'is_visible', 'farmer_phone_mandatory', 'registration','show_farmer_share','percent_farmer_share', 'version')
     list_display = (
-    '__user__', 'name', 'role', 'phone_number', 'village', 'name_en', 'days_count', 'farmer_phone_mandatory', 'partner' ,'show_farmer_share','percent_farmer_share')
+    '__user__', 'name', 'role', 'phone_number', 'village', 'name_en', 'days_count', 'farmer_phone_mandatory', 'partner' ,'show_farmer_share','percent_farmer_share', 'version')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name',
                      'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country', 'village__block__district__state',
-                   'village__block__district', 'role', 'partner']
-    list_editable = ['days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share', 'partner']
+                   'village__block__district', 'role', 'partner', 'version']
+    list_editable = ['days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share', 'partner', 'role']
 
 class AdminAssignedDistricts(admin.StackedInline):
     model = AdminAssignedDistrict
@@ -88,13 +88,14 @@ class FarmerAdmin(admin.ModelAdmin):
 class CombinedTransactionAdmin(admin.ModelAdmin):
     list_display = (
     'id', 'date', '__mandi__', '__gaddidar__', '__aggregator__', '__farmer__', '__farmer_phone__', '__crop__', 'price',
-    'quantity', 'amount', 'status')
+    'quantity', 'amount', 'status', 'payment_sms', 'payment_sms_id')
     search_fields = ['farmer__name', 'farmer__village__village_name', 'gaddidar__gaddidar_name',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name', 'status']
     list_filter = (UserListFilter, 'status',
                    'crop__crop_name', 'mandi__mandi_name', 'gaddidar__gaddidar_name', 'farmer__village__village_name',
                    'mandi__district__state__country')
     date_hierarchy = 'date'
+    list_editable = ['payment_sms', 'status']
 
 
 class TransporterAdmin(admin.ModelAdmin):
@@ -165,13 +166,18 @@ class DistrictAdmin(admin.ModelAdmin):
 
 class StateAdmin(admin.ModelAdmin):
     fields = ('country', ('state_name', 'state_name_en'), 'helpline_number', 'crop_add', 'phone_digit', 'phone_start',
-              'is_visible', 'aggregation_state')
+              'is_visible', 'aggregation_state', 'server_sms')
     list_display = (
     'id', 'state_name', 'country', 'state_name_en', 'helpline_number', 'crop_add', 'phone_digit', 'phone_start',
-    'aggregation_state')
+    'aggregation_state', 'server_sms')
     search_fields = ['state_name', 'state_name_en', 'country__country_name']
     list_filter = ['country__country_name']
+    list_editable = ['server_sms']
 
+class CountryAdmin(admin.ModelAdmin):
+    fields = ('contry_name','is_visible')
+    list_display = ('id', 'country_name')
+    search_fields = ['country_name']
 
 class CropAdmin(admin.ModelAdmin):
     list_display = ('id', 'crop_name')
@@ -294,7 +300,7 @@ loop_admin.login_template = 'social_website/login.html'
 loop_admin.logout_template = 'social_website/home.html'
 
 loop_admin.register(Village, VillageAdmin)
-loop_admin.register(Country)
+loop_admin.register(Country,CountryAdmin)
 loop_admin.register(AdminUser, AdminUserAdmin)
 loop_admin.register(Block, BlockAdmin)
 loop_admin.register(District, DistrictAdmin)
