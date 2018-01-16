@@ -18,7 +18,7 @@ def remove_crop_outliers(ct_data=None):
         for recursion_counter in range(0,3):
             combined_transactions_data.fillna(0,inplace=True)
             ct_data = combined_transactions_data[(combined_transactions_data['D/STD'] > 1.3)]
-            if ct_data is not None:
+            if ct_data is not None and not ct_data.empty:
                 combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
                 combined_transactions_data = combined_transactions_data[columnlist_ct]
                 combined_transactions_data = call_methods(combined_transactions_data)
