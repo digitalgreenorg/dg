@@ -131,7 +131,7 @@ class Command(BaseCommand):
 						ap.duplicate_count += 1
 					else:
 						ap.other_error_count += 1
-						wtr.writerow(['village',vil, e])
+						wtr.writerow(['village',village_name, e])
 
 			try:
 				village_q = Village.objects.filter(block_id=block.id).get(village_name=village_name)
