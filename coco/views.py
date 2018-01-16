@@ -15,6 +15,7 @@ from django.contrib.messages import add_message
 # app imports
 from forms import DataUploadForm
 from models import CocoUser
+from videos.models import APVideo
 from coco.models import FullDownloadStats
 from people.models import Person,Animator,AnimatorAssignedVillage
 from people.models import PersonGroup
@@ -168,3 +169,45 @@ def upload_data(request):
     context = {'form': form_data}
     template = "coco/data_upload.html"
     return render(request, template, context)
+
+
+def ap_video(request):
+    video_list = APVideo.objects.filter(video__partner_id=50)
+    data_list = []
+    practice_list = []
+    dg_practice_list = []
+    tags = [{'id': '', 'tag_name': ''}]
+    for video_iterable in video_list:
+        dg_practice = video_iterable.video.videopractice.all()
+        for item in dg_practice:
+            dg_practice_list.append({'id': item.id,
+                                     'practice_name': item.videopractice_name,
+                                     })
+        practice_q = video_iterable.practice.all()
+        for item in practice_q:
+            practice_list.append({'id': item.id,
+                                  'practice_name': item.pest_name,
+                                  'practice_code': item.pest_code,
+                                  'practice_name_telgu': item.pest_name_telgu})
+
+        data_list.append({'id': video_iterable.video.id,
+                         'video_title': video_iterable.video.title,
+                         'video_short_name_english': video_iterable.video_short_name,
+                         'video_short_regionalname': video_iterable.video_short_regionalname,
+                         'category': {'id': video_iterable.video.category.id,
+                                      'category_name': video_iterable.video.category.category_name},
+                         'subcategory': {'id': video_iterable.video.subcategory.id,
+                                         'subcategory_name': video_iterable.video.subcategory.subcategory_name},
+                         'practice': practice_list,
+                         'dg_practice': dg_practice_list,
+                         'tags': tags,
+                         'producton_date': video_iterable.video.production_date,
+                         'youtube': video_iterable.video.youtubeid,
+                         'updation_date': video_iterable.video.approval_date,
+                         'version': 2,
+                         'video_type': video_iterable.video.video_type
+                         })
+
+    return JsonResponse({'data': data_list}, safe=False)
+
+

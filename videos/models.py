@@ -250,40 +250,72 @@ class JSLPS_Video(CocoModel):
         return self.vc
 
 
-class BluefrogSubcategory(models.Model):
-    crop_id = models.CharField(max_length=10, null=True)
-    crop_name = models.CharField(max_length=255, null=True)
+# class BluefrogSubcategory(models.Model):
+#     crop_id = models.CharField(max_length=10, null=True)
+#     crop_name = models.CharField(max_length=255, null=True)
+#     crop_name_telgu = models.CharField(max_length=255, null=True)
+
+#     def __unicode__(self):
+#         return  """%s""" % self.crop_name
+
+
+# class BluefrogPractice(models.Model):
+#     practice_id = models.CharField(max_length=10, null=True)
+#     practice_method_name = models.CharField(max_length=255, null=True)
+#     practice_method_name_telgu = models.CharField(max_length=255, null=True)
+
+#     def __unicode__(self):
+#         return  """%s""" % self.practice_method_name
+
+# class DistrictScreening(models.Model):
+#     districtscreening_id = models.CharField(max_length=10, null=True)
+#     districtscreening_name = models.CharField(max_length=255, null=True)
+
+#     def __unicode__(self):
+#         return  """%s""" % self.districtscreening_name
+
+
+class APCrop(CocoModel):
+    subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
+    crop_code = models.CharField(max_length=80)
+    crop_name = models.CharField(max_length=80)
     crop_name_telgu = models.CharField(max_length=255, null=True)
 
     def __unicode__(self):
-        return  """%s""" % self.crop_name
+        return """%s:%s""" % (self.crop_name, self.crop_code)
+
+    class Meta:
+        verbose_name = "Bluefrog Crop"
+        verbose_name_plural = "Bluefrog Crop"
 
 
-class BluefrogPractice(models.Model):
-    practice_id = models.CharField(max_length=10, null=True)
-    practice_method_name = models.CharField(max_length=255, null=True)
-    practice_method_name_telgu = models.CharField(max_length=255, null=True)
-
-    def __unicode__(self):
-        return  """%s""" % self.practice_method_name
-
-class DistrictScreening(models.Model):
-    districtscreening_id = models.CharField(max_length=10, null=True)
-    districtscreening_name = models.CharField(max_length=255, null=True)
+class APPractice(CocoModel):
+    pest_code = models.CharField(max_length=80)
+    pest_name = models.CharField(max_length=80)
+    pest_name_telgu = models.CharField(max_length=255, null=True)
 
     def __unicode__(self):
-        return  """%s""" % self.districtscreening_name
+        return """%s:%s""" % (self.pest_name, self.pest_code)
+
+    class Meta:
+        verbose_name = "Bluefrog Practice"
+        verbose_name_plural = "Bluefrog Practice"
+
 
 
 class APVideo(CocoModel):
     video = models.ForeignKey(Video, null=True, blank=True)
     video_short_name = models.CharField(max_length=40)
     video_short_regionalname = models.CharField(max_length=40)
-    bluefrog_subcategory = models.ForeignKey(BluefrogSubcategory, null=True, blank=True)
-    districtscreening = models.ManyToManyField(DistrictScreening, blank=True)
-    bluefrog_practice = models.ManyToManyField(BluefrogPractice, blank=True)
+    subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
+    # districtscreening = models.ManyToManyField(DistrictScreening, blank=True)
+    practice = models.ManyToManyField(APPractice, blank=True)
 
     
+    class Meta:
+        verbose_name = "Video"
+        verbose_name_plural = "Video"
+
     @property
     def short_video_title(self):
         return truncatechars(self.video.title, 50)

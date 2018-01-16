@@ -6,7 +6,7 @@ from django.views.generic.base import RedirectView
 from tastypie.api import Api
 # django imports
 from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource
-from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data
+from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, ap_video
 
 from dg.base_settings import COCO_PAGE
 from dg.ap_admin import ap_admin
@@ -84,4 +84,5 @@ urlpatterns = patterns('',
     (r'^getgrouppage/?$', farmer_book_views.get_group_page),
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
+    (r'^api/v2/apvideo/?$', ap_video),
 )
