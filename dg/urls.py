@@ -33,7 +33,7 @@ admin.autodiscover()
 #from farmerbook import farmer_book_views
 from output.views import video_analytics
 from static_site_views import spring_analytics
-#from website_admin import website_admin
+from website_admin import website_admin
 #from mcoco_admin import mcoco_admin
 from ivr_admin import ivr_admin
 #from loop_ivr.admin import loop_ivr_admin
@@ -52,9 +52,9 @@ import deoanalytics.urls
 #loop_admin.index_template = 'social_website/index.html'
 #loop_admin.login_template = 'social_website/login.html'
 #loop_admin.logout_template = 'social_website/home.html'
-# website_admin.index_template = 'social_website/index.html'
-# website_admin.login_template = 'social_website/login.html'
-# website_admin.logout_template = 'social_website/home.html'
+website_admin.index_template = 'social_website/index.html'
+website_admin.login_template = 'social_website/login.html'
+website_admin.logout_template = 'social_website/home.html'
 # mcoco_admin.index_template = 'social_website/index.html'
 # mcoco_admin.login_template = 'social_website/login.html'
 # mcoco_admin.logout_template = 'social_website/home.html'
@@ -106,7 +106,7 @@ urlpatterns = patterns('',
     #(r'^admin/coco/cocouser/[0-9]', 'coco.admin_views.add_cocouser'),
     #(r'^admin/', include(coco_admin.urls)),
     #(r'^qacoco_admin/', include(qacoco_admin.urls)),
-    #(r'^adminwebsite/', include(website_admin.urls)),
+    (r'^adminwebsite/', include(website_admin.urls)),
     #(r'^mcocoadmin/', include(mcoco_admin.urls)),
     #(r'^trainingadmin/', include(training_admin.urls)),
     #(r'^loopadmin/', include(loop_admin.urls)),

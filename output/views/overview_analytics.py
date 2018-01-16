@@ -29,7 +29,6 @@ def overview_module(request):
     tot_prac = run_query_dict(shared_sql.overview(type='practice',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
     tot_per = run_query_dict(shared_sql.overview(type='person',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
     tot_vil = run_query_dict(shared_sql.overview(type='village',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
-
     #Merging all dictionaries (vid_prod, tot_prac, etc) into one big one 'table_data'
     table_data = run_query(shared_sql.child_geog_list(geog=geog,id=id, from_date = from_date, to_date=to_date))
     for i in table_data:
@@ -112,13 +111,20 @@ def overview_module(request):
     else:
         header_geog = "Village"
 
-    return render(request, 'overview_module.html', dict(search_box_params = search_box_params, \
-                                                           country_data = country_data, \
-                                                           table_data = table_data, \
-                                                           par_geog_data = par_geog_data, \
-                                                           get_req_url = get_req_url, \
-                                                           header_geog = header_geog \
-                                                           ))
+    if  "/coco/jslps/analytics/" in request.get_full_path():
+        template = 'jslps_overview_module.html'
+    else:
+        template = 'overview_module.html'
+    
+    return render(request, template, dict(search_box_params = search_box_params, \
+                                          country_data = country_data, \
+                                          table_data = table_data, \
+                                          par_geog_data = par_geog_data, \
+                                          get_req_url = get_req_url, \
+                                          header_geog = header_geog \
+                                        ))
+
+
 
 def get_parent_geog_id(geog, id):
     if geog is None:

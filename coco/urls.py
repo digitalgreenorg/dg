@@ -11,6 +11,7 @@ from views import coco_v2, debug, login, logout, record_full_download_time, rese
 from dg.base_settings import COCO_PAGE
 from dg.ap_admin import ap_admin
 from dg.coco_admin import coco_admin
+from dg.jslps_admin import jslps_admin
 
 from coco.data_log import send_updated_log
 
@@ -62,9 +63,11 @@ urlpatterns = patterns('',
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/coco/admin/'}),
     url(r'^admin/', include(coco_admin.urls)),
     url(r'^apadmin/', include(ap_admin.urls)),
+    url(r'^jslpsadmin/', include(jslps_admin.urls)),
     (r'coco/', coco_v2),
     (r'^get_log/?$', send_updated_log),
     (r'^analytics/', include(output.urls)),
+    (r'^jslps/analytics/', include(output.urls)),
     (r'^rda/', include(raw_data_analytics.urls)),
     (r'^vrp/',include(vrppayment.urls)),
     (r'^mrp/',include(mrppayment.urls)),

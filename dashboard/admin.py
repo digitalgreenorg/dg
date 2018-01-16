@@ -302,4 +302,142 @@ class APVideoAdmin(admin.ModelAdmin):
     search_fields = ['id', 'video', 'video_short_name', 'video_short_regionalname', 'bluefrog_practice']
     # list_editable = ['video_short_name', 'video_short_regionalname', 'bluefrog_practice']
 
+class JSLPS_AnimatorAdmin(admin.ModelAdmin):
+    list_display = ('id','animator_code', 'user_created', 'time_created',
+                    '_animator', 'activity')
+    search_fields = ['id', 'animator_code']
+    list_filter = ['activity']
+
+    def _animator(self, obj):
+        return "%s:%s" % (obj.animator.id, obj.animator.name)
+    _animator.allow_tags = True
+    _animator.short_description = "COCO-DB-Animator-ID"
+
+
+class JSLPS_AnimatorAssignedVillageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'animator', 'village', 'user_created', 'time_created']
+    search_fields = ['animator']
+
+
+class JSLPS_PersongroupAdmin(admin.ModelAdmin):
+    list_display = ['id', 'group_code', 'user_created', 'time_created',
+                    '_persongroup', 'activity']
+    search_fields = ['group__group_name', 'group_code']
+    list_filter = ['activity']
+
+    def _persongroup(self, obj):
+        return "%s:%s" % (obj.group.id, obj.group.group_name)
+    _persongroup.allow_tags = True
+    _persongroup.short_description = "COCO-DB-PersonGroup-ID"
+
+
+class JSLPS_PersonAdmin(admin.ModelAdmin):
+    list_display = ['id', 'person_code', 'person', '_group_code', 'user_created',
+                    'time_created', 'activity', '_person']
+    search_fields = ['id', 'person_code', 'person__id', 'group__group_code']
+    list_filter = ['activity']
+
+    def _person(self, obj):
+        return "%s:%s" % (obj.person.id, obj.person.person_name)
+    _person.allow_tags = True
+    _person.short_description = "COCO-DB-Person-ID"
+
+    def _group_code(self, obj):
+        if obj.group:
+            return "%s" % obj.group.group_code
+        else:
+            return  obj.group 
+    _group_code.allow_tags = True
+    _group_code.short_description = "PersonGroup-Code"
+
+
+class JSLPS_DistrictAdmin(admin.ModelAdmin):
+    list_display = ['id', 'district_code', 'district_name', 'user_created',
+                    'time_created', '_district', 'activity']
+    search_fields = ['id', 'district_code', 'district_name', 'district__id']
+    list_filter = ['activity']
+
+    def _district(self, obj):
+        return "%s:%s" % (obj.district.id, obj.district.district_name)
+    _district.allow_tags = True
+    _district.short_description = "COCO-DB-District-ID"
+
+
+class JSLPS_BlockAdmin(admin.ModelAdmin):
+    list_display = ['id', 'block_code', 'block_name', 'district_code',
+                    'user_created', 'time_created', '_block', 'activity']
+    search_fields = ['id', 'block_code', 'block_name', 'block', 'district_code']
+    list_filter = ['activity']
+
+    def _block(self, obj):
+        return "%s:%s" % (obj.block.id, obj.block.block_name)
+    _block.allow_tags = True
+    _block.short_description = "COCO-DB-Block-ID"
+
+
+class JSLPS_VillageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'village_code', 'village_name', 'block_code',
+                    'user_created', 'time_created', '_village', 'activity']
+    search_fields = ['id', 'village_code', 'village_name', 'block_code', 'Village__id']
+    list_filter = ['activity']
+    readonly_fields = list_display
+
+    def _village(self, obj):
+        return "%s:%s" % (obj.Village.id, obj.Village.village_name)
+    _village.allow_tags = True
+    _village.short_description = "COCO-DB-Village-ID"
+
+    def has_add_permission(self, request):
+        return False
+
+class JSLPS_VideoAdmin(admin.ModelAdmin):
+    list_display = ['id', 'vc', 'title', 'user_created', 'time_created',
+                    '_video', 'activity']
+    search_fields = ['id', 'vc', 'title']
+    list_filter = ['activity']
+    readonly_fields = list_display
+
+    def _video(self, obj):
+        return "%s:%s" % (obj.video.id, obj.video.title)
+    _video.allow_tags = True
+    _video.short_description = "COCO-DB-Video-ID"
+
+    def has_add_permission(self, request):
+        return False
+
+
+
+
+class JSLPS_ScreeningAdmin(admin.ModelAdmin):
+    list_display = ['id', 'screenig_code', 'activity', 
+                    'screening', '_village', '_dg_screening_id',
+                    'user_created', 'time_created']
+    search_fields = ['id', 'screenig_code', 'activity', 'screening__village__block__block_name']
+    list_filter = ['activity']
+    readonly_fields = list_display
+
+    def _dg_screening_id(self, obj):
+        return obj.screening.id
+
+    def _village(self, obj):
+        return "%s: %s: %s" % (obj.screening.village.village_name,
+                               obj.screening.village.block.block_name,
+                               obj.screening.village.block.district.district_name)
+
+    def has_add_permission(self, request):
+        return False
+
+
+class JSLPS_AdoptionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'member_code', 'jslps_video', 'jslps_akmcode',
+                    'adoption', 'jslps_date_of_adoption', 'user_created', 'time_created']
+    search_fields = ['id', 'member_code', 'jslps_video', 'jslps_akmcode', 'jslps_akmcode', 'adoption']
+    list_filter = ['jslps_date_of_adoption']
+
+    readonly_fields = list_display
+
+    def has_add_permission(self, request):
+        return False
+
+
 

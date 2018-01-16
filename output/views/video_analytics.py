@@ -38,12 +38,17 @@ def video_module(request):
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
 
-    return render(request, 'video_module.html',dict(search_box_params = search_box_params,\
-                                                          tot_video=tot_vid,\
-                                                          tot_vids_screened=tot_vids_screened, \
-                                                          #tot_average= tot_avg, \
-                                                          get_req_url = get_req_url
-                                                          ))
+    if  "/coco/jslps/analytics/" in request.get_full_path():
+        template = 'jslps_video_module.html'
+    else:
+        template = 'video_module.html'
+
+    return render(request, template, dict(search_box_params = search_box_params,\
+                                                    tot_video=tot_vid,\
+                                                    tot_vids_screened=tot_vids_screened, \
+                                                    #tot_average= tot_avg, \
+                                                    get_req_url = get_req_url
+                                                    ))
 
 
 
