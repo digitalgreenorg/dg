@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('loop', '0023_helplineexpert_state'),
+        ('loop', '0023_auto_20180111_1005'),
     ]
 
     operations = [
@@ -15,6 +15,11 @@ class Migration(migrations.Migration):
             model_name='helplineexpert',
             name='partner',
             field=models.ForeignKey(blank=True, to='loop.Partner', null=True),
+        ),
+        migrations.AddField(
+            model_name='helplineexpert',
+            name='state',
+            field=models.ForeignKey(blank=True, to='loop.State', null=True),
         ),
         migrations.AddField(
             model_name='partner',
