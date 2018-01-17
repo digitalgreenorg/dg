@@ -12,7 +12,7 @@ def remove_crop_outliers(ct_data, state_id, rate_deviation_threshold, deviation_
     combined_transactions_data = combined_transactions_data[combined_transactions_data['State'] == state_id]
 
     # Check whether amount is always equal to quantity*rate or not.
-    # combined_transactions_data['Amount'] = combined_transactions_data['Quantity Real'] * combined_transactions_data[
+    # ct_data_filtered['Amount'] = ct_data_filtered['Quantity Real'] * ct_data_filtered[
     #     'Price']
 
     # Finds deviation for date-market-crop combination without giving any weight to quantity
@@ -26,8 +26,8 @@ def remove_crop_outliers(ct_data, state_id, rate_deviation_threshold, deviation_
 
     # Identifying all rows in ct where deviation from mean is greater than standard deviation and where standard
     # deviation is above the minimum threshold.
-    outlier_market_crop = deviation_rate[deviation_rate['Price_std'] > rate_deviation_threshold]
-    outlier_ct_data = pd.merge(combined_transactions_data, outlier_market_crop, how='inner',
+    deviation_rate = deviation_rate[deviation_rate['Price_std'] > rate_deviation_threshold]
+    outlier_ct_data = pd.merge(combined_transactions_data, deviation_rate, how='inner',
                                on=['Date', 'Market Real', 'Crop'])
     outlier_ct_data['Mean-Deviation'] = outlier_ct_data['Price_mean'] - outlier_ct_data['Price']
     outlier_ct_data = outlier_ct_data[abs(outlier_ct_data['Mean-Deviation']) > outlier_ct_data['Price_std']]
@@ -35,7 +35,7 @@ def remove_crop_outliers(ct_data, state_id, rate_deviation_threshold, deviation_
     # print outlier_ct_data.count()
     # print outlier_ct_data
 
-    # Removing these identified outliers from combined_transactions_data.
+    # Removing these identified outliers from ct_data_filtered.
     outlier_merged = outlier_ct_data.merge(combined_transactions_data, on=columnlist_ct).loc[:, 'Date': 'State']
     combined_transactions_data = combined_transactions_data[~combined_transactions_data.isin(outlier_merged)].dropna()
 
