@@ -797,10 +797,14 @@ def helpline_incoming(request):
                 module = 'helpline_incoming (New Call)'
                 write_log(HELPLINE_LOG_FILE, module, str(e))
                 return HttpResponse(status=500)
-            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            # expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
+            # # Initiate Call if Expert is available
+            # if len(expert_obj) > 0:
+            #     make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
+            expert_number = get_expert_number(dg_number)
             # Initiate Call if Expert is available
-            if len(expert_obj) > 0:
-                make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
+            if expert_number != '':
+                make_helpline_call(incoming_call_obj, expert_number, farmer_number)
             # Send Greeting and Sms if No Expert is available
             else:
                 sms_body = helpline_data['sms_body']
@@ -829,12 +833,15 @@ def helpline_incoming(request):
             if call_status != '' and call_status['response_code'] == 200 and (
                         call_status['status'] in ('ringing', 'in-progress')):
                 return HttpResponse(status=200)
-            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
-            # Initiate Call if Expert is available
-            if len(expert_obj) > 0:
-                make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
+            expert_number = get_expert_number(dg_number)
+            # expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
+
+            # # Initiate Call if Expert is available
+            if expert_number != '':
+                make_helpline_call(incoming_call_obj, expert_number, farmer_number)
             # Send Greeting and Sms if No Expert is available
             else:
+
                 sms_body = helpline_data['sms_body']
                 send_helpline_sms(EXOTEL_HELPLINE_NUMBER, farmer_number, sms_body)
                 # Send greeting to user for notify about no expert available at this time.
@@ -843,6 +850,19 @@ def helpline_incoming(request):
     else:
         return HttpResponse(status=403)
 
+def get_expert_number(dg_number):
+    expert_number = ''
+    expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
+
+    if len(expert_obj) > 0:
+        expert_number = expert_obj[0]
+    else :
+        # Search in partner helpline number
+        expert_partner_obj = HelplineExpert.objects.filter(partner__helpline_number=dg_number)[:1]
+        if len(expert_partner_obj) > 0 :
+            expert_number = expert_partner_obj[0]
+    
+    return expert_number
 
 @csrf_exempt
 def helpline_call_response(request):
@@ -909,7 +929,7 @@ def helpline_call_response(request):
                     make_call = 1
             if make_call == 1:
                 # Find next expert
-                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1))
+                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number))
                 try:
                     expert_numbers = expert_numbers[expert_numbers.index(expert_obj) + 1:]
                 except Exception as e:

@@ -178,6 +178,7 @@ class Partner(LoopModel):
     name = models.CharField(max_length=100)
     is_visible = models.BooleanField(verbose_name="Is Active", default=True)
     start_date = models.DateField()
+    helpline_number = models.CharField(max_length=14, null=False, blank=False, default="0")
 
     def __unicode__(self):
         return "%s" % (self.name)
@@ -715,6 +716,8 @@ class HelplineExpert(LoopModel):
     phone_number = models.CharField(max_length=20, unique=True)
     email_id = models.CharField(max_length=50)
     expert_status = models.IntegerField(choices=EXPERT_STATUS, default=1)
+    state = models.ForeignKey(State, null=True, blank=True)
+    partner = models.ForeignKey(Partner, null=True, blank=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.phone_number)

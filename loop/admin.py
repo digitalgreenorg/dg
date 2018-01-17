@@ -224,9 +224,10 @@ class IncentiveParameterAdmin(admin.ModelAdmin):
 
 
 class HelplineExpertAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'phone_number', 'email_id', 'expert_status')
-    list_filter = ('expert_status',)
-    search_fields = ['name', 'phone_number', 'email_id', 'expert_status']
+    list_display = ('id', 'name', 'phone_number', 'email_id', 'expert_status', 'state', 'partner')
+    list_filter = ('expert_status','state')
+    search_fields = ['name', 'phone_number', 'email_id', 'expert_status', 'state']
+    list_editable = ['expert_status', 'state', 'partner']
 
 
 class HelplineIncomingAdmin(admin.ModelAdmin):
@@ -290,7 +291,7 @@ class SmsLogAdmin(admin.ModelAdmin):
     search_fields = ['contact_no', 'text_local_id', 'status']
 
 class PartnerAdmin(admin.ModelAdmin):
-    list_display = ('id','name')
+    list_display = ('id','name','helpline_number')
 
 loop_admin = LoopAdmin(name='loop_admin')
 
