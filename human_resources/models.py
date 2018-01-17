@@ -1,5 +1,7 @@
 from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
+from mezzanine.core.fields import RichTextField
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 team_choices = [('Executive Leadership Team', 'Executive Leadership Team'),
                 ('Technology Team', 'Technology Team'),
@@ -49,6 +51,8 @@ class Job(models.Model):
     conclusion = models.TextField()
     hierarchy_num = models.FloatField(default=0)
     geography = models.ForeignKey(Geography)
+    key_res_content = RichTextField(_("Key Resonsibility Content"), null=True)
+
     def __unicode__(self):
         return '%s' %(self.title)
     class Meta:

@@ -1,0 +1,74 @@
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #3D3D3F !important;
+  transition: 0.4s;
+  padding-top: 20px;
+  overflow-x: hidden;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 12px;
+  font-size: 14px;
+  color: white;
+  display: block;
+  transition: 0.3s;
+}
+
+.datepicker {
+  -webkit-text-fill-color: black;
+}
+
+.form-control {
+  height: 36px;
+}
+
+input {
+  -webkit-text-fill-color: black;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a {
+    font-size: 14px;
+  }
+}
+
+.bg-white {
+  background: #ffffff;
+}
+
+.text-white {
+  padding: 8px 0px 0px 32px;
+  -webkit-text-fill-color: white;
+}
+.no-margin {
+  padding-top: 5px;
+  margin-bottom: 0px;
+}
+.parent-scrollbar {
+  height: 100%;
+}
+
+.scrollBar {
+  height: 300px;
+}
+
+.red-text {
+  -webkit-text-fill-color: red;
+  margin-bottom: 0px;
+}
+
+.sideNav-font {
+  font-size: 14px;
+}
+
+.white-text {
+  -webkit-text-fill-color: white;
+}

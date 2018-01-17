@@ -223,7 +223,7 @@ def partner_view(request, partner):
     try:
         partner = Partner.objects.get(name__iexact = partner)
     except Partner.DoesNotExist:
-        return HttpResponseRedirect(reverse('connect'))
+        return HttpResponseRedirect('/videos/library/')
     context= {
         'header': {
             'jsController':'Profile',

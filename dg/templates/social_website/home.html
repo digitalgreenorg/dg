@@ -8,21 +8,18 @@
                     <h2 class="hdg-b hdg-source-lt layout-vr-tiny">Who we are</h2>
                     <p class="hdg-f centered hdg-source-reg layout-vr-sm">A not-for-profit which brings together technology and social organisations to improve agriculture, health and nutrition
                     </p>
-                    <a  href="{% url 'about' %}" class="btn">Read our story</a>   
                 </div>
             </div>
             <div class="grid-col grid-size1of3">
                 <div class="borderLt grid-pad-rt-md centered">
                     <h2 class="hdg-b hdg-source-lt layout-vr-tiny">What we do</h2>
                     <p class="hdg-f hdg-source-reg layout-vr-sm">We build innovative platforms to enable rural communities to create and share videos for wider adoption of locally relevant practices</p>
-                    <a  href="{% url 'ourwork' %}" class="btn">Know our work</a>
                 </div>
             </div>
             <div class="grid-col grid-size1of3">
                 <div class="borderLt centered">
                     <h2 class="hdg-b hdg-source-lt layout-vr-tiny">Who we work with</h2>
                     <p class="hdg-f hdg-source-reg layout-vr-sm">A network of development organisations in South Asia and Sub-Saharan Africa use our approach to amplify their impact</p>
-                    <a href="{% url 'connect' %}" class="btn">Meet our Partners</a>
                 </div>
             </div>
             <!-- FEATURED COLLECTIONS -->
@@ -52,7 +49,6 @@
                     <!--div class="pagination-wrapper js-pagination">
                     </div-->
                     <div class="gradientBg-ft-btn">
-                        <a href="{% url 'discover' %}" class="btn">Explore video library</a>
                     </div>
                 </div>
             </div> <!-- End .inner-wrapper -->
@@ -162,7 +158,6 @@
                     <div class="grid-col grid-size2of4">
                         <div class="borderLt grid-pad-rt-md centered">
                             <div class="grid-rt">
-                                <a  href="{% url 'resources' %}" class="btn">VIEW MORE RESOURCES</a> 
                             </div>
                         </div>
                     </div>
@@ -299,36 +294,42 @@
                     </div>
                     <div class="awards-ticker layout-vr-md">
                         <ul class="js-awards-ticker h-list">
-                            <li data='1' class="js-description"> 
-                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/NT-100.png" alt="Nominet Trust 100" title="Nominet Trust 100, 2015" height="130" width="130"/> 
+
+                            <li data='1' class="js-description">
+                                <img class="awards-shadow" style="border-radius: 50%" src="{{STATIC_URL}}social_website/content/awards/AWS.png" alt="AMW" title="Amazon Mobility Awards" height="130" width="130"/>
                             </li>
                             <li data='2' class="js-description"> 
-                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/eNGO-challenge.png" alt="4th eNGO Challenge" title="4th eNGO Challenge" height="130" width="130"/> 
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/NT-100.png" alt="Nominet Trust 100" title="Nominet Trust 100, 2015" height="130" width="130"/> 
                             </li>
                             <li data='3' class="js-description"> 
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/eNGO-challenge.png" alt="4th eNGO Challenge" title="4th eNGO Challenge" height="130" width="130"/> 
+                            </li>
+                            <li data='4' class="js-description"> 
                                 <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/google-impact-challenge.png" alt="Google Impact Challenge" title="Google Impact Challenge" height="130" width="130"/> 
                             </li>
-                            <li data='4' class="js-description">
+                            <li data='5' class="js-description">
                                 <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/fortune.png" alt="Fortune" title="Fortune" height="130" width="130"/>
                             </li>
-                            <li data='5' class="js-description">
+                            <li data='6' class="js-description">
                                 <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/ashoka-india-fellowship.png" alt="Ashoka India Fellowship" title="Ashoka India Fellowship" height="130" width="130"/>
                             </li>
-                            <li data='6' class="js-description">
+                            <li data='7' class="js-description">
                                 <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/MIT-innovators.png" alt="MIT Tech Review" title="MIT Tech Review" height="130" width="130"/>
                             </li>
-                            <li data='7' class="js-description">
+                            <li data='8' class="js-description">
                                 <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/stockholm-challenge.png" alt="Stockholm Challenge" title="Stockholm Challenge" height="130" width="130"/>
                             </li>
-                            <li data='8' class="js-description">
+                            <li data='9' class="js-description">
                                 <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/TED-fellows.png" alt="Ted Fellow" title="Ted Fellow" height="130" width="130"/>
                             </li>
-                            <li data='9' class="js-description">
+                            <li data='10' class="js-description">
                                 <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/IFA-norman-borlaug.png" alt="IFA Norman Borlaug" title="IFA Norman Borlaug Award - 2012" height="130" width="130"/>
                             </li>
-                            <li data='10' class="js-description">
+                            <li data='11' class="js-description">
                                 <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/manthan.png" alt="Manthan" title="The Manthan Award - South Asia 2010" height="130" width="130"/>
                             </li>
+
+
                         </ul>
                     </div>
                     <div class="js-awards-right-arrow awards-right-arrow">
@@ -336,43 +337,48 @@
                     </div>
                 </div>
                 <div class="hdg-f hdg-source-reg">
-                    <div class="awards-description js-awards-description js-awards-description-show" data='1'>
+                    <div class="awards-description js-awards-description" data='1'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny">Amazon Web Services Mobility Awards, 2017</a>
+                        <p>Digital Green was awarded the best non-profit/public service app of the year - Loop</p>
+                    </div>
+
+                    <div class="awards-description js-awards-description js-awards-description-show" data='2'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://socialtech.org.uk/projects/digital-green/">Nominet Trust 100, 2015</a>
                         <p>Digital Green was named among the 100 most inspiring tech-for-good ventures from around the world. <a class="hdg-source-semibold" target="_blank" href="http://socialtech.org.uk/projects/digital-green/">Read more</a></p>
                     </div>
-                    <div class="awards-description js-awards-description" data='2'>
+                    <div class="awards-description js-awards-description" data='3'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://engochallenge.org">eNGO Challenge, 2015</a>
                         <p>Digital Green won the 4th eNGO Challenge in 2015 for Innovative use of eContent. <a class="hdg-source-semibold" target="_blank" href="http://engochallenge.org">Read more</a></p>
                     </div>
-                    <div class="awards-description js-awards-description" data='3'>
+                    <div class="awards-description js-awards-description" data='4'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="https://impactchallenge.withgoogle.com/india2013#/digitalgreen">Google Impact Challenge, 2013</a>
                         <p>Digital Green won the Google Impact Challenge in 2013. <a class="hdg-source-semibold" target="_blank" href="https://impactchallenge.withgoogle.com/india2013#/digitalgreen">Read more</a></p>
                     </div>
-                    <div class="awards-description js-awards-description" data='4'>
+                    <div class="awards-description js-awards-description" data='5'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://archive.fortune.com/galleries/2010/fortune/1006/gallery.global_forum_visionaries.fortune/4.html">Fortune’s Global Forum Visionaries in Agriculture, 2010</a>
                         <p>Digital Green’s founder and CEO, Rikin Gandhi was selected as Fortune’s Global Forum Visionary in 2010. <a class="hdg-source-semibold" target="_blank" href="http://archive.fortune.com/galleries/2010/fortune/1006/gallery.global_forum_visionaries.fortune/4.html">Read more</a></p>
                     </div>
-                    <div class="awards-description js-awards-description" data='5'>
+                    <div class="awards-description js-awards-description" data='6'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://india.ashoka.org/fellow/rikin-gandhi">Ashoka Fellow</a>
                         <p>Digital Green’s founder and CEO, Rikin Gandhi is an Ashoka Fellow since 2010. <a class="hdg-source-semibold" target="_blank" href="http://india.ashoka.org/fellow/rikin-gandhi">Read more</a></p>
                     </div>
-                    <div class="awards-description js-awards-description" data='6'>
+                    <div class="awards-description js-awards-description" data='7'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://www2.technologyreview.com/tr35/profile.aspx?TRID=969">Innovator under 35 by MIT Technology Review, 2010</a>
                         <p>Digital Green’s founder and CEO, Rikin Gandhi was selected as an innovator under 35 by MIT’s Tech Review in 2010.<a class="hdg-source-semibold" target="_blank" href="http://www2.technologyreview.com/tr35/profile.aspx?TRID=969">Read more</a></p>
                     </div>
-                    <div class="awards-description js-awards-description" data='7'>
+                    <div class="awards-description js-awards-description" data='8'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://blogs.msdn.com/b/microsoft-green/archive/2008/07/09/digital-green-wins-award-in-the-stockholm-challenge-2008.aspx">Stockholm Challenge, 2008</a>
                         <p>Digital Green won the Stockholm Challenge in 2008. <a class="hdg-source-semibold" target="_blank" href="http://blogs.msdn.com/b/microsoft-green/archive/2008/07/09/digital-green-wins-award-in-the-stockholm-challenge-2008.aspx">Read more</a></p>
                     </div>
-                    <div class="awards-description js-awards-description" data='8'>
+                    <div class="awards-description js-awards-description" data='9'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://www.ted.com/profiles/299130/fellow">TED Fellow</a>
                         <p>Digital Green’s founder and CEO, Rikin Gandhi is a TED Fellow (Agricultural Tech Innovator) <a class="hdg-source-semibold" target="_blank" href="http://www.ted.com/profiles/299130/fellow">Read more</a></p>
                     </div>
-                    <div class="awards-description js-awards-description" data='9'>
+                    <div class="awards-description js-awards-description" data='10'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://www.fertilizer.org//En/Media/Press_Releases_Detailed/20_April_2012.aspx">IFA Norman Borlaug Award, 2012</a>
                         <p>Digital Green's founder and CEO, Rikin Gandhi received the IFA Norman Borlaug Award in 2012. <a class="hdg-source-semibold" target="_blank" href="http://www.fertilizer.org//En/Media/Press_Releases_Detailed/20_April_2012.aspx">Read more</a></p>
                     </div>
-                    <div class="awards-description js-awards-description" data='10'>
+                    <div class="awards-description js-awards-description" data='11'>
                         <a class="hdg-green hdg-source-bold layout-vr-tiny">Manthan Award South Asia in Environment, 2008</a>
                         <p>Digital Green won the Manthan Award South Asia in 2008 in the category Environment.</p>
                     </div>

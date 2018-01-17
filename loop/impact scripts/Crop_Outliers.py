@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 # The entire function could be divided into smaller functions but that could be done later.
-def remove_crop_outliers(ct_data, state_id, rate_deviation_threshold, deviation_factor_threshold, quantity_rate_deviation_threshold):
+def remove_crop_outliers(ct_data=None, state_id=1, rate_deviation_threshold=15, deviation_factor_threshold=0.3, quantity_rate_deviation_threshold=5):
     # Converts SQL query output in a dataframe
     daily_aggregator_market_crop_rate_query_result = list(ct_data)
     columnlist_ct = ['Date', 'Aggregator', 'Market Real', 'Crop', 'Quantity Real', 'Price', 'Amount', 'State']
@@ -10,6 +11,14 @@ def remove_crop_outliers(ct_data, state_id, rate_deviation_threshold, deviation_
 
     # Filters out data of other states
     combined_transactions_data = combined_transactions_data[combined_transactions_data['State'] == state_id]
+
+    # combined_transactions_data = combined_transactions_data[(combined_transactions_data['Crop']==2)]
+    combined_transactions_data.to_csv('before_outliers_removal.csv') #Recording data in CSV file
+    combined_transactions_data['datetime'] = combined_transactions_data['Date'].astype('datetime64[ns]')
+    combined_transactions_data['datetime'] = combined_transactions_data['datetime'].astype('int64')
+    combined_transactions_data.plot(use_index=False,kind='scatter',x='datetime',y='Price',figsize=(18,8))
+    # plt.show()
+
 
     # Check whether amount is always equal to quantity*rate or not.
     # ct_data_filtered['Amount'] = ct_data_filtered['Quantity Real'] * ct_data_filtered[
@@ -31,6 +40,8 @@ def remove_crop_outliers(ct_data, state_id, rate_deviation_threshold, deviation_
                                on=['Date', 'Market Real', 'Crop'])
     outlier_ct_data['Mean-Deviation'] = outlier_ct_data['Price_mean'] - outlier_ct_data['Price']
     outlier_ct_data = outlier_ct_data[abs(outlier_ct_data['Mean-Deviation']) > outlier_ct_data['Price_std']]
+
+    outlier_ct_data.to_csv('outliers.csv') #Recording outliers in a CSV file
 
     # print outlier_ct_data.count()
     # print outlier_ct_data
@@ -82,6 +93,13 @@ def remove_crop_outliers(ct_data, state_id, rate_deviation_threshold, deviation_
     combined_transactions_data = combined_transactions_data[
         ~combined_transactions_data.isin(outlier_merged_2)].dropna()
     combined_transactions_data = combined_transactions_data.loc[:, 'Date': 'State']
+
+    # print outlier_ct_data_2.head()
+    outlier_ct_data_2.to_csv('outliers_2.csv') #Recording outliers in a CSV file
+    combined_transactions_data.to_csv('after_outliers_removal.csv') # Recording data after removal of outliers in CSV file
+    combined_transactions_data['datetime'] = combined_transactions_data['Date'].astype('datetime64[ns]')
+    combined_transactions_data['datetime'] = combined_transactions_data['datetime'].astype('int64')
+    combined_transactions_data.plot(use_index=False,kind='scatter',x='datetime',y='Price',figsize=(18,8))
+    # plt.show()
+
     return combined_transactions_data
-
-

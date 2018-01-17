@@ -1,4 +1,4 @@
-{% include "includes/header.html" %}
+{% include "internal-tools/header.html" %}
 
 <script src="/media/assets/scripts/jquery.min.js"></script>
 <script src="/media/assets/scripts/chosen.jquery.min.js"></script>
@@ -11,7 +11,7 @@
             <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top: -2%">Raw Data Analytics</h2>
             <div class="media layout-vr-xlg">
 
-                <form target="_blank" action="/raw_data_analytics/execute/" id="formId" method="POST"
+                <form target="_blank" action="/coco/rda/execute/" id="formId" method="POST"
                       enctype="multipart/form-data"  style="margin-top: -5%">
                     {% csrf_token %}
 
@@ -60,7 +60,7 @@
                         </h3>
                         </p>
                     </div>
-                    <div id="rightdiv" style="width:55%;float: left;margin-bottom: 27%">
+                    <div id="rightdiv" style="width:60%;float: left;margin-bottom: 27%">
 
 
                         <!--</center>-->
@@ -105,7 +105,7 @@
 
                                 <div name='block' id='blockID'
                                      style="">
-                                    Block &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    Block &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <select class='select' multiple="multiple" name='block' id='blockId'
 
                                             style="  width: 450px; " disabled="true"
@@ -156,7 +156,7 @@
 
                         </div>
                     </div>
-                    <div id="leftdiv" style="width: 45%; float:left">
+                    <div id="leftdiv" style="width:40% ; float:left">
                         <div name="Partition"
                              style=' padding-right:10px; display:inline-block; float:left;margin-left: 5%;margin-top:3%;'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Partitions:</h3>
@@ -244,4 +244,4 @@
 </section>
 
 
-{% include "includes/footer.html" %}
+{% include "internal-tools/footer.html" %}

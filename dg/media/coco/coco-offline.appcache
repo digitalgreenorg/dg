@@ -1,15 +1,15 @@
 CACHE MANIFEST
-# 2017-04-03 v4.4.1
+# 2017-09-12 v6.0
 CACHE:
 /media/coco/app/scripts/libs/bootstrap/css/bootstrap.css
 /media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css
 /media/coco/app/scripts/libs/tabletools_media/css/dataTables.tableTools.css
-/media/coco/app/scripts/libs/bootstrap/img/glyphicons-halflings.png 
-/media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.woff 
+/media/coco/app/scripts/libs/bootstrap/img/glyphicons-halflings.png
+/media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.woff
 /media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.ttf
 /media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.svg
 /media/coco/app/scripts/libs/bootstrap/fonts/glyphicons-halflings-regular.eot
-/media/img/admin/nav-bg.gif  
+/media/img/admin/nav-bg.gif
 /media/coco/app/styles/css/coco.css
 /media/coco/app/styles/css/datepicker.css
 /media/coco/app/styles/css/bootstrap-timepicker.css
@@ -38,7 +38,7 @@ CACHE:
 /media/coco/app/scripts/libs/datatablejs_media/images/Sorting%20icons.psd
 /media/coco/app/images/loading_text.gif
 /media/coco/app/scripts/libs/chosen-select/chosen-sprite.png
-/media/coco/app/styles/css/chosen-sprite.png 
+/media/coco/app/styles/css/chosen-sprite.png
 /media/coco/app/images/offline.png
 /media/coco/app/images/online.png
 /media/coco/app/images/add.png
@@ -48,6 +48,8 @@ CACHE:
 /media/coco/app/images/default.png
 /media/coco/app/images/dg4.png
 /media/coco/app/images/logo.png
+/media/coco/app/images/favicon.ico
+/media/coco/app/images/coco_logo.png
 
 /media/coco/app/scripts/libs/tabletools_media/swf/copy_csv_xls.swf
 

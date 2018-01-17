@@ -2,11 +2,32 @@
 
 import MySQLdb
 import pandas as pd
+import sys
+import os
+DIR_PATH = os.path.dirname(os.path.abspath(__file__))
+sys.path.extend([DIR_PATH+"/../../"])
+#from dg.settings import DATABASES
 # import Crop_Rate_Analysis
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'digitalgreen_local_21 aug',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': 3306
+    }
+}
 
-mysql_cn = MySQLdb.connect(host='localhost', port=3306, user='root',
-                           passwd='root',
-                           db='digitalgreen_local_21 aug',
+database = DATABASES['default']['NAME']
+username = DATABASES['default']['USER']
+password = DATABASES['default']['PASSWORD']
+host = DATABASES['default']['HOST']
+port = DATABASES['default']['PORT']
+
+mysql_cn = MySQLdb.connect(host=host, port=port, user=username,
+                           passwd=password,
+                           db=database,
                            charset='utf8',
                            use_unicode=True)
 
@@ -65,7 +86,7 @@ daily_aggregator_crop_query = 'SELECT ct.date, ct.user_created_id, ct.mandi_id, 
                               'loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
                               'join loop_village as lv on lv.id=f.village_id join loop_block as lb on lb.id=lv.block_id ' \
                               'join loop_district as ld on ld.id=lb.district_id join loop_state as ls on ls.id=ld.state_id ' \
-                              'GROUP BY ct.date , ct.crop_id , ct.user_created_id, ct.mandi_id '
+                              'GROUP BY ct.date , ct.crop_id , ct.user_created_id, ct.mandi_id, ls.id '
 daily_aggregator_crop_query_result = onrun_query(daily_aggregator_crop_query)
 columnlist = ['Date', 'Aggregator', 'Market Real', 'Crop_1', 'Quantity Real', 'State']
 daily_aggregator_crop_data = pd.DataFrame(list(daily_aggregator_crop_query_result), columns= columnlist)
@@ -76,7 +97,7 @@ daily_crop_market_query = 'SELECT ct.date, ct.mandi_id, ct.crop_id, SUM(ct.quant
                           'FROM loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
                           'join loop_village as lv on lv.id=f.village_id join loop_block as lb on lb.id=lv.block_id ' \
                           'join loop_district as ld on ld.id=lb.district_id join loop_state as ls on ls.id=ld.state_id ' \
-                          'GROUP BY date , crop_id , mandi_id '
+                          'GROUP BY ct.date , ct.crop_id , ct.mandi_id, ls.id '
 daily_crop_market_query_result = onrun_query(daily_crop_market_query)
 columnlist = ['Date', 'Market', 'Crop_2', 'Total_Quantity', 'Av Rate', 'State']
 daily_market_crop_data = pd.DataFrame(list(daily_crop_market_query_result), columns=columnlist)
@@ -88,7 +109,7 @@ daily_aggregator_sales_query = 'SELECT ct.date, ct.user_created_id, ct.mandi_id,
                                'FROM loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
                                'join loop_village as lv on lv.id=f.village_id join loop_block as lb on lb.id=lv.block_id ' \
                                'join loop_district as ld on ld.id=lb.district_id join loop_state as ls on ls.id=ld.state_id ' \
-                               'GROUP BY date, user_created_id, mandi_id'
+                               'GROUP BY ct.date, ct.user_created_id, ct.mandi_id, ls.id'
 daily_aggregator_sales_query_result = onrun_query(daily_aggregator_sales_query)
 columnlist = ['Date', 'Aggregator', 'Market Real', 'Daily_Quantity', 'Daily_Amount', 'State']
 daily_aggregator_data = pd.DataFrame(list(daily_aggregator_sales_query_result), columns= columnlist)

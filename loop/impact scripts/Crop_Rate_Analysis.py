@@ -6,7 +6,7 @@ import Crop_Outliers
 daily_aggregator_market_crop_rate_query_result = Tables.daily_aggregator_market_crop_rate_query_result
 remove_crop_outliers = Crop_Outliers.remove_crop_outliers
 
-ct_data_filtered = remove_crop_outliers(daily_aggregator_market_crop_rate_query_result, 1, 15, 0.3, 5)
+ct_data_filtered = remove_crop_outliers(ct_data=daily_aggregator_market_crop_rate_query_result, state_id=1, rate_deviation_threshold=12, deviation_factor_threshold=0.3, quantity_rate_deviation_threshold=5)
 
 print ct_data_filtered.head()
 
