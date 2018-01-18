@@ -63,6 +63,3 @@ print daily_transaction_corrected_data.head()
 writer = pd.ExcelWriter('Impact_Loop.xlsx')
 daily_transaction_corrected_data.to_excel(writer,'Sheet1')
 writer.save()
-
-
-
