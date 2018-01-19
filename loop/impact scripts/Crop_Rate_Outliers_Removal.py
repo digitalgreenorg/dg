@@ -15,8 +15,6 @@ columnlist_ct = ['Date', 'Aggregator', 'Market', 'Gaddidar', 'Farmer','Crop', 'Q
 def get_grouped_clean_data(combined_transactions_data = None):
     try:
         combined_transactions_data = get_clean_data(combined_transactions_data)
-        combined_transactions_data.fillna(0, inplace=True)
-        combined_transactions_data = combined_transactions_data[combined_transactions_data['Flag'] == 1]
 
         # TODO: Total Quantity Sum is wrong because Total_Quantity already has summation
         combined_transactions_data = combined_transactions_data.groupby(group_by_list).agg(
@@ -28,7 +26,7 @@ def get_grouped_clean_data(combined_transactions_data = None):
         combined_transactions_data = combined_transactions_data.sort_values(
             ['Crop', 'Market', 'Date', 'Total_Quantitysum'], ascending=[True, True, False, False])
         return combined_transactions_data
-    except Exception as e:
+    except Exception:
         return None
 
 # This function removes outliers from combined transactions data
@@ -38,7 +36,7 @@ def get_clean_data (combined_transactions_data = None):
         combined_transactions_data.fillna(0, inplace=True)
         combined_transactions_data = combined_transactions_data[combined_transactions_data['Flag'] == 1]
         return combined_transactions_data
-    except Exception as e:
+    except Exception:
         return None
 
 # This function puts appropriate flag in all combined transactions data
@@ -47,32 +45,33 @@ def flag_crop_outliers(combined_transactions_data):
     # combined_transactions_data['Date'] = pd.to_datetime(combined_transactions_data['Date'])
 
     # ...
-    get_initial_total_quantity = combined_transactions_data.groupby(group_by_list).agg({'Quantity': ['sum']}).reset_index()
-    get_initial_total_quantity.columns = get_initial_total_quantity.columns.droplevel(1)
-    get_initial_total_quantity = get_initial_total_quantity.rename(columns = {'Quantity': 'Initial_Total_Quantity'})
+    if combined_transactions_data is not None and not combined_transactions_data.empty:
+        get_initial_total_quantity = combined_transactions_data.groupby(group_by_list).agg({'Quantity': ['sum']}).reset_index()
+        get_initial_total_quantity.columns = get_initial_total_quantity.columns.droplevel(1)
+        get_initial_total_quantity = get_initial_total_quantity.rename(columns = {'Quantity': 'Initial_Total_Quantity'})
 
-    combined_transactions_data = pd.merge(combined_transactions_data, get_initial_total_quantity, on= group_by_list)
-    combined_transactions_final_data = pd.DataFrame()
-    combined_transactions_non_iteration_data = pd.DataFrame()
+        combined_transactions_data = pd.merge(combined_transactions_data, get_initial_total_quantity, on= group_by_list)
+        combined_transactions_final_data = pd.DataFrame()
+        combined_transactions_non_iteration_data = pd.DataFrame()
 
-    # print 'Flag_Crop_Outliers'
-    # print combined_transactions_data.head()
-    #***
-    combined_transactions_data = call_methods(combined_transactions_data, combined_transactions_final_data, combined_transactions_non_iteration_data)
+        # print 'Flag_Crop_Outliers'
+        # print combined_transactions_data.head()
+        #***
+        combined_transactions_data = call_methods(combined_transactions_data, combined_transactions_final_data, combined_transactions_non_iteration_data)
 
-    #for recursion_counter in range(0,3):
-     #   combined_transactions_data.fillna(0,inplace=True)
-      #  ct_data = combined_transactions_data[(combined_transactions_data['D/STD'] > 1.3)]
-       # if ct_data is not None:
-        #    combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
-         #   combined_transactions_data = combined_transactions_data[columnlist_ct]
-          #  combined_transactions_data = call_methods(combined_transactions_data)
-        #else:
-         #   break
+        #for recursion_counter in range(0,3):
+         #   combined_transactions_data.fillna(0,inplace=True)
+          #  ct_data = combined_transactions_data[(combined_transactions_data['D/STD'] > 1.3)]
+           # if ct_data is not None:
+            #    combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
+             #   combined_transactions_data = combined_transactions_data[columnlist_ct]
+              #  combined_transactions_data = call_methods(combined_transactions_data)
+            #else:
+             #   break
 
-    # combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
-    # combined_transactions_data = combined_transactions_data[columnlist_ct]
-    # combined_transactions_data = call_methods(combined_transactions_data)
+        # combined_transactions_data = combined_transactions_data[(combined_transactions_data['D/STD'] <= 1.3)]
+        # combined_transactions_data = combined_transactions_data[columnlist_ct]
+        # combined_transactions_data = call_methods(combined_transactions_data)
 
     return combined_transactions_data
 

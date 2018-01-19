@@ -1,14 +1,7 @@
 import pandas as pd
-import numpy as np
+# import numpy as np
 
-
-def fill_transport_data(daily_aggregator_market_data, daily_transaction_corrected_data):
-    daily_aggregator_market_data_temp = daily_aggregator_market_data[['Date', 'Aggregator', 'Market', 'TCPK', 'FSPK']]
-    daily_transaction_corrected_data = pd.merge(daily_transaction_corrected_data, daily_aggregator_market_data_temp, on= ['Date', 'Aggregator', 'Market'])
-    daily_transaction_corrected_data['Transport_Cost'] = daily_transaction_corrected_data['Quantity'] * daily_transaction_corrected_data['TCPK']
-    daily_transaction_corrected_data['Farmer_Share'] = daily_transaction_corrected_data['Quantity'] * daily_transaction_corrected_data['FSPK']
-    return daily_transaction_corrected_data
-
+# aggregator_market_data = ['Aggregator', 'Market', 'Total_Quantity', 'Visits']
 def get_aggregator_local_market(aggregator_market_data):
     aggregator_local_market = aggregator_market_data.groupby(['Aggregator']).agg({'Total_Quantity': ['max']}).reset_index()
     aggregator_local_market.columns = aggregator_local_market.columns.droplevel(1)
@@ -17,6 +10,9 @@ def get_aggregator_local_market(aggregator_market_data):
     aggregator_local_market = aggregator_local_market[['Aggregator', 'Local_Market']]
     return aggregator_local_market
 
+# daily_market_crop_data = ['Date', 'Market', 'Crop', 'Av_Rate']
+# daily_transaction_data = ['Date', 'Aggregator', 'Market', 'Gaddidar', 'Farmer', 'Crop', 'Quantity', 'Price', 'Amount']
+# aggregator_local_market = ['Aggregator', 'Local_Market']
 def fill_local_market_rate(daily_market_crop_data, daily_transaction_data, aggregator_local_market):
     daily_market_crop_data = daily_market_crop_data.rename(columns = {'Av_Ratemean': 'Predicted_Rate'})
 
@@ -30,7 +26,19 @@ def fill_local_market_rate(daily_market_crop_data, daily_transaction_data, aggre
     daily_transaction_data = daily_transaction_data.rename(columns= {'Market_x': 'Market'})
     return daily_transaction_data
 
-# If vehicle was not used, then NA or next vehicle?
+# daily_aggregator_market_data = ['Date', 'Aggregator', 'Market', 'Quantity','Transport_Cost', 'TCPK', 'Farmer_Share', 'FSPK']
+# daily_transaction_corrected_data = ['Date', 'Aggregator', 'Market', 'Gaddidar', 'Farmer', 'Crop', 'Quantity', 'Price', 'Amount'] + Columns inserted by other functions
+def fill_transport_data(daily_aggregator_market_data, daily_transaction_corrected_data):
+    daily_aggregator_market_data_temp = daily_aggregator_market_data[['Date', 'Aggregator', 'Market', 'TCPK', 'FSPK']]
+    daily_transaction_corrected_data = pd.merge(daily_transaction_corrected_data, daily_aggregator_market_data_temp, on= ['Date', 'Aggregator', 'Market'])
+    daily_transaction_corrected_data['Transport_Cost'] = daily_transaction_corrected_data['Quantity'] * daily_transaction_corrected_data['TCPK']
+    daily_transaction_corrected_data['Farmer_Share'] = daily_transaction_corrected_data['Quantity'] * daily_transaction_corrected_data['FSPK']
+    return daily_transaction_corrected_data
+
+# If vehicle was not used, then NA.
+# daily_farmer_quantity_data = ['Date', 'Aggregator', 'Farmer', 'Farmer_Quantity']
+# aggregator_local_market = ['Aggregator', 'Local_Market']
+# aggregator_market_vehicle_predicted_cost_quantity = Dekhna padega. Pehle function banao. Phir insert karo.
 def find_predicted_cost(daily_farmer_quantity_data, aggregator_local_market, aggregator_market_vehicle_predicted_cost_quantity):
     daily_farmer_quantity_data_temp = pd.merge(daily_farmer_quantity_data, aggregator_local_market, how='inner', on= ['Aggregator'])
     daily_farmer_quantity_data_temp = pd.merge(daily_farmer_quantity_data_temp, aggregator_market_vehicle_predicted_cost_quantity, how='inner', left_on= ['Aggregator', 'Local_Market'], right_on= ['Aggregator', 'Market'])
@@ -55,6 +63,8 @@ def find_predicted_cost(daily_farmer_quantity_data, aggregator_local_market, agg
 
     return daily_farmer_quantity_data
 
+# daily_farmer_quantity_data = ['Date', 'Aggregator', 'Farmer', 'Farmer_Quantity']
+# daily_transaction_corrected_data = ['Date', 'Aggregator', 'Market', 'Gaddidar', 'Farmer', 'Crop', 'Quantity', 'Price', 'Amount'] + Columns inserted by other functions
 def fill_predicted_cost(daily_farmer_quantity_data, daily_transaction_corrected_data):
     # Add predicted_tcpk and corresponding predicted_tc in daily_transaction_data
     daily_transaction_corrected_data = pd.merge(daily_transaction_corrected_data, daily_farmer_quantity_data, on=['Date', 'Aggregator', 'Farmer'])

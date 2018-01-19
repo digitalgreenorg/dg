@@ -116,20 +116,6 @@ daily_aggregator_data = pd.DataFrame(list(daily_aggregator_sales_query_result), 
 daily_aggregator_data['Date'] = pd.to_datetime(daily_aggregator_data['Date'])
 # daily_aggregator_data = daily_aggregator_data[daily_aggregator_data['State'] == 1]
 
-
-daily_aggregator_market_crop_rate_query = 'SELECT ct.date, ct.user_created_id, ct.mandi_id, ct.crop_id, ct.quantity, ct.price, ct.amount, ls.id FROM ' \
-                                          'loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
-                                          'join loop_village as lv on lv.id=f.village_id join loop_block as lb on lb.id=lv.block_id ' \
-                                          'join loop_district as ld on ld.id=lb.district_id join loop_state as ls on ls.id=ld.state_id '
-daily_aggregator_market_crop_rate_query_result = onrun_query(daily_aggregator_market_crop_rate_query)
-
-daily_aggregator_market_farmer_crop_rate_query = 'SELECT ct.date, ct.user_created_id, ct.mandi_id, ct.farmer_id, ct.crop_id, ct.quantity, ct.price, ct.amount, ls.id FROM ' \
-                                          'loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
-                                          'join loop_village as lv on lv.id=f.village_id join loop_block as lb on lb.id=lv.block_id ' \
-                                          'join loop_district as ld on ld.id=lb.district_id join loop_state as ls on ls.id=ld.state_id '
-daily_aggregator_market_farmer_crop_rate_query_result = onrun_query(daily_aggregator_market_crop_rate_query)
-
-
 daily_transport_vehicle_query = 'SELECT dt.date, dt.user_created_id, dt.mandi_id, SUM(ct.quantity), tv.vehicle_id, ' \
                                 'dt.transportation_cost FROM loop_daytransportation dt LEFT JOIN ' \
                                 'loop_combinedtransaction ct ON ct.date = dt.date AND ' \
@@ -138,7 +124,7 @@ daily_transport_vehicle_query = 'SELECT dt.date, dt.user_created_id, dt.mandi_id
 daily_transport_vehicle_query_result = onrun_query(daily_transport_vehicle_query)
 columnlist = ['Date', 'Aggregator', 'Market', 'Quantity', 'Vehicle_ID', 'Transport_Cost']
 daily_transportation_data = pd.DataFrame(list(daily_transport_vehicle_query_result), columns= columnlist)
-
+daily_transportation_data['Date'] = pd.to_datetime(daily_transportation_data['Date'])
 
 aggregator_query = 'SELECT u.user_id, u.name_en, ls.id, ls.state_name_en FROM loop_loopuser u JOIN ' \
                     'loop_village AS lv ON lv.id = u.village_id JOIN loop_block AS lb ON lb.id = lv.block_id JOIN ' \
@@ -151,3 +137,22 @@ market_query = 'select m.id, m.mandi_name_en from loop_mandi m'
 market_query_result = onrun_query(market_query)
 columnlist = ['Market', 'Market_Name']
 market_list = pd.DataFrame(list(market_query_result), columns= columnlist)
+
+
+# These queries are used for market recommendation code and not in impact evaluation code. 
+# daily_aggregator_market_crop_rate_query = 'SELECT ct.date, ct.user_created_id, ct.mandi_id, ct.crop_id, ct.quantity, ct.price, ct.amount, ls.id FROM ' \
+#                                           'loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
+#                                           'join loop_village as lv on lv.id=f.village_id join loop_block as lb on lb.id=lv.block_id ' \
+#                                           'join loop_district as ld on ld.id=lb.district_id join loop_state as ls on ls.id=ld.state_id '
+# daily_aggregator_market_crop_rate_query_result = onrun_query(daily_aggregator_market_crop_rate_query)
+
+# daily_aggregator_market_farmer_crop_rate_query = 'SELECT ct.date, ct.user_created_id, ct.mandi_id, ct.farmer_id, ct.crop_id, ct.quantity, ct.price, ct.amount, ls.id FROM ' \
+#                                           'loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
+#                                           'join loop_village as lv on lv.id=f.village_id join loop_block as lb on lb.id=lv.block_id ' \
+#                                           'join loop_district as ld on ld.id=lb.district_id join loop_state as ls on ls.id=ld.state_id '
+# daily_aggregator_market_farmer_crop_rate_query_result = onrun_query(daily_aggregator_market_crop_rate_query)
+
+
+
+
+

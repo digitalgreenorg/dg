@@ -1,5 +1,5 @@
 import pandas as pd
-import numpy as np
+# import numpy as np
 import Tables
 
 # TODO: Remove outliers while finding transport cost for A-M combination
