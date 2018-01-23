@@ -173,7 +173,8 @@ class MandiAuthorization(Authorization):
 
 class CombinedTransactionAuthorization(Authorization):
     def read_list(self, object_list, bundle):
-        return object_list.filter(user_created_id=bundle.request.user.id).distinct()
+
+        return object_list.filter(user_created_id=bundle.request.user.id,date__gte=datetime.datetime.today()-datetime.timedelta(days = 90)).distinct()
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
@@ -187,7 +188,7 @@ class CombinedTransactionAuthorization(Authorization):
 
 class DayTransportationAuthorization(Authorization):
     def read_list(self, object_list, bundle):
-        return object_list.filter(user_created_id=bundle.request.user.id).distinct()
+        return object_list.filter(user_created_id=bundle.request.user.id,date__gte=datetime.datetime.today()-datetime.timedelta(days = 90)).distinct()
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
