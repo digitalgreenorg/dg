@@ -14,12 +14,12 @@ def compute_aggregator_share():
     aso_queryset = AggregatorShareOutliers.objects.all()
     combined_ct_queryset = CombinedTransaction.objects.none()
     for aggregator in aggregators:
-        if aggregator.village.block.district.state.state_name_en == "Bihar":
-            aggregator_ct_queryset = CombinedTransaction.objects.filter(Q(date__lt=INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE) | Q(date__gte=F('farmer__correct_phone_date'))).values(
+        if aggregator.village.block.district.state.state_name_en == 'Bihar':
+            aggregator_ct_queryset = CombinedTransaction.objects.filter((Q(date__lt=INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE) | Q(date__gte=F('farmer__correct_phone_date'))) & Q(user_created_id=aggregator.user_id)).values(
                 'date', 'user_created_id', 'mandi').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
                                                                                Count('farmer_id', distinct=True))
         else:
-            aggregator_ct_queryset = CombinedTransaction.objects.values(
+            aggregator_ct_queryset = CombinedTransaction.objects.filter(Q(user_created_id=aggregator.user_id)).values(
                 'date', 'user_created_id', 'mandi').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
                                                                                Count('farmer_id', distinct=True))
 
