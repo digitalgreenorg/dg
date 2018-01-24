@@ -495,7 +495,7 @@ function set_filterlistener() {
     $('#district_all').on('change', function (e) {
         if (this.checked) {
             $('#districts').children().each(function () {
-                var districtss_all = $(this).children()[1].firstChild;
+                var districts_all = $(this).children()[1].firstChild;
                 districts_all.checked = true;
             });
         } else {
