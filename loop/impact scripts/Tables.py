@@ -11,7 +11,7 @@ sys.path.extend([DIR_PATH+"/../../"])
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'digitalgreen_local_21 aug',
+        'NAME': 'digitalgreen_local',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',
@@ -36,12 +36,12 @@ def onrun_query(query):
     cursor.execute(query)
     result = cursor.fetchall()
     return result
-
+#
 # columnlist_ct = ['Date', 'Aggregator', 'Market Real', 'Crop_1', 'Quantity Real', 'State']
 # daily_aggregator_crop_data = outlier_ct_data.groupby(['Date', 'Aggregator', 'Market Real', 'Crop_1'])
 # #     pd.DataFrame(daily_aggregator_crop_query_result, columns= columnlist_ct)
 # # daily_aggregator_crop_data = daily_aggregator_crop_data[daily_aggregator_crop_data['State'] == 1]
-
+#
 # Purpose: To story daily quantity given by farmers. Predicted cost and time for transactions will depend on this.
 # TODO: Won't work if a farmer gives produce to multiple aggregators in a day. Fix.
 daily_farmer_quantity_query = 'SELECT date, user_created_id, farmer_id, SUM(quantity)FROM loop_combinedtransaction GROUP BY date , ' \
@@ -80,8 +80,6 @@ aggregator_market_query_result = onrun_query(aggregator_market_query)
 columnlist = ['Aggregator', 'Market', 'Total_Quantity', 'Visits']
 aggregator_market_data = pd.DataFrame(list(aggregator_market_query_result), columns=columnlist)
 
-
-
 daily_aggregator_crop_query = 'SELECT ct.date, ct.user_created_id, ct.mandi_id, ct.crop_id, SUM(ct.quantity), ls.id FROM ' \
                               'loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
                               'join loop_village as lv on lv.id=f.village_id join loop_block as lb on lb.id=lv.block_id ' \
@@ -91,7 +89,6 @@ daily_aggregator_crop_query_result = onrun_query(daily_aggregator_crop_query)
 columnlist = ['Date', 'Aggregator', 'Market Real', 'Crop_1', 'Quantity Real', 'State']
 daily_aggregator_crop_data = pd.DataFrame(list(daily_aggregator_crop_query_result), columns= columnlist)
 daily_aggregator_crop_data['Date'] = pd.to_datetime(daily_aggregator_crop_data['Date'])
-# daily_aggregator_crop_data = daily_aggregator_crop_data[daily_aggregator_crop_data['State'] == 1]
 
 daily_crop_market_query = 'SELECT ct.date, ct.mandi_id, ct.crop_id, SUM(ct.quantity), SUM(ct.amount) / SUM(ct.quantity), ls.id ' \
                           'FROM loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
@@ -102,8 +99,6 @@ daily_crop_market_query_result = onrun_query(daily_crop_market_query)
 columnlist = ['Date', 'Market', 'Crop_2', 'Total_Quantity', 'Av Rate', 'State']
 daily_market_crop_data = pd.DataFrame(list(daily_crop_market_query_result), columns=columnlist)
 daily_market_crop_data['Date'] = pd.to_datetime(daily_market_crop_data['Date'])
-#daily_market_crop_data = daily_market_crop_data[(daily_market_crop_data['State'] == 1) & (daily_market_crop_data['Av Rate'] < 50)]
-# daily_market_crop_data = daily_market_crop_data[daily_market_crop_data['State'] == 1]
 
 daily_aggregator_sales_query = 'SELECT ct.date, ct.user_created_id, ct.mandi_id, SUM(ct.quantity), SUM(ct.amount), ls.id ' \
                                'FROM loop_combinedtransaction ct LEFT JOIN loop_farmer f ON f.id = ct.farmer_id ' \
@@ -114,7 +109,6 @@ daily_aggregator_sales_query_result = onrun_query(daily_aggregator_sales_query)
 columnlist = ['Date', 'Aggregator', 'Market Real', 'Daily_Quantity', 'Daily_Amount', 'State']
 daily_aggregator_data = pd.DataFrame(list(daily_aggregator_sales_query_result), columns= columnlist)
 daily_aggregator_data['Date'] = pd.to_datetime(daily_aggregator_data['Date'])
-# daily_aggregator_data = daily_aggregator_data[daily_aggregator_data['State'] == 1]
 
 
 daily_aggregator_market_crop_rate_query = 'SELECT ct.date, ct.user_created_id, ct.mandi_id, ct.crop_id, ct.quantity, ct.price, ct.amount, ls.id FROM ' \
@@ -130,24 +124,31 @@ daily_aggregator_market_farmer_crop_rate_query = 'SELECT ct.date, ct.user_create
 daily_aggregator_market_farmer_crop_rate_query_result = onrun_query(daily_aggregator_market_crop_rate_query)
 
 
-daily_transport_vehicle_query = 'SELECT dt.date, dt.user_created_id, dt.mandi_id, SUM(ct.quantity), tv.vehicle_id, ' \
-                                'dt.transportation_cost FROM loop_daytransportation dt LEFT JOIN ' \
+daily_transport_vehicle_query = 'SELECT dt.date, dt.user_created_id, dt.mandi_id, dt.id, tv.vehicle_id, ' \
+                                'v.vehicle_name_en, dt.transportation_cost, SUM(ct.quantity) ' \
+                                'FROM loop_daytransportation dt LEFT JOIN ' \
                                 'loop_combinedtransaction ct ON ct.date = dt.date AND ' \
                                 'ct.user_created_id = dt.user_created_id AND ct.mandi_id = dt.mandi_id LEFT JOIN ' \
-                                'loop_transportationvehicle tv ON dt.transportation_vehicle_id = tv.id GROUP BY dt.id'
+                                'loop_transportationvehicle tv ON dt.transportation_vehicle_id = tv.id LEFT JOIN ' \
+                                'loop_vehicle v ON v.id = tv.vehicle_id GROUP BY dt.id'
 daily_transport_vehicle_query_result = onrun_query(daily_transport_vehicle_query)
-columnlist = ['Date', 'Aggregator', 'Market', 'Quantity', 'Vehicle_ID', 'Transport_Cost']
+columnlist = ['Date', 'Aggregator', 'Market', 'DT_ID', 'Vehicle_ID', 'Vehicle_Name','Transport_Cost','Quantity' ]
 daily_transportation_data = pd.DataFrame(list(daily_transport_vehicle_query_result), columns= columnlist)
 
 
-aggregator_query = 'SELECT u.user_id, u.name_en, ls.id, ls.state_name_en FROM loop_loopuser u JOIN ' \
+aggregator_query = 'SELECT u.user_id, u.name_en, ld.district_name, ls.id, ls.state_name_en FROM loop_loopuser u JOIN ' \
                     'loop_village AS lv ON lv.id = u.village_id JOIN loop_block AS lb ON lb.id = lv.block_id JOIN ' \
                     'loop_district AS ld ON ld.id = lb.district_id JOIN loop_state AS ls ON ls.id = ld.state_id '
 aggregator_query_result = onrun_query(aggregator_query)
-columnlist = ['Aggregator', 'Aggregator_Name', 'State_ID', 'State_Name']
+columnlist = ['Aggregator', 'Aggregator_Name', 'District_Name','State_ID', 'State_Name']
 aggregator_list = pd.DataFrame(list(aggregator_query_result), columns= columnlist)
 
 market_query = 'select m.id, m.mandi_name_en from loop_mandi m'
 market_query_result = onrun_query(market_query)
 columnlist = ['Market', 'Market_Name']
 market_list = pd.DataFrame(list(market_query_result), columns= columnlist)
+
+vehicle_query = 'select v.id, v.vehicle_name_en from loop_vehicle v'
+vehicle_query_result = onrun_query(vehicle_query)
+columnlist = ['ID', 'Name']
+vehicle_data = pd.DataFrame(list(vehicle_query_result), columns= columnlist)

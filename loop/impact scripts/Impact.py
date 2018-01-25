@@ -16,13 +16,13 @@ daily_aggregator_market_data = Tables.daily_aggregator_market_data
 # columnlist = ['Date', 'Aggregator', 'Market', 'Gaddidar', 'Farmer', 'Crop', 'Quantity', 'Price', 'Amount']
 daily_transaction_data = Tables.daily_transaction_data
 
-# columnlist = ['Aggregator', 'Market', 'Total_Quantity', 'Visits']
-aggregator_market_data = Tables.aggregator_market_data
-
 # Predicted cost for Aggregator-Market-Vehicle combination. This needs to be converted into a function
 aggregator_market_vehicle_predicted_cost_quantity = Transport_Cost.vehicle_market_cost
 
+# columnlist = ['Aggregator', 'Aggregator_Name', 'District_Name','State_ID', 'State_Name']
 aggregator_list = Tables.aggregator_list
+
+# columnlist = ['Market', 'Market_Name']
 market_list = Tables.market_list
 
 # Importing functions
@@ -38,10 +38,13 @@ get_aggregator_local_market = Functions.get_aggregator_local_market
 # Eventually, we will remove outliers from ct data and then run everything on it.
 daily_transaction_corrected_data = daily_transaction_data
 
+# daily_transaction_corrected_data = daily_transaction_corrected_data[daily_transaction_corrected_data['State_ID'] == 7]
+# print daily_transaction_corrected_data.head()
+
 # Step 1: Find rate in local market (non-Loop) for that date-aggregator-crop combination and integrate in transaction-level data
 
 # Step 1.1 Find aggregator-wise local markets
-aggregator_local_market = get_aggregator_local_market(aggregator_market_data)
+aggregator_local_market = get_aggregator_local_market(daily_aggregator_market_data)
 # Step 1.2 Find rate in that local market
 daily_market_crop_data = get_grouped_clean_data(daily_transaction_data)
 daily_transaction_corrected_data = fill_local_market_rate(daily_market_crop_data, daily_transaction_corrected_data, aggregator_local_market)
@@ -57,12 +60,13 @@ daily_transaction_corrected_data = fill_predicted_cost(daily_farmer_quantity_dat
 daily_transaction_corrected_data = pd.merge(daily_transaction_corrected_data, aggregator_list, on=['Aggregator'])
 daily_transaction_corrected_data = pd.merge(daily_transaction_corrected_data, market_list, on=['Market'])
 
+
 print 'Final data'
 print daily_transaction_corrected_data.head()
 
-writer = pd.ExcelWriter('Impact_Loop.xlsx')
-daily_transaction_corrected_data.to_excel(writer,'Sheet1')
-writer.save()
+# writer = pd.ExcelWriter('Impact_Loop_Jan_24.xlsx')
+# daily_transaction_corrected_data.to_excel(writer,'Sheet1')
+# writer.save()
 
 
 
