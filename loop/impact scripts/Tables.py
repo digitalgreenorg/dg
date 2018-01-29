@@ -37,11 +37,11 @@ def onrun_query(query):
     result = cursor.fetchall()
     return result
 #
-# columnlist_ct = ['Date', 'Aggregator', 'Market Real', 'Crop_1', 'Quantity Real', 'State']
-# daily_aggregator_crop_data = outlier_ct_data.groupby(['Date', 'Aggregator', 'Market Real', 'Crop_1'])
-# #     pd.DataFrame(daily_aggregator_crop_query_result, columns= columnlist_ct)
-# # daily_aggregator_crop_data = daily_aggregator_crop_data[daily_aggregator_crop_data['State'] == 1]
-#
+#columnlist_ct = ['Date', 'Aggregator', 'Market Real', 'Crop_1', 'Quantity Real', 'State']
+#daily_aggregator_crop_data = outlier_ct_data.groupby(['Date', 'Aggregator', 'Market Real', 'Crop_1'])
+#     pd.DataFrame(daily_aggregator_crop_query_result, columns= columnlist_ct)
+# daily_aggregator_crop_data = daily_aggregator_crop_data[daily_aggregator_crop_data['State'] == 1]
+
 # Purpose: To story daily quantity given by farmers. Predicted cost and time for transactions will depend on this.
 # TODO: Won't work if a farmer gives produce to multiple aggregators in a day. Fix.
 daily_farmer_quantity_query = 'SELECT date, user_created_id, farmer_id, SUM(quantity)FROM loop_combinedtransaction GROUP BY date , ' \
@@ -68,10 +68,10 @@ daily_aggregator_market_data['Date'] = pd.to_datetime(daily_aggregator_market_da
 
 
 # Purpose: To have data for each transaction. Every data (ACPK, TCPK, FSPK, Predicted...) will be mapped on this level.
-transaction_level_data_query = 'SELECT date, user_created_id, mandi_id, gaddidar_id, farmer_id, crop_id, quantity, price, amount ' \
+transaction_level_data_query = 'SELECT id, date, user_created_id, mandi_id, gaddidar_id, farmer_id, crop_id, quantity, price, amount ' \
                                'FROM loop_combinedtransaction'
 transaction_level_data_query_result = onrun_query(transaction_level_data_query)
-columnlist = ['Date', 'Aggregator', 'Market', 'Gaddidar', 'Farmer', 'Crop', 'Quantity', 'Price', 'Amount']
+columnlist = ['ID', 'Date', 'Aggregator', 'Market', 'Gaddidar', 'Farmer', 'Crop', 'Quantity', 'Price', 'Amount']
 daily_transaction_data = pd.DataFrame(list(transaction_level_data_query_result), columns= columnlist)
 daily_transaction_data['Date'] = pd.to_datetime(daily_transaction_data['Date'])
 
@@ -125,14 +125,17 @@ daily_aggregator_market_farmer_crop_rate_query_result = onrun_query(daily_aggreg
 
 
 daily_transport_vehicle_query = 'SELECT dt.date, dt.user_created_id, dt.mandi_id, dt.id, tv.vehicle_id, ' \
-                                'v.vehicle_name_en, dt.transportation_cost, SUM(ct.quantity) ' \
+                                'v.vehicle_name_en, dt.transportation_cost, SUM(ct.quantity), s.id ' \
                                 'FROM loop_daytransportation dt LEFT JOIN ' \
                                 'loop_combinedtransaction ct ON ct.date = dt.date AND ' \
                                 'ct.user_created_id = dt.user_created_id AND ct.mandi_id = dt.mandi_id LEFT JOIN ' \
                                 'loop_transportationvehicle tv ON dt.transportation_vehicle_id = tv.id LEFT JOIN ' \
-                                'loop_vehicle v ON v.id = tv.vehicle_id GROUP BY dt.id'
+                                'loop_vehicle v ON v.id = tv.vehicle_id LEFT JOIN loop_loopuser u ON ' \
+                                'u.user_id = dt.user_created_id LEFT JOIN loop_village vi ON vi.id = u.village_id ' \
+                                'LEFT JOIN loop_block b ON b.id = vi.block_id LEFT JOIN loop_district d ON ' \
+                                'd.id = b.district_id LEFT JOIN loop_state s ON s.id = d.state_id GROUP BY dt.id'
 daily_transport_vehicle_query_result = onrun_query(daily_transport_vehicle_query)
-columnlist = ['Date', 'Aggregator', 'Market', 'DT_ID', 'Vehicle_ID', 'Vehicle_Name','Transport_Cost','Quantity' ]
+columnlist = ['Date', 'Aggregator', 'Market', 'DT_ID', 'Vehicle_ID', 'Vehicle_Name','Transport_Cost','Quantity', 'State' ]
 daily_transportation_data = pd.DataFrame(list(daily_transport_vehicle_query_result), columns= columnlist)
 
 

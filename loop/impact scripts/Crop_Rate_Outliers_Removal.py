@@ -7,9 +7,7 @@ group_by_list = ['Date', 'Market', 'Crop']
 final_group_by = ['Crop','Market','Date']
 columnlist_ct = ['Date', 'Aggregator', 'Market', 'Gaddidar', 'Farmer','Crop', 'Quantity', 'Price', 'Amount', 'Initial_Total_Quantity']
 
-# All combined transactions
-# columnlist = ['Date', 'Aggregator', 'Market', 'Gaddidar', 'Farmer', 'Crop', 'Quantity', 'Price', 'Amount']
-# daily_transaction_data = pd.DataFrame(list(Tables.transaction_level_data_query_result), columns= columnlist)
+
 
 # This function groups cleaned data on Date-Market_Crop combination and returns Av_Rate
 def get_grouped_clean_data(combined_transactions_data = None):

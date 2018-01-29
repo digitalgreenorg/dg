@@ -13,7 +13,7 @@ import Transport_Cost
 daily_aggregator_crop_data = Tables.daily_aggregator_crop_data
 daily_market_crop_data = Tables.daily_market_crop_data
 daily_aggregator_data = Tables.daily_aggregator_data
-vehicle_market_cost = Transport_Cost.vehicle_market_cost
+vehicle_market_cost = Transport_Cost.aggregator_market_vehicle_cost_detailed
 daily_market_transport_cost = Transport_Cost.daily_market_transport_cost
 aggregator_list = Tables.aggregator_list
 market_list = Tables.market_list

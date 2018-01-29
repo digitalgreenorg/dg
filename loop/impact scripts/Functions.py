@@ -10,6 +10,11 @@ def fill_transport_data(daily_aggregator_market_data, daily_transaction_correcte
     daily_transaction_corrected_data['Farmer_Share'] = daily_transaction_corrected_data['Quantity'] * daily_transaction_corrected_data['FSPK']
     return daily_transaction_corrected_data
 
+# Returns the market where aggregator has sold maximum produce in first 30 days.
+# TODO: Check the ratio of produce sold in local market to the total quantity sold in 30 days. Put some minimum threshold on this ratio.
+# TODO: Put some minimum threshold on number of market visits in first thirty days.
+# TODO: Instead of 30 days as the filter, keep # market visits as the filter.
+
 def get_aggregator_local_market(daily_aggregator_market_data):
     aggregator_first_date = daily_aggregator_market_data.groupby(['Aggregator']).agg({'Date': 'min'}).reset_index()
     aggregator_first_date = aggregator_first_date.rename(columns={'Date': 'First_Date'})
@@ -36,6 +41,7 @@ def get_aggregator_local_market(daily_aggregator_market_data):
 
     return aggregator_local_market
 
+# Finds rate for Date-Aggregator-Crop combination in local market. If market is same as local market, then rate is unchanged.
 def fill_local_market_rate(daily_market_crop_data, daily_transaction_data, aggregator_local_market):
     daily_market_crop_data = daily_market_crop_data.rename(columns = {'Av_Ratemean': 'Predicted_Rate'})
 
@@ -44,7 +50,7 @@ def fill_local_market_rate(daily_market_crop_data, daily_transaction_data, aggre
 
     daily_transaction_data = pd.merge(daily_transaction_data, aggregator_local_market, on= ['Aggregator'])
     daily_transaction_data = pd.merge(daily_transaction_data, daily_market_crop_data, how= 'left', left_on= ['Date', 'Crop', 'Local_Market'], right_on= ['Date', 'Crop', 'Market'])
-    daily_transaction_data.loc[daily_transaction_data['Market'] == daily_transaction_data['Local_Market'], 'Predicted_Rate'] = daily_transaction_data['Price']
+    daily_transaction_data.loc[daily_transaction_data['Market_x'] == daily_transaction_data['Local_Market'], 'Predicted_Rate'] = daily_transaction_data['Price']
     daily_transaction_data['Predicted_Amount'] = daily_transaction_data['Quantity'] * daily_transaction_data['Predicted_Rate']
     daily_transaction_data = daily_transaction_data.drop(['Market_y', 'STDmean', 'Pricemax', 'Pricemin', 'Total_Quantitysum'], axis = 1)
     daily_transaction_data = daily_transaction_data.rename(columns= {'Market_x': 'Market'})
@@ -52,6 +58,10 @@ def fill_local_market_rate(daily_market_crop_data, daily_transaction_data, aggre
 
 # If vehicle was not used, then NA or next vehicle?
 def find_predicted_cost(daily_farmer_quantity_data, aggregator_local_market, aggregator_market_vehicle_predicted_cost_quantity):
+
+    # Finds vehicle whose quantity_limit > farmer_quantity for the day
+    # Assigns this vehicle to this Date-Farmer combination and insert the cost for local market
+
     daily_farmer_quantity_data_temp = pd.merge(daily_farmer_quantity_data, aggregator_local_market, how='inner', on= ['Aggregator'])
     daily_farmer_quantity_data_temp = pd.merge(daily_farmer_quantity_data_temp, aggregator_market_vehicle_predicted_cost_quantity, how='inner', left_on= ['Aggregator', 'Local_Market'], right_on= ['Aggregator', 'Market'])
     daily_farmer_quantity_data_temp = daily_farmer_quantity_data_temp[daily_farmer_quantity_data_temp['Farmer_Quantity'] <= daily_farmer_quantity_data_temp['Quantity_Limit']]
@@ -61,17 +71,18 @@ def find_predicted_cost(daily_farmer_quantity_data, aggregator_local_market, agg
     daily_farmer_quantity_data_temp = daily_farmer_quantity_data_temp[['Date', 'Aggregator', 'Farmer', 'Quantity_Limit', 'Local_Market', 'Vehicle_ID', 'Predicted_TC', 'Vehicle_Name']]
     daily_farmer_quantity_data = pd.merge(daily_farmer_quantity_data, daily_farmer_quantity_data_temp, on=['Date', 'Aggregator', 'Farmer'])
 
+    # If quantity is less than 150 Kgs, then make vehicles as motorcycle and cost = Rs. 60
     daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Predicted_TC'] = 60
     daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Vehicle_ID'] = 1
     daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Vehicle_Name'] = 'Motor Cycle'
     daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Quantity_Limit'] = 150
 
-
-    #This is assuming that no aggregation will happen without Loop and farmer will take produce on his own
     # daily_farmer_quantity_data['Predicted_TCPK'] = daily_farmer_quantity_data['Predicted_TC'] / daily_farmer_quantity_data['Farmer_Quantity']
 
-    # If farmer will aggregate enough to fill the lowest vehicle. This is a better estimate.
-    daily_farmer_quantity_data['Predicted_TCPK'] = daily_farmer_quantity_data['Predicted_TC'] / daily_farmer_quantity_data['Quantity_Limit']
+    # If farmer's quantity < 0.85 * quantity_limit, then it will fill vehicle to 85%. If not, then it will fill completely. TCPK & Predicted_TC is changed accordingly.
+    daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] < 0.85 * daily_farmer_quantity_data['Quantity_Limit'], 'Predicted_TCPK'] = daily_farmer_quantity_data['Predicted_TC'] / (0.85* daily_farmer_quantity_data['Quantity_Limit'])
+    daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] >= 0.85 * daily_farmer_quantity_data[
+        'Quantity_Limit'], 'Predicted_TCPK'] = daily_farmer_quantity_data['Predicted_TC'] / daily_farmer_quantity_data['Farmer_Quantity']
     daily_farmer_quantity_data['Predicted_TC'] = daily_farmer_quantity_data['Predicted_TCPK'] * daily_farmer_quantity_data['Farmer_Quantity']
     return daily_farmer_quantity_data
 
