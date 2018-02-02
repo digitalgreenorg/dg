@@ -59,18 +59,12 @@ class Command(BaseCommand):
 				district_added = AP_District.objects.values_list('district_name',flat=True)
 				#district_added = [i[0] for i in district_added]
 				
-				if district_name not in district_added:
-					district_obj, created = \
-						AP_District.objects.get_or_create(district_name=district_name,
-														  district_code=district_code,
-										                  district = district,
-										                  user_created_id=user_obj.id)
-					print district_obj, "District Saved in AP_District Table"
-				else:
-					district_obj = \
-						AP_District.objects.get(district_name=district_name,
-												district_code=district_code,
-												district = district)
+				district_obj, created = \
+					AP_District.objects.get_or_create(district_name=district_name,
+													  district_code=district_code,
+									                  district = district,
+									                  user_created_id=user_obj.id)
+				print district_obj, "District Saved in AP_District Table"
 			except Exception as e:
 				if "Duplicate entry" not in str(e):
 					ap.other_error_count += 1
@@ -96,21 +90,14 @@ class Command(BaseCommand):
 				block = Block.objects.get(block_name=mandal)
 				block_added = AP_Mandal.objects.values_list('mandal_name',flat=True)
 				#block_added = [i[0] for i in block_added]
-				if block not in block_added:
-					mandal_obj, created = \
-						AP_Mandal.objects.get_or_create(mandal_code=mandal_code,
-													    mandal_name=mandal,
-													    block=block,
-													    ap_district=district_obj,
-													    user_created_id=user_obj.id)
+				mandal_obj, created = \
+					AP_Mandal.objects.get_or_create(mandal_code=mandal_code,
+												    mandal_name=mandal,
+												    block=block,
+												    ap_district=district_obj,
+												    user_created_id=user_obj.id)
 
-					print mandal_obj, "block saved in AP_block table"
-				else:
-					mandal_obj = \
-						AP_Mandal.objects.get(mandal_code=mandal_code,
-											  mandal_name=mandal,
-											  block=block,
-											  ap_district=district_obj)
+				print mandal_obj, "block saved in AP_block table"
 
 			except Exception as e:
 				print mandal, e
@@ -138,22 +125,15 @@ class Command(BaseCommand):
 				village_added = AP_Village.objects.values_list('village_name',flat=True)
 				#village_added = [i[0] for i in village_added]
 
-				if village_name not in village_added:
-					village_obj, created = \
-						AP_Village.objects.get_or_create(village_code = village_code,
-														 village_name = village_name,
-														 village = village_q,
-														 user_created_id=user_obj.id,
-														 ap_mandal=mandal_obj,
-														 )
+				village_obj, created = \
+					AP_Village.objects.get_or_create(village_code = village_code,
+													 village_name = village_name,
+													 village = village_q,
+													 user_created_id=user_obj.id,
+													 ap_mandal=mandal_obj,
+													 )
 
-					print village_obj, "village saved in AP_VILLAGE Table"
-				else:
-					village_obj = \
-						AP_Village.objects.get(village_code=village_code,
-											   village_name = village_name,
-											   village = village_q,
-											   user_created_id=user_obj.id)
+				print village_obj, "village saved in AP_VILLAGE Table"
 			except Exception as e:
 				if "Duplicate entry" not in str(e):
 					ap.other_error_count += 1

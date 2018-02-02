@@ -35,9 +35,7 @@ class Command(BaseCommand):
 		state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
 		district_data_list = []
-		village = None
-		animator = None
-		videoes_screened = []
+
 		for data_iterable in data:
 			screening_code = data_iterable.get('ID')
 			start_date = data_iterable.get('Date of Screening')
