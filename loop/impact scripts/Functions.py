@@ -12,7 +12,6 @@ def fill_transport_data(daily_aggregator_market_data, daily_transaction_correcte
 
 # Returns the market where aggregator has sold maximum produce in first 30 days.
 # TODO: Check the ratio of produce sold in local market to the total quantity sold in 30 days. Put some minimum threshold on this ratio.
-# TODO: Put some minimum threshold on number of market visits in first thirty days.
 # TODO: Instead of 30 days as the filter, keep # market visits as the filter.
 
 def get_aggregator_local_market(daily_aggregator_market_data):
@@ -71,18 +70,20 @@ def find_predicted_cost(daily_farmer_quantity_data, aggregator_local_market, agg
     daily_farmer_quantity_data_temp = daily_farmer_quantity_data_temp[['Date', 'Aggregator', 'Farmer', 'Quantity_Limit', 'Local_Market', 'Vehicle_ID', 'Predicted_TC', 'Vehicle_Name']]
     daily_farmer_quantity_data = pd.merge(daily_farmer_quantity_data, daily_farmer_quantity_data_temp, on=['Date', 'Aggregator', 'Farmer'])
 
+    # TODO: This has to be removed.
     # If quantity is less than 150 Kgs, then make vehicles as motorcycle and cost = Rs. 60
-    daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Predicted_TC'] = 60
-    daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Vehicle_ID'] = 1
-    daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Vehicle_Name'] = 'Motor Cycle'
-    daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Quantity_Limit'] = 150
+    # daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Predicted_TC'] = 60
+    # daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Vehicle_ID'] = 1
+    # daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Vehicle_Name'] = 'Motor Cycle'
+    # daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] <= 150, 'Quantity_Limit'] = 150
 
     # daily_farmer_quantity_data['Predicted_TCPK'] = daily_farmer_quantity_data['Predicted_TC'] / daily_farmer_quantity_data['Farmer_Quantity']
 
-    # If farmer's quantity < 0.85 * quantity_limit, then it will fill vehicle to 85%. If not, then it will fill completely. TCPK & Predicted_TC is changed accordingly.
+    # If farmer's quantity < 0.85 * quantity_limit, then it will fill vehicle to 85%. If not, then it will take produce individually. TCPK & Predicted_TC is changed accordingly.
     daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] < 0.85 * daily_farmer_quantity_data['Quantity_Limit'], 'Predicted_TCPK'] = daily_farmer_quantity_data['Predicted_TC'] / (0.85* daily_farmer_quantity_data['Quantity_Limit'])
     daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Farmer_Quantity'] >= 0.85 * daily_farmer_quantity_data[
         'Quantity_Limit'], 'Predicted_TCPK'] = daily_farmer_quantity_data['Predicted_TC'] / daily_farmer_quantity_data['Farmer_Quantity']
+    daily_farmer_quantity_data.loc[daily_farmer_quantity_data['Vehicle_ID'] == 1, 'Predicted_TCPK'] = daily_farmer_quantity_data['Predicted_TC']/daily_farmer_quantity_data['Farmer_Quantity']
     daily_farmer_quantity_data['Predicted_TC'] = daily_farmer_quantity_data['Predicted_TCPK'] * daily_farmer_quantity_data['Farmer_Quantity']
     return daily_farmer_quantity_data
 

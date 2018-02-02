@@ -7,6 +7,7 @@ import Tables, Transport_Cost, Functions, Crop_Rate_Outliers_Removal
 # TODO: Improve prediction of Transport Cost, remove outliers
 # TODO: Integrate Gadidar Share in Analysis
 # TODO: Vehichle should be state-wise in DB
+# TODO: Put filters put by Melbin on top of the data that comes out of it
 
 # Importing dataframes from Tables file
 
@@ -23,7 +24,7 @@ daily_transaction_data = Tables.daily_transaction_data
 daily_transportation_data = Tables.daily_transportation_data
 
 # List of state-wise frequently used vehicles
-vehicles_to_fill_na_data = {'State': [1,1,1,1], 'Vehicle_ID': [2, 3, 4, 5]}
+vehicles_to_fill_na_data = {'State': [1,1,1,1,1], 'Vehicle_ID': [0, 2, 3, 4, 5]}
 vehicles_to_fill_na = pd.DataFrame(data= vehicles_to_fill_na_data)
 
 # columnlist = ['Aggregator', 'Aggregator_Name', 'District_Name','State_ID', 'State_Name']
