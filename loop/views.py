@@ -314,8 +314,10 @@ def calculate_inc_default(V):
 def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=None, aggregator_list=None):
     if aggregator_list is not None:
         user_qset = LoopUser.objects.filter(user__in=aggregator_list).values_list('id', flat=True)
+        aggregators = LoopUser.objects.filter(user__in=aggregator_list)
     else:
         user_qset = LoopUser.objects.values_list('id', flat=True)
+        aggregators = LoopUser.objects.all()
 
     parameters_dictionary = {'aggregator__in': user_qset}
     parameters_dictionary_for_outliers = {
@@ -344,16 +346,21 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
 
     aso_queryset = AggregatorShareOutliers.objects.filter(
         **arguments_for_aggregator_incentive_outliers)
-    combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
-        'date', 'user_created_id', 'mandi', 'mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'),
-                                                                                               Sum('amount'),
-                                                                                               Count('farmer_id',
-                                                                                                     distinct=True))
-
+    
+    combined_ct_queryset = CombinedTransaction.objects.none()
     # Checking if we need to apply incorrect farmer phone model on payment data
     date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     if date_start >= INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE:
-        combined_ct_queryset = combined_ct_queryset.filter(date__gte=F('farmer__correct_phone_date'))
+        for aggregator in aggregators:
+            arguments_for_agg = arguments_for_ct
+            if aggregator.village.block.district.state.state_name_en == "Bihar":
+                arguments_for_agg['date__gte'] = F('farmer__correct_phone_date')
+            aggregator_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_agg).values(
+            'date', 'user_created_id', 'mandi', 'mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'),
+                                                                                               Sum('amount'),
+                                                                                               Count('farmer_id',
+                                                                                                     distinct=True))
+            combined_ct_queryset = combined_ct_queryset | aggregator_ct_queryset
 
     result = []
     daily_pay_list = []
