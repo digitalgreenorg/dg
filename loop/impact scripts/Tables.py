@@ -11,7 +11,7 @@ sys.path.extend([DIR_PATH+"/../../"])
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'digitalgreen_local',
+        'NAME': 'digital_green_30_aug',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',
