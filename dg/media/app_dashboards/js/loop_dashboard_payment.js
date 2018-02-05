@@ -495,7 +495,7 @@ function set_filterlistener() {
     $('#district_all').on('change', function (e) {
         if (this.checked) {
             $('#districts').children().each(function () {
-                var districtss_all = $(this).children()[1].firstChild;
+                var districts_all = $(this).children()[1].firstChild;
                 districts_all.checked = true;
             });
         } else {
@@ -764,7 +764,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     var aggregator_data_set_length = aggregator_data_set.length;
     aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.SNO] = aggregator_data_set_length.toString();
     aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.MANDI_NAME] = "Mobile Recharge";
-    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat("150").toFixed(2);
+    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat("150");
     aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat("150").toFixed(2);
 
 

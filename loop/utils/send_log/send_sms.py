@@ -49,9 +49,10 @@ def send_sms(request):
                     transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0)
 
                     transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id)
-
-                    helpline_no = requesting_loop_user.village.block.district.state.helpline_number
-
+                    if requesting_loop_user.partner.id != 2:
+                        helpline_no = requesting_loop_user.partner.helpline_number
+                    else:
+                        helpline_no = requesting_loop_user.village.block.district.state.helpline_number
                     Thread(target=transactions_sms,
                            args=[requesting_loop_user, transactions_to_consider, preferred_language,
                                  transportations_to_consider_for_ct, helpline_no]).start()
