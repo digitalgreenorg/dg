@@ -7,7 +7,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict, ModelChoiceField
 # tastypie imports
 from tastypie import fields
-from tastypie.authentication import SessionAuthentication
+from tastypie.models import ApiKey
+from tastypie.authentication import SessionAuthentication, MultiAuthentication
+from custom_authentication import AnonymousGETAuthentication
 from tastypie.authorization import Authorization
 from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource
@@ -262,8 +264,17 @@ class MediatorAuthorization(Authorization):
             raise NotFound( "Not allowed to download Mediator")
 
 class VideoAuthorization(Authorization):
-    def read_list(self, object_list, bundle):        
-        return object_list.filter(id__in= get_user_videos(bundle.request.user.id))
+    def read_list(self, object_list, bundle):
+        try:
+            return object_list.filter(id__in= get_user_videos(bundle.request.user.id))
+        except Exception as e:
+            """ this is for external APIs"""
+            meta_auth_container = bundle.request.META.get('HTTP_AUTHORIZATION')
+            if meta_auth_container and len(meta_auth_container):
+                apikey = bundle.request.META.get('HTTP_AUTHORIZATION').split(':')[-1] 
+                apikey_object = ApiKey.objects.get(key=apikey)
+                user_id = apikey_object.user_id
+                return object_list.filter(id__in= get_user_videos(user_id))
     
     def read_detail(self, object_list, bundle):
         #To add adoption for the video seen which is outside user access
@@ -472,7 +483,7 @@ class VideoResource(BaseResource):
         max_limit = None
         queryset = Video.objects.prefetch_related('village', 'language', 'production_team', 'partner', 'category','subcategory').all()
         resource_name = 'video'
-        authentication = SessionAuthentication()
+        authentication = MultiAuthentication(SessionAuthentication(), AnonymousGETAuthentication())
         authorization = VideoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
@@ -774,7 +785,7 @@ class CategoryResource(ModelResource):
         max_limit = None
         queryset = Category.objects.all()
         resource_name = 'category'
-        authentication = SessionAuthentication()
+        authentication = MultiAuthentication(SessionAuthentication(), AnonymousGETAuthentication())
         authorization = Authorization()
     # dehydrate_parent_category = partial(foreign_key_to_id, field_name='parent_category',sub_field_names=['id','parent_category_name'])
     hydrate_parent_category = partial(dict_to_foreign_uri, field_name='parent_category', resource_name='parentcategory')
@@ -792,7 +803,7 @@ class SubCategoryResource(ModelResource):
         max_limit = None
         queryset = SubCategory.objects.all()
         resource_name = 'subcategory'
-        authentication = SessionAuthentication()
+        authentication = MultiAuthentication(SessionAuthentication(), AnonymousGETAuthentication())
         authorization = Authorization()
     dehydrate_category = partial(foreign_key_to_id, field_name='category',sub_field_names=['id','category_name'])
     hydrate_category = partial(dict_to_foreign_uri, field_name='category', resource_name='category')
@@ -803,7 +814,7 @@ class VideoPracticeResource(ModelResource):
         max_limit = None
         queryset = VideoPractice.objects.all()
         resource_name = 'videopractice'
-        authentication = SessionAuthentication()
+        authentication = MultiAuthentication(SessionAuthentication(), AnonymousGETAuthentication())
         authorization = Authorization()
     dehydrate_subcategory = partial(foreign_key_to_id, field_name='subcategory',sub_field_names=['id','subcategory_name'])
     hydrate_category = partial(dict_to_foreign_uri, field_name='subcategory', resource_name='subcategory')

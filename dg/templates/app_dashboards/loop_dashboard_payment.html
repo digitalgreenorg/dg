@@ -29,11 +29,16 @@
           <li class="active" id="logout_tab"><a class="white-text" href="{% url 'logout' %}?next=/loop/analytics/">SIGN OUT</a></li>
         </ul>
       </div>
-      <ul class="side-nav" id="page-navigation">
-        <li><a href="/loop/analytics/">LOOP Dashboard</a></li>
-        <li><a href="{% url 'logout' %}?next=/loop/analytics/">SIGN OUT</a></li>
-      </ul>
-    </div>
+      <div class="col s1 initialized" id="filters_nav" style="float:right;">
+        <ul class="hide-on-med-and-down">
+          <ul class="right">
+            <li>
+              <a data-activates="mobile-demo" class="button-collapse1"><img src="{% static 'app_dashboards/images/ic_filter_list.png' %}"/></a>
+            </li>
+          </ul>
+        </ul>
+      </div>
+    </div>    
   </nav>
 </div>
 <ul class="side-nav" id="mobile-demo">
@@ -41,59 +46,28 @@
   <li class="no-padding not-hoverable">
     <ul class="collapsible collapsible-accordion">
       <li class="bold not-hoverable">
-      </li>
+        <a class="collapsible-header  waves-effect waves-black">Districts</a>
+        <div class="collapsible-body" style="display: none;">
+          <table class="filter-table centered">
+            <thead>
+              <tr>
+                <th class="center grey-text text-lighten-1">Select/Unselect</th>
+                <th>
+                  <input type="checkbox" class="black" id="district_all"/>
+                  <label for="district_all"></label>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="districts">
+            </tbody>
+          </table>
+        </div>
+      </li>      
+      <li><a id="get_filter_data_button" class="waves-effect waves-light grey darken-3 white-text btn modal-trigger">APPLY FILTER</a></li>
     </ul>
   </li>
 </ul>
 {% endblock %} {% block content %}
-<div id="loader" class="center">
-  <div class="preloader-wrapper active">
-    <div class="spinner-layer spinner-blue">
-      <div class="circle-clipper left">
-        <div class="circle"></div>
-      </div>
-      <div class="gap-patch">
-        <div class="circle"></div>
-      </div>
-      <div class="circle-clipper right">
-        <div class="circle"></div>
-      </div>
-    </div>
-    <div class="spinner-layer spinner-red">
-      <div class="circle-clipper left">
-        <div class="circle"></div>
-      </div>
-      <div class="gap-patch">
-        <div class="circle"></div>
-      </div>
-      <div class="circle-clipper right">
-        <div class="circle"></div>
-      </div>
-    </div>
-    <div class="spinner-layer spinner-yellow">
-      <div class="circle-clipper left">
-        <div class="circle"></div>
-      </div>
-      <div class="gap-patch">
-        <div class="circle"></div>
-      </div>
-      <div class="circle-clipper right">
-        <div class="circle"></div>
-      </div>
-    </div>
-    <div class="spinner-layer spinner-green">
-      <div class="circle-clipper left">
-        <div class="circle"></div>
-      </div>
-      <div class="gap-patch">
-        <div class="circle"></div>
-      </div>
-      <div class="circle-clipper right">
-        <div class="circle"></div>
-      </div>
-    </div>
-  </div>
-</div>
 <div id="modal1" class="modal">
   <div class="modal-content">
     <h4>Invalid Date Range</h4>
@@ -104,22 +78,75 @@
   </div>
 </div>
 <div id="payments_div" hide>
-  <div class="row">
-    <div class="input-field col s4 m2 offset-m3">
-      <label for="payments_from_date">From Date</label>
-      <input id="payments_from_date" placeholder="From Date" type="text" class="datepicker black-text">
+  <div class="row valign-wrapper">
+    <div class="col s5 m5">
+      <div class="input-field col s6 m4 offset-m2">
+        <label for="payments_from_date">From Date</label>
+        <input id="payments_from_date" placeholder="From Date" type="text" class="datepicker black-text">
+      </div>
+      <div class="input-field col s6 m4 offset-m1">
+        <label for="payments_to_date">To Date</label>
+        <input id="payments_to_date" placeholder="To Date" type="text" class="datepicker black-text">
+      </div>
     </div>
-    <div class="input-field col s4 m2">
-      <label for="payments_to_date">To Date</label>
-      <input id="payments_to_date" placeholder="To Date" type="text" class="datepicker black-text">
-    </div>
-    <a class="col s4 m2 waves-effect waves-light grey darken-3 white-text btn" onclick="get_payments_data()">GET DATA</a>
-  </div>
-  <div class="row" id="aggregator_payment_tab">
-    <div class="input-field col s8 m4 offset-m3">
+    <div class="input-field col s5 m3">
       <select id="aggregator_payments" class="initialized"></select>
     </div>
-    <a class="col s4 m2 waves-effect waves-light btn grey darken-3 white-text" id="download-payment-sheet">Download</a>
+    <div class="col s2 m4">
+      <a class="col s4 m4 offset-m1 waves-effect waves-light grey darken-3 white-text btn" onclick="get_payments_data()">GET DATA</a>
+      <a class="col s4 m4 offset-s1 offset-m1 waves-effect waves-light btn grey darken-3 white-text" id="download_payment_sheet">Download</a>
+    </div>
+  </div>
+  <div id="loader" class="center">
+    <div class="preloader-wrapper active">
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" id="aggregator_payment_tab">
+    
     <div id="aggregator_payment_details">
       <table style="width:100%">
         <tr id="outliers">
@@ -141,14 +168,7 @@
         <div>
           <table id="table2" class="stripe">
             <tfoot>
-              <tr>
-                <th colspan="3" align="left">Total:</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+              <tr id="payment_summary_details">
               </tr>
             </tfoot>
           </table>
@@ -157,10 +177,7 @@
         <div style="display:none">
           <table id="table3" class="stripe">
             <tfoot>
-              <tr>
-                <th colspan="3" align="left">Total:</th>
-                <th colspan="2"></th>
-                <th colspan="1"></th>
+              <tr id="commission_agent_details">
               </tr>
             </tfoot>
           </table>
@@ -169,9 +186,7 @@
         <div style="display:none">
           <table id="table4" class="stripe">
             <tfoot>
-              <tr>
-                <th colspan="6">Total:</th>
-                <th></th>
+              <tr id="transporter_details">
               </tr>
             </tfoot>
           </table>
@@ -476,11 +491,13 @@
 </div>
 {% endblock %} {% block script %}
 <!-- ?1 after js represents js version for refreshing cached version of javascript-->
+<script src="{% static 'app_dashboards/js/payment_config.js?2' %}"></script>
 <script src="{% static 'app_dashboards/js/loop_dashboard_payment.js?2' %}"></script>
 <script>
   window.localStorage.name = '{{user_name}}';
   window.localStorage.akey = '{{key}}';
   window.localStorage.user_id = '{{user_id}}';
+  window.localStorage.state = '{{state}}';
   globalApi = '{{key}}';
   window.localStorage.login_timestamp = new Date().getTime();
 </script>

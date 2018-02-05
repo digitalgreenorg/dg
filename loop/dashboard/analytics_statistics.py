@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from operator import itemgetter
 from loop.constants.constants import *
-from loop.models import CombinedTransaction
 from loop.utils.loop_etl.aggregation_methods import *
 from loop.utils.utility import get_init_sql_ds, join_sql_ds
 from loop.dashboard.database_operations import *
@@ -102,8 +101,9 @@ def repeat_farmer_count(outer_param1, outer_param2, graphname, **kwargs):
             inner_data['innerData'].append(temp_dict_inner)
 
         final_data_list[graphname].update(inner_data)
-    except:
-        final_data_list["error"] = "No data Found"
+    except Exception as e:
+        final_data_list["error"] = "No data Found : "
+        final_data_list["error_detail"] = str(e)
 
     return final_data_list
 
