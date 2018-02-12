@@ -39,6 +39,7 @@ class Command(BaseCommand):
 		animator = None
 		videoes_screened = []
 		for data_iterable in data:
+                        import pdb;pdb.set_trace()
 			screening_code = data_iterable.get('ID')
 			start_date = data_iterable.get('Date of Screening')
 			start_time = data_iterable.get('Date & Time of Data Entry')

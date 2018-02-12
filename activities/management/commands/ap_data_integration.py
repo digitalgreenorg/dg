@@ -28,25 +28,25 @@ class Command(BaseCommand):
         call_command('bluefrog_geo')
         
         print "People,ap_people"
-        call_command('bluefrog_person')
+        #call_command('bluefrog_person')
 
         print "Mediators,ap_mediators"
-        call_command('bluefrog_mediator')
+        #call_command('bluefrog_mediator')
 
         print "Subcategory,ap_crops"
-        call_command('bluefrog_crops')
+        #call_command('bluefrog_crops')
 
         print "Practice, ap_pest_management"
-        call_command('bluefrog_practice')
+        #call_command('bluefrog_practice')
 
         print "Practice, ap_fertility_management"
-        call_command('bluefrog_practice_new')
+        #call_command('bluefrog_practice_new')
 
         print "Screening, ap_screening"
-        call_command('bluefrog_screening')
+        #call_command('bluefrog_screening')
 
         print "Adoption, ap_adoption"
-        call_command('bluefrog_adoptions')
+        #call_command('bluefrog_adoptions')
 
 
         self.send_mail()
