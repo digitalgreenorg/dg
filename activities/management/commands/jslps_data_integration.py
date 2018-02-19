@@ -69,7 +69,19 @@ class Command(BaseCommand):
         # print "Adoption,jslps_adoptions"
         # call_command('jslps_adoptions_new')
 
-        print "Adoption,jslps_adoptions"
+        print "Health Person"
         call_command('jslps_hnn_person')
+
+        print "Health Person New"
+        call_command('jslps_hnn_person_new')
+
+        print "Health-1"
+        call_command('jslps_hnn_person_new1')
+
+        print "Health-1"
+        call_command('jslps_hnn_person_new2')
+
+        print "Health-1"
+        call_command('jslps_hnn_person_new3')
 
         self.send_mail()
