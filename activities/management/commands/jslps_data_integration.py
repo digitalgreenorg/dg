@@ -70,6 +70,6 @@ class Command(BaseCommand):
         # call_command('jslps_adoptions_new')
 
         print "Adoption,jslps_adoptions"
-        call_command('hnn_person')
+        call_command('jslps_hnn_person')
 
         self.send_mail()
