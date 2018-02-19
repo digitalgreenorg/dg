@@ -47,6 +47,25 @@ class Command(BaseCommand):
 
         print "Adoption, ap_adoption"
         #call_command('bluefrog_adoptions')
+        # print "People,ap_people"
+        # call_command('bluefrog_person')
+
+        # print "Mediators,ap_mediators"
+        # call_command('bluefrog_mediator')
+
+        # print "Subcategory,ap_crops"
+        # call_command('bluefrog_crops')
+
+        # print "Practice, ap_pest_management"
+        # call_command('bluefrog_practice')
+
+        # print "Practice, ap_fertility_management"
+        # call_command('bluefrog_practice_new')
+
+        # print "Screening, ap_screening"
+        # call_command('bluefrog_screening')
+
+        # print "Adoption, ap_adoption"
 
 
         self.send_mail()
