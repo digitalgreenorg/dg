@@ -24,8 +24,6 @@ class Command(BaseCommand):
 		tree = ET.parse('jslps_data_integration_files/hnn-person.xml')
 		root = tree.getroot()
 		
-		print root.findall('GroupMemberData')
-		print root.findall('JSLPSData')
 		for c in root.findall('GroupMemberData'):
 			district_code = c.find('DistrictCode').text
 			block_code = c.find('BlockCode').text
@@ -33,6 +31,7 @@ class Command(BaseCommand):
 			group_code = c.find('GroupCode').text
 			member_code = c.find('Group_M_Code').text
 			member_name = c.find('MemberName').text
+			father_name = c.find('FatherName').text if c.find('FatherName') else 'X'
 			gender = 'F'
 
 			try:
@@ -71,12 +70,16 @@ class Command(BaseCommand):
 													 partner=partner,
 													 gender=gender,
 													 village = village.Village,
+													 father_name=father_name,
+													 group=group.group,
+													 user_created_id=user_obj.id
 													 )
-					person.group=group.group
-					person.user_created_id = user_obj.id
-					person.save()
+					# person.group=group.group
+					# person.user_created_id = user_obj.id
+					# person.save()
 					jslps.new_count += 1
 				except Exception as e:
+					# import pdb;pdb.set_trace()
 					person = None
 					if "Duplicate entry" not in str(e):
 						jslps.other_error_count += 1
