@@ -2,6 +2,7 @@ import urllib2
 import unicodecsv as csv
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
 from geographies.models import *
 from people.models import *
 from programs.models import *
@@ -21,6 +22,8 @@ class Command(BaseCommand):
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/mediator.xml')
 		root = tree.getroot()
+		user_obj = User.objects.get(username="jslps_bot")
+
 		for c in root.findall('AKMData'):
 			ac = c.find('AKM_ID').text
 			an = unicode(c.find('AKMName').text)
@@ -45,12 +48,13 @@ class Command(BaseCommand):
 				wtr.writerow(['village not exist '+str(ac), vc, e])
 
 			try:
-				animator = Animator(name = an,
-									gender = gender,
-									partner = partner,
-									district = district.district,
-									phone_no = phone)
-				animator.save()
+				animator, created = \
+					Animator.objects.get_or_create(name=an,
+												   gender=gender,
+												   partner=partner,
+												   district=district.district,
+												   phone_no=phone,
+												   user_created_id=user_obj.id)
 				jslps.new_count += 1
 			except Exception as e:
 				animator = None
@@ -64,39 +68,50 @@ class Command(BaseCommand):
 				assigned_villages = AnimatorAssignedVillage.objects.filter(animator=animator).values_list('village_id', flat=True)
 				for village in village_list:
 					if village.Village.id not in assigned_villages:
-						animator_village = AnimatorAssignedVillage(animator = animator,village = village.Village)
-						animator_village.save()
+						animator_village, created = \
+							AnimatorAssignedVillage.objects.get_or_create(animator=animator,
+																		  village=village.Village,
+																		  user_created_id=user_obj.id)
+
 				jslps_animator_list = JSLPS_Animator.objects.filter(animator_code=ac)
 				if len(jslps_animator_list) == 0:
-					jslps_animator = JSLPS_Animator(animator_code=ac,animator=animator)
-					jslps_animator.save()
+					jslps_animator, created = \
+						JSLPS_Animator.objects.get_or_create(animator_code=ac,
+															 animator=animator,
+															 activity="LIVELIHOOD",
+															 user_created_id=user_obj.id)
 				else:
 					jslps_animator = jslps_animator_list[0]
 					jslps_animator.animator = animator
 					jslps_animator.save()
 			else:
 				if phone != '':
-					animator_list = Animator.objects.filter(name = an,
-										gender = gender,
-										partner = partner,
-										district = district.district,
-										phone_no = phone)
+					animator_list = Animator.objects.filter(name=an,
+										gender=gender,
+										partner=partner,
+										district=district.district,
+										phone_no=phone)
 				else:
 					animator_list = Animator.objects.filter(name = an,
-										gender = gender,
-										partner = partner,
-										district = district.district)
-				if len(animator_list) != 0:
+										gender=gender,
+										partner=partner,
+										district=district.district)
+				if animator_list.count() != 0:
 					animator = animator_list[0]
 					assigned_villages = AnimatorAssignedVillage.objects.filter(animator=animator).values_list('village_id', flat=True)
 					for village in village_list:
 						if village.Village.id not in assigned_villages:
-							animator_village = AnimatorAssignedVillage(animator = animator,village = village.Village)
-							animator_village.save()
+							animator_village, created = \
+								AnimatorAssignedVillage.objects.get_or_create(animator=animator,
+																		  village=village.Village,
+																		  user_created_id=user_obj.id)
 					jslps_animator_list = JSLPS_Animator.objects.filter(animator_code=ac,animator=animator)
-					if len(jslps_animator_list) == 0:
-						jslps_animator = JSLPS_Animator(animator_code=ac,animator=animator)
-						jslps_animator.save()
+					if jslps_animator_list.count() == 0:
+						jslps_animator, created = \
+							JSLPS_Animator.objects.get_or_create(animator_code=ac,
+																 animator=animator,
+																 activity="LIVELIHOOD",
+																 user_created_id=user_obj.id)
 					else:
 						jslps_animator = jslps_animator_list[0]
 						if jslps_animator.animator == None:
@@ -104,7 +119,6 @@ class Command(BaseCommand):
 							jslps_animator.save()
 				else:
 					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])
-			
 
 		
 		#add camera operator to mediator table
@@ -114,17 +128,17 @@ class Command(BaseCommand):
 		xml_file.write(contents)
 		xml_file.close()
 
-		partner = Partner.objects.get(id = 24)
 		csv_file = open('jslps_data_integration_files/mediator_co_error.csv', 'wb')
 		wtrr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/mediator_co.xml')
 		root = tree.getroot()
+		new_data_list = []
 		for c in root.findall('CameraOperatorMasterData'):
 			ac = c.find('CameraOperatorID').text
 			an = unicode(c.find('CameraOperatorName').text)
 			gender = 'F'
 			dc = c.find('DistrictCode').text
-
+			new_data_list.append(ac)
 			try:
 				district = JSLPS_District.objects.get(district_code = dc)
 			except JSLPS_District.DoesNotExist as e:
@@ -132,11 +146,11 @@ class Command(BaseCommand):
 				continue
 
 			try:
-				animator = Animator(name = an,
-									gender = gender,
-									partner = partner,
-									district = district.district)
-				animator.save()
+				animator, created = \
+					Animator.objects.get_or_create(name=an,
+												   gender=gender,
+												   partner = partner,
+												   district = district.district)
 				jslps.new_count += 1
 			except Exception as e:
 				animator = None
@@ -148,24 +162,30 @@ class Command(BaseCommand):
 
 			if animator != None:
 				jslps_animator_list = JSLPS_Animator.objects.filter(animator_code=ac)
-				if len(jslps_animator_list) == 0:
-					jslps_animator = JSLPS_Animator(animator_code=ac,animator=animator)
-					jslps_animator.save()
+				if jslps_animator_list.count() == 0:
+					jslps_animator, created = \
+						JSLPS_Animator.objects.get_or_create(animator_code=ac,
+									   						 animator=animator,
+									   						 activity="LIVELIHOOD",
+									   						 user_created_id=user_obj.id)
 				else:
 					jslps_animator = jslps_animator_list[0]
 					jslps_animator.animator = animator
 					jslps_animator.save()
 			else:
 				animator_list = Animator.objects.filter(name = an,
-									gender = gender,
-									partner = partner,
-									district = district.district)
-				if len(animator_list) != 0:
+														gender=gender,
+														partner=partner,
+														district=district.district)
+				if animator_list.count() != 0:
 					animator = animator_list[0]
 					jslps_animator_list = JSLPS_Animator.objects.filter(animator_code=ac,animator=animator)
-					if len(jslps_animator_list) == 0:
-						jslps_animator = JSLPS_Animator(animator_code=ac,animator=animator)
-						jslps_animator.save()
+					if jslps_animator_list.count() == 0:
+						jslps_animator, created = \
+						JSLPS_Animator.objects.get_or_create(animator_code=ac,
+									   						 animator=animator,
+									   						 activity="LIVELIHOOD",
+									   						 user_created_id=user_obj.id)
 					else:
 						jslps_animator = jslps_animator_list[0]
 						if jslps_animator.animator == None:
@@ -173,3 +193,7 @@ class Command(BaseCommand):
 							jslps_animator.save()
 				else:
 					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])
+
+		csv_file.close()
+
+

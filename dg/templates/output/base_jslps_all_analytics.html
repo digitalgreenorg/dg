@@ -1,0 +1,36 @@
+ {% extends "static_site/base.html" %} {% block cssfile %}
+<link type='text/css' rel='stylesheet' href='/media/Output/CSS/base_all_analytics.css' />
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"> {% endblock cssfile %} {% block mainbody %} {% block bodytitle %}
+<div id='maintitlediv'>
+    <div id='titlediv'>
+        <div id='title'>
+            {% block pagetitle %}&nbsp; {% endblock pagetitle %}
+        </div>
+    </div>
+    <div id='breadcrums'>
+        {% block breadcrums %}
+        <a href='/'> Home</a> / {% endblock breadcrums %}
+    </div>
+</div>
+{% endblock bodytitle %} {% block mainbodycontent %}
+<div id='mainbodycontent'>
+    <div id='mainbodycontentleft'>
+        {% block mainbodycontentleft %}
+        <div class='mainbodycontentleftimg'>
+            {% block mainbodycontentleftimg %}
+            <img src="/media/Output/Images/img1.jpg" alt='Women on the field'> {% endblock mainbodycontentleftimg %}
+        </div>
+        {% endblock mainbodycontentleft %}
+    </div>
+
+    <div id='mainbodycontentright'>
+        {% block mainbodycontentright %} {% endblock mainbodycontentright %}
+    </div>
+</div>
+{% endblock mainbodycontent %} {% block content %} {% endblock content %}
+
+<div id="new_footer">
+    <p style="text-align:center">&#169; 2017 Digital Green. All rights reserved. <b><a id="privacy" href="{{ PRIVACY_POLICY }}" target="_blank">Privacy Policy.</a> <a id="terms-service" href="{{ TERMS_SERVICE }}" target="_blank">Terms of Service</a></b> </p>
+</div>
+
+{% endblock mainbody %}

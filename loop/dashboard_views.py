@@ -139,8 +139,9 @@ def overall_graph_data(**filter_args):
         loopUserData = loopUserData.filter(village__block__district__state=state_id)
     if partner_id:
         loopUserData = loopUserData.filter(partner=partner_id)
-        loopUserWithPartner = loopUserData.values_list('user__id',flat=True)
-        combinedTransactionData = combinedTransactionData.filter(user_created_id__in=loopUserWithPartner)
+
+    loopUsersToFilter = loopUserData.values_list('user__id',flat=True)
+    combinedTransactionData = combinedTransactionData.filter(user_created_id__in=loopUsersToFilter)
 
     total_farmers_reached = combinedTransactionData.values('farmer').distinct().count()
     total_cluster_reached = combinedTransactionData.values('user_created_id').distinct().count()
