@@ -26,9 +26,22 @@ def get_cost_distance():
     aggregator_market_vehicle_cost_detailed = Transport_Cost.find_transport_cost_amv(daily_vehicle_single_data, vehicle_quantity_limits)
 
     aggregator_market_vehicle_cost = aggregator_market_vehicle_cost_detailed.drop(
-        ['Vehicle_Name', 'Quantity_Min', 'Quantity_Limit'], axis=1)
+        ['Quantity_Min', 'Quantity_Limit'], axis=1) #'Vehicle_Name',
 
-    print aggregator_market_vehicle_cost.head(n=10)
+    # print aggregator_market_vehicle_cost.head(n=10)
+
+    df_distance = pd.read_csv('mandi_village_mapping.csv')
+    df_distance.drop(['Unnamed: 0','loop_user__id','mandi__latitude','mandi__longitude','village__latitude','village__longitude', 'village__village_name_en', 'village__id'], axis = 1,inplace = True)
+    df_distance.rename(columns={"loop_user__user__id":"Aggregator","mandi__id":"Market"},inplace=True)
+
+    # print df_distance.head()
+
+    cost_distance_vehicle = pd.merge(aggregator_market_vehicle_cost,df_distance, on=['Aggregator','Market'],how="inner")
+    cost_distance_vehicle['distance_km'] = cost_distance_vehicle['distance'].str.split(' ').str[0].astype('float64')
+    cost_distance_vehicle['cost_per_km'] = cost_distance_vehicle['Predicted_TC'] / cost_distance_vehicle['distance_km']
+    print cost_distance_vehicle.head(n=25)
+
+
 
 
 if __name__=="__main__":
