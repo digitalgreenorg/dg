@@ -25,6 +25,8 @@ from videos.models import Video,Language,Category,Practice,SubCategory
 from activities.models import Screening
 from activities.models import PersonAdoptPractice
 from coco.prepare_data import *
+from django.views.generic import View
+from tastypie.models import ApiKey
 
 
 def coco_v2(request):
@@ -171,43 +173,55 @@ def upload_data(request):
     return render(request, template, context)
 
 
-def ap_video(request):
-    video_list = APVideo.objects.filter(video__partner_id=50)
-    data_list = []
-    practice_list = []
-    dg_practice_list = []
-    tags = [{'id': '', 'tag_name': ''}]
-    for video_iterable in video_list:
-        dg_practice = video_iterable.video.videopractice.all()
-        for item in dg_practice:
-            dg_practice_list.append({'id': item.id,
-                                     'practice_name': item.videopractice_name,
-                                     })
-        practice_q = video_iterable.practice.all()
-        for item in practice_q:
-            practice_list.append({'id': item.id,
-                                  'practice_name': item.pest_name,
-                                  'practice_code': item.pest_code,
-                                  'practice_name_telgu': item.pest_name_telgu})
+class APVideoGenerator(View):
 
-        data_list.append({'id': video_iterable.video.id,
-                         'video_title': video_iterable.video.title,
-                         'video_short_name_english': video_iterable.video_short_name,
-                         'video_short_regionalname': video_iterable.video_short_regionalname,
-                         'category': {'id': video_iterable.video.category.id,
-                                      'category_name': video_iterable.video.category.category_name},
-                         'subcategory': {'id': video_iterable.video.subcategory.id,
-                                         'subcategory_name': video_iterable.video.subcategory.subcategory_name},
-                         'practice': practice_list,
-                         'dg_practice': dg_practice_list,
-                         'tags': tags,
-                         'producton_date': video_iterable.video.production_date,
-                         'youtube': video_iterable.video.youtubeid,
-                         'updation_date': video_iterable.video.approval_date,
-                         'version': 2,
-                         'video_type': video_iterable.video.video_type
-                         })
+    def get(self, request, *args, **kwargs):
+        meta_auth_container = request.META.get('HTTP_AUTHORIZATION')
+        if meta_auth_container and len(meta_auth_container):
+            apikey = meta_auth_container.split('ApiKey')[-1].split(':')[-1]
+            try:
+                apikey_object = ApiKey.objects.get(key=apikey)
+                if apikey_object:
+                    video_list = APVideo.objects.filter(video__partner_id=50)
+                    data_list = []
+                    practice_list = []
+                    dg_practice_list = []
+                    tags = [{'id': '', 'tag_name': ''}]
+                    for video_iterable in video_list:
+                        dg_practice = video_iterable.video.videopractice.all()
+                        for item in dg_practice:
+                            dg_practice_list.append({'id': item.id,
+                                                     'practice_name': item.videopractice_name,
+                                                     })
+                        practice_q = video_iterable.practice.all()
+                        for item in practice_q:
+                            practice_list.append({'id': item.id,
+                                                  'practice_name': item.pest_name,
+                                                  'practice_code': item.pest_code,
+                                                  'practice_name_telgu': item.pest_name_telgu})
 
-    return JsonResponse({'data': data_list}, safe=False)
+                        data_list.append({'id': video_iterable.video.id,
+                                         'video_title': video_iterable.video.title,
+                                         'district_name': video_iterable.video.village.block.district.district_name,
+                                         'video_short_name_english': video_iterable.video_short_name,
+                                         'video_short_regionalname': video_iterable.video_short_regionalname,
+                                         'category': {'id': video_iterable.video.category.id,
+                                                      'category_name': video_iterable.video.category.category_name},
+                                         'subcategory': {'id': video_iterable.video.subcategory.id,
+                                                         'subcategory_name': video_iterable.video.subcategory.subcategory_name},
+                                         'practice': practice_list,
+                                         'dg_practice': dg_practice_list,
+                                         'tags': tags,
+                                         'producton_date': video_iterable.video.production_date,
+                                         'youtube': video_iterable.video.youtubeid,
+                                         'updation_date': video_iterable.video.approval_date,
+                                         'version': 2,
+                                         'video_type': video_iterable.video.video_type
+                                         })
 
+                    return JsonResponse({'data': data_list})
+            except Exception:
+                return HttpResponse("You are not authorized.Wrong Key", status=401)
+        else:
+            return HttpResponse("You are not authorized", status=401)
 

@@ -109,7 +109,7 @@ class Command(BaseCommand):
 			village_set = dict(Village.objects.filter(block_id = block.id).values_list('id', 'village_name'))
 			if village_name not in village_set.values():
 				try:
-					vil, created = Village.objects.get_or_create(village_name=village,
+					vil, created = Village.objects.get_or_create(village_name=village_name,
 																 block=block)
 					ap.new_count += 1
 					print vil, "village saved in geaography_village table"

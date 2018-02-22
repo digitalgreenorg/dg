@@ -37,7 +37,6 @@ class Command(BaseCommand):
 		district_data_list = []
 
 		for data_iterable in data:
-                        import pdb;pdb.set_trace()
 			screening_code = data_iterable.get('ID')
 			start_date = data_iterable.get('Date of Screening')
 			start_time = data_iterable.get('Date & Time of Data Entry')
@@ -78,8 +77,11 @@ class Command(BaseCommand):
 
 			#videos
 			try:
-				videoes_screened = [int(item) for item in videos.split(',')]
-				videoes_screened = filter(0, videoes_screened)
+				videoes_screened = [int(item) for item in videos.strip().split(',') if item != '0']
+				# try:
+				# 	videoes_screened = filter(0, videoes_screened)
+				# except Exception as e:
+				# 	print e
 			except Exception as e:
 				print e, videos
 				videoes_screened = []
@@ -91,10 +93,12 @@ class Command(BaseCommand):
 							  }
 			try:
 				scr_obj, created = Screening.objects.get_or_create(**screening_dict)
-				# import pdb;pdb.set_trace()
-				print videoes_screened
+				videoes_screened = [item for item in videoes_screened if item != 0]
 				if len(videoes_screened) >=1:
-					scr_obj.videoes_screened.add(*videoes_screened)
+					try:
+						scr_obj.videoes_screened.add(*videoes_screened)
+					except:
+						import pdb;pdb.set_trace()
 					scr_obj.farmer_groups_targeted.add(*farmer_groups_targeted)
 
 					if scr_obj:

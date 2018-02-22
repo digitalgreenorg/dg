@@ -155,6 +155,9 @@ class AP_District(CocoModel):
         verbose_name = "AP District"
         verbose_name_plural = "AP District"
 
+    def __unicode__(self):
+        return self.district_name
+
 
 class AP_Mandal(CocoModel):
     ap_district = models.ForeignKey(AP_District, null=True, blank=True)
@@ -165,6 +168,9 @@ class AP_Mandal(CocoModel):
     class Meta:
         verbose_name = "AP Block"
         verbose_name_plural = "AP Block"
+
+    def __unicode__(self):
+        return self.mandal_name
 
 
 class AP_Village(CocoModel):
@@ -177,6 +183,9 @@ class AP_Village(CocoModel):
         verbose_name = "AP Village"
         verbose_name_plural = "AP Village"
 
+    def __unicode__(self):
+        return self.village_name
+
 
 class AP_Habitation(CocoModel):
     ap_village = models.ForeignKey(AP_Village, null=True, blank=True)
@@ -186,4 +195,7 @@ class AP_Habitation(CocoModel):
     class Meta:
         verbose_name = "AP Habitation"
         verbose_name_plural = "AP Habitation"
+
+    def __unicode__(self):
+        return self.habitation_name
 
