@@ -5,6 +5,7 @@ import datetime
 import unicodecsv as csv
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.conf import settings
 from geographies.models import *
 import xml.etree.ElementTree as ET
 import ap_data_integration as ap
@@ -14,7 +15,7 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):	
 
 		#GEOGRAPHIES ADD
-		req = requests.get('http://45.127.101.204/DG_API/AP_MIS.svc/GetGeographyDetails', auth=('Bluefrog', 'Blue@123'))
+		req = requests.get('http://45.127.101.204/DG_API/AP_MIS.svc/GetGeographyDetails', auth=(settings.BLUEFROG_API_USERNAME, settings.BLUEFROG_API_PASSWORD))
 		xml_file = open("ap/geo.xml", 'w')
 		xml_file.write(req.content)
 		xml_file.close()

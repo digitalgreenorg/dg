@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 #django imports
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.conf import settings
 from geographies.models import *
 #app imports
 from videos.models import *
@@ -15,7 +16,7 @@ import ap_data_integration as ap
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		req = requests.get('http://45.127.101.204/DG_API/AP_MIS.svc/GetCropMasterDetails', auth=('Bluefrog', 'Blue@123'))
+		req = requests.get('http://45.127.101.204/DG_API/AP_MIS.svc/GetCropMasterDetails', auth=(settings.BLUEFROG_API_USERNAME, settings.BLUEFROG_API_PASSWORD))
 		xml_file = open("ap/crop.xml", 'w')
 		xml_file.write(req.content)
 		xml_file.close()
