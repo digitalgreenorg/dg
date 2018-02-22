@@ -112,6 +112,6 @@ class Command(BaseCommand):
 
                 gender_wise_new_farmer_year2_df = self.run_query(gender_wise_new_farmer_year2_query)
                 gender_wise_farmer = dict()
-                gender_wise_farmer[gender_wise_common_active_farmer_df.iloc[0]['gender']] = (gender_wise_bangladesh_farmer_df.iloc[0]['count'],gender_wise_new_farmer_year2_df.iloc[0]['count'])
-                gender_wise_farmer[gender_wise_bangladesh_farmer_df.iloc[1]['gender']] = (gender_wise_bangladesh_farmer_df.iloc[1]['count'],gender_wise_new_farmer_year2_df.iloc[1]['count'])
+                gender_wise_farmer[gender_wise_common_active_farmer_df.iloc[0]['gender']] = (gender_wise_common_active_farmer_df.iloc[0]['count'],gender_wise_new_farmer_year2_df.iloc[0]['count'])
+                gender_wise_farmer[gender_wise_common_active_farmer_df.iloc[1]['gender']] = (gender_wise_common_active_farmer_df.iloc[1]['count'],gender_wise_new_farmer_year2_df.iloc[1]['count'])
                 self.send_mail(gender_wise_farmer)
