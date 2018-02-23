@@ -51,13 +51,12 @@ class Command(BaseCommand):
                 next_date = next_date + timedelta(days=1)
             # If there is only on Tuesday after this monday in this month, then send stats.
             if tuesday_count == 1:
-                # Query for Common Active farmer who participated and YEAR 1 as well as YEAR 2
-                gender_wise_common_active_farmer_query = '''SELECT
+                # Query for Common Active farmer who participated and YEAR 1 (1 Oct 2016 - 30 Sept 2017)
+                # as well as YEAR 2 (1 Oct 2017 - 30 Sept 2018)
+                gender_wise_common_active_farmer_query = '''SELECT 
                         lf.gender, COUNT(DISTINCT lf.id) 'count'
                     FROM
                         loop_combinedtransaction lc1
-                        JOIN
-                        loop_combinedtransaction lc2 ON lc2.farmer_id=lc1.farmer_id
                             JOIN
                         loop_farmer lf ON lf.id = lc1.farmer_id
                             JOIN
@@ -70,10 +69,29 @@ class Command(BaseCommand):
                         loop_state ls ON ls.id = ld.state_id
                     WHERE
                         ls.country_id = 2
+                            AND lc1.date >= 20171001
+                            AND lc1.farmer_id IN (SELECT 
+                                lc2.farmer_id
+                            FROM
+                                loop_combinedtransaction lc2
+                                    JOIN
+                                loop_farmer lf ON lf.id = lc2.farmer_id
+                                    JOIN
+                                loop_village lv ON lv.id = lf.village_id
+                                    JOIN
+                                loop_block lb ON lb.id = lv.block_id
+                                    JOIN
+                                loop_district ld ON ld.id = lb.district_id
+                                    JOIN
+                                loop_state ls ON ls.id = ld.state_id
+                            WHERE
+                                ls.country_id = 2
+                                    AND lc2.date >= 20161001
+                                    AND lc2.date <= 20170930)
                     GROUP BY lf.gender'''
 
                 # Query for New Farmer who participated in YEAR 2 but not in YEAR 1
-                gender_wise_new_farmer_year2_query ='''SELECT
+                gender_wise_new_farmer_year2_query ='''SELECT 
                         lf.gender, COUNT(DISTINCT lf.id) 'count'
                     FROM
                         loop_combinedtransaction lc1
@@ -89,7 +107,8 @@ class Command(BaseCommand):
                         loop_state ls ON ls.id = ld.state_id
                     WHERE
                         ls.country_id = 2
-                            AND lc1.farmer_id NOT IN (SELECT
+                            AND lc1.date >= 20171001
+                            AND lc1.farmer_id NOT IN (SELECT 
                                 lc2.farmer_id
                             FROM
                                 loop_combinedtransaction lc2
