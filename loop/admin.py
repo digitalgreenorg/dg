@@ -20,7 +20,7 @@ class UserListFilter(SimpleListFilter):
         """
         list_tuple = []
         for user in LoopUser.objects.all().order_by('name_en'):
-            list_tuple.append((user.user_id, user.name_en + ' (' + str(user.user_id) + ')'))
+            list_tuple.append((user.user_id, user.name_en + ' (' + str(user.phone_number) + ')'))
         return list_tuple
 
     def queryset(self, request, queryset):
@@ -121,7 +121,7 @@ class FarmerAdmin(admin.ModelAdmin):
 class CombinedTransactionAdmin(admin.ModelAdmin):
     list_display = (
     'id', 'date', '__mandi__', '__gaddidar__', '__aggregator__', '__farmer__', '__farmer_phone__', '__crop__', 'price',
-    'quantity', 'amount', 'status', 'payment_sms', 'payment_sms_id')
+    'quantity', 'amount', 'status', 'payment_sms')
     search_fields = ['farmer__name', 'farmer__phone', 'farmer__village__village_name_en', 'gaddidar__gaddidar_name_en',
                      'user_created__username', 'crop__crop_name', 'mandi__mandi_name_en', 'status']
     list_filter = (UserListFilter, 'status',
