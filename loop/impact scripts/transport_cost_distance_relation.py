@@ -5,6 +5,11 @@ import Transport_Cost
 import matplotlib.pyplot as plt
 
 def get_cost_distance():
+    #Distance dataframe
+    df_distance = pd.read_csv('mandi_village_mapping.csv')
+    df_distance.drop(['Unnamed: 0','loop_user__id','mandi__latitude','mandi__longitude','village__latitude','village__longitude', 'village__village_name_en', 'village__id'], axis = 1,inplace = True)
+    df_distance.rename(columns={"loop_user__user__id":"Aggregator","mandi__id":"Market"},inplace=True)
+
     # List of state-wise frequently used vehicles
     vehicles_to_fill_na_data = {'State': [1,1,1,1,1], 'Vehicle_ID': [0, 2, 3, 4, 5]}
     vehicles_to_fill_na = pd.DataFrame(data= vehicles_to_fill_na_data)
@@ -28,33 +33,31 @@ def get_cost_distance():
     aggregator_market_vehicle_cost = aggregator_market_vehicle_cost_detailed.drop(
         ['Quantity_Min', 'Quantity_Limit', 'Vehicle_Name'], axis=1) #'Vehicle_Name',
 
-    # print aggregator_market_vehicle_cost.head(n=10)
+    before_prediction_cost_distance_vehicle = pd.merge(aggregator_market_vehicle_cost,df_distance, on=['Aggregator','Market'],how="inner")
+    before_prediction_cost_distance_vehicle['distance_km'] = before_prediction_cost_distance_vehicle['distance'].str.split(' ').str[0].astype('float64')
+    before_prediction_cost_distance_vehicle['cost_per_km'] = before_prediction_cost_distance_vehicle['Predicted_TC'] / before_prediction_cost_distance_vehicle['distance_km']
+
+    #Fill predicted costs for vehicles
     aggregator_market_vehicle_cost_na = Transport_Cost.find_predicted_transport_cost_amv(aggregator_market_vehicle_cost, vehicles_to_fill_na)
     aggregator_market_vehicle_cost = aggregator_market_vehicle_cost.append(aggregator_market_vehicle_cost_na)
 
     aggregator_market_motorcycle_list = aggregator_market_vehicle_cost[aggregator_market_vehicle_cost['Vehicle_ID'] == 0]
     aggregator_market_motorcycle_list['Motorcycle Cost'] = 0.4*aggregator_market_motorcycle_list['Predicted_TC']
     aggregator_market_motorcycle_list['Vehicle_ID'] = 1
-    # aggregator_market_motorcycle_list['Vehicle_Name']= 'Motorcycle'
     aggregator_market_motorcycle_list['Predicted_TC'] = aggregator_market_motorcycle_list['Motorcycle Cost']
     aggregator_market_motorcycle_list = aggregator_market_motorcycle_list.drop(['Motorcycle Cost'], axis = 1)
 
     aggregator_market_vehicle_cost = aggregator_market_vehicle_cost.append(aggregator_market_motorcycle_list)
 
-
-    df_distance = pd.read_csv('mandi_village_mapping.csv')
-    df_distance.drop(['Unnamed: 0','loop_user__id','mandi__latitude','mandi__longitude','village__latitude','village__longitude', 'village__village_name_en', 'village__id'], axis = 1,inplace = True)
-    df_distance.rename(columns={"loop_user__user__id":"Aggregator","mandi__id":"Market"},inplace=True)
-
-    # print df_distance.head()
-
+    #Merge Distance and Cost dataframes
     cost_distance_vehicle = pd.merge(aggregator_market_vehicle_cost,df_distance, on=['Aggregator','Market'],how="inner")
     cost_distance_vehicle['distance_km'] = cost_distance_vehicle['distance'].str.split(' ').str[0].astype('float64')
     cost_distance_vehicle['cost_per_km'] = cost_distance_vehicle['Predicted_TC'] / cost_distance_vehicle['distance_km']
     print cost_distance_vehicle.head(n=25)
 
-    cost_distance_vehicle = cost_distance_vehicle[cost_distance_vehicle['Vehicle_ID']==2]
+    cost_distance_vehicle = cost_distance_vehicle[cost_distance_vehicle['Vehicle_ID']==5]
     plot_cost_distance = cost_distance_vehicle.plot(use_index=False,kind='scatter',x='distance_km',y='cost_per_km',figsize=(18,8), color='Red')
+    before_prediction_cost_distance_vehicle.plot(use_index=False,kind='scatter',x='distance_km',y='cost_per_km',figsize=(18,8), color='Blue',ax=plot_cost_distance, grid=True)
     plt.show()
 
 
