@@ -318,6 +318,8 @@ class AggregatorIncentiveAdmin(admin.ModelAdmin):
     fields = ('start_date', 'aggregator', 'model_type', 'incentive_model')
     list_display = ('start_date', '__unicode__', '__incentive_model__', 'model_type')
     search_fields = ['aggregator__name_en', 'incentive_model__description']
+    list_filter = [UserListFilter, 'incentive_model']
+    date_hierarchy = 'start_date'
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "aggregator":
              kwargs["queryset"] = LoopUser.objects.all().order_by('name_en',)
