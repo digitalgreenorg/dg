@@ -45,7 +45,7 @@ class Command(BaseCommand):
 			habitation_code = data_iterable.get('Habitation ID')
 			
 			try:
-				village = AP_Village.objects.get(village_code=village_code)
+				village = AP_Village.objects.filter(village_code=village_code).latest('id')
 			except AP_Village.DoesNotExist as e:
 				wtr.writerow(['AP village not EXIST: '+str(person_code), village_code, e])
 				continue
@@ -82,11 +82,14 @@ class Command(BaseCommand):
 													    user_created_id=user_obj.id,
 													    )
 				else:
-					ap_person = \
+                                        try:
+					    ap_person = \
 						AP_Person.objects.get(person_code=person_code,
 										      person=person,
 										      user_created_id=user_obj.id,
 										      )
+                                        except Exception as e:
+                                            pass
 			else:
 				person_list = \
 					Person.objects.filter(person_name=person_name,
