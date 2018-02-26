@@ -23,6 +23,7 @@ MANDI_CATEGORY = ((0, "Wholesale Market"), (1, "Retail Market"), (2, "Individual
 PERSON_TYPE = ((0, 'Farmer'), (1, 'Transporter'))
 SMS_STATUS = ((0, 'Fail'), (1, 'Success'))
 SMS_STATE = {'N':(0,'None'), 'S':(1,'SMS initiated'), 'F':(2,'SMS fired'), 'D':(3,'SMS delivered'), 'U':(4,'SMS undelivered'), 'P':(5,'pending en route'), 'I':(6,'invalid no.'), 'E':(7,'expired'), '?':(8,'pushed to network en route'), 'B':(9,'DND block')}
+QR_ACTIONS =((1,'Pick Up'),(2,'Payment'))
 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
@@ -343,6 +344,10 @@ class Farmer(LoopModel):
     correct_phone_date = models.DateField(default=None, auto_now=False, null=True)
     registration_sms = models.BooleanField(default=False)
     registration_sms_id = models.CharField(max_length=15, null=True, blank=True)
+    qr_code = models.IntegerField(default=None,null=True,blank=True)
+    referred_by = models.IntegerField(default=None,null=True,blank=True)
+    verified = models.BooleanField(default=False)
+
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.village.village_name_en)
@@ -827,3 +832,28 @@ class SmsLog(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (self.contact_no, self.sms_body)
+
+
+class RegistrationSms(LoopModel):
+    id = models.AutoField(primary_key=True)
+    farmer = models.ForeignKey(Farmer)
+    sms_status = models.IntegerField(choices=SMS_STATUS,default=None,blank=True,null=True)
+    state = models.IntegerField(default=0,blank=True,null=True)
+    text_local_id = models.CharField(max_length=20,blank=True,null=True)
+
+class FarmerQRScan(LoopModel):
+    timestamp = models.DateTimeField(blank=True,null=True)
+    qr_code = models.IntegerField(default=None)
+    action = models.IntegerField(choices=QR_ACTIONS,default=0)
+
+class FarmerTransportCode(LoopModel):
+    code = models.IntegerField(blank=True,null=True)
+    phone = models.IntegerField(blank=True,null=True)
+    dateUsed = models.DateField(blank=True,null=True)
+    qr_code = models.IntegerField(blank=True,null=True)
+    sms_status = models.IntegerField(choices=SMS_STATUS,default=0)
+    state = models.IntegerField(default=0)
+
+
+
+

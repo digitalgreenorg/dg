@@ -261,6 +261,12 @@ sms_text = {
 
 }
 
+registration_sms = {
+  'welcome':{'hi':u'','en':u'Welcome'},
+  'transportion_code_beg':{'hi':u'','en':u''},
+  'transportion_code_end':{'hi':u'','en':u''}
+}
+
 
 
 RECIPIENTS = ['lokesh@digitalgreen.org', 'loop@digitalgreen.org']

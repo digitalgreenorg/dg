@@ -18,10 +18,13 @@ import json
 from django.contrib.auth.models import User
 from models import *
 
+from loop.utils.send_log.registration import send_reg_sms as txtlcl
 import datetime
 import time
 
 from loop_ivr.helper_function import send_sms_using_textlocal
+
+AGGREGATORS_IDEO = [3775L]
 
 class AssignedMandiNotSaved(Exception):
     pass
@@ -364,6 +367,9 @@ class FarmerResource(BaseResource):
             bundle.data['correct_phone_date'] = None
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
+            
+            if bundle.obj.user_created_id in AGGREGATORS_IDEO:
+                txtlcl(bundle.obj)
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
@@ -380,6 +386,8 @@ class FarmerResource(BaseResource):
                 bundle.data['correct_phone_date'] = None
                 
             bundle = super(FarmerResource, self).obj_update(bundle, **kwargs)
+
+
         except Exception as e:
             village = Village.objects.get(id=bundle.data["village"]["online_id"])
             attempt = Farmer.objects.filter(
