@@ -167,6 +167,21 @@ def download_data_workbook(request):
                                 content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         return response
 
+@csrf_exempt
+def download_pdf(request):
+    if request.method == 'POST':
+        response = HttpResponse(content_type='application/pdf')
+        # this will prepare the data
+        formatted_post_data = format_web_request(request)
+        # this will get combined web data and various formats
+        data_dict = get_combined_data_and_sheets_formats(formatted_post_data)
+        pdf_output = BytesIO()
+        filename = "pdf_trial"
+        response['Content-Disposition'] = 'attachement; filename={0}.pdf'.format(filename)
+        report = PdfPrint(pdf_output)
+        pdf = report.generate(formatted_post_data,"Loop data")
+        response.write(pdf)
+        return response
 
 @csrf_exempt
 def farmer_payments(request):

@@ -5,6 +5,12 @@ import xlsxwriter
 from django.http import JsonResponse
 from io import BytesIO
 import re
+from reportlab.lib.units import mm
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
+from reportlab.lib import colors
 
 from config import *
 from django.http import HttpResponse
@@ -248,3 +254,94 @@ def prepare_value_data_generic(data):
                         'sheet_header': sheet_header, 'sheet_footer': sheet_footer}
 
     return combined_dict
+
+class PdfPrint:
+    def __init__(self, output):
+        self.output = output
+        self.pageSize = A4
+        self.width, self.height = self.pageSize
+
+    def generate(self, data_dict, title):
+        try:
+            doc = SimpleDocTemplate(self.output, rightMargin = 72, leftMargin = 72,
+                                    topMargin = 30, bottomMargin = 72, pageSize = self.pageSize)
+
+            #setting up styles
+            styles = getSampleStyleSheet()
+            cell_format = data_dict.get('cell_format')
+            styles.add(ParagraphStyle(
+                name="ParagraphTitle", fontSize=cell_format.get('font_size'), alignment=TA_JUSTIFY))
+            styles.add(ParagraphStyle(
+                name="Justify", alignment=TA_JUSTIFY))
+            styles.add(ParagraphStyle("Comment", fontSize = cell_format.get('font_size')))
+            styles.add(ParagraphStyle("TableHeader", fontSize = 8, alignment=TA_CENTER))
+            styles.add(ParagraphStyle("Text", fontSize = 8, alignment=TA_CENTER))
+
+            pdfdata = []
+            pdfdata.append(Paragraph(title, styles['Title']))
+            pdfdata.append(Spacer(1, 12))
+
+            name_of_sheets = data_dict.get('name_of_sheets')
+            heading_of_sheets = data_dict.get('heading_of_sheets')
+           # heading_format = data_dict.get('heading_format')
+           # header_format = data_dict.get('header_format')
+           # row_format = data_dict.get('row_format')
+           # excel_output = data_dict.get('excel_output')
+            combined_data = data_dict.get('combined_data')
+            combined_header = data_dict.get('combined_header')
+
+           # sheet_header = data_dict.get('sheet_header')
+           # sheet_footer = data_dict.get('sheet_footer')
+
+
+
+            for sheet_index, item in enumerate(name_of_sheets):
+                table_data = []
+                pdfdata.append(Paragraph(heading_of_sheets[sheet_index],styles['ParagraphTitle']))
+                header_data = []
+                col_widths = []
+                # append data for first header
+                for header_index, header_value in enumerate(combined_header.values()[sheet_index]):
+                    header_data.append(Paragraph(header_value.get('label'), styles['TableHeader']))
+                    col_widths.append((header_value.get('column_width'))*7)
+                table_data.append(header_data)
+                for value_list in combined_data[sheet_index]:
+                    value_data = []
+                    for value in value_list:
+                        if type(value) is int or type(value) is float:
+                            value_data.append(u"{0}".format(value))
+                        elif value is None:
+                            value_data.append("")
+                        else:
+                            value_data.append(Paragraph(value,styles['Text']))
+                    print value_data
+                    table_data.append(value_data)
+                #table_data.append(combined_data[sheet_index])
+
+                # Create table
+                data_table = Table(table_data, col_widths)
+                data_table.hAlign = 'CENTER'
+                data_table.setStyle(TableStyle(
+                    [('INNERGRID', (0, 0), (-1, -1), 0, colors.black),
+                     ('BOX', (0, 0), (-1, -1), 0, colors.black),
+                     ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+                     ('BACKGROUND', (0, 0), (-1, 0), colors.white)]
+                ))
+
+                pdfdata.append(data_table)
+                pdfdata.append(Spacer(1, 48))
+
+                # Add comment in Aggregator part
+                if (sheet_index == 0):
+                    pdfdata.append(Paragraph("**Quantity is deducted for farmers having incorrect/unavailable mobile numbers.", styles['Comment']))
+                    pdfdata.append(Paragraph("##AP calculation formula (Bihar)				 = 0.2*Q ; Q<=2000							", styles['Comment']))
+                    pdfdata.append(Paragraph("				 = 0.2*2000 + 0.1*(Q-2000) ; Q>2000							", styles['Comment']))
+                    pdfdata.append(Paragraph("##AP calculation formula (Maharashtra)				 = 0.25*Q							", styles['Comment']))
+                    pdfdata.append(Paragraph("##AP calculation formula (Bangladesh)				 = 0.5*Q							", styles['Comment']))
+
+            doc.build(pdfdata)
+            pdf = self.output.getvalue()
+            self.output.close()
+            return pdf
+        except Exception as e:
+            print e
