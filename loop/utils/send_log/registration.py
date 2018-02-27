@@ -92,6 +92,7 @@ def registration_auth_response(request):
 					sms_id = response['messages'][0]['id']
 					reg_sms.state = SMS_STATE['F'][0]
 					farmer[0].verified=True
+					farmer[0].save()
 				reg_sms.text_local_id = sms_id
 				reg_sms.sms_status = status_code
 				reg_sms.save()
