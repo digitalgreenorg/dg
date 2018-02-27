@@ -47,8 +47,6 @@ def send_first_transportation_code(farmer_no,query_code,custom_id):
 	custom_id = 1
 	if query_code=='1':
 		sms_body = registration_sms['transportion_code_beg']['en'] + '12345' + registration_sms['transportion_code_end']
-    elif query_code=='0':
-		sms_body = registration_sms['wrong_reg']['en']	
     else:
     	sms_body = registration_sms['input_error']['en']
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
