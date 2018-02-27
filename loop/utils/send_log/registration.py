@@ -1,7 +1,7 @@
 
 from dg.settings import TEXTLOCAL_API_KEY
 from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode
-from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL
+from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER
 from loop.config import registration_sms
 import requests
 from django.views.decorators.csrf import csrf_exempt
@@ -27,7 +27,7 @@ def send_reg_sms(farmer):
 
 def send_sms_using_textlocal(farmer_no, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    sms_body = registration_sms['welcome']['en']
+    sms_body = registration_sms['welcome']['en'] + ' ' + REG_RESP_NUMBER
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
