@@ -110,6 +110,6 @@ urlpatterns = patterns('',
     url(r'^get_partners_list/', get_partners_list),
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loop/admin/'}),
     url(r'^admin/', include(loop_admin.urls)),
-    url(r'^reg_response/',sms_response_from_txtlcl)
+    url(r'^reg_response/',sms_response_from_txtlcl),
     url(r'^reg_auth_response/',registration_auth_response)
     )
