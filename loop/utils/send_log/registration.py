@@ -68,7 +68,6 @@ def sms_reg_response_from_txtlcl(request):
 
 @csrf_exempt
 def registration_auth_response(request):
-	#import pdb;pdb.set_trace()
 	if request.method == 'POST':
 		msg_id = str(request.POST.get('msgId'))
         farmer_number = str(request.POST.get('sender'))
@@ -79,6 +78,7 @@ def registration_auth_response(request):
             query_code = str(request.POST.get('content')).replace(" ", "")
         except Exception as e:
             query_code = ''
+        import pdb;pdb.set_trace()
         farmer = Farmer.objects.filter(phone=farmer_number)
         if farmer.count()>0:
 	        if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified:
