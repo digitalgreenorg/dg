@@ -52,3 +52,4 @@ CONTAINS_ZERO = r'^[0]$'
 
 REG_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_response/')
 AGGREGATORS_IDEO = [3775L]
+REG_AUTH_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_auth_response/')
