@@ -263,8 +263,10 @@ sms_text = {
 
 registration_sms = {
   'welcome':{'hi':u'','en':u'Welcome'},
-  'transportion_code_beg':{'hi':u'','en':u''},
-  'transportion_code_end':{'hi':u'','en':u''}
+  'transportion_code_beg':{'hi':u'','en':u'beg'},
+  'transportion_code_end':{'hi':u'','en':u'end'},
+  'wrong_reg':{'hi':u'','en':u'Sorry'},
+  'input_error':{'hi':u'','en':u'Input Error'},
 }
 
 

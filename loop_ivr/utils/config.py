@@ -39,7 +39,6 @@ TEXT_LOCAL_SINGLE_SMS_API = 'https://api.textlocal.in/send/'
 
 RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/rcpt_response/')
 
-REG_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_response/')
 
 TOP_SELLING_CROP_WINDOW = 30
 N_TOP_SELLING_CROP = 5
@@ -48,3 +47,8 @@ ALL_FLAG_FALSE = 0
 
 PATTERN_REGEX = r'^([1-9]([0-9]*)[*, **]*)*$|^([0][*]{2}([1-9][*]?)+)$|^([1-9][0-9]*[*]{0,1})+[*]{2}[0]$'
 CONTAINS_ZERO = r'^[0]$'
+
+
+
+REG_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_response/')
+AGGREGATORS_IDEO = [3775L]

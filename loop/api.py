@@ -24,7 +24,7 @@ import time
 
 from loop_ivr.helper_function import send_sms_using_textlocal
 
-AGGREGATORS_IDEO = [3775L]
+from loop_ivr.utils.config import AGGREGATORS_IDEO
 
 class AssignedMandiNotSaved(Exception):
     pass
