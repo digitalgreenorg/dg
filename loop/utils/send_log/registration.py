@@ -6,7 +6,7 @@ from loop.config import registration_sms
 import requests
 from django.views.decorators.csrf import csrf_exempt
 
-from loop_ivr.utils.config import AGGREGATOR_IDEO
+from loop_ivr.utils.config import AGGREGATORS_IDEO
 import json
 from random import randint
 
@@ -47,14 +47,14 @@ def send_first_transportation_code(farmer_no,query_code,custom_id):
 	custom_id = 1
 	if query_code=='1':
 		sms_body = registration_sms['transportion_code_beg']['en'] + '12345' + registration_sms['transportion_code_end']
-    else:
-    	sms_body = registration_sms['input_error']['en']
-    sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
+	else:
+		sms_body = registration_sms['input_error']['en']
+	sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
+	parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_AUTH_RECEIPT_URL}
-    response = requests.post(sms_request_url, params=parameters)
-    response_text = json.loads(str(response.text))
-    return response_text
+	response = requests.post(sms_request_url, params=parameters)
+	response_text = json.loads(str(response.text))
+	return response_text
 
 @csrf_exempt
 def sms_reg_response_from_txtlcl(request):
@@ -77,8 +77,8 @@ def registration_auth_response(request):
         except Exception as e:
             query_code = ''
         farmer = Farmer.objects.filter(phone=farmer_number)[0]
-        if farmer.user_created_id in AGGREGATOR_IDEO and not farmer.verified:
-        	code = random_with_N_digits(5)
+        if farmer.user_created_id in AGGREGATORS_IDEO and not farmer.verified:
+			code = random_with_N_digits(5)
 			reg_sms = FarmerTransportCode(code = code,phone=farmer_number,state=SMS_STATE['S'][0])
 			reg_sms.save()
 			response = send_first_transportation_code(farmer_number,query_code,farmer_number)
