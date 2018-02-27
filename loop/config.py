@@ -262,9 +262,9 @@ sms_text = {
 }
 
 registration_sms = {
-  'welcome':{'hi':u'लूप में आपका स्वागत है| पुष्टि क लिए "1" लिख कर भेजे और फसल को पहली बार मंदी तक मुफ़्त मे पहुँचाए|','en':u'Welcome to Loop! Please reply "1" to confirm and receive your free transport credit'},
-  'transportion_code_beg':{'hi':u'पुष्टि के लिए धन्यवाद| अपने अग्रिगेटर को ','en':u'Thank you for confirming.Give your aggregator the code '},
-  'transportion_code_end':{'hi':u' कोड दे और पहली बार अपनी फसल मुफ़्त में मंदी पहुँचाए|','en':u' to get Free Transport on your first trip with Loop.'},
+  'welcome':{'hi':u'लूप में आपका स्वागत है| अगर आप लूप से जुड़े किसान हैं तो "1" लिख कर 9246022444 पर भेजें और फ़सल को पहली बार मंडी तक मुफ़्त मे पहुँचायें|','en':u'Welcome to Loop! Please reply "1" to confirm and receive your free transport credit'},
+  'transportion_code_beg':{'hi':u'पुष्टि के लिए धन्यवाद| अपने एग्रीगेटर को ','en':u'Thank you for confirming.Give your aggregator the code '},
+  'transportion_code_end':{'hi':u' कोड दें और पहली बार अपनी फ़सल मुफ़्त में मंडी पहुँचायें|','en':u' to get Free Transport on your first trip with Loop.'},
   'wrong_reg':{'hi':u'','en':u'Sorry'},
   'input_error':{'hi':u'','en':u'Input Error'},
 }

@@ -347,6 +347,7 @@ class Farmer(LoopModel):
     qr_code = models.IntegerField(default=None,null=True,blank=True)
     referred_by = models.IntegerField(default=None,null=True,blank=True)
     verified = models.BooleanField(default=False)
+    referral_free_transport = models.BooleanField(default=False)
 
 
     def __unicode__(self):
