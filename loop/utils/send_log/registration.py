@@ -28,7 +28,7 @@ def send_reg_sms(farmer):
 
 def send_sms_using_textlocal(farmer_no, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    sms_body = registration_sms['welcome']['en'] + ' ' + REG_RESP_NUMBER
+    sms_body = registration_sms['welcome']['hi'] + ' ' + REG_RESP_NUMBER
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
@@ -47,7 +47,7 @@ def sms_response_from_txtlcl(request):
 def send_first_transportation_code(farmer_no,code,query_code,custom_id):
 	custom_id = 1
 	if query_code=='1':
-		sms_body = ('%s %s %s') % (registration_sms['transportion_code_beg']['en'],code ,registration_sms['transportion_code_end'])
+		sms_body = ('%s %s %s') % (registration_sms['transportion_code_beg']['hi'],code ,registration_sms['transportion_code_end']['hi'])
 		#sms_body = registration_sms['transportion_code_beg']['en'] + code + registration_sms['transportion_code_end']
 	else:
 		sms_body = registration_sms['input_error']['en']
