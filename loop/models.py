@@ -848,11 +848,11 @@ class FarmerQRScan(LoopModel):
 
 class FarmerTransportCode(LoopModel):
     code = models.IntegerField(blank=True,null=True)
-    phone = models.IntegerField(blank=True,null=True)
+    phone = models.CharField(max_length=13,blank=True,null=True)
     dateUsed = models.DateField(blank=True,null=True)
     qr_code = models.IntegerField(blank=True,null=True)
-    sms_status = models.IntegerField(choices=SMS_STATUS,default=0)
-    state = models.IntegerField(default=0)
+    sms_status = models.IntegerField(choices=SMS_STATUS,default=0,blank=True,null=True)
+    state = models.IntegerField(default=0,blank=True,null=True)
     text_local_id = models.CharField(max_length=20,blank=True,null=True)
 
 

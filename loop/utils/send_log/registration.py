@@ -5,10 +5,11 @@ from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, RE
 from loop.config import registration_sms
 import requests
 from django.views.decorators.csrf import csrf_exempt
-
+from django.http import HttpResponse
 from loop_ivr.utils.config import AGGREGATORS_IDEO
 import json
 from random import randint
+import re
 
 
 def send_reg_sms(farmer):
@@ -43,10 +44,11 @@ def sms_response_from_txtlcl(request):
 
 	return HttpResponse("0")
 
-def send_first_transportation_code(farmer_no,query_code,custom_id):
+def send_first_transportation_code(farmer_no,code,query_code,custom_id):
 	custom_id = 1
 	if query_code=='1':
-		sms_body = registration_sms['transportion_code_beg']['en'] + '12345' + registration_sms['transportion_code_end']
+		sms_body = ('%s %s %s') % (registration_sms['transportion_code_beg']['en'],code ,registration_sms['transportion_code_end'])
+		#sms_body = registration_sms['transportion_code_beg']['en'] + code + registration_sms['transportion_code_end']
 	else:
 		sms_body = registration_sms['input_error']['en']
 	sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
@@ -66,6 +68,7 @@ def sms_reg_response_from_txtlcl(request):
 
 @csrf_exempt
 def registration_auth_response(request):
+	import pdb;pdb.set_trace()
 	if request.method == 'POST':
 		msg_id = str(request.POST.get('msgId'))
         farmer_number = str(request.POST.get('sender'))
@@ -76,22 +79,23 @@ def registration_auth_response(request):
             query_code = str(request.POST.get('content')).replace(" ", "")
         except Exception as e:
             query_code = ''
-        farmer = Farmer.objects.filter(phone=farmer_number)[0]
-        if farmer.user_created_id in AGGREGATORS_IDEO and not farmer.verified:
-			code = random_with_N_digits(5)
-			reg_sms = FarmerTransportCode(code = code,phone=farmer_number,state=SMS_STATE['S'][0])
-			reg_sms.save()
-			response = send_first_transportation_code(farmer_number,query_code,farmer_number)
-			status_code = 0
-			if response['status'] == "success":
-				status_code = 1
-				sms_id = response['messages'][0]['id']
-				reg_sms.state = SMS_STATE['F'][0]
-			reg_sms.text_local_id = sms_id
-			reg_sms.sms_status = status_code
-			reg_sms.save()
+        farmer = Farmer.objects.filter(phone=farmer_number)
+        if farmer.count()>0:
+	        if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified:
+				code = random_with_N_digits(5)
+				reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0])
+				reg_sms.save()
+				response = send_first_transportation_code(farmer_number,code,query_code,farmer_number)
+				status_code = 0
+				if response['status'] == "success":
+					status_code = 1
+					sms_id = response['messages'][0]['id']
+					reg_sms.state = SMS_STATE['F'][0]
+					farmer[0].verified=True
+				reg_sms.text_local_id = sms_id
+				reg_sms.sms_status = status_code
+				reg_sms.save()
         	
-
 	return HttpResponse("0")
 
 def random_with_N_digits(n):
