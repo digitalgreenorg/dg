@@ -102,3 +102,30 @@ def random_with_N_digits(n):
     range_start = 10**(n-1)
     range_end = (10**n)-1
     return randint(range_start, range_end)
+
+def send_msg_sms_using_textlocal(farmer_no, custom_id):
+    sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
+    sms_body = first_transaction_sms['hi']
+    parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
+                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_RECEIPT_URL}
+    response = requests.post(sms_request_url, params=parameters)
+    response_text = json.loads(str(response.text))
+    return response_text
+
+
+def send_msg_after_first_trans(request):
+	farmer_list = []
+	for farmer in farmer_list:
+		reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0])
+		reg_sms.save()
+		response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id)
+		status_code = 0
+		if response['status'] == "success":
+			status_code = 1
+			sms_id = response['messages'][0]['id']
+			reg_sms.state = SMS_STATE['F'][0]
+		reg_sms.text_local_id = sms_id
+		reg_sms.sms_status = status_code
+		reg_sms.save()		
+		
+

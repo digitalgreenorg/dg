@@ -356,6 +356,7 @@ class FarmerResource(BaseResource):
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
     def obj_create(self, bundle, request=None, **kwargs):
+        import pdb;pdb.set_trace()
         village = Village.objects.get(id=bundle.data["village"]["online_id"])
         attempt = Farmer.objects.filter(
             phone=bundle.data['phone'], name=bundle.data['name'], village=village)
@@ -1126,3 +1127,37 @@ class CombinedTransactionResource(BaseResource):
             return self.create_response(request, deleted_bundle, response_class=http.HttpResponse)
         except NotFound:
             return http.Http404()
+
+class FarmerQRScanResource(BaseResource):
+
+    class Meta:
+        limit = 0
+        max_limit = 0
+        allowed_methods = ["get", "post", "put", "delete"]
+        queryset = FarmerQRScan.objects.all()
+        resource_name = 'farmerqrscan'
+        authorization = BlockAuthorization('block')
+        authentication = ApiKeyAuthentication()
+        always_return_data = True
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        attempt = FarmerQRScan.objects.filter(timestamp=bundle.data['timestamp'],qr_code=bundle.data['qr_code'],action=bundle.data['action'])
+        if attempt.count() < 1:
+            bundle = super(FarmerQRScanResource, self).obj_create(
+                bundle, **kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            bundle = super(FarmerQRScanResource, self).obj_update(
+                bundle, **kwargs)
+        except Exception, e:
+            attempt = FarmerQRScan.objects.filter(timestamp=bundle.data['timestamp'],qr_code=bundle.data['qr_code'],action=bundle.data['action'])
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+

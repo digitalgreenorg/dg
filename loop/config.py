@@ -269,8 +269,12 @@ registration_sms = {
   'input_error':{'hi':u'','en':u'Input Error'},
 }
 
+first_transaction_sms ={'hi':u'लूप का इस्तेमाल करने के लिए धन्यवाद| अन्य किसानों को लूप से जोड़े और उनके लूप के इस्तेमाल से अगली बार मंडी तक फ़सल मुफ़्त में पहुँचायें|','en':'thanks'}
 
-
+referral_transport_sms = {
+  'beg':{'hi':u'अपने साथी किसान को लूप से जोड़ने के लिए धन्यवाद| अपने एग्रीगेटर को ','en':u'beg'},
+  'end':{'hi'u'कोड दें और अगली बार अपनी फसल मुफ़्त में मंडी पहुँचायें|','en':u'end'}
+}
 RECIPIENTS = ['lokesh@digitalgreen.org', 'loop@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']
