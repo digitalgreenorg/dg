@@ -68,7 +68,7 @@ def sms_reg_response_from_txtlcl(request):
 
 @csrf_exempt
 def registration_auth_response(request):
-	import pdb;pdb.set_trace()
+	#import pdb;pdb.set_trace()
 	if request.method == 'POST':
 		msg_id = str(request.POST.get('msgId'))
         farmer_number = str(request.POST.get('sender'))
