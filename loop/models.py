@@ -853,6 +853,7 @@ class FarmerTransportCode(LoopModel):
     qr_code = models.IntegerField(blank=True,null=True)
     sms_status = models.IntegerField(choices=SMS_STATUS,default=0)
     state = models.IntegerField(default=0)
+    text_local_id = models.CharField(max_length=20,blank=True,null=True)
 
 
 
