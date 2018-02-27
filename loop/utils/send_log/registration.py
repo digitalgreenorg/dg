@@ -78,7 +78,7 @@ def registration_auth_response(request):
             query_code = str(request.POST.get('content')).replace(" ", "")
         except Exception as e:
             query_code = ''
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         farmer = Farmer.objects.filter(phone=farmer_number)
         if farmer.count()>0:
 	        if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified:
@@ -91,8 +91,7 @@ def registration_auth_response(request):
 					status_code = 1
 					sms_id = response['messages'][0]['id']
 					reg_sms.state = SMS_STATE['F'][0]
-					farmer[0].verified=True
-					farmer[0].save()
+					farmer.update(verified=True)
 				reg_sms.text_local_id = sms_id
 				reg_sms.sms_status = status_code
 				reg_sms.save()
