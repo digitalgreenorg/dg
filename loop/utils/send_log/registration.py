@@ -71,7 +71,7 @@ def registration_auth_response(request):
 	if request.method == 'POST':
 		msg_id = str(request.POST.get('msgId'))
         farmer_number = str(request.POST.get('sender'))
-        farmer_number = re.sub('^91', '0', farmer_number)
+        farmer_number = re.sub('^91', '', farmer_number)
         to_number = str(request.POST.get('inNumber'))
 
         try:
