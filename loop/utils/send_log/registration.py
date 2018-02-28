@@ -30,7 +30,7 @@ def send_reg_sms(farmer):
 
 def send_sms_using_textlocal(farmer_no, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    sms_body = registration_sms['welcome']['hi'] + ' ' + REG_RESP_NUMBER
+    sms_body = registration_sms['welcome']['hi'] 
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
