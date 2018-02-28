@@ -32,7 +32,7 @@ class Command(BaseCommand):
 		try:
 			data = json.loads(root.text, strict=False)
 		except Exception as e:
-			print e
+			pass
 		state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
 		district_data_list = []
@@ -63,9 +63,8 @@ class Command(BaseCommand):
 				if village_obj.count() >= 1:
 					village = village_obj[0]
 					village = village.village
-			except AP_Village.DoesNotExist as e:
+			except AP_Village.DoesNotExist:
 				village = None
-				print e
 			# for animator
 			try:
 				animator_obj = AP_Animator.objects.filter(animator_code=mediator_code)
@@ -74,7 +73,6 @@ class Command(BaseCommand):
 					animator = animator.animator
 			except AP_Village.DoesNotExist as e:
 				animator = None
-				print e 
 
 			#videos
 			try:
@@ -83,8 +81,7 @@ class Command(BaseCommand):
 				# 	videoes_screened = filter(0, videoes_screened)
 				# except Exception as e:
 				# 	print e
-			except Exception as e:
-				print e, videos
+			except:
 				videoes_screened = []
 			partner = partner
 			farmer_groups_targeted=[1]
@@ -99,7 +96,7 @@ class Command(BaseCommand):
 					try:
 						scr_obj.videoes_screened.add(*videoes_screened)
 					except:
-						import pdb;pdb.set_trace()
+						pass
 					scr_obj.farmer_groups_targeted.add(*farmer_groups_targeted)
 
 					if scr_obj:
@@ -114,7 +111,6 @@ class Command(BaseCommand):
 						except Exception as e:
 							wtr.writerow(['Not able to Save Screening in AP Screening TABLE', screening_code, e])
 			except Screening.DoesNotExist as e:
-				print e
 				wtr.writerow(['Not able to save screening',screening_code, e])
 
 			

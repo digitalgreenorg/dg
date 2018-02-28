@@ -31,7 +31,6 @@ class Command(BaseCommand):
 			print e
 		state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
-		district_data_list = []
 		for data_iterable in data:
 			pest_code = data_iterable.get('Pest_Id')
 			pest_name = data_iterable.get('Pest_Method_Name')

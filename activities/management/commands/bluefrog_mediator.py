@@ -45,8 +45,6 @@ class Command(BaseCommand):
 			block_code = data_iterable.get('Mandal Id')
 			village_code = data_iterable.get('Village ID')
 			habitation_code = data_iterable.get('Habitation ID')
-
-			error = 0
 			try:
 				district = AP_District.objects.get(district_code=district_code)
 			except AP_District.DoesNotExist as e:

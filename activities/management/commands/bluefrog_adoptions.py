@@ -39,7 +39,6 @@ class Command(BaseCommand):
 			member_code = data_iterable.get('Person ID')
 			member_name = data_iterable.get('Person Name')
 			video_id = data_iterable.get('Video ID')
-			district_code = data_iterable.get('District ID')
 			village_code = data_iterable.get('Village ID')
 			animator_code = data_iterable.get("Animator ID")
 			date_of_adoption = data_iterable.get('Date of Adoption')
