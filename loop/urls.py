@@ -42,6 +42,7 @@ api1.register(api.AggregatorShareOutliersResource())
 api1.register(api.LanguageResource())
 api1.register(api.CropLanguageResource())
 api1.register(api.VehicleLanguageResource())
+api1.register(api.FarmerQRScanResource())
 
 api2 = Api(api_name = "v2")
 api2.register(api_admin.VillageResource())

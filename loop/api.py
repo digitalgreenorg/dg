@@ -356,7 +356,6 @@ class FarmerResource(BaseResource):
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
     def obj_create(self, bundle, request=None, **kwargs):
-        import pdb;pdb.set_trace()
         village = Village.objects.get(id=bundle.data["village"]["online_id"])
         attempt = Farmer.objects.filter(
             phone=bundle.data['phone'], name=bundle.data['name'], village=village)
@@ -1135,7 +1134,7 @@ class FarmerQRScanResource(BaseResource):
         max_limit = 0
         allowed_methods = ["get", "post", "put", "delete"]
         queryset = FarmerQRScan.objects.all()
-        resource_name = 'farmerqrscan'
+        resource_name = 'qrscan'
         authorization = BlockAuthorization('block')
         authentication = ApiKeyAuthentication()
         always_return_data = True

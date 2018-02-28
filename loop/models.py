@@ -344,7 +344,7 @@ class Farmer(LoopModel):
     correct_phone_date = models.DateField(default=None, auto_now=False, null=True)
     registration_sms = models.BooleanField(default=False)
     registration_sms_id = models.CharField(max_length=15, null=True, blank=True)
-    qr_code = models.IntegerField(default=None,null=True,blank=True)
+    qr_code = models.CharField(max_length=30,default=None,null=True,blank=True)
     referred_by = models.IntegerField(default=None,null=True,blank=True)
     verified = models.BooleanField(default=False)
     referral_free_transport = models.BooleanField(default=False)
@@ -842,20 +842,27 @@ class RegistrationSms(LoopModel):
     state = models.IntegerField(default=0,blank=True,null=True)
     text_local_id = models.CharField(max_length=20,blank=True,null=True)
 
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.farmer, self.state)
+
 class FarmerQRScan(LoopModel):
     timestamp = models.DateTimeField(blank=True,null=True)
     qr_code = models.IntegerField(default=None)
     action = models.IntegerField(choices=QR_ACTIONS,default=0)
 
+    def __unicode__(self):
+        return "%s (%s)" % (self.qr_code, self.action)
+
 class FarmerTransportCode(LoopModel):
     code = models.IntegerField(blank=True,null=True)
     phone = models.CharField(max_length=13,blank=True,null=True)
     dateUsed = models.DateField(blank=True,null=True)
-    qr_code = models.IntegerField(blank=True,null=True)
+    qr_code = models.CharField(max_length=30,blank=True,null=True)
     sms_status = models.IntegerField(choices=SMS_STATUS,default=0,blank=True,null=True)
     state = models.IntegerField(default=0,blank=True,null=True)
     text_local_id = models.CharField(max_length=20,blank=True,null=True)
 
-
-
+    def __unicode__(self):
+        return "%s (%s)" % (self.code, self.phone)
 
