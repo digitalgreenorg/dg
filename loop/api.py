@@ -1144,6 +1144,7 @@ class FarmerQRScanResource(BaseResource):
     def obj_create(self, bundle, request=None, **kwargs):
         import pdb;pdb.set_trace()
         rdtime = datetime.datetime.fromtimestamp(float(bundle.data['timestamp']))
+        bundle.data['timestamp']=str(rdtime)
         #rdtime = datetime.strptime(rdtime, '%Y-%m-%d %H:%M:%S')
         #rdtime = time.strftime("%Y-%m-%d %H:%M:%S", rdtime)
         attempt = FarmerQRScan.objects.filter(timestamp=rdtime,qr_code=bundle.data['qr_code'],action=bundle.data['action'])
