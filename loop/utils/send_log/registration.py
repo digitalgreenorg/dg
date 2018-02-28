@@ -168,7 +168,7 @@ def send_refer_transport_code(farmer):
 
 
 def getFirstTransportFarmers(from_date,to_date):
-	import pdb;pdb.set_trace()
+	#import pdb;pdb.set_trace()
 	farmers = Farmer.objects.filter(user_created_id__in=AGGREGATORS_IDEO)
 	farmer_first = CombinedTransaction.objects.values('farmer').annotate(Min('date')).filter(farmer__in=farmers).filter(date__min__gte=from_date,date__min__lte=to_date)
 	return Farmer.objects.filter(id__in=farmer_first.values('farmer'))

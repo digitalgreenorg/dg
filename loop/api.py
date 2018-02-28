@@ -1142,7 +1142,7 @@ class FarmerQRScanResource(BaseResource):
         include_resource_uri = False
 
     def obj_create(self, bundle, request=None, **kwargs):
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         rdtime = datetime.datetime.fromtimestamp(float(bundle.data['timestamp'])/1000)
         bundle.data['timestamp']=str(rdtime)
         #rdtime = datetime.strptime(rdtime, '%Y-%m-%d %H:%M:%S')
