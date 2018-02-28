@@ -345,7 +345,7 @@ class Farmer(LoopModel):
     registration_sms = models.BooleanField(default=False)
     registration_sms_id = models.CharField(max_length=15, null=True, blank=True)
     qr_code = models.CharField(max_length=30,default=None,null=True,blank=True)
-    referred_by = models.IntegerField(default=None,null=True,blank=True)
+    referred_by = models.CharField(max_length=13,default=None,null=True,blank=True)
     verified = models.BooleanField(default=False)
     referral_free_transport = models.BooleanField(default=False)
 
