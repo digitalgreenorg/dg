@@ -1,6 +1,6 @@
 
 from dg.settings import TEXTLOCAL_API_KEY
-from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction	
+from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode
 from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER
 from loop.config import registration_sms,first_transaction_sms,referral_transport_sms
 import requests
@@ -102,7 +102,11 @@ def registration_auth_response(request):
 def random_with_N_digits(n):
     range_start = 10**(n-1)
     range_end = (10**n)-1
-    return randint(range_start, range_end)
+    code = randint(range_start, range_end)
+    used_codes = FarmerTransportCode.objects.values_list('code',flat=True)
+    while code in used_codes:
+    	code = randint(range_start, range_end)
+    return code
 
 def send_msg_sms_using_textlocal(farmer_no, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
