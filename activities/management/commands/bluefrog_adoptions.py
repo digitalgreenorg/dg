@@ -23,7 +23,7 @@ class Command(BaseCommand):
 		xml_file = open("ap/adoption.xml", 'w')
 		xml_file.write(req.content)
 		xml_file.close()
-		partner=Partner.objects.get(id=50)
+		# partner=Partner.objects.get(id=50)
 		csv_file = open('ap/adoption.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('ap/adoption.xml')
@@ -32,9 +32,8 @@ class Command(BaseCommand):
 			data = json.loads(root.text, strict=False)
 		except Exception as e:
 			print e
-		state = State.objects.get(id=6)
+		# state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
-		district_data_list = []
 		for data_iterable in data:
 			member_code = data_iterable.get('Person ID')
 			member_name = data_iterable.get('Person Name')

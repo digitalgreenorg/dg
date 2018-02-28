@@ -57,8 +57,6 @@ class Command(BaseCommand):
 						wtr.writerow(['district',district_name, e])
 			try:
 				district = District.objects.filter(state_id=6).get(district_name=district_name)
-				district_added = AP_District.objects.values_list('district_name',flat=True)
-				#district_added = [i[0] for i in district_added]
 				
 				district_obj, created = \
 					AP_District.objects.get_or_create(district_name=district_name,

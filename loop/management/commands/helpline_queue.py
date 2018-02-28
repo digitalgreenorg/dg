@@ -40,6 +40,7 @@ class Command(BaseCommand):
             return ''
 
     def handle(self, *args, **options):
+        # Check if State filter is required or not
         expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
         working_hours = range(9,18)
         if expert_obj:

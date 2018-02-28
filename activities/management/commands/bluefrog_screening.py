@@ -33,7 +33,7 @@ class Command(BaseCommand):
 			data = json.loads(root.text, strict=False)
 		except Exception as e:
 			pass
-		state = State.objects.get(id=6)
+		# state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
 		district_data_list = []
 

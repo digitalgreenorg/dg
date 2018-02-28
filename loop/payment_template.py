@@ -209,6 +209,8 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
                 ws.merge_range('E'+str(ap_formula_row+1)+':L'+str(ap_formula_row+1), " = 0.2*2000 + 0.1*(Q-2000) ; Q>2000", row_format)
                 ws.merge_range('A'+str(ap_formula_row+2)+':D'+str(ap_formula_row+2), "##AP calculation formula (Maharashtra)", row_format)
                 ws.merge_range('E'+str(ap_formula_row+2)+':L'+str(ap_formula_row+2), " = 0.25*Q", row_format)
+                ws.merge_range('A'+str(ap_formula_row+3)+':D'+str(ap_formula_row+3), "##AP calculation formula (Bangladesh)", row_format)
+                ws.merge_range('E'+str(ap_formula_row+3)+':L'+str(ap_formula_row+3), " = 0.5*Q", row_format)
 
     except Exception as e:
         print e

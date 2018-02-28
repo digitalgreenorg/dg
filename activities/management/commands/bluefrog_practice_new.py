@@ -20,7 +20,7 @@ class Command(BaseCommand):
 		xml_file = open("ap/practice_new.xml", 'w')
 		xml_file.write(req.content)
 		xml_file.close()
-		partner=Partner.objects.get(id=50)
+		# partner=Partner.objects.get(id=50)
 		csv_file = open('ap/practice_new_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('ap/practice_new.xml')

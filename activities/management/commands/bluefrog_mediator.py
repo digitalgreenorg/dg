@@ -29,7 +29,6 @@ class Command(BaseCommand):
 		data = json.loads(root.text)
 		state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
-		district_data_list = []
 		for data_iterable in data:
 			mediator_code = data_iterable.get('ID')
 			mediator_name = data_iterable.get('Name')

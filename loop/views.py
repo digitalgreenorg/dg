@@ -20,7 +20,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, AdminUser
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, AdminUser, District
 
 import loop.utils.send_log.loop_data_log as loop_log
 import loop.utils.send_log.loop_admin_log as admin_log
@@ -45,7 +45,8 @@ from loop.helpline_view import write_log, save_call_log, save_sms_log, get_statu
     update_incoming_obj, send_acknowledge, send_voicemail, start_broadcast, connect_to_broadcast, save_broadcast_audio, \
     redirect_to_broadcast, save_farmer_file
 from loop.utils.loop_etl.group_myisam_data import get_data_from_myisam
-from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME, INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE
+from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, DISCOUNT_CRITERIA_VOLUME, \
+    INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE
 
 import pandas as pd
 from training.management.databases.utility import *
@@ -55,6 +56,7 @@ from dg.settings import DATABASES
 # Create your views here.
 HELPLINE_NUMBER = "01139595953"
 
+
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
@@ -63,10 +65,15 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
         loop_user = LoopUser.objects.filter(user=user)
         reg_token = None
+        version = "0"
         if 'registration' in request.POST and request.POST['registration']:
             reg_token = request.POST['registration']
             LoopUser.objects.filter(registration=reg_token).update(registration=None)
-        loop_user.update(registration=reg_token)
+
+        if 'version' in request.POST and request.POST['version']:
+            version = request.POST['version']
+
+        loop_user.update(registration=reg_token, version=version)
 
         if user is not None and user.is_active and loop_user.count() > 0:
             auth.login(request, user)
@@ -78,23 +85,26 @@ def login(request):
                 api_key.save()
             log_object = loop_log.get_latest_timestamp()
             return HttpResponse(json.dumps(
-                    {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name,
-                    'user_id': loop_user[0].user_id,
-                    'mode': loop_user[0].mode, 'phone_number': loop_user[0].phone_number, 'user_name': username,
-                    'district': loop_user[0].village.block.district.id, 'days_count': loop_user[0].days_count,
-                    'helpline': loop_user[0].village.block.district.state.helpline_number,
-                    'crop_add': loop_user[0].village.block.district.state.crop_add,
-                    'phone_digits':loop_user[0].village.block.district.state.phone_digit,
-                    'phone_start':loop_user[0].village.block.district.state.phone_start,
-                    'preferred_language':loop_user[0].preferred_language.notation,
-                    'registration':loop_user[0].registration,
-                    'country':loop_user[0].village.block.district.state.country.country_name,'role':loop_user[0].role,
-                    'farmer_phone_mandatory':loop_user[0].farmer_phone_mandatory,'state':loop_user[0].village.block.district.state.state_name,
-                    'show_farmer_share':loop_user[0].show_farmer_share,'percent_farmer_share':loop_user[0].percent_farmer_share}))
+                {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': loop_user[0].name,
+                 'user_id': loop_user[0].user_id,
+                 'mode': loop_user[0].mode, 'phone_number': loop_user[0].phone_number, 'user_name': username,
+                 'district': loop_user[0].village.block.district.id, 'days_count': loop_user[0].days_count,
+                 'helpline': loop_user[0].village.block.district.state.helpline_number,
+                 'crop_add': loop_user[0].village.block.district.state.crop_add,
+                 'phone_digits': loop_user[0].village.block.district.state.phone_digit,
+                 'phone_start': loop_user[0].village.block.district.state.phone_start,
+                 'preferred_language': loop_user[0].preferred_language.notation,
+                 'registration': loop_user[0].registration,
+                 'country': loop_user[0].village.block.district.state.country.country_name, 'role': loop_user[0].role,
+                 'farmer_phone_mandatory': loop_user[0].farmer_phone_mandatory,
+                 'state': loop_user[0].village.block.district.state.state_name,
+                 'show_farmer_share': loop_user[0].show_farmer_share,
+                 'percent_farmer_share': loop_user[0].percent_farmer_share,
+                 'server_sms': loop_user[0].village.block.district.state.server_sms}))
         else:
-            admin_user = AdminUser.objects.filter(user = user)
-            if user is not None and user.is_active and admin_user.count()>0:
-                auth.login(request,user)
+            admin_user = AdminUser.objects.filter(user=user)
+            if user is not None and user.is_active and admin_user.count() > 0:
+                auth.login(request, user)
                 try:
                     api_key = ApiKey.objects.get(user=user)
                 except ApiKey.DoesNotExist:
@@ -102,16 +112,16 @@ def login(request):
                     api_key.save()
                 log_object = admin_log.get_latest_timestamp()
                 return HttpResponse(json.dumps(
-                {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': admin_user[0].name,
-                 'user_id': admin_user[0].user_id,
-                 'phone_number': admin_user[0].phone_number, 'user_name': username,
-                 'state': admin_user[0].state.id,
-                 'helpline': admin_user[0].state.helpline_number,
-                 'phone_digits':admin_user[0].state.phone_digit,
-                 'phone_start':admin_user[0].state.phone_start,
-                 'preferred_language':admin_user[0].preferred_language.notation}))
+                    {'key': api_key.key, 'timestamp': str(log_object.timestamp), 'full_name': admin_user[0].name,
+                     'user_id': admin_user[0].user_id,
+                     'phone_number': admin_user[0].phone_number, 'user_name': username,
+                     'state': admin_user[0].state.id,
+                     'helpline': admin_user[0].state.helpline_number,
+                     'phone_digits': admin_user[0].state.phone_digit,
+                     'phone_start': admin_user[0].state.phone_start,
+                     'preferred_language': admin_user[0].preferred_language.notation}))
 
-            #return HttpResponse("0", status=401)
+                # return HttpResponse("0", status=401)
     else:
         return HttpResponse("0", status=403)
     return HttpResponse("0", status=400)
@@ -182,18 +192,28 @@ def filter_data(request):
     country_id = request.GET.get('country_id')
     state_id = request.GET.get('state_id')
 
-    if(int(state_id) < 0):
-        #country filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
+    if (int(state_id) < 0):
+        # country filter
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR,
+                                              village__block__district__state__country=country_id).values('user__id',
+                                                                                                          'name',
+                                                                                                          'name_en',
+                                                                                                          'id',
+                                                                                                          'village__block__district__state__state_name_en',
+                                                                                                          'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state__country=country_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state__country=country_id).values(
-        'id', 'gaddidar_name', 'gaddidar_name_en')
-    elif(int(state_id)>0):
-        #state filter
-        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
+            'id', 'gaddidar_name', 'gaddidar_name_en')
+    elif (int(state_id) > 0):
+        # state filter
+        aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR,
+                                              village__block__district__state=state_id).values('user__id', 'name',
+                                                                                               'name_en', 'id',
+                                                                                               'village__block__district__state__state_name_en',
+                                                                                               'village__block__district__state__country__country_name')
         mandis = Mandi.objects.filter(district__state=state_id).values('id', 'mandi_name', 'mandi_name_en')
         gaddidars = Gaddidar.objects.filter(mandi__district__state=state_id).values(
-        'id', 'gaddidar_name', 'gaddidar_name_en')
+            'id', 'gaddidar_name', 'gaddidar_name_en')
 
     # villages = Village.objects.all().values('id', 'village_name', 'village_name_en')
     crops = Crop.objects.all().values('id', 'crop_name')
@@ -203,7 +223,7 @@ def filter_data(request):
         if obj['language_id'] not in crops_language:
             crops_language[obj['language_id']] = list()
         crops_language[obj['language_id']].append({'id': obj['crop_id'],
-                                            'crop_name': obj['crop_name']})
+                                                   'crop_name': obj['crop_name']})
 
     # transporters = Transporter.objects.values('id', 'transporter_name')
     data_dict = {'aggregators': list(aggregators), 'crops': list(crops),
@@ -211,46 +231,72 @@ def filter_data(request):
     data = json.dumps(data_dict)
     return HttpResponse(data)
 
+def admin_assigned_loopusers_data(request):
+    user_id = request.GET.get('user_id')
+    admin_user = AdminUser.objects.get(user__id = user_id)
+    aggregators = admin_user.assigned_loopusers.all().values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
+    data_dict = {'aggregators': list(aggregators)}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)
+
+def districts_for_state(request):
+    state = request.GET.get('state')
+    districts = District.objects.filter(state__state_name_en=state).values('id', 'district_name_en')
+    data_dict = {'districts': list(districts)}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)
+
+def aggregator_data_for_districts(request):
+    district_ids = request.GET.getlist('district_ids[]')
+    aggregators = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__in=district_ids).values('user__id', 'name', 'name_en', 'id', 'village__block__district__state__state_name_en', 'village__block__district__state__country__country_name')
+    data_dict = {'aggregators': list(aggregators)}
+    data = json.dumps(data_dict)
+    return HttpResponse(data)
+
 def jsonify(data):
     if isinstance(data, dict):
         json_data = dict()
         for key, value in data.items():
-            if isinstance(value, list): # for lists
+            if isinstance(value, list):  # for lists
                 for i, item in enumerate(value):
                     value[i] = jsonify(value[i])
             if isinstance(value, unicode):
                 value = value.encode("utf-8")
-            if isinstance(value, dict): # for nested lists
+            if isinstance(value, dict):  # for nested lists
                 value = jsonify(value)
-            if type(value).__module__=='numpy': # if value is numpy.*: > to python list
+            if type(value).__module__ == 'numpy':  # if value is numpy.*: > to python list
                 value = value.tolist()
             json_data[str(key)] = value
         return json_data
 
     elif isinstance(data, list):
         for i, item in enumerate(data):
-            data[strr(i)] = jsonify(data[i])
+            data[str(i)] = jsonify(data[i])
         return data
 
-    elif type(data).__module__=='numpy':
+    elif type(data).__module__ == 'numpy':
         data = data.tolist()
         return data
 
     else:
         return data
 
-def total_static_data(request):
-    country_id = request.GET['country_id'] #To be fetched from request
-    state_id = request.GET['state_id']
-    if(int(state_id) < 0):
-        #Only country filter
-        total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values('farmer').distinct().count()
-        total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state__country=country_id).count()
-    elif(int(state_id) > 0):
-        #state filter
-        total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state=state_id).values('farmer').distinct().count()
-        total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR, village__block__district__state=state_id).count()
 
+def total_static_data(request):
+    country_id = request.GET['country_id']  # To be fetched from request
+    state_id = request.GET['state_id']
+    if (int(state_id) < 0):
+        # Only country filter
+        total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state__country=country_id).values(
+            'farmer').distinct().count()
+        total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR,
+                                                        village__block__district__state__country=country_id).count()
+    elif (int(state_id) > 0):
+        # state filter
+        total_farmers_reached = CombinedTransaction.objects.filter(mandi__district__state=state_id).values(
+            'farmer').distinct().count()
+        total_cluster_reached = LoopUser.objects.filter(role=ROLE_CHOICE_AGGREGATOR,
+                                                        village__block__district__state=state_id).count()
 
     aggregated_result, cum_vol_farmer = get_data_from_myisam(1, country_id, state_id)
 
@@ -268,8 +314,10 @@ def calculate_inc_default(V):
 def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=None, aggregator_list=None):
     if aggregator_list is not None:
         user_qset = LoopUser.objects.filter(user__in=aggregator_list).values_list('id', flat=True)
+        aggregators = LoopUser.objects.filter(user__in=aggregator_list)
     else:
         user_qset = LoopUser.objects.values_list('id', flat=True)
+        aggregators = LoopUser.objects.all()
 
     parameters_dictionary = {'aggregator__in': user_qset}
     parameters_dictionary_for_outliers = {
@@ -298,16 +346,21 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
 
     aso_queryset = AggregatorShareOutliers.objects.filter(
         **arguments_for_aggregator_incentive_outliers)
-    combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
-        'date', 'user_created_id', 'mandi', 'mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'),
+    
+    combined_ct_queryset = CombinedTransaction.objects.none()
+    # Checking if we need to apply incorrect farmer phone model on payment data
+    date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    if date_start >= INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE:
+        for aggregator in aggregators:
+            arguments_for_agg = arguments_for_ct
+            if aggregator.village.block.district.state.state_name_en == "Bihar":
+                arguments_for_agg['date__gte'] = F('farmer__correct_phone_date')
+            aggregator_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_agg).values(
+            'date', 'user_created_id', 'mandi', 'mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'),
                                                                                                Sum('amount'),
                                                                                                Count('farmer_id',
                                                                                                      distinct=True))
-
-    #Checking if we need to apply incorrect farmer phone model on payment data
-    date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-    if date_start >= INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE:
-        combined_ct_queryset = combined_ct_queryset.filter(date__gte=F('farmer__correct_phone_date'))
+            combined_ct_queryset = combined_ct_queryset | aggregator_ct_queryset
 
     result = []
     daily_pay_list = []
@@ -382,6 +435,7 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
         pass
     return result
 
+
 def crop_language_data(request):
     crops = CropLanguage.objects.filter(language=request.GET.get('language'))
     data = json.dumps(crops)
@@ -390,7 +444,7 @@ def crop_language_data(request):
 
 
 # def recent_graphs_data(request):
-#     country_id = request.GET['country_id'] #To be fetched from request
+# country_id = request.GET['country_id'] #To be fetched from request
 #     aggregated_result, cummulative_vol_farmer = get_data_from_myisam(0, country_id)
 
 #     chart_dict = {'aggregated_result': aggregated_result, 'cummulative_vol_farmer': cummulative_vol_farmer}
@@ -405,7 +459,7 @@ def data_for_drilldown_graphs(request):
     crop_ids = request.GET.getlist('c_id[]')
     mandi_ids = request.GET.getlist('m_id[]')
     gaddidar_ids = request.GET.getlist('g_id[]')
-    country_id = request.GET['country_id'] #To be fetched from request
+    country_id = request.GET['country_id']  #To be fetched from request
     state_id = request.GET['state_id']
 
     filter_args = {}
@@ -516,7 +570,7 @@ def data_for_line_graph(request):
     crop_ids = request.GET.getlist('c_id[]')
     mandi_ids = request.GET.getlist('m_id[]')
     gaddidar_ids = request.GET.getlist('g_id[]')
-    country_id = request.GET['country_id'] #To be fetched from request
+    country_id = request.GET['country_id']  #To be fetched from request
     state_id = request.GET['state_id']
     filter_args = {}
     filter_transportation = {}
@@ -535,7 +589,7 @@ def data_for_line_graph(request):
     filter_transportation["mandi__id__in"] = mandi_ids
     filter_transportation["mandi__district__state__country"] = country_id
 
-    if(int(state_id) > 0):
+    if (int(state_id) > 0):
         filter_args["mandi__district__state"] = state_id
         filter_transportation["mandi__district__state"] = state_id
 
@@ -564,7 +618,8 @@ def data_for_line_graph(request):
 def calculate_gaddidar_share_payments(start_date, end_date, mandi_list=None, aggregator_list=None):
     parameters_dictionary = {'mandi__in': mandi_list}
     parameters_dictionary_for_outliers = {'aggregator__user__in': aggregator_list, 'mandi__in': mandi_list}
-    parameters_dictionary_for_ct = {'user_created__id__in': aggregator_list, 'mandi__in': mandi_list, 'date__gte': start_date, 'date__lte': end_date}
+    parameters_dictionary_for_ct = {'user_created__id__in': aggregator_list, 'mandi__in': mandi_list,
+                                    'date__gte': start_date, 'date__lte': end_date}
 
     arguments_for_ct = {}
     arguments_for_gaddidar_commision = {}
@@ -622,10 +677,11 @@ def calculate_gaddidar_share_payments(start_date, end_date, mandi_list=None, agg
                         gc_discount = amount_sum / CT['amount__sum']
             except GaddidarShareOutliers.DoesNotExist:
                 pass
-        result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'],'gaddidar__id': CT[
+        result.append({'date': CT['date'], 'user_created__id': CT['user_created_id'], 'gaddidar__id': CT[
             'gaddidar'], 'mandi__id': CT['mandi'], 'gaddidar__name': CT[
-            'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': round(amount_sum,2),
-                       'gaddidar_discount': round(gc_discount,3), 'comment': comment,'quantity__sum': round(CT['quantity__sum'],2)})
+            'gaddidar__gaddidar_name_en'], 'mandi__name': CT['mandi__mandi_name_en'], 'amount': round(amount_sum, 2),
+                       'gaddidar_discount': round(gc_discount, 3), 'comment': comment,
+                       'quantity__sum': round(CT['quantity__sum'], 2)})
     return result
 
 
@@ -679,7 +735,7 @@ def payments(request):
         'mandi__mandi_name', 'farmer_share', 'id', 'farmer_share_comment', 'transportation_cost_comment', 'mandi__id',
         'transportation_vehicle__id', 'timestamp').order_by('date').annotate(Sum('transportation_cost'))
 
-    gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date,None, [aggregator_id])
+    gaddidar_data = calculate_gaddidar_share_payments(start_date, end_date, None, [aggregator_id])
 
     aggregator_incentive = calculate_aggregator_incentive(start_date, end_date, None, [aggregator_id])
 
@@ -691,9 +747,11 @@ def payments(request):
 
     return HttpResponse(data)
 
+
 @login_required()
-@user_passes_test(lambda u: u.groups.filter(name='Loop Payment').count() > 0 and AdminUser.objects.filter(user_id=u.id).count()>0,
-                  login_url=PERMISSION_DENIED_URL)
+@user_passes_test(
+    lambda u: u.groups.filter(name='Loop Payment').count() > 0 and AdminUser.objects.filter(user_id=u.id).count() > 0,
+    login_url=PERMISSION_DENIED_URL)
 def dashboard_payments(request):
     if request.method == 'GET':
         context = RequestContext(request)
@@ -703,10 +761,12 @@ def dashboard_payments(request):
         except ApiKey.DoesNotExist:
             api_key = ApiKey.objects.create(user=user)
             api_key.save()
+        admin_user = AdminUser.objects.get(user = user)
         login_data = dict()
         login_data['user_name'] = user.username
         login_data['user_id'] = user.id
         login_data['key'] = api_key.key
+        login_data['state'] = admin_user.state
         return render_to_response('app_dashboards/loop_dashboard_payment.html', login_data, context_instance=context)
     else:
         return HttpResponse(status=404)
@@ -723,7 +783,8 @@ def helpline_incoming(request):
                                        '91' + farmer_number.lstrip('0'), '+91' + farmer_number.lstrip('0')]
         # check if any broadcast pending after this time period.
         time_period = (
-        datetime.datetime.now(timezone('Asia/Kolkata')) - timedelta(days=BROADCAST_PENDING_TIME)).replace(tzinfo=None)
+            datetime.datetime.now(timezone('Asia/Kolkata')) - timedelta(days=BROADCAST_PENDING_TIME)).replace(
+            tzinfo=None)
         # Check if a pending (0) or DND-faild (2) broadcast exist.
         if BroadcastAudience.objects.filter(to_number__in=farmer_number_possibilities, status__in=[0, 2],
                                             start_time__gte=time_period).exists():
@@ -743,10 +804,14 @@ def helpline_incoming(request):
                 module = 'helpline_incoming (New Call)'
                 write_log(HELPLINE_LOG_FILE, module, str(e))
                 return HttpResponse(status=500)
-            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
+            # expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
+            # # Initiate Call if Expert is available
+            # if len(expert_obj) > 0:
+            #     make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
+            expert_number = get_expert_number(dg_number)
             # Initiate Call if Expert is available
-            if len(expert_obj) > 0:
-                make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
+            if expert_number != '':
+                make_helpline_call(incoming_call_obj, expert_number, farmer_number)
             # Send Greeting and Sms if No Expert is available
             else:
                 sms_body = helpline_data['sms_body']
@@ -773,14 +838,17 @@ def helpline_incoming(request):
                 call_status = ''
             # Check If Pending call is already in-progress
             if call_status != '' and call_status['response_code'] == 200 and (
-                call_status['status'] in ('ringing', 'in-progress')):
+                        call_status['status'] in ('ringing', 'in-progress')):
                 return HttpResponse(status=200)
-            expert_obj = HelplineExpert.objects.filter(expert_status=1)[:1]
-            # Initiate Call if Expert is available
-            if len(expert_obj) > 0:
-                make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
+            expert_number = get_expert_number(dg_number)
+            # expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
+
+            # # Initiate Call if Expert is available
+            if expert_number != '':
+                make_helpline_call(incoming_call_obj, expert_number, farmer_number)
             # Send Greeting and Sms if No Expert is available
             else:
+
                 sms_body = helpline_data['sms_body']
                 send_helpline_sms(EXOTEL_HELPLINE_NUMBER, farmer_number, sms_body)
                 # Send greeting to user for notify about no expert available at this time.
@@ -789,6 +857,19 @@ def helpline_incoming(request):
     else:
         return HttpResponse(status=403)
 
+def get_expert_number(dg_number):
+    expert_number = ''
+    expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
+
+    if len(expert_obj) > 0:
+        expert_number = expert_obj[0]
+    else :
+        # Search in partner helpline number
+        expert_partner_obj = HelplineExpert.objects.filter(partner__helpline_number=dg_number)[:1]
+        if len(expert_partner_obj) > 0 :
+            expert_number = expert_partner_obj[0]
+    
+    return expert_number
 
 @csrf_exempt
 def helpline_call_response(request):
@@ -855,7 +936,7 @@ def helpline_call_response(request):
                     make_call = 1
             if make_call == 1:
                 # Find next expert
-                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1))
+                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number))
                 try:
                     expert_numbers = expert_numbers[expert_numbers.index(expert_obj) + 1:]
                 except Exception as e:
@@ -952,13 +1033,15 @@ def broadcast(request):
                 farmer_file = broadcast_form.cleaned_data.get('farmer_file')
                 farmer_contact_detail = []
                 if cluster_id_list:
-                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id__in=cluster_id_list).values_list('village',flat=True)
-                    farmer_contact_detail = list(Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
+                    village_list = LoopUserAssignedVillage.objects.filter(loop_user_id__in=cluster_id_list).values_list(
+                        'village', flat=True)
+                    farmer_contact_detail = list(
+                        Farmer.objects.filter(village_id__in=village_list).values('id', 'phone'))
                 if farmer_file:
-                    farmer_file_name = save_farmer_file(broadcast_title,farmer_file)
+                    farmer_file_name = save_farmer_file(broadcast_title, farmer_file)
                     # Fetch cantact from csv file
-                    with open(farmer_file_name,'rb') as csvfile:
-                        csv_header = ['id','phone']
+                    with open(farmer_file_name, 'rb') as csvfile:
+                        csv_header = ['id', 'phone']
                         customreader = csv.reader(csvfile)
                         # If csv file is not in correct format
                         if customreader.next() != csv_header:
@@ -966,12 +1049,12 @@ def broadcast(request):
                             template_data['broadcast_form'] = broadcast_form
                             # Change to 1 for select Broadcast tab.
                             template_data['active_tab'] = 1
-                            return render_to_response('loop/broadcast.html',template_data,context_instance=context)
+                            return render_to_response('loop/broadcast.html', template_data, context_instance=context)
                         for row in customreader:
 
                             farmer_id = int(row[0].strip()) if row[0].strip() else None
                             farmer_no = row[1].strip()
-                            farmer_contact = {'id':farmer_id, 'phone':farmer_no}
+                            farmer_contact = {'id': farmer_id, 'phone': farmer_no}
                             if farmer_contact not in farmer_contact_detail:
                                 farmer_contact_detail.append(farmer_contact)
                     # Remove csv file from server
@@ -987,7 +1070,9 @@ def broadcast(request):
         s3_audio_url = BROADCAST_S3_AUDIO_URL % (audio_file_name,)
         # Start thread for begin broadcast.
 
-        Thread(target=start_broadcast,args=[broadcast_title,s3_audio_url,farmer_contact_detail,cluster_id_list,EXOTEL_HELPLINE_NUMBER,BROADCAST_APP_ID]).start()
+        Thread(target=start_broadcast,
+               args=[broadcast_title, s3_audio_url, farmer_contact_detail, cluster_id_list, EXOTEL_HELPLINE_NUMBER,
+                     BROADCAST_APP_ID]).start()
 
         template_data['acknowledge'] = 1
     elif request.method != 'GET':
