@@ -1142,7 +1142,10 @@ class FarmerQRScanResource(BaseResource):
         include_resource_uri = False
 
     def obj_create(self, bundle, request=None, **kwargs):
-        attempt = FarmerQRScan.objects.filter(timestamp=bundle.data['timestamp'],qr_code=bundle.data['qr_code'],action=bundle.data['action'])
+        import pdb;pdb.set_trace()
+        rdtime = datetime.datetime.fromtimestamp(float(bundle.data['timestamp']))
+        #rdtime = time.strftime("%Y-%m-%d %H:%M:%S", rdtime)
+        attempt = FarmerQRScan.objects.filter(timestamp=rdtime,qr_code=bundle.data['qr_code'],action=bundle.data['action'])
         if attempt.count() < 1:
             bundle = super(FarmerQRScanResource, self).obj_create(
                 bundle, **kwargs)

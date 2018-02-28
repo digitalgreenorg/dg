@@ -848,7 +848,7 @@ class RegistrationSms(LoopModel):
 
 class FarmerQRScan(LoopModel):
     timestamp = models.DateTimeField(blank=True,null=True)
-    qr_code = models.IntegerField(default=None)
+    qr_code = models.CharField(max_length=30, default=None)
     action = models.IntegerField(choices=QR_ACTIONS,default=0)
 
     def __unicode__(self):
