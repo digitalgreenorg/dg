@@ -293,6 +293,22 @@ class SmsLogAdmin(admin.ModelAdmin):
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ('id','name','helpline_number')
 
+class RegistrationSmsAdmin(admin.ModelAdmin):
+    list_display = ('id','farmer','sms_status','state','text_local_id')
+    list_filter = ('farmer','status','sms_state')
+    search_fields = ('farmer')
+
+class FarmerQRScanAdmin(admin.ModelAdmin):
+    list_display = ('id','timestamp','qr_code','action')
+    list_filter = ('timestamp','qr_code','action')
+    search_fields = ('qr_code','action')
+
+class FarmerTransportCodeAdmin(admin.ModelAdmin):
+    list_display = ('id','code','phone','qr_code','sms_status','state','text_local_id')
+    list_filter = ('phone','qr_code','sms_status','state')
+    search_fields = ('code','phone','qr_code')
+
+
 loop_admin = LoopAdmin(name='loop_admin')
 
 loop_admin.index_template = 'social_website/index.html'
@@ -339,6 +355,6 @@ loop_admin.register(VehicleLanguage)
 loop_admin.register(MandiType, MandiTypeAdmin)
 loop_admin.register(SmsLog, SmsLogAdmin)
 loop_admin.register(Partner, PartnerAdmin)
-loop_admin.register(RegistrationSms)
-loop_admin.register(FarmerQRScan)
-loop_admin.register(FarmerTransportCode)
+loop_admin.register(RegistrationSms,RegistrationSmsAdmin)
+loop_admin.register(FarmerQRScan,FarmerQRScanAdmin)
+loop_admin.register(FarmerTransportCode,FarmerTransportCodeAdmin)
