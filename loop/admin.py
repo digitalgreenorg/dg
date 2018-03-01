@@ -295,18 +295,18 @@ class PartnerAdmin(admin.ModelAdmin):
 
 class RegistrationSmsAdmin(admin.ModelAdmin):
     list_display = ('id','farmer','sms_status','state','text_local_id')
-    list_filter = ('farmer','status','sms_state')
-    search_fields = ('farmer')
+    list_filter = ('farmer','state','sms_status')
+    search_fields = ['farmer']
 
 class FarmerQRScanAdmin(admin.ModelAdmin):
     list_display = ('id','timestamp','qr_code','action')
     list_filter = ('timestamp','qr_code','action')
-    search_fields = ('qr_code','action')
+    search_fields = ['qr_code','action']
 
 class FarmerTransportCodeAdmin(admin.ModelAdmin):
     list_display = ('id','code','phone','qr_code','sms_status','state','text_local_id')
     list_filter = ('phone','qr_code','sms_status','state')
-    search_fields = ('code','phone','qr_code')
+    search_fields = ['code','phone','qr_code']
 
 
 loop_admin = LoopAdmin(name='loop_admin')
