@@ -1159,4 +1159,8 @@ class FarmerQRScanResource(BaseResource):
             send_duplicate_message(int(attempt[0].id))
         return bundle
 
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
+
 
