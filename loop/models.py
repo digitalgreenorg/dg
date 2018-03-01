@@ -854,6 +854,9 @@ class FarmerQRScan(LoopModel):
     def __unicode__(self):
         return "%s (%s)" % (self.qr_code, self.action)
 
+    def __timestamp__(self):
+        return "%s" % (str(self.timestamp))
+
 class FarmerTransportCode(LoopModel):
     code = models.IntegerField(blank=True,null=True)
     phone = models.CharField(max_length=13,blank=True,null=True)

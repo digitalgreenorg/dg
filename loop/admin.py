@@ -299,7 +299,7 @@ class RegistrationSmsAdmin(admin.ModelAdmin):
     search_fields = ['farmer']
 
 class FarmerQRScanAdmin(admin.ModelAdmin):
-    list_display = ('id','timestamp','qr_code','action')
+    list_display = ('id','__timestamp__','qr_code','action')
     list_filter = ('timestamp','qr_code','action')
     search_fields = ['qr_code','action']
 
