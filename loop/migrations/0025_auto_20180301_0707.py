@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
                 ('time_modified', models.DateTimeField(auto_now=True, null=True)),
                 ('timestamp', models.DateTimeField(null=True, blank=True)),
-                ('qr_code', models.IntegerField(default=None)),
+                ('qr_code', models.CharField(default=None, max_length=30)),
                 ('action', models.IntegerField(default=0, choices=[(1, b'Pick Up'), (2, b'Payment')])),
                 ('user_created', models.ForeignKey(related_name='loop_farmerqrscan_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
                 ('user_modified', models.ForeignKey(related_name='loop_farmerqrscan_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
