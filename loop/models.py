@@ -847,7 +847,7 @@ class RegistrationSms(LoopModel):
         return "%s (%s)" % (self.farmer, self.state)
 
 class FarmerQRScan(LoopModel):
-    timestamp = models.DateTimeField(blank=True,null=True)
+    timestamp = models.CharField(max_length=20,blank=True,null=True)
     qr_code = models.CharField(max_length=30, default=None)
     action = models.IntegerField(choices=QR_ACTIONS,default=0)
 
@@ -855,7 +855,7 @@ class FarmerQRScan(LoopModel):
         return "%s (%s)" % (self.qr_code, self.action)
 
     def __timestamp__(self):
-        return "%s" % (str(self.timestamp))
+        return "%s" % (str(datetime.datetime.fromtimestamp(float(self.timestamp)/1000)))
 
 class FarmerTransportCode(LoopModel):
     code = models.IntegerField(blank=True,null=True)
