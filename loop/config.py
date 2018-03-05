@@ -275,6 +275,10 @@ referral_transport_sms = {
   'beg':{'hi':u'अपने साथी किसान को लूप से जोड़ने के लिए धन्यवाद| अपने एग्रीगेटर को ','en':u'beg'},
   'end':{'hi':u'कोड दें और अगली बार अपनी फसल मुफ़्त में मंडी पहुँचायें|','en':u'end'}
 }
+already_exist_sms = {
+  'hi':u'hey',
+  'en':u'hi'
+}
 RECIPIENTS = ['lokesh@digitalgreen.org', 'loop@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']

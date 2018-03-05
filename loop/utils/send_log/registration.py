@@ -2,7 +2,7 @@
 from dg.settings import TEXTLOCAL_API_KEY
 from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode
 from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER
-from loop.config import registration_sms,first_transaction_sms,referral_transport_sms
+from loop.config import registration_sms,first_transaction_sms,referral_transport_sms,already_exist_sms
 import requests
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
@@ -15,9 +15,10 @@ from django.db.models import Min
 
 
 def send_reg_sms(farmer):
-	reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0])
+	reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=0)
 	reg_sms.save()
-	response = send_sms_using_textlocal(farmer.phone,reg_sms.id)
+	msg_type=0
+	response = send_sms_using_textlocal(farmer.phone,reg_sms.id,msg_type)
 	status_code = 0
 	if response['status'] == "success":
 		status_code = 1
@@ -28,9 +29,12 @@ def send_reg_sms(farmer):
 	reg_sms.save()
 
 
-def send_sms_using_textlocal(farmer_no, custom_id):
+def send_sms_using_textlocal(farmer_no, custom_id,msg_type):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    sms_body = registration_sms['welcome']['hi'] 
+    if msg_type==0:
+    	sms_body = registration_sms['welcome']['hi'] 
+    if msg_type==4:
+    	sms_body = already_exist_sms['hi']
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
@@ -82,9 +86,10 @@ def registration_auth_response(request):
         #import pdb;pdb.set_trace()
         farmer = Farmer.objects.filter(phone=farmer_number)
         if farmer.count()>0:
-	        if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified:
+
+	        if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified and RegistrationSms.objects.filter(farmer=farmer[0],msg_type=0).count()>0:
 				code = random_with_N_digits(5)
-				reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0])
+				reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
 				reg_sms.save()
 				response = send_first_transportation_code(farmer[0],code,query_code,farmer_number)
 				status_code = 0
@@ -122,17 +127,18 @@ def send_msg_after_first_trans(from_date,to_date):
 	# import pdb;pdb.set_trace()
 	farmer_list = getFirstTransportFarmers(from_date,to_date)
 	for farmer in farmer_list:
-		reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0])
-		reg_sms.save()
-		response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id)
-		status_code = 0
-		if response['status'] == "success":
-			status_code = 1
-			sms_id = response['messages'][0]['id']
-			reg_sms.state = SMS_STATE['F'][0]
-		reg_sms.text_local_id = sms_id
-		reg_sms.sms_status = status_code
-		reg_sms.save()
+		if RegistrationSms.objects.filter(farmer=farmer,msg_type=2).count()==0 and farmer.time_created>=datetime.datetime.strptime('05032018', "%d%m%Y"):
+			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=2)
+			reg_sms.save()
+			response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id)
+			status_code = 0
+			if response['status'] == "success":
+				status_code = 1
+				sms_id = response['messages'][0]['id']
+				reg_sms.state = SMS_STATE['F'][0]
+			reg_sms.text_local_id = sms_id
+			reg_sms.sms_status = status_code
+			reg_sms.save()
 		send_refer_transport_code(farmer)
 
 def send_referral_transportation_code(farmer,code,custom_id):
@@ -152,25 +158,38 @@ def send_refer_transport_code(farmer):
 	referred_by = farmer.referred_by
 	farmer_refer = Farmer.objects.filter(phone=referred_by)
 	if farmer_refer.count()>0 and not farmer_refer[0].referral_free_transport:
-		code = random_with_N_digits(5)
-		reg_sms = FarmerTransportCode(code=code,phone=farmer_refer[0].phone,state=SMS_STATE['S'][0])
-		reg_sms.save()
-		response = send_referral_transportation_code(farmer_refer[0],code,farmer_refer[0].phone)
-		status_code = 0
-		if response['status'] == "success":
-			status_code = 1
-			sms_id = response['messages'][0]['id']
-			reg_sms.state = SMS_STATE['F'][0]
-			farmer_refer.update(referral_free_transport=True)
-		reg_sms.text_local_id = sms_id
-		reg_sms.sms_status = status_code
-		reg_sms.save()		
+		if  farmer_refer[0].time_created>datetime.datetime.strptime('05032018','%d%m%Y'):
+			code = random_with_N_digits(5)
+			reg_sms = FarmerTransportCode(code=code,phone=farmer_refer[0].phone,state=SMS_STATE['S'][0],msg_type=3)
+			reg_sms.save()
+			response = send_referral_transportation_code(farmer_refer[0],code,farmer_refer[0].phone)
+			status_code = 0
+			if response['status'] == "success":
+				status_code = 1
+				sms_id = response['messages'][0]['id']
+				reg_sms.state = SMS_STATE['F'][0]
+				farmer_refer.update(referral_free_transport=True)
+			reg_sms.text_local_id = sms_id
+			reg_sms.sms_status = status_code
+			reg_sms.save()
+		elif farmer.time_created<datetime.datetime.strptime('05032018','%d%m%Y'):
+			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=4)
+			reg_sms.save()
+			msg_type=4
+			response = send_sms_using_textlocal(farmer.phone,reg_sms.id,msg_type)
+			if response['status'] == "success":
+				status_code = 1
+				sms_id = response['messages'][0]['id']
+				reg_sms.state = SMS_STATE['F'][0]
+			reg_sms.text_local_id = sms_id
+			reg_sms.sms_status = status_code
+			reg_sms.save()
 
 
 def getFirstTransportFarmers(from_date,to_date):
-	#import pdb;pdb.set_trace()
 	farmers = Farmer.objects.filter(user_created_id__in=AGGREGATORS_IDEO)
-	farmer_first = CombinedTransaction.objects.values('farmer').annotate(Min('date')).filter(farmer__in=farmers).filter(date__min__gte=from_date,date__min__lte=to_date)
+	#farmer_first = CombinedTransaction.objects.values('farmer').annotate(Min('date')).filter(farmer__in=farmers).filter(date__min__gte=from_date,date__min__lte=to_date)
+	farmer_first = CombinedTransaction.objects.values('farmer').annotate(Min('date')).filter(farmer__in=farmers)
 	return Farmer.objects.filter(id__in=farmer_first.values('farmer'))
 
 def getFirstRefferelFarmers(farmer_list):
@@ -179,4 +198,6 @@ def getFirstRefferelFarmers(farmer_list):
 	return farmerss
 
 
+def farmer_already_exist_sms(farmer_phone):
+	pass
 
