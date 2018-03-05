@@ -10,7 +10,7 @@ from django.core.management.base import BaseCommand
 from loop.config import *
 from dg.settings import MEDIA_ROOT, EMAIL_HOST_USER
 from loop_ivr.utils.config import AGGREGATORS_IDEO
-from loop.utils.send_log.registration import send_msg_after_first_trans
+from loop.utils.send_log.registration import send_msg_after_first_trans,update_referrals
 import os
 
 id_map = {}
@@ -40,4 +40,5 @@ class Command(BaseCommand):
         from_date = datetime.datetime.strptime(from_date, "%d%m%Y").date()
         to_date = re.sub('-', '', options.get('to_date'))
         to_date = datetime.datetime.strptime(to_date, "%d%m%Y").date()
+        update_referrals()
         send_msg_after_first_trans(from_date,to_date)

@@ -1,6 +1,6 @@
 
 from dg.settings import TEXTLOCAL_API_KEY
-from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode
+from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode,Referral
 from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER
 from loop.config import registration_sms,first_transaction_sms,referral_transport_sms,already_exist_sms
 import requests
@@ -201,4 +201,15 @@ def getFirstRefferelFarmers(farmer_list):
 
 def farmer_already_exist_sms(farmer_phone):
 	pass
+
+def update_referrals():
+	referrals = Referral.objects.all()
+	for referral in referrals:
+		referred_farmer = Farmer.objects.filter(phone=referral.referred_farmer)
+		referred_by = Farmer.objects.filter(phone=referral.referred_by)
+		if referred_farmer.count()>0 and referred_by.count()>0 and referred_farmer[0].referred_by is None:
+			referred_farmer.update(referred_by=referred_by.phone)
+
+
+
 
