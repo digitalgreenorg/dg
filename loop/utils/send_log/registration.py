@@ -207,7 +207,8 @@ def update_referrals():
 	for referral in referrals:
 		referred_farmer = Farmer.objects.filter(phone=referral.referred_farmer)
 		referred_by = Farmer.objects.filter(phone=referral.referred_by)
-		if referred_farmer.count()>0 and referred_by.count()>0 and referred_farmer[0].referred_by is None:
+		import pdb;pdb.set_trace()
+		if referred_farmer.count()>0 and referred_by.count()>0 and referred_farmer[0].referred_by=='':
 			referred_farmer.update(referred_by=referred_by.phone)
 
 
