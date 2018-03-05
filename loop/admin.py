@@ -294,7 +294,7 @@ class PartnerAdmin(admin.ModelAdmin):
     list_display = ('id','name','helpline_number')
 
 class RegistrationSmsAdmin(admin.ModelAdmin):
-    list_display = ('id','farmer','sms_status','state','text_local_id')
+    list_display = ('id','farmer','sms_status','state','text_local_id','msg_type')
     list_filter = ('farmer','state','sms_status')
     search_fields = ['farmer']
 
@@ -304,9 +304,14 @@ class FarmerQRScanAdmin(admin.ModelAdmin):
     search_fields = ['qr_code','action']
 
 class FarmerTransportCodeAdmin(admin.ModelAdmin):
-    list_display = ('id','code','phone','qr_code','sms_status','state','text_local_id')
+    list_display = ('id','code','phone','qr_code','sms_status','state','text_local_id','msg_type')
     list_filter = ('phone','qr_code','sms_status','state')
     search_fields = ['code','phone','qr_code']
+
+class ReferralAdmin(admin.ModelAdmin):
+    list_display = ('id','referred_farmer','referred_by')
+    list_filter = ('referred_farmer','referred_by')
+    search_fields = ['referred_farmer','referred_by']
 
 
 loop_admin = LoopAdmin(name='loop_admin')
@@ -358,3 +363,4 @@ loop_admin.register(Partner, PartnerAdmin)
 loop_admin.register(RegistrationSms,RegistrationSmsAdmin)
 loop_admin.register(FarmerQRScan,FarmerQRScanAdmin)
 loop_admin.register(FarmerTransportCode,FarmerTransportCodeAdmin)
+loop_admin.register(Referral,ReferralAdmin)
