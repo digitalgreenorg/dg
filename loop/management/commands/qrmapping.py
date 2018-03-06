@@ -5,7 +5,7 @@ import xlrd
 
 class LoopQRMapping():
 	def update(self):
-		xl_file = xlrd.open_workbook('/Users/sourabhsingh/Downloads/Loop Farmer QR Codes.xlsx')
+		xl_file = xlrd.open_workbook('../Loop Farmer QR Codes.xlsx')
 		print xl_file.sheet_names
 		sheets = ['Village1_mapping','Village2_mapping','Village3_mapping','Village4_mapping']
 		c=0
