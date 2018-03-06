@@ -878,4 +878,9 @@ class Referral(LoopModel):
     referred_by = models.CharField(max_length=13,blank=True,null=True)
     used = models.BooleanField(default=False)
 
+class QrMapping(LoopModel):
+    id = models.AutoField(primary_key=True)
+    url = models.CharField(max_length=40,blank=True,null=True)
+    code = models.CharField(max_length=10,blank=True,null=True)
+
 

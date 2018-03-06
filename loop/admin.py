@@ -450,6 +450,11 @@ class ReferralAdmin(admin.ModelAdmin):
     list_filter = ('referred_farmer','referred_by')
     search_fields = ['referred_farmer','referred_by']
 
+class QrMappingAdmin(admin.ModelAdmin):
+    list_display = ('id','url','code')
+    list_filter = ('url','code')
+    search_fields =['url','code']
+
 
 loop_admin = LoopAdmin(name='loop_admin')
 
@@ -501,3 +506,4 @@ loop_admin.register(RegistrationSms,RegistrationSmsAdmin)
 loop_admin.register(FarmerQRScan,FarmerQRScanAdmin)
 loop_admin.register(FarmerTransportCode,FarmerTransportCodeAdmin)
 loop_admin.register(Referral,ReferralAdmin)
+loop_admin.register(QrMapping,QrMappingAdmin)
