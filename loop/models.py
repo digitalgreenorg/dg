@@ -145,7 +145,7 @@ class MandiType(LoopModel):
     type_description = models.CharField(max_length=300, null=True)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.mandi_type_name, self.mandi_category)
+        return "%s (%s)" % (self.mandi_type_name, self.get_mandi_category_display())
 
     class Meta:
         unique_together = ("mandi_type_name", "mandi_category")
@@ -164,7 +164,7 @@ class Mandi(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (self.mandi_name_en, self.district.district_name_en)
-
+   
     class Meta:
         unique_together = ("mandi_name", "district",)
 
@@ -530,7 +530,7 @@ class DayTransportation(LoopModel):
         self.transportation_vehicle.vehicle.vehicle_name, self.transportation_vehicle.vehicle_number)
 
     def __mandi__(self):
-        return "%s" % (self.mandi.mandi_name)
+        return "%s" % (self.mandi.mandi_name_en)
 
     def __transporter_phone__(self):
         return "%s" % (self.validate_phone_number(self.transportation_vehicle.transporter.block.district.state,
@@ -612,7 +612,7 @@ class GaddidarCommission(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (
-            self.gaddidar.gaddidar_name, self.mandi.mandi_name)
+            self.gaddidar.gaddidar_name_en, self.mandi.mandi_name_en)
 
     class Meta:
         unique_together = ("start_date", "gaddidar", "mandi")
@@ -638,7 +638,7 @@ class GaddidarShareOutliers(LoopModel):
             self.gaddidar.gaddidar_name_en, self.mandi.mandi_name_en)
 
     def __aggregator__(self):
-        return "%s" % (self.aggregator.name)
+        return "%s" % (self.aggregator.name_en)
 
     class Meta:
         unique_together = ("date", "gaddidar", "aggregator", "mandi")
@@ -671,7 +671,7 @@ class AggregatorIncentive(LoopModel):
         unique_together = ("start_date", "aggregator", "model_type", "incentive_model")
 
     def __unicode__(self):
-        return "%s" % (self.aggregator.name)
+        return "%s" % (self.aggregator.name_en)
 
     def __incentive_model__(self):
         return "%s" % (self.incentive_model.description)
@@ -686,10 +686,10 @@ class AggregatorShareOutliers(LoopModel):
     # loop_user = models.ForeignKey(LoopUser,null=True,related_name="loopuser")
 
     def __mandi__(self):
-        return "%s" % (self.mandi.mandi_name)
+        return "%s" % (self.mandi.mandi_name_en)
 
     def __aggregator__(self):
-        return "%s" % (self.aggregator.name)
+        return "%s" % (self.aggregator.name_en)
 
     class Meta:
         unique_together = ("date", "aggregator", "mandi")
