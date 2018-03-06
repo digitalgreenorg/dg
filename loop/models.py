@@ -876,5 +876,6 @@ class Referral(LoopModel):
     id = models.AutoField(primary_key=True)
     referred_farmer = models.CharField(max_length=13,blank=True,null=True)
     referred_by = models.CharField(max_length=13,blank=True,null=True)
+    used = models.BooleanField(default=False)
 
 
