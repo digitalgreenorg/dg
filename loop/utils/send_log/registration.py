@@ -205,9 +205,12 @@ def farmer_already_exist_sms(farmer_phone):
 	pass
 
 def update_referrals():
-	referrals = Referral.objects.all()
+	referrals = Referral.objects.filter(used=False)
 	for referral in referrals:
 		referred_farmer = Farmer.objects.filter(phone=referral.referred_farmer)
 		referred_by = Farmer.objects.filter(phone=referral.referred_by)
-		if referred_farmer.count()>0 and referred_by.count()>0 and referred_farmer[0].referred_by=='':
+		if referred_farmer.count()>0 and referred_by.count()>0 and (referred_farmer[0].referred_by=='' or referred_farmer[0].referred_by is None):
 			referred_farmer.update(referred_by=referred_by[0].phone)
+			obj = Referral.objects.get(id=referral.id)
+			obj.used=True
+			obj.save()
