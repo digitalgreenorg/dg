@@ -11,20 +11,20 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGroupMemberDataHnNNew1?pUsername=admin&pPassword=JSLPSSRI')
+		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGroupMemberDataHnNNew4?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
-		xml_file = open("jslps_data_integration_files/jslps-hnn-person-new1.xml", 'w')
+		xml_file = open("jslps_data_integration_files/jslps-hnn-person-new6.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
 		user_obj = User.objects.get(username="jslps_bot")
-		csv_file = open('jslps_data_integration_files/jslps-hnn-person-new1.csv', 'wb')
+		csv_file = open('jslps_data_integration_files/jslps-hnn-person-new6.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/jslps-hnn-person-new1.xml')
+		tree = ET.parse('jslps_data_integration_files/jslps-hnn-person-new6.xml')
 		root = tree.getroot()
 		
-		for c in root.findall('GroupMemberDataNew1'):
+		for c in root.findall('GroupMemberDataNew6'):
 			district_code = c.find('DistrictCode').text
 			block_code = c.find('BlockCode').text
 			village_code = c.find('VillageCode').text
