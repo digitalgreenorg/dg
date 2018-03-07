@@ -3,9 +3,9 @@ DELETE
 FROM
 	`village_partner_myisam`;
 
-DELETE 
-FROM 
-	`screening_myisam` 
+DELETE
+FROM
+	`screening_myisam`
 WHERE date > DATE_ADD(Now(), Interval -1 year);
 
 DELETE
@@ -35,3 +35,5 @@ FROM
 DELETE
 FROM
 	`village_precalculation_copy`;
+ALTER TABLE `village_precalculation_copy` CHANGE COLUMN `id` `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `village_precalculation_copy` AUTO_INCREMENT=1;

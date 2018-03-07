@@ -1,0 +1,54 @@
+{% include "includes/header_mrp.html" %}
+<script src="/media/assets/scripts/chosen.jquery.min.js"></script>
+<script src="/media/vrppayment/vrppayment.js"></script>
+<section id="main" role="main" class="wrapper">
+
+    <div class="inner-wrapper">
+
+        <div class="featured layout-vr-xlg layoutclass">
+            <div class="layout-vr-xlg">
+                <div class="my-select leftrelative">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">FROM</label>
+                    <input class="search search-input-wrapper input-block-level js-startperiod " id="sdate"
+                           type="text"/>
+                </div>
+
+                <div class="my-select leftrelative">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">TO</label>
+                    <input class="search search-input-wrapper input-block-level js-endperiod" id="edate" type="text"/>
+                </div>
+            </div>
+            <br/>
+
+
+            <div class="push-top-sm layout-vr-xlg" style="padding:10px;">
+                <div class="leftrelative" style="padding-right : 100px;">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">Choose Partner</label>
+                    <select id="partnerlist" style='display:none; width :150px;'>
+                    </select>
+                </div>
+                <div class=" leftrelative" style="padding-right : 100px;">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">Choose District</label>
+                    <select id="districtlist" onchange="setdistrictlistdiv(value);" style='display:none; width :150px;'>
+                    </select>
+                </div>
+                <div class=" leftrelative">
+                    <label class="copy hdg-bold layout-vr-tiny hdg-green">Choose Block</label>
+                    <select id="blocklist" style='display:none; width :150px;'>
+                    </select>
+                </div>
+
+                <div class="fright" style='padding-right:80px;'>
+                    <input type="submit" value="GO" class="btn js-go-btn" onclick="vrp_payment_goclicked()">
+                </div>
+
+                <div id="maindiv">
+                    <table id="example" class="display" style="text-align:center;">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include "internal-tools/footer.html" %}
