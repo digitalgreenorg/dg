@@ -214,3 +214,5 @@ def update_referrals():
 			obj = Referral.objects.get(id=referral.id)
 			obj.used=True
 			obj.save()
+		elif referred_farmer.count()>0 and referred_by.count()>0 and (referred_by.time_created< datetime.datetime.strptime('05032018','%d%m%Y')or referred_farmer.time_created< datetime.datetime.strptime('05032018','%d%m%Y') or len(referred_farmer[0].referred_by)>1):
+			pass
