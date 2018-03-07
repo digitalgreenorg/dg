@@ -37,10 +37,6 @@ class VRPpayment(models.Manager):
     "Custom manager filters standard query set with given args."
     def __init__(self, partner_id, block_id, start_period, end_period):
         super(VRPpayment, self).__init__()
-        print partner_id
-        print block_id
-        print start_period
-        print end_period
         self.start_yyyy = start_period[-4:]
         self.start_mm = start_period[:2]
         self.start_dd = 01

@@ -206,21 +206,6 @@ function vrp_payment_goclicked()
                     {sTitle: "Adoption Amount",sClass:"a-Center"},
                     {sTitle: "Total Amount (Rs)", sClass: "a-center"}
                     ],
-//
-//
-//
-//
-//
-//                    "aoColumns": [
-//                        {sTitle: "S. No."},
-//                        {sTitle: "Name"},
-//                        {sTitle: "Total Screening"},
-//                        {sTitle: "Successful Screening"},
-//                        {sTitle: "Screening amount"},
-//                        {sTitle: "Adoptions"},
-//                        {sTitle: "Adoptions Amount"},
-//                        {sTitle: "Total Amount"}
-//                    ],
 
                     "aaData": data['output'] ,      //aaData takes array_table_values and push data in the table.
                 "swfPath" : "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
