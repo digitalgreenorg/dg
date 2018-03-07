@@ -78,10 +78,24 @@ class Command(BaseCommand):
         print "Health-1"
         call_command('jslps_hnn_person_new1')
 
-        print "Health-1"
+        print "Health-2"
         call_command('jslps_hnn_person_new2')
 
-        print "Health-1"
+        print "Health-3"
         call_command('jslps_hnn_person_new3')
+        print "Health Person"
+        call_command('jslps_hnn_person')
+
+        print "Health Person New4"
+        call_command('jslps_hnn_person_new4')
+
+        print "Health-5"
+        call_command('jslps_hnn_person_new5')
+
+        print "Health-6"
+        call_command('jslps_hnn_person_new6')
+
+        print "Health-7"
+        call_command('jslps_hnn_person_new7')
 
         self.send_mail()
