@@ -175,18 +175,7 @@ def send_refer_transport_code(farmer):
 			reg_sms.text_local_id = sms_id
 			reg_sms.sms_status = status_code
 			reg_sms.save()
-		elif farmer.time_created<datetime.datetime.strptime('05032018','%d%m%Y'):
-			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=4)
-			reg_sms.save()
-			msg_type=4
-			response = send_sms_using_textlocal(farmer.phone,reg_sms.id,msg_type)
-			if response['status'] == "success":
-				status_code = 1
-				sms_id = response['messages'][0]['id']
-				reg_sms.state = SMS_STATE['F'][0]
-			reg_sms.text_local_id = sms_id
-			reg_sms.sms_status = status_code
-			reg_sms.save()
+
 
 
 def getFirstTransportFarmers(from_date,to_date):
@@ -200,10 +189,6 @@ def getFirstRefferelFarmers(farmer_list):
 	farmerss = Farmer.objects.filter(phone__in=farmers_phone,referral_free_transport=False)
 	return farmerss
 
-
-def farmer_already_exist_sms(farmer_phone):
-	pass
-
 def update_referrals():
 	referrals = Referral.objects.filter(used=False)
 	for referral in referrals:
@@ -214,5 +199,15 @@ def update_referrals():
 			obj = Referral.objects.get(id=referral.id)
 			obj.used=True
 			obj.save()
-		elif referred_farmer.count()>0 and referred_by.count()>0 and (referred_by.time_created< datetime.datetime.strptime('05032018','%d%m%Y')or referred_farmer.time_created< datetime.datetime.strptime('05032018','%d%m%Y') or len(referred_farmer[0].referred_by)>1):
-			pass
+		elif referred_farmer.count()>0 and referred_by.count()>0 and (referred_by.time_created< datetime.datetime.strptime('05032018','%d%m%Y')or referred_farmer.time_created< datetime.datetime.strptime('05032018','%d%m%Y') or (len(referred_farmer[0].referred_by)>1) and referred_farmer[0].referred_by != referral.referred_by):
+			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=4)
+			reg_sms.save()
+			msg_type=4
+			response = send_sms_using_textlocal(farmer.phone,reg_sms.id,msg_type)
+			if response['status'] == "success":
+				status_code = 1
+				sms_id = response['messages'][0]['id']
+				reg_sms.state = SMS_STATE['F'][0]
+			reg_sms.text_local_id = sms_id
+			reg_sms.sms_status = status_code
+			reg_sms.save()
