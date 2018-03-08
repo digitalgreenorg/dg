@@ -69,33 +69,69 @@ class Command(BaseCommand):
         # print "Adoption,jslps_adoptions"
         # call_command('jslps_adoptions_new')
 
-        print "Health Person"
-        call_command('jslps_hnn_person')
+        
+        try:
+            print "Health Person"
+            call_command('jslps_hnn_person')
+        except:
+            pass
 
-        print "Health Person New"
-        call_command('jslps_hnn_person_new')
+        
+        try:
+            print "Health Person New"
+            call_command('jslps_hnn_person_new')
+        except:
+            pass
 
-        print "Health-1"
-        call_command('jslps_hnn_person_new1')
+        
+        try:
+            print "Health-1"
+            call_command('jslps_hnn_person_new1')
+        except:
+            pass
 
-        print "Health-2"
-        call_command('jslps_hnn_person_new2')
+        
+        try:
+            print "Health-2"
+            call_command('jslps_hnn_person_new2')
+        except:
+            pass
 
-        print "Health-3"
-        call_command('jslps_hnn_person_new3')
-        print "Health Person"
-        call_command('jslps_hnn_person')
+        
+        try:
+            print "Health-3"
+            call_command('jslps_hnn_person_new3')
+        except:
+            pass
+        
+        try:
+            print "Health Person"
+            call_command('jslps_hnn_person')
+        except:
+            pass
 
-        print "Health Person New4"
-        call_command('jslps_hnn_person_new4')
+        try:
+            print "Health Person New4"
+            call_command('jslps_hnn_person_new4')
+        except:
+            pass
 
-        print "Health-5"
-        call_command('jslps_hnn_person_new5')
+        try:
+            print "Health-5"
+            call_command('jslps_hnn_person_new5')
+        except:
+            pass
 
-        print "Health-6"
-        call_command('jslps_hnn_person_new6')
+        try:
+            print "Health-6"
+            call_command('jslps_hnn_person_new6')
+        except:
+            pass
 
-        print "Health-7"
-        call_command('jslps_hnn_person_new7')
+        try:
+            print "Health-7"
+            call_command('jslps_hnn_person_new7')
+        except:
+            pass
 
         self.send_mail()
