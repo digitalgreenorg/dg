@@ -346,7 +346,7 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
 
     aso_queryset = AggregatorShareOutliers.objects.filter(
         **arguments_for_aggregator_incentive_outliers)
-    
+
     combined_ct_queryset = CombinedTransaction.objects.none()
     # Checking if we need to apply incorrect farmer phone model on payment data
     date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
@@ -859,16 +859,16 @@ def helpline_incoming(request):
 
 def get_expert_number(dg_number):
     expert_number = ''
-    expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
+    expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number, partner__name='DG')[:1]
 
     if len(expert_obj) > 0:
         expert_number = expert_obj[0]
     else :
         # Search in partner helpline number
-        expert_partner_obj = HelplineExpert.objects.filter(partner__helpline_number=dg_number)[:1]
+        expert_partner_obj = HelplineExpert.objects.filter(expert_status=1, partner__is_visible=1, partner__helpline_number=dg_number)[:1]
         if len(expert_partner_obj) > 0 :
             expert_number = expert_partner_obj[0]
-    
+
     return expert_number
 
 @csrf_exempt
