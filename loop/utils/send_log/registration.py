@@ -199,10 +199,13 @@ def update_referrals():
 			obj = Referral.objects.get(id=referral.id)
 			obj.used=True
 			obj.save()
-		elif referred_farmer.count()>0 and referred_by.count()>0 and (referred_by.time_created< datetime.datetime.strptime('05032018','%d%m%Y')or referred_farmer.time_created< datetime.datetime.strptime('05032018','%d%m%Y') or (len(referred_farmer[0].referred_by)>1) and referred_farmer[0].referred_by != referral.referred_by):
+		elif referred_farmer.count()>0 and referred_by.count()>0 and (referred_farmer[0].time_created< datetime.datetime.strptime('05032018','%d%m%Y') or (len(referred_farmer[0].referred_by)>1) and referred_farmer[0].referred_by != referral.referred_by):
 			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=4)
 			reg_sms.save()
 			msg_type=4
+			obj = Referral.objects.get(id=referral.id)
+			obj.used=True
+			obj.save()
 			response = send_sms_using_textlocal(farmer.phone,reg_sms.id,msg_type)
 			if response['status'] == "success":
 				status_code = 1
