@@ -362,6 +362,13 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                                                                                                      distinct=True))
             combined_ct_queryset = combined_ct_queryset | aggregator_ct_queryset
 
+    else:
+        combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
+            'date', 'user_created_id', 'mandi', 'mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'),
+                                                                                               Sum('amount'),
+                                                                                               Count('farmer_id',
+                                                                                                     distinct=True))
+
     result = []
     daily_pay_list = []
 
