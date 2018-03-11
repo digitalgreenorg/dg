@@ -1124,3 +1124,59 @@ def broadcast_audio_request(request):
         return audio_url_response
     else:
         return HttpResponse(status=200)
+
+def calculate_farmer_share(request):
+    if request.method == 'GET':
+        date =  request.GET.get('date')
+        date = datetime.datetime.strptime(date,'%d%m%Y')
+        day_ct = CombinedTransaction.objects.filter(date= date)
+        #day_dt = DayTransportation.objects.filter(date=date)
+        mandi_volume = {}
+        farmer_wise_ct ={}
+        mapShare ={}
+        farmer_share_final = {}
+        total_volume=0
+        for ct in day_ct:
+            if not ct.mandi in mandi_volume:
+                mandi_volume[ct.mandi]= ct.quantity
+            else:
+                mandi_volume[ct.mandi] = mandi_volume[ct.mandi] + ct.quantity
+            if not ct.farmer in farmer_wise_ct:
+                l=[]
+                farmer_wise_ct[ct.farmer]=l
+                farmer_wise_ct[ct.farmer].append(ct)
+            else:
+                farmer_wise_ct[ct.farmer].append(ct)
+
+            try:
+                if not ct.mandi in mapShare:
+                    dt = DayTransportation.objects.filter(date=date, mandi=ct.mandi)
+                    if dt.count()>0:
+                        mapShare[ct.mandi]=dt[0].farmer_share
+            except:
+                pass
+
+
+        for farmer in farmer_wise_ct:
+            map_farmer_volume={}
+            for ct in farmer_wise_ct[farmer]:
+                if not ct.mandi in map_farmer_volume:
+                    map_farmer_volume[ct.mandi]=ct.quantity
+                else:
+                    map_farmer_volume[ct.mandi]=map_farmer_volume[ct.mandi]+ct.quantity
+
+            fShare = 0.0
+            for mandi in mapShare:
+                if mandi in map_farmer_volume:
+                    fShare = fShare + (map_farmer_volume[mandi] * mapShare[mandi]) / mandi_volume[mandi]
+            farmer_share_final[farmer]=fShare
+
+        return farmer_share_final
+    return {}
+
+
+
+
+
+
+

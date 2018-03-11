@@ -214,3 +214,5 @@ def update_referrals():
 			reg_sms.text_local_id = sms_id
 			reg_sms.sms_status = status_code
 			reg_sms.save()
+
+
