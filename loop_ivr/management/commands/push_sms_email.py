@@ -23,12 +23,12 @@ class Command(BaseCommand):
                 correct_queries_via_call_count, total_queries_count_content, total_queries_via_sms_content, 
                 total_queries_via_call_content, queries_per_person_content, top_users_content, matrix_date):
         from_email = EMAIL_HOST_USER
-        # to_email = ['sujit@digitalgreen.org', 'abhisheklodha@digitalgreen.org', 'aditya@digitalgreen.org']
+        to_email = ['sujit@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
         
-        to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
-                    'vinay@digitalgreen.org', 'ashok@digitalgreen.org','bipin@digitalgreen.org', 
-                    'lokesh@digitalgreen.org', 'sujit@digitalgreen.org',
-                    'melbin@digitalgreen.org', 'erica@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
+        # to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
+        #             'vinay@digitalgreen.org', 'ashok@digitalgreen.org','bipin@digitalgreen.org', 
+        #             'lokesh@digitalgreen.org', 'sujit@digitalgreen.org',
+        #             'melbin@digitalgreen.org', 'erica@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
         
         body_content = ['''Dear Team <br/><br/>%s Metrics: <b>(%s)</b><br>'''%(period_label, matrix_date),
                             '''<html>
@@ -141,27 +141,22 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         date_range = options['days']
+        days = {'1': 'One', '7': 'Seven'}
+        period_label = {'One': 'Daily', 'Seven' : 'Weekly'}
+        comparison_param_label = {days['1']: 'DoD', days['7']: 'Wow' }
 
         # today_date = datetime.now().date()
         today_date = datetime(2017, 11, 1).date()
         start_date = today_date-timedelta(days=date_range)
         prev_start_date = start_date - timedelta(days=date_range)
-        # fifteen_day_back_date = today_date-timedelta(days=16)
-        # sixteen_day_back_date = today_date-timedelta(days=17)
-
-        # excluding yesterday, because we are counting matrices for yeseterday.
-        # last_fifteen_day_caller_no = list(PriceInfoIncoming.objects.filter(incoming_time__gte=fifteen_day_back_date,incoming_time__lt=yesterday_date).exclude(from_number__in=team_contact).values_list('from_number',flat=True))
-
-        # last_sixteen_day_caller_no = list(PriceInfoIncoming.objects.filter(incoming_time__gte=sixteen_day_back_date,incoming_time__lt=one_day_before_yesterday_date).exclude(from_number__in=team_contact).values_list('from_number',flat=True))
+        
         if date_range == 1 :
             email_subject = 'Loop Mandi Master - Daily Metrics: %s'%(start_date.strftime("%Y-%m-%d"),)
-            period_label = 'Daily'
-            comparison_param_label = 'DoD'
         elif date_range == 7 :
             email_subject = 'Loop Mandi Master - Weekly Metrics: %s - %s'%(start_date.strftime("%Y-%m-%d"),today_date.strftime("%Y-%m-%d"),) 
-            period_label = 'Weekly'
-            comparison_param_label = 'WoW'
-
+            
+        comparison_param_label_str = comparison_param_label[days[str(options['days'])]]
+        period_label_str = period_label[days[str(options['days'])]]
 
         # Active Users excluding DG staff
         # from_number__in=last_fifteen_day_caller_no
@@ -188,10 +183,10 @@ class Command(BaseCommand):
          active_aggregators_count_y = active_user_info(yesterday_active_caller_object,\
                                                     loop_farmer_list, loop_aggregators_list)
         # Active user info content
-        active_caller_count_content = get_active_user_comp_info(active_caller_count, active_caller_count_y, comparison_param_label)
-        active_loop_farmer_count_content = get_active_user_comp_info(active_loop_farmer_count, active_loop_farmer_count_y, comparison_param_label)
-        active_non_loop_farmer_count_content = get_active_user_comp_info(active_non_loop_farmer_count, active_non_loop_farmer_count_y, comparison_param_label)
-        active_aggregators_count_content = get_active_user_comp_info(active_aggregators_count, active_aggregators_count_y, comparison_param_label)
+        active_caller_count_content = get_active_user_comp_info(active_caller_count, active_caller_count_y, comparison_param_label_str)
+        active_loop_farmer_count_content = get_active_user_comp_info(active_loop_farmer_count, active_loop_farmer_count_y, comparison_param_label_str)
+        active_non_loop_farmer_count_content = get_active_user_comp_info(active_non_loop_farmer_count, active_non_loop_farmer_count_y, comparison_param_label_str)
+        active_aggregators_count_content = get_active_user_comp_info(active_aggregators_count, active_aggregators_count_y, comparison_param_label_str)
 
         # Total Queries
         total_queries_count = active_caller_object.count()
@@ -217,9 +212,9 @@ class Command(BaseCommand):
         correct_queries_via_call_count = total_correct_queries_obj.filter(call_source__in=[1,2]).count()
         
         # Total queries Content
-        total_queries_count_content = get_active_user_comp_info(total_queries_count, total_queries_count_y, comparison_param_label)
-        total_queries_sms_count_content =  get_active_user_comp_info(total_queries_sms_count, total_queries_sms_count_y, comparison_param_label)
-        total_queries_call_count_content =  get_active_user_comp_info(total_queries_call_count, total_queries_call_count_y, comparison_param_label)
+        total_queries_count_content = get_active_user_comp_info(total_queries_count, total_queries_count_y, comparison_param_label_str)
+        total_queries_sms_count_content =  get_active_user_comp_info(total_queries_sms_count, total_queries_sms_count_y, comparison_param_label_str)
+        total_queries_call_count_content =  get_active_user_comp_info(total_queries_call_count, total_queries_call_count_y, comparison_param_label_str)
 
         per_total_correct_queries_content = get_total_queries_content(total_correct_queries_count, total_queries_count)
         per_correct_queries_resolved_content = get_total_queries_content(correct_queries_resolved_count, total_correct_queries_count)
@@ -235,7 +230,7 @@ class Command(BaseCommand):
                 queries_per_person_content = str(queries_per_person)
             else :
                 queries_per_person_y = round(float(total_queries_count_y) / active_caller_count_y, 1)
-                queries_per_person_content = get_active_user_comp_info(queries_per_person, queries_per_person_y, comparison_param_label)
+                queries_per_person_content = get_active_user_comp_info(queries_per_person, queries_per_person_y, comparison_param_label_str)
 
 
         # Top Users
@@ -246,7 +241,7 @@ class Command(BaseCommand):
                                 ' (%s)'%(obj['query_count']) + '<br>'
 
 
-        self.send_mail(email_subject, period_label, active_caller_count_content, active_loop_farmer_count_content,
+        self.send_mail(email_subject, period_label_str, active_caller_count_content, active_loop_farmer_count_content,
          active_non_loop_farmer_count_content, active_aggregators_count_content, total_queries_count,
          per_total_correct_queries_content, per_correct_queries_resolved_content, per_correct_queries_via_sms_content,
          per_correct_queries_via_call_content,total_queries_count_content, total_queries_sms_count_content, total_queries_call_count_content,
@@ -270,17 +265,17 @@ def active_user_info(active_caller_object, loop_farmer_list, loop_aggregators_li
     return active_caller_count, active_loop_farmer_count, active_non_loop_farmer_count,\
          active_aggregators_count
 
-def get_active_user_comp_info(active_user_today_info, active_user_yesterday_info, comparison_param_label) :
+def get_active_user_comp_info(active_user_today_info, active_user_yesterday_info, comparison_param_label_str) :
     res = str(active_user_today_info)
     diff = active_user_today_info - active_user_yesterday_info
     
     if active_user_yesterday_info == 0 :
-        res = res + r' (- % up ' + '%s)' %(comparison_param_label,)
+        res = res + r' (- % up ' + '%s)' %(comparison_param_label_str,)
     else :
         if diff >= 0 :
-            res = res + ' (%s '%(round(float(diff) / active_user_yesterday_info * 100)) + r' % up ' + '%s)' %(comparison_param_label,)
+            res = res + ' (%s '%(round(float(diff) / active_user_yesterday_info * 100)) + r' % up ' + '%s)' %(comparison_param_label_str,)
         else :
-            res = res + ' (%s '%(round(float(abs(diff)) / active_user_yesterday_info * 100)) + r' % down ' + '%s)' %(comparison_param_label,)
+            res = res + ' (%s '%(round(float(abs(diff)) / active_user_yesterday_info * 100)) + r' % down ' + '%s)' %(comparison_param_label_str,)
 
     return res
 
