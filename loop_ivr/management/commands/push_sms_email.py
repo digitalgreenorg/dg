@@ -132,7 +132,7 @@ class Command(BaseCommand):
                 total_queries_via_call_content, total_queries_count, total_correct_queries_count, correct_queries_via_sms_count,
                 correct_queries_via_call_count, correct_queries_resolved_count, queries_per_person_content,
                 top_users_content), 
-                '<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thanks you.']
+                '<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thank you.']
         body = ''.join(body_content)
         msg = EmailMultiAlternatives(email_subject, body, from_email, to_email)
         msg.content_subtype = "html"
@@ -141,9 +141,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         date_range = options['days']
-        days = {'1': 'One', '7': 'Seven'}
-        period_label = {'One': 'Daily', 'Seven' : 'Weekly'}
-        comparison_param_label = {days['1']: 'DoD', days['7']: 'Wow' }
+        period_label = {'1': 'Daily', '7' : 'Weekly'}
+        comparison_param_label = {'1': 'DoD', '7': 'WoW' }
 
         # today_date = datetime.now().date()
         today_date = datetime(2017, 11, 1).date()
@@ -155,8 +154,8 @@ class Command(BaseCommand):
         elif date_range == 7 :
             email_subject = 'Loop Mandi Master - Weekly Metrics: %s - %s'%(start_date.strftime("%Y-%m-%d"),today_date.strftime("%Y-%m-%d"),) 
             
-        comparison_param_label_str = comparison_param_label[days[str(options['days'])]]
-        period_label_str = period_label[days[str(options['days'])]]
+        comparison_param_label_str = comparison_param_label[str(options['days'])]
+        period_label_str = period_label[str(options['days'])]
 
         # Active Users excluding DG staff
         # from_number__in=last_fifteen_day_caller_no
