@@ -25,7 +25,6 @@ class Command(BaseCommand):
 		root = tree.getroot()
 		
 		for c in root.findall('GroupMemberDataNew6'):
-			district_code = c.find('DistrictCode').text
 			block_code = c.find('BlockCode').text
 			village_code = c.find('VillageCode').text
 			group_code = c.find('GroupCode').text
