@@ -609,7 +609,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -1228,7 +1228,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -1865,7 +1865,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -2502,7 +2502,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -3139,7 +3139,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -3151,7 +3151,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 17.3,
+          'column_width': 16.5,
           'formula': null,
           'label': 'Transporter',
           'total': false

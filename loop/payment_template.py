@@ -7,13 +7,22 @@ from io import BytesIO
 import re
 from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
+from reportlab.lib.fonts import tt2ps
 from reportlab.lib import colors
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+#from weasyprint import HTML
 
 from config import *
 from django.http import HttpResponse
+from django.template.loader import get_template
+from django.template import RequestContext
+
+import pandas as pd
+
 
 TOTAL_NUMBER_OF_PRINTABLE_COLUMNS = 10
 NAME_OF_SHEETS = ['Aggregator', 'Commission Agent', 'Transporter']
@@ -116,7 +125,7 @@ def read_formula_and_write_to_excel(ws_obj, formula, start, end, format_str):
         if re.match('[a-zA-Z]+', iter_formula[i]) is not None:
             final_str += iter_formula[i] + str(start)
         else:
-            final_str += iter_formula[i]    
+            final_str += iter_formula[i]
         i += 1
     ws_obj.write(col_index+str(start) , final_str, format_str)
     return
@@ -157,7 +166,7 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
     row_format = set_format_for_heading(workbook=workbook,
                                         format_str=formatted_post_data.get('cell_format'))
     total_cell_format = set_format_for_heading(workbook=workbook,
-                                              format_str={'bold':1, 
+                                              format_str={'bold':1,
                                                           'font_size': 9,
                                                           'num_format':'#,##0.00',
                                                           'align':'right',
@@ -168,7 +177,7 @@ def get_combined_data_and_sheets_formats(formatted_post_data):
     combined_header = formatted_post_data.get('combined_header')
     sheet_header = formatted_post_data.get('sheet_header')
     sheet_footer = formatted_post_data.get('sheet_footer')
-    data_dict = {'name_of_sheets': name_of_sheets, 'combined_data': combined_data, 'combined_header': combined_header, 
+    data_dict = {'name_of_sheets': name_of_sheets, 'combined_data': combined_data, 'combined_header': combined_header,
                  'heading_of_sheets': heading_of_sheets, 'workbook': workbook, 'heading_format': heading_format,
                  'header_format': header_format, 'row_format': row_format,
                  'total_cell_format': total_cell_format, 'sheet_header': sheet_header, 'sheet_footer': sheet_footer,
@@ -206,7 +215,7 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
                                     row_format)
 
             #Add comment in Aggregator sheet
-            if(sheet_index==0):                
+            if(sheet_index==0):
                 comment_row=str(write_values.get('end') + 3)
                 ws.merge_range('A'+comment_row+':L'+comment_row, "**Quantity is deducted for farmers having incorrect/unavailable mobile numbers.", row_format)
                 ap_formula_row = write_values.get('end') + 4
@@ -255,6 +264,7 @@ def prepare_value_data_generic(data):
 
     return combined_dict
 
+
 class PdfPrint:
     def __init__(self, output):
         self.output = output
@@ -263,60 +273,74 @@ class PdfPrint:
 
     def generate(self, data_dict, title):
         try:
-            doc = SimpleDocTemplate(self.output, rightMargin = 72, leftMargin = 72,
-                                    topMargin = 30, bottomMargin = 72, pageSize = self.pageSize)
+            doc = SimpleDocTemplate(self.output, rightMargin=72, leftMargin=72,
+                                    topMargin=30, bottomMargin=50, pageSize=self.pageSize)
 
-            #setting up styles
+            # setting up styles
             styles = getSampleStyleSheet()
             cell_format = data_dict.get('cell_format')
+
+            arial_font = 'Arial'
+
+            # Font for displaying unicode characters
+            pdfmetrics.registerFont(TTFont(arial_font, 'Arial Unicode.ttf'))
             styles.add(ParagraphStyle(
                 name="ParagraphTitle", fontSize=cell_format.get('font_size'), alignment=TA_JUSTIFY))
             styles.add(ParagraphStyle(
                 name="Justify", alignment=TA_JUSTIFY))
-            styles.add(ParagraphStyle("Comment", fontSize = cell_format.get('font_size')))
-            styles.add(ParagraphStyle("TableHeader", fontSize = 8, alignment=TA_CENTER))
-            styles.add(ParagraphStyle("Text", fontSize = 8, alignment=TA_CENTER))
+            styles.add(ParagraphStyle("Comment", fontSize=cell_format.get('font_size')))
+            styles.add(ParagraphStyle("TableHeader", fontSize=8, alignment=TA_CENTER, fontName=arial_font))
+            styles.add(ParagraphStyle("Text", fontSize=8, alignment=TA_CENTER, fontName=arial_font))
+            styles.add(ParagraphStyle("TextBold", fontName=arial_font, fontSize=8, alignment=TA_CENTER))
+            styles.add(ParagraphStyle("CommentSpace", fontSize=cell_format.get('font_size'), leftIndent=133))
 
-            pdfdata = []
+            # A list of complete data which goes in the pdf.
+            pdfdata = list()
             pdfdata.append(Paragraph(title, styles['Title']))
             pdfdata.append(Spacer(1, 12))
 
             name_of_sheets = data_dict.get('name_of_sheets')
             heading_of_sheets = data_dict.get('heading_of_sheets')
-           # heading_format = data_dict.get('heading_format')
-           # header_format = data_dict.get('header_format')
-           # row_format = data_dict.get('row_format')
-           # excel_output = data_dict.get('excel_output')
             combined_data = data_dict.get('combined_data')
             combined_header = data_dict.get('combined_header')
 
-           # sheet_header = data_dict.get('sheet_header')
-           # sheet_footer = data_dict.get('sheet_footer')
-
-
-
             for sheet_index, item in enumerate(name_of_sheets):
                 table_data = []
-                pdfdata.append(Paragraph(heading_of_sheets[sheet_index],styles['ParagraphTitle']))
+                pdfdata.append(Paragraph(heading_of_sheets[sheet_index], styles['ParagraphTitle']))
+                pdfdata.append(Spacer(1, 12))
                 header_data = []
                 col_widths = []
-                # append data for first header
-                for header_index, header_value in enumerate(combined_header.values()[sheet_index]):
+                headers = combined_header.values()[sheet_index]
+
+                # append data for header and calculate column widths
+                for header_index, header_value in enumerate(headers):
                     header_data.append(Paragraph(header_value.get('label'), styles['TableHeader']))
-                    col_widths.append((header_value.get('column_width'))*7)
+                    col_widths.append((header_value.get('column_width'))*6.3)
                 table_data.append(header_data)
+                total_vals = [0]*len(combined_data[sheet_index][0])
+                total_vals_str = []
                 for value_list in combined_data[sheet_index]:
                     value_data = []
-                    for value in value_list:
+                    for i, value in enumerate(value_list):
                         if type(value) is int or type(value) is float:
-                            value_data.append(u"{0}".format(value))
+                            value_data.append(Paragraph(u"{0}".format(value), styles['Text']))
+                            if headers[i].get('total'):
+                                total_vals[i] += value
                         elif value is None:
                             value_data.append("")
                         else:
-                            value_data.append(Paragraph(value,styles['Text']))
-                    print value_data
+                            value_data.append(Paragraph(value, styles['Text']))
                     table_data.append(value_data)
-                #table_data.append(combined_data[sheet_index])
+
+                #manually calculate values for Total Payment (in Rs) (AP + TC - FC - CAC) for aggregator sheet
+                if sheet_index == 0:
+                    total_vals[8] = total_vals[4] + total_vals[5] - total_vals[6] - total_vals[7]
+                for value in total_vals:
+                    if value > 0:
+                        total_vals_str.append(Paragraph(u"{0}".format(value), styles['TextBold']))
+                    else:
+                        total_vals_str.append("")
+                table_data.append(total_vals_str)
 
                 # Create table
                 data_table = Table(table_data, col_widths)
@@ -329,15 +353,19 @@ class PdfPrint:
                 ))
 
                 pdfdata.append(data_table)
-                pdfdata.append(Spacer(1, 48))
+                pdfdata.append(Spacer(1, 30))
 
                 # Add comment in Aggregator part
-                if (sheet_index == 0):
+                if sheet_index == 0:
                     pdfdata.append(Paragraph("**Quantity is deducted for farmers having incorrect/unavailable mobile numbers.", styles['Comment']))
-                    pdfdata.append(Paragraph("##AP calculation formula (Bihar)				 = 0.2*Q ; Q<=2000							", styles['Comment']))
-                    pdfdata.append(Paragraph("				 = 0.2*2000 + 0.1*(Q-2000) ; Q>2000							", styles['Comment']))
-                    pdfdata.append(Paragraph("##AP calculation formula (Maharashtra)				 = 0.25*Q							", styles['Comment']))
-                    pdfdata.append(Paragraph("##AP calculation formula (Bangladesh)				 = 0.5*Q							", styles['Comment']))
+
+                    pdfdata.append(Paragraph("##AP calculation formula (Bihar) &nbsp;= 0.2*Q ; Q<=2000", styles['Comment']))
+
+                    pdfdata.append(Paragraph("= 0.2*2000 + 0.1*(Q-2000) ; Q>2000							", styles['CommentSpace']))
+                    pdfdata.append(Paragraph("##AP calculation formula (Maharashtra)		 = 0.25*Q							", styles['Comment']))
+                    pdfdata.append(Paragraph("##AP calculation formula (Bangladesh)		     = 0.5*Q							", styles['Comment']))
+
+                pdfdata.append(PageBreak())
 
             doc.build(pdfdata)
             pdf = self.output.getvalue()

@@ -163,8 +163,15 @@ def download_data_workbook(request):
         # final closing the working
         workbook.close()
         excel_output.seek(0)
-        response = HttpResponse(excel_output.read(),
-                                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        #response = HttpResponse(excel_output.read(),
+        #                        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response = HttpResponse(content_type='application/pdf')
+        filename = "pdf_trial"
+        response['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(filename)
+        print "generating pdf"
+        pdf = generate_from_excel(request, excel_output)
+        response.write(pdf)
+        print "generated pdf"
         return response
 
 @csrf_exempt
@@ -177,9 +184,9 @@ def download_pdf(request):
         data_dict = get_combined_data_and_sheets_formats(formatted_post_data)
         pdf_output = BytesIO()
         filename = "pdf_trial"
-        response['Content-Disposition'] = 'attachement; filename={0}.pdf'.format(filename)
+        response['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(filename)
         report = PdfPrint(pdf_output)
-        pdf = report.generate(formatted_post_data,"Loop data")
+        pdf = report.generate(formatted_post_data, "Loop data")
         response.write(pdf)
         return response
 
