@@ -3,28 +3,16 @@ import unicodecsv as csv
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.conf import settings
 from geographies.models import *
 from people.models import *
 from programs.models import *
 import jslps_data_integration as jslps
 
 class Command(BaseCommand):
-	def handle(self, *args, **options):
-		#read xml from url
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGroupMemberDataHnNNew1?pUsername=admin&pPassword=JSLPSSRI')
-		contents = url.read()
-		xml_file = open("jslps_data_integration_files/jslps-hnn-person-new1.xml", 'w')
-		xml_file.write(contents)
-		xml_file.close()
-
-		partner = Partner.objects.get(id = 24)
-		user_obj = User.objects.get(username="jslps_bot")
-		csv_file = open('jslps_data_integration_files/jslps-hnn-person-new1.csv', 'wb')
-		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('jslps_data_integration_files/jslps-hnn-person-new1.xml')
-		root = tree.getroot()
-		
-		for c in root.findall('GroupMemberDataNew1'):
+	
+	def data_processing(self, partner, user_obj, csv_file, wtr, root, file_index):
+		for c in root.findall('GroupMemberDataNew'+str(file_index)):
 			village_code = c.find('VillageCode').text
 			group_code = c.find('GroupCode').text
 			member_code = c.find('Group_M_Code').text
@@ -138,7 +126,26 @@ class Command(BaseCommand):
 							jslps_person.save()
 				else:
 					wtr.writerow(['Person not saved and duplicate also not exist',member_code, "not saved"])
+		return 
 
+
+	def handle(self, *args, **options):
+		#read xml from url
+		file_url = options.get('file_url')+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		idx = options.get('file_index')
+		url = urllib2.urlopen(file_url)
+		contents = url.read()
+		xml_file = open("jslps_data_integration_files/%s" % options.get('file_name'), 'w') 
+		xml_file.write(contents)
+		xml_file.close()
+
+		partner = Partner.objects.get(id = 24)
+		user_obj = User.objects.get(username="jslps_bot")
+		csv_file = open('jslps_data_integration_files/%s' % options.get('error_file'), 'wb') 
+		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
+		tree = ET.parse('jslps_data_integration_files/%s' % options.get('file_name'))
+		root = tree.getroot()
+		self.data_processing(partner, user_obj, csv_file, wtr, root, idx)
 		csv_file.close()
 
 
