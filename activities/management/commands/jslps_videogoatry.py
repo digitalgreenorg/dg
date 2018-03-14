@@ -170,7 +170,7 @@ class Command(BaseCommand):
 					jslps_video_list = JSLPS_Video.objects.filter(title=vn, vc=vn, video=vid)
 					if len(jslps_video_list) == 0:
 						jslps_video, created = \
-							JSLPS_Video.get_or_create(vc=vdc,
+							JSLPS_Video.objects.get_or_create(vc=vdc,
 													  title=vn,
 													  video=vid,
 													  user_created_id=user_obj.id,
