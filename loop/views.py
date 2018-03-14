@@ -20,7 +20,7 @@ from tastypie.models import ApiKey, create_api_key
 from models import LoopUser, CombinedTransaction, Village, Crop, Mandi, Farmer, DayTransportation, Gaddidar, \
     Transporter, Language, CropLanguage, GaddidarCommission, GaddidarShareOutliers, AggregatorIncentive, \
     AggregatorShareOutliers, IncentiveParameter, IncentiveModel, HelplineExpert, HelplineIncoming, HelplineOutgoing, \
-    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, AdminUser, District
+    HelplineCallLog, HelplineSmsLog, LoopUserAssignedVillage, BroadcastAudience, AdminUser, District, FarmerTransportCode
 
 import loop.utils.send_log.loop_data_log as loop_log
 import loop.utils.send_log.loop_admin_log as admin_log
@@ -1124,55 +1124,52 @@ def broadcast_audio_request(request):
         return audio_url_response
     else:
         return HttpResponse(status=200)
-
-def calculate_farmer_share(request):
+@csrf_exempt
+def referral_farmer(request):
+      
     if request.method == 'GET':
-        date =  request.GET.get('date')
-        date = datetime.datetime.strptime(date,'%d%m%Y')
-        day_ct = CombinedTransaction.objects.filter(date= date)
-        #day_dt = DayTransportation.objects.filter(date=date)
-        mandi_volume = {}
-        farmer_wise_ct ={}
-        mapShare ={}
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        aggregator_id = request.GET.get('aggregator_id')
+        filter_args = {}
+        if (start_date != ""):
+            filter_args["date__gte"] = start_date
+        if (end_date != ""):
+            filter_args["date__lte"] = end_date
+        if (aggregator_id != ""):
+            filter_args["user_created__id"] = aggregator_id
+        farmer_transport_free = FarmerTransportCode.objects.filter(dateUsed__range=(start_date,end_date)).values('phone','code','dateUsed')
+        farmers=Farmer.objects.filter(phone__in=farmer_transport_free.values('phone'))
+        for single_object in farmer_transport_free:
+            single_object['farmer'] = Farmer.objects.filter(phone=single_object['phone'])
+        mandi_volume = CombinedTransaction.objects.filter(**filter_args).values('date','user_created__id','mandi__id').order_by('date').annotate(Sum('quantity'))
+        map_farmer_volume = CombinedTransaction.objects.filter(**filter_args).values('date', 'user_created__id','farmer__id', 'mandi__id').order_by('date').annotate(Sum('quantity'))
+        mapShare = DayTransportation.objects.filter(**filter_args).values('date','mandi__id').annotate(Avg('farmer_share')).order_by('date')
         farmer_share_final = {}
-        total_volume=0
-        for ct in day_ct:
-            if not ct.mandi in mandi_volume:
-                mandi_volume[ct.mandi]= ct.quantity
-            else:
-                mandi_volume[ct.mandi] = mandi_volume[ct.mandi] + ct.quantity
-            if not ct.farmer in farmer_wise_ct:
-                l=[]
-                farmer_wise_ct[ct.farmer]=l
-                farmer_wise_ct[ct.farmer].append(ct)
-            else:
-                farmer_wise_ct[ct.farmer].append(ct)
-
-            try:
-                if not ct.mandi in mapShare:
-                    dt = DayTransportation.objects.filter(date=date, mandi=ct.mandi)
-                    if dt.count()>0:
-                        mapShare[ct.mandi]=dt[0].farmer_share
-            except:
-                pass
-
-
-        for farmer in farmer_wise_ct:
-            map_farmer_volume={}
-            for ct in farmer_wise_ct[farmer]:
-                if not ct.mandi in map_farmer_volume:
-                    map_farmer_volume[ct.mandi]=ct.quantity
-                else:
-                    map_farmer_volume[ct.mandi]=map_farmer_volume[ct.mandi]+ct.quantity
+        final = {}
+        for obj in farmer_transport_free:
+            if obj['farmer'].count() == 1:
+                mpv = filter(lambda sol: (sol['farmer__id']== obj['farmer'][0].id and sol['date'] == obj['dateUsed']), map_farmer_volume)   
 
             fShare = 0.0
-            for mandi in mapShare:
-                if mandi in map_farmer_volume:
-                    fShare = fShare + (map_farmer_volume[mandi] * mapShare[mandi]) / mandi_volume[mandi]
-            farmer_share_final[farmer]=fShare
+            
+            if str(obj['dateUsed']) not in final:
+                final[str(obj['dateUsed'])]={}
+            for obj_fs in mpv:  
+                mvv = filter(lambda sol:(sol['mandi__id'] == obj_fs['mandi__id'] and sol['date'] == obj['dateUsed']),mandi_volume)
+                ms = filter(lambda sol: (sol['date'] == obj['dateUsed'] and sol['mandi__id'] == obj_fs['mandi__id']), mapShare)
+                if str(obj_fs['mandi__id']) not in final[str(obj['dateUsed'])]:
+                    if len(ms)>0:
+                        final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=(float(obj_fs['quantity__sum'])*float(ms[0]['farmer_share__avg']))/float(mvv[0]['quantity__sum'])
+                    else:
+                        final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=0
+                elif len(ms) > 0:
+                    final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])] + (float(obj_fs['quantity__sum'])*float(ms[0]['farmer_share__avg']))/float(mvv[0]['quantity__sum'])
 
-        return farmer_share_final
-    return {}
+        return HttpResponse(json.dumps(final),status=200)
+    return HttpResponse(status=200)
+
+
 
 
 
