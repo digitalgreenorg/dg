@@ -1166,8 +1166,16 @@ def referral_farmer(request):
                 elif len(ms) > 0:
                     final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])] + (float(obj_fs['quantity__sum'])*float(ms[0]['farmer_share__avg']))/float(mvv[0]['quantity__sum'])
 
+        with open('../output.csv', 'wb') as output:
+            writer = csv.writer(output)
+            writer.writerow(['date','mandi','Discount Share'])
+            for key in final.keys():
+                for key2 in final[key].keys():
+                    writer.writerow([key,key2,final[key][key2]])
+                    
         return HttpResponse(json.dumps(final),status=200)
     return HttpResponse(status=200)
+
 
 
 
