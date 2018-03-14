@@ -3,6 +3,7 @@ import unicodecsv as csv
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.conf import settings
 from people.models import *
 from programs.models import *
 from videos.models import *
@@ -12,8 +13,9 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		
+		file_url = 'http://webservicesri.swalekha.in/Service.asmx/GetExportGoatryVideoData'+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		url = urllib2.urlopen(file_url)
 		partner = Partner.objects.get(id = 24)
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGoatryVideoData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/video_goatary.xml", 'w')
 		xml_file.write(contents)
@@ -168,7 +170,7 @@ class Command(BaseCommand):
 					jslps_video_list = JSLPS_Video.objects.filter(title=vn, vc=vn, video=vid)
 					if len(jslps_video_list) == 0:
 						jslps_video, created = \
-							JSLPS_Video.get_or_create(vc=vdc,
+							JSLPS_Video.objects.get_or_create(vc=vdc,
 													  title=vn,
 													  video=vid,
 													  user_created_id=user_obj.id,
@@ -187,7 +189,8 @@ class Command(BaseCommand):
 		csv_file.close()
 
 		#saving non-negotiables
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGotaryNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		file_url = 'http://webservicesri.swalekha.in/Service.asmx/GetExportGotaryNon_NegotiableMasterData'+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		url = urllib2.urlopen(file_url)
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/goatary_nonnego.xml", 'w')
 		xml_file.write(contents)

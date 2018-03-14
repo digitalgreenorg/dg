@@ -3,6 +3,7 @@ import unicodecsv as csv
 from datetime import datetime 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
+from django.conf import settings
 from people.models import *
 from programs.models import *
 from videos.models import *
@@ -12,8 +13,9 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		
+		file_url = 'http://webservicesri.swalekha.in/Service.asmx/GetExportAdoptionData'+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		url = urllib2.urlopen(file_url)
 		partner = Partner.objects.get(id = 24)
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportAdoptionData?pUsername=admin&pPassword=JSLPSSRI')
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/adoption.xml", 'w')
 		xml_file.write(contents)
