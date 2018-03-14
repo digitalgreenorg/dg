@@ -248,7 +248,7 @@ var calc_functions = {
 
     net_payment: function () {
         for (var i = 0; i < aggregator_data_set.length; i++) {
-            aggregator_data_set[i][PAYMENT_SUMMARY.NET_PAYMENT] = (parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE]) + parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.TRANSPORT_COST]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.GADDIDAR_SHARE]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.FARMER_SHARE])).toFixed(2);   
+            aggregator_data_set[i][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat((parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE]) + parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.TRANSPORT_COST]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.GADDIDAR_SHARE]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.FARMER_SHARE])).toFixed(2));   
         }
     },
 
@@ -762,10 +762,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     //Adding mobile recharge entry for aggregator in Payment Sheet
     aggregator_data_set.push(default_aggregator_data_set.slice());
     var aggregator_data_set_length = aggregator_data_set.length;
+    var mob_recharge = 150;
     aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.SNO] = aggregator_data_set_length.toString();
     aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.MANDI_NAME] = "Mobile Recharge";
-    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat("150");
-    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat("150").toFixed(2);
+    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat(mob_recharge.toFixed(2));
+    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat(mob_recharge.toFixed(2));
 
 
     //gaddidar data clone
