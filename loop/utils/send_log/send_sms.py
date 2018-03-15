@@ -27,6 +27,7 @@ def deprecated_send_sms(request):
 
 @csrf_exempt
 def send_sms(request):
+    import pdb;pdb.set_trace()
     if request.method == 'POST':
         apikey = request.POST['ApiKey']
         timestamp = request.POST['timestamp']
