@@ -93,6 +93,7 @@ def registration_auth_response(request):
 					reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
 					reg_sms.save()
 					response = send_first_transportation_code(farmer[0],code,query_code,farmer_number)
+					farmer.update(referral_free_transport_count=farmer[0].referral_free_transport_count+1)
 					status_code = 0
 					if response['status'] == "success":
 						status_code = 1
@@ -167,6 +168,7 @@ def send_refer_transport_code(farmer):
 			reg_sms.save()
 			response = send_referral_transportation_code(farmer_refer[0],code,farmer_refer[0].phone)
 			status_code = 0
+			farmer.update(referral_free_transport_count=farmer[0].referral_free_transport_count+1)
 			if response['status'] == "success":
 				status_code = 1
 				sms_id = response['messages'][0]['id']
