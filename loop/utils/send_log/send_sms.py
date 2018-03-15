@@ -27,7 +27,7 @@ def deprecated_send_sms(request):
 
 @csrf_exempt
 def send_sms(request):
-    import pdb;pdb.set_trace()
+    #import pdb;pdb.set_trace()
     if request.method == 'POST':
         apikey = request.POST['ApiKey']
         timestamp = request.POST['timestamp']
@@ -225,8 +225,9 @@ def transportations_sms(user, transportations, language):
             for trans in transportations_to_update:
                 trans.payment_sms=SMS_STATE['S'][0]
                 trans.save()
+            import pdb;pdb.set_trace()
             SmsLog = get_model('loop', 'SmsLog')
-            smslog_obj = SmsLog(sms_body=message, contact_no=transporter_num, person_type=1,model_ids = str(single_transporter_details[entity]['dt_id']))
+            smslog_obj = SmsLog(sms_body=message.decode('utf-8'), contact_no=transporter_num, person_type=1,model_ids = str(single_transporter_details[entity]['dt_id']))
             smslog_obj.save()
 
             sms_response = send_sms_using_textlocal(transporter_num, message, smslog_obj.id)
