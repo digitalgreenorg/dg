@@ -33,6 +33,10 @@ class Command(BaseCommand):
                             dest='to_date',
                             default=None)
 
+        parser.add_argument('-t',
+                            dest='type',
+                            default='msg')
+
     # generate the excel for the given command line arguments
     def handle(self, *args, **options):
         # from_to_date = date_setter.set_from_to_date(options.get('from_date'), options.get('to_date'))
@@ -41,6 +45,11 @@ class Command(BaseCommand):
         from_date = datetime.datetime.strptime(from_date, "%d%m%Y").date()
         to_date = re.sub('-', '', options.get('to_date'))
         to_date = datetime.datetime.strptime(to_date, "%d%m%Y").date()
-        update_referrals()
-        send_msg_after_first_trans(from_date,to_date)
-        referral_farmer(from_date,to_date,AGGREGATORS_IDEO)
+        type = options.get('type')
+        if type == 'msg':
+            update_referrals()
+            send_msg_after_first_trans(from_date,to_date)
+        elif type == 'csv':
+            referral_farmer(from_date,to_date,AGGREGATORS_IDEO)
+        else:
+            pass

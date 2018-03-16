@@ -1142,6 +1142,14 @@ class FarmerQRScanResource(BaseResource):
         include_resource_uri = False
 
     def obj_create(self, bundle, request=None, **kwargs):
+        if 'a' in bundle.data.keys() and not 'qr_code' in bundle.data.keys():
+            bundle.data['qr_code'] = bundle.data['a']
+        if 'b' in bundle.data.keys() and not 'timestamp' in bundle.data.keys():
+            bundle.data['timestamp'] = bundle.data['b']
+        if 'c' in bundle.data.keys() and not 'online_id' in bundle.data.keys():
+            bundle.data['online_id'] = bundle.data['c']
+        if 'd' in bundle.data.keys() and not 'action' in bundle.data.keys():
+            bundle.data['action'] = bundle.data['d']
         attempt = FarmerQRScan.objects.filter(timestamp=bundle.data['timestamp'],qr_code=bundle.data['qr_code'],action=bundle.data['action'])
         if attempt.count() < 1:
             bundle = super(FarmerQRScanResource, self).obj_create(
