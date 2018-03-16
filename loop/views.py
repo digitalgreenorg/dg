@@ -1124,50 +1124,63 @@ def broadcast_audio_request(request):
         return audio_url_response
     else:
         return HttpResponse(status=200)
-@csrf_exempt
-def referral_farmer(request):
+
+def referral_farmer(start_date,end_date,aggregators_list):
       
-    if request.method == 'GET':
-        start_date = request.GET.get('start_date')
-        end_date = request.GET.get('end_date')
-        aggregator_id = request.GET.get('aggregator_id')
-        filter_args = {}
-        if (start_date != ""):
-            filter_args["date__gte"] = start_date
-        if (end_date != ""):
-            filter_args["date__lte"] = end_date
-        if (aggregator_id != ""):
-            filter_args["user_created__id"] = aggregator_id
-        farmer_transport_free = FarmerTransportCode.objects.filter(dateUsed__range=(start_date,end_date)).values('phone','code','dateUsed')
-        farmers=Farmer.objects.filter(phone__in=farmer_transport_free.values('phone'))
-        for single_object in farmer_transport_free:
-            single_object['farmer'] = Farmer.objects.filter(phone=single_object['phone'])
-        mandi_volume = CombinedTransaction.objects.filter(**filter_args).values('date','user_created__id','mandi__id').order_by('date').annotate(Sum('quantity'))
-        map_farmer_volume = CombinedTransaction.objects.filter(**filter_args).values('date', 'user_created__id','farmer__id', 'mandi__id').order_by('date').annotate(Sum('quantity'))
-        mapShare = DayTransportation.objects.filter(**filter_args).values('date','mandi__id').annotate(Avg('farmer_share')).order_by('date')
-        farmer_share_final = {}
-        final = {}
-        for obj in farmer_transport_free:
-            if obj['farmer'].count() == 1:
-                mpv = filter(lambda sol: (sol['farmer__id']== obj['farmer'][0].id and sol['date'] == obj['dateUsed']), map_farmer_volume)   
+    for aggregator_id in aggregators_list:
+        try:
+            # start_date = request.GET.get('start_date')
+            # end_date = request.GET.get('end_date')
+            # aggregator_id = request.GET.get('aggregator_id')
+            filter_args = {}
+            if (start_date != ""):
+                filter_args["date__gte"] = start_date
+            if (end_date != ""):
+                filter_args["date__lte"] = end_date
+            if (aggregator_id != ""):
+                filter_args["user_created__id"] = aggregator_id
+            farmer_transport_free = FarmerTransportCode.objects.filter(dateUsed__range=(start_date,end_date)).values('phone','code','dateUsed')
+            farmers=Farmer.objects.filter(phone__in=farmer_transport_free.values('phone'))
+            for single_object in farmer_transport_free:
+                single_object['farmer'] = Farmer.objects.filter(phone=single_object['phone'])
+            mandi_volume = CombinedTransaction.objects.filter(**filter_args).values('date','user_created__id','mandi__id').order_by('date').annotate(Sum('quantity'))
+            map_farmer_volume = CombinedTransaction.objects.filter(**filter_args).values('date', 'user_created__id','farmer__id', 'mandi__id').order_by('date').annotate(Sum('quantity'))
+            mapShare = DayTransportation.objects.filter(**filter_args).values('date','mandi__id').annotate(Avg('farmer_share')).order_by('date')
+            farmer_share_final = {}
+            final = {}
+            for obj in farmer_transport_free:
+                if obj['farmer'].count() == 1:
+                    mpv = filter(lambda sol: (sol['farmer__id']== obj['farmer'][0].id and sol['date'] == obj['dateUsed']), map_farmer_volume)   
 
-            fShare = 0.0
-            
-            if str(obj['dateUsed']) not in final:
-                final[str(obj['dateUsed'])]={}
-            for obj_fs in mpv:  
-                mvv = filter(lambda sol:(sol['mandi__id'] == obj_fs['mandi__id'] and sol['date'] == obj['dateUsed']),mandi_volume)
-                ms = filter(lambda sol: (sol['date'] == obj['dateUsed'] and sol['mandi__id'] == obj_fs['mandi__id']), mapShare)
-                if str(obj_fs['mandi__id']) not in final[str(obj['dateUsed'])]:
-                    if len(ms)>0:
-                        final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=(float(obj_fs['quantity__sum'])*float(ms[0]['farmer_share__avg']))/float(mvv[0]['quantity__sum'])
-                    else:
-                        final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=0
-                elif len(ms) > 0:
-                    final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])] + (float(obj_fs['quantity__sum'])*float(ms[0]['farmer_share__avg']))/float(mvv[0]['quantity__sum'])
+                fShare = 0.0
+                
+                if str(obj['dateUsed']) not in final:
+                    final[str(obj['dateUsed'])]={}
+                for obj_fs in mpv:  
+                    mvv = filter(lambda sol:(sol['mandi__id'] == obj_fs['mandi__id'] and sol['date'] == obj['dateUsed']),mandi_volume)
+                    ms = filter(lambda sol: (sol['date'] == obj['dateUsed'] and sol['mandi__id'] == obj_fs['mandi__id']), mapShare)
+                    if str(obj_fs['mandi__id']) not in final[str(obj['dateUsed'])]:
+                        if len(ms)>0:
+                            final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=(float(obj_fs['quantity__sum'])*float(ms[0]['farmer_share__avg']))/float(mvv[0]['quantity__sum'])
+                        else:
+                            final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=0
+                    elif len(ms) > 0:
+                        final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])]=final[str(obj['dateUsed'])][str(obj_fs['mandi__id'])] + (float(obj_fs['quantity__sum'])*float(ms[0]['farmer_share__avg']))/float(mvv[0]['quantity__sum'])
+            user = LoopUser.objects.get(user_id=aggregator_id)
+            mandis = Mandi.objects.all()
+            with open('../'+str(user.name_en)+'_'+str(user.user_id)+'.csv', 'wb') as output:
+                writer = csv.writer(output)
+                writer.writerow(['date','mandi','Discount Share'])
+                for key in final.keys():
+                    for key2 in final[key].keys():
+                        writer.writerow([key,mandis.filter(id=int(key2))[0].mandi_name_en,final[key][key2]])
+            return HttpResponse(json.dumps(final),status=200)
+        except Exception as e:
+            pass
 
-        return HttpResponse(json.dumps(final),status=200)
+
     return HttpResponse(status=200)
+
 
 
 
