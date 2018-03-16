@@ -11,6 +11,7 @@ from loop.config import *
 from dg.settings import MEDIA_ROOT, EMAIL_HOST_USER
 from loop_ivr.utils.config import AGGREGATORS_IDEO
 from loop.utils.send_log.registration import send_msg_after_first_trans,update_referrals
+from loop.views import referral_farmer
 import os
 
 id_map = {}
@@ -42,3 +43,4 @@ class Command(BaseCommand):
         to_date = datetime.datetime.strptime(to_date, "%d%m%Y").date()
         update_referrals()
         send_msg_after_first_trans(from_date,to_date)
+        referral_farmer(from_date,to_date,AGGREGATORS_IDEO)
