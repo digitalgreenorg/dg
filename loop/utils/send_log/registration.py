@@ -131,7 +131,7 @@ def send_msg_after_first_trans(from_date,to_date):
 	farmer_list = getFirstTransportFarmers(from_date,to_date)
 	for farmer in farmer_list:
 		if RegistrationSms.objects.filter(farmer=farmer,msg_type=2).count()==0 and farmer.time_created>=datetime.datetime.strptime('05032018', "%d%m%Y"):
-			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=2)
+			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=1)
 			reg_sms.save()
 			response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id)
 			status_code = 0
