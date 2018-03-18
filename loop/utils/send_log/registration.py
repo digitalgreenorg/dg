@@ -1,7 +1,7 @@
 
 from dg.settings import TEXTLOCAL_API_KEY
 from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode,Referral
-from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER
+from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER,REG_CODE_RESPONSE_URL
 from loop.config import registration_sms,first_transaction_sms,referral_transport_sms,already_exist_sms
 import requests
 from django.views.decorators.csrf import csrf_exempt
@@ -59,7 +59,7 @@ def send_first_transportation_code(farmer,code,query_code,custom_id):
 		sms_body = registration_sms['input_error']['hi']
 	sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
 	parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer.phone,
-                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_AUTH_RECEIPT_URL}
+                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_CODE_RESPONSE_URL}
 	response = requests.post(sms_request_url, params=parameters)
 	response_text = json.loads(str(response.text))
 	return response_text
