@@ -46,7 +46,7 @@ def send_sms_using_textlocal(farmer_no, custom_id,msg_type):
 @csrf_exempt
 def sms_response_from_txtlcl(request):
     if request.method == 'POST':
-    	log_obj = RegistrationSms.objects.get(id=request.POST['customID'])
+    	log_obj = RegistrationSms.objects.filter(id=request.POST['customID'])
     	log_obj.update(state=SMS_STATE[request.POST['status']][0])
 
 	return HttpResponse("0")
@@ -67,7 +67,7 @@ def send_first_transportation_code(farmer,code,query_code,custom_id):
 @csrf_exempt
 def sms_reg_response_from_txtlcl(request):
     if request.method == 'POST':
-    	log_obj = FarmerTransportCode.objects.get(phone=request.POST['customID'])
+    	log_obj = FarmerTransportCode.objects.filter(phone=request.POST['customID'])
     	log_obj.update(state=SMS_STATE[request.POST['status']][0])
 
 	return HttpResponse("0")
