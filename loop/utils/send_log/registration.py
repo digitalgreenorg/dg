@@ -46,7 +46,7 @@ def send_sms_using_textlocal(farmer_no, custom_id,msg_type):
 @csrf_exempt
 def sms_response_from_txtlcl(request):
     if request.method == 'POST':
-    	log_obj = RegistrationSms.objects.get(farmer_id=request.POST['customID'])
+    	log_obj = RegistrationSms.objects.get(id=request.POST['customID'])
     	log_obj.update(state=SMS_STATE[request.POST['status']][0])
 
 	return HttpResponse("0")
