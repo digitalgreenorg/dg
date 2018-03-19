@@ -53,4 +53,5 @@ CONTAINS_ZERO = r'^[0]$'
 REG_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_response/')
 AGGREGATORS_IDEO = [3775L,5049L,5050L,4630L,4790L]
 REG_AUTH_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_auth_response/')
+REG_CODE_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_code_response/')
 REG_RESP_NUMBER="9246022444"

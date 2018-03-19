@@ -1,7 +1,7 @@
 
 from dg.settings import TEXTLOCAL_API_KEY
 from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode,Referral
-from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER
+from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER,REG_CODE_RESPONSE_URL
 from loop.config import registration_sms,first_transaction_sms,referral_transport_sms,already_exist_sms
 import requests
 from django.views.decorators.csrf import csrf_exempt
@@ -46,7 +46,7 @@ def send_sms_using_textlocal(farmer_no, custom_id,msg_type):
 @csrf_exempt
 def sms_response_from_txtlcl(request):
     if request.method == 'POST':
-    	log_obj = RegistrationSms.objects.get(farmer_id=request.POST['customID'])
+    	log_obj = RegistrationSms.objects.filter(id=request.POST['customID'])
     	log_obj.update(state=SMS_STATE[request.POST['status']][0])
 
 	return HttpResponse("0")
@@ -59,7 +59,7 @@ def send_first_transportation_code(farmer,code,query_code,custom_id):
 		sms_body = registration_sms['input_error']['hi']
 	sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
 	parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer.phone,
-                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_AUTH_RECEIPT_URL}
+                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_CODE_RESPONSE_URL}
 	response = requests.post(sms_request_url, params=parameters)
 	response_text = json.loads(str(response.text))
 	return response_text
@@ -67,7 +67,7 @@ def send_first_transportation_code(farmer,code,query_code,custom_id):
 @csrf_exempt
 def sms_reg_response_from_txtlcl(request):
     if request.method == 'POST':
-    	log_obj = FarmerTransportCode.objects.get(phone=request.POST['customID'])
+    	log_obj = FarmerTransportCode.objects.filter(phone=request.POST['customID'])
     	log_obj.update(state=SMS_STATE[request.POST['status']][0])
 
 	return HttpResponse("0")
@@ -132,7 +132,7 @@ def send_msg_after_first_trans(from_date,to_date):
 	farmer_list = getFirstTransportFarmers(from_date,to_date)
 	for farmer in farmer_list:
 		if RegistrationSms.objects.filter(farmer=farmer,msg_type=2).count()==0 and farmer.time_created>=datetime.datetime.strptime('05032018', "%d%m%Y"):
-			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=2)
+			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=1)
 			reg_sms.save()
 			response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id)
 			status_code = 0
