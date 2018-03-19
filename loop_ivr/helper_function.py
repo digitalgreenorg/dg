@@ -9,6 +9,7 @@ import json
 from datetime import datetime, timedelta
 from pytz import timezone
 import xml.etree.ElementTree as xml_parse
+import urllib
 
 from django.db.models import get_model, Sum
 
@@ -128,6 +129,10 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
             else:
                 price_info_incoming_obj.textlocal_sms_id += ',' + message_id
             price_info_incoming_obj.save()
+
+            sms_status_obj = SmsStatus(price_info_incoming_id=price_info_incoming_id.id, textlocal_sms_id=message_id, status='D', delivery_time=datetime.now(timezone('Asia/Kolkata')),
+            api_call_initiation_time=datetime.now(timezone('Asia/Kolkata')))
+            sms_status_obj.save()
     elif response_text['status'] == 'failure':
         module = 'send_sms_using_textlocal'
         if price_info_incoming_obj != None:
@@ -135,6 +140,11 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
         else:
             log = "Status Code: %s (price_info_incoming_obj_id: %s)"%(response_text['status'], str(price_info_incoming_obj))
         write_log(LOG_FILE,module,log)
+    if price_info_incoming_obj != None:
+        sms_status_obj = SmsStatus(price_info_incoming_id=price_info_incoming_id.id, textlocal_sms_id=121, status='D', delivery_time=datetime.now(timezone('Asia/Kolkata')),
+        api_call_initiation_time=datetime.now(timezone('Asia/Kolkata')))
+        sms_status_obj.save()
+
 
 def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
     # Replace ascii next line with textlocal next line identifier (i.e. %0A)
@@ -328,3 +338,10 @@ def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_c
     price_info_incoming_obj.save()
 
     send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
+
+# Get TextLocal Sms Status
+def get_textlocal_sms_status(apikey, messageID):
+        params = {'apikey': apikey, 'message_id': messageID}
+        f = urllib.urlopen('https://api.textlocal.in/status_message/?'
+            + urllib.urlencode(params))
+        return (f.read(), f.code)
