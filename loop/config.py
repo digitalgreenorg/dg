@@ -262,15 +262,23 @@ sms_text = {
 }
 
 registration_sms = {
-  'welcome':{'hi':u'लूप में आपका स्वागत है| अगर आप लूप से जुड़े किसान हैं तो "1" लिख कर 9246022444 पर भेजें और फ़सल को पहली बार मंडी तक मुफ़्त मे पहुँचायें|','en':u'Welcome to Loop! Please reply "1" to confirm and receive your free transport credit'},
-  'transportion_code_beg':{'hi':u'पुष्टि के लिए धन्यवाद| अपने एग्रीगेटर को ','en':u'Thank you for confirming.Give your aggregator the code '},
-  'transportion_code_end':{'hi':u' कोड दें और पहली बार अपनी फ़सल मुफ़्त में मंडी पहुँचायें|','en':u' to get Free Transport on your first trip with Loop.'},
+  'welcome':{'hi':u'अगर आप लूप किसान हैं,तो "1" लिख कर 9246022444 पर SMS भेजें और पहली बार अपनी सब्ज़ी  लूप की गाड़ी से मंडी तक मुफ़्त पहुँचायें।','en':u'Welcome to Loop! Please reply "1" to confirm and receive your free transport credit'},
+  'transportion_code_beg':{'hi':u'लूप एग्रीगेटर को ','en':u'Thank you for confirming.Give your aggregator the code '},
+  'transportion_code_end':{'hi':u' कोड दें,सब्ज़ी पहली बार मंडी मुफ़्त पहुँचायें।','en':u' to get Free Transport on your first trip with Loop.'},
   'wrong_reg':{'hi':u'','en':u'Sorry'},
-  'input_error':{'hi':u'','en':u'Input Error'},
+  'input_error':{'hi':u'आपके द्वारा दिया गया विकल्प सही नहीं है| अगर आप लूप किसान हैं, तो "1" लिख कर 9246022444 पर SMS भेजें|','en':u'Input Error'},
 }
 
+first_transaction_sms ={'hi':u'नए किसान को लूप से जोड़ें और उनके लूप के पहले इस्तेमाल पर अगली बार अपनी सब्ज़ी लूप की गाड़ी से मंडी तक मुफ़्त पहुँचायें। एग्रीगेटर को नए किसान का मोबाइल नः दें।','en':'thanks'}
 
-
+referral_transport_sms = {
+  'beg':{'hi':u'साथी किसान को लूप से जोड़ने के लिए धन्यवाद| एग्रीगेटर को ','en':u'beg'},
+  'end':{'hi':u' कोड दें और अगली बार अपनी सब्ज़ी लूप की गाड़ी से मंडी तक मुफ़्त पहुँचायें| ','en':u'end'}
+}
+already_exist_sms = {
+  'hi':u'माफ़ कीजिए आपके द्वारा बताया गया किसान पहले से ही लूप से जुड़ा हुआ है|',
+  'en':u'hi'
+}
 RECIPIENTS = ['lokesh@digitalgreen.org', 'loop@digitalgreen.org']
 
 RECIPIENTS_TEMP = ['amandeep@digitalgreen.org']

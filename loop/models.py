@@ -21,6 +21,7 @@ EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
 BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
 MANDI_CATEGORY = ((0, "Wholesale Market"), (1, "Retail Market"), (2, "Individual Entity"))
 PERSON_TYPE = ((0, 'Farmer'), (1, 'Transporter'))
+MSG_TYPE=((0,'Welcome'),(1,'After-Transport'),(2,'First-Transport'),(3,'Referral-Transport'),(4,'Already-exist-sms'))
 SMS_STATUS = ((0, 'Fail'), (1, 'Success'))
 SMS_STATE = {'N':(0,'None'), 'S':(1,'SMS initiated'), 'F':(2,'SMS fired'), 'D':(3,'SMS delivered'), 'U':(4,'SMS undelivered'), 'P':(5,'pending en route'), 'I':(6,'invalid no.'), 'E':(7,'expired'), '?':(8,'pushed to network en route'), 'B':(9,'DND block')}
 QR_ACTIONS =((1,'Pick Up'),(2,'Payment'))
@@ -144,7 +145,7 @@ class MandiType(LoopModel):
     type_description = models.CharField(max_length=300, null=True)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.mandi_type_name, self.mandi_category)
+        return "%s (%s)" % (self.mandi_type_name, self.get_mandi_category_display())
 
     class Meta:
         unique_together = ("mandi_type_name", "mandi_category")
@@ -163,7 +164,7 @@ class Mandi(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (self.mandi_name_en, self.district.district_name_en)
-
+   
     class Meta:
         unique_together = ("mandi_name", "district",)
 
@@ -344,8 +345,8 @@ class Farmer(LoopModel):
     correct_phone_date = models.DateField(default=None, auto_now=False, null=True)
     registration_sms = models.BooleanField(default=False)
     registration_sms_id = models.CharField(max_length=15, null=True, blank=True)
-    qr_code = models.IntegerField(default=None,null=True,blank=True)
-    referred_by = models.IntegerField(default=None,null=True,blank=True)
+    qr_code = models.CharField(max_length=30,default=None,null=True,blank=True)
+    referred_by = models.CharField(max_length=13,default=None,null=True,blank=True)
     verified = models.BooleanField(default=False)
     referral_free_transport = models.BooleanField(default=False)
 
@@ -529,7 +530,7 @@ class DayTransportation(LoopModel):
         self.transportation_vehicle.vehicle.vehicle_name, self.transportation_vehicle.vehicle_number)
 
     def __mandi__(self):
-        return "%s" % (self.mandi.mandi_name)
+        return "%s" % (self.mandi.mandi_name_en)
 
     def __transporter_phone__(self):
         return "%s" % (self.validate_phone_number(self.transportation_vehicle.transporter.block.district.state,
@@ -611,7 +612,7 @@ class GaddidarCommission(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (
-            self.gaddidar.gaddidar_name, self.mandi.mandi_name)
+            self.gaddidar.gaddidar_name_en, self.mandi.mandi_name_en)
 
     class Meta:
         unique_together = ("start_date", "gaddidar", "mandi")
@@ -637,7 +638,7 @@ class GaddidarShareOutliers(LoopModel):
             self.gaddidar.gaddidar_name_en, self.mandi.mandi_name_en)
 
     def __aggregator__(self):
-        return "%s" % (self.aggregator.name)
+        return "%s" % (self.aggregator.name_en)
 
     class Meta:
         unique_together = ("date", "gaddidar", "aggregator", "mandi")
@@ -670,7 +671,7 @@ class AggregatorIncentive(LoopModel):
         unique_together = ("start_date", "aggregator", "model_type", "incentive_model")
 
     def __unicode__(self):
-        return "%s" % (self.aggregator.name)
+        return "%s" % (self.aggregator.name_en)
 
     def __incentive_model__(self):
         return "%s" % (self.incentive_model.description)
@@ -685,10 +686,10 @@ class AggregatorShareOutliers(LoopModel):
     # loop_user = models.ForeignKey(LoopUser,null=True,related_name="loopuser")
 
     def __mandi__(self):
-        return "%s" % (self.mandi.mandi_name)
+        return "%s" % (self.mandi.mandi_name_en)
 
     def __aggregator__(self):
-        return "%s" % (self.aggregator.name)
+        return "%s" % (self.aggregator.name_en)
 
     class Meta:
         unique_together = ("date", "aggregator", "mandi")
@@ -841,21 +842,45 @@ class RegistrationSms(LoopModel):
     sms_status = models.IntegerField(choices=SMS_STATUS,default=None,blank=True,null=True)
     state = models.IntegerField(default=0,blank=True,null=True)
     text_local_id = models.CharField(max_length=20,blank=True,null=True)
+    msg_type = models.IntegerField(choices=MSG_TYPE,default=0)
+
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.farmer, self.state)
 
 class FarmerQRScan(LoopModel):
-    timestamp = models.DateTimeField(blank=True,null=True)
-    qr_code = models.IntegerField(default=None)
+    timestamp = models.CharField(max_length=20,blank=True,null=True)
+    qr_code = models.CharField(max_length=30, default=None)
     action = models.IntegerField(choices=QR_ACTIONS,default=0)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.qr_code, self.action)
+
+    def __timestamp__(self):
+        return "%s" % (str(datetime.datetime.fromtimestamp(float(self.timestamp)/1000)))
 
 class FarmerTransportCode(LoopModel):
     code = models.IntegerField(blank=True,null=True)
     phone = models.CharField(max_length=13,blank=True,null=True)
     dateUsed = models.DateField(blank=True,null=True)
-    qr_code = models.IntegerField(blank=True,null=True)
+    qr_code = models.CharField(max_length=30,blank=True,null=True)
     sms_status = models.IntegerField(choices=SMS_STATUS,default=0,blank=True,null=True)
     state = models.IntegerField(default=0,blank=True,null=True)
     text_local_id = models.CharField(max_length=20,blank=True,null=True)
+    msg_type = models.IntegerField(choices=MSG_TYPE,default=2)
 
+    def __unicode__(self):
+        return "%s (%s)" % (self.code, self.phone)
 
+class Referral(LoopModel):
+    id = models.AutoField(primary_key=True)
+    referred_farmer = models.CharField(max_length=13,blank=True,null=True)
+    referred_by = models.CharField(max_length=13,blank=True,null=True)
+    used = models.BooleanField(default=False)
+
+class QrMapping(LoopModel):
+    id = models.AutoField(primary_key=True)
+    url = models.CharField(max_length=40,blank=True,null=True)
+    code = models.CharField(max_length=10,blank=True,null=True)
 
 
