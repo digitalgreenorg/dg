@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 correct_queries_via_call_count, total_queries_count_content, total_queries_via_sms_content, 
                 total_queries_via_call_content, queries_per_person_content, top_users_content, matrix_date):
         from_email = EMAIL_HOST_USER
-        to_email = ['sujit@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
+        to_email = ['tech@digitalgreen.org']
         
         # to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
         #             'vinay@digitalgreen.org', 'ashok@digitalgreen.org','bipin@digitalgreen.org', 
@@ -144,8 +144,8 @@ class Command(BaseCommand):
         period_label = {'1': 'Daily', '7' : 'Weekly'}
         comparison_param_label = {'1': 'DoD', '7': 'WoW' }
 
-        # today_date = datetime.now().date()
-        today_date = datetime(2017, 11, 1).date()
+        today_date = datetime.now().date()
+        # today_date = datetime(2017, 11, 1).date()
         start_date = today_date-timedelta(days=date_range)
         prev_start_date = start_date - timedelta(days=date_range)
         
