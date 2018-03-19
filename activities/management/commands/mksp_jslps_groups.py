@@ -3,6 +3,7 @@ import unicodecsv as csv
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.conf import settings
 from geographies.models import *
 from people.models import *
 from programs.models import *
@@ -11,7 +12,9 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportGroupDataMKSP?pUsername=admin&pPassword=JSLPSSRI')
+
+		file_url = 'http://webservicesri.swalekha.in/Service.asmx/GetExportGroupDataMKSP'+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		url = urllib2.urlopen(file_url)
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/mksp_group.xml", 'w')
 		xml_file.write(contents)

@@ -299,7 +299,7 @@ class JSLPS_PersongroupAdmin(admin.ModelAdmin):
 
 class JSLPS_PersonAdmin(admin.ModelAdmin):
     list_display = ['id', 'person_code', 'person', '_group_code', 'user_created',
-                    'time_created', 'activity', '_person']
+                    'time_created', 'activity', '_person', '_block_name']
     search_fields = ['id', 'person_code', 'person__id', 'group__group_code']
     list_filter = ['activity']
 
@@ -315,6 +315,11 @@ class JSLPS_PersonAdmin(admin.ModelAdmin):
             return  obj.group 
     _group_code.allow_tags = True
     _group_code.short_description = "PersonGroup-Code"
+
+    def _block_name(self, obj):
+        return obj.person.village.block.block_name
+    _block_name.allow_tags = True
+    _block_name.allow_description = "Block Name"
 
 
 class JSLPS_DistrictAdmin(admin.ModelAdmin):
