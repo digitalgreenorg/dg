@@ -21,7 +21,7 @@ from loop.helpline_view import write_log
 
 from loop_ivr.utils.marketinfo import raw_sql, get_query
 from loop_ivr.utils.config import *
-from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
+from loop_ivr.models import PriceInfoLog, PriceInfoIncoming, SmsStatus
 
 from loop_ivr.outliers.removal import remove_crop_outliers
 import logging
@@ -130,9 +130,10 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
             else:
                 price_info_incoming_obj.textlocal_sms_id += ',' + message_id
             price_info_incoming_obj.save()
-
-            sms_status_obj = SmsStatus(price_info_incoming_id=price_info_incoming_id.id, textlocal_sms_id=121, api_call_initiation_time=api_call_initiation_time)
+            print 'PIIOBJ saved!'
+            sms_status_obj = SmsStatus(price_info_incoming_id=price_info_incoming_obj, textlocal_sms_id=message_id, api_call_initiation_time=api_call_initiation_time)
             sms_status_obj.save()
+            print 'Hi saved!'
 
     elif response_text['status'] == 'failure':
         module = 'send_sms_using_textlocal'
