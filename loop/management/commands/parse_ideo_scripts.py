@@ -46,8 +46,8 @@ class Command(BaseCommand):
             #                    SET referred_by = %s
             #                    WHERE phone = %s'''
 
-            referral_query = '''INSERT INTO loop_referral (referred_by, referred_farmer, used)
-                                  VALUES (%s, %s, false)'''
+            referral_query = '''INSERT INTO loop_referral (referred_by, referred_farmer, used, time_created)
+                                  VALUES (%s, %s, false, now())'''
             # Operations to extract just the required columns,
             # i.e., phone numbers of farmers
             temp_data = [parsed_data[1], parsed_data[3]]
