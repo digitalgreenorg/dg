@@ -42,18 +42,20 @@ class Command(BaseCommand):
             print "Invalid file, please check header or number of columns"
         else:
             # Inserting data into the table
-            referral_query = '''UPDATE loop_farmer 
-                                SET referred_by = %s 
-                                WHERE phone = %s'''
+            #referral_query = '''UPDATE loop_farmer
+            #                    SET referred_by = %s
+            #                    WHERE phone = %s'''
 
+            referral_query = '''INSERT INTO loop_referral (referred_by, referred_farmer, used)
+                                  VALUES (%s, %s, false)'''
             # Operations to extract just the required columns,
             # i.e., phone numbers of farmers
-            temp_data = [parsed_data[:, 1], parsed_data[:, 3]]
+            temp_data = [parsed_data[1], parsed_data[3]]
             extracted_data = zip(*temp_data)
             self.run_query_multiple(referral_query, extracted_data)
 
     def parse_transport_sheet(self, filename):
-        referral_columns = [u'Farmer QR Code', u'Free Transport Code', u'Date Used']
+        referral_columns = [u'Phone Number', u'Free Transport Code', u'Date Used']
         columns, parsed_data = self.parse_data(filename)
 
         if columns is None:
@@ -63,35 +65,28 @@ class Command(BaseCommand):
             print "Invalid file, please check header or number of columns"
         else:
             #old_codes, new_codes = self.check_transport_codes(parsed_data[:, 1], parsed_data[:, 0])
-            transport_query_insert = '''INSERT INTO loop_farmertransportcode (dateUsed, code, qr_code)
+            transport_query_insert = '''INSERT INTO loop_farmertransportcode (dateUsed, code, phone)
                                   VALUES (%s, %s, %s)'''
 
             # Inserting data into the table
             transport_query_update ='''UPDATE loop_farmertransportcode
                                 SET dateUsed=%s
-                                WHERE code=%s AND qr_code=%s'''
+                                WHERE code=%s AND phone=%s'''
 
             # Operations to extract just the required columns,
             # i.e., phone numbers of farmers
-            # temp_data = [parsed_data[:, 0], new_codes, map(str, parsed_data[:, 2])]
-            # extracted_data = zip(*temp_data)
-            # self.run_query_multiple(transport_query_insert, extracted_data)
-
-            temp_data = [map(str, parsed_data[:, 2]), parsed_data[:, 1], parsed_data[:, 0]]
+            temp_data = [map(str, parsed_data[2]), parsed_data[1], parsed_data[0]]
             extracted_data = zip(*temp_data)
-            print 'data1', extracted_data
             rows_affected_list = self.run_query_multiple(transport_query_update, extracted_data)
             extracted_data2 = []
             for i, rows_affected in enumerate(rows_affected_list):
                 if rows_affected == 0:
                     extracted_data2.append(extracted_data[i])
-            print 'data2 ', extracted_data2
             self.run_query_multiple(transport_query_insert, extracted_data2)
 
     def parse_data(self, filename):
         ext_allwd = ['.xlsx', '.xls']
         file_ext = os.path.splitext(filename)[-1]
-        data = []
         if file_ext in ext_allwd or file_ext != '.csv':
             try:
                 # Parsing data into list to be inserted
@@ -110,8 +105,14 @@ class Command(BaseCommand):
 
     def parse_excel(self, filename):
         xl = pd.ExcelFile(filename)
-        df = xl.parse(0)
-        return df.columns, df.values
+        data = []
+        columns = []
+        for sheet in xl.sheet_names:
+            df = xl.parse(sheet)
+            df = df.dropna(thresh=2)
+            data.extend(df.values.tolist())
+            columns = df.columns
+        return columns, zip(*data)
 
     def parse_csv(self, filename):
         df = pd.read_csv(filename)
@@ -122,16 +123,6 @@ class Command(BaseCommand):
         codes = sample(range(10010, 20010), 2000)
         transport_code_query = '''INSERT INTO loop_farmertransportcode (code) VALUES (%s)'''
         self.run_query_multiple(transport_code_query, codes)
-
-    def check_transport_codes(self, codes, qr_codes):
-        format_strings = ','.join(['%s'] * len(codes))
-        code_query = 'SELECT code, qr_code FROM loop_farmertransportcode WHERE code IN (%s)' % format_strings
-        result = self.run_query_output(code_query, tuple(codes)).values
-        temp_codes = zip(*[codes, qr_codes])
-        result_codes = zip(*[result[:, 0], result[: 1]])
-        correct_codes = list(set(temp_codes) & set(result_codes))
-        wrong_codes = list(set(temp_codes) ^ set(result_codes))
-        return correct_codes, list(set(result[:, 0]) ^ set(codes))
 
     def init_cursor(self):
         self.mysql_cn = MySQLdb.connect(host=dg.settings.DATABASES['default']['HOST'],
