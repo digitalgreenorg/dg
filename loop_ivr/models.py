@@ -76,7 +76,7 @@ class SubscriptionLog(LoopModel):
 
 class SmsStatus(LoopModel):
     id = models.AutoField(primary_key=True)
-    price_info_incoming_id = models.ForeignKey(PriceInfoIncoming)
+    price_info_incoming = models.ForeignKey(PriceInfoIncoming)
     textlocal_sms_id = models.CharField(max_length=150, null=True, blank=True)
     status = models.CharField(max_length=150, null=True, blank=True)
     delivery_time = models.DateTimeField(null=True, blank=True)

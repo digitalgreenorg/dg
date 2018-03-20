@@ -125,15 +125,8 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
     if response_text['status'] == 'success':
         message_id = ','.join([str(message["id"]) for message in response_text['messages']])
         if price_info_incoming_obj != None:
-            if price_info_incoming_obj.textlocal_sms_id == None:
-                price_info_incoming_obj.textlocal_sms_id = message_id
-            else:
-                price_info_incoming_obj.textlocal_sms_id += ',' + message_id
-            price_info_incoming_obj.save()
-            print 'PIIOBJ saved!'
             sms_status_obj = SmsStatus(price_info_incoming_id=price_info_incoming_obj, textlocal_sms_id=message_id, api_call_initiation_time=api_call_initiation_time)
             sms_status_obj.save()
-            print 'Hi saved!'
 
     elif response_text['status'] == 'failure':
         module = 'send_sms_using_textlocal'
