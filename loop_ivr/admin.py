@@ -26,7 +26,8 @@ class SubscriptionAdmin(admin.ModelAdmin):
 
 class SubscriptionLogAdmin(admin.ModelAdmin):
 	list_display = ('id', 'subscription', 'date', 'sms_id', 'status')
-
+class SmsStatus(admin.ModelAdmin):
+    list_display = ('id', 'price_info_incoming_id', 'textlocal_sms_id', 'status', 'delivery_time', 'api_call_initiation_time')
 loop_ivr_admin = LoopIVRAdmin(name='loop_ivr_admin')
 
 loop_ivr_admin.index_template = 'social_website/index.html'

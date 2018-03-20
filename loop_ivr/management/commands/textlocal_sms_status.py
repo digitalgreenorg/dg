@@ -1,5 +1,5 @@
 import urllib
-from loop_ivr.models import PriceInfoIncoming
+from loop_ivr.models import SmsStatus
 from datetime import datetime, timedelta
 from dg.settings import TEXTLOCAL_API_KEY 
 from django.core.management.base import BaseCommand
@@ -18,6 +18,7 @@ class Command(BaseCommand):
         today = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
 
         sms_status_obj = SmsStatus.objects.filter(api_call_initiation_time=today)
+        print len(sms_status_obj)
         for smsobj in sms_status_obj:
             resp, code = self.get_textlocal_sms_status(TEXTLOCAL_API_KEY, smsobj['id'])
             smsobj = smsobj(status=resp['status'], delivery_time=resp['date'])
