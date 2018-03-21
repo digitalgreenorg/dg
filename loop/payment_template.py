@@ -5,16 +5,15 @@ import xlsxwriter
 from django.http import JsonResponse
 from io import BytesIO
 import re
-from reportlab.lib.units import mm
+
+from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
-from reportlab.lib.fonts import tt2ps
 from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-#from weasyprint import HTML
 
 from config import *
 from django.http import HttpResponse
@@ -270,33 +269,38 @@ class PdfPrint:
         self.output = output
         self.pageSize = A4
         self.width, self.height = self.pageSize
+        self.header = None
+        self.footer = None
 
-    def generate(self, data_dict, title):
+    def generate(self, data_dict, header, footer):
         try:
             doc = SimpleDocTemplate(self.output, rightMargin=72, leftMargin=72,
-                                    topMargin=30, bottomMargin=50, pageSize=self.pageSize)
+                                    topMargin=40, bottomMargin=50, pageSize=self.pageSize)
 
             # setting up styles
             styles = getSampleStyleSheet()
             cell_format = data_dict.get('cell_format')
 
-            arial_font = 'Arial'
+            unicode_font = 'UnicodeFont'
 
-            # Font for displaying unicode characters
-            pdfmetrics.registerFont(TTFont(arial_font, 'Arial Unicode.ttf'))
+            self.header = header
+            self.footer = footer
+
+            # Font for displaying unicode characters,
+            # currently this font contains glyphs for almost all indian languages
+            pdfmetrics.registerFont(TTFont(unicode_font, 'NotoSans-Regular-Indian.ttf'))
             styles.add(ParagraphStyle(
                 name="ParagraphTitle", fontSize=cell_format.get('font_size'), alignment=TA_JUSTIFY))
             styles.add(ParagraphStyle(
                 name="Justify", alignment=TA_JUSTIFY))
             styles.add(ParagraphStyle("Comment", fontSize=cell_format.get('font_size')))
-            styles.add(ParagraphStyle("TableHeader", fontSize=8, alignment=TA_CENTER, fontName=arial_font))
-            styles.add(ParagraphStyle("Text", fontSize=8, alignment=TA_CENTER, fontName=arial_font))
-            styles.add(ParagraphStyle("TextBold", fontName=arial_font, fontSize=8, alignment=TA_CENTER))
-            styles.add(ParagraphStyle("CommentSpace", fontSize=cell_format.get('font_size'), leftIndent=133))
+            styles.add(ParagraphStyle("TableHeader", fontSize=8, alignment=TA_CENTER, fontName=unicode_font))
+            styles.add(ParagraphStyle("Text", fontSize=8, alignment=TA_CENTER, fontName=unicode_font))
+            styles.add(ParagraphStyle("TextBold", fontName=unicode_font, fontSize=8, alignment=TA_CENTER))
+            styles.add(ParagraphStyle("CommentSpace", fontSize=cell_format.get('font_size'), leftIndent=179))
 
             # A list of complete data which goes in the pdf.
             pdfdata = list()
-            pdfdata.append(Paragraph(title, styles['Title']))
             pdfdata.append(Spacer(1, 12))
 
             name_of_sheets = data_dict.get('name_of_sheets')
@@ -359,17 +363,31 @@ class PdfPrint:
                 if sheet_index == 0:
                     pdfdata.append(Paragraph("**Quantity is deducted for farmers having incorrect/unavailable mobile numbers.", styles['Comment']))
 
-                    pdfdata.append(Paragraph("##AP calculation formula (Bihar) &nbsp;= 0.2*Q ; Q<=2000", styles['Comment']))
+                    pdfdata.append(Spacer(1, 5))
+                    pdfdata.append(Paragraph("##AP calculation formula (Bihar) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.2*Q ; Q<=2000", styles['Comment']))
 
                     pdfdata.append(Paragraph("= 0.2*2000 + 0.1*(Q-2000) ; Q>2000							", styles['CommentSpace']))
-                    pdfdata.append(Paragraph("##AP calculation formula (Maharashtra)		 = 0.25*Q							", styles['Comment']))
-                    pdfdata.append(Paragraph("##AP calculation formula (Bangladesh)		     = 0.5*Q							", styles['Comment']))
+                    pdfdata.append(Paragraph("##AP calculation formula (Maharashtra) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.25*Q							", styles['Comment']))
+                    pdfdata.append(Paragraph("##AP calculation formula (Bangladesh) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.5*Q							", styles['Comment']))
 
                 pdfdata.append(PageBreak())
 
-            doc.build(pdfdata)
+            doc.multiBuild(pdfdata, onFirstPage=self.onMyPages, onLaterPages=self.onMyPages)
             pdf = self.output.getvalue()
             self.output.close()
             return pdf
         except Exception as e:
             print e
+
+    def onMyPages(self, canvas, doc):
+        canvas.saveState()
+        canvas.setFont('Times-Roman', 12)
+        if self.header is not None:
+            # draw header
+            canvas.drawCentredString(self.width/2.0, self.height-30, self.header)
+
+        if self.footer is not None:
+            # draw footer
+            canvas.drawCentredString(self.width/2.0, 30, self.footer)
+        canvas.restoreState()
+

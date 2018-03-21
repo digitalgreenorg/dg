@@ -499,7 +499,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8.5,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -559,7 +559,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8,
+          'column_width': 9,
           'formula': null,
           'label': 'Farmer Comment',
           'total': false
@@ -1124,7 +1124,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8.5,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -1178,7 +1178,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8,
+          'column_width': 9,
           'formula': null,
           'label': 'Farmer Comment',
           'total': false
@@ -1755,7 +1755,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8.5,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -1815,7 +1815,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8,
+          'column_width': 9,
           'formula': null,
           'label': 'Farmer Comment',
           'total': false
@@ -2392,7 +2392,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8.5,
+          'column_width': 8.7,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -2410,7 +2410,7 @@ var models = [
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 7.9,
           'formula': null,
           'label': 'Aggregator Payment [AP] (in ৳)##',
           'total': true
@@ -2434,7 +2434,7 @@ var models = [
           'total': true
         },
         {
-          'column_width': 7.5,
+          'column_width': 7.4,
           'formula': null,
           'label': 'Commission Agent Contribution [CAC] (in ৳)',
           'total': true

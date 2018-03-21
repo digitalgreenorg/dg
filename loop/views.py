@@ -186,7 +186,7 @@ def download_pdf(request):
         filename = "pdf_trial"
         response['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(filename)
         report = PdfPrint(pdf_output)
-        pdf = report.generate(formatted_post_data, "Loop data")
+        pdf = report.generate(formatted_post_data, formatted_post_data.get('sheet_header'), formatted_post_data.get('sheet_footer'))
         response.write(pdf)
         return response
 
