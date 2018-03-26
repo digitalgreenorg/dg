@@ -222,3 +222,43 @@ def update_referrals():
 			reg_sms.save()
 
 
+
+
+
+
+@csrf_exempt
+def registration_ivr_response(request):
+	import pdb;pdb.set_trace()
+	if request.method == 'POST':
+		msg_id = str(request.POST.get('msgId'))
+        farmer_number = str(request.POST.get('sender'))
+        farmer_number = re.sub('^91', '', farmer_number)
+        to_number = str(request.POST.get('inNumber'))
+
+        try:
+            query_code = str(request.POST.get('content')).replace(" ", "")
+        except Exception as e:
+            query_code = ''
+        #import pdb;pdb.set_trace()
+        farmer = Farmer.objects.filter(phone=farmer_number)
+        if farmer.count()>0:
+			if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified and RegistrationSms.objects.filter(farmer=farmer[0],msg_type=0).count()>0:
+				if query_code=='1':
+					code = random_with_N_digits(5)
+					reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
+					reg_sms.save()
+					response = send_first_transportation_code(farmer[0],code,query_code,farmer_number)
+					farmer.update(referral_free_transport_count=farmer[0].referral_free_transport_count+1)
+					status_code = 0
+					if response['status'] == "success":
+						status_code = 1
+						sms_id = response['messages'][0]['id']
+						reg_sms.state = SMS_STATE['F'][0]
+						farmer.update(verified=True)
+					reg_sms.text_local_id = sms_id
+					reg_sms.sms_status = status_code
+					reg_sms.save()
+				else:
+					response = send_first_transportation_code(farmer[0],1,query_code,farmer_number)
+        	
+	return HttpResponse("0")

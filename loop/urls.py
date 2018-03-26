@@ -113,6 +113,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(loop_admin.urls)),
     url(r'^reg_response/',sms_response_from_txtlcl),
     url(r'^reg_auth_response/',registration_auth_response),
-    url(r'^reg_code_response/',sms_reg_response_from_txtlcl)
-
+    url(r'^reg_code_response/',sms_reg_response_from_txtlcl),
+    url(r'^reg_ivr_response/',registration_ivr_response)
     )
