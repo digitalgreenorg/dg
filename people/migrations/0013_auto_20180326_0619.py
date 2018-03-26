@@ -8,9 +8,9 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('geographies', '0005_auto_20180305_0830'),
+        ('geographies', '0006_auto_20180326_0619'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('people', '0011_jslps_person_group'),
+        ('people', '0012_auto_20180219_0856'),
     ]
 
     operations = [

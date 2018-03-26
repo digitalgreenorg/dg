@@ -9,9 +9,9 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('videos', '0017_apcrop_appractice_apvideo'),
-        ('people', '0012_auto_20180305_0830'),
-        ('activities', '0015_auto_20171220_0631'),
+        ('videos', '0018_apcrop_appractice_apvideo'),
+        ('people', '0013_auto_20180326_0619'),
+        ('activities', '0016_auto_20180202_1012'),
     ]
 
     operations = [

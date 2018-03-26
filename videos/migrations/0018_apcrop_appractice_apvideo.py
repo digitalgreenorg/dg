@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('videos', '0016_jslps_video_title'),
+        ('videos', '0017_auto_20180202_1012'),
     ]
 
     operations = [
