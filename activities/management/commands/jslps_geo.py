@@ -2,6 +2,7 @@ import urllib2
 import unicodecsv as csv
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.conf import settings
 from geographies.models import *
 import xml.etree.ElementTree as ET
 import jslps_data_integration as jslps
@@ -10,7 +11,8 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):	
 
 		#GEOGRAPHIES ADD
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		file_url = 'http://webservicesri.swalekha.in/Service.asmx/GetExportMasterData'+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		url = urllib2.urlopen(file_url)
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/geo.xml", 'w')
 		xml_file.write(contents)

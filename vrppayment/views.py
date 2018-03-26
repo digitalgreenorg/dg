@@ -2,6 +2,8 @@ __author__ = 'HP'
 import json, datetime
 
 from django.http import HttpResponse
+from django.views import generic
+from people.models import Animator, Person, AnimatorAssignedVillage
 
 from activities.models import PersonAdoptPractice, Screening, VRPpayment
 from coco.models import CocoUser
@@ -11,28 +13,25 @@ from geographies.models import District, Block
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-def home(request):
-    partner = Partner.objects.order_by('partner_name').values('partner_name', 'id')
-    context= {
-              'header': {
-                         'jsController':'VrpPayment',
-                         },
-              'partner': partner,
-              }
-    return render_to_response('vrppayment.html' , context, context_instance = RequestContext(request))
+class vrppayment(generic.ListView):
+    template_name = 'vrppayment/vrppayment.html'
+    context_object_name = 'vrppayment'
+    queryset = Animator.objects.filter(role=0)
 
+def partnersetter(request):
+    partners = Partner.objects.values('partner_name', 'id').order_by('partner_name')
+    return HttpResponse(json.dumps(list(partners)), content_type="application/json")
 
 def districtsetter(request):
     selectedpartner = request.GET.get('partner', None)
-    districts = District.objects.select_related().filter(block__village__person__partner_id=selectedpartner).values('district_name', 'id').distinct()
-    resp = json.dumps({"district": list(districts)})
-    return HttpResponse(resp)
+    districts = Person.objects.select_related().filter(partner_id=selectedpartner).values(
+        'village__block__district__district_name', 'village__block__district__id').distinct()
+    return HttpResponse(json.dumps(list(districts)), content_type="application/json")
 
 def blocksetter(request):
     selecteddistrict = request.GET.get('district', None)
-    blocks = Block.objects.filter(district_id=selecteddistrict).values('block_name', 'id')
-    resp = json.dumps({"block":list(blocks)})
-    return HttpResponse(resp)
+    blocks = Block.objects.filter(district__id=selecteddistrict).values('block_name', 'id')
+    return HttpResponse(json.dumps(list(blocks)), content_type="application/json")
 
 def make_vrp_detail_list(custom_object, list_of_vrps):
     animators_disseminations_payments = []
@@ -54,7 +53,6 @@ def make_vrp_detail_list(custom_object, list_of_vrps):
         each_vrp_dict['village'] = village_work_list
         animators_disseminations_payments.append(each_vrp_dict)
     return animators_disseminations_payments
-
 
 def make_dissemination_list(custom_object, vrp_id):
     disseminations = custom_object.each_vrp_diss_list(vrp_id)
@@ -83,7 +81,6 @@ def make_dissemination_list(custom_object, vrp_id):
         dissemination_details.append(each_diss_det_dict)
     return dissemination_details
 
-
 def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_attending_count):
     
     #dissemination_video_shown_id = custom_object.get_video_shown_list(diss_id)
@@ -108,15 +105,17 @@ def make_videos_shown_list(custom_object, dissemination, ppl_attending, ppl_atte
         each_diss_vid_arr_detail.append(each_video_adopt_dict)
     return each_diss_vid_arr_detail
 
-
 def makereport(request):
     per_dissemination_rate = 28                     # Amount to be given to VRP for one successful dissemination
     per_adoption_rate = 12                          # Amount to be given to VRP for one successful adoption
-    start_date = request.GET.get('startperiod', None)
-    end_date = request.GET.get('endperiod', None)
-    selectedpartner = request.GET.get('partner', None)
-    selectedblock = request.GET.get('block', None)
-    custom_object = VRPpayment(selectedpartner, selectedblock, start_date, end_date)
+    start_date = request.GET.get('start_date', None)
+    end_date = request.GET.get('end_date', None)
+    selectedpartner = request.GET.get('partner_name', None)
+    selectedblock = request.GET.get('block_name', None)
+    partner_id = get_partner_id(selectedpartner)
+    block_id = get_block_id(selectedblock)
+
+    custom_object = VRPpayment(partner_id, block_id, start_date, end_date)
     list_of_vrps = custom_object.get_req_id_vrp()
     complete_data = make_vrp_detail_list(custom_object, list_of_vrps)
     output_array = []
@@ -133,13 +132,21 @@ def makereport(request):
                     adoption_count = adoption_count + 1
         final_amount = diss_count * per_dissemination_rate + adoption_count * per_adoption_rate
         screening_amount = diss_count*per_dissemination_rate
-        adoption_amount  = adoption_count*per_adoption_rate
+        adoption_amount = adoption_count*per_adoption_rate
         temp_arr = [i, each_vrp['name'], each_vrp['village'],len(each_vrp['dissem_detail']), diss_count, screening_amount, adoption_count, adoption_amount, final_amount]
         output_array.append(temp_arr)
     if not output_array:
         report_data = [[0,'NaN', 'No Data Available', '', '','','', '', '']]
-        resp = json.dumps({"vrppayment":report_data})
+        resp = json.dumps({"output":report_data})
     else:
         report_data = output_array
-        resp = json.dumps({"vrppayment":report_data})
-    return HttpResponse(resp)
+        resp = json.dumps({"output":report_data})
+    return HttpResponse(resp, content_type="application/json")
+
+def get_block_id(block):
+    b_id = Block.objects.filter(block_name=block).values('id')
+    return b_id[0]['id']
+
+def get_partner_id(partner):
+    p_id = Partner.objects.filter(partner_name=partner).values('id')
+    return p_id[0]['id']

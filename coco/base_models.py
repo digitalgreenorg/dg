@@ -11,6 +11,7 @@ ACTIVITY_CHOICES = (
     ('MKSP', 'MKSP'),
     ('LIVELIHOOD', 'LIVELIHOOD'),
     ('GOTARY', 'GOTARY'),
+    ('HNN', 'HNN'),
 )
 
 DAY_CHOICES = (
