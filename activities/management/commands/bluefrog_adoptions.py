@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 #django imports
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.conf import settings
 #app imports
 from geographies.models import *
 from videos.models import *
@@ -39,10 +40,11 @@ class Command(BaseCommand):
 			member_name = data_iterable.get('Person Name')
 			video_id = data_iterable.get('Video ID')
 			village_code = data_iterable.get('Village ID')
-			animator_code = data_iterable.get("Animator ID")
+			animator_code = data_iterable.get("Animator/CRPCA  ID")
 			date_of_adoption = data_iterable.get('Date of Adoption')
 			adoption_type = data_iterable.get('Type of Adoption')
 			ap_adopt_practice = data_iterable.get('Adoption')
+
 
 			try:
 				ap_adopt_practice_obj = APPractice.objects.get(pest_name=ap_adopt_practice)
