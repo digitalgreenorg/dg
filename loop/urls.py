@@ -17,7 +17,7 @@ from loop.utils.send_log.send_sms import send_sms, sms_receipt_from_txtlcl, depr
 from loop.utils.send_log.loop_admin_log import send_updated_admin_log
 from loop.utils.send_log.send_extra_data import sendData
 
-from loop.utils.send_log.registration import sms_response_from_txtlcl,registration_auth_response,sms_reg_response_from_txtlcl
+from loop.utils.send_log.registration import sms_response_from_txtlcl,registration_auth_response,sms_reg_response_from_txtlcl,registration_ivr_response
 from loop.admin import loop_admin
 
 api1 = Api(api_name = "v1")
