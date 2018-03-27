@@ -1,7 +1,7 @@
 
 from dg.settings import TEXTLOCAL_API_KEY
 from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode,Referral
-from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER,REG_CODE_RESPONSE_URL
+from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER,REG_CODE_RESPONSE_URL,IVR_RECEIPT_URL
 from loop.config import registration_sms,first_transaction_sms,referral_transport_sms,already_exist_sms
 import requests
 from django.views.decorators.csrf import csrf_exempt
@@ -268,42 +268,44 @@ def registration_ivr_response(request):
 
 
 
+@csrf_exempt
+def ivr_response(request):
+	if request.method == 'POST':
+		response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
+		call_detail = response_tree.findall('Call')[0]
+		call_id = str(call_detail.find('Sid').text)
+		log_obj = RegistrationSms.objects.filter(text_local_id=call_id)
+		log_obj.update(call_state=str(call_detail.find('Status').text))
+
+
+
 
 #def initiate_ivr_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
-@csrf_exempt
+
 def initiate_ivr_call(farmer):
 
 	app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
 	app_id = 165528 # MARKET_INFO_APP
 	app_url = APP_URL%(app_id,)
 	dg_number='09243422233'
-	phone_number = '08115479516'
-	call_response_url = REG_RECEIPT_URL #MARKET_INFO_CALL_RESPONSE_URL
-	
-	# reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=0)
-	# reg_sms.save()
-	# msg_type=0
-
-
-
-
-
+	phone_number = '0'+str(farmer.phone)
+	call_response_url = IVR_RECEIPT_URL #MARKET_INFO_CALL_RESPONSE_URL
+	reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=0)
+	reg_sms.save()
+	msg_type=0
 	parameters = {'From':phone_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
 	# parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url}
 	response = requests.post(app_request_url,data=parameters)
-	import pdb; pdb.set_trace()
-	# #response = send_sms_using_textlocal(farmer.phone,reg_sms.id,msg_type)
-	# status_code = 0
-	# if response.status_code == 200:
-	# 	status_code = 1
-	# 	response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
-	# 	call_detail = response_tree.findall('Call')[0]
-	# 	sms_id = str(call_detail.find('Sid').text)
-	# 	#sms_id = response['messages'][0]['id']
-	# reg_sms.state = SMS_STATE['F'][0]
-	# reg_sms.text_local_id = sms_id
-	# reg_sms.sms_status = status_code
-	# reg_sms.save()
+	if response.status_code == 200:
+		status_code = 1
+		response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
+		call_detail = response_tree.findall('Call')[0]
+		call_id = str(call_detail.find('Sid').text)
+		#sms_id = response['messages'][0]['id']
+	reg_sms.state = SMS_STATE['F'][0]
+	reg_sms.text_local_id = call_id
+	reg_sms.sms_status = status_code
+	reg_sms.save()
 
 
     # module = 'make_market_info_call'

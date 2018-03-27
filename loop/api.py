@@ -19,6 +19,7 @@ from django.contrib.auth.models import User
 from models import *
 
 from loop.utils.send_log.registration import send_reg_sms as txtlcl
+from loop.utils.send_log.registration import initiate_ivr_call
 import datetime
 import time
 
@@ -369,7 +370,7 @@ class FarmerResource(BaseResource):
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
             
             if bundle.obj.user_created_id in AGGREGATORS_IDEO:
-                txtlcl(bundle.obj)
+                initiate_ivr_call(bundle.obj)
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle

@@ -841,8 +841,9 @@ class RegistrationSms(LoopModel):
     farmer = models.ForeignKey(Farmer)
     sms_status = models.IntegerField(choices=SMS_STATUS,default=None,blank=True,null=True)
     state = models.IntegerField(default=0,blank=True,null=True)
-    text_local_id = models.CharField(max_length=20,blank=True,null=True)
+    text_local_id = models.CharField(max_length=50,blank=True,null=True)
     msg_type = models.IntegerField(choices=MSG_TYPE,default=0)
+    call_state = models.CharField(max_length=25,blank=True,null=True)
 
 
     def __unicode__(self):

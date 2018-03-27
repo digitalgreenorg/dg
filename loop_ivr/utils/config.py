@@ -49,7 +49,7 @@ PATTERN_REGEX = r'^([1-9]([0-9]*)[*, **]*)*$|^([0][*]{2}([1-9][*]?)+)$|^([1-9][0
 CONTAINS_ZERO = r'^[0]$'
 
 
-
+IVR_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/ivr_response/')
 REG_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_response/')
 AGGREGATORS_IDEO = [3775L,5049L,5050L,4630L,4790L]
 REG_AUTH_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_auth_response/')
