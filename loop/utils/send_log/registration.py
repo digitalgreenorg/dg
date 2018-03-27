@@ -243,6 +243,7 @@ def registration_ivr_response(request):
 
         try:
             query_code = str(request.GET['digits'])
+            query_code = re.sub('"','',query_code)
         except Exception as e:
             query_code = ''
         #import pdb;pdb.set_trace()
