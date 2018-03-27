@@ -299,6 +299,7 @@ def initiate_ivr_call(farmer):
 	parameters = {'From':phone_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
 	# parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url}
 	call_id=0
+	status_code = 0
 	response = requests.post(app_request_url,data=parameters)
 	if response.status_code == 200:
 		status_code = 1
