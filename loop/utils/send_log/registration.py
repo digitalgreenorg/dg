@@ -232,14 +232,17 @@ def update_referrals():
 @csrf_exempt
 def registration_ivr_response(request):
 	import pdb;pdb.set_trace()
-	if request.method == 'POST':
-		msg_id = str(request.POST.get('msgId'))
-        farmer_number = str(request.POST.get('sender'))
-        farmer_number = re.sub('^91', '', farmer_number)
-        to_number = str(request.POST.get('inNumber'))
+	if request.method == 'GET':
+		call_id = str(request.GET['CallSid'])
+		farmer_number = str(request.GET['From'])
+		farmer_number = re.sub('^0', '', farmer_number)
+		# msg_id = str(request.POST.get('msgId'))
+		# farmer_number = str(request.POST.get('sender'))
+		# farmer_number = re.sub('^91', '', farmer_number)
+		# to_number = str(request.POST.get('inNumber'))
 
         try:
-            query_code = str(request.POST.get('content')).replace(" ", "")
+            query_code = str(request.GET['digits'])
         except Exception as e:
             query_code = ''
         #import pdb;pdb.set_trace()
