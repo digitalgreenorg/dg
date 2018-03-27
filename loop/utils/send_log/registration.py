@@ -11,6 +11,9 @@ import json
 from random import randint
 import re
 import datetime
+import xml.etree.ElementTree as xml_parse
+from dg.settings import EXOTEL_ID, EXOTEL_TOKEN, DATABASES, TEXTLOCAL_API_KEY
+from loop.utils.ivr_helpline.helpline_data import CALL_REQUEST_URL, APP_REQUEST_URL, APP_URL
 
 from django.db.models import Min
 
@@ -262,3 +265,63 @@ def registration_ivr_response(request):
 					response = send_first_transportation_code(farmer[0],1,query_code,farmer_number)
         	
 	return HttpResponse("0")
+
+
+
+
+#def initiate_ivr_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
+@csrf_exempt
+def initiate_ivr_call(farmer):
+
+	app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
+	app_id = 165528 # MARKET_INFO_APP
+	app_url = APP_URL%(app_id,)
+	dg_number='09243422233'
+	phone_number = '08115479516'
+	call_response_url = REG_RECEIPT_URL #MARKET_INFO_CALL_RESPONSE_URL
+	
+	# reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=0)
+	# reg_sms.save()
+	# msg_type=0
+
+
+
+
+
+	parameters = {'From':phone_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
+	# parameters = {'From':caller_number,'CallerId':dg_number,'CallType':'trans','Url':app_url}
+	response = requests.post(app_request_url,data=parameters)
+	import pdb; pdb.set_trace()
+	# #response = send_sms_using_textlocal(farmer.phone,reg_sms.id,msg_type)
+	# status_code = 0
+	# if response.status_code == 200:
+	# 	status_code = 1
+	# 	response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
+	# 	call_detail = response_tree.findall('Call')[0]
+	# 	sms_id = str(call_detail.find('Sid').text)
+	# 	#sms_id = response['messages'][0]['id']
+	# reg_sms.state = SMS_STATE['F'][0]
+	# reg_sms.text_local_id = sms_id
+	# reg_sms.sms_status = status_code
+	# reg_sms.save()
+
+
+    # module = 'make_market_info_call'
+    # if response.status_code == 200:
+        
+    #     #outgoing_call_time = str(call_detail.find('StartTime').text)
+    #     #price_info_incoming_obj = PriceInfoIncoming(call_id=outgoing_call_id, from_number=caller_number,
+    #                                 to_number=dg_number, incoming_time=outgoing_call_time, call_source=call_source)
+    # else:
+    #     # Enter in Log
+    #     price_info_incoming_obj = PriceInfoIncoming(call_id=incoming_call_id, from_number=caller_number,
+    #                                     to_number=dg_number, incoming_time=incoming_time, info_status=0, call_source=call_source)
+    #     log = 'Status Code: %s (Parameters: %s)'%(str(response.status_code),parameters)
+    #     write_log(LOG_FILE,module,log)
+    #     if response.status_code == 403:
+    #         send_info_using_textlocal(caller_number, DND_MESSAGE, price_info_incoming_obj)
+    # try:
+    #     price_info_incoming_obj.save()
+    # except Exception as e:
+    #     # Save Errors in Logs
+    #     write_log(LOG_FILE,module,str(e))
