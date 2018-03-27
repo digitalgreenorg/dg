@@ -231,7 +231,7 @@ def update_referrals():
 
 @csrf_exempt
 def registration_ivr_response(request):
-	import pdb;pdb.set_trace()
+	#import pdb;pdb.set_trace()
 	if request.method == 'GET':
 		call_id = str(request.GET['CallSid'])
 		farmer_number = str(request.GET['From'])
@@ -249,7 +249,7 @@ def registration_ivr_response(request):
         farmer = Farmer.objects.filter(phone=farmer_number)
         if farmer.count()>0:
 			if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified and RegistrationSms.objects.filter(farmer=farmer[0],msg_type=0).count()>0:
-				if query_code=='1':
+				if query_code=="1":
 					code = random_with_N_digits(5)
 					reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
 					reg_sms.save()
