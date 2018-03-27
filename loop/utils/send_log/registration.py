@@ -271,11 +271,9 @@ def registration_ivr_response(request):
 @csrf_exempt
 def ivr_response(request):
 	if request.method == 'POST':
-		response_tree = xml_parse.fromstring((response.text).encode('utf-8'))
-		call_detail = response_tree.findall('Call')[0]
-		call_id = str(call_detail.find('Sid').text)
+		call_id = request.POST.get('CallSid')
 		log_obj = RegistrationSms.objects.filter(text_local_id=call_id)
-		log_obj.update(call_state=str(call_detail.find('Status').text))
+		log_obj.update(call_state=str(request.POST.get('Status')))
 
 
 
