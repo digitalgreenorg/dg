@@ -21,7 +21,7 @@ from loop.helpline_view import write_log
 
 from loop_ivr.utils.marketinfo import raw_sql, get_query
 from loop_ivr.utils.config import *
-from loop_ivr.models import PriceInfoLog, PriceInfoIncoming, SmsStatus
+from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
 
 from loop_ivr.outliers.removal import remove_crop_outliers
 import logging
@@ -118,16 +118,16 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
     #                 'custom': recipient_custom_id}
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers':user_no,
                      'message': sms_body, 'unicode': 'true'}
-    api_call_initiation_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
-
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
     if response_text['status'] == 'success':
         message_id = ','.join([str(message["id"]) for message in response_text['messages']])
         if price_info_incoming_obj != None:
-            sms_status_obj = SmsStatus(price_info_incoming_id=price_info_incoming_obj, textlocal_sms_id=message_id, api_call_initiation_time=api_call_initiation_time)
-            sms_status_obj.save()
-
+            if price_info_incoming_obj.textlocal_sms_id == None:
+                price_info_incoming_obj.textlocal_sms_id = message_id
+            else:
+                price_info_incoming_obj.textlocal_sms_id += ',' + message_id
+            price_info_incoming_obj.save()
     elif response_text['status'] == 'failure':
         module = 'send_sms_using_textlocal'
         if price_info_incoming_obj != None:
@@ -135,7 +135,6 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
         else:
             log = "Status Code: %s (price_info_incoming_obj_id: %s)"%(response_text['status'], str(price_info_incoming_obj))
         write_log(LOG_FILE,module,log)
-
 
 def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
     # Replace ascii next line with textlocal next line identifier (i.e. %0A)
@@ -329,10 +328,3 @@ def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_c
     price_info_incoming_obj.save()
 
     send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
-
-# Get TextLocal Sms Status
-def get_textlocal_sms_status(apikey, messageID):
-        params = {'apikey': apikey, 'message_id': messageID}
-        f = urllib.urlopen('https://api.textlocal.in/status_message/?'
-            + urllib.urlencode(params))
-        return (f.read(), f.code)

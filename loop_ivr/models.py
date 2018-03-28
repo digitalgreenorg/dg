@@ -19,7 +19,7 @@ class PriceInfoIncoming(LoopModel):
     prev_info_status = models.IntegerField(choices=INFO_STATUS, default=4, db_index=True)
     prev_query_code = models.CharField(max_length=120, null=True, blank=True)
     price_result = models.TextField(null=True, blank=True)
-    # return_result_to_app = models.IntegerField(choices=RETURN_RESULT, default=1)
+    return_result_to_app = models.IntegerField(choices=RETURN_RESULT, default=1)
     call_source = models.IntegerField(choices=CALL_SOURCE, default=1)
     textlocal_sms_id = models.TextField(null=True, blank=True)  #Comma Seprated Multiple SMS id
     server_response_time = models.DateTimeField(verbose_name="Time at which server makes API call to textlocal", blank=True, null=True)
@@ -72,13 +72,3 @@ class SubscriptionLog(LoopModel):
 
     def __unicode__(self):
         return "%s (%s)" % (self.subscription, self.status)
-
-
-class SmsStatus(LoopModel):
-    id = models.AutoField(primary_key=True)
-    price_info_incoming = models.ForeignKey(PriceInfoIncoming)
-    textlocal_sms_id = models.CharField(max_length=150, null=True, blank=True)
-    status = models.CharField(max_length=150, null=True, blank=True)
-    delivery_time = models.DateTimeField(null=True, blank=True)
-    api_call_initiation_time = models.DateTimeField(null=True, blank=True)
-    
