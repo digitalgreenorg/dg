@@ -290,7 +290,7 @@ def initiate_ivr_call(farmer):
 	app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
 	app_id = 165528 # MARKET_INFO_APP
 	app_url = APP_URL%(app_id,)
-	dg_number='09243422233'
+	dg_number='01139589707'
 	phone_number = '0'+str(farmer.phone)
 	call_response_url = IVR_RECEIPT_URL #MARKET_INFO_CALL_RESPONSE_URL
 	reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=0)
