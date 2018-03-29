@@ -21,7 +21,7 @@ class Command(BaseCommand):
 		xml_file = open("ap/person.xml", 'w')
 		xml_file.write(req.content)
 		xml_file.close()
-		partner=Partner.objects.get(id=50)
+		partner=Partner.objects.get(id=72)
 		csv_file = open('ap/person_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('ap/person.xml')
@@ -57,7 +57,6 @@ class Command(BaseCommand):
 												 partner=partner,
 												 gender=gender,
 												 village=village.village,
-												 partner_id=72
 												 )
 				if age:
 					person.age = age
