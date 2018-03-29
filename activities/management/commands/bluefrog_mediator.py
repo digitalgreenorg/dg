@@ -63,7 +63,8 @@ class Command(BaseCommand):
 												   partner=partner,
 												   district=district.district,
 												   phone_no=mobile,
-												   user_created_id=user_obj.id)
+												   user_created_id=user_obj.id,
+												   partner_id=72)
 				ap.new_count += 1
 			except Exception as e:
 				animator = None

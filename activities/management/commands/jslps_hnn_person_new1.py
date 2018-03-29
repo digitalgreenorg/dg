@@ -74,7 +74,7 @@ class Command(BaseCommand):
 						jslps.duplicate_count += 1
 
 			if person != None:
-				jslps_person_list = JSLPS_Person.objects.filter(person_code=member_code)
+				jslps_person_list = JSLPS_Person.objects.filter(person_code=member_code, group=group)
 				if len(jslps_person_list) == 0:
 					if group is not None:
 						jslps_person, created = \
@@ -93,9 +93,10 @@ class Command(BaseCommand):
 															   activity="HNN",
 															   )
 				else:
-					jslps_person = jslps_person_list[0]
-					jslps_person.person = person
-					jslps_person.save()
+					pass
+					# jslps_person = jslps_person_list[0]
+					# jslps_person.person = person
+					# jslps_person.save()
 			else:
 				person_list = Person.objects.filter(person_name=member_name,
 													village=village.Village)

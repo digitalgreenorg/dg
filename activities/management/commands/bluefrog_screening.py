@@ -24,7 +24,7 @@ class Command(BaseCommand):
 		xml_file = open("ap/screening.xml", 'w')
 		xml_file.write(req.content)
 		xml_file.close()
-		partner=Partner.objects.get(id=50)
+		partner=Partner.objects.get(id=72)
 		csv_file = open('ap/screening.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('ap/screening.xml')

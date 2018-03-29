@@ -57,6 +57,7 @@ class Command(BaseCommand):
 												 partner=partner,
 												 gender=gender,
 												 village=village.village,
+												 partner_id=72
 												 )
 				if age:
 					person.age = age

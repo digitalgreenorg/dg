@@ -250,30 +250,6 @@ class JSLPS_Video(CocoModel):
         return self.vc
 
 
-# class BluefrogSubcategory(models.Model):
-#     crop_id = models.CharField(max_length=10, null=True)
-#     crop_name = models.CharField(max_length=255, null=True)
-#     crop_name_telgu = models.CharField(max_length=255, null=True)
-
-#     def __unicode__(self):
-#         return  """%s""" % self.crop_name
-
-
-# class BluefrogPractice(models.Model):
-#     practice_id = models.CharField(max_length=10, null=True)
-#     practice_method_name = models.CharField(max_length=255, null=True)
-#     practice_method_name_telgu = models.CharField(max_length=255, null=True)
-
-#     def __unicode__(self):
-#         return  """%s""" % self.practice_method_name
-
-# class DistrictScreening(models.Model):
-#     districtscreening_id = models.CharField(max_length=10, null=True)
-#     districtscreening_name = models.CharField(max_length=255, null=True)
-
-#     def __unicode__(self):
-#         return  """%s""" % self.districtscreening_name
-
 
 class APCrop(CocoModel):
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
