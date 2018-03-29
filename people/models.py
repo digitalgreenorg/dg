@@ -140,3 +140,36 @@ class JSLPS_Person(CocoModel):
         verbose_name_plural = "JSLPS Person"
 
 
+class AP_Animator(CocoModel):
+    animator_code = models.CharField(max_length=100)
+    animator = models.ForeignKey(Animator, null=True, blank=True)
+    assigned_villages = models.ManyToManyField(AP_Village, related_name='ap_assigned_villages', through='AP_AnimatorAssignedVillage', blank=True)
+    designation = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "AP Animator"
+        verbose_name_plural = "AP Animator"
+
+    def __unicode__(self):
+        return self.animator_code
+
+class AP_AnimatorAssignedVillage(CocoModel):
+    animator = models.ForeignKey(AP_Animator)
+    village = models.ForeignKey(AP_Village)
+
+    class Meta:
+        verbose_name = "AP AnimatorAssignedVillage"
+        verbose_name_plural = "AP AnimatorAssignedVillage"
+
+
+
+class AP_Person(CocoModel):
+    person_code = models.CharField(max_length=100)
+    person = models.ForeignKey(Person, null=True, blank=True)
+    habitation = models.ForeignKey(AP_Habitation, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "AP Person"
+        verbose_name_plural = "AP Person"
+
+
