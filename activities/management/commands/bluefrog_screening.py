@@ -71,6 +71,8 @@ class Command(BaseCommand):
 				if animator_obj.count() >= 1:
 					animator = animator_obj[0]
 					animator = animator.animator
+				else:
+					animator = None
 			except AP_Village.DoesNotExist as e:
 				animator = None
 
@@ -85,33 +87,36 @@ class Command(BaseCommand):
 				videoes_screened = []
 			partner = partner
 			farmer_groups_targeted=[1]
-			screening_dict = {'village': village, 'animator':animator, 'start_time': start_time,
-							  'date': start_date, 'parentcategory_id': parentcategory_id,
-							  'partner_id':partner.id
-							  }
-			try:
-				scr_obj, created = Screening.objects.get_or_create(**screening_dict)
-				videoes_screened = [item for item in videoes_screened if item != 0]
-				if len(videoes_screened) >=1:
-					try:
-						scr_obj.videoes_screened.add(*videoes_screened)
-					except:
-						pass
-					scr_obj.farmer_groups_targeted.add(*farmer_groups_targeted)
-
-					if scr_obj:
+			if animator:
+				screening_dict = {'village': village, 'animator':animator, 'start_time': start_time,
+								  'date': start_date, 'parentcategory_id': parentcategory_id,
+								  'partner_id':partner.id
+								  }
+				try:
+					scr_obj, created = Screening.objects.get_or_create(**screening_dict)
+					videoes_screened = [item for item in videoes_screened if item != 0]
+					if len(videoes_screened) >=1:
 						try:
-							ap_scr_obj, created = \
-								AP_Screening.objects.get_or_create(screening_code=screening_code,
-																   screening=scr_obj,
-																   no_of_male=no_of_male,
-																   no_of_female=no_of_female,
-																   user_created_id=user_obj.id,
-																   total_members=total_members)
-						except Exception as e:
-							wtr.writerow(['Not able to Save Screening in AP Screening TABLE', screening_code, e])
-			except Screening.DoesNotExist as e:
-				wtr.writerow(['Not able to save screening',screening_code, e])
+							scr_obj.videoes_screened.add(*videoes_screened)
+						except:
+							pass
+						scr_obj.farmer_groups_targeted.add(*farmer_groups_targeted)
+
+						if scr_obj:
+							try:
+								ap_scr_obj, created = \
+									AP_Screening.objects.get_or_create(screening_code=screening_code,
+																	   screening=scr_obj,
+																	   no_of_male=no_of_male,
+																	   no_of_female=no_of_female,
+																	   user_created_id=user_obj.id,
+																	   total_members=total_members)
+							except Exception as e:
+								wtr.writerow(['Not able to Save Screening in AP Screening TABLE', screening_code, e])
+				except Screening.DoesNotExist as e:
+					wtr.writerow(['Not able to save screening',screening_code, e])
+			else:
+				wtr.writerow(['Not able to save screening',screening_code, 'meditor was not present'])
 
 			
 		csv_file.close()

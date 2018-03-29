@@ -95,12 +95,12 @@ class Command(BaseCommand):
 					ap_animator.animator = animator
 					ap_animator.save()
 			else:
-				if phone != '':
+				if mobile != '':
 					animator_list = Animator.objects.filter(name=mediator_name,
 															gender=gender,
 															partner=partner,
 															district=district.district,
-															phone_no=phone)
+															phone_no=mobile)
 				else:
 					animator_list = Animator.objects.filter(name=mediator_name,
 															gender=gender,
@@ -130,7 +130,7 @@ class Command(BaseCommand):
 							ap_animator.animator = animator
 							ap_animator.save()
 				else:
-					wtr.writerow(['Animator not saved and duplicate also not exist',ac, "not saved"])
+					wtr.writerow(['Animator not saved and duplicate also not exist',mediator_code, "not saved"])
 
 		
 		
