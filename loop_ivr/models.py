@@ -7,6 +7,7 @@ TYPE_OF_SUBSCRIBER = ((0, "Farmer"), (1, "Aggregator"), (2, "DG"), (3, "Other"))
 STATUS = ((0, "Inactive"), (1, "Active"))
 SMS_STATUS = ((0, "Pending"), (1, "Sent"), (2, "Failed"), (3, "Failed-DND"))
 CALL_SOURCE = ((1, "Exotel Call"), (2, "Textlocal Call"), (3, "Textlocal SMS"))
+RATES_AVAILABILITY = ((0, 'NA'), (1, 'Available'), (2, 'Partial Available'))
 
 class PriceInfoIncoming(LoopModel):
     id = models.AutoField(primary_key=True)
@@ -23,7 +24,8 @@ class PriceInfoIncoming(LoopModel):
     call_source = models.IntegerField(choices=CALL_SOURCE, default=1)
     textlocal_sms_id = models.TextField(null=True, blank=True)  #Comma Seprated Multiple SMS id
     server_response_time = models.DateTimeField(verbose_name="Time at which server makes API call to textlocal", blank=True, null=True)
-
+    is_rate_available = models.IntegerField(choices=RATES_AVAILABILITY, db_index=True)
+    
     def __unicode__(self):
         return "%s (%s)" % (self.from_number, self.incoming_time)
 
