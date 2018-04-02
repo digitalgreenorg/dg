@@ -93,6 +93,7 @@ def registration_auth_response(request):
 					reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
 					reg_sms.save()
 					response = send_first_transportation_code(farmer[0],code,query_code,farmer_number)
+					farmer.update(referral_free_transport_count=farmer[0].referral_free_transport_count+1)
 					status_code = 0
 					if response['status'] == "success":
 						status_code = 1
@@ -130,7 +131,7 @@ def send_msg_after_first_trans(from_date,to_date):
 	# import pdb;pdb.set_trace()
 	farmer_list = getFirstTransportFarmers(from_date,to_date)
 	for farmer in farmer_list:
-		if RegistrationSms.objects.filter(farmer=farmer,msg_type=2).count()==0 and farmer.time_created>=datetime.datetime.strptime('05032018', "%d%m%Y"):
+		if RegistrationSms.objects.filter(farmer=farmer,msg_type=1).count()==0 and farmer.time_created>=datetime.datetime.strptime('05032018', "%d%m%Y"):
 			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=1)
 			reg_sms.save()
 			response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id)
@@ -142,14 +143,14 @@ def send_msg_after_first_trans(from_date,to_date):
 			reg_sms.text_local_id = sms_id
 			reg_sms.sms_status = status_code
 			reg_sms.save()
-		send_refer_transport_code(farmer)
+			send_refer_transport_code(farmer)
 
 def send_referral_transportation_code(farmer,code,custom_id):
 	sms_body = ('%s %s %s') % (referral_transport_sms['beg']['hi'],code ,referral_transport_sms['end']['hi'])
 		#sms_body = registration_sms['transportion_code_beg']['en'] + code + registration_sms['transportion_code_end']
 	sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
 	parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer.phone,
-                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_AUTH_RECEIPT_URL}
+                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_CODE_RESPONSE_URL}
 	response = requests.post(sms_request_url, params=parameters)
 	response_text = json.loads(str(response.text))
 	return response_text
@@ -160,13 +161,18 @@ def send_refer_transport_code(farmer):
 	# for farmer in farmer_list:
 	referred_by = farmer.referred_by
 	farmer_refer = Farmer.objects.filter(phone=referred_by)
-	if farmer_refer.count()>0 and not farmer_refer[0].referral_free_transport:
+	if farmer_refer.count()>0: #and not farmer_refer[0].referral_free_transport:
 		if  farmer_refer[0].time_created>datetime.datetime.strptime('05032018','%d%m%Y'):
 			code = random_with_N_digits(5)
 			reg_sms = FarmerTransportCode(code=code,phone=farmer_refer[0].phone,state=SMS_STATE['S'][0],msg_type=3)
 			reg_sms.save()
 			response = send_referral_transportation_code(farmer_refer[0],code,farmer_refer[0].phone)
 			status_code = 0
+			if farmer.referral_free_transport_count>=0:
+				farmer.referral_free_transport_count=int(farmer.referral_free_transport_count)+1
+			else:
+				farmer.referral_free_transport_count=1
+			farmer.save()
 			if response['status'] == "success":
 				status_code = 1
 				sms_id = response['messages'][0]['id']

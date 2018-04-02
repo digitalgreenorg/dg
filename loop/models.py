@@ -349,7 +349,7 @@ class Farmer(LoopModel):
     referred_by = models.CharField(max_length=13,default=None,null=True,blank=True)
     verified = models.BooleanField(default=False)
     referral_free_transport = models.BooleanField(default=False)
-
+    referral_free_transport_count = models.IntegerField(default=0,null=True,blank=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.village.village_name_en)
