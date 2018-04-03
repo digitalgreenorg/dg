@@ -4,6 +4,8 @@ from dg.settings import EMAIL_HOST_USER, team_contact
 from push_sms_email import get_active_user_comp_info, get_total_queries_content, active_user_info
 from loop_ivr.models import PriceInfoIncoming, SmsStatus
 from django.core.mail import EmailMultiAlternatives
+import pandas as pd
+
 
 class Command(BaseCommand):
     
@@ -15,8 +17,8 @@ class Command(BaseCommand):
                         , no_sms_dilivered, no_sms_diliver_time_limit, today_caller_object_call_count, today_rates_available_count):
         from_email = EMAIL_HOST_USER
 
-        to_email = ['sujit@digitalgreen.org']
-        # to_email = ['sujit@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
+        # to_email = ['sujit@digitalgreen.org']
+        to_email = ['sujit@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
 
         body_content = ['''Dear Team<br></br>%s Matrics: <b>(%s)</b><br>'''%(email_subject, start_date),
                         '''
@@ -151,6 +153,7 @@ class Command(BaseCommand):
         # print 'Total Request %s \n'%today_caller_object.count()
         # print 'Total Sms Request %s'%today_caller_object_sms_count
 
+        comparison_param_label_str = comparison_param_label[str(options['days'])]
         no_incoming_sms = get_active_user_comp_info(today_caller_object_sms_count, yesterday_caller_object_sms_count, '')
         
         # print 'No Of Incoming SMS %s'%no_incoming_sms
@@ -158,6 +161,7 @@ class Command(BaseCommand):
         today_caller_object_sms_user_count = today_caller_object.filter(call_source=3).values_list('from_number', flat=True).distinct().count()
         yesterday_caller_object_sms_user_count = yesterday_caller_object.filter(call_source=3).values_list('from_number', flat=True).distinct().count()
 
+        comparison_param_label_str = comparison_param_label[str(options['days'])]
         no_sms_users = get_active_user_comp_info(today_caller_object_sms_user_count, yesterday_caller_object_sms_user_count, '')
 
         print 'SMS users %s'%no_sms_users
@@ -166,6 +170,7 @@ class Command(BaseCommand):
         today_caller_object_correct_query_sms_count = today_caller_object.filter(call_source=3, info_status=1).count()
         yesterday_caller_object_correct_query_sms_count = yesterday_caller_object.filter(call_source=3, info_status=1).count()
 
+        comparison_param_label_str = comparison_param_label[str(options['days'])]
         per_correct_code_entered_sms = get_active_user_comp_info(today_caller_object_correct_query_sms_count, yesterday_caller_object_correct_query_sms_count, '')
 
         # print ' Correct Code Entered via sms %s'%per_correct_code_entered_sms
@@ -174,6 +179,7 @@ class Command(BaseCommand):
         today_caller_object_call_count = today_caller_object.filter(call_source__in=[1, 2]).count()
         yesterday_caller_object_call_count = yesterday_caller_object.filter(call_source__in=[1, 2]).count()
 
+        comparison_param_label_str = comparison_param_label[str(options['days'])]
         no_incoming_call = get_active_user_comp_info(today_caller_object_call_count, yesterday_caller_object_call_count, '')
 
         # print 'No of incoming call %s'%(no_incoming_call)
@@ -181,6 +187,7 @@ class Command(BaseCommand):
         today_caller_object_correct_query_call_count = today_caller_object.filter(call_source__in=[1, 2], info_status=1).count()
         yesterday_caller_object_correct_query_call_count = yesterday_caller_object.filter(call_source__in=[1, 2], info_status=1).count()
 
+        comparison_param_label_str = comparison_param_label[str(options['days'])]
         per_correct_code_entered_call = get_active_user_comp_info(today_caller_object_correct_query_call_count, yesterday_caller_object_correct_query_call_count, '')
 
         # print ' Correct Code Entered via call %s'%per_correct_code_entered_call
@@ -189,6 +196,7 @@ class Command(BaseCommand):
         today_caller_object_wrong_query_count = today_caller_object.filter(info_status=2).count()
         yesterday_caller_object_wrong_query_count = yesterday_caller_object.filter(info_status=2).count()
 
+        comparison_param_label_str = comparison_param_label[str(options['days'])]
         no_wrong_query_code = get_active_user_comp_info(today_caller_object_wrong_query_count, yesterday_caller_object_wrong_query_count, '')
 
         # print 'Wrong Query Code %s'%(no_wrong_query_code)
@@ -196,7 +204,7 @@ class Command(BaseCommand):
         # Total SMS Sent using textlocal
         today_smsstatus_obj = SmsStatus.objects.filter(price_info_incoming=today_caller_object)
         no_sms_sent = today_smsstatus_obj.count()
-        no_sms_dilivered = today_smsstatus_obj.filter(status='D')
+        no_sms_dilivered = today_smsstatus_obj.filter(status='D').count()
         # print '# SMS sent %s'%(no_sms_sent)
         # print '# SMS dilivered %s'%(no_sms_dilivered)
 
@@ -206,11 +214,12 @@ class Command(BaseCommand):
         # print ' Queries with rates available'
         # values to be calculated
         no_call_backs_time_limit = ''
-        no_first_attempt_success = ''
+        no_first_attempt_success = today_caller_object.filter(info_status=1, prev_query_code__isnull=False).count()
         no_sms_diliver_time_limit = ''
-        # print email_subject, start_date, period_label, no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
-        #                  ,per_correct_code_entered_call, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
-        #                  , no_sms_dilivered, no_sms_diliver_time_limit, today_caller_object_call_count
+
+        df = pd.DataFrame(list(SmsStatus.objects.filter(price_info_incoming=today_caller_object)))
+        print df.head
+        
         self.send_mail(email_subject, start_date, period_label, no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
                         ,per_correct_code_entered_call, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
                         , no_sms_dilivered, no_sms_diliver_time_limit, today_caller_object_call_count, today_rates_available_count )
