@@ -6,9 +6,10 @@ from django.views.generic.base import RedirectView
 from tastypie.api import Api
 # django imports
 from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource
-from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data
+from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, APVideoGenerator
 
 from dg.base_settings import COCO_PAGE
+from dg.ap_admin import ap_admin
 from dg.coco_admin import coco_admin
 from dg.jslps_admin import jslps_admin
 
@@ -61,6 +62,7 @@ urlpatterns = patterns('',
     # admin/logout/ should be above admin/ URL
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/coco/admin/'}),
     url(r'^admin/', include(coco_admin.urls)),
+    url(r'^apadmin/', include(ap_admin.urls)),
     url(r'^jslpsadmin/', include(jslps_admin.urls)),
     (r'coco/', coco_v2),
     (r'^get_log/?$', send_updated_log),
@@ -82,4 +84,5 @@ urlpatterns = patterns('',
     (r'^getgrouppage/?$', farmer_book_views.get_group_page),
     (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
     (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
+    (r'^api/v2/apvideo/?$', APVideoGenerator.as_view()),
 )
