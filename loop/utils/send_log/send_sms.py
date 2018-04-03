@@ -16,7 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from tastypie.models import ApiKey
 import ast
-
+import datetime
+from datetime import timedelta
 
 class UserDoesNotExist(Exception):
     pass
@@ -44,11 +45,11 @@ def send_sms(request):
                 if requesting_loop_user.village.block.district.state.country.country_name == 'India':
                     preferred_language = requesting_loop_user.preferred_language.notation
                     transactions_to_consider = CombinedTransaction.objects.filter(user_created_id=user.id, payment_sms=0,
-                                                                                  status=1)
+                                                                                  status=1, date__gt=str(datetime.datetime.now().date() - timedelta(days=7)))
 
-                    transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0)
+                    transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0, date__gt=str(datetime.datetime.now().date() - timedelta(days=7)))
 
-                    transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id)
+                    transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id, date__gt=str(datetime.datetime.now().date() - timedelta(days=7)))
                     if requesting_loop_user.partner.id != 2:
                         helpline_no = requesting_loop_user.partner.helpline_number
                     else:
@@ -240,8 +241,8 @@ def transportations_sms(user, transportations, language):
                     trans.payment_sms_id=sms_response['messages'][0]['id']
                     trans.save()
 
-            smslog_obj.text_local_id=sms_id
-            smslog_obj.status=status_code
+            smslog_obj.text_local_id = sms_id
+            smslog_obj.status = status_code
             smslog_obj.save()
 
     except Exception as e:
@@ -273,9 +274,10 @@ def make_transportation_sms(key, farmer_name, aggregator, value):
 def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
-                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': RECEIPT_URL}
+                  'message': sms_body, 'test': 'true', 'unicode': 'true', 'custom': custom_id, 'receipt_url': RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
+    print response_text
     return response_text
 
 @csrf_exempt
