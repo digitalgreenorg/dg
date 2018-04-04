@@ -441,7 +441,7 @@ class FarmerQRScanAdmin(admin.ModelAdmin):
     search_fields = ['qr_code','action']
 
 class FarmerTransportCodeAdmin(admin.ModelAdmin):
-    list_display = ('id','code','phone','qr_code','sms_status','state','text_local_id','msg_type')
+    list_display = ('id','code','phone','qr_code','sms_status','state','text_local_id','msg_type','dateUsed')
     list_filter = ('phone','qr_code','sms_status','state')
     search_fields = ['code','phone','qr_code']
 

@@ -1174,7 +1174,6 @@ def referral_farmer(start_date,end_date,aggregators_list):
                 for key in final.keys():
                     for key2 in final[key].keys():
                         writer.writerow([key,mandis.filter(id=int(key2))[0].mandi_name_en,final[key][key2]])
-            return HttpResponse(json.dumps(final),status=200)
         except Exception as e:
             pass
 
