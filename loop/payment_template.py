@@ -10,7 +10,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER
+from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER, TA_RIGHT
 from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -282,6 +282,7 @@ class PdfPrint:
             cell_format = data_dict.get('cell_format')
 
             unicode_font = 'UnicodeFont'
+            unicode_font_bold = 'UnicodeFontBold'
 
             self.header = header
             self.footer = footer
@@ -289,14 +290,17 @@ class PdfPrint:
             # Font for displaying unicode characters,
             # currently this font contains glyphs for almost all indian languages
             pdfmetrics.registerFont(TTFont(unicode_font, 'NotoSans-Regular-Indian.ttf'))
+            pdfmetrics.registerFont(TTFont(unicode_font_bold, 'NotoSans-Bold-Indian.ttf'))
             styles.add(ParagraphStyle(
                 name="ParagraphTitle", fontSize=cell_format.get('font_size'), alignment=TA_JUSTIFY))
             styles.add(ParagraphStyle(
                 name="Justify", alignment=TA_JUSTIFY))
             styles.add(ParagraphStyle("Comment", fontSize=cell_format.get('font_size')))
-            styles.add(ParagraphStyle("TableHeader", fontSize=8, alignment=TA_CENTER, fontName=unicode_font))
+            styles.add(ParagraphStyle("TableHeader", fontSize=8, alignment=TA_CENTER, fontName=unicode_font_bold))
             styles.add(ParagraphStyle("Text", fontSize=8, alignment=TA_CENTER, fontName=unicode_font))
-            styles.add(ParagraphStyle("TextBold", fontName=unicode_font, fontSize=8, alignment=TA_CENTER))
+            styles.add(ParagraphStyle("TextRight", fontSize=8, alignment=TA_RIGHT, fontName=unicode_font))
+            styles.add(ParagraphStyle("TextBold", fontName=unicode_font_bold, fontSize=8, alignment=TA_CENTER))
+            styles.add(ParagraphStyle("TextBoldRight", fontName=unicode_font_bold, fontSize=8, alignment=TA_RIGHT))
             styles.add(ParagraphStyle("CommentSpace", fontSize=cell_format.get('font_size'), leftIndent=179))
 
             # A list of complete data which goes in the pdf.
@@ -327,7 +331,7 @@ class PdfPrint:
                     value_data = []
                     for i, value in enumerate(value_list):
                         if type(value) is int or type(value) is float:
-                            value_data.append(Paragraph(u"{0}".format(value), styles['Text']))
+                            value_data.append(Paragraph(u"{0:.2f}".format(value), styles['TextRight']))
                             if headers[i].get('total'):
                                 total_vals[i] += value
                         elif value is None:
@@ -341,7 +345,7 @@ class PdfPrint:
                     total_vals[8] = total_vals[4] + total_vals[5] - total_vals[6] - total_vals[7]
                 for value in total_vals:
                     if value > 0:
-                        total_vals_str.append(Paragraph(u"{0}".format(value), styles['TextBold']))
+                        total_vals_str.append(Paragraph(u"{0:.2f}".format(value), styles['TextBoldRight']))
                     else:
                         total_vals_str.append("")
                 table_data.append(total_vals_str)

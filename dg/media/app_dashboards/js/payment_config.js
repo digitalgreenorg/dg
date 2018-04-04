@@ -493,7 +493,7 @@ var models = [
     net_quantity_const: "QUANTITY_POST_DEDUCTION",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.45,
+          'column_width': 3.5,
           'formula': null,
           'label': 'S No',
           'total': false
@@ -1118,7 +1118,7 @@ var models = [
     net_quantity_const: "QUANTITY",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.47,
+          'column_width': 3.5,
           'formula': null,
           'label': 'S No',
           'total': false
@@ -1749,7 +1749,7 @@ var models = [
     net_quantity_const: "QUANTITY_POST_DEDUCTION",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.45,
+          'column_width': 3.5,
           'formula': null,
           'label': 'S No',
           'total': false
@@ -2386,7 +2386,7 @@ var models = [
     net_quantity_const: "QUANTITY",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.47,
+          'column_width': 3.5,
           'formula': null,
           'label': 'S No',
           'total': false
@@ -3023,7 +3023,7 @@ var models = [
     net_quantity_const: "QUANTITY",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.47,
+          'column_width': 3.5,
           'formula': null,
           'label': 'S No',
           'total': false
