@@ -274,7 +274,7 @@ class PdfPrint:
 
     def generate(self, data_dict, header, footer):
         try:
-            doc = SimpleDocTemplate(self.output, rightMargin=72, leftMargin=72,
+            doc = SimpleDocTemplate(self.output, rightMargin=50, leftMargin=50,
                                     topMargin=40, bottomMargin=50, pageSize=self.pageSize)
 
             # setting up styles
@@ -292,7 +292,7 @@ class PdfPrint:
             pdfmetrics.registerFont(TTFont(unicode_font, 'NotoSans-Regular-Indian.ttf'))
             pdfmetrics.registerFont(TTFont(unicode_font_bold, 'NotoSans-Bold-Indian.ttf'))
             styles.add(ParagraphStyle(
-                name="ParagraphTitle", fontSize=cell_format.get('font_size'), alignment=TA_JUSTIFY))
+                name="ParagraphTitle", fontSize=10, alignment=TA_JUSTIFY, fontName=unicode_font_bold))
             styles.add(ParagraphStyle(
                 name="Justify", alignment=TA_JUSTIFY))
             styles.add(ParagraphStyle("Comment", fontSize=cell_format.get('font_size')))

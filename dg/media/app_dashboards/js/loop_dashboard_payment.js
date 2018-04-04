@@ -1853,9 +1853,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         }
     });
 
-    aggregator_sheet_name = "Aggregator Payment " + getFormattedDate(aggregator) + "Payment Summary " + getCurrentTime();
-    gaddidar_sheet_name = "Aggregator Payment " + getFormattedDate(aggregator) + "Commission Agent Details " + getCurrentTime();
-    transporter_sheet_name = "Aggregator Payment " + getFormattedDate(aggregator) + "Transporter Details " + getCurrentTime();
+    aggregator_sheet_name = "Aggregator Payment " + getFormattedDate(aggregator) + " Payment Summary " + getCurrentTime();
+    gaddidar_sheet_name = "Aggregator Payment " + getFormattedDate(aggregator) + " Commission Agent Details " + getCurrentTime();
+    transporter_sheet_name = "Aggregator Payment " + getFormattedDate(aggregator) + " Transporter Details " + getCurrentTime();
     header_dict = payment_model["header_dict"];
 }
 
@@ -1867,7 +1867,7 @@ function getFormattedDate(aggregator_id) {
     var name = (aggregator_names[aggregator_index]).replace('.', '');
     var fromDate = new Date(payments_start_date);
     var toDate = new Date(payments_to_date);
-    var str = name + "(" + aggregator_id + ")" + " " + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate() + " ";
+    var str = name + "(" + aggregator_id + ")" + " " + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate();
     return str;
 }
 
