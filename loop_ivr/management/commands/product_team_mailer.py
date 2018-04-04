@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from dg.settings import EMAIL_HOST_USER, team_contact
 from push_sms_email import get_active_user_comp_info, get_total_queries_content, active_user_info
 from loop_ivr.models import PriceInfoIncoming, SmsStatus
@@ -125,8 +125,8 @@ class Command(BaseCommand):
         period_label = {'1': 'Daily', '7' : 'Weekly'}
         comparison_param_label = {'1': 'DoD', '7': 'WoW' }
 
-        # today_date = datetime.now().date()
-        today_date = datetime(2018, 03, 21).date()
+        today_date = datetime.now().date()
+        # today_date = datetime(2018, 04, 04).date()
         start_date = today_date-timedelta(days=date_range)
         prev_start_date = start_date - timedelta(days=date_range)
 
@@ -149,14 +149,9 @@ class Command(BaseCommand):
         today_caller_object_sms_count = today_caller_object.filter(call_source=3).count()
         yesterday_caller_object_sms_count = yesterday_caller_object.filter(call_source=3).count()
 
-
-        # print 'Total Request %s \n'%today_caller_object.count()
-        # print 'Total Sms Request %s'%today_caller_object_sms_count
-
         comparison_param_label_str = comparison_param_label[str(options['days'])]
         no_incoming_sms = get_active_user_comp_info(today_caller_object_sms_count, yesterday_caller_object_sms_count, '')
-        
-        # print 'No Of Incoming SMS %s'%no_incoming_sms
+
         # SMS user count
         today_caller_object_sms_user_count = today_caller_object.filter(call_source=3).values_list('from_number', flat=True).distinct().count()
         yesterday_caller_object_sms_user_count = yesterday_caller_object.filter(call_source=3).values_list('from_number', flat=True).distinct().count()
@@ -173,8 +168,6 @@ class Command(BaseCommand):
         comparison_param_label_str = comparison_param_label[str(options['days'])]
         per_correct_code_entered_sms = get_active_user_comp_info(today_caller_object_correct_query_sms_count, yesterday_caller_object_correct_query_sms_count, '')
 
-        # print ' Correct Code Entered via sms %s'%per_correct_code_entered_sms
-
         # Incoming Calls
         today_caller_object_call_count = today_caller_object.filter(call_source__in=[1, 2]).count()
         yesterday_caller_object_call_count = yesterday_caller_object.filter(call_source__in=[1, 2]).count()
@@ -182,15 +175,11 @@ class Command(BaseCommand):
         comparison_param_label_str = comparison_param_label[str(options['days'])]
         no_incoming_call = get_active_user_comp_info(today_caller_object_call_count, yesterday_caller_object_call_count, '')
 
-        # print 'No of incoming call %s'%(no_incoming_call)
-
         today_caller_object_correct_query_call_count = today_caller_object.filter(call_source__in=[1, 2], info_status=1).count()
         yesterday_caller_object_correct_query_call_count = yesterday_caller_object.filter(call_source__in=[1, 2], info_status=1).count()
 
         comparison_param_label_str = comparison_param_label[str(options['days'])]
         per_correct_code_entered_call = get_active_user_comp_info(today_caller_object_correct_query_call_count, yesterday_caller_object_correct_query_call_count, '')
-
-        # print ' Correct Code Entered via call %s'%per_correct_code_entered_call
 
         # Wrong Code Entered via call
         today_caller_object_wrong_query_count = today_caller_object.filter(info_status=2).count()
@@ -199,26 +188,24 @@ class Command(BaseCommand):
         comparison_param_label_str = comparison_param_label[str(options['days'])]
         no_wrong_query_code = get_active_user_comp_info(today_caller_object_wrong_query_count, yesterday_caller_object_wrong_query_count, '')
 
-        # print 'Wrong Query Code %s'%(no_wrong_query_code)
-
         # Total SMS Sent using textlocal
         today_smsstatus_obj = SmsStatus.objects.filter(price_info_incoming=today_caller_object)
         no_sms_sent = today_smsstatus_obj.count()
         no_sms_dilivered = today_smsstatus_obj.filter(status='D').count()
-        # print '# SMS sent %s'%(no_sms_sent)
-        # print '# SMS dilivered %s'%(no_sms_dilivered)
 
         # Queries with rates available
         today_rates_available_count = today_caller_object.filter(is_rate_available__in=[2, 3]).count()
 
-        # print ' Queries with rates available'
         # values to be calculated
         no_call_backs_time_limit = ''
         no_first_attempt_success = today_caller_object.filter(info_status=1, prev_query_code__isnull=False).count()
-        no_sms_diliver_time_limit = ''
-
-        df = pd.DataFrame(list(SmsStatus.objects.filter(price_info_incoming=today_caller_object)))
-        print df.head
+        
+        df = pd.DataFrame(list(SmsStatus.objects.filter(price_info_incoming=today_caller_object).values('id','price_info_incoming','status', 'delivery_time', 'api_call_initiation_time')))
+        df['time_delay'] = df.groupby('price_info_incoming')['api_call_initiation_time', 'delivery_time'].diff(axis='columns')['delivery_time']
+        df_max = df.groupby('price_info_incoming')['time_delay'].max()
+        time_delay = t = pd.Timedelta(seconds=1)
+        no_sms_diliver_time_limit = df_max.loc[lambda x : x > time_delay].count()
+        
         
         self.send_mail(email_subject, start_date, period_label, no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
                         ,per_correct_code_entered_call, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
