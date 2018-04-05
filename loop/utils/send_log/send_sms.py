@@ -46,9 +46,9 @@ def send_sms(request):
                     transactions_to_consider = CombinedTransaction.objects.filter(user_created_id=user.id, payment_sms=0,
                                                                                   status=1, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
 
-                    transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0, date__gt=str(datetime.datetime.now().date() - timedelta(days=7)))
+                    transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
 
-                    transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id, date__gt=str(datetime.datetime.now().date() - timedelta(days=7)))
+                    transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
                     if requesting_loop_user.partner.id != 2:
                         helpline_no = requesting_loop_user.partner.helpline_number
                     else:
