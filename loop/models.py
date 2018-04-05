@@ -207,6 +207,9 @@ class LoopUser(LoopModel):
     percent_farmer_share = models.FloatField(default=0.0)
     partner = models.ForeignKey(Partner, default=None, null=True, blank=True)
     version = models.CharField(max_length=10, blank=True, null=True, default="0")
+    active = models.BooleanField(default=True)
+    closing_date = models.DateTimeField(blank=True,null=True)
+    closing_reason = models.CharField(max_length=140,default="",blank=True,null=True)
 
     def __unicode__(self):
         return """%s (%s)""" % (self.name_en, self.phone_number)
