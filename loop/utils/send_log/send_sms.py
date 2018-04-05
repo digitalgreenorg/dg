@@ -276,6 +276,7 @@ def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom': custom_id, 'receipt_url': RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
+    print response_text
     return response_text
 
 @csrf_exempt
