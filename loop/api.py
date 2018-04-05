@@ -58,7 +58,7 @@ class CustomApiKeyAuthentication(ApiKeyAuthentication):
             return False
         
         # checks if loopuser exists and is active
-        if loop_user.count() < 1 or not loop_user[0].active:
+        if loop_user.count() < 1 or not loop_user[0].active or loop_user[0].role == 3:
             return False
 
         key_auth_check = self.get_key(user, api_key)
