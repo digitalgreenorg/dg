@@ -41,17 +41,24 @@ def send_sms(request):
             DayTransportation = get_model('loop', 'DayTransportation')
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
-                if requesting_loop_user.village.block.district.state.country.country_name == 'India':
+                if requesting_loop_user.village.block.district.state.country.country_name == 'India' and requesting_loop_user.role == 2:
+                    print "hello"
                     preferred_language = requesting_loop_user.preferred_language.notation
                     transactions_to_consider = CombinedTransaction.objects.filter(user_created_id=user.id, payment_sms=0,
                                                                                   status=1, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
 
                     transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
 
+                    print "dude"
+                    print transportations_to_consider
+                    print transactions_to_consider
                     transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
+                    print "after dude"
                     if requesting_loop_user.partner.id != 2:
+                        print "fuck here"
                         helpline_no = requesting_loop_user.partner.helpline_number
                     else:
+                        print "yoyo"
                         helpline_no = requesting_loop_user.village.block.district.state.helpline_number
                     Thread(target=transactions_sms,
                            args=[requesting_loop_user, transactions_to_consider, preferred_language,
@@ -68,10 +75,13 @@ def send_sms(request):
 
 def transactions_sms(user, transactions, language, transportations, helpline_num):
     try:
-        
+        print "test"
         single_farmer_date_message = {}
         transactions_list = []
+        print transactions
         for transaction in transactions:
+            print "<<<<<<<<<<<<<<<"
+            print transaction
             transactions_list.append(transaction)
             if (transaction.date, transaction.farmer.phone,
                 transaction.farmer.name) not in single_farmer_date_message.keys():
@@ -135,7 +145,9 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                     (transaction.date, transaction.farmer.phone, transaction.farmer.name)]['transaction_id'].append(
                     transaction.id)
 
+        print single_farmer_date_message
         for key, value in single_farmer_date_message.iteritems():
+            print "trump"
             farmer_no = key[1]
             farmer_name = key[2].encode('utf-8')
             message = make_transaction_sms(key, farmer_name, user.name, value, language)
@@ -149,13 +161,21 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
             status_code = 0
             sms_id = None
 
+            print message
             transaction_to_update = transactions.filter(id__in=single_farmer_date_message[key]['transaction_id'])
             for trans in transaction_to_update:
                 trans.payment_sms=SMS_STATE['S'][0]
                 trans.save()
             SmsLog = get_model('loop', 'SmsLog')
             smslog_obj = SmsLog(sms_body=message ,contact_no=farmer_no, person_type=0, model_ids = str(single_farmer_date_message[key]['transaction_id']))
-            smslog_obj.save()
+            print "kya hua"
+            import pdb
+            pdb.set_trace()
+            try:
+                smslog_obj.save()
+            except Exception as e:
+                print str(e)
+            print "kya hua"
 
             sms_response = send_sms_using_textlocal(farmer_no, message, smslog_obj.id)
             if sms_response['status'] == "success":
@@ -271,6 +291,7 @@ def make_transportation_sms(key, farmer_name, aggregator, value):
 
 
 def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
+    print "hihi"
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom': custom_id, 'receipt_url': RECEIPT_URL}
