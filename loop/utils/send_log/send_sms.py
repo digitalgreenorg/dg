@@ -49,7 +49,7 @@ def send_sms(request):
                     transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
 
                     transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
-                    if requesting_loop_user.partner.id != 2:
+                    if requesting_loop_user.partner is not None and requesting_loop_user.partner.id != 2:
                         helpline_no = requesting_loop_user.partner.helpline_number
                     else:
                         helpline_no = requesting_loop_user.village.block.district.state.helpline_number
