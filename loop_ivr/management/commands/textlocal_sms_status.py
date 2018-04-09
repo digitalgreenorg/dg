@@ -18,7 +18,6 @@ class Command(BaseCommand):
         # today = datetime(2018, 03, 21).date()
         today = datetime.now().date()
         sms_status_obj = SmsStatus.objects.filter(api_call_initiation_time__contains=today)
-        print len(sms_status_obj)
         for smsobj in sms_status_obj:
             resp = self.get_textlocal_sms_status(TEXTLOCAL_API_KEY, smsobj.textlocal_sms_id)
             resp = json.loads(resp)

@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 from dg.settings import EMAIL_HOST_USER, team_contact
-from push_sms_email import get_active_user_comp_info, get_total_queries_content, active_user_info
+from push_sms_email import get_active_user_comp_info, get_total_queries_content
 from loop_ivr.models import PriceInfoIncoming, SmsStatus
 from django.core.mail import EmailMultiAlternatives
 import pandas as pd
@@ -11,6 +11,7 @@ class Command(BaseCommand):
     
     def add_arguments(self, parser):
         parser.add_argument('days', type=int)
+        parser.add_argument('delay', type=int)
 
     def send_mail(self, email_subject, start_date, period_label, no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
                         ,per_correct_code_entered_call, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
@@ -122,6 +123,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         date_range = options['days']
+        # delay should be in seconds
+        delay = options['delay']
         period_label = {'1': 'Daily', '7' : 'Weekly'}
         comparison_param_label = {'1': 'DoD', '7': 'WoW' }
 
@@ -150,43 +153,41 @@ class Command(BaseCommand):
         yesterday_caller_object_sms_count = yesterday_caller_object.filter(call_source=3).count()
 
         comparison_param_label_str = comparison_param_label[str(options['days'])]
-        no_incoming_sms = get_active_user_comp_info(today_caller_object_sms_count, yesterday_caller_object_sms_count, '')
+        no_incoming_sms = get_active_user_comp_info(today_caller_object_sms_count, yesterday_caller_object_sms_count, comparison_param_label_str)
 
         # SMS user count
         today_caller_object_sms_user_count = today_caller_object.filter(call_source=3).values_list('from_number', flat=True).distinct().count()
         yesterday_caller_object_sms_user_count = yesterday_caller_object.filter(call_source=3).values_list('from_number', flat=True).distinct().count()
 
         comparison_param_label_str = comparison_param_label[str(options['days'])]
-        no_sms_users = get_active_user_comp_info(today_caller_object_sms_user_count, yesterday_caller_object_sms_user_count, '')
-
-        print 'SMS users %s'%no_sms_users
+        no_sms_users = get_active_user_comp_info(today_caller_object_sms_user_count, yesterday_caller_object_sms_user_count, comparison_param_label_str)
 
         # Correct Queries
         today_caller_object_correct_query_sms_count = today_caller_object.filter(call_source=3, info_status=1).count()
         yesterday_caller_object_correct_query_sms_count = yesterday_caller_object.filter(call_source=3, info_status=1).count()
 
         comparison_param_label_str = comparison_param_label[str(options['days'])]
-        per_correct_code_entered_sms = get_active_user_comp_info(today_caller_object_correct_query_sms_count, yesterday_caller_object_correct_query_sms_count, '')
+        per_correct_code_entered_sms = get_active_user_comp_info(today_caller_object_correct_query_sms_count, yesterday_caller_object_correct_query_sms_count, comparison_param_label_str)
 
         # Incoming Calls
         today_caller_object_call_count = today_caller_object.filter(call_source__in=[1, 2]).count()
         yesterday_caller_object_call_count = yesterday_caller_object.filter(call_source__in=[1, 2]).count()
 
         comparison_param_label_str = comparison_param_label[str(options['days'])]
-        no_incoming_call = get_active_user_comp_info(today_caller_object_call_count, yesterday_caller_object_call_count, '')
+        no_incoming_call = get_active_user_comp_info(today_caller_object_call_count, yesterday_caller_object_call_count, comparison_param_label_str)
 
         today_caller_object_correct_query_call_count = today_caller_object.filter(call_source__in=[1, 2], info_status=1).count()
         yesterday_caller_object_correct_query_call_count = yesterday_caller_object.filter(call_source__in=[1, 2], info_status=1).count()
 
         comparison_param_label_str = comparison_param_label[str(options['days'])]
-        per_correct_code_entered_call = get_active_user_comp_info(today_caller_object_correct_query_call_count, yesterday_caller_object_correct_query_call_count, '')
+        per_correct_code_entered_call = get_active_user_comp_info(today_caller_object_correct_query_call_count, yesterday_caller_object_correct_query_call_count, comparison_param_label_str)
 
         # Wrong Code Entered via call
         today_caller_object_wrong_query_count = today_caller_object.filter(info_status=2).count()
         yesterday_caller_object_wrong_query_count = yesterday_caller_object.filter(info_status=2).count()
 
         comparison_param_label_str = comparison_param_label[str(options['days'])]
-        no_wrong_query_code = get_active_user_comp_info(today_caller_object_wrong_query_count, yesterday_caller_object_wrong_query_count, '')
+        no_wrong_query_code = get_active_user_comp_info(today_caller_object_wrong_query_count, yesterday_caller_object_wrong_query_count, comparison_param_label_str)
 
         # Total SMS Sent using textlocal
         today_smsstatus_obj = SmsStatus.objects.filter(price_info_incoming=today_caller_object)
@@ -200,14 +201,15 @@ class Command(BaseCommand):
         no_call_backs_time_limit = ''
         no_first_attempt_success = today_caller_object.filter(info_status=1, prev_query_code__isnull=False).count()
         
+        # timedelay for delivered messages
         df = pd.DataFrame(list(SmsStatus.objects.filter(price_info_incoming=today_caller_object).values('id','price_info_incoming','status', 'delivery_time', 'api_call_initiation_time')))
         df['time_delay'] = df.groupby('price_info_incoming')['api_call_initiation_time', 'delivery_time'].diff(axis='columns')['delivery_time']
         df_max = df.groupby('price_info_incoming')['time_delay'].max()
-        time_delay = t = pd.Timedelta(seconds=1)
+        time_delay = pd.Timedelta(seconds=delay)
         no_sms_diliver_time_limit = df_max.loc[lambda x : x > time_delay].count()
         
         
-        self.send_mail(email_subject, start_date, period_label, no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
+        self.send_mail(email_subject, start_date, period_label_str, no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
                         ,per_correct_code_entered_call, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
                         , no_sms_dilivered, no_sms_diliver_time_limit, today_caller_object_call_count, today_rates_available_count )
 
