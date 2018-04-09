@@ -166,10 +166,12 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                     trans.payment_sms=SMS_STATE['F'][0]
                     trans.payment_sms_id=sms_response['messages'][0]['id']
                     trans.save()
-
-            smslog_obj.text_local_id = sms_id
-            smslog_obj.status = status_code
-            smslog_obj.save()
+            try:
+                smslog_obj.text_local_id = sms_id
+                smslog_obj.status = status_code
+                smslog_obj.save()
+            except:
+                pass
 
     except Exception as e:
         pass
