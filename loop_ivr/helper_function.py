@@ -345,4 +345,4 @@ def get_textlocal_sms_status(apikey, messageID):
         params = {'apikey': apikey, 'message_id': messageID}
         f = urllib.urlopen(TEXT_LOCAL_SMS_STATUS_API
             + urllib.urlencode(params))
-        return (f.read(), f.code)
+        return (f.read())
