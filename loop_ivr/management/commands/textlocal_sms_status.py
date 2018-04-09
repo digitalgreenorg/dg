@@ -1,4 +1,3 @@
-import urllib
 from loop_ivr.models import SmsStatus
 from datetime import datetime
 from dg.settings import TEXTLOCAL_API_KEY 

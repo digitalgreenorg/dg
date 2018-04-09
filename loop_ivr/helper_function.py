@@ -6,6 +6,7 @@ import time
 import itertools
 import MySQLdb
 import json
+import urllib
 from datetime import datetime, timedelta
 from pytz import timezone
 import xml.etree.ElementTree as xml_parse
