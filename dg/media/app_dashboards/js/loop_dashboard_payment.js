@@ -248,7 +248,7 @@ var calc_functions = {
 
     net_payment: function () {
         for (var i = 0; i < aggregator_data_set.length; i++) {
-            aggregator_data_set[i][PAYMENT_SUMMARY.NET_PAYMENT] = (parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE]) + parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.TRANSPORT_COST]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.GADDIDAR_SHARE]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.FARMER_SHARE])).toFixed(2);   
+            aggregator_data_set[i][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat((parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE]) + parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.TRANSPORT_COST]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.GADDIDAR_SHARE]) - parseFloat(aggregator_data_set[i][PAYMENT_SUMMARY.FARMER_SHARE])).toFixed(2));   
         }
     },
 
@@ -469,15 +469,11 @@ function set_filterlistener() {
             $('#payments_to_date').prop('disabled', false);
             var from_date = new Date(new Date(start_date));
             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            if (from_date.getDate() >= 16) {
-                if (from_date.getFullYear() % 4 == 0 && from_date.getMonth() == 1) {
-                    $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + "29");
-                } else {
-                    $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + daysInMonth[from_date.getMonth()]);
-                }
+            if (from_date.getFullYear() % 4 == 0 && from_date.getMonth() == 1) {
+                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + "29");
             } else {
-                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + (from_date.getDate() + 14));
-            }
+                $('#payments_to_date').val(from_date.getFullYear() + "-" + (from_date.getMonth() + 1) + "-" + daysInMonth[from_date.getMonth()]);
+            }            
         } else {
             $('#payments_to_date').val('');
         }
@@ -762,10 +758,11 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
     //Adding mobile recharge entry for aggregator in Payment Sheet
     aggregator_data_set.push(default_aggregator_data_set.slice());
     var aggregator_data_set_length = aggregator_data_set.length;
+    var mobile_recharge_amount = 300;
     aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.SNO] = aggregator_data_set_length.toString();
     aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.MANDI_NAME] = "Mobile Recharge";
-    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat("150");
-    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat("150").toFixed(2);
+    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat(mobile_recharge_amount.toFixed(2));
+    aggregator_data_set[aggregator_data_set_length - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat(mobile_recharge_amount.toFixed(2));
 
 
     //gaddidar data clone
@@ -1884,7 +1881,7 @@ function get_payments_data() {
     payments_start_date = $("#payments_from_date").val();
     payments_to_date = $("#payments_to_date").val();
     aggregator_id = $('#aggregator_payments :selected').val();
-    if (payments_start_date != "" && payments_to_date != "" && Date.parse(payments_start_date) < Date.parse(payments_to_date) && new Date(payments_start_date) < new Date(payments_to_date) && new Date(payments_to_date) - new Date(payments_start_date) <= 1296000000 && aggregator_id != "") {
+    if (payments_start_date != "" && payments_to_date != "" && Date.parse(payments_start_date) < Date.parse(payments_to_date) && new Date(payments_start_date) < new Date(payments_to_date) && new Date(payments_to_date) - new Date(payments_start_date) <= TIME_DIFF_THIRTY_DAYS && aggregator_id != "") {
         showLoader();
         $.get("/loop/payments/", {
             'start_date': payments_start_date,
@@ -1909,7 +1906,7 @@ function get_payments_data() {
             outliers_summary(aggregator_id);
         });
     } else {
-        alert("Please select valid date range \n 1. Date Range should not exceed 15 days. \n 2. Please make sure that <To> date is after <From> date. \n 3. Please select an aggregator.");
+        alert("Please select valid date range \n 1. Date Range should not exceed a month. \n 2. Please make sure that <To> date is after <From> date. \n 3. Please select an aggregator.");
     }
 }
 

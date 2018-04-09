@@ -136,3 +136,66 @@ class JSLPS_Village(CocoModel):
         verbose_name_plural = "JSLPS Village"
 
 
+
+# class AP_State(CocoModel):
+#     district_code = models.CharField(max_length=100)
+#     district_name = models.CharField(max_length=100)
+
+#     class Meta:
+#         verbose_name = "AP State"
+#         verbose_name_plural = "AP State"
+
+
+class AP_District(CocoModel):
+    district_code = models.CharField(max_length=100)
+    district_name = models.CharField(max_length=100)
+    district = models.ForeignKey(District, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "AP District"
+        verbose_name_plural = "AP District"
+
+    def __unicode__(self):
+        return self.district_name
+
+
+class AP_Mandal(CocoModel):
+    ap_district = models.ForeignKey(AP_District, null=True, blank=True)
+    mandal_code = models.CharField(max_length=100)
+    mandal_name = models.CharField(max_length=100)
+    block = models.ForeignKey(Block, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "AP Block"
+        verbose_name_plural = "AP Block"
+
+    def __unicode__(self):
+        return self.mandal_name
+
+
+class AP_Village(CocoModel):
+    ap_mandal = models.ForeignKey(AP_Mandal, null=True, blank=True)
+    village_code = models.CharField(max_length=100)
+    village_name = models.CharField(max_length=100)
+    village = models.ForeignKey(Village, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "AP Village"
+        verbose_name_plural = "AP Village"
+
+    def __unicode__(self):
+        return self.village_name
+
+
+class AP_Habitation(CocoModel):
+    ap_village = models.ForeignKey(AP_Village, null=True, blank=True)
+    habitation_code = models.CharField(max_length=100)
+    habitation_name = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "AP Habitation"
+        verbose_name_plural = "AP Habitation"
+
+    def __unicode__(self):
+        return self.habitation_name
+
