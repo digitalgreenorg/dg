@@ -170,7 +170,7 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                 smslog_obj.text_local_id = sms_id
                 smslog_obj.status = status_code
                 smslog_obj.save()
-            except:
+            except Exception as e:
                 pass
 
     except Exception as e:
