@@ -19,7 +19,7 @@
     <LINK REL="stylesheet"  HREF="/media/coco/app/styles/css/tabletools_custom.css">
     <LINK rel="icon" type="image/x-icon" href="/media/coco/app/images/favicon.ico">
 
-    <script data-main="/media/coco/dist/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
+    <script data-main="/media/coco/app/scripts/main" src="/media/coco/app/scripts/libs/require.js"></script>
     <script type="text/javascript">
 	  require.config({
 	    paths: {
@@ -1296,6 +1296,15 @@
                     </select>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><%= tags %></label>
+                <div class="col-sm-4">
+                    <select size="20" class="chosen-select form-control" id = "id_tags" name="tags" multiple>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="dis-block col-sm-2 control-label notbold"><%= youtubeid %></label>
                 <div class="col-sm-4">
