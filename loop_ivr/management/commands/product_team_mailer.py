@@ -200,6 +200,7 @@ class Command(BaseCommand):
         df['time_delay'] = df.groupby('price_info_incoming')['api_call_initiation_time', 'delivery_time'].diff(axis='columns')['delivery_time']
         df_max = df.groupby('price_info_incoming')['time_delay'].max()
         time_delay = pd.Timedelta(seconds=delay)
+        print type(df_max)
         no_sms_diliver_time_limit = df_max.loc[lambda x : x > time_delay].count()
         
         
