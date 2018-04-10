@@ -495,7 +495,8 @@ def send_updated_admin_log(request):
                         list_rows.append(row)
                 except:
                     pass
-            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'],admin_user=requesting_admin_user))        
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'],admin_user=requesting_admin_user))
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['MandiType'], admin_user=None))
             #Mandi Log
             list_rows.append(Log.objects.filter(
                 timestamp__gt=timestamp, district__in=districts, entry_table__in=['Mandi'],admin_user=None))

@@ -683,10 +683,25 @@ class CropLanguageResource(BaseResource):
          bundle.data['online_id']= bundle.data['id']
          return bundle
 
+class MandiTypeResource(BaseResource):
 
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = MandiType.objects.all()
+        resource_name = 'mandi_type'
+        authorization = Authorization()
+        authentication = ApiKeyAuthentication()
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class MandiResource(BaseResource):
     district = fields.ForeignKey(DistrictResource, 'district')
+    mandi_type = fields.ForeignKey(MandiTypeResource, 'mandi_type', null=True)
 
     class Meta:
         limit = 0
@@ -703,6 +718,9 @@ class MandiResource(BaseResource):
     dehydrate_district = partial(
         foreign_key_to_id, field_name='district', sub_field_names=['id'])
     hydrate_district = partial(dict_to_foreign_uri, field_name='district')
+
+    dehydrate_mandi_type = partial(foreign_key_to_id, field_name='mandi_type', sub_field_names=['id'])
+    hydrate_mandi_type = partial(dict_to_foreign_uri, field_name='mandi_type')
 
     def obj_create(self, bundle, request=None, **kwargs):
         district_id = bundle.data['district']['online_id']
