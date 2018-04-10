@@ -189,7 +189,7 @@ class Command(BaseCommand):
         no_sms_dilivered = today_smsstatus_obj.filter(status='D').count()
 
         # Queries with rates available
-        today_rates_available_count = today_caller_object.filter(is_rate_available__in=[1, 2]).count()
+        today_rates_available_count = today_caller_object.filter(is_rate_available=0).count()
 
         # values to be calculated
         no_call_backs_time_limit = ''
