@@ -6,6 +6,7 @@ import time
 import itertools
 import MySQLdb
 import json
+import urllib
 from datetime import datetime, timedelta
 from pytz import timezone
 import xml.etree.ElementTree as xml_parse
@@ -21,7 +22,7 @@ from loop.helpline_view import write_log
 
 from loop_ivr.utils.marketinfo import raw_sql, get_query
 from loop_ivr.utils.config import *
-from loop_ivr.models import PriceInfoLog, PriceInfoIncoming
+from loop_ivr.models import PriceInfoLog, PriceInfoIncoming, SmsStatus
 
 from loop_ivr.outliers.removal import remove_crop_outliers
 import logging
@@ -118,16 +119,16 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
     #                 'custom': recipient_custom_id}
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers':user_no,
                      'message': sms_body, 'unicode': 'true'}
+    api_call_initiation_time = datetime.now(timezone('Asia/Kolkata')).replace(tzinfo=None)
+
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
     if response_text['status'] == 'success':
         message_id = ','.join([str(message["id"]) for message in response_text['messages']])
         if price_info_incoming_obj != None:
-            if price_info_incoming_obj.textlocal_sms_id == None:
-                price_info_incoming_obj.textlocal_sms_id = message_id
-            else:
-                price_info_incoming_obj.textlocal_sms_id += ',' + message_id
-            price_info_incoming_obj.save()
+            sms_status_obj = SmsStatus(price_info_incoming=price_info_incoming_obj, textlocal_sms_id=message_id, api_call_initiation_time=api_call_initiation_time)
+            sms_status_obj.save()
+
     elif response_text['status'] == 'failure':
         module = 'send_sms_using_textlocal'
         if price_info_incoming_obj != None:
@@ -135,6 +136,7 @@ def send_sms_using_textlocal(user_no, sms_body, price_info_incoming_obj):
         else:
             log = "Status Code: %s (price_info_incoming_obj_id: %s)"%(response_text['status'], str(price_info_incoming_obj))
         write_log(LOG_FILE,module,log)
+
 
 def send_info_using_textlocal(user_no, content, price_info_incoming_obj=None):
     # Replace ascii next line with textlocal next line identifier (i.e. %0A)
@@ -199,6 +201,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     dataframe = remove_crop_outliers(ct_data = result)
 
     try:
+        # Default value set to be 2; 2: avilbale
+        price_info_incoming_obj.is_rate_available = 2
         if (not result) or dataframe is None or dataframe.empty:
             if not all_crop_flag and not all_mandi_flag:
                 crop_name_list = ','.join(map(lambda crop_id: '%s (%s: %s)'%(crop_in_hindi_map.get(crop_id).encode("utf-8"),code_hi,str(crop_id)) if crop_in_hindi_map.get(crop_id) else '%s (%s: %s)'%(crop_map[crop_id].encode("utf-8"),code_hi,str(crop_id)), crop_list))
@@ -215,6 +219,9 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             price_info_list.append(no_price_message)
             crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
             price_info_list.append(('\n\n%s')%(crop_code_list,))
+            # No rate available
+            price_info_incoming_obj.is_rate_available = 0
+            price_info_incoming_obj.save()
         else:
             prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
             for index, row in dataframe.iterrows():
@@ -255,6 +262,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
             prev_crop, prev_mandi, crop_name, mandi_name = -1, -1, '', ''
             for crop, mandi in itertools.product(crop_list, mandi_list):
                 if (crop,mandi) not in crop_mandi_comb:
+                    price_info_incoming_obj.is_rate_available = 1
+                    price_info_incoming_obj.save()
                     price_info_log_obj = PriceInfoLog(price_info_incoming=price_info_incoming_obj,
                                 crop_id=crop, mandi_id=mandi)
                     # price_info_log_list.append(price_info_log_obj)
@@ -284,6 +293,8 @@ def get_price_info(from_number, crop_list, mandi_list, price_info_incoming_obj, 
     # If caller is calling first time then send crop code to them.
     if PriceInfoIncoming.objects.filter(from_number=from_number).count() == 1:
         crop_code_list = get_crop_code_list(N_TOP_SELLING_CROP, TOP_SELLING_CROP_WINDOW)
+        # Assumption For first caller it's not applicable
+        price_info_incoming_obj.is_rate_available = 3
         if result and not dataframe.empty:
             first_time_caller_message = [first_time_caller,'\n\n', crop_code_list, '\n', remaining_crop_line]
             first_time_caller_message = ''.join(first_time_caller_message)
@@ -328,3 +339,10 @@ def send_wrong_query_sms_content(price_info_incoming_obj, farmer_number, query_c
     price_info_incoming_obj.save()
 
     send_info_using_textlocal(farmer_number, sms_content, price_info_incoming_obj)
+
+# Get TextLocal Sms Status
+def get_textlocal_sms_status(apikey, messageID):
+        params = {'apikey': apikey, 'message_id': messageID}
+        f = urllib.urlopen(TEXT_LOCAL_SMS_STATUS_API
+            + urllib.urlencode(params))
+        return (f.read())

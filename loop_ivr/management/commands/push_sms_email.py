@@ -15,7 +15,7 @@ from dg.settings import EMAIL_HOST_USER, team_contact
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
-        parser.add_argument('days', type=int)
+        parser.add_argument('--days', type=int)
 
     def send_mail(self, email_subject, period_label, active_caller_count, active_loop_farmer_count,
                 active_non_loop_farmer_count, active_aggregators_count, total_queries_count,
@@ -25,10 +25,7 @@ class Command(BaseCommand):
         from_email = EMAIL_HOST_USER
         # to_email = ['tech@digitalgreen.org']
         
-        to_email = ['rikin@digitalgreen.org', 'saureen@digitalgreen.org', 'aditya@digitalgreen.org',
-                    'vinay@digitalgreen.org', 'ashok@digitalgreen.org','bipin@digitalgreen.org', 
-                    'lokesh@digitalgreen.org', 'sujit@digitalgreen.org','melbin@digitalgreen.org',
-                    'erica@digitalgreen.org', 'abhisheklodha@digitalgreen.org']
+        to_email = ['loop@digitalgreen.org']
         
         body_content = ['''Dear Team <br/><br/>%s Metrics: <b>(%s)</b><br>'''%(period_label, matrix_date),
                             '''<html>
