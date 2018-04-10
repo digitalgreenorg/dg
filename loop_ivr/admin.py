@@ -11,9 +11,9 @@ class LoopIVRAdmin(AdminSite):
         return request.user.is_active
 
 class PriceInfoIncomingAdmin(admin.ModelAdmin):
-    list_filter = ['info_status', 'call_source', 'to_number', 'incoming_time']
+    list_filter = ['info_status', 'call_source', 'to_number', 'incoming_time', 'is_rate_available']
     search_fields = ['from_number']
-    list_display = ('id' ,'call_id', 'from_number', 'to_number', 'incoming_time', 'call_source', 'info_status', 'query_code', 'prev_info_status', 'prev_query_code','server_response_time')
+    list_display = ('id' ,'call_id', 'from_number', 'to_number', 'incoming_time', 'call_source', 'info_status', 'query_code', 'prev_info_status', 'prev_query_code','is_rate_available', 'server_response_time')
 
 class PriceInfoLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'price_info_incoming', 'crop', 'mandi')
