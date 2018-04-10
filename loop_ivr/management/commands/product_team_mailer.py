@@ -10,12 +10,12 @@ import pandas as pd
 class Command(BaseCommand):
     
     def add_arguments(self, parser):
-        parser.add_argument('days', type=int)
-        parser.add_argument('delay', type=int)
+        parser.add_argument('--days', type=int)
+        parser.add_argument('--delay', type=int)
 
     def send_mail(self, email_subject=None, start_date=None, period_label=None, no_incoming_sms=None, no_sms_users=None, per_correct_code_entered_sms=None, no_incoming_call=None \
                         ,per_correct_code_entered_call=None, no_call_backs_time_limit=None, no_first_attempt_success=None, today_caller_object_sms_count=None, no_sms_sent=None \
-                        , no_sms_dilivered=None, no_sms_diliver_time_limit=None, total_correct_code_entered_sms=None, today_rates_available_count=None):
+                        , no_sms_dilivered=None, no_sms_diliver_time_limit=None, total_correct_code_entered_sms=None, today_rates_available_count=None, delay=None):
         from_email = EMAIL_HOST_USER
 
         # to_email = ['sujit@digitalgreen.org']
@@ -69,7 +69,7 @@ class Command(BaseCommand):
                                                     <td><b>%s</b></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><b># Call backs with time > t</b></td>
+                                                    <td><b># Call backs with time > %s Sec</b></td>
                                                     <td><b>%s</b></td>
                                                 </tr>
                                                 <tr>
@@ -95,7 +95,7 @@ class Command(BaseCommand):
                                                     <td><b>%s</b></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><b># SMS with Delivery Time > t sec </b></td>
+                                                    <td><b># SMS with Delivery Time > %s sec </b></td>
                                                     <td><b>%s</b></td>
                                                 </tr>
                                                 <tr>
@@ -109,8 +109,8 @@ class Command(BaseCommand):
                                             </tbody>
                                         </table>
                         '''%(no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
-                        ,per_correct_code_entered_call, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
-                        , no_sms_dilivered, no_sms_diliver_time_limit, total_correct_code_entered_sms, today_rates_available_count),
+                        ,per_correct_code_entered_call, delay, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
+                        , no_sms_dilivered, delay, no_sms_diliver_time_limit, total_correct_code_entered_sms, today_rates_available_count),
                         '<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thank you.']
                                                 # <tr>
                                                 #     <td><b></b></td>
@@ -128,8 +128,8 @@ class Command(BaseCommand):
         period_label = {'1': 'Daily', '7' : 'Weekly'}
         comparison_param_label = {'1': 'DoD', '7': 'WoW' }
 
-        # today_date = datetime.now().date()
-        today_date = datetime(2018, 04, 11).date()
+        today_date = datetime.now().date()
+        # today_date = datetime(2018, 04, 11).date()
         start_date = today_date-timedelta(days=date_range)
         prev_start_date = start_date - timedelta(days=date_range)
 
@@ -200,14 +200,13 @@ class Command(BaseCommand):
         df['time_delay'] = df.groupby('price_info_incoming')['api_call_initiation_time', 'delivery_time'].diff(axis='columns')['delivery_time']
         df_max = df.groupby('price_info_incoming')['time_delay'].max()
         time_delay = pd.Timedelta(seconds=delay)
-        print type(df_max)
         no_sms_diliver_time_limit = df_max.loc[lambda x : x > time_delay].count()
         
         
         self.send_mail(email_subject=email_subject, start_date=start_date, period_label=period_label_str, no_incoming_sms=no_incoming_sms, no_sms_users=no_sms_users, 
         per_correct_code_entered_sms=per_correct_code_entered_sms, no_incoming_call=no_incoming_call, per_correct_code_entered_call=per_correct_code_entered_call, \
         no_call_backs_time_limit=no_call_backs_time_limit, no_first_attempt_success=no_first_attempt_success, today_caller_object_sms_count=today_caller_object_sms_count, no_sms_sent=no_sms_sent, \
-        no_sms_dilivered=no_sms_dilivered, no_sms_diliver_time_limit=no_sms_diliver_time_limit, total_correct_code_entered_sms=per_correct_code_entered_sms, today_rates_available_count=today_rates_available_count )
+        no_sms_dilivered=no_sms_dilivered, no_sms_diliver_time_limit=no_sms_diliver_time_limit, total_correct_code_entered_sms=per_correct_code_entered_sms, today_rates_available_count=today_rates_available_count, delay=delay )
 
 
 
