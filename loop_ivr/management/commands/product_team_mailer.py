@@ -13,9 +13,9 @@ class Command(BaseCommand):
         parser.add_argument('days', type=int)
         parser.add_argument('delay', type=int)
 
-    def send_mail(self, email_subject, start_date, period_label, no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
-                        ,per_correct_code_entered_call, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
-                        , no_sms_dilivered, no_sms_diliver_time_limit, today_caller_object_call_count, today_rates_available_count):
+    def send_mail(self, email_subject=None, start_date=None, period_label=None, no_incoming_sms=None, no_sms_users=None, per_correct_code_entered_sms=None, no_incoming_call=None \
+                        ,per_correct_code_entered_call=None, no_call_backs_time_limit=None, no_first_attempt_success=None, today_caller_object_sms_count=None, no_sms_sent=None \
+                        , no_sms_dilivered=None, no_sms_diliver_time_limit=None, total_correct_code_entered_sms=None, today_rates_available_count=None):
         from_email = EMAIL_HOST_USER
 
         # to_email = ['sujit@digitalgreen.org']
@@ -110,7 +110,7 @@ class Command(BaseCommand):
                                         </table>
                         '''%(no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
                         ,per_correct_code_entered_call, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
-                        , no_sms_dilivered, no_sms_diliver_time_limit, today_caller_object_call_count, today_rates_available_count),
+                        , no_sms_dilivered, no_sms_diliver_time_limit, total_correct_code_entered_sms, today_rates_available_count),
                         '<br/><br/>Please contact system@digitalgreen.org for any clarification.<br/><br/>Thank you.']
                                                 # <tr>
                                                 #     <td><b></b></td>
@@ -161,7 +161,7 @@ class Command(BaseCommand):
         no_sms_users = get_active_user_comp_info(today_caller_object_sms_user_count, yesterday_caller_object_sms_user_count, comparison_param_label_str)
 
         # Correct Queries
-        today_caller_object_correct_query_sms_count = today_caller_object.filter(call_source=3, info_status=1).count()
+        today_caller_object_correct_query_sms_count = today_caller_object.filter(info_status=1).count()
         yesterday_caller_object_correct_query_sms_count = yesterday_caller_object.filter(call_source=3, info_status=1).count()
 
         per_correct_code_entered_sms = get_active_user_comp_info(today_caller_object_correct_query_sms_count, yesterday_caller_object_correct_query_sms_count, comparison_param_label_str)
@@ -204,9 +204,10 @@ class Command(BaseCommand):
         no_sms_diliver_time_limit = df_max.loc[lambda x : x > time_delay].count()
         
         
-        self.send_mail(email_subject, start_date, period_label_str, no_incoming_sms, no_sms_users, per_correct_code_entered_sms, no_incoming_call \
-                        ,per_correct_code_entered_call, no_call_backs_time_limit, no_first_attempt_success, today_caller_object_sms_count, no_sms_sent \
-                        , no_sms_dilivered, no_sms_diliver_time_limit, today_caller_object_call_count, today_rates_available_count )
+        self.send_mail(email_subject=email_subject, start_date=start_date, period_label=period_label_str, no_incoming_sms=no_incoming_sms, no_sms_users=no_sms_users, 
+        per_correct_code_entered_sms=per_correct_code_entered_sms, no_incoming_call=no_incoming_call, per_correct_code_entered_call=per_correct_code_entered_call, \
+        no_call_backs_time_limit=no_call_backs_time_limit, no_first_attempt_success=no_first_attempt_success, today_caller_object_sms_count=today_caller_object_sms_count, no_sms_sent=no_sms_sent, \
+        no_sms_dilivered=no_sms_dilivered, no_sms_diliver_time_limit=no_sms_diliver_time_limit, total_correct_code_entered_sms=per_correct_code_entered_sms, today_rates_available_count=today_rates_available_count )
 
 
 
