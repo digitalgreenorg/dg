@@ -128,8 +128,8 @@ class Command(BaseCommand):
         period_label = {'1': 'Daily', '7' : 'Weekly'}
         comparison_param_label = {'1': 'DoD', '7': 'WoW' }
 
-        today_date = datetime.now().date()
-        # today_date = datetime(2018, 04, 04).date()
+        # today_date = datetime.now().date()
+        today_date = datetime(2018, 04, 11).date()
         start_date = today_date-timedelta(days=date_range)
         prev_start_date = start_date - timedelta(days=date_range)
 
