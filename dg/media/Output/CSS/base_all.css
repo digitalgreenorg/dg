@@ -29,6 +29,39 @@
 /* Footer Div */
 #footertop									{ clear:both; margin-top:20px; width:59px; height:17px; background:url("/media/Output/Images/footertopbg5.png"); background-position:center; background-repeat:none; }
 #footerdivleft								{ margin-top:0px; width:900px; border-top:10px solid #c0e481; height:100px; background:url("/media/Output/Images/footerbg2.png"); background-repeat:x-repeat; }		
+#footerdivleft > ul {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+    font-size: smaller;
+}
+
+.footer_copyright {
+    display: inline;
+    font-family: 'Montserrat', sans-serif;
+    font-size: smaller;
+}
+
+.privacy_policy {
+    display: inline;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    font-size: smaller;
+}
+
+.terms_of_service {
+    display: inline;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    font-size: smaller;
+}
+
+.privacy_policy a, .terms_of_service a {
+	text-decoration: none;
+	color: black;
+}
+
 #footerquicklinkdiv ul						{ margin-top:-10px; margin-left:-32px; }
 #footerquicklinkdiv ul li					{ float:left; list-style:none; font-size:12px; font-family:Arial,Helvetica,Sans-Serif; font-weight:normal; color:Gray; }
 .footerquicklinkgap							{ margin-left:10px; margin-right:10px; }

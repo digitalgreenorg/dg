@@ -13,11 +13,13 @@ from coco.base_models import VIDEO_GRADE
 from coco.base_models import VIDEO_REVIEW
 from coco.base_models import REVIEW_BY
 from coco.base_models import PARENT_CATEGORY
+from coco.base_models import ACTIVITY_CHOICES
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator
 from people.models import Person
 from training.log.training_log import enter_to_log
+from django.template.defaultfilters import truncatechars
 
 
 class PracticeSector(CocoModel):
@@ -235,5 +237,65 @@ pre_delete.connect(delete_log, sender=NonNegotiable)
 
 class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=200, null=True)
     vc = models.CharField(max_length=100)
     video = models.ForeignKey(Video, null=True, blank=True)
+    activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "JSLPS Video"
+        verbose_name_plural = "JSLPS Video"
+
+    def __unicode__(self):
+        return self.vc
+
+
+
+class APCrop(CocoModel):
+    subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
+    crop_code = models.CharField(max_length=80)
+    crop_name = models.CharField(max_length=80)
+    crop_name_telgu = models.CharField(max_length=255, null=True)
+
+    def __unicode__(self):
+        return """%s:%s""" % (self.crop_name, self.crop_code)
+
+    class Meta:
+        verbose_name = "Bluefrog Crop"
+        verbose_name_plural = "Bluefrog Crop"
+
+
+class APPractice(CocoModel):
+    pest_code = models.CharField(max_length=80)
+    pest_name = models.CharField(max_length=80)
+    pest_name_telgu = models.CharField(max_length=255, null=True)
+
+    def __unicode__(self):
+        return """%s:%s""" % (self.pest_name, self.pest_code)
+
+    class Meta:
+        verbose_name = "Bluefrog Practice"
+        verbose_name_plural = "Bluefrog Practice"
+
+
+
+class APVideo(CocoModel):
+    video = models.ForeignKey(Video, null=True, blank=True)
+    video_short_name = models.CharField(max_length=40)
+    video_short_regionalname = models.CharField(max_length=40)
+    subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
+    # districtscreening = models.ManyToManyField(DistrictScreening, blank=True)
+    practice = models.ManyToManyField(APPractice, blank=True)
+
+    
+    class Meta:
+        verbose_name = "Video"
+        verbose_name_plural = "Video"
+
+    @property
+    def short_video_title(self):
+        return truncatechars(self.video.title, 50)
+
+
+    def __unicode__(self):
+        return """%s:%s:%s""" % (str(self.id), self.video.title, self.video_short_name)

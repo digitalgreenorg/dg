@@ -16,6 +16,10 @@ class QACocoAdmin(AdminSite):
 
 qacoco_admin = QACocoAdmin(name="admin_qacoco")
 
+qacoco_admin.index_template = 'social_website/index.html'
+qacoco_admin.login_template = 'social_website/login.html'
+qacoco_admin.logout_template = 'social_website/home.html'
+
 qacoco_admin.register(QAReviewerCategory)
 qacoco_admin.register(QAReviewerName, QAReviewerNameAdmin)
 qacoco_admin.register(QACocoUser, QACocoUserAdmin)

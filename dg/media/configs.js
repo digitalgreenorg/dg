@@ -1370,7 +1370,7 @@ function() {
                        line_11:"Base de données dernièrement supprimée et téléchargée ici", line_12:"Base de données dernièrement synchronisée",
                        line_13:"Entrées pour téléchargement"},
         background_download_interval: 5 * 60 * 1000,
-        inc_download_url: "/get_log/",
+        inc_download_url: "/coco/get_log/",
         afterFullDownload: function(start_time, download_status){
             return saveTimeTaken();
             function saveTimeTaken(){

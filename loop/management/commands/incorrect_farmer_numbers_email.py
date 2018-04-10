@@ -9,7 +9,7 @@ from dg.settings import MEDIA_ROOT
 __author__ = 'Lokesh'
 
 from loop.sendmail import common_send_email
-from loop.models import LoopUser
+from loop.models import LoopUser, District
 from loop.utils.emailers_support import date_setter
 from django.core.management.base import BaseCommand
 from loop.utils.emailers_support.queries import *
@@ -55,11 +55,13 @@ class Command(BaseCommand):
             content_for_mail = self.file_creator_date_specific(['2015-07-01', from_to_date[1]], aggregator_to_check_id_string,
                                                 aggregators)
             email_body_stats_alltime = content_for_mail[0]
-            email_file_list.append(content_for_mail[1])
+            for files in content_for_mail[1]:
+                email_file_list.append(files)
 
             content_for_mail = self.file_creator_date_specific(from_to_date, aggregator_to_check_id_string, aggregators)
             email_body_stats_currenttime = content_for_mail[0]
-            email_file_list.append(content_for_mail[1])
+            for files in content_for_mail[1]:
+                email_file_list.append(files)
 
             for element in email_body_stats_alltime:
                 items.append({'name':element, 'total':email_body_stats_alltime[element], 'current': email_body_stats_currenttime[element] if email_body_stats_currenttime[element] is not None else '0'})
@@ -71,11 +73,13 @@ class Command(BaseCommand):
             content_for_mail = self.file_creator_date_specific(['2015-07-01', from_to_date[1]], aggregator_to_check_id_string,
                                                 aggregators)
             email_body_stats_alltime = content_for_mail[0]
-            email_file_list.append(content_for_mail[1])
+            for files in content_for_mail[1]:
+                email_file_list.append(files)
 
             content_for_mail = self.file_creator_date_specific(from_to_date, aggregator_to_check_id_string, aggregators)
             email_body_stats_currenttime = content_for_mail[0]
-            email_file_list.append(content_for_mail[1])
+            for files in content_for_mail[1]:
+                email_file_list.append(files)
 
             for element in email_body_stats_alltime:
                 items.append({'name':element, 'total':email_body_stats_alltime[element], 'current': email_body_stats_currenttime[element] if email_body_stats_currenttime[element] is not None else 0})
@@ -113,8 +117,30 @@ class Command(BaseCommand):
 
         create_xlsx(workbook, data_set_all, table_properties, table_position_to_start, worksheet_name)
 
-        file_to_send = header_dict_for_loop_email_mobile_numbers['workbook_name'] % (
-            MEDIA_ROOT, '', str(from_to_date[0]), str(from_to_date[1]))
+        file_to_send = []
+        file_to_send.append(header_dict_for_loop_email_mobile_numbers['workbook_name'] % (
+            MEDIA_ROOT, '', str(from_to_date[0]), str(from_to_date[1])))
+
+        # Generate District Wise Sheets.
+        district_wise_query_result_data = self.district_wise_data_generator(from_to_date, aggregator_to_check_id_string)
+        district_wise_data_set_all = self.district_wise_get_all_data(district_wise_query_result_data)
+        district_list = District.objects.all()
+        table_properties = {'data': None, 'autofilter': False, 'banded_rows': False,
+                            'style': 'Table Style Light 15',
+                            'columns': header_dict_for_loop_email_mobile_numbers['column_properties_district_wise']}
+        for district in district_list:
+            structured_data_set = self.district_wise_set_filtered_structured_data(district_wise_data_set_all['All'], district)
+            if structured_data_set:
+                data_set = dict()
+                data_set[district.district_name_en] = structured_data_set
+                workbook = create_workbook(header_dict_for_loop_email_mobile_numbers['workbook_name_per_district'] % (
+                            MEDIA_ROOT, district.district_name_en,'', str(from_to_date[0]), str(from_to_date[1])))
+                worksheet_name[district.district_name_en] = header_dict_for_loop_email_mobile_numbers['worksheet_name'] % (
+                    str(district.district_name_en), str(from_to_date[0]), str(from_to_date[1]))
+                create_xlsx(workbook, data_set, table_properties, table_position_to_start, worksheet_name)
+                file_to_send.append(header_dict_for_loop_email_mobile_numbers['workbook_name_per_district'] % (
+                            MEDIA_ROOT, district.district_name_en,'', str(from_to_date[0]), str(from_to_date[1])))
+
         return [data_list_for_email_body, file_to_send]
 
     def data_generator(self, from_to_date, aggregator_to_check_id_string):
@@ -146,3 +172,31 @@ class Command(BaseCommand):
             row[0] = i
         return filtered_data
 
+    def district_wise_data_generator(self, from_to_date, aggregator_to_check_id_string):
+        query = query_for_incorrect_phone_all_per_district % (
+            str(from_to_date[0]), str(from_to_date[1]), aggregator_to_check_id_string, str(from_to_date[0]),
+            str(from_to_date[1]))
+        query_result = onrun_query(query)
+        return query_result
+
+    def district_wise_get_all_data(self, data_from_query_result):
+        data = collections.OrderedDict()
+        data['All'] = []
+        i = 0
+        for result in data_from_query_result:
+            i = i + 1
+            temp = list(result)
+            if int(temp[6]) >= 9999999999:
+                temp[6] = u'नंबर नहीं है'
+            temp.insert(0, i)
+            data['All'].append(temp)
+        return data
+
+    def district_wise_set_filtered_structured_data(self, data_store, district):
+        i = 0
+        filtered_data = [row for row in data_store if row[1] == district.district_name_en]
+        filtered_data = copy.deepcopy(filtered_data)
+        for row in filtered_data:
+            i = i + 1
+            row[0] = i
+        return filtered_data

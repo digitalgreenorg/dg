@@ -59,11 +59,13 @@ def extract_filters_request(request):
         apply_filter = True if request.GET['apply_filter'] == 'true' else False
     else :
         apply_filter = False
-    if 'chartType' in request.GET and 'chartName' in request.GET:
+    if 'chartType' in request.GET:
         chart_type =  str(request.GET.get('chartType'))
-        chart_name = str(request.GET.get('chartName'))
     else:
         chart_type = ''
+    if 'chartName' in request.GET:
+        chart_name = str(request.GET.get('chartName'))
+    else:
         chart_name = ''
     trainers_list = request.GET.getlist('Trainer')
     states_list = request.GET.getlist('State')
@@ -254,7 +256,6 @@ def year_month_wise_data(chart_name, result):
 
 def graph_data(request):
     filter_args = extract_filters_request(request)
-
     if filter_args['chart_name'] in ['state_trainer_#trainings', 'state_trainer_#mediators']:
         sql_query = trainings_mediators_query(**filter_args)
         result = get_pandas_dataframe(sql_query)
