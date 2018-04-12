@@ -368,7 +368,6 @@ class FarmerResource(BaseResource):
             bundle.data['correct_phone_date'] = None
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
-            import pdb;pdb.set_trace()
             if bundle.obj.user_created_id in AGGREGATORS_IDEO:
                 user = LoopUser.objects.get(user=bundle.obj.user_created_id)
                 initiate_ivr_call(bundle.obj,user.preferred_language)
