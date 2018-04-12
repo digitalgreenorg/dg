@@ -36,7 +36,7 @@ def send_reg_sms(farmer,language):
 def send_sms_using_textlocal(farmer_no, custom_id,msg_type,language):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
     if msg_type==0:
-    	sms_body = registration_sms['welcome'][language] 
+    	sms_body = registration_sms['welcome'][language.notation] 
     if msg_type==4:
     	sms_body = already_exist_sms['hi']
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
@@ -56,10 +56,10 @@ def sms_response_from_txtlcl(request):
 
 def send_first_transportation_code(farmer,code,query_code,custom_id,language):
 	if query_code=='1':
-		sms_body = ('%s %s %s') % (registration_sms['transportion_code_beg'][language],code ,registration_sms['transportion_code_end'][language])
+		sms_body = ('%s %s %s') % (registration_sms['transportion_code_beg'][language.notation],code ,registration_sms['transportion_code_end'][language.notation])
 		#sms_body = registration_sms['transportion_code_beg']['en'] + code + registration_sms['transportion_code_end']
 	else:
-		sms_body = registration_sms['input_error'][language]
+		sms_body = registration_sms['input_error'][language.notation]
 	sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
 	parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer.phone,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_CODE_RESPONSE_URL}
@@ -123,7 +123,7 @@ def random_with_N_digits(n):
 
 def send_msg_sms_using_textlocal(farmer_no, custom_id,language):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    sms_body = first_transaction_sms[language]
+    sms_body = first_transaction_sms[language.notation]
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
@@ -151,7 +151,7 @@ def send_msg_after_first_trans(from_date,to_date):
 			send_refer_transport_code(farmer)
 
 def send_referral_transportation_code(farmer,code,custom_id,language):
-	sms_body = ('%s %s %s') % (referral_transport_sms['beg'][language],code ,referral_transport_sms['end'][language])
+	sms_body = ('%s %s %s') % (referral_transport_sms['beg'][language.notation],code ,referral_transport_sms['end'][language.notation])
 		#sms_body = registration_sms['transportion_code_beg']['en'] + code + registration_sms['transportion_code_end']
 	sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
 	parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer.phone,
@@ -297,7 +297,7 @@ def initiate_ivr_call(farmer,language):
 	
 	dg_number_br='01139589707'
 	dg_number_ap = '01139587500'
-	
+
 	if language.notation == 'hi':
 		dg_number= dg_number_br
 		app_id = app_id_br
