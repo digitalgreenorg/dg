@@ -292,14 +292,18 @@ def ivr_response(request):
 def initiate_ivr_call(farmer,language):
 
 	app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-	app_id = 165528 # MARKET_INFO_APP
-	app_url = APP_URL%(app_id,)
+	app_id_br = 165528 # MARKET_INFO_APP
+	app_id_ap = 168599
+	
 	dg_number_br='01139589707'
 	dg_number_ap = '01139587500'
 	if language == 'hi':
 		dg_number= dg_number_br
+		app_id = app_id_br
 	else:
 		dg_number= dg_number_ap
+		app_id = app_id_ap
+	app_url = APP_URL%(app_id,)
 	phone_number = '0'+str(farmer.phone)
 	call_response_url = IVR_RECEIPT_URL #MARKET_INFO_CALL_RESPONSE_URL
 	reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=0)
