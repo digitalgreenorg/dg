@@ -1,0 +1,433 @@
+{% include "includes/header.html" %}
+    {% include "includes/partials/mainCarousel.html" %}
+    {% load app_tags %}
+    <section id="main" role="main" class="wrapper">
+        <div class="inner-wrapper grid layout-vr-md">
+            <div class="grid-col grid-size1of3">
+                <div class="grid-pad-rt-md centered">
+                    <h2 class="hdg-b hdg-source-lt layout-vr-tiny">Who we are</h2>
+                    <p class="hdg-f centered hdg-source-reg layout-vr-sm">A not-for-profit which brings together technology and social organisations to improve agriculture, health and nutrition
+                    </p>
+                </div>
+            </div>
+            <div class="grid-col grid-size1of3">
+                <div class="borderLt grid-pad-rt-md centered">
+                    <h2 class="hdg-b hdg-source-lt layout-vr-tiny">What we do</h2>
+                    <p class="hdg-f hdg-source-reg layout-vr-sm">We build innovative platforms to enable rural communities to create and share videos for wider adoption of locally relevant practices</p>
+                </div>
+            </div>
+            <div class="grid-col grid-size1of3">
+                <div class="borderLt centered">
+                    <h2 class="hdg-b hdg-source-lt layout-vr-tiny">Who we work with</h2>
+                    <p class="hdg-f hdg-source-reg layout-vr-sm">A network of development organisations in South Asia and Sub-Saharan Africa use our approach to amplify their impact</p>
+                </div>
+            </div>
+            <!-- FEATURED COLLECTIONS -->
+            <!--div class="featured layout-vr-xlg">
+                <div class="grid js-featured-collection-wrapper">
+            </div>-->
+            <!-- End .featured -->
+        </div> <!-- End .inner-wrapper -->
+    </section> <!-- End .wrapper -->
+    
+    <section class="mainBg mainBg-grey">
+        <div class="wrapper">
+            <div class="inner-wrapper js-collections-wrapper">
+                <header class="clearfix layout-vr-md">
+                    <div class="grid-col">
+                        <h1 class="hdg-a hdg-source-lt">Community Videos</h1>
+                    </div>
+                    <div class="grid-rt">
+                        {% include "includes/partials/mostFilters.html"%}
+                    </div>
+                </header> <!-- End .clearfix -->
+                <ul class="blocks blocks-4-up clearfix js-collections-container">
+
+                        <!-- Dynamic Collections Content Here -->
+                </ul>
+                <div class="gradientBg-ft ">
+                    <!--div class="pagination-wrapper js-pagination">
+                    </div-->
+                    <div class="gradientBg-ft-btn">
+                    </div>
+                </div>
+            </div> <!-- End .inner-wrapper -->
+        </div> <!-- End .wrapper -->
+    </section>
+    
+    <section class="wrapper mainBg mainBg-gradient">
+        <div class="grid inner-wrapper js-news-feed-wrapper">
+            <div class="grid-col grid-size2of4">
+                <div class="borderRt">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Blog</h2>                    
+                    <ul class="v-list-sm">
+                        <li>               
+                            {% for blog_post in blog_posts %}
+                                <h3 class="hdg-green copy layout-vr-tiny hdg-bold">
+                                    <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a>
+                                </h3>
+                                <div class="copy-italic">
+                                    {{ blog_post.publish_date.date }}
+                                </div>
+                                <p class="copy">
+                                    {{ blog_post.content|striptags|slice:":120"}}
+                                    <a href="{{ blog_post.get_absolute_url }}">...read more</a>
+                                </p> 
+                                <div class="layout-vr-md"></div>
+                            {% endfor %}
+                        </li> 
+                    </ul>   
+                </div>          
+            </div>
+            <div class="grid-col grid-size2of4">
+                <div class="grid-pad-lt-md">
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md">Resources</h2>
+                    <ul class="v-list-md">
+                        <li>
+                            <article class="media">
+                                <div class="bd">
+                                    <div class="layout-vr-sm"> <!-- bd-text  -->
+                                        <div class="grid">
+                                            <div class="grid-col grid-size1of3">
+                                                <a href="/resources/annual_reports/#annualreport16"><img src="{{STATIC_URL}}social_website/content/homepage/AR2016.jpg" target="/resources/annual_reports/#annualreport16"></a>
+                                            </div>
+                                            <div class="grid-col grid-size2of3">
+                                                <a href="/resources/annual_reports/#annualreport16"><h3 class="hdg-green copy layout-vr-tiny hdg-bold">Annual Report 2016</h3></a>
+                                                <p class="copy">
+                                                    A comprehensive description of Digital Green’s activities throughout the financial year 2016.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- End .bd -->
+                            </article>
+                        </li>
+                        <li>
+                            <article class="media">
+                                <div class="bd">
+                                    <div class="layout-vr-sm"> <!-- bd-text  -->
+                                        <div class="grid">
+                                            <div class="grid-col grid-size1of3">
+                                                <a href="{{STATIC_URL}}docs/DG-Brochure-Sept-2016-Facing-pages.pdf"><img src="{{STATIC_URL}}social_website/content/homepage/DG-Brochure.png" target="_blank"></a>
+                                            </div>
+                                            <div class="grid-col grid-size2of3">
+                                                <a href="{{STATIC_URL}}docs/DG-Brochure-Sept-2016-Facing-pages.pdf"><h3 class="hdg-green copy layout-vr-tiny hdg-bold">Key Facts</h3></a>
+                                                <p class="copy">
+                                                    A quick introduction to Digital Green’s process, approach and field of activities across South Asia and Sub-Saharan Africa.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- End .bd -->
+                            </article>
+                        </li>
+                        <li>
+                            <article class="media">
+                                <div class="bd">
+                                    <div class="layout-vr-sm"> <!-- bd-text  -->
+                                        <div class="grid">
+                                            <div class="grid-col grid-size1of3">
+                                                <a href="{{STATIC_URL}}docs/success_stories/Voices.pdf"><img src="{{STATIC_URL}}social_website/content/homepage/voices.png" target="_blank"></a>
+                                            </div>
+                                            <div class="grid-col grid-size2of3">
+                                               <a href="/resources/field_stories/#voices"><h3 class="hdg-green copy layout-vr-tiny hdg-bold">Voices from the Field</h3></a>
+                                                <p class="copy">
+                                                    A compilation of stories of some of the many lives Digital Green has touched in different ways.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- End .bd -->
+                            </article>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div> <!-- End .inner-wrapper -->
+        
+        <div class="wrapper">
+            <div class="inner-wrapper">
+                <div class="grid layout-vr-sm">
+                    <div class="grid-col grid-size2of4 layout-vr-sm">
+                        <div class="borderLt grid-pad-rt-md centered">
+                            <div class="grid-rt">
+                                <a  href="/blog" class="btn">VIEW MORE BLOGS</a> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-col grid-size2of4">
+                        <div class="borderLt grid-pad-rt-md centered">
+                            <div class="grid-rt">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="wrapper layout-vr-md">
+            <!-- NEWS SECTION-->
+            <div class="inner-wrapper layout-vr-md">
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">In the News</h2>
+                <div class="grid">
+                <div class="grid-col grid-size3of5">
+                    <div class="js-imageCarousel imageCarousel">
+                        <div class="carousel-container js-carousel-container">
+                            <ul class="carousel-list">
+                                <li>
+                                    <img src="{{STATIC_URL}}social_website/content/homepage/Hillary.JPG" width="100%">
+                                    </img>
+                                    <span class="image-carousel hdg-source-lt hdg-f hdg-white image-carousel-caption push-top-md grid-pad-lt-tiny">
+                                        Rikin Gandhi, CEO, Digital Green with Hillary Clinton
+                                    </span>
+                                </li>
+                                <li>
+                                    <img src="{{STATIC_URL}}social_website/content/homepage/jairam.jpg" width="100%">
+                                    </img>
+                                    <span class="image-carousel hdg-source-lt hdg-f hdg-white image-carousel-caption push-top-md grid-pad-lt-tiny">
+                                        Ministry of Rural Development, Govt. of India, appoints Digital Green as the National Support Organization for its flagship, National Rural Livelihood Program.
+                                    </span>
+                                </li>
+                                <li>
+                                    <img src="{{STATIC_URL}}social_website/content/homepage/rikin_ted.jpg" width="100%">
+                                    </img>
+                                    <span class="image-carousel hdg-source-lt hdg-f hdg-white image-carousel-caption push-top-md grid-pad-lt-tiny">
+                                        Rikin Gandhi at a TED talk about using ICT and the "American Idol" model in agriculture.    
+                                    </span>
+                                </li>
+                                <li>
+                                    <img src="{{STATIC_URL}}social_website/content/homepage/gic.jpg" width="100%">
+                                    </img>
+                                    <span class=" image-carousel hdg-source-lt hdg-f hdg-white image-carousel-caption push-top-md grid-pad-lt-tiny">
+                                        Digital Green is the Google Impact awardee for India
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="js-carousel-nav">
+                            <ul class="h-list img-effects grid-rt" style="padding-right:3px; padding-top:15px">
+                                <li><img src="{{STATIC_URL}}social_website/content/homepage/Hillary.JPG" width="126px">
+                                </img></li>
+                                <li><img src="{{STATIC_URL}}social_website/content/homepage/jairam.jpg" width="126px">
+                                </img></li>
+                                <li><img src="{{STATIC_URL}}social_website/content/homepage/rikin_ted.jpg" width="126px">
+                                </img></li>
+                                <li><img src="{{STATIC_URL}}social_website/content/homepage/gic.jpg" width="126px">
+                                </img></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-col grid-size2of5">
+                    <a href="http://www.bloomberg.com/news/2014-11-23/women-empowered-to-reshape-indian-farming-with-video.html" target="_blank" class="layout-vr-tiny">
+                        <div class="grid">
+                            <div class="grid-col grid-size1of3 img-effects layout-vr-tiny">
+                                <img class="grid-rt" src="{{STATIC_URL}}social_website/content/homepage/bloomberg.png" width="80px"></img>
+                            </div>
+                            <div class="grid-col grid-size2of3 layout-vr-tiny">
+                                <p class="copy grid-pad-lt-sm grid-pad-rt-md hdg-black copy-sourcesans">
+                                    Microsoft's 10-Minute Movie Stars Inspire Change in Indian Villages
+                                </p>
+                            </div>
+                        </div>
+                    </a>     
+                     <a href="http://www.gatesnotes.com/Development/Innovation" target="_blank" class="layout-vr-tiny">
+                        <div class="grid">
+                            <div class="grid-col grid-size1of3 img-effects layout-vr-tiny">
+                                <img class="grid-rt" src="{{STATIC_URL}}social_website/content/homepage/gatesnotes.png" width="80px"></img>
+                            </div>
+                            <div class=" grid-col grid-size2of3 layout-vr-tiny">
+                                <p class="copy grid-pad-lt-sm grid-pad-rt-md hdg-black copy-sourcesans">
+                                    4 Innovations for poor farmers
+                                </p>
+                            </div>
+                        </div>
+                    </a>       
+                   <a href="https://blogs.worldbank.org/endpovertyinsouthasia/digital-libraries-poor" target="_blank" class="layout-vr-sm">
+                        <div class="grid">
+                            <div class="grid-col grid-size1of3 img-effects layout-vr-tiny">
+                                <img class="grid-rt" src="{{STATIC_URL}}social_website/content/homepage/wb.png" width="80px"></img>
+                            </div>
+                            <div class="grid-col grid-size2of3 layout-vr-tiny">
+                                <p class="copy grid-pad-lt-sm grid-pad-rt-md hdg-black copy-sourcesans">
+                                    Digital libraries for the poor - facilitating bottom-up Innovation through a video-based learning platform
+                                </p>
+                            </div>
+                        </div>
+                    </a>          
+                    <a href="http://www.ndtv.com/article/india/digital-green-catalyses-a-quiet-revolution-in-india-50977"  target="_blank" class="layout-vr-tiny">
+                        <div class="grid">
+                            <div class="grid-col grid-size1of3 img-effects layout-vr-tiny">
+                                <img class="grid-rt" src="{{STATIC_URL}}social_website/content/homepage/ndtv.png" width="80px"></img>
+                            </div>
+                            <div class="grid-col grid-size2of3 layout-vr-tiny">
+                                <p class="copy grid-pad-lt-sm grid-pad-rt-md hdg-black copy-sourcesans">
+                                    Digital Green catalyses a quiet revolution in India
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="http://opinionator.blogs.nytimes.com/2013/04/03/where-youtube-meets-the-farm/?_php=true&_type=blogs&_php=true&_type=blogs&_r=1" target="_blank">
+                        <div class="grid">
+                            <div class="grid-col grid-size1of3 img-effects">
+                                <img class="grid-rt" src="{{STATIC_URL}}social_website/content/homepage/nyt.png" width="80px"></img>
+                            </div>
+                            <div class="grid-col grid-size2of3">
+                                <p class="copy grid-pad-lt-sm grid-pad-rt-md hdg-black copy-sourcesans">
+                                    Where YouTube meets the farm
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper layout-vr-md">
+            <!-- AWARDS-->
+            <div class="inner-wrapper">
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">Awards</h2>
+                <div class="awards-container">
+                    <div class="js-awards-left-arrow awards-left-arrow">
+                        <img src="{{STATIC_URL}}assets/images/awards-ticker-left.png" alt="Left" height="20" width="12">
+                    </div>
+                    <div class="awards-ticker layout-vr-md">
+                        <ul class="js-awards-ticker h-list">
+
+                            <li data='1' class="js-description">
+                                <img class="awards-shadow" style="border-radius: 50%" src="{{STATIC_URL}}social_website/content/awards/AWS.png" alt="AMW" title="Amazon Mobility Awards" height="130" width="130"/>
+                            </li>
+                            <li data='2' class="js-description"> 
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/NT-100.png" alt="Nominet Trust 100" title="Nominet Trust 100, 2015" height="130" width="130"/> 
+                            </li>
+                            <li data='3' class="js-description"> 
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/eNGO-challenge.png" alt="4th eNGO Challenge" title="4th eNGO Challenge" height="130" width="130"/> 
+                            </li>
+                            <li data='4' class="js-description"> 
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/google-impact-challenge.png" alt="Google Impact Challenge" title="Google Impact Challenge" height="130" width="130"/> 
+                            </li>
+                            <li data='5' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/fortune.png" alt="Fortune" title="Fortune" height="130" width="130"/>
+                            </li>
+                            <li data='6' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/ashoka-india-fellowship.png" alt="Ashoka India Fellowship" title="Ashoka India Fellowship" height="130" width="130"/>
+                            </li>
+                            <li data='7' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/MIT-innovators.png" alt="MIT Tech Review" title="MIT Tech Review" height="130" width="130"/>
+                            </li>
+                            <li data='8' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/stockholm-challenge.png" alt="Stockholm Challenge" title="Stockholm Challenge" height="130" width="130"/>
+                            </li>
+                            <li data='9' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/TED-fellows.png" alt="Ted Fellow" title="Ted Fellow" height="130" width="130"/>
+                            </li>
+                            <li data='10' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/IFA-norman-borlaug.png" alt="IFA Norman Borlaug" title="IFA Norman Borlaug Award - 2012" height="130" width="130"/>
+                            </li>
+                            <li data='11' class="js-description">
+                                <img class="awards-shadow" src="{{STATIC_URL}}social_website/content/awards/manthan.png" alt="Manthan" title="The Manthan Award - South Asia 2010" height="130" width="130"/>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                    <div class="js-awards-right-arrow awards-right-arrow">
+                        <img src="{{STATIC_URL}}assets/images/awards-ticker-right.png" alt="Right" height="20" width="12">
+                    </div>
+                </div>
+                <div class="hdg-f hdg-source-reg">
+                    <div class="awards-description js-awards-description" data='1'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny">Amazon Web Services Mobility Awards, 2017</a>
+                        <p>Digital Green was awarded the best non-profit/public service app of the year - Loop</p>
+                    </div>
+
+                    <div class="awards-description js-awards-description js-awards-description-show" data='2'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://socialtech.org.uk/projects/digital-green/">Nominet Trust 100, 2015</a>
+                        <p>Digital Green was named among the 100 most inspiring tech-for-good ventures from around the world. <a class="hdg-source-semibold" target="_blank" href="http://socialtech.org.uk/projects/digital-green/">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='3'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://engochallenge.org">eNGO Challenge, 2015</a>
+                        <p>Digital Green won the 4th eNGO Challenge in 2015 for Innovative use of eContent. <a class="hdg-source-semibold" target="_blank" href="http://engochallenge.org">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='4'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="https://impactchallenge.withgoogle.com/india2013#/digitalgreen">Google Impact Challenge, 2013</a>
+                        <p>Digital Green won the Google Impact Challenge in 2013. <a class="hdg-source-semibold" target="_blank" href="https://impactchallenge.withgoogle.com/india2013#/digitalgreen">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='5'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://archive.fortune.com/galleries/2010/fortune/1006/gallery.global_forum_visionaries.fortune/4.html">Fortune’s Global Forum Visionaries in Agriculture, 2010</a>
+                        <p>Digital Green’s founder and CEO, Rikin Gandhi was selected as Fortune’s Global Forum Visionary in 2010. <a class="hdg-source-semibold" target="_blank" href="http://archive.fortune.com/galleries/2010/fortune/1006/gallery.global_forum_visionaries.fortune/4.html">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='6'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://india.ashoka.org/fellow/rikin-gandhi">Ashoka Fellow</a>
+                        <p>Digital Green’s founder and CEO, Rikin Gandhi is an Ashoka Fellow since 2010. <a class="hdg-source-semibold" target="_blank" href="http://india.ashoka.org/fellow/rikin-gandhi">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='7'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://www2.technologyreview.com/tr35/profile.aspx?TRID=969">Innovator under 35 by MIT Technology Review, 2010</a>
+                        <p>Digital Green’s founder and CEO, Rikin Gandhi was selected as an innovator under 35 by MIT’s Tech Review in 2010.<a class="hdg-source-semibold" target="_blank" href="http://www2.technologyreview.com/tr35/profile.aspx?TRID=969">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='8'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://blogs.msdn.com/b/microsoft-green/archive/2008/07/09/digital-green-wins-award-in-the-stockholm-challenge-2008.aspx">Stockholm Challenge, 2008</a>
+                        <p>Digital Green won the Stockholm Challenge in 2008. <a class="hdg-source-semibold" target="_blank" href="http://blogs.msdn.com/b/microsoft-green/archive/2008/07/09/digital-green-wins-award-in-the-stockholm-challenge-2008.aspx">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='9'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://www.ted.com/profiles/299130/fellow">TED Fellow</a>
+                        <p>Digital Green’s founder and CEO, Rikin Gandhi is a TED Fellow (Agricultural Tech Innovator) <a class="hdg-source-semibold" target="_blank" href="http://www.ted.com/profiles/299130/fellow">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='10'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny" target="_blank" href="http://www.fertilizer.org//En/Media/Press_Releases_Detailed/20_April_2012.aspx">IFA Norman Borlaug Award, 2012</a>
+                        <p>Digital Green's founder and CEO, Rikin Gandhi received the IFA Norman Borlaug Award in 2012. <a class="hdg-source-semibold" target="_blank" href="http://www.fertilizer.org//En/Media/Press_Releases_Detailed/20_April_2012.aspx">Read more</a></p>
+                    </div>
+                    <div class="awards-description js-awards-description" data='11'>
+                        <a class="hdg-green hdg-source-bold layout-vr-tiny">Manthan Award South Asia in Environment, 2008</a>
+                        <p>Digital Green won the Manthan Award South Asia in 2008 in the category Environment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper layout-vr-md">
+            <!-- INVESTORS-->
+            <div class="inner-wrapper media">
+                <h2 class="hdg-a hdg-source-lt layout-vr-md">Investors</h2>
+                <div class="investors-container">
+                    <div class="investors-ticker">
+                        <ul class="js-investor-ticker h-list img-size-partner h-list-xlg">
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/mrd.jpg" alt="MoRD" /> 
+                            </li>
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/bmgf.jpg" alt="BMGF" /> 
+                            </li>
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/usaid.png" alt="USAID" /> 
+                            </li>
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/dfid.jpg" alt="DFID" /> 
+                            </li>
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/icrisat.png" alt="ICRISAT" /> 
+                            </li>
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/birac.jpg" alt="BIRAC" /> 
+                            </li>
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/google.jpg" alt="Google" /> 
+                            </li>
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/cisco.jpg" alt="CISCO" /> 
+                            </li>
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/oracle.png" alt="Oracle" /> 
+                            </li>
+                            <li> 
+                                <img src="{{STATIC_URL}}social_website/content/partners/mqed.jpeg" alt="MQed" /> 
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+{% include "includes/footer.html"%}

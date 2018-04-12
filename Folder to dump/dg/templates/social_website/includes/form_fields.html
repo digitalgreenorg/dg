@@ -1,0 +1,16 @@
+{% load mezzanine_tags %}
+
+{% nevercache %}
+<input type="hidden" name="referrer" value="{{ request.META.HTTP_REFERER }}">
+{% csrf_token %}
+{% endnevercache %}
+
+{% for field in form_for_fields %}
+{% if field.is_hidden %}
+{{ field }}
+{% endif %}
+{% endfor %}
+
+<input id="id_name" maxlength="50" name="name" type="hidden" value="{% if request.user.first_name %}{{request.user.first_name}} {{request.user.last_name}}{% else %} {{request.user.username}} {% endif %}">
+<input id="id_email" name="email" type="hidden" value="{% if request.user.email %}{{request.user.email}}{% else %} default@dg.com {% endif %}">
+<input id="id_honeypot" name="honeypot" type="hidden">

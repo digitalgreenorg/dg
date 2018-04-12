@@ -32,7 +32,7 @@ APPEND_SLASH = True
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 
-MEDIA_URL = '/media/social_website/uploads/'
+MEDIA_URL = '/media/loop/uploads/'
 MEDIA_ROOT = os.path.join(PROJECT_PATH, *MEDIA_URL.strip("/").split("/"))
 
 # List of callables that know how to import templates from various sources.
@@ -144,28 +144,28 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     #'django.contrib.comments',
     # 'corsheaders',
-    'programs',
-    'geographies',
-    'people',
-    'videos',
-    'activities',
+    # 'programs',
+    # 'geographies',
+    # 'people',
+    # 'videos',
+    # 'activities',
     #'debug_toolbar',
-    'output',
+    # 'output',
     'django.contrib.humanize',
     #'south',
-    'farmerbook',
-    'fbconnect',
-    'dimagi',
+    # 'farmerbook',
+    # 'fbconnect',
+    # 'dimagi',
     'tastypie',
     'coco',
     'social_website',
     'social.apps.django_app.default',
-    'communications',
-    'human_resources',
-    'feeds',
-    'deoanalytics',
-    'data_upload',
-    'raw_data_analytics',
+    # 'communications',
+    # 'human_resources',
+    # 'feeds',
+    # 'deoanalytics',
+    # 'data_upload',
+    # 'raw_data_analytics',
     'mezzanine.boot',
     'mezzanine.conf',
     'mezzanine.core',
@@ -177,12 +177,12 @@ INSTALLED_APPS = (
     'mezzanine.twitter',
     'filebrowser_safe',
     'grappelli_safe',
-    'videokheti',
-    'ivr',
-    'training',
+    # 'videokheti',
+    # 'ivr',
+    # 'training',
     'loop',
-    'qacoco',
-    'mrppayment',
+    # 'qacoco',
+    # 'mrppayment',
     'smart_selects',
     'loop_ivr'
 )
@@ -225,7 +225,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/logfile'),
+            'filename': os.path.join(PROJECT_PATH, 'media/loop/uploads/log/logfile'),
             'formatter': 'standard',
         },
         'console':{

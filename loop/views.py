@@ -49,7 +49,7 @@ from constants.constants import ROLE_CHOICE_AGGREGATOR, MODEL_TYPES_DAILY_PAY, D
     INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE
 
 import pandas as pd
-from training.management.databases.utility import *
+# from training.management.databases.utility import *
 from loop.management.commands.get_sql_queries import *
 import MySQLdb
 from dg.settings import DATABASES

@@ -1,0 +1,4 @@
+.inline-group .tabular tr.has_original td { padding-top:0.5em; }
+.inline-group .tabular tr.has_original td.original p { display:none; }
+#box { padding:10px; background: #FFF; border: 3px solid #5B80B2; font-weight: bold; font-family: "Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif; text-align: center; position: fixed; margin-left: -75px; margin-top: -75px; left: 50%; top: 50%; z-index: 20; display: none;}
+#screen { position: absolute; left: 0; top: 0; background: #000; }

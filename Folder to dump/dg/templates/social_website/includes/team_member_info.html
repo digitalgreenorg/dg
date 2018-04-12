@@ -1,0 +1,29 @@
+{% if mem.team == 'Executive Leadership Team' %}
+    <div class="layout-vr-md">
+        <div class="grid">
+            <div class="grid-col grid-teampage-size1of7">
+                <div class="img img-effects img-size-sq grid-pad-lt-sm">
+                    <img src="{{mem.image.url}}" alt="{{mem.name}}" title="{{mem.name}}">
+                    </img>
+                </div>
+            </div>
+            <div class="grid-col grid-teampage-size6of7">
+                <p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}, {{mem.designation}}</p>
+             <!--    <p class="copy-sm"><a href="mailto:{{mem.email}}">{{mem.email}}</a></p> -->
+                 <p class="copy-sm js-intro line-clamp team-line-clamp"> {{mem.personal_intro}} </p>
+                 <a href="#" class="js-show-more hdg-green">Show More</a>
+            </div>
+        </div>
+    </div>
+{% else %}
+<div class="grid grid-col grid-size1of3 layout-vr-md">
+    <div class="img img-effects img-size-sq">
+        <img src="{{mem.image.url}}" alt="{{mem.name}}" title="{{mem.name}}">
+    </div>
+    <div class="copy">
+        <p class="hdg-f hdg-source-semibold hdg-green">{{mem.name}}</p>
+        <p>{{mem.designation}}</p>
+         <p class="copy-sm"><a href="mailto:{{mem.email}}">{{mem.email}}</a></p>
+    </div>
+</div>
+{% endif %}

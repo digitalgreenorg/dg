@@ -1,0 +1,20 @@
+<section class="wrapper slideshow" style="border-bottom:4px solid #047d0a;">
+
+    <div class="slide" id="video-img">
+            <!-- The #player div is where the video player comes. -->
+        <div id='player' style="display: none;"></div>
+            <div class="slide-img" >
+				{% if header.currentPage == 'Home' %}
+				    <video id="video-loop" autoplay="autoplay" loop muted="muted" poster="https://s3.amazonaws.com/digitalgreenorg/DG_Website_Loop.jpg">
+                        		<source src="{{STATIC_URL}}social_website/content/{% if header.random == 1 %}loop.mp4{% else %}sugari.mp4{% endif %}" class="mp4">
+                        		<img src="https://s3.amazonaws.com/digitalgreenorg/home_carousel_img.jpg">
+                    		    </video>                    
+				{% else %}
+				    <img src="https://s3.amazonaws.com/digitalgreenorg/{% if header.currentPage == 'About' %}about_carousel_img.jpg{% elif header.currentPage == 'Events' %}events_carousel_img.jpg{% endif %}" alt="">
+				{% endif %}
+                
+				<div class="play-button" > 
+				</div>
+         </div>
+    </div>
+</section>

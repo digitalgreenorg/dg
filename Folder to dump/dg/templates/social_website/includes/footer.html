@@ -1,0 +1,201 @@
+            <div class="follow">	
+                <div class="wrapper">
+                    <div class="inner-wrapper">
+                        <div class="grid">
+                            <div class="hdg-follow grid-col grid-size3of4 layout-vr-sm">
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-source-semibold hdg-e">Who we are</h3>
+                                    <ul class="hdg-source-reg hdg-f">
+                                    </ul>
+                                </div>
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-e hdg-source-semibold">What we do</h3>
+                                    <ul class="hdg-source-reg hdg-f">
+                                    </ul>
+                                </div>
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-e hdg-source-semibold">Technologies we use</h3>
+                                    <ul class="hdg-source-reg hdg-f">
+                                    </ul>
+                                </div>
+                                <div class="grid-col grid-size1of4">
+                                    <h3 class="hdg-e hdg-source-semibold">Work with us</h3>
+                                    <ul class="hdg-source-reg hdg-f">
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="grid-col grid-size1of4">
+                                <h3 class="hdg-f hdg-source-semibold">Follow Us</h3>
+                                <ul class="social layout-vr-sm" role="navigation">
+        						    {% include "includes/partials/footer_social_media.html" %}
+                                </ul>
+                                <!-- Begin MailChimp Signup Form -->
+                                <link rel="stylesheet" type="text/css" media="screen" href="{{STATIC_URL}}assets/styles/mailchimp.css" />
+                                <style type="text/css">
+                                    #mc_embed_signup{clear:left; font:14px Helvetica,Arial,sans-serif;  width:auto;}
+                                    /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+                                       We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+                                </style>
+                                <div id="mc_embed_signup">
+                                    <form action="//digitalgreen.us7.list-manage.com/subscribe/post?u=d51864c6725a6ba45cd160867&amp;id=944c549f98" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                                        <div id="mc_embed_signup_scroll">
+                                            <div class="mc-field-group">
+                                                <label class="hdg-source-semibold hdg-f" for="mce-EMAIL">Email ID</label>
+                                                <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+                                            </div>
+                                            <div id="mce-responses" class="clear">
+                                                <div class="response" id="mce-error-response" style="display:none"></div>
+                                                <div class="response" id="mce-success-response" style="display:none"></div>
+                                            </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                                            <div style="position: absolute; left: -5000px;">
+                                                <input type="text" name="b_d51864c6725a6ba45cd160867_944c549f98" tabindex="-1" value="">
+                                            </div>
+                                            <div class="clear">
+                                                <input type="submit" value="Subscribe to Our Newsletter" name="subscribe" id="mc-embedded-subscribe" class="button" onClick="goog_report_conversion()">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script>
+                                <script type='text/javascript'>
+                                (function($) {
+                                    window.fnames = new Array(); 
+                                    window.ftypes = new Array();
+                                    fnames[0]='EMAIL';
+                                    ftypes[0]='email';
+                                }(jQuery));
+                                var $mcj = jQuery.noConflict(true);
+                                </script>
+                                <!--End mc_embed_signup-->
+                            </div>
+                        </div>
+                    </div> <!-- End .inner-wrapper -->
+                </div>  <!-- End .wrapper -->
+            </div> <!-- End .follow -->
+            
+            <footer>
+                <div class="footer" role="contentinfo">
+                    <div class="wrapper">
+                        <div class="inner-wrapper">
+                            <nav role="navigation">
+                                <ul class="copy-lt hdg-upper copy footer-links">
+                                    <li><a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"> (cc) 2013 Digital Green</a></li>
+                                </ul>
+                            </nav>
+                            <a class="footer-btn" href="/coco/coco/" target="_blank">Coco</a>
+                        </div>
+                    </div> <!-- End .inner-wrapper -->
+                </div>  <!-- End .wrapper -->
+            </footer>
+        </div>
+        <!-- End Main Wrapper -->
+        <!-- JAVASCRIPT -->
+        
+        <!-- For Debugging -->
+        <!-- <script data-main="{{STATIC_URL}}social_website/scripts/main" src="{{STATIC_URL}}social_website/scripts/libs/external/requirejs/require.js"></script> -->
+        <!-- Also change build to scripts in main.js -->
+        
+        <!-- For Production -->
+        <script type="text/javascript" src="{{STATIC_URL}}social_website/build/libs/external/requirejs/require.js"></script>
+        <script type="text/javascript" src="{{STATIC_URL}}social_website/build/main.js"></script>
+
+        <!-- Enabling Google Analytics -->
+        <script type="text/javascript">
+    		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    	</script>
+    	<script type="text/javascript">
+    		try {
+    			var pageTracker = _gat._getTracker("UA-16211208-1");
+    			pageTracker._trackPageview();
+    			} 
+    	catch(err) {}
+    	</script>
+    	
+    	<!-- Universal Google Analytics -->
+        <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-16211208-3', 'auto');  // Replace with your property ID.
+        ga('send', 'pageview');
+
+        </script>
+        <!-- End Universal Google Analytics -->
+        
+        <!-- Begin Inspectlet Embed Code -->
+	    <script type="text/javascript" id="inspectletjs">
+	    window.__insp = window.__insp || [];
+	    __insp.push(['wid', 1500693903]);
+	    (function() {
+	        function __ldinsp(){var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); }
+	        if (window.attachEvent) window.attachEvent('onload', __ldinsp);
+	        else window.addEventListener('load', __ldinsp, false);
+	        })();
+	    </script>
+	    <!-- End Inspectlet Embed Code -->
+
+        <!-- Google Code for Newsletter Sign Up Conversion Page
+        In your html page, add the snippet and call
+        goog_report_conversion when someone clicks on the
+        chosen link or button. -->
+        <script type="text/javascript">
+        /* <![CDATA[ */
+        goog_snippet_vars = function() {
+            var w = window;
+            w.google_conversion_id = 1021729762;
+            w.google_conversion_label = "2mg8CNeQwF8Q4reZ5wM";
+            w.google_remarketing_only = false;
+        }
+        // DO NOT CHANGE THE CODE BELOW.
+        goog_report_conversion = function(url) {
+            goog_snippet_vars();
+            window.google_conversion_format = "3";
+            window.google_is_call = true;
+            var opt = new Object();
+            opt.onload_callback = function() {
+                if (typeof(url) != 'undefined') {
+                    window.location = url;
+                }
+            }
+            var conv_handler = window['google_trackConversion'];
+            if (typeof(conv_handler) == 'function') {
+                conv_handler(opt);
+            }
+        }
+        /* ]]> */
+        </script>
+        <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion_async.js">
+        </script>
+        <!-- End of Google Conversion Tracker Code  -->
+
+            <!-- Quantcast Tag -->
+            <script type="text/javascript">
+                var _qevents = _qevents || [];
+
+                (function () {
+                    var elem = document.createElement('script');
+                    elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
+                    elem.async = true;
+                    elem.type = "text/javascript";
+                    var scpt = document.getElementsByTagName('script')[0];
+                    scpt.parentNode.insertBefore(elem, scpt);
+                })();
+
+                _qevents.push({
+                    qacct: "p-v8ZfLRLAahkeW"
+                });
+            </script>
+
+            <noscript>
+                <div style="display:none;">
+                    <img src="//pixel.quantserve.com/pixel/p-v8ZfLRLAahkeW.gif" border="0" height="1" width="1"
+                         alt="Quantcast"/>
+                </div>
+            </noscript>
+            <!-- End Quantcast tag -->
+
+    </body>
+</html>
