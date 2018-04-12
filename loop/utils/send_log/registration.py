@@ -18,11 +18,11 @@ from loop.utils.ivr_helpline.helpline_data import CALL_REQUEST_URL, APP_REQUEST_
 from django.db.models import Min
 
 
-def send_reg_sms(farmer):
+def send_reg_sms(farmer,language):
 	reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=0)
 	reg_sms.save()
 	msg_type=0
-	response = send_sms_using_textlocal(farmer.phone,reg_sms.id,msg_type)
+	response = send_sms_using_textlocal(farmer.phone,reg_sms.id,msg_type,language)
 	status_code = 0
 	if response['status'] == "success":
 		status_code = 1
@@ -33,10 +33,10 @@ def send_reg_sms(farmer):
 	reg_sms.save()
 
 
-def send_sms_using_textlocal(farmer_no, custom_id,msg_type):
+def send_sms_using_textlocal(farmer_no, custom_id,msg_type,language):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
     if msg_type==0:
-    	sms_body = registration_sms['welcome']['hi'] 
+    	sms_body = registration_sms['welcome'][language] 
     if msg_type==4:
     	sms_body = already_exist_sms['hi']
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
@@ -54,12 +54,12 @@ def sms_response_from_txtlcl(request):
 
 	return HttpResponse("0")
 
-def send_first_transportation_code(farmer,code,query_code,custom_id):
+def send_first_transportation_code(farmer,code,query_code,custom_id,language):
 	if query_code=='1':
-		sms_body = ('%s %s %s') % (registration_sms['transportion_code_beg']['hi'],code ,registration_sms['transportion_code_end']['hi'])
+		sms_body = ('%s %s %s') % (registration_sms['transportion_code_beg'][language],code ,registration_sms['transportion_code_end'][language])
 		#sms_body = registration_sms['transportion_code_beg']['en'] + code + registration_sms['transportion_code_end']
 	else:
-		sms_body = registration_sms['input_error']['hi']
+		sms_body = registration_sms['input_error'][language]
 	sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
 	parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer.phone,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_CODE_RESPONSE_URL}
@@ -90,12 +90,13 @@ def registration_auth_response(request):
         #import pdb;pdb.set_trace()
         farmer = Farmer.objects.filter(phone=farmer_number)
         if farmer.count()>0:
+			user = LoopUser.objects.filter(user=farmer[0].user_created_id)
 			if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified and RegistrationSms.objects.filter(farmer=farmer[0],msg_type=0).count()>0:
 				if query_code=='1':
 					code = random_with_N_digits(5)
 					reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
 					reg_sms.save()
-					response = send_first_transportation_code(farmer[0],code,query_code,farmer_number)
+					response = send_first_transportation_code(farmer[0],code,query_code,farmer_number,user[0].preferred_language)
 					farmer.update(referral_free_transport_count=farmer[0].referral_free_transport_count+1)
 					status_code = 0
 					if response['status'] == "success":
@@ -107,7 +108,7 @@ def registration_auth_response(request):
 					reg_sms.sms_status = status_code
 					reg_sms.save()
 				else:
-					response = send_first_transportation_code(farmer[0],1,query_code,farmer_number)
+					response = send_first_transportation_code(farmer[0],1,query_code,farmer_number,user[0].preferred_language)
         	
 	return HttpResponse("0")
 
@@ -120,9 +121,9 @@ def random_with_N_digits(n):
     	code = randint(range_start, range_end)
     return code
 
-def send_msg_sms_using_textlocal(farmer_no, custom_id):
+def send_msg_sms_using_textlocal(farmer_no, custom_id,language):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
-    sms_body = first_transaction_sms['hi']
+    sms_body = first_transaction_sms[language]
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
                   'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': REG_RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
@@ -137,7 +138,8 @@ def send_msg_after_first_trans(from_date,to_date):
 		if RegistrationSms.objects.filter(farmer=farmer,msg_type=1).count()==0 and farmer.time_created>=datetime.datetime.strptime('05032018', "%d%m%Y"):
 			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=1)
 			reg_sms.save()
-			response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id)
+			user = LoopUser.objects.filter(user=farmer.user_created_id)
+			response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id,language)
 			status_code = 0
 			if response['status'] == "success":
 				status_code = 1
@@ -148,8 +150,8 @@ def send_msg_after_first_trans(from_date,to_date):
 			reg_sms.save()
 			send_refer_transport_code(farmer)
 
-def send_referral_transportation_code(farmer,code,custom_id):
-	sms_body = ('%s %s %s') % (referral_transport_sms['beg']['hi'],code ,referral_transport_sms['end']['hi'])
+def send_referral_transportation_code(farmer,code,custom_id,language):
+	sms_body = ('%s %s %s') % (referral_transport_sms['beg'][language],code ,referral_transport_sms['end'][language])
 		#sms_body = registration_sms['transportion_code_beg']['en'] + code + registration_sms['transportion_code_end']
 	sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
 	parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer.phone,
@@ -169,7 +171,8 @@ def send_refer_transport_code(farmer):
 			code = random_with_N_digits(5)
 			reg_sms = FarmerTransportCode(code=code,phone=farmer_refer[0].phone,state=SMS_STATE['S'][0],msg_type=3)
 			reg_sms.save()
-			response = send_referral_transportation_code(farmer_refer[0],code,farmer_refer[0].phone)
+			user = LoopUser.objects.filter(user=farmer_refer[0].user_created_id)
+			response = send_referral_transportation_code(farmer_refer[0],code,farmer_refer[0].phone,user[0].preferred_language)
 			status_code = 0
 			if farmer.referral_free_transport_count>=0:
 				farmer.referral_free_transport_count=int(farmer.referral_free_transport_count)+1
@@ -215,7 +218,8 @@ def update_referrals():
 			obj = Referral.objects.get(id=referral.id)
 			obj.used=True
 			obj.save()
-			response = send_sms_using_textlocal(referred_by[0].phone,reg_sms.id,msg_type)
+			language = LoopUser.objects.filter(user=referred_farmer[0].user_created_id)
+			response = send_sms_using_textlocal(referred_by[0].phone,reg_sms.id,msg_type,language)
 			if response['status'] == "success":
 				status_code = 1
 				sms_id = response['messages'][0]['id']
@@ -285,12 +289,17 @@ def ivr_response(request):
 
 #def initiate_ivr_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
 
-def initiate_ivr_call(farmer):
+def initiate_ivr_call(farmer,language):
 
 	app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
 	app_id = 165528 # MARKET_INFO_APP
 	app_url = APP_URL%(app_id,)
-	dg_number='01139589707'
+	dg_number_br='01139589707'
+	dg_number_ap = '01139587500'
+	if language == 'hi':
+		dg_number= dg_number_br
+	else:
+		dg_number= dg_number_ap
 	phone_number = '0'+str(farmer.phone)
 	call_response_url = IVR_RECEIPT_URL #MARKET_INFO_CALL_RESPONSE_URL
 	reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=0)
