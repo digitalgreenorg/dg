@@ -298,7 +298,7 @@ def initiate_ivr_call(farmer,language):
 	dg_number_br='01139589707'
 	dg_number_ap = '01139587500'
 	import pdb;pdb.set_trace()
-	if language == 'hi':
+	if language.notation == 'hi':
 		dg_number= dg_number_br
 		app_id = app_id_br
 	else:
