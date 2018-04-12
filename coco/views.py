@@ -186,7 +186,7 @@ class APVideoGenerator(View):
                     data_list = []
                     practice_list = []
                     dg_practice_list = []
-                    tags = [{'id': '', 'tag_name': ''}]
+                    tags = []
                     for video_iterable in video_list:
                         dg_practice = video_iterable.video.videopractice.all()
                         for item in dg_practice:
@@ -199,6 +199,10 @@ class APVideoGenerator(View):
                                                   'practice_name': item.pest_name,
                                                   'practice_code': item.pest_code,
                                                   'practice_name_telgu': item.pest_name_telgu})
+                        tags_q = video_iterable.video.tags.all()
+                        for tag_item in tags_q:
+                            tags.append({'id': tag_item.id,
+                                         'tag_name': tag_item.tag_name})
 
                         data_list.append({'id': video_iterable.video.id,
                                          'video_title': video_iterable.video.title,
