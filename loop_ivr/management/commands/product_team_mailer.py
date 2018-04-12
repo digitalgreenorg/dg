@@ -161,7 +161,7 @@ class Command(BaseCommand):
         no_sms_users = get_active_user_comp_info(today_caller_object_sms_user_count, yesterday_caller_object_sms_user_count, comparison_param_label_str)
 
         # Correct Queries
-        today_caller_object_correct_query_sms_count = today_caller_object.filter(info_status=1).count()
+        today_caller_object_correct_query_sms_count = today_caller_object.filter(info_status=1, call_source=3).count()
         yesterday_caller_object_correct_query_sms_count = yesterday_caller_object.filter(call_source=3, info_status=1).count()
 
         per_correct_code_entered_sms = get_active_user_comp_info(today_caller_object_correct_query_sms_count, yesterday_caller_object_correct_query_sms_count, comparison_param_label_str)
