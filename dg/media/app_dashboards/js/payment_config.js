@@ -2386,13 +2386,13 @@ var models = [
     net_quantity_const: "QUANTITY",
     header_dict: {
       'aggregator': [{
-          'column_width': 3.4,
+          'column_width': 3.2,
           'formula': null,
           'label': 'S No',
           'total': false
         },
         {
-          'column_width': 8.7,
+          'column_width': 10,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -3023,13 +3023,13 @@ var models = [
     net_quantity_const: "QUANTITY",
     header_dict: {
       'aggregator': [{
-          'column_width': 3.4,
+          'column_width': 3.2,
           'formula': null,
           'label': 'S No',
           'total': false
         },
         {
-          'column_width': 8.7,
+          'column_width': 10,
           'formula': null,
           'label': 'Date',
           'total': false

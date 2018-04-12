@@ -430,6 +430,7 @@ def getTableData(data_dict):
             for header_index, header_value in enumerate(headers):
                 header_value['column_width'] = header_value.get('column_width') * 6.3
                 header_value['align'] = 'center'
+                print header_value['column_width']
             data['heading_of_sheet'] = heading_of_sheets[sheet_index]
             data['headers'] = headers
             if len(combined_data[sheet_index]) > 0:

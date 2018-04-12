@@ -52,7 +52,7 @@
 
         tr td {
             border: 1pt solid;
-            font-size: 10px;
+            font-size: 11px;
             padding: 8px 2px;
             vertical-align: bottom;
             word-wrap: break-word;
@@ -74,8 +74,9 @@
                     width: {{  header_value.column_width }}px;
                 }
             {% endfor %}
-            #transporterTable{{ forloop.counter }} tr:last-child {
+            #transporterTable{{ forloop.counter }} tr:last-child td{
                 font-weight: bold;
+                font-size: 10px;
             }
         {% endfor %}
     </style>
