@@ -14,10 +14,12 @@ from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER, TA_RIGHT
 from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from weasyprint import HTML
 
 from config import *
 from django.http import HttpResponse
 from django.template.loader import get_template
+from django.template.loader import render_to_string
 from django.template import RequestContext
 
 import pandas as pd
@@ -394,4 +396,82 @@ class PdfPrint:
             # draw footer
             canvas.drawCentredString(self.width/2.0, 30, self.footer)
         canvas.restoreState()
+
+
+def printPDF(pdf_output, data_dict):
+    try:
+        table_data = getTableData(data_dict)
+        html_template = render_to_string('app_dashboards/payment_pdf.html', {'header': data_dict.get('sheet_header'), 'footer': data_dict.get('sheet_footer'), 'values': table_data})
+
+        HTML(string=html_template).write_pdf(pdf_output)
+        pdf = pdf_output.getvalue()
+        pdf_output.close()
+        return pdf
+    except Exception as e:
+        print e
+
+
+def getTableData(data_dict):
+    try:
+        name_of_sheets = data_dict.get('name_of_sheets')
+        heading_of_sheets = data_dict.get('heading_of_sheets')
+        combined_data = data_dict.get('combined_data')
+        combined_header = data_dict.get('combined_header')
+
+        table_data_final = []
+
+        for sheet_index, item in enumerate(name_of_sheets):
+            table_data = []
+            data = {}
+            comments = []
+            headers = combined_header.values()[sheet_index]
+
+            # append data for header and calculate column widths
+            for header_index, header_value in enumerate(headers):
+                header_value['column_width'] = header_value.get('column_width') * 6.3
+                header_value['align'] = 'center'
+            data['heading_of_sheet'] = heading_of_sheets[sheet_index]
+            data['headers'] = headers
+            if len(combined_data[sheet_index]) > 0:
+                total_vals = [0] * len(combined_data[sheet_index][0])
+                total_vals_str = []
+                for value_list in combined_data[sheet_index]:
+                    value_data = []
+                    for i, value in enumerate(value_list):
+                        if type(value) is int or type(value) is float:
+                            value_data.append(u"{0:,.2f}".format(value))
+                            if headers[i].get('total'):
+                                total_vals[i] += value
+                            headers[i]['align'] = 'right'
+                        elif value is None:
+                            value_data.append("")
+                        else:
+                            value_data.append(value)
+                    table_data.append(value_data)
+
+                # manually calculate values for Total Payment (in Rs) (AP + TC - FC - CAC) for aggregator sheet
+                if sheet_index == 0:
+                    total_vals[8] = total_vals[4] + total_vals[5] - total_vals[6] - total_vals[7]
+                for value in total_vals:
+                    if value > 0:
+                        total_vals_str.append(u"{:,.2f}".format(value))
+                    else:
+                        total_vals_str.append("")
+                table_data.append(total_vals_str)
+            data['data'] = table_data
+
+            # Add comment in Aggregator part
+            if sheet_index == 0:
+                comments.append("     **Quantity is deducted for farmers having incorrect/unavailable mobile numbers.")
+                comments.append("     ##AP calculation formula (Bihar)                    = 0.2*Q ; Q<=2000")
+
+                comments.append("                                                                          = 0.2*2000 + 0.1*(Q-2000) ; Q>2000							")
+                comments.append("     ##AP calculation formula (Maharashtra)        = 0.25*Q")
+                comments.append("     ##AP calculation formula (Bangladesh)         = 0.5*Q")
+            data['comments'] = comments
+            table_data_final.append(data)
+
+        return table_data_final
+    except Exception as e:
+        print e
 
