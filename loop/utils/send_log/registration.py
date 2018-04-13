@@ -1,6 +1,6 @@
 
 from dg.settings import TEXTLOCAL_API_KEY
-from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode,Referral
+from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode,Referral,LoopUser
 from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER,REG_CODE_RESPONSE_URL,IVR_RECEIPT_URL
 from loop.config import registration_sms,first_transaction_sms,referral_transport_sms,already_exist_sms
 import requests
@@ -253,7 +253,6 @@ def registration_ivr_response(request):
         #import pdb;pdb.set_trace()
         farmer = Farmer.objects.filter(phone=farmer_number)
         if farmer.count()>0:
-			import pdb;pdb.set_trace()
 			if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified and RegistrationSms.objects.filter(farmer=farmer[0],msg_type=0).count()>0:
 				user = LoopUser.objects.filter(user=farmer[0].user_created_id)
 				if query_code=="1":
