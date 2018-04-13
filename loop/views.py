@@ -816,7 +816,7 @@ def helpline_incoming(request):
             # if len(expert_obj) > 0:
             #     make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
             expert = get_expert_number(dg_number)
-            expert_number = expert[0].phone_number
+            expert_number = expert[0]
             # Initiate Call if Expert is available
             if expert_number != '':
                 make_helpline_call(incoming_call_obj, expert_number, farmer_number)
@@ -849,7 +849,7 @@ def helpline_incoming(request):
                         call_status['status'] in ('ringing', 'in-progress')):
                 return HttpResponse(status=200)
             expert = get_expert_number(dg_number)
-            expert_number = expert[0].phone_number
+            expert_number = expert[0]
             # expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
 
             # # Initiate Call if Expert is available
