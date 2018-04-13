@@ -253,6 +253,7 @@ def registration_ivr_response(request):
         #import pdb;pdb.set_trace()
         farmer = Farmer.objects.filter(phone=farmer_number)
         if farmer.count()>0:
+        	import pdb;pdb.set_trace()
 			if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified and RegistrationSms.objects.filter(farmer=farmer[0],msg_type=0).count()>0:
 				user = LoopUser.objects.filter(user=farmer[0].user_created_id)
 				if query_code=="1":
