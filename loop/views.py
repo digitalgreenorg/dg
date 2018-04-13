@@ -815,7 +815,8 @@ def helpline_incoming(request):
             # # Initiate Call if Expert is available
             # if len(expert_obj) > 0:
             #     make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
-            expert_number = get_expert_number(dg_number)
+            expert = get_expert_number(dg_number)
+            expert_number = expert[0]
             # Initiate Call if Expert is available
             if expert_number != '':
                 make_helpline_call(incoming_call_obj, expert_number, farmer_number)
@@ -847,7 +848,8 @@ def helpline_incoming(request):
             if call_status != '' and call_status['response_code'] == 200 and (
                         call_status['status'] in ('ringing', 'in-progress')):
                 return HttpResponse(status=200)
-            expert_number = get_expert_number(dg_number)
+            expert = get_expert_number(dg_number)
+            expert_number = expert[0]
             # expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
 
             # # Initiate Call if Expert is available
@@ -865,18 +867,18 @@ def helpline_incoming(request):
         return HttpResponse(status=403)
 
 def get_expert_number(dg_number):
-    expert_number = ''
-    expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number, partner__name='DG')[:1]
+    expert = ''
+    expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number, partner__name='DG')
 
-    if len(expert_obj) > 0:
-        expert_number = expert_obj[0]
+    if expert_obj.count() > 0:
+        expert = expert_obj
     else :
         # Search in partner helpline number
-        expert_partner_obj = HelplineExpert.objects.filter(expert_status=1, partner__is_visible=1, partner__helpline_number=dg_number)[:1]
-        if len(expert_partner_obj) > 0 :
-            expert_number = expert_partner_obj[0]
+        expert_partner_obj = HelplineExpert.objects.filter(expert_status=1, partner__is_visible=1, partner__helpline_number=dg_number)
+        if expert_partner_obj.count() > 0 :
+            expert = expert_partner_obj
 
-    return expert_number
+    return expert
 
 @csrf_exempt
 def helpline_call_response(request):
@@ -943,7 +945,7 @@ def helpline_call_response(request):
                     make_call = 1
             if make_call == 1:
                 # Find next expert
-                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number))
+                expert_numbers = list(get_expert_number(outgoing_obj.incoming_call.to_number))
                 try:
                     expert_numbers = expert_numbers[expert_numbers.index(expert_obj) + 1:]
                 except Exception as e:
