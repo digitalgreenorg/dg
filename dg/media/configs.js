@@ -229,17 +229,17 @@ function() {
         'config_Français': 'Vidéos',
         'labels_हिन्दी': {video:"वीडियो", title: "शीर्षक", video_type: "वीडियो का प्रकार", production_date: "उत्पादन की तिथि", language: "भाषा", benefit: "लाभ",
                             village: "गाँव", production_team: "वीडियो उत्पादन टीम", category: "श्रेणी", subcategory: "उप श्रेणी", videopractice:"विडियो में दिखाई गई क्रिया",
-                            tags: "टैग चुनें", youtubeid: "यूट्यूब आईडी", reviewed_by: "द्वारा अनुमोदित", reviewer: "संगठन", approval_date: "स्वीकृति तिथि", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य", direct_beneficiaries: "सीधा लाभार्थियों",
+                            tags: "टैग", youtubeid: "यूट्यूब आईडी", reviewed_by: "द्वारा अनुमोदित", reviewer: "संगठन", approval_date: "स्वीकृति तिथि", add_row:"खाली पंक्तियाँ जोड़े", sr_no:"क्रम संख्या", non_n:"अति आवश्यक बातें", physically_verifiable:"जाँच करने योग्य", direct_beneficiaries: "सीधा लाभार्थियों",
                             self_reported_behaviour2: "Self Reported Behaviour2", self_reported_behaviour1: "Self Reported Behaviour1"
                         },
         'labels_Français': {video:"Vidéos", title: "Titre", video_type: "Type de vidéo", production_date: "Date de production", language: "Langue", benefit: "Bénéfice",
                             village: "Villages", production_team: "Equipe de production", category: "Catégorie", subcategory: "Sous-catégorie", videopractice:"La pratique vidéo",
-                            tags: "Sélectionnez les tags", youtubeid: "Identité Youtube", reviewed_by: "Approuvé par", reviewer: "organisation", approval_date: "Date de validation", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable", direct_beneficiaries: "Bénéficiaires directs",
+                            tags: "Mots clés", youtubeid: "Identité Youtube", reviewed_by: "Approuvé par", reviewer: "organisation", approval_date: "Date de validation", add_row:"ajouter des lignes", sr_no:"Serie de Numéro", non_n:"Non négociables", physically_verifiable:"Physiquement vérifiable", direct_beneficiaries: "Bénéficiaires directs",
                             self_reported_behaviour2: "Self Reported Behaviour2", self_reported_behaviour1: "Self Reported Behaviour1"},
         
 
         'labels_English': {video:"Video", title: "Title", video_type: "Video Type", production_date: "Production Date", language: "Language", benefit: "Benefit", village: "Village",
-                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", tags: "Select Tags", youtubeid: "YouTube ID", 
+                           production_team: "Production Team", category: "Category", subcategory: "Sub Category", videopractice:"Video Practice", tags: "Tags", youtubeid: "YouTube ID", 
                            reviewed_by: "Approved By", reviewer: "Organization", approval_date: "Approval Date", add_row:"Add Empty Rows", sr_no:"Sr. No.", non_n:"Non Negotiables", 
                            physically_verifiable:"Physically Verifiable", direct_beneficiaries: "DirectBeneficiaries", srb: "Self Reported Behaviour",
                            self_reported_behaviour2: "Self Reported Behaviour2", self_reported_behaviour1: "Self Reported Behaviour1"},
