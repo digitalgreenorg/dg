@@ -945,7 +945,7 @@ def helpline_call_response(request):
                     make_call = 1
             if make_call == 1:
                 # Find next expert
-                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number))
+                expert_numbers = list(get_expert_number(outgoing_obj.to_number))
                 try:
                     expert_numbers = expert_numbers[expert_numbers.index(expert_obj) + 1:]
                 except Exception as e:
