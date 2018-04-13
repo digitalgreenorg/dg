@@ -998,7 +998,7 @@ define([
                 }
                 if (this.edit_case && this.foreign_elements_rendered[element]){
                     $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
-                        $(that.entity_config.reset_element+'_chosen'+ ' '+ '.search-choice-close').click()
+                        $(that.entity_config.reset_element+'_chosen'+ ' '+ '.search-choice-close').click();
                         $(that.entity_config.reset_element).trigger("chosen:updated");
 
                     })
