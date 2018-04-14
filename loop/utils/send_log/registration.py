@@ -139,7 +139,7 @@ def send_msg_after_first_trans(from_date,to_date):
 			reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=1)
 			reg_sms.save()
 			user = LoopUser.objects.filter(user=farmer.user_created_id)
-			response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id,language)
+			response = send_msg_sms_using_textlocal(farmer.phone,reg_sms.id,user[0].preferred_language)
 			status_code = 0
 			if response['status'] == "success":
 				status_code = 1
