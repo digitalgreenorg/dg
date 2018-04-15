@@ -70,6 +70,12 @@ class ScreeningAdmin(admin.ModelAdmin):
                 settings.STATIC_URL + "js/qa_screening.js",
         )
 
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['tag_name']
+    search_fields = ['tag_name']
+
+
 class NonNegotiablesInline(admin.TabularInline):
     model =  NonNegotiable
     raw_id_fields = ("video",)
@@ -105,7 +111,7 @@ class DirectBeneficiariesAdmin(admin.ModelAdmin):
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline]
     fieldsets = [
-                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice', 'tags']}),
                 (None,{'fields':['village','production_team']}),
                 ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]

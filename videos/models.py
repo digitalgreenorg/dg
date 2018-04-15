@@ -66,7 +66,9 @@ class PracticeSubject(CocoModel):
     def __unicode__(self):
         return self.name
 
-
+###############################################################################
+###                     COCO USAGE                                          ###
+###############################################################################
 class Practice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -186,6 +188,13 @@ post_save.connect(enter_to_log, sender=Language)
 pre_delete.connect(enter_to_log,sender=Language)
 
 
+class Tag(CocoModel):
+    tag_name = models.CharField(max_length=100, unique='True')
+
+    def __unicode__(self):
+        return self.tag_name
+
+
 class Video(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -201,6 +210,7 @@ class Video(CocoModel):
     direct_beneficiaries = models.ManyToManyField(DirectBeneficiaries, blank=True)
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
     videopractice = models.ManyToManyField(VideoPractice, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     youtubeid = models.CharField(max_length=20, blank=True)
@@ -234,7 +244,9 @@ class NonNegotiable(CocoModel):
 post_save.connect(save_log, sender=NonNegotiable)
 pre_delete.connect(delete_log, sender=NonNegotiable)
 
-
+###############################################################################
+#                      COCO USAGE                                            ##
+###############################################################################
 class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200, null=True)
