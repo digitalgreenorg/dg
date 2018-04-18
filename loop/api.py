@@ -575,6 +575,7 @@ class CropResource(BaseResource):
         for d in bundle.data['crops']:
             if d.data['language']['notation'] == user.preferred_language.notation:
                 bundle.data['crop_name'] = d.data['crop_name']
+                bundle.data['measuring_unit']=d.data['measuring_unit']
                 break
         del bundle.data['crops']
         return bundle
