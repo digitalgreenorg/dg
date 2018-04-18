@@ -32,7 +32,7 @@ APPEND_SLASH = True
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 
-MEDIA_URL = '/media/loop/uploads/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PROJECT_PATH, *MEDIA_URL.strip("/").split("/"))
 
 # List of callables that know how to import templates from various sources.
@@ -100,16 +100,16 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(PROJECT_PATH, 'templates/social_website'),
-            os.path.join(PROJECT_PATH, 'templates/videokheti'),
+            # os.path.join(PROJECT_PATH, 'templates/videokheti'),
             os.path.join(PROJECT_PATH, 'templates'),
             os.path.join(PROJECT_PATH, 'templates/output'),
             os.path.join(PROJECT_PATH, 'templates/static_site'),
-            os.path.join(PROJECT_PATH, 'templates/farmerbook'),
+            # os.path.join(PROJECT_PATH, 'templates/farmerbook'),
             os.path.join(PROJECT_PATH, 'media/coco/app'),
-            os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
+            # os.path.join(PROJECT_PATH, 'templates/deoanalytics'),
             os.path.join(PROJECT_PATH, 'media/'),
             os.path.join(PROJECT_PATH, 'media/analytics/'),
-            os.path.join(PROJECT_PATH, 'templates/data_upload'),
+            # os.path.join(PROJECT_PATH, 'templates/data_upload'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -157,8 +157,8 @@ INSTALLED_APPS = (
     # 'fbconnect',
     # 'dimagi',
     'tastypie',
-    'coco',
-    'social_website',
+    # 'coco',
+    # 'social_website',
     'social.apps.django_app.default',
     # 'communications',
     # 'human_resources',
@@ -166,15 +166,15 @@ INSTALLED_APPS = (
     # 'deoanalytics',
     # 'data_upload',
     # 'raw_data_analytics',
-    'mezzanine.boot',
-    'mezzanine.conf',
-    'mezzanine.core',
-    'mezzanine.generic',
-    'mezzanine.blog',
-    'mezzanine.forms',
-    'mezzanine.pages',
-    'mezzanine.galleries',
-    'mezzanine.twitter',
+    # 'mezzanine.boot',
+    # 'mezzanine.conf',
+    # 'mezzanine.core',
+    # 'mezzanine.generic',
+    # 'mezzanine.blog',
+    # 'mezzanine.forms',
+    # 'mezzanine.pages',
+    # 'mezzanine.galleries',
+    # 'mezzanine.twitter',
     'filebrowser_safe',
     'grappelli_safe',
     # 'videokheti',
@@ -184,7 +184,9 @@ INSTALLED_APPS = (
     # 'qacoco',
     # 'mrppayment',
     'smart_selects',
-    'loop_ivr'
+    'loop_ivr',
+    'django_unused_media',
+    'django_cleanup'
 )
 
 # Store these package names here as they may change in the future since
