@@ -369,7 +369,7 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
 
     aso_queryset = AggregatorShareOutliers.objects.filter(
         **arguments_for_aggregator_incentive_outliers)
-    
+
     combined_ct_queryset = CombinedTransaction.objects.none()
     # Checking if we need to apply incorrect farmer phone model on payment data
     date_start = datetime.datetime.strptime(start_date, "%Y-%m-%d")
@@ -384,6 +384,13 @@ def calculate_aggregator_incentive(start_date=None, end_date=None, mandi_list=No
                                                                                                Count('farmer_id',
                                                                                                      distinct=True))
             combined_ct_queryset = combined_ct_queryset | aggregator_ct_queryset
+
+    else:
+        combined_ct_queryset = CombinedTransaction.objects.filter(**arguments_for_ct).values(
+            'date', 'user_created_id', 'mandi', 'mandi__mandi_name_en').order_by('-date').annotate(Sum('quantity'),
+                                                                                               Sum('amount'),
+                                                                                               Count('farmer_id',
+                                                                                                     distinct=True))
 
     result = []
     daily_pay_list = []
@@ -831,7 +838,8 @@ def helpline_incoming(request):
             # # Initiate Call if Expert is available
             # if len(expert_obj) > 0:
             #     make_helpline_call(incoming_call_obj, expert_obj[0], farmer_number)
-            expert_number = get_expert_number(dg_number)
+            expert = get_expert_number(dg_number)
+            expert_number = expert[0]
             # Initiate Call if Expert is available
             if expert_number != '':
                 make_helpline_call(incoming_call_obj, expert_number, farmer_number)
@@ -863,7 +871,8 @@ def helpline_incoming(request):
             if call_status != '' and call_status['response_code'] == 200 and (
                         call_status['status'] in ('ringing', 'in-progress')):
                 return HttpResponse(status=200)
-            expert_number = get_expert_number(dg_number)
+            expert = get_expert_number(dg_number)
+            expert_number = expert[0]
             # expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
 
             # # Initiate Call if Expert is available
@@ -881,18 +890,18 @@ def helpline_incoming(request):
         return HttpResponse(status=403)
 
 def get_expert_number(dg_number):
-    expert_number = ''
-    expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number)[:1]
+    expert = ''
+    expert_obj = HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number, partner__name='DG')
 
-    if len(expert_obj) > 0:
-        expert_number = expert_obj[0]
+    if expert_obj.count() > 0:
+        expert = expert_obj
     else :
         # Search in partner helpline number
-        expert_partner_obj = HelplineExpert.objects.filter(partner__helpline_number=dg_number)[:1]
-        if len(expert_partner_obj) > 0 :
-            expert_number = expert_partner_obj[0]
-    
-    return expert_number
+        expert_partner_obj = HelplineExpert.objects.filter(expert_status=1, partner__is_visible=1, partner__helpline_number=dg_number)
+        if expert_partner_obj.count() > 0 :
+            expert = expert_partner_obj
+
+    return expert
 
 @csrf_exempt
 def helpline_call_response(request):
@@ -959,7 +968,7 @@ def helpline_call_response(request):
                     make_call = 1
             if make_call == 1:
                 # Find next expert
-                expert_numbers = list(HelplineExpert.objects.filter(expert_status=1, state__helpline_number=dg_number))
+                expert_numbers = list(get_expert_number(outgoing_obj.incoming_call.to_number))
                 try:
                     expert_numbers = expert_numbers[expert_numbers.index(expert_obj) + 1:]
                 except Exception as e:

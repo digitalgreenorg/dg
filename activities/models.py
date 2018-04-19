@@ -23,12 +23,12 @@ from coco.base_models import ACTIVITY_CHOICES
 from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator
-from people.models import JSLPS_Animator
+from people.models import JSLPS_Animator, AP_Animator
 from people.models import JSLPS_Person
 from people.models import Person
 from people.models import PersonGroup
 from videos.models import Video
-from videos.models import JSLPS_Video
+from videos.models import JSLPS_Video, APVideo, APPractice
 from videos.models import ParentCategory
 
 
@@ -115,7 +115,7 @@ class Screening(CocoModel):
     observer = models.IntegerField( choices=VERIFIED_BY, null=True, blank=True, validators=[MaxValueValidator(2)])
     health_provider_present = models.BooleanField(default=False)
     # UPAVAN fields
-    type_of_video = models.CharField(max_length=20, choices=TYPE_OF_VIDEO, blank=True)
+    type_of_video = models.CharField(max_length=20, choices=TYPE_OF_VIDEO, null=True, blank=True)
     frontlineworkerpresent =  models.ManyToManyField(FrontLineWorkerPresent, blank=True)
     type_of_venue = models.CharField(choices=TYPE_OF_VENUE,
                                      blank=True, null=True,
@@ -211,3 +211,33 @@ class JSLPS_Adoption(CocoModel):
     class Meta:
         verbose_name = "JSLPS Adoption"
         verbose_name_plural = "JSLPS Adoption"
+
+
+
+class AP_Screening(CocoModel):
+    screening_code = models.CharField(max_length=100)
+    screening = models.ForeignKey(Screening, null=True, blank=True)
+    no_of_male = models.CharField(max_length=100, null=True)
+    no_of_female = models.CharField(max_length=100, null=True)
+    total_members = models.CharField(max_length=100, null=True)
+
+    class Meta:
+        verbose_name = "Screening"
+        verbose_name_plural = "Screening"
+
+
+class AP_Adoption(CocoModel):
+    member_code = models.CharField(max_length=255)
+    member_name = models.CharField(max_length=255)
+    ap_video = models.ForeignKey(APVideo, null=True, blank=True)
+    date_of_adoption = models.DateField()
+    ap_animator = models.ForeignKey(AP_Animator)
+    adoption = models.ForeignKey(PersonAdoptPractice, null=True, blank=True)
+    ap_adopt_practice = models.ForeignKey(APPractice, null=True, blank=True)
+    adoption_type = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Adoption"
+        verbose_name_plural = "Adoption"
+
+

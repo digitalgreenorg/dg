@@ -5405,8 +5405,11 @@ define('views/form',[
                              // for multiple fields
                             if (that.entity_config.text_to_select_display_hack_field_array){
                                 _.each(that.entity_config.text_to_select_display_hack_field_array, function(element, index) {
-                                    that.$el.find("#id_" + element + " option[value="+ that.model_json[element]+"]").attr('selected', 'selected')
-                                    $("#id_" + element).change().trigger("chosen:updated");
+                                    if (that.model_json[element] != ""){
+                                      that.$el.find("#id_" + element + " option[value="+ that.model_json[element]+"]").attr('selected', 'selected')
+                                      $("#id_" + element).change().trigger("chosen:updated"); 
+                                    }
+                                    
                                 })
                             }
                             // for single fields
@@ -6032,14 +6035,14 @@ define('views/form',[
                 if (!this.edit_case && !this.foreign_elements_rendered[element]){
                     $("#id_" + this.entity_config.fetch_element_that_manipulate).on('change', function(){
                         if ($(that.entity_config.reset_element).val() != ''){
-                            $('.search-choice-close').click();
+                            $(that.entity_config.reset_element+'_chosen'+ ' '+ '.search-choice-close').click();
                             $(that.entity_config.reset_element).trigger("chosen:updated");
                         }
                     })
                 }
                 if (this.edit_case && this.foreign_elements_rendered[element]){
                     $("#id_"+ this.entity_config.fetch_element_that_manipulate + "_chosen").on('click', function(){
-                        $('.search-choice-close').click();
+                        $(that.entity_config.reset_element+'_chosen'+ ' '+ '.search-choice-close').click();
                         $(that.entity_config.reset_element).trigger("chosen:updated");
 
                     })

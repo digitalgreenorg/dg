@@ -19,6 +19,7 @@ from programs.models import Partner
 from people.models import Animator
 from people.models import Person
 from training.log.training_log import enter_to_log
+from django.template.defaultfilters import truncatechars
 
 
 class PracticeSector(CocoModel):
@@ -65,7 +66,9 @@ class PracticeSubject(CocoModel):
     def __unicode__(self):
         return self.name
 
-
+###############################################################################
+###                     COCO USAGE                                          ###
+###############################################################################
 class Practice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -185,6 +188,13 @@ post_save.connect(enter_to_log, sender=Language)
 pre_delete.connect(enter_to_log,sender=Language)
 
 
+class Tag(CocoModel):
+    tag_name = models.CharField(max_length=100, unique='True')
+
+    def __unicode__(self):
+        return self.tag_name
+
+
 class Video(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -200,6 +210,7 @@ class Video(CocoModel):
     direct_beneficiaries = models.ManyToManyField(DirectBeneficiaries, blank=True)
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
     videopractice = models.ManyToManyField(VideoPractice, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
     approval_date = models.DateField(null=True, blank=True)
     related_practice = models.ForeignKey(Practice, blank=True, null=True)
     youtubeid = models.CharField(max_length=20, blank=True)
@@ -233,7 +244,9 @@ class NonNegotiable(CocoModel):
 post_save.connect(save_log, sender=NonNegotiable)
 pre_delete.connect(delete_log, sender=NonNegotiable)
 
-
+###############################################################################
+#                      COCO USAGE                                            ##
+###############################################################################
 class JSLPS_Video(CocoModel):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200, null=True)
@@ -247,3 +260,54 @@ class JSLPS_Video(CocoModel):
 
     def __unicode__(self):
         return self.vc
+
+
+
+class APCrop(CocoModel):
+    subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
+    crop_code = models.CharField(max_length=80)
+    crop_name = models.CharField(max_length=80)
+    crop_name_telgu = models.CharField(max_length=255, null=True)
+
+    def __unicode__(self):
+        return """%s:%s""" % (self.crop_name, self.crop_code)
+
+    class Meta:
+        verbose_name = "Bluefrog Crop"
+        verbose_name_plural = "Bluefrog Crop"
+
+
+class APPractice(CocoModel):
+    pest_code = models.CharField(max_length=80)
+    pest_name = models.CharField(max_length=80)
+    pest_name_telgu = models.CharField(max_length=255, null=True)
+
+    def __unicode__(self):
+        return """%s:%s""" % (self.pest_name, self.pest_code)
+
+    class Meta:
+        verbose_name = "Bluefrog Practice"
+        verbose_name_plural = "Bluefrog Practice"
+
+
+
+class APVideo(CocoModel):
+    video = models.ForeignKey(Video, null=True, blank=True)
+    video_short_name = models.CharField(max_length=40)
+    video_short_regionalname = models.CharField(max_length=40)
+    subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
+    # districtscreening = models.ManyToManyField(DistrictScreening, blank=True)
+    practice = models.ManyToManyField(APPractice, blank=True)
+
+    
+    class Meta:
+        verbose_name = "Video"
+        verbose_name_plural = "Video"
+
+    @property
+    def short_video_title(self):
+        return truncatechars(self.video.title, 50)
+
+
+    def __unicode__(self):
+        return """%s:%s:%s""" % (str(self.id), self.video.title, self.video_short_name)

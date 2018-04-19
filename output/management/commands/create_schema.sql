@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `screening_myisam`;
 CREATE TABLE `screening_myisam` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `screening_id` int unsigned NOT NULL,
   `date` date NOT NULL,
   `video_id` int unsigned DEFAULT NULL,
@@ -28,7 +28,7 @@ CREATE INDEX screening_myisam_country_id ON screening_myisam(country_id, date);
 -- Normalized version of digitalgreen.VIDEO
 DROP TABLE IF EXISTS `video_myisam`;
 CREATE TABLE `video_myisam` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `video_id` int unsigned NOT NULL,
   `video_production_date` date NOT NULL,
   `practice_id` int unsigned DEFAULT NULL,
@@ -55,7 +55,7 @@ CREATE INDEX video_myisam_country_id ON video_myisam(country_id, video_productio
 -- Normalized version of digitalgreen.PERSON_MEETING_ATTENDANCE
 DROP TABLE IF EXISTS `person_meeting_attendance_myisam`;
 CREATE TABLE `person_meeting_attendance_myisam` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `pma_id` int unsigned NOT NULL,
   `person_id` int unsigned DEFAULT NULL,
   `screening_id` int unsigned DEFAULT NULL,
@@ -111,7 +111,7 @@ CREATE INDEX person_adopt_practice_myisam_country_id ON person_adopt_practice_my
 -- Aggregation of some statistics on a per day per village basis. The _copy derives from an existing table
 DROP TABLE IF EXISTS `village_precalculation_copy`;
 CREATE TABLE `village_precalculation_copy` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `date` date NOT NULL,
   `total_screening` int(10) unsigned NOT NULL DEFAULT '0',
   `total_videos_produced` int(10) unsigned NOT NULL DEFAULT '0',
@@ -148,7 +148,7 @@ CREATE INDEX village_precalculation_copy_country_id ON village_precalculation_co
 -- Screeingwisedata table for raw_data_analytics
 DROP TABLE IF EXISTS `activities_screeningwisedata`;
 CREATE TABLE `activities_screeningwisedata` (
-  `id` int(11) not null AUTO_INCREMENT,
+  `id` bigint(20) not null AUTO_INCREMENT,
   `user_created_id` INT(11),
   `time_created` DATETIME,
   `user_modified_id` INT(11),
@@ -169,15 +169,15 @@ CREATE TABLE `activities_screeningwisedata` (
 )ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE INDEX activities_screeningwisedata_screening_id ON activities_screeningwisedata(screening_id);
-CREATE INDEX activities_screeningwisedata_village_id ON activities_screeningwisedata(village_id); 
+CREATE INDEX activities_screeningwisedata_village_id ON activities_screeningwisedata(village_id);
 CREATE INDEX activities_screeningwisedata_animator_id ON activities_screeningwisedata(animator_id);
-CREATE INDEX activities_screeningwisedata_partner_id ON activities_screeningwisedata(partner_id); 
+CREATE INDEX activities_screeningwisedata_partner_id ON activities_screeningwisedata(partner_id);
 CREATE INDEX activities_screeningwisedata_video_id ON activities_screeningwisedata(video_id);
 
 -- Animatorwisedata for raw_data_analytics
 DROP TABLE IF EXISTS `people_animatorwisedata`;
-CREATE TABLE `people_animatorwisedata` ( 
-  `id` int(11) not null AUTO_INCREMENT,
+CREATE TABLE `people_animatorwisedata` (
+  `id` bigint(20) not null AUTO_INCREMENT,
   `user_created_id` int(11),
   `time_created` datetime,
   `user_modified_id` int(11),
@@ -191,17 +191,17 @@ CREATE TABLE `people_animatorwisedata` (
   `district_id` INT(11),
   `total_adoptions` INT(10),
   `assignedvillage_id` BIGINT(20),
-  `start_date` date, 
+  `start_date` date,
   PRIMARY KEY (`id`)
 )ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-CREATE INDEX people_animatorwisedata_animator_id ON people_animatorwisedata(animator_id); 
+CREATE INDEX people_animatorwisedata_animator_id ON people_animatorwisedata(animator_id);
 CREATE INDEX people_animatorwisedata_assignedvillage_id ON people_animatorwisedata(assignedvillage_id);
 
 -- Geographies-Partner Added for raw_data_analytics --
 DROP TABLE IF EXISTS `village_partner_myisam`;
 CREATE TABLE `village_partner_myisam` (
-  `id` int(11) not null AUTO_INCREMENT,
+  `id` bigint(20) not null AUTO_INCREMENT,
   `village_id` int(11) DEFAULT NULL,
   `block_id` int(11) DEFAULT NULL,
   `district_id` int(11) DEFAULT NULL,

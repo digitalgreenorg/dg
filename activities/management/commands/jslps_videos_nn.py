@@ -3,6 +3,7 @@ import unicodecsv as csv
 from datetime import * 
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
+from django.conf import settings
 from geographies.models import *
 from people.models import *
 from programs.models import *
@@ -12,7 +13,8 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#saving videos
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		file_url = 'http://webservicesri.swalekha.in/Service.asmx/GetExportVedioMasterData'+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		url = urllib2.urlopen(file_url)
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/video.xml", 'w')
 		xml_file.write(contents)
@@ -182,7 +184,8 @@ class Command(BaseCommand):
 							wtr.writerow(['JSLPS Video save', vdc, e])
 
 		#saving non-negotiables
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		file_url = 'http://webservicesri.swalekha.in/Service.asmx/GetExportVedioNon_NegotiableMasterData'+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		url = urllib2.urlopen(file_url)
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/nn.xml", 'w')
 		xml_file.write(contents)

@@ -16,8 +16,9 @@ from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
 from videos.models import  NonNegotiable
-from videos.models import ParentCategory
+from videos.models import *
 from programs.models import Project
+from easy_select2 import Select2Multiple, Select2
 
 
 class PersonMeetingAttendanceForm(forms.ModelForm):
@@ -69,6 +70,12 @@ class ScreeningAdmin(admin.ModelAdmin):
                 settings.STATIC_URL + "js/qa_screening.js",
         )
 
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = ['tag_name']
+    search_fields = ['tag_name']
+
+
 class NonNegotiablesInline(admin.TabularInline):
     model =  NonNegotiable
     raw_id_fields = ("video",)
@@ -104,7 +111,7 @@ class DirectBeneficiariesAdmin(admin.ModelAdmin):
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline]
     fieldsets = [
-                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice', 'tags']}),
                 (None,{'fields':['village','production_team']}),
                 ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
@@ -268,6 +275,132 @@ class ProjectAdmin(admin.ModelAdmin):
     search_fields = ['project_name']
 
 
+class VideoForm(forms.ModelForm):
+    video = forms.ModelChoiceField(queryset=None, widget=Select2(select2attrs={'width': '600px'}),required=True)
+    practice = forms.ModelMultipleChoiceField(queryset=APPractice.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
+    subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), widget=Select2(select2attrs={'width': '600px'}),required=True)
+    # districtscreening = forms.ModelMultipleChoiceField(queryset=DistrictScreening.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(VideoForm, self).__init__(*args, **kwargs)
+        self.fields['video'].queryset = Video.objects.filter(partner_id=50)
+
+
+
+class BluefrogSubcategoryAdmin(admin.ModelAdmin):
+    list_display = ['crop_id', 'crop_name', 'crop_name_telgu']
+    search_fields = ['crop_id', 'crop_name', 'crop_name_telgu']
+
+
+class BluefrogPracticeAdmin(admin.ModelAdmin):
+    list_display = ['practice_id', 'practice_method_name', 'practice_method_name_telgu']
+    search_fields = ['practice_id', 'practice_method_name', 'practice_method_name_telgu']
+
+
+class DistrictScreeningAdmin(admin.ModelAdmin):
+    list_display = ['id', 'districtscreening_id', 'districtscreening_name']
+
+
+class APVideoAdmin(admin.ModelAdmin):
+
+    form = VideoForm
+    list_display = ['id', 'short_video_title', 'video_short_name',
+                    'video_short_regionalname']
+    search_fields = ['id', 'video', 'video_short_name',
+                     'video_short_regionalname', 'practice']
+
+
+class AP_DistrictAdmin(admin.ModelAdmin):
+    list_display = ['id', 'district_code', 'district_name', 'user_created',
+                    'time_created', '_district']
+    search_fields = ['id', 'district_code', 'district_name', 'district__id']
+
+    def _district(self, obj):
+        return "%s:%s" % (obj.district.id, obj.district.district_name)
+    _district.allow_tags = True
+    _district.short_description = "COCO-DB-District-ID"
+
+
+class AP_BlockAdmin(admin.ModelAdmin):
+    list_display = ['id', 'mandal_code', 'mandal_name',
+                    'user_created', 'time_created', '_block']
+    search_fields = ['id', 'mandal_code', 'mandal_name', 'block', 'district_code']
+
+    def _block(self, obj):
+        return "%s:%s" % (obj.block.id, obj.block.block_name)
+    _block.allow_tags = True
+    _block.short_description = "COCO-DB-Block-ID"
+
+
+class AP_VillageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'village_code', 'village_name', 'ap_mandal',
+                    'user_created', 'time_created', '_village']
+    search_fields = ['id', 'village_code', 'village_name', 'village__id']
+    readonly_fields = list_display
+
+    def _village(self, obj):
+        return "%s:%s" % (obj.village.id, obj.village.village_name)
+    _village.allow_tags = True
+    _village.short_description = "COCO-DB-Village-ID"
+
+    def has_add_permission(self, request):
+        return False
+
+
+class AP_HabitationAdmin(admin.ModelAdmin):
+    list_display = ['id', 'habitation_code', 'habitation_name', 'ap_village',
+                    'user_created', 'time_created']
+    search_fields = ['id', 'habitation_code', 'habitation_name', 'ap_village__village_code', 'ap_village__id']
+    readonly_fields = list_display
+
+    def has_add_permission(self, request):
+        return False
+
+
+class APCropAdmin(admin.ModelAdmin):
+    list_display = ['id', 'crop_code', 'crop_name', 'crop_name_telgu', 'user_created',
+                    'time_created', '_subcategory']
+    search_fields = ['id', 'crop_code', 'crop_name']
+
+    def _subcategory(self, obj):
+        return "%s:%s" % (obj.subcategory.id, obj.subcategory.subcategory_name)
+    _subcategory.allow_tags = True
+    _subcategory.short_description = "COCO-DB-Person-ID"
+
+
+class APPracticeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'pest_code', 'pest_name', 'pest_name_telgu', 'user_created',
+                    'time_created']
+    search_fields = ['id', 'pest_code', 'pest_name']
+
+
+class AP_PersonAdmin(admin.ModelAdmin):
+    list_display = ['id', 'person_code', 'person', 'user_created',
+                    'time_created', '_person']
+    search_fields = ['id', 'person_code', 'person__id']
+
+    def _person(self, obj):
+        return "%s:%s" % (obj.person.id, obj.person.person_name)
+    _person.allow_tags = True
+    _person.short_description = "COCO-DB-Person-ID"
+
+
+class AP_AnimatorAdmin(admin.ModelAdmin):
+    list_display = ['id','animator_code', 'designation',  'user_created', 'time_created',
+                    '_animator']
+    search_fields = ['id', 'animator_code', 'designation']
+
+    def _animator(self, obj):
+        return "%s:%s" % (obj.animator.id, obj.animator.name)
+    _animator.allow_tags = True
+    _animator.short_description = "COCO-DB-Animator-ID"
+
+class AP_AnimatorAssignedVillageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'animator', 'village', 'user_created', 'time_created']
+    search_fields = ['animator']
+
+
+
 class JSLPS_AnimatorAdmin(admin.ModelAdmin):
     list_display = ('id','animator_code', 'user_created', 'time_created',
                     '_animator', 'activity')
@@ -299,7 +432,7 @@ class JSLPS_PersongroupAdmin(admin.ModelAdmin):
 
 class JSLPS_PersonAdmin(admin.ModelAdmin):
     list_display = ['id', 'person_code', 'person', '_group_code', 'user_created',
-                    'time_created', 'activity', '_person']
+                    'time_created', 'activity', '_person', '_block_name']
     search_fields = ['id', 'person_code', 'person__id', 'group__group_code']
     list_filter = ['activity']
 
@@ -315,6 +448,11 @@ class JSLPS_PersonAdmin(admin.ModelAdmin):
             return  obj.group 
     _group_code.allow_tags = True
     _group_code.short_description = "PersonGroup-Code"
+
+    def _block_name(self, obj):
+        return obj.person.village.block.block_name
+    _block_name.allow_tags = True
+    _block_name.allow_description = "Block Name"
 
 
 class JSLPS_DistrictAdmin(admin.ModelAdmin):
@@ -372,6 +510,28 @@ class JSLPS_VideoAdmin(admin.ModelAdmin):
         return False
 
 
+class AP_ScreeningAdmin(admin.ModelAdmin):
+    list_display = ['id', 'screening_code', 'total_members',
+                    'screening', 'no_of_male', 'no_of_female', '_dg_screening_id',
+                    'user_created', 'time_created']
+    search_fields = ['id', 'screening_code', 'screening__village__block__block_name']
+    readonly_fields = list_display
+
+    def _dg_screening_id(self, obj):
+        return obj.screening.id
+
+
+class AP_AdoptionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'member_code', 'ap_video', 'ap_animator',
+                    'adoption', 'date_of_adoption', 'user_created', 'time_created']
+    search_fields = ['id', 'member_code', 'ap_video', 'ap_animator', 'adoption']
+    list_filter = ['date_of_adoption']
+
+    readonly_fields = list_display
+
+    def has_add_permission(self, request):
+        return False
+
 
 
 class JSLPS_ScreeningAdmin(admin.ModelAdmin):
@@ -404,13 +564,6 @@ class JSLPS_AdoptionAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
-
-
-
-
-
-
-
 
 
 
