@@ -7,7 +7,7 @@ class LoopQRMapping():
 	def update(self):
 		xl_file = xlrd.open_workbook('../Loop Farmer QR Codes.xlsx')
 		print xl_file.sheet_names
-		sheets = ['Village1_mapping','Village2_mapping','Village3_mapping','Village4_mapping']
+		sheets = ['Village1_mapping','Village2_mapping','Village3_mapping','Village4_mapping','Village5_mapping','Village6_mapping']
 		c=0
 		for sheet in sheets: 
 			d = xl_file.sheet_by_name(sheet)
