@@ -135,7 +135,7 @@ def dashboard(request):
     return render(request, 'analytics/dist/loop/index.html')
     # return render(request, 'app_dashboards/loop_dashboard.html')
 
-
+# This function is used to download payment sheet in excel format.
 @csrf_exempt
 def download_data_workbook(request):
     if request.method == 'POST':
@@ -163,31 +163,22 @@ def download_data_workbook(request):
         # final closing the working
         workbook.close()
         excel_output.seek(0)
-        #response = HttpResponse(excel_output.read(),
-        #                        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        response = HttpResponse(content_type='application/pdf')
-        filename = "pdf_trial"
-        response['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(filename)
-        print "generating pdf"
-        pdf = generate_from_excel(request, excel_output)
-        response.write(pdf)
-        print "generated pdf"
+        response = HttpResponse(excel_output.read(),
+                               content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         return response
 
+# This function is used to download pdf payment sheet, this and the function above are interchangeable, just replace
+# in views with the above function and you'll be able to download excel version of payment sheet
 @csrf_exempt
 def download_pdf(request):
     if request.method == 'POST':
         response = HttpResponse(content_type='application/pdf')
         # this will prepare the data
         formatted_post_data = format_web_request(request)
-        # this will get combined web data and various formats
-        data_dict = get_combined_data_and_sheets_formats(formatted_post_data)
         pdf_output = BytesIO()
-        filename = "pdf_trial"
+        filename = "payment_sheet"
         response['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(filename)
-        #report = PdfPrint(pdf_output)
-        pdf = printPDF(pdf_output,formatted_post_data)
-        # pdf = report.generate(formatted_post_data, formatted_post_data.get('sheet_header'), formatted_post_data.get('sheet_footer'))
+        pdf = generate_pdf(pdf_output, formatted_post_data)
         response.write(pdf)
         return response
 

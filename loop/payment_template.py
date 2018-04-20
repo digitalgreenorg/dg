@@ -2,27 +2,13 @@
 
 import json
 import xlsxwriter
-from django.http import JsonResponse
 from io import BytesIO
 import re
 
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_JUSTIFY, TA_CENTER, TA_RIGHT
-from reportlab.lib import colors
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
 from weasyprint import HTML
 
 from config import *
-from django.http import HttpResponse
-from django.template.loader import get_template
 from django.template.loader import render_to_string
-from django.template import RequestContext
-
-import pandas as pd
 
 
 TOTAL_NUMBER_OF_PRINTABLE_COLUMNS = 10
@@ -266,141 +252,13 @@ def prepare_value_data_generic(data):
     return combined_dict
 
 
-class PdfPrint:
-    def __init__(self, output):
-        self.output = output
-        self.pageSize = A4
-        self.width, self.height = self.pageSize
-        self.header = None
-        self.footer = None
-
-    def generate(self, data_dict, header, footer):
-        try:
-            doc = SimpleDocTemplate(self.output, rightMargin=50, leftMargin=50,
-                                    topMargin=40, bottomMargin=50, pageSize=self.pageSize)
-
-            # setting up styles
-            styles = getSampleStyleSheet()
-            cell_format = data_dict.get('cell_format')
-
-            unicode_font = 'UnicodeFont'
-            unicode_font_bold = 'UnicodeFontBold'
-
-            self.header = header
-            self.footer = footer
-
-            # Font for displaying unicode characters,
-            # currently this font contains glyphs for almost all indian languages
-            pdfmetrics.registerFont(TTFont(unicode_font, 'NotoSans-Regular-Indian.ttf'))
-            pdfmetrics.registerFont(TTFont(unicode_font_bold, 'NotoSans-Bold-Indian.ttf'))
-            styles.add(ParagraphStyle(
-                name="ParagraphTitle", fontSize=10, alignment=TA_JUSTIFY, fontName=unicode_font_bold))
-            styles.add(ParagraphStyle(
-                name="Justify", alignment=TA_JUSTIFY))
-            styles.add(ParagraphStyle("Comment", fontSize=cell_format.get('font_size')))
-            styles.add(ParagraphStyle("TableHeader", fontSize=8, alignment=TA_CENTER, fontName=unicode_font_bold))
-            styles.add(ParagraphStyle("Text", fontSize=8, alignment=TA_CENTER, fontName=unicode_font))
-            styles.add(ParagraphStyle("TextRight", fontSize=8, alignment=TA_RIGHT, fontName=unicode_font))
-            styles.add(ParagraphStyle("TextBold", fontName=unicode_font_bold, fontSize=8, alignment=TA_CENTER))
-            styles.add(ParagraphStyle("TextBoldRight", fontName=unicode_font_bold, fontSize=8, alignment=TA_RIGHT))
-            styles.add(ParagraphStyle("CommentSpace", fontSize=cell_format.get('font_size'), leftIndent=179))
-
-            # A list of complete data which goes in the pdf.
-            pdfdata = list()
-            pdfdata.append(Spacer(1, 12))
-
-            name_of_sheets = data_dict.get('name_of_sheets')
-            heading_of_sheets = data_dict.get('heading_of_sheets')
-            combined_data = data_dict.get('combined_data')
-            combined_header = data_dict.get('combined_header')
-
-            for sheet_index, item in enumerate(name_of_sheets):
-                table_data = []
-                pdfdata.append(Paragraph(heading_of_sheets[sheet_index], styles['ParagraphTitle']))
-                pdfdata.append(Spacer(1, 12))
-                header_data = []
-                col_widths = []
-                headers = combined_header.values()[sheet_index]
-
-                # append data for header and calculate column widths
-                for header_index, header_value in enumerate(headers):
-                    header_data.append(Paragraph(header_value.get('label'), styles['TableHeader']))
-                    col_widths.append((header_value.get('column_width'))*6.3)
-                table_data.append(header_data)
-                total_vals = [0]*len(combined_data[sheet_index][0])
-                total_vals_str = []
-                for value_list in combined_data[sheet_index]:
-                    value_data = []
-                    for i, value in enumerate(value_list):
-                        if type(value) is int or type(value) is float:
-                            value_data.append(Paragraph(u"{0:.2f}".format(value), styles['TextRight']))
-                            if headers[i].get('total'):
-                                total_vals[i] += value
-                        elif value is None:
-                            value_data.append("")
-                        else:
-                            value_data.append(Paragraph(value, styles['Text']))
-                    table_data.append(value_data)
-
-                #manually calculate values for Total Payment (in Rs) (AP + TC - FC - CAC) for aggregator sheet
-                if sheet_index == 0:
-                    total_vals[8] = total_vals[4] + total_vals[5] - total_vals[6] - total_vals[7]
-                for value in total_vals:
-                    if value > 0:
-                        total_vals_str.append(Paragraph(u"{0:.2f}".format(value), styles['TextBoldRight']))
-                    else:
-                        total_vals_str.append("")
-                table_data.append(total_vals_str)
-
-                # Create table
-                data_table = Table(table_data, col_widths)
-                data_table.hAlign = 'CENTER'
-                data_table.setStyle(TableStyle(
-                    [('INNERGRID', (0, 0), (-1, -1), 0, colors.black),
-                     ('BOX', (0, 0), (-1, -1), 0, colors.black),
-                     ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
-                     ('BACKGROUND', (0, 0), (-1, 0), colors.white)]
-                ))
-
-                pdfdata.append(data_table)
-                pdfdata.append(Spacer(1, 30))
-
-                # Add comment in Aggregator part
-                if sheet_index == 0:
-                    pdfdata.append(Paragraph("**Quantity is deducted for farmers having incorrect/unavailable mobile numbers.", styles['Comment']))
-
-                    pdfdata.append(Spacer(1, 5))
-                    pdfdata.append(Paragraph("##AP calculation formula (Bihar) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.2*Q ; Q<=2000", styles['Comment']))
-
-                    pdfdata.append(Paragraph("= 0.2*2000 + 0.1*(Q-2000) ; Q>2000							", styles['CommentSpace']))
-                    pdfdata.append(Paragraph("##AP calculation formula (Maharashtra) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.25*Q							", styles['Comment']))
-                    pdfdata.append(Paragraph("##AP calculation formula (Bangladesh) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 0.5*Q							", styles['Comment']))
-
-                pdfdata.append(PageBreak())
-
-            doc.multiBuild(pdfdata, onFirstPage=self.onMyPages, onLaterPages=self.onMyPages)
-            pdf = self.output.getvalue()
-            self.output.close()
-            return pdf
-        except Exception as e:
-            print e
-
-    def onMyPages(self, canvas, doc):
-        canvas.saveState()
-        canvas.setFont('Times-Roman', 12)
-        if self.header is not None:
-            # draw header
-            canvas.drawCentredString(self.width/2.0, self.height-30, self.header)
-
-        if self.footer is not None:
-            # draw footer
-            canvas.drawCentredString(self.width/2.0, 30, self.footer)
-        canvas.restoreState()
-
-
-def printPDF(pdf_output, data_dict):
+# this function requires installation of WeasyPrint for generating PDF file.
+# Dependencies- Pango, GdkPixbuf, and cairo can not be installed with pip and
+# need to be installed from your platform’s packages. use the following command
+# sudo apt-get install build-essential python-dev python-pip python-cffi libcairo2 libpango1.0-0 libpangocairo-1.0.0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
+def generate_pdf(pdf_output, data_dict):
     try:
-        table_data = getTableData(data_dict)
+        table_data = get_table_data(data_dict)
         html_template = render_to_string('app_dashboards/payment_pdf.html', {'header': data_dict.get('sheet_header'), 'footer': data_dict.get('sheet_footer'), 'values': table_data})
 
         HTML(string=html_template).write_pdf(pdf_output)
@@ -411,7 +269,7 @@ def printPDF(pdf_output, data_dict):
         print e
 
 
-def getTableData(data_dict):
+def get_table_data(data_dict):
     try:
         name_of_sheets = data_dict.get('name_of_sheets')
         heading_of_sheets = data_dict.get('heading_of_sheets')
@@ -430,7 +288,6 @@ def getTableData(data_dict):
             for header_index, header_value in enumerate(headers):
                 header_value['column_width'] = header_value.get('column_width') * 6.3
                 header_value['align'] = 'center'
-                print header_value['column_width']
             data['heading_of_sheet'] = heading_of_sheets[sheet_index]
             data['headers'] = headers
             if len(combined_data[sheet_index]) > 0:
@@ -450,9 +307,6 @@ def getTableData(data_dict):
                             value_data.append(value)
                     table_data.append(value_data)
 
-                # manually calculate values for Total Payment (in Rs) (AP + TC - FC - CAC) for aggregator sheet
-                if sheet_index == 0:
-                    total_vals[8] = total_vals[4] + total_vals[5] - total_vals[6] - total_vals[7]
                 for value in total_vals:
                     if value > 0:
                         total_vals_str.append(u"{:,.2f}".format(value))

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Loop Payment Sheet</title>
     <style>
         @page {
             margin: 1.5cm 0.4cm;
@@ -31,7 +31,7 @@
             line-height: 20px;
         }
 
-        #transporterTable1, #transporterTable2, #transporterTable3 {
+        #paymentSheetTable1, #paymentSheetTable2, #paymentSheetTable3 {
             border-collapse: collapse;
             margin: 0.5cm 0 0;
             width: 100%;
@@ -61,7 +61,7 @@
 
         {% for page_data in values %}
             {% for header_value in page_data.headers %}
-                #transporterTable{{ forloop.parentloop.counter }} tr td:nth-child({{ forloop.counter }}) {
+                #paymentSheetTable{{ forloop.parentloop.counter }} tr td:nth-child({{ forloop.counter }}) {
                     width: {{  header_value.column_width }}px;
                     text-align:
                     {% if forloop.counter == 1 %}
@@ -70,11 +70,11 @@
                         {{ header_value.align }};
                     {% endif %}
                 }
-                #transporterTable{{ forloop.parentloop.counter }} th:nth-child({{ forloop.counter }}) {
+                #paymentSheetTable{{ forloop.parentloop.counter }} th:nth-child({{ forloop.counter }}) {
                     width: {{  header_value.column_width }}px;
                 }
             {% endfor %}
-            #transporterTable{{ forloop.counter }} tr:last-child td{
+            #paymentSheetTable{{ forloop.counter }} tr:last-child td{
                 font-weight: bold;
                 font-size: 10px;
             }
@@ -84,7 +84,7 @@
 <body>
 {% for page_data in values %}
     <p id="pageHead">{{ page_data.heading_of_sheet }}</p>
-    <table id="transporterTable{{ forloop.counter }}">
+    <table id="paymentSheetTable{{ forloop.counter }}">
         <thead>
         <tr>
             {% for header in page_data.headers %}
