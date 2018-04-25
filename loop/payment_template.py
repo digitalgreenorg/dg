@@ -255,7 +255,12 @@ def prepare_value_data_generic(data):
 # this function requires installation of WeasyPrint for generating PDF file.
 # Dependencies- Pango, GdkPixbuf, and cairo can not be installed with pip and
 # need to be installed from your platform’s packages. use the following command
+# for Ubuntu
 # sudo apt-get install build-essential python-dev python-pip python-cffi libcairo2 libpango1.0-0 libpangocairo-1.0.0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
+#
+# for Mac:
+# brew install pkg-config libffi
+# PKG_CONFIG_PATH=/usr/local/opt/libffi/lib/pkgconfig pip install cffi
 def generate_pdf(pdf_output, data_dict):
     try:
         table_data = get_table_data(data_dict)
