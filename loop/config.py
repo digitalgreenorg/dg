@@ -246,18 +246,18 @@ header_dict_for_transport_outlier = {
 }
 
 sms_text = {
-    'farmer': {'hi': u'किसान', 'en': u"Farmer", 'bn': u'কৃষকের', 'mr': u'शेतकऱ्यांची'},
-    'aggregator': {'hi': u'जमाकर्ता', 'en': u"Aggregator", 'bn': u"जमाकर्ता", 'mr': u"जमाकर्ता"},
-    'currency': {'hi': u"₹", 'en': u'Rs', 'bn': u"৳", 'mr': u'₹'},
-    'date': {'hi': "", 'en': "Farmer", 'bn': "", 'mr': ""},
+    'farmer': {'hi': u'किसान', 'en': u"Farmer", 'bn': u'কৃষকের', 'mr': u'शेतकऱ्यांची', 'te': u'రైతు'},
+    'aggregator': {'hi': u'जमाकर्ता', 'en': u"Aggregator", 'bn': u"जमाकर्ता", 'mr': u"जमाकर्ता", 'te': u'ఆగ్రిగేటర్'},
+    'currency': {'hi': u"₹", 'en': u'Rs', 'bn': u"৳", 'mr': u'₹', 'te': u'₹'},
+    'date': {'hi': "", 'en': "Farmer", 'bn': "", 'mr': "", 'te': ""},
     'loop_receipt': {'hi': u'लूप-रसीद', 'en': u'Loop Receipt', 'bn': u'লুপ রশিদ',
-                     'mr': u'लूप-पावती'},
-    'total': {'hi': u'कुल राशि', 'en': u'Total', 'bn': u'মোট', 'mr': u'एकूण रक्कम'},
+                     'mr': u'लूप-पावती', 'te': u'లూప్ రశీదు'},
+    'total': {'hi': u'कुल राशि', 'en': u'Total', 'bn': u'মোট', 'mr': u'एकूण रक्कम', 'te':u'మొత్తం'},
     'bracket_open': {'default': '('},
     'bracket_close': {'default': ')'},
-    'helpline_no':{'hi': u'हेल्पलाइन नं.', 'en':u'Helpline No.', 'bn':u'হেল্পলাইন নম্বর', 'mr':u'मदतीसाठी संपर्क: '},
-    'ke_liye': {'hi': u'के लिए', 'en':u'for', 'bn': u' জন্য ', 'mr':u'च्या साठी ' },
-    'ka kiraya': {'hi': u'का किराया :', 'en': u',Rent', 'bn': u' খাজনা : ', 'mr': u'चा भाडा :'}
+    'helpline_no': {'hi': u'हेल्पलाइन नं.', 'en':u'Helpline No.', 'bn':u'হেল্পলাইন নম্বর', 'mr':u'मदतीसाठी संपर्क: ', 'te': u'హెల్ప్ లైన్ నంబరు'},
+    'ke_liye': {'hi': u'के लिए', 'en':u'for', 'bn': u' জন্য ', 'mr':u'च्या साठी ', 'te': u'కొరకు'},
+    'ka kiraya': {'hi': u'का किराया :', 'en': u',Rent', 'bn': u' খাজনা : ', 'mr': u'चा भाडा :', 'te': u'కిరాయి'}
 
 }
 
