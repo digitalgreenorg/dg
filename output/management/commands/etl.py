@@ -48,7 +48,7 @@ class AnalyticsSync():
         database = 'digitalgreen_clone'
         print "Database:", database
 
-        print time.time()
+        print datetime.datetime.utcnow()
         # Create schema
         ret_val = subprocess.call("mysql -h%s -P%s -u%s -p%s %s < %s" % (self.db_root_host, self.db_root_port, self.db_root_user, self.db_root_pass,
                                                                database, os.path.join(DIR_PATH, 'delete_myisam_tables.sql')), shell=True)
@@ -57,6 +57,7 @@ class AnalyticsSync():
         print "Schema Created on clone DB"
 
         # Fill Data
+        print "Filling data in ", database
         try:
             self.db_connection_clone = MySQLdb.connect(host=self.db_root_host,
                                                        port=self.db_root_port,

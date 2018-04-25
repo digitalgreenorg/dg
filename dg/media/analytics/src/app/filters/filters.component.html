@@ -1,33 +1,33 @@
-<div id="mySidenav" #mySidenav class="sidenav">
+<div id="mySidenav" #mySidenav class="sidenav sideNav-font">
   <perfect-scrollbar class="parent-scrollbar">
     <div #sideNavContent class="container">
-      <div class="row">
-        <div class="col-md-8">
-          <h6 class="text-left text-uppercase no-margin">Filters</h6>
+      <div class="row white-text">
+        <div class="col-8">
+          <label class="text-left no-margin sideNav-font">Filters</label>
         </div>
-        <div class="col-md-4">
+        <div class="col-4">
           <button type="button" class="close" aria-label="Close" (click)="closeNav()"><span aria-hidden="true">&times;</span></button>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
           <hr class="bg-white" style="margin-top:4%">
         </div>
       </div>
       <div *ngIf="showDateFilter">
         <div class="row">
-          <h6 class="col-md-3 col-sm-3 text-white">From</h6>
-          <div class="col-md-8 col-sm-8">
-            <form #myForm="ngForm" novalidate>
+          <label class="col-3 text-white sideNav-font">From</label>
+          <div class="col-7">
+            <form #myForm="ngForm" novalidate style="margin-top:5%;">
               <my-date-picker class="datepicker" name="start_date" [options]="myDatePickerOptions" [(ngModel)]="startModel" required></my-date-picker>
             </form>
           </div>
         </div>
         <div class="row">
-          <h6 class="col-md-3 col-sm-3 text-white">To</h6>
-          <div class="col-md-8 col-sm-8">
-            <form #myForm="ngForm" novalidate>
-              <my-date-picker class="datepicker" name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
+          <label class="col-3 text-white sideNav-font">To</label>
+          <div class="col-7">
+            <form #myForm="ngForm" novalidate style="margin-top:5%;">
+              <my-date-picker class="datepicker " name="end_date" [options]="myDatePickerOptions" [(ngModel)]="endModel" required></my-date-picker>
             </form>
           </div>
         </div>
@@ -37,35 +37,45 @@
       <div class="row">
         <div class="col-sm-12">
           <a *ngFor='let filter_name of filter_list'>
-          <label (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand">{{ filter_name.heading }}</label>
-          <div class="container" *ngIf="filter_name.expand">
-            <div class="form-group row" [id]="filter_name.heading">
-              <h6 class="col-sm-12">
-                <span class="checkbox">
-                  <label><input id={{filter_name.heading}} type="checkbox" checked="checked" [(ngModel)]="filter_name.select_all" (change)="select_all(filter_name)"> Select All</label>
-                </span>
-              </h6>
-              <div class="col-sm-12">
-                <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
+            <div class="row" (click)="onFilterClick(filter_name); filter_name.expand=!filter_name.expand;" style="cursor: pointer; cursor: hand;">
+              <div class="col-3">
+                <label>{{ filter_name.heading }}</label>
+              </div>
+              <div class="col-7">
+                <label class="float-right">
+                    <strong style="font-size:18px;">{{filter_name.show_icon}}</strong>
+                  </label>
               </div>
             </div>
-            <div>
-              <perfect-scrollbar class="scrollBar">
-                <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm">
+            <div class="container" *ngIf="filter_name.expand">
+              <div class="form-group row" [id]="filter_name.heading">
+                <h6 class="col-sm-12">
                   <span class="checkbox">
-                    <label><input id={{data.id}} type="checkbox" [(ngModel)]="data.checked" (change)="filter_name.changed = true"> {{data.value}}</label>
+                    <label><input id={{filter_name.heading}} type="checkbox" checked="checked" [(ngModel)]="filter_name.select_all" (change)="selectAll(filter_name)"> Select All</label>
                   </span>
                 </h6>
-              </perfect-scrollbar>
+                <div class="col-sm-12">
+                  <input class="form-control" type="search" [(ngModel)]="filter_name.searchTerm" placeholder="Search {{filter_name.heading}}">
+                </div>
+              </div>
+              <div>
+                <perfect-scrollbar class="scrollBar">
+                  <h6 *ngFor="let data of filter_name.element | search: 'value': filter_name.searchTerm">
+                    <span class="checkbox">
+                      <label><input id={{data.id}} type="checkbox" [(ngModel)]="data.checked" (change)="filter_name.changed = true"> {{data.value}}</label>
+                    </span>
+                  </h6>
+                </perfect-scrollbar>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
         </div>
       </div>
-      <div class="row">
+      <div class="row white-text">
         <div class="col-sm-12">
           <div class="text-center">
-            <button class="btn btn-success btn-sx btn-submit" (click)="applyFilters()">Apply Filters</button>
+            <button class="btn btn-sx" (click)="applyFilters()"
+            [ngStyle]="{'background-color' : generalConfig.applyFilterButton}" >Apply Filters</button>
           </div>
         </div>
       </div>
@@ -73,10 +83,11 @@
   </perfect-scrollbar>
 </div>
 
-<div class="container" style="height: 70px;">
-  <div class="row" style="-webkit-text-fill-color: white">
-    <div class="col-md-1">
-      <span style="font-size:20px;cursor:pointer" (click)="openNav()">&#9776;</span>
+<div class="container">
+  <div style="-webkit-text-fill-color: white">
+    <div class="float-right">
+      <!-- &#9776; -->
+      <span style="cursor:pointer" (click)="openNav()">&#926;</span>
     </div>
   </div>
 </div>

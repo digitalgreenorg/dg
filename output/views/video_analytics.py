@@ -23,13 +23,13 @@ import math
 def video_module(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-    
+
     geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
     if(geog not in geog_list):
         raise Http404()
 
     tot_vid = run_query_raw(shared_sql.get_totals(geog, id, from_date, to_date, partners, "tot_vid"))[0][0];
-    tot_vid = 0 if tot_vid is None else tot_vid 
+    tot_vid = 0 if tot_vid is None else tot_vid
     tot_vids_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
 #    prod_duration_ls = map(lambda x: x[0], run_query_raw(video_analytics_sql.video_prod_duration(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners)))
 #    tot_avg =  float(sum(prod_duration_ls))/len(prod_duration_ls) if prod_duration_ls else 0
@@ -38,12 +38,17 @@ def video_module(request):
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
 
-    return render_to_response('video_module.html',dict(search_box_params = search_box_params,\
-                                                          tot_video=tot_vid,\
-                                                          tot_vids_screened=tot_vids_screened, \
-                                                          #tot_average= tot_avg, \
-                                                          get_req_url = get_req_url
-                                                          ))
+    if  "/coco/jslps/analytics/" in request.get_full_path():
+        template = 'jslps_video_module.html'
+    else:
+        template = 'video_module.html'
+
+    return render(request, template, dict(search_box_params = search_box_params,\
+                                                    tot_video=tot_vid,\
+                                                    tot_vids_screened=tot_vids_screened, \
+                                                    #tot_average= tot_avg, \
+                                                    get_req_url = get_req_url
+                                                    ))
 
 
 
@@ -58,12 +63,12 @@ def video_geog_pie_data(request):
     geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE', 'DUMMY']
     if(geog not in geog_list[:-1]):
         raise Http404()
-    
+
     get_req_url = request.META['QUERY_STRING']
     get_req_url = [i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id']
     get_req_url.append("geog="+geog_list[geog_list.index(geog)+1].lower())
 
-    url = "/analytics/video_module?"
+    url = "/coco/analytics/video_module?"
 
 
     vid_prod = run_query(shared_sql.overview(geog,id, from_date, to_date, partners, 'production'))
@@ -124,10 +129,10 @@ def video(request):
         except Video.DoesNotExist:
             vid = Video.objects.select_related().get(old_coco_id=id)
             return HttpResponseRedirect("?id=" + str(vid.id))
-        
+
         tot_vid_scr = vid.screening_set.count()
         tot_vid_adopt = vid.personadoptpractice_set.count()
-                
+
         #Many questions are irrelevant to the video. Ranking the questions by using the number of matches
         #in title and question
         title_arr = [i for j in map(lambda x: x.split('_'), vid.title.split(' ')) for i in j]
@@ -144,7 +149,7 @@ def video(request):
             ques_arr = []
             for x in ques:
                 ques_arr.append([x['text'].split(' '), x])
-                
+
             scores = []
             for ques in ques_arr:
                 count = 0
@@ -155,7 +160,7 @@ def video(request):
             scores.sort(key = (lambda x: x[0]), reverse = True)
             ques = scores
         #ques is the final array of Question. It is SORTED list of lists, each list of the form [scores, pma object]
-        
+
         rel_vids_all = Video.objects.exclude(pk=vid.pk)
         rel_vids_prac = rel_vids_all.filter(related_practice = vid.related_practice)
         if(rel_vids_prac.count()>= 9):
@@ -167,7 +172,7 @@ def video(request):
             if(len(rel_vids)< 9):
                 rel_vids.update(list((rel_vids_all.filter(village__block__district__state = vid.village.block.district.state))[:9-len(rel_vids)]))
 
-        return render_to_response('videopage.html',dict(vid = vid, \
+        return render(request, 'videopage.html',dict(vid = vid, \
                                                          tot_vid_scr = tot_vid_scr, \
                                                          tot_vid_adopt = tot_vid_adopt, \
                                                          tot_vid_views = tot_vid_views, \
@@ -197,11 +202,11 @@ def video_search(request):
     top=request.GET.get('top')
     subtop=request.GET.get('subtop')
     sub=request.GET.get('sub')
-    
+
     search_box_params = {}
-    
+
     vids = Video.objects.all()
-    
+
     if(query):
         vids = vids.filter(title__icontains = query)
         search_box_params['query'] = query
@@ -225,7 +230,7 @@ def video_search(request):
     elif(video_uploaded == '0'):
         vids = vids.filter(youtubeid = '')
         search_box_params['video_uploaded'] = video_uploaded
-    
+
     if(season):
         vids = vids.filter(related_practice__seasonality__in = season);
         search_box_params['season'] = season
@@ -251,12 +256,12 @@ def video_search(request):
         search_box_params['geog_val'] = views.common.breadcrumbs_options(geog,id)
     else:
         search_box_params['geog_val'] = views.common.breadcrumbs_options("COUNTRY",1)
-    
+
     if(partners):
         vids = vids.filter(partner__id__in=map(int,partners))
         search_box_params['sel_partners'] = partners
     search_box_params['all_partners'] = Partner.objects.all().values('id','partner_name')
-    
+
     if(sort == None):
         vids  = vids.order_by('id')
     elif(sort == "viewers"):
@@ -282,7 +287,7 @@ def video_search(request):
             vids = vids.order_by('adoptions', 'id')
         else:
             vids = vids.order_by('-adoptions', 'id')
-        
+
     if(sec!=None):
         vids=vids.filter(related_practice__practice_sector=int(sec))
     if(subsec!=None):
@@ -293,22 +298,22 @@ def video_search(request):
         vids=vids.filter(related_practice__practice_subtopic=int(subtop))
     if(sub!=None):
         vids=vids.filter(related_practice__practice_subject=int(sub))
-                    
+
     search_box_params['prac_level'] = views.common.practice_options(sec,subsec,top,subtop,sub)
-    
-    
+
+
     #for paging
     vid_count = vids.count()
     vid_per_page = 10
     tot_pages = int(math.ceil(float(vid_count)/vid_per_page))
-    if(not page or int(page) > tot_pages): 
+    if(not page or int(page) > tot_pages):
         page = 1
     page = int(page)
     vids = vids[(page-1)*vid_per_page:(page*vid_per_page)]
     paging = dict(tot_pages = range(1,tot_pages+1), vid_count = vid_count, cur_page = page)
-    
-    return render_to_response("searchvideo_result.html",dict(vids = vids, paging=paging, search_box_params = search_box_params))
-                                            
+
+    return render(request, "searchvideo_result.html",dict(vids = vids, paging=paging, search_box_params = search_box_params))
+
 #Data generator for Month-wise Bar graph for Screening of videos
 def video_screening_month_bar_data(request):
     video_id = int(request.GET['id'])

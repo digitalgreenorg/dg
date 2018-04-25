@@ -76,7 +76,7 @@ function districtfilter(partner_id)
         data:{
         'partner': partner_id
         },
-        url: window.location.origin + "/analytics/mrptool/getdistrict",
+        url: window.location.origin + "/coco/mrp/getdistrict",
 
         success: function(data){
 
@@ -112,7 +112,7 @@ function blockfilter(district_id) {
             data: {
                 'district': district_id
             },
-            url: window.location.origin + "/analytics/mrptool/getblock",
+            url: window.location.origin + "/coco/mrp/getblock",
 
             success: function (data) {
                 if(bflag == 0) {
@@ -178,7 +178,7 @@ function mrp_payment_goclicked()
                 'block_name': block_name
             },
 
-            url: window.location.origin + "/analytics/mrptool/report",
+            url: window.location.origin + "/coco/mrp/report",
 
             success: function (data) {
                 j$.unblockUI();
@@ -189,9 +189,9 @@ function mrp_payment_goclicked()
                 }
                 j$("#example").dataTable({
 
-                    "sDom": 'T<"clear">lfrtip',
+                    "dom": 'B<"clear">lfrtip',
                     "bDeferRender": true,
-                    "bAutoWidth": false,
+                    "AutoWidth": false,
                     "columnDefs": [
                       { "title": "My column title", "targets": 0 }
                     ],
@@ -207,23 +207,23 @@ function mrp_payment_goclicked()
                     ],
 
                     "aaData": data['output'] ,      //aaData takes array_table_values and push data in the table.
-            "oTableTools":{
-
-                "sSwfPath": "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
-          "aButtons": [
-                                 {
-                                     "sExtends": "copy",
-                                     "sButtonText": "Copy to Clipboard"
-                                 },
-                                 {
-                                     "sExtends": "xls",
-                                      "sTitle": 'MRP Payment ' + block_name + ' ' + sdate + ' - '+ edate,
-                                     "sButtonText": "Download in Excel"
-                                 }
-                             ]
-                        }
+                "swfPath" : "/media/social_website/scripts/libs/tabletools_media/swf/copy_csv_xls.swf",
+                "buttons": [
+            
+                    {
+                    "extend": 'copyHtml5',
+                    "text": 'Copy to Clipboard',
+                    "title": 'MRP Payment ' + block_name + ' ' + sdate + ' - '+ edate,
+                    },
+                    {
+                    "extend": 'csvHtml5',
+                    "text": 'Download in CSV',
+                    "title":'MRP Payment ' + block_name + ' ' + sdate + ' - '+ edate,
+                    }
+                ]
                 });
                 tflag = 1;
+                $('.dt-buttons').css('float','right');
              },
             error: function (data) {
                 j$.unblockUI();

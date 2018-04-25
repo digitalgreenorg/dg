@@ -2,6 +2,8 @@ import urllib2
 import unicodecsv as csv
 import xml.etree.ElementTree as ET
 from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
+from django.conf import settings
 from geographies.models import *
 from people.models import *
 from programs.models import *
@@ -10,17 +12,20 @@ import jslps_data_integration as jslps
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationData?pUsername=admin&pPassword=JSLPSSRI')
+		file_url = 'http://webservicesri.swalekha.in/Service.asmx/GetExportSRIRegistrationData'+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		url = urllib2.urlopen(file_url)
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/person.xml", 'w')
 		xml_file.write(contents)
 		xml_file.close()
 
 		partner = Partner.objects.get(id = 24)
+		user_obj = User.objects.get(username="jslps_bot")
 		csv_file = open('jslps_data_integration_files/person_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		tree = ET.parse('jslps_data_integration_files/person.xml')
 		root = tree.getroot()
+
 		for c in root.findall('SRIRegistrationData'):
 			pc = c.find('MemID').text
 			pn = unicode(c.find('MemberName').text)
@@ -57,13 +62,16 @@ class Command(BaseCommand):
 
 			if error == 1:
 				try:
-					person = Person(person_name = pn,
-									father_name = pfn,
-									age = age,
-									phone_no = phone,
-									gender = gender,
-									village = village.Village,
-									partner = partner)
+					person, created = \
+						Person.objects.get_or_create(person_name = pn,
+													 father_name = pfn,
+													 partner=partner,
+													 gender=gender,
+													 village = village.Village,
+													 )
+					person.age = age
+					person.phone_no = phone
+					person.user_created_id = user_obj.id
 					person.save()
 					jslps.new_count += 1
 				except Exception as e:
@@ -75,14 +83,17 @@ class Command(BaseCommand):
 						jslps.duplicate_count += 1
 			else:
 				try:
-					person = Person(person_name = pn,
-										father_name = pfn,
-										age = age,
-										phone_no = phone,
-										gender = gender,
-										village = village.Village,
-										group = group.group,
-										partner = partner)
+					person, created = \
+						Person.objects.get_or_create(person_name = pn,
+													 father_name = pfn,
+													 partner=partner,
+													 gender=gender,
+													 village = village.Village,
+													 )
+					person.age = age
+					person.phone_no = phone
+					person.group=group.group
+					person.user_created_id = user_obj.id
 					person.save()
 					jslps.new_count += 1
 				except Exception as e:
@@ -95,21 +106,49 @@ class Command(BaseCommand):
 
 			if person != None:
 				jslps_person_list = JSLPS_Person.objects.filter(person_code=pc)
-				if len(jslps_person_list) == 0:
-					jslps_person = JSLPS_Person(person_code=pc,person=person)
-					jslps_person.save()
+				if jslps_person_list.count() == 0:
+					if group is not None:
+						jslps_person, created = \
+							JSLPS_Person.objects.get_or_create(person_code=pc,
+															   person=person,
+															   user_created_id=user_obj.id,
+															   activity="LIVELIHOOD"
+															   )
+						jslps_person.group=group
+						jslps_person.save()
+					else:
+						jslps_person, created = \
+							JSLPS_Person.objects.get_or_create(person_code=pc,
+															   person=person,
+															   user_created_id=user_obj.id,
+															   activity="LIVELIHOOD",
+															   )
 				else:
 					jslps_person = jslps_person_list[0]
 					jslps_person.person = person
 					jslps_person.save()
 			else:
 				person_list = Person.objects.filter(person_name = pn,father_name = pfn,village = village.Village)
-				if len(person_list) != 0:
+				if person_list.count() != 0:
 					person = person_list[0]
 					jslps_person_list = JSLPS_Person.objects.filter(person_code=pc,person=person)
-					if len(jslps_person_list) == 0:
-						jslps_person = JSLPS_Person(person_code=pc,person=person)
-						jslps_person.save()
+					if jslps_person_list.count() == 0:
+						if group is not None:
+							jslps_person, created = \
+								JSLPS_Person.objects.get_or_create(person_code=pc,
+																   person=person,
+																   user_created_id=user_obj.id,
+																   activity="LIVELIHOOD"
+																   )
+							jslps_person.group=group
+							jslps_person.save()
+						else:
+							jslps_person, created = \
+								JSLPS_Person.objects.get_or_create(person_code=pc,
+																   person=person,
+																   user_created_id=user_obj.id,
+																   activity="LIVELIHOOD",
+																   )
 					else:
 						jslps_person = jslps_person_list[0]
 						if jslps_person.person == None:
@@ -117,4 +156,10 @@ class Command(BaseCommand):
 							jslps_person.save()
 				else:
 					wtr.writerow(['Person not saved and duplicate also not exist',pc, "not saved"])
+
+		csv_file.close()
+
+
+
+
 			

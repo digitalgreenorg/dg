@@ -88,7 +88,7 @@
         //Function to enable/disable and fill option in Selects for region select drop downs
         function dochange(src, val) {
             $.ajax({ type: "GET",
-                    url: "/analytics/drop_down_val?geog="+src+"&id="+val,
+                    url: "/coco/analytics/drop_down_val?geog="+src+"&id="+val,
                     success: function(html) {                   
                     var flag = false;
                     $(".geog_select").each(function() {
@@ -116,7 +116,7 @@
 <div id='analyticsheader'> 
 
 	<div id='analyticslogo'> 
-		<a href="/analytics/overview_module?geog=country&id=1"> <img src="/media/Output/Images/analyticslogo1.png" alt='Analytics Logo'> </a>
+		<a href="/coco/analytics/?geog=country&id=1"> <img src="/media/Output/Images/analyticslogo1.png" alt='Analytics Logo'> </a>
 	</div>
 	
 	<div id='analyticsnav'>
@@ -124,11 +124,11 @@
 			<a id='analyticsnavlink' href="#">Select Dashboard &nbsp; <img src="/media/Output/Images/navbtn1.png" alt=""></a>
 			<div id='analyticsnav1'>
 				<ul>
-					<li> <a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
-					<li> <a href="{% if search_box_params %}/analytics/video_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
-					<li> <a href="{% if search_box_params %}/analytics/screening_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
-					<li> <a href="{% if search_box_params %}/analytics/adoption_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/adoption_module?geog=country&id=1{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
-					<li> <a href="{% if search_box_params %}/analytics/target_table{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/target_table?geog=country&id=1{%endif%}" title='Targets Dashboard'>Targets Statistics</a></li>
+					<li> <a href="{% if search_box_params %}/coco/analytics/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/?geog=country&id=1{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
+					<li> <a href="{% if search_box_params %}/coco/analytics/video_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/video_module?geog=country&id=1{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
+					<li> <a href="{% if search_box_params %}/coco/analytics/screening_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/screening_module?geog=country&id=1{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/coco/analytics/adoption_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/adoption_module?geog=country&id=1{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/coco/analytics/target_table{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/target_table?geog=country&id=1{%endif%}" title='Targets Dashboard'>Targets Statistics</a></li>
 				</ul>
 			</div>
 		</div>
@@ -143,7 +143,7 @@
 	&nbsp; 
 	{% block analyticsbreadcrums %}
 		<a href='/'>Home</a> /
-		<a href="{% if search_box_params %}/analytics/overview_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/overview_module?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>		
+		<a href="{% if search_box_params %}/coco/analytics/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>		
 	{% endblock analyticsbreadcrums %}
 
 </div>

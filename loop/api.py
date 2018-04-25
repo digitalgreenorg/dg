@@ -18,6 +18,11 @@ import json
 from django.contrib.auth.models import User
 from models import *
 
+import datetime
+import time
+
+from loop_ivr.helper_function import send_sms_using_textlocal
+
 class AssignedMandiNotSaved(Exception):
     pass
 
@@ -110,11 +115,13 @@ class BlockAuthorization(Authorization):
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
         kwargs = {}
+        userObject = AdminUser.objects.filter(user_id=bundle.request.user.id)
+        if userObject:
+            return True
         kwargs[self.block_field] = LoopUser.objects.get(
             user_id=bundle.request.user.id).village.block
         obj = object_list.filter(**kwargs).distinct()
-        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
-        if obj or userObject.role == 1:
+        if obj:
             return True
         else:
             raise NotFound("Not allowed to download Block")
@@ -184,10 +191,13 @@ class DayTransportationAuthorization(Authorization):
 
     def read_detail(self, object_list, bundle):
         # Is the requested object owned by the user?
+        #import pdb;pdb.set_trace()
+        userObject = AdminUser.objects.filter(user_id=bundle.request.user.id)
+        if userObject:
+            return True
         obj = object_list.filter(
             user_created_id=bundle.request.user.id).distinct()
-        userObject = LoopUser.objects.get(user_id=bundle.request.user.id)
-        if obj or userObject.role == 1:
+        if obj:
             return True
         else:
             raise NotFound("Not allowed to download Transportations")
@@ -346,6 +356,12 @@ class FarmerResource(BaseResource):
         village = Village.objects.get(id=bundle.data["village"]["online_id"])
         attempt = Farmer.objects.filter(
             phone=bundle.data['phone'], name=bundle.data['name'], village=village)
+        if self.is_phone_valid(bundle):
+            date = datetime.datetime.now()
+            time = date.strftime('%Y-%m-%d %H:%M:%S')
+            bundle.data['correct_phone_date'] = '2015-11-27'
+        else:
+            bundle.data['correct_phone_date'] = None
         if attempt.count() < 1:
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
         else:
@@ -354,8 +370,17 @@ class FarmerResource(BaseResource):
 
     def obj_update(self, bundle, request=None, **kwargs):
         try:
+            attempt = Farmer.objects.filter(id=bundle.data['online_id'])
+
+            if attempt[0].correct_phone_date is None and self.is_phone_valid(bundle):
+                date = datetime.datetime.now()
+                time = date.strftime('%Y-%m-%d %H:%M:%S')
+                bundle.data['correct_phone_date'] = time
+            elif attempt[0].correct_phone_date is not None and not self.is_phone_valid(bundle):
+                bundle.data['correct_phone_date'] = None
+                
             bundle = super(FarmerResource, self).obj_update(bundle, **kwargs)
-        except Exception, e:
+        except Exception as e:
             village = Village.objects.get(id=bundle.data["village"]["online_id"])
             attempt = Farmer.objects.filter(
                 phone=bundle.data['phone'], name=bundle.data['name'], village=village)
@@ -366,6 +391,21 @@ class FarmerResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
         return bundle
+
+    def is_phone_valid(self,bundle):
+        village = Village.objects.get(id=bundle.data['village']['online_id'])
+        state = State.objects.get(id=village.block.district.state.id)
+        phone = bundle.data['phone']
+        validPhoneString =False
+        if len(phone) == int(state.phone_digit):
+            if phone.startswith(tuple(state.phone_start.split(","))):
+                validPhoneString = True
+        duplicateCount = Farmer.objects.filter(phone=phone).count()
+        if duplicateCount <= 3 and validPhoneString:
+            return True
+        return False
+
+
 
 
 class LoopUserResource(BaseResource):
@@ -504,7 +544,10 @@ class CropResource(BaseResource):
         user = LoopUser.objects.get(user_id=request.user)
         languageFilter = str(user.preferred_language.notation)
         if languageFilter:
-            result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
+            if languageFilter!='en':
+                result = super(CropResource, self).get_object_list(request).filter(crops__language__notation=languageFilter)         
+            else:
+                result = super(CropResource,self).get_object_list(request)
         else:
             result = super(CropResource,self).get_object_list(request).filter(crops__language_id=1)
         return result
@@ -532,6 +575,7 @@ class CropResource(BaseResource):
         for d in bundle.data['crops']:
             if d.data['language']['notation'] == user.preferred_language.notation:
                 bundle.data['crop_name'] = d.data['crop_name']
+                bundle.data['measuring_unit']=d.data['measuring_unit']
                 break
         del bundle.data['crops']
         return bundle
@@ -618,7 +662,10 @@ class VehicleResource(BaseResource):
         user = LoopUser.objects.get(user_id=request.user)
         languageFilter = user.preferred_language.notation
         if languageFilter:
-            result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
+            if languageFilter!='en':
+                result = super(VehicleResource, self).get_object_list(request).filter(vehicles__language__notation=languageFilter)         
+            else:
+                result = super(VehicleResource, self).get_object_list(request)
         else:
             result = super(VehicleResource,self).get_object_list(request).filter(vehicles__language__id=1)
         return result
@@ -808,10 +855,14 @@ class DayTransportationResource(BaseResource):
     hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def obj_create(self, bundle, request=None, **kwargs):
+        #import pdb;pdb.set_trace()
         mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
-        user = LoopUser.objects.get(user__username=bundle.request.user)
+        #for payments
         if "aggregator" in bundle.data.keys():
             user = LoopUser.objects.get(id=bundle.data["aggregator"]["online_id"])
+        else:
+        #for aggregator app
+            user = LoopUser.objects.get(user__username=bundle.request.user)
         transportationvehicle = TransportationVehicle.objects.get(
             id=bundle.data["transportation_vehicle"]["online_id"])
         attempt = DayTransportation.objects.filter(date=bundle.data[
@@ -1008,7 +1059,10 @@ class CombinedTransactionResource(BaseResource):
         user = LoopUser.objects.get(user__username=bundle.request.user)
         attempt = CombinedTransaction.objects.filter(date=bundle.data[
                                                      "date"], user_created=user.user_id, timestamp=bundle.data["timestamp"])
+        
         if attempt.count() < 1:
+            # if bundle.data["status"]==1:
+            #     self.send_farmer_message(bundle)
             bundle = super(CombinedTransactionResource,self).obj_create(bundle, **kwargs)
         else:
             send_duplicate_message(int(attempt[0].id))
@@ -1021,6 +1075,8 @@ class CombinedTransactionResource(BaseResource):
         gaddidar = Gaddidar.objects.get(id=bundle.data["gaddidar"]["online_id"])
 
         try:
+            # if(bundle.data["status"]==1):
+            #     self.send_farmer_message(bundle)
             bundle = super(CombinedTransactionResource,
                            self).obj_update(bundle, **kwargs)
         except Exception, e:

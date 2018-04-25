@@ -22,6 +22,7 @@ from dashboard.admin import SubCategoryAdmin
 from dashboard.admin import VideoPracticeAdmin
 from dashboard.admin import ParentCategoryAdmin
 from dashboard.admin import ProjectAdmin
+from dashboard.admin import TagAdmin
 from activities.models import PersonAdoptPractice, Screening
 from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
@@ -39,6 +40,7 @@ from videos.models import Video
 from videos.models import Category
 from videos.models import SubCategory
 from videos.models import VideoPractice
+from videos.models import Tag
 from videos.models import ParentCategory
 
 
@@ -48,6 +50,10 @@ class CocoAdmin(AdminSite):
         return request.user.is_active
 
 coco_admin = CocoAdmin(name="admin_coco")
+
+coco_admin.index_template = 'social_website/index.html'
+coco_admin.login_template = 'social_website/login.html'
+coco_admin.logout_template = 'social_website/home.html'
 
 coco_admin.register(User, UserAdmin)
 coco_admin.register(Group, GroupAdmin)
@@ -68,6 +74,7 @@ coco_admin.register(Language)
 coco_admin.register(Category)
 coco_admin.register(SubCategory, SubCategoryAdmin)
 coco_admin.register(VideoPractice, VideoPracticeAdmin)
+coco_admin.register(Tag, TagAdmin)
 coco_admin.register(Practice, PracticesAdmin)
 coco_admin.register(Screening, ScreeningAdmin)
 coco_admin.register(ParentCategory, ParentCategoryAdmin)

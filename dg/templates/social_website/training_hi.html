@@ -34,6 +34,8 @@
         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/dataTables.tableTools.css" />
         <link rel="stylesheet" media="screen" href="{{STATIC_URL}}assets/styles/select2.css" />
 
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+
 
         <script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
         
@@ -64,106 +66,41 @@
     <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
     <body data-controller="{% if header.jsController %}{{header.jsController}}{% else %}DigitalGreenPage{% endif %}" data-user-id={{request.user.id}}>
         <!-- Begin Main Wrapper -->
-        <div class="wrapper-main wrapper">
+        <div class="wrapper-main wrapper" >
             <div class="user-dropdown-div">
-                <div class="user-dropdown js-user-dropdown">
-                    <ul>
-                        <li class="user-dropdown-option"><a class="hdg-black">{{request.user.username}}</a></li>
-                        {% if not request.user.social_auth.all.0 %}
-                            <li class="user-dropdown-option">
-                                <a href="{% url 'change_password' %}">Change Password</a>
-                            </li>
-                        {% endif %}
-                        <li class="user-dropdown-option"><a href="{% url 'logout' %}">Sign Out</a></li>
-                    </ul>
-                </div>
             </div>
-            <div id="survey" class="survey media">
-                <div class="feedback-modal">
-                    <a href="#surveyModal" class="js-modal-click"><img src="{{STATIC_URL}}social_website/content/feedback/feedback.png"></img></a>
-                </div>
-                <div id="surveyModal" class="modalDialog">
-                    <div class="">
-                        <a href="#close" title="Close" class="close">X</a>
-                        <h2 class="hdg-e layout-vr-sm centered">Thanks for visiting!</h2>
-                        <p class="hdg-f layout-vr-sm">Please take a moment to share your feedback to help us improve your experience.</p>
-                        <div class="img-size-feedback centered layout-vr-sm">
-                            <img data="5" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/very_happy.png"></img>
-                            <img data="4" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/happy.png"></img>
-                            <img data="3" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/neutral.png"></img>
-                            <img data="2" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/sad.png"></img>
-                            <img data="1" class="js-smiley-click" src="{{STATIC_URL}}social_website/content/feedback/very_sad.png"></img>
-                        </div>
-                        <div class="js-modal comment-survey">
-                            <textarea placeholder="Any comments?" id="comments" name="comments" class="layout-vr-sm hdg-f text-width-feedback" id="comments" rows="8"></textarea>
-                            <p class="hdg-f layout-vr-sm">Share your email address to hear back from us.</p>
-                            <input placeholder="E-Mail ID (Optional)" id="email" type="text" name="email" class="layout-vr-sm hdg-f text-width-feedback text-height-feedback" id="email"> 
-                            <p class="hdg-f hdg-semibold centered layout-vr-sm">Thank You!</p>
-                            <div class="centered">
-                                <a id="button" class="btn js-submit-form btn-pointer-feedback">SUBMIT</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="header-fixed">
-                <div class="header-wrapper clearfix">
-                    <header class="global-nav">
+            <div class="header-fixed" style="background-color: #8F288C">
+                <div class="clearfix">
+                    <header class="global-nav-training-courseware">
                         <a class="skip-to-content" href="#main">Skip to content</a>
                         <div class="wrapper">
-                            <nav class="inner-nav" role="navigation">
-                                <ul class="nav">
-                                    <!-- Indicate the current active nav item by adding the "selected" class to a li element below -->
-                                    <li class="logo"><a href="{% url 'home' %}">Green Digital</a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'About' %} selected {% endif %}"><a href="{% url 'about' %}">About Us <span class="nav-sub hdg-f menu-subitem">and our approach</span></a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Discover' %} selected {% endif %}"><a href="{% url 'discover' %}">Discover <span class="nav-sub hdg-f menu-subitem">great videos</span></a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Connect' %} selected {% endif %}" ><a href="{% url 'connect' %}">Connect <span class="nav-sub hdg-f menu-subitem">with our partners</span></a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Tools' %} selected {% endif %}"><a href="{% url 'tools' %}">Tools <span class="nav-sub hdg-f menu-subitem">to catalyze change</span></a></li>
-                                    <li class="nav-pipe nav-size hdg-e menu-item {% if header.currentPage = 'Careers' %} selected {% endif %}"><a href="{% url 'career' %}">Work<span class="nav-sub hdg-f menu-subitem">with us</span></a></li>
-                                    
-                                    {% if not request.user.is_authenticated %}
-                                        <li class="nav-pipe"><a class="btn-sign-in" href="/login/?next={{request.path}}">Sign in</a></li>
-                                    {% else %}
-                                        <li class="grid-rt nav-pipe" style="padding-left:51px; padding-bottom:0px;">
-                                            <div class="media grid-rt">
-                                                <div class="img">
-                                                    {% if "facebook" == request.user.social_auth.all.0.provider %}
-                                                    <div class="img-effects">
-                                                        <img src="https://graph.facebook.com/{{request.user.social_auth.all.0.uid}}/picture" class="user-image js-user-image">
-                                                    </div>
-                                                    {% elif "google-oauth2" == request.user.social_auth.all.0.provider %}
-                                                    <div class="img-effects">
-                                                        <img src=" {{request.user.social_auth.all.0.extra_data.picture}}?sz=40" class="user-image js-user-image">
-                                                    </div>
-                                                    {% else %}
-                                                    <div class="img-effects">
-                                                        <img src="{{STATIC_URL}}social_website/content/default.png" class="user-image js-user-image">
-                                                    </div>
-                                                    {% endif %}
-                                                    <img src="{{STATIC_URL}}social_website/content/dropdown.png" class="user-dropdown-arrow js-user-dropdown-arrow">
-                                                </div>
-                                            </div>
-                                        </li>
-                                    {% endif %}
+                            <div></div>
+                            <div>
+                                <ul class="nav-vid">
+                                    <li class="logodg"><a href="{{ WEBSITE_DOMAIN }}" target="_blank">Green Digital</a></li>
+                                    <li class="logo-training-courseware"><a href="/training/courseware/">Green Digital</a></li>
+
                                 </ul>
-                            </nav> <!-- End .inner-nav -->
+                            </div>
+                            <div></div>
                         </div>  <!-- End .wrapper -->
                     </header> <!-- End .global-nav -->
                 </div>
             </div>
             <div class="header-margin"></div>
-<div class="grid" id="tabs">                                 
+
+<div class="grid" id="tabs" style="background: #f3f2eb;padding-top: 10px">                                 
     <div style="width: 600px;float: left">
-      <ul class="nav" style="border: 1px solid #EEEEEE;background: #f3f2eb;color: #047D0A;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
+      <ul class="nav-training-courseware" style="border: 1px solid #EEEEEE;background: #f3f2eb;color: #8F288C;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
         <li><a href="#tabs-1" class="selected"><span>Production</span></span></a></li>
         <li><a href="#tabs-2"><span><span>Dissemination</span></span></a></li>
       </ul>
     </div>
     <div style="margin-left:200px;margin-top:4px;background: #f3f2eb" class="nav">
-    <select style="border: 1px solid #ffffff;background: #ffffff; height: 32px; width: 400px; color: #047D0A;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
-      <option value="/about/training/hi/" {% if request.get_full_path == "/about/training/hi/" %} selected="true"{% endif %}>Hindi</option>
-      <option value="/about/training/en/" {% if request.get_full_path == "/about/training/en/"  or  request.get_full_path == "/about/training/en/" %} selected="true"{% endif %}>English</option>
-      <option value="/about/training/fr/" {% if request.get_full_path == "/about/training/fr/" %} selected="true"{% endif %}>French</option>
+    <select style="border: 1px solid #ffffff;background: #ffffff; height: 32px; width: 400px; color: #8F288C;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
+      <option value="/training/courseware/hi/" {% if request.get_full_path == "/training/courseware/hi/" %} selected="true"{% endif %}>Hindi</option>
+      <option value="/training/courseware/en/" {% if request.get_full_path == "/training/courseware/en/"  or  request.get_full_path == "/training/courseware/en/" %} selected="true"{% endif %}>English</option>
+      <option value="/training/courseware/fr/" {% if request.get_full_path == "/training/courseware/fr/" %} selected="true"{% endif %}>French</option>
     </select>
     </div>
   
@@ -178,46 +115,46 @@
             
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon Tent Activity Sheet A5 Size.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/moontent.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Activity Sheet</div>
+                <div class="centered hdg-purple">Moon Tent - Activity Sheet</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Written Instructions</div>
+                <div class="centered hdg-purple">Moon Tent - Written Instructions</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon-Tent-with-Illustrations-and-Instructions-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/Moon-Tent-with-Illustrations-and-Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Illustration</div>
+                <div class="centered hdg-purple">Moon Tent - Illustration</div>
               </a>
             </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
                   <a href="{{STATIC_URL}}docs/training/Digital-Green-photo-story-(Hindi).pdf" target="_blank">
-                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Digital-Green-photo-story-(Hindi).png" height="260" width="190" alt=""/>
                     </div>
-                    <div class="centered">DG photo story</div>
+                    <div class="centered hdg-purple">DG photo story</div>
                   </a>
               </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Video-Production-Assessment-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Video Production Assessment</div>
+                <div class="centered hdg-purple">Video Production Assessment</div>
               </a>
             </div>
 
@@ -236,13 +173,13 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Moon Tent - Video</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Moon Tent - Video</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                           </div>
                           <div class="vid-cat-ft">
-                            <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                            <p></p>
                           </div>
                         </div> <!-- End .vid-inner -->
                     </div> <!-- End .vid-cat -->
@@ -260,13 +197,13 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">DG Production team's work</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">DG Production team's work</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                           </div>
                           <div class="vid-cat-ft">
-                            <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                            <p></p>
                           </div>
                         </div> <!-- End .vid-inner -->
                     </div> <!-- End .vid-cat -->
@@ -303,13 +240,13 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Types of Shots</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Types of Shots</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                           </div>
                           <div class="vid-cat-ft">
-                            <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                            <p></p>
                           </div>
                         </div> <!-- End .vid-inner -->
                     </div> <!-- End .vid-cat -->
@@ -328,13 +265,13 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">How to construct a scene</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">How to construct a scene</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                           </div>
                           <div class="vid-cat-ft">
-                            <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                            <p></p>
                           </div>
                         </div> <!-- End .vid-inner -->
                     </div> <!-- End .vid-cat -->
@@ -354,13 +291,10 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Camera Angels and Movem..</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Camera Angels and Movem..</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
-                          </div>
-                          <div class="vid-cat-ft">
-                            <p>For more information and related videos visit us on http://www.digitalgreen.org</p>
                           </div>
                         </div> <!-- End .vid-inner -->
                       </div> <!-- End .vid-cat -->
@@ -379,13 +313,10 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Composition and Framing</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Composition and Framing</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
-                          </div>
-                          <div class="vid-cat-ft">
-                            <p>For more information and related videos visit us on http://www.digitalgreen.org</p>
                           </div>
                         </div> <!-- End .vid-inner -->
                       </div> <!-- End .vid-cat -->
@@ -410,13 +341,13 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Basic Lighting</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Basic Lighting</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                           </div>
                           <div class="vid-cat-ft">
-                            <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                            <p></p>
                           </div>
                         </div> <!-- End .vid-inner -->
                     </div> <!-- End .vid-cat -->
@@ -435,13 +366,13 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Rules of maintaining visual ..</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Rules of maintaining visual ..</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                           </div>
                           <div class="vid-cat-ft">
-                            <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                            <p></p>
                           </div>
                         </div> <!-- End .vid-inner -->
                     </div> <!-- End .vid-cat -->
@@ -466,10 +397,10 @@
           <div class="hdg-f hdg-source-reg grid">
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Video-production-Technical-tips-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/handout.png" height="260" width="190" alt=""/>
                 </div>
-                <div class="centered">Video Review Form</div>
+                <div class="centered hdg-purple">Video Production - Technical Tips</div>
               </a>
             </div>
           </div>
@@ -491,37 +422,37 @@
               
               <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon Tent Activity Sheet A5 Size.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/moontent.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Activity Sheet</div>
+                <div class="centered hdg-purple">Moon Tent - Activity Sheet</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/Moon Tent -Written Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Written Instructions</div>
+                <div class="centered hdg-purple">Moon Tent - Written Instructions</div>
               </a>
             </div>
 
             <div class="grid-col grid-size1of4 layout-vr-lg">
               <a href="{{STATIC_URL}}docs/training/Moon-Tent-with-Illustrations-and-Instructions-Hindi.pdf" target="_blank">
-                <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                   <img src="{{STATIC_URL}}docs/training/Moon-Tent-with-Illustrations-and-Instructions-Hindi.png" height="260" width="190" alt=""/> 
                 </div>
-                <div class="centered">Moon Tent - Illustration</div>
+                <div class="centered hdg-purple">Moon Tent - Illustration</div>
               </a>
             </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
                   <a href="{{STATIC_URL}}docs/training/Digital-Green-photo-story-(Hindi).pdf" target="_blank">
-                    <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Digital-Green-photo-story-(Hindi).png" height="260" width="190" alt=""/>
                     </div>
-                    <div class="centered">DG photo story</div>
+                    <div class="centered hdg-purple">DG photo story</div>
                   </a>
               </div>
 
@@ -539,13 +470,13 @@
                         </div>
                           <div class="vid-cat-inner">
                             <div class="vid-cat-hd">
-                              <h3 class="hdg-green hdg-f hdg-bold">Dharmendra's Story</h3>
+                              <h3 class="hdg-purple hdg-f hdg-bold">Dharmendra's Story</h3>
                             </div>
                             <div class="vid-cat-bd">
                               <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                             </div>
                             <div class="vid-cat-ft">
-                              <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                              <p></p>
                             </div>
                           </div> <!-- End .vid-inner -->
                       </div> <!-- End .vid-cat -->
@@ -556,37 +487,37 @@
 
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/traning/Pico-Scoresheet-Hindi-2015-05-07.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <a href="{{STATIC_URL}}docs/training/Pico-Scoresheet-Hindi-2015-05-07.pdf" target="_blank">
+                  <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Pico-Scoresheet-Hindi-2015-05-07.png" height="260" width="190" alt=""/> 
                   </div>
-                  <div class="centered">Pico Scoresheet</div>
+                  <div class="centered hdg-purple">Pico Scoresheet</div>
                 </a>
               </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/traning/Dissemination-Process-cards.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <a href="{{STATIC_URL}}docs/training/Dissemination-Process-cards.pdf" target="_blank">
+                  <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Dissemination-Process-cards.png" height="260" width="190" alt=""/> 
                   </div>
-                  <div class="centered">Dissemination Process Card</div>
+                  <div class="centered hdg-purple">Dissemination Process Card</div>
                 </a>
               </div>
 
               <div class="grid-col grid-size1of4 layout-vr-lg">
                 <a href="{{STATIC_URL}}docs/training/Non-negotiable-card.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                  <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/Non-negotiable-card.png" height="260" width="190" alt=""/> 
                   </div>
-                  <div class="centered">Non-negotiable card</div>
+                  <div class="centered hdg-purple">Non-negotiable card</div>
                 </a>
               </div>
               <div class="grid-col grid-size1of4 layout-vr-lg">
-                <a href="{{STATIC_URL}}docs/traning/Training-Feedback-Hindi-2015-05-14.pdf" target="_blank">
-                  <div class="img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                <a href="{{STATIC_URL}}docs/training/Training-Feedback-Hindi-2015-05-14.pdf" target="_blank">
+                  <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
                       <img src="{{STATIC_URL}}docs/training/training_hindi.png" height="260" width="190" alt=""/> 
                   </div>
-                  <div class="centered">Training Feedback</div>
+                  <div class="centered hdg-purple">Training Feedback</div>
                 </a>
               </div>
 
@@ -604,13 +535,13 @@
                       </div>
                         <div class="vid-cat-inner">
                           <div class="vid-cat-hd">
-                            <h3 class="hdg-green hdg-f hdg-bold">Moon Tent - Video</h3>
+                            <h3 class="hdg-purple hdg-f hdg-bold">Moon Tent - Video</h3>
                           </div>
                           <div class="vid-cat-bd">
                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                           </div>
                           <div class="vid-cat-ft">
-                            <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                            <p></p>
                           </div>
                         </div> <!-- End .vid-inner -->
                     </div> <!-- End .vid-cat -->
@@ -648,7 +579,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">Pico Seekho</h3>
+                                            <h3 class="hdg-purple hdg-f hdg-bold">Pico Seekho</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -674,7 +605,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">Preparing for Dissemi ...</h3>
+                                            <h3 class="hdg-purple hdg-f hdg-bold">Preparing for Dissemi ...</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -700,7 +631,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">Dissemination process ...</h3>
+                                            <h3 class="hdg-purple hdg-f hdg-bold">Dissemination process ...</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -726,7 +657,7 @@
                                     </div>
                                     <div class="vid-cat-inner">
                                         <div class="vid-cat-hd">
-                                            <h3 class="hdg-green hdg-f hdg-bold">Adoption Verification ...</h3>
+                                            <h3 class="hdg-purple hdg-f hdg-bold">Adoption Verification ...</h3>
                                         </div>
                                         <div class="vid-cat-bd">
                                             <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
@@ -754,13 +685,13 @@
                           </div>
                             <div class="vid-cat-inner">
                               <div class="vid-cat-hd">
-                                <h3 class="hdg-green hdg-f hdg-bold">Environment Building</h3>
+                                <h3 class="hdg-purple hdg-f hdg-bold">Environment Building</h3>
                               </div>
                               <div class="vid-cat-bd">
                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                               </div>
                               <div class="vid-cat-ft">
-                                <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                                <p></p>
                               </div>
                             </div> <!-- End .vid-inner -->
                         </div> <!-- End .vid-cat -->
@@ -779,13 +710,13 @@
                           </div>
                             <div class="vid-cat-inner">
                               <div class="vid-cat-hd">
-                                <h3 class="hdg-green hdg-f hdg-bold">Engaging audience</h3>
+                                <h3 class="hdg-purple hdg-f hdg-bold">Engaging audience</h3>
                               </div>
                               <div class="vid-cat-bd">
                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
                               </div>
                               <div class="vid-cat-ft">
-                                <p>For more information and related videos visit us on http://www.digitalgreen.org/</p>
+                                <p></p>
                               </div>
                             </div> <!-- End .vid-inner -->
                         </div> <!-- End .vid-cat -->
@@ -805,13 +736,10 @@
                           </div>
                             <div class="vid-cat-inner">
                               <div class="vid-cat-hd">
-                                <h3 class="hdg-green hdg-f hdg-bold">Summarzing</h3>
+                                <h3 class="hdg-purple hdg-f hdg-bold">Summarzing</h3>
                               </div>
                               <div class="vid-cat-bd">
                                 <p class="copy copy-sm layout-vr-tiny">Bihar | Hindi</p>
-                              </div>
-                              <div class="vid-cat-ft">
-                                <p>For more information and related videos visit us on http://www.digitalgreen.org</p>
                               </div>
                             </div> <!-- End .vid-inner -->
                           </div> <!-- End .vid-cat -->
@@ -852,109 +780,17 @@
     };
 </script>
 
-  
-
-            <div class="follow">  
-                <div class="wrapper">
-                    <div class="inner-wrapper">
-                        <div class="grid">
-                            <div class="hdg-follow grid-col grid-size3of4 layout-vr-sm">
-                                <div class="grid-col grid-size1of4">
-                                    <h3 class="hdg-source-semibold hdg-e">Who we are</h3>
-                                    <ul class="hdg-source-reg hdg-f">
-                                        <li><a href="{% url 'team' %}">Our Team</a></li>
-                                        <li><a href="{% url 'board' %}">Our Board</a></li>
-                                        <li><a href="{% url 'ourwork' %}">Our Work</a></li>
-                                        <li><a href="{% url 'connect' %}">Our Partners</a></li>
-                                    </ul>
-                                </div>
-                                <div class="grid-col grid-size1of4">
-                                    <h3 class="hdg-e hdg-source-semibold">What we do</h3>
-                                    <ul class="hdg-source-reg hdg-f">
-                                        <li><a href="{% url 'our_programs' %}">Our Programs</a></li>
-                                        <li><a href="{% url 'resources' %}">Resources</a></li>
-                                        <li><a href="/blog">Blog</a></li>
-                                        <li><a href="{% url 'press' %}">In the News</a></li>
-                                    </ul>
-                                </div>
-                                <div class="grid-col grid-size1of4">
-                                    <h3 class="hdg-e hdg-source-semibold">Technologies we use</h3>
-                                    <ul class="hdg-source-reg hdg-f">
-                                        <li><a href="{% url 'tools' %}">Tools</a></li>
-                                        <li><a href="{% url 'training' %}">Training Resources</a></li>
-                                        <li><a href="{% url 'technology' %}">Technology Resources</a></li>
-                                        <li><a href="{% url 'discover' %}">Video Library</a></li>
-                                    </ul>
-                                </div>
-                                <div class="grid-col grid-size1of4">
-                                    <h3 class="hdg-e hdg-source-semibold">Work with us</h3>
-                                    <ul class="hdg-source-reg hdg-f">
-                                        <li><a href="{% url 'career' %}">Careers</a></li>
-                                        <li><a href="{% url 'donate' %}">Donate</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="grid-col grid-size1of4">
-                                <h3 class="hdg-f hdg-source-semibold">Follow Us</h3>
-                                <ul class="social layout-vr-sm" role="navigation">
-                        {% include "includes/partials/footer_social_media.html" %}
-                                </ul>
-                                <!-- Begin MailChimp Signup Form -->
-                                <link rel="stylesheet" type="text/css" media="screen" href="{{STATIC_URL}}assets/styles/mailchimp.css" />
-                                <style type="text/css">
-                                    #mc_embed_signup{clear:left; font:14px Helvetica,Arial,sans-serif;  width:auto;}
-                                    /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
-                                       We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-                                </style>
-                                <div id="mc_embed_signup">
-                                    <form action="//digitalgreen.us7.list-manage.com/subscribe/post?u=d51864c6725a6ba45cd160867&amp;id=944c549f98" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-                                        <div id="mc_embed_signup_scroll">
-                                            <div class="mc-field-group">
-                                                <label class="hdg-source-semibold hdg-f" for="mce-EMAIL">Email ID</label>
-                                                <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
-                                            </div>
-                                            <div id="mce-responses" class="clear">
-                                                <div class="response" id="mce-error-response" style="display:none"></div>
-                                                <div class="response" id="mce-success-response" style="display:none"></div>
-                                            </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                                            <div style="position: absolute; left: -5000px;">
-                                                <input type="text" name="b_d51864c6725a6ba45cd160867_944c549f98" tabindex="-1" value="">
-                                            </div>
-                                            <div class="clear">
-                                                <input type="submit" value="Subscribe to Our Newsletter" name="subscribe" id="mc-embedded-subscribe" class="button" onClick="goog_report_conversion()">
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script>
-                                <script type='text/javascript'>
-                                (function($) {
-                                    window.fnames = new Array(); 
-                                    window.ftypes = new Array();
-                                    fnames[0]='EMAIL';
-                                    ftypes[0]='email';
-                                }(jQuery));
-                                var $mcj = jQuery.noConflict(true);
-                                </script>
-                                <!--End mc_embed_signup-->
-                            </div>
-                        </div>
-                    </div> <!-- End .inner-wrapper -->
-                </div>  <!-- End .wrapper -->
-            </div> <!-- End .follow -->
-            
-            <footer>
-                <div class="footer" role="contentinfo">
+<footer>
+                    <div class="footer-video" role="contentinfo">
                     <div class="wrapper">
-                        <div class="inner-wrapper">
-                            <nav role="navigation">
-                                <ul class="copy-lt hdg-upper copy footer-links">
-                                    <li><a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"> (cc) 2013 Digital Green</a></li>
-                                    <li><a href="{% url 'sitemap' %}">Sitemap</a></li>
-                                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                        <div class="footer-nav-vid">
+                                <ul>
+                                    <li class="footer_copyright"><a href="http://creativecommons.org/licenses/by-nc-sa/2.5/in/"
+                                                    target="_blank">&#169; 2017 Digital Green. All rights reserved.</li>
+                                    <li class="privacy_policy"><a href="{{ PRIVACY_POLICY }}" target="_blank">Privacy Policy |</a></li>
+                                    <li class="terms_of_service"><a href="{{ TERMS_SERVICE }}" target="_blank">Terms of Service</a></li>
+
                                 </ul>
-                            </nav>
-                            <a class="footer-btn" href="/coco/" target="_blank">Coco</a>
                         </div>
                     </div> <!-- End .inner-wrapper -->
                 </div>  <!-- End .wrapper -->
@@ -963,31 +799,48 @@
         <!-- End Main Wrapper -->
         <!-- JAVASCRIPT -->
         
-        <!-- Enabling Google Analytics -->
-        <script type="text/javascript">
-        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-      </script>
-      <script type="text/javascript">
-        try {
-          var pageTracker = _gat._getTracker("UA-16211208-1");
-          pageTracker._trackPageview();
-          } 
-      catch(err) {}
-      </script>
-      
-      <!-- Universal Google Analytics -->
-        <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<!-- Enable Google Analytics -->
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106595309-1"></script>
+<script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments)};
+        gtag('js', new Date());
 
-        ga('create', 'UA-16211208-3', 'auto');  // Replace with your property ID.
-        ga('send', 'pageview');
+        gtag('config', 'UA-106595309-1');
 
-        </script>
-        <!-- End Universal Google Analytics -->
+
+</script>
+
+<!-- End Google Analytics -->
+
+
+<!-- OLD Enabling Google Analytics -->
+
+<!--<script type="text/javascript">-->
+<!--var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");-->
+<!--document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));-->
+<!--</script>-->
+<!--<script type="text/javascript">-->
+<!--try {-->
+<!--var pageTracker = _gat._getTracker("UA-16211208-1");-->
+<!--pageTracker._trackPageview();-->
+<!--} -->
+<!--catch(err) {}-->
+<!--</script>-->
+<!---->
+<!--&lt;!&ndash; Universal Google Analytics &ndash;&gt;-->
+<!--<script>-->
+<!--(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){-->
+<!--(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),-->
+<!--m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)-->
+<!--})(window,document,'script','//www.google-analytics.com/analytics.js','ga');-->
+
+<!--ga('create', 'UA-16211208-3', 'auto');  // Replace with your property ID.-->
+<!--ga('send', 'pageview');-->
+
+<!--</script>-->
+<!-- OLD End Universal Google Analytics -->
         
         <!-- Begin Inspectlet Embed Code -->
       <script type="text/javascript" id="inspectletjs">
@@ -1037,4 +890,5 @@
 
     </body>
 </html>
+
 

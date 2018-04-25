@@ -1,18 +1,30 @@
 from loop.models import AggregatorIncentive, AggregatorShareOutliers, CombinedTransaction, IncentiveParameter, LoopUser, IncentiveModel
-from django.db.models import Count, Sum, Avg
+from django.db.models import Count, Sum, Avg, Q, F
 import inspect
-from loop.constants.constants import MODEL_TYPES_DAILY_PAY
+import datetime
+from loop.constants.constants import MODEL_TYPES_DAILY_PAY, INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE
 import pandas as pd
 
 def calculate_inc_default(V):
     return 0.25*V
 
 def compute_aggregator_share():
+    aggregators = LoopUser.objects.all()
     ai_queryset = AggregatorIncentive.objects.all()
     aso_queryset = AggregatorShareOutliers.objects.all()
-    combined_ct_queryset = CombinedTransaction.objects.values(
-        'date', 'user_created_id', 'mandi').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
-                                                                       Count('farmer_id', distinct=True))
+    combined_ct_queryset = CombinedTransaction.objects.none()
+    for aggregator in aggregators:
+        if aggregator.village.block.district.state.state_name_en == 'Bihar':
+            aggregator_ct_queryset = CombinedTransaction.objects.filter((Q(date__lt=INCORRECT_FARMER_PHONE_MODEL_APPLY_DATE) | Q(date__gte=F('farmer__correct_phone_date'))) & Q(user_created_id=aggregator.user_id)).values(
+                'date', 'user_created_id', 'mandi').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
+                                                                               Count('farmer_id', distinct=True))
+        else:
+            aggregator_ct_queryset = CombinedTransaction.objects.filter(Q(user_created_id=aggregator.user_id)).values(
+                'date', 'user_created_id', 'mandi').order_by('-date').annotate(Sum('quantity'), Sum('amount'),
+                                                                               Count('farmer_id', distinct=True))
+
+        combined_ct_queryset = combined_ct_queryset | aggregator_ct_queryset
+
     aggregator_incentive_result = []
     daily_pay_list = []
 

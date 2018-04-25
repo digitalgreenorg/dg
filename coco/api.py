@@ -7,7 +7,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict, ModelChoiceField
 # tastypie imports
 from tastypie import fields
-from tastypie.authentication import SessionAuthentication
+from tastypie.models import ApiKey
+from tastypie.authentication import SessionAuthentication, MultiAuthentication
+from custom_authentication import AnonymousGETAuthentication
 from tastypie.authorization import Authorization
 from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource
@@ -33,6 +35,7 @@ from videos.models import SubCategory
 from videos.models import VideoPractice
 from videos.models import ParentCategory
 from videos.models import DirectBeneficiaries
+from videos.models import Tag
 from activities.models import FrontLineWorkerPresent
 # Will need to changed when the location of forms.py is changed
 from dashboard.forms import AnimatorForm
@@ -262,8 +265,17 @@ class MediatorAuthorization(Authorization):
             raise NotFound( "Not allowed to download Mediator")
 
 class VideoAuthorization(Authorization):
-    def read_list(self, object_list, bundle):        
-        return object_list.filter(id__in= get_user_videos(bundle.request.user.id))
+    def read_list(self, object_list, bundle):
+        try:
+            return object_list.filter(id__in= get_user_videos(bundle.request.user.id))
+        except Exception as e:
+            """ this is for external APIs"""
+            meta_auth_container = bundle.request.META.get('HTTP_AUTHORIZATION')
+            if meta_auth_container and len(meta_auth_container):
+                apikey = bundle.request.META.get('HTTP_AUTHORIZATION').split(':')[-1] 
+                apikey_object = ApiKey.objects.get(key=apikey)
+                user_id = apikey_object.user_id
+                return object_list.filter(id__in= get_user_videos(user_id))
     
     def read_detail(self, object_list, bundle):
         #To add adoption for the video seen which is outside user access
@@ -452,7 +464,8 @@ class VideoResource(BaseResource):
     category = fields.ForeignKey('coco.api.CategoryResource', 'category', null=True)
     subcategory = fields.ForeignKey('coco.api.SubCategoryResource', 'subcategory', null=True)
     videopractice = fields.ToManyField('coco.api.VideoPracticeResource', 'videopractice', null=True)
-    
+    tags = fields.ToManyField('coco.api.TagResource', 'tags', null=True)
+
     dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id','village_name'])
     dehydrate_language = partial(foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
     dehydrate_category = partial(foreign_key_to_id, field_name='category', sub_field_names=['id','category_name', 'parent_category'])
@@ -464,6 +477,7 @@ class VideoResource(BaseResource):
     hydrate_subcategory = partial(dict_to_foreign_uri, field_name='subcategory', resource_name='subcategory')
 
     hydrate_videopractice = partial(dict_to_foreign_uri_m2m, field_name='videopractice', resource_name='videopractice')
+    hydrate_tags = partial(dict_to_foreign_uri_m2m, field_name='tags', resource_name='tag')
     hydrate_production_team = partial(dict_to_foreign_uri_m2m, field_name = 'production_team', resource_name = 'mediator')
     hydrate_direct_beneficiaries = partial(dict_to_foreign_uri_m2m, field_name = 'direct_beneficiaries', resource_name = 'directbeneficiaries')
     hydrate_partner = partial(assign_partner)
@@ -472,7 +486,7 @@ class VideoResource(BaseResource):
         max_limit = None
         queryset = Video.objects.prefetch_related('village', 'language', 'production_team', 'partner', 'category','subcategory').all()
         resource_name = 'video'
-        authentication = SessionAuthentication()
+        authentication = MultiAuthentication(SessionAuthentication(), AnonymousGETAuthentication())
         authorization = VideoAuthorization()
         validation = ModelFormValidation(form_class=VideoForm)
         always_return_data = True
@@ -483,6 +497,9 @@ class VideoResource(BaseResource):
 
     def dehydrate_videopractice(self, bundle):
         return [{'id': iterable.id, 'name': iterable.videopractice_name} for iterable in bundle.obj.videopractice.all()]
+
+    def dehydrate_tags(self, bundle):
+        return [{'id': iterable.id, 'name': iterable.tag_name} for iterable in bundle.obj.tags.all()]
 
     def dehydrate_direct_beneficiaries(self, bundle):
         return [{'id': beneficiaries.id, 'name': beneficiaries.direct_beneficiaries_category} for beneficiaries in bundle.obj.direct_beneficiaries.all() ]
@@ -641,33 +658,42 @@ class ScreeningResource(BaseResource):
         data_list= []
         db_list = DirectBeneficiaries.objects.values_list('id', flat=True)
         int_db_list = [int(item) for item in db_list]
-        for pma in bundle.obj.personmeetingattendance_set.all():
-            if isinstance(pma.category, unicode):
+        queryset = bundle.obj.personmeetingattendance_set.values('id', 'person_id', 'person__person_name', 'category')
+        list_queryset = list(queryset)
+        for pma in filter(None, list_queryset):
+            if isinstance(pma.get('category'), unicode):
                 try:
-                    int_pma_db_list = [int(item) for item in ast.literal_eval(pma.category)]
+                    int_pma_db_list = [int(item) for item in ast.literal_eval(pma.get('category'))]
                 except:
-                    int_pma_db_list = [int(item.get('id')) for item in ast.literal_eval(pma.category)]
+                    try:
+                        int_pma_db_list = [int(item.get('id')) for item in ast.literal_eval(pma.get('category'))]
+                    except:
+                        pass
                 for iterable in int_pma_db_list:
-                    data_list.append({'id': iterable, 
+                    data_list.append({'id': iterable,
                                       'category': DirectBeneficiaries.objects.get(id=iterable).direct_beneficiaries_category,
-                                      'person_id': pma.person.id,
-                                      'person_name': pma.person.person_name
+                                      'person_id': pma.get('person_id'),
+                                      'person_name': pma.get('person__person_name')
                                      })
         return data_list
 
     def dehydrate_category(self, bundle):
-        return  [{'person_id':pma.person.id, 
-                  'person_name': pma.person.person_name,
-                  'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.person.id]
+        queryset = bundle.obj.personmeetingattendance_set.values('id', 'person_id', 'person__person_name', 'category')
+        list_queryset = list(queryset)
+        return  [{'person_id':pma.get('person_id'),
+                  'person_name': pma.get('person__person_name'),
+                  'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.get('person_id')]
                  }  
-                 for pma in bundle.obj.personmeetingattendance_set.all()]
+                 for pma in list_queryset]
 
     def dehydrate_farmers_attendance(self, bundle):
-        return [{'person_id':pma.person.id, 
-                 'person_name': pma.person.person_name,
-                 'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.person.id]
+        queryset = bundle.obj.personmeetingattendance_set.values('id', 'person_id', 'person__person_name', 'category')
+        list_queryset = list(queryset)
+        return [{'person_id':pma.get('person_id'),
+                 'person_name': pma.get('person__person_name'),
+                 'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.get('person_id')]
                  }  
-                 for pma in bundle.obj.personmeetingattendance_set.all()]
+                 for pma in list_queryset]
     
 class PersonResource(BaseResource):
     label = fields.CharField()
@@ -758,6 +784,16 @@ class LanguageResource(ModelResource):
         authentication = SessionAuthentication()
         authorization = Authorization()
 
+
+class TagResource(ModelResource):    
+    class Meta:
+        max_limit = None
+        queryset = Tag.objects.all()
+        resource_name = 'tag'
+        authentication = SessionAuthentication()
+        authorization = Authorization()
+
+
 class CategoryResource(ModelResource):    
     parent_category = fields.ForeignKey(ParentCategoryResource, 'parent_category', null=True)
     
@@ -765,7 +801,7 @@ class CategoryResource(ModelResource):
         max_limit = None
         queryset = Category.objects.all()
         resource_name = 'category'
-        authentication = SessionAuthentication()
+        authentication = MultiAuthentication(SessionAuthentication(), AnonymousGETAuthentication())
         authorization = Authorization()
     # dehydrate_parent_category = partial(foreign_key_to_id, field_name='parent_category',sub_field_names=['id','parent_category_name'])
     hydrate_parent_category = partial(dict_to_foreign_uri, field_name='parent_category', resource_name='parentcategory')
@@ -783,7 +819,7 @@ class SubCategoryResource(ModelResource):
         max_limit = None
         queryset = SubCategory.objects.all()
         resource_name = 'subcategory'
-        authentication = SessionAuthentication()
+        authentication = MultiAuthentication(SessionAuthentication(), AnonymousGETAuthentication())
         authorization = Authorization()
     dehydrate_category = partial(foreign_key_to_id, field_name='category',sub_field_names=['id','category_name'])
     hydrate_category = partial(dict_to_foreign_uri, field_name='category', resource_name='category')
@@ -794,7 +830,7 @@ class VideoPracticeResource(ModelResource):
         max_limit = None
         queryset = VideoPractice.objects.all()
         resource_name = 'videopractice'
-        authentication = SessionAuthentication()
+        authentication = MultiAuthentication(SessionAuthentication(), AnonymousGETAuthentication())
         authorization = Authorization()
     dehydrate_subcategory = partial(foreign_key_to_id, field_name='subcategory',sub_field_names=['id','subcategory_name'])
     hydrate_category = partial(dict_to_foreign_uri, field_name='subcategory', resource_name='subcategory')

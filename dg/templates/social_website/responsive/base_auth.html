@@ -3,6 +3,7 @@
     <head>
         <title>Digital Green</title>
         <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/screen.css" />
+        <link rel="icon" href="{{STATIC_URL}}img/admin/new_fav_icon.ico" sizes="48x48" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     
@@ -11,7 +12,7 @@
             <header class="global-nav clearfix">
                 <nav class="inner-nav">
                     <ul class="nav">
-                        <li class="logo"><a href="{% url 'home'%}">Green Digital</a></li>
+                        <li class="logo"><img href="{% url 'home'%}" src="{{STATIC_URL}}assets/images/login_page_logo.png" style="max-height:54px"></img></li>
                     </ul>
                 </nav> <!-- End .inner-nav -->
             </header> <!-- End .global-nav -->

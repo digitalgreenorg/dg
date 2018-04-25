@@ -1,6 +1,8 @@
 import urllib2
 import unicodecsv as csv
 from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
+from django.conf import settings
 from geographies.models import *
 import xml.etree.ElementTree as ET
 import jslps_data_integration as jslps
@@ -9,7 +11,8 @@ class Command(BaseCommand):
 	def handle(self, *args, **options):	
 
 		#GEOGRAPHIES ADD
-		url = urllib2.urlopen('http://webservicesri.swalekha.in/Service.asmx/GetExportMasterData?pUsername=admin&pPassword=JSLPSSRI')
+		file_url = 'http://webservicesri.swalekha.in/Service.asmx/GetExportMasterData'+'?pUsername=%s&pPassword=%s' % (settings.JSLPS_USERNAME, settings.JSLPS_PASSWORD)
+		url = urllib2.urlopen(file_url)
 		contents = url.read()
 		xml_file = open("jslps_data_integration_files/geo.xml", 'w')
 		xml_file.write(contents)
@@ -20,6 +23,7 @@ class Command(BaseCommand):
 		tree = ET.parse('jslps_data_integration_files/geo.xml')
 		root = tree.getroot()
 		state = State.objects.get(id = 2)
+		user_obj = User.objects.get(username="jslps_bot")
 		for c in root.findall('MasterData'):
 			dc = c.find('DistrictCode').text
 			dn = unicode(c.find('DistrictName').text)
@@ -32,11 +36,11 @@ class Command(BaseCommand):
 			district_set = dict(District.objects.filter(state_id = 2).values_list('id','district_name'))
 			if dn not in district_set.values():
 				try:
-					dist = District(district_name = dn,
-									state = state)
-					dist.save()
+					dist, created = \
+						District.objects.get_or_create(district_name = dn,
+													   state = state)
 					jslps.new_count += 1
-					print dc, " District saved in old"
+					print dc, "District Saved in DG Table"
 				except Exception as e:
 					print dc, e
 					if "Duplicate entry" in str(e):
@@ -50,33 +54,35 @@ class Command(BaseCommand):
 				#district_added = [i[0] for i in district_added]
 				
 				if dc not in district_added:
-					jd = JSLPS_District(district_code = dc,
-										district_name = dn,
-										district = district)
+					jd, created = \
+						JSLPS_District.objects.get_or_create(district_code = dc,
+															 district_name = dn,
+										                     district = district,
+										                     activity='LIVELIHOOD',
+										                     user_created_id=user_obj.id)
+					jd.user_created_id=user_obj.id
 					jd.save()
-					print dc, "District Saved in new"
+					print dc, "District Saved in JSLPS_District Table"
 			except Exception as e:
-				print dc, e
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
-					wtr.writerow(['JSLPS district',dc, e])
+					wtr.writerow(['JSLPS district',dc, e, c])
 
 			#Block
 			block_set = dict(Block.objects.filter(district_id = district.id).values_list('id','block_name'))
 			if bn not in block_set.values():
 				try:
-					blck = Block(block_name = bn,
-								district = district)
-					blck.save()
+					blck, created = Block.objects.get_or_create(block_name = bn,
+																district = district)
 					jslps.new_count += 1
-					print bc, "block saved in old"
+					print bc, "block saved in DG table"
 				except Exception as e:
 					print bc, e
 					if "Duplicate entry" in str(e):
 						jslps.duplicate_count += 1
 					else:
 						jslps.other_error_count += 1
-						wtr.writerow(['block',bc, e])
+						wtr.writerow(['block',bc, e, c])
 			
 			try:
 				block = Block.objects.get(block_name = bn)
@@ -84,33 +90,33 @@ class Command(BaseCommand):
 				#block_added = [i[0] for i in block_added]
 
 				if bc not in block_added:
-					jb = JSLPS_Block(block_code = bc,
-									block_name = bn,
-									block = block)
-					jb.save()
-					print bc, "block saved in new"
+					jb, created = JSLPS_Block.objects.get_or_create(block_code = bc,
+														   block_name = bn,
+														   block = block,
+														   district_code=dc,
+														   activity='LIVELIHOOD',
+														   user_created_id=user_obj.id)
+					print bc, "block saved in JSLPS_block table"
 			except Exception as e:
 				print bc, e
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
-					wtr.writerow(['JSLPS block',bc, e])
+					wtr.writerow(['JSLPS block',bc, e, c])
 
 			#village
 			village_set = dict(Village.objects.filter(block_id = block.id).values_list('id', 'village_name'))
 			if vn not in village_set.values():
 				try:
-					vil = Village(village_name = vn,
-								block = block)
-					vil.save()
+					vil, created = Village.objects.get_or_create(village_name = vn,
+																 block = block)
 					jslps.new_count += 1
-					print vc, "village saved in old"
+					print vc, "village saved in geaography_village table"
 				except Exception as e:
-					print vc, e
 					if "Duplicate entry" in str(e):
 						jslps.duplicate_count += 1
 					else:
 						jslps.other_error_count += 1
-						wtr.writerow(['village',vc, e])
+						wtr.writerow(['village',vc, e, c])
 
 			try:
 				village = Village.objects.filter(block_id = block.id).get(village_name = vn)
@@ -118,12 +124,19 @@ class Command(BaseCommand):
 				#village_added = [i[0] for i in village_added]
 
 				if vc not in village_added:
-					jv = JSLPS_Village(village_code = vc,
-									village_name = vn,
-									Village = village)
-					jv.save()
-					print vc, "village saved in new"
+					jv, created = JSLPS_Village.objects.get_or_create(village_code = vc,
+															 village_name = vn,
+															 Village = village,
+															 user_created_id=user_obj.id,
+															 block_code=bc,
+															 activity='LIVELIHOOD'
+															)
+
+					print vc, "village saved in JSLPS_VILLAGE Table"
 			except Exception as e:
 				if "Duplicate entry" not in str(e):
 					jslps.other_error_count += 1
-					wtr.writerow(['JSLPS village',vc, e])
+					wtr.writerow(['JSLPS village',vc, e, c])
+		csv_file.close()
+
+
