@@ -312,8 +312,8 @@ def get_table_data(data_dict):
                             value_data.append(value)
                     table_data.append(value_data)
 
-                for value in total_vals:
-                    if value > 0:
+                for i, value in enumerate(total_vals):
+                    if headers[i].get('total'):
                         total_vals_str.append(u"{:,.2f}".format(value))
                     else:
                         total_vals_str.append("")
