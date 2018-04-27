@@ -1170,6 +1170,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
 
                                         aggregator_data_set[keys - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_COMMENT].innerHTML);
                                         aggregator_data_set[keys - 1][PAYMENT_SUMMARY.AGGREGATOR_COMMENT] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_COMMENT].innerHTML;
+                                        aggregator_data_set[keys - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.NET_PAYMENT].innerHTML);
+
                                     }
                                     rows_table2 = [];
                                 },
@@ -1194,6 +1196,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                     for (var keys in rows_table2_farmer) {
                                         aggregator_data_set[keys - 1][PAYMENT_SUMMARY.FARMER_SHARE] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.FARMER_SHARE].innerHTML);
                                         aggregator_data_set[keys - 1][PAYMENT_SUMMARY.FARMER_COMMENT] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.FARMER_COMMENT].innerHTML;
+                                        aggregator_data_set[keys - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.NET_PAYMENT].innerHTML);
+
                                     }
                                     rows_table2_farmer = [];
                                 },
