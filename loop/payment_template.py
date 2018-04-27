@@ -323,9 +323,8 @@ def get_table_data(data_dict):
             # Add comment in Aggregator part
             if sheet_index == 0:
                 comments.append("     **Quantity is deducted for farmers having incorrect/unavailable mobile numbers.")
-                comments.append("     ##AP calculation formula (Bihar)                    = 0.2*Q ; Q<=2000")
-
-                comments.append("                                                                          = 0.2*2000 + 0.1*(Q-2000) ; Q>2000							")
+                comments.append("     ##AP calculation formula (Bihar)              = 0.2*Q ; Q<=2000")
+                comments.append("                                                   = 0.2*2000 + 0.1*(Q-2000) ; Q>2000")
                 comments.append("     ##AP calculation formula (Maharashtra)        = 0.25*Q")
                 comments.append("     ##AP calculation formula (Bangladesh)         = 0.5*Q")
             data['comments'] = comments
