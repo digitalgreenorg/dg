@@ -1168,7 +1168,7 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                     aggregatorAjaxSuccess = 1;
                                     for (var keys in rows_table2) {
 
-                                        aggregator_data_set[keys - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_COMMENT].innerHTML);
+                                        aggregator_data_set[keys - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE].innerHTML);
                                         aggregator_data_set[keys - 1][PAYMENT_SUMMARY.AGGREGATOR_COMMENT] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_COMMENT].innerHTML;
                                         aggregator_data_set[keys - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.NET_PAYMENT].innerHTML);
 
