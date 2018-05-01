@@ -136,36 +136,36 @@ def dashboard(request):
     # return render(request, 'app_dashboards/loop_dashboard.html')
 
 # This function is used to download payment sheet in excel format.
-# @csrf_exempt
-# def download_data_workbook(request):
-#     if request.method == 'POST':
-#         # this will prepare the data
-#         formatted_post_data = format_web_request(request)
-#         # this will get combined web data and various formats
-#         data_dict = get_combined_data_and_sheets_formats(formatted_post_data)
-#         # accessing basic variables
-#         workbook = data_dict.get('workbook')
-#         name_of_sheets = data_dict.get('name_of_sheets')
-#         heading_of_sheets = data_dict.get('heading_of_sheets')
-#         heading_format = data_dict.get('heading_format')
-#         header_format = data_dict.get('header_format')
-#         row_format = data_dict.get('row_format')
-#         total_cell_format = data_dict.get('total_cell_format')
-#         excel_output = data_dict.get('excel_output')
-#         combined_data = data_dict.get('combined_data')
-#         combined_header = data_dict.get('combined_header')
-#         sheet_header = data_dict.get('sheet_header')
-#         sheet_footer = data_dict.get('sheet_footer')
-#         # now the sheet processes
-#         workbook = excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format,
-#                                     row_format, total_cell_format, header_format, combined_data, combined_header,
-#                                     sheet_header, sheet_footer)
-#         # final closing the working
-#         workbook.close()
-#         excel_output.seek(0)
-#         response = HttpResponse(excel_output.read(),
-#                                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-#         return response
+@csrf_exempt
+def download_data_workbook(request):
+    if request.method == 'POST':
+        # this will prepare the data
+        formatted_post_data = format_web_request(request)
+        # this will get combined web data and various formats
+        data_dict = get_combined_data_and_sheets_formats(formatted_post_data)
+        # accessing basic variables
+        workbook = data_dict.get('workbook')
+        name_of_sheets = data_dict.get('name_of_sheets')
+        heading_of_sheets = data_dict.get('heading_of_sheets')
+        heading_format = data_dict.get('heading_format')
+        header_format = data_dict.get('header_format')
+        row_format = data_dict.get('row_format')
+        total_cell_format = data_dict.get('total_cell_format')
+        excel_output = data_dict.get('excel_output')
+        combined_data = data_dict.get('combined_data')
+        combined_header = data_dict.get('combined_header')
+        sheet_header = data_dict.get('sheet_header')
+        sheet_footer = data_dict.get('sheet_footer')
+        # now the sheet processes
+        workbook = excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format,
+                                    row_format, total_cell_format, header_format, combined_data, combined_header,
+                                    sheet_header, sheet_footer)
+        # final closing the working
+        workbook.close()
+        excel_output.seek(0)
+        response = HttpResponse(excel_output.read(),
+                               content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        return response
 
 # This function is used to download pdf payment sheet, this and the function above are interchangeable, just replace
 # in views with the above function and you'll be able to download excel version of payment sheet
