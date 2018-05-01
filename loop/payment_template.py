@@ -9,6 +9,8 @@ from weasyprint import HTML
 
 from config import *
 from django.template.loader import render_to_string
+from dg.settings import LOCALE
+import locale as lc
 
 
 TOTAL_NUMBER_OF_PRINTABLE_COLUMNS = 10
@@ -263,9 +265,9 @@ def prepare_value_data_generic(data):
 # PKG_CONFIG_PATH=/usr/local/opt/libffi/lib/pkgconfig pip install cffi
 def generate_pdf(pdf_output, data_dict):
     try:
+        lc.setlocale(lc.LC_ALL, LOCALE)
         table_data = get_table_data(data_dict)
         html_template = render_to_string('app_dashboards/payment_pdf.html', {'header': data_dict.get('sheet_header'), 'footer': data_dict.get('sheet_footer'), 'values': table_data})
-
         HTML(string=html_template).write_pdf(pdf_output)
         pdf = pdf_output.getvalue()
         pdf_output.close()
@@ -314,7 +316,8 @@ def get_table_data(data_dict):
 
                 for i, value in enumerate(total_vals):
                     if headers[i].get('total'):
-                        total_vals_str.append(u"{:,.2f}".format(value))
+                        total_vals_str.append(lc.format('%.2f', value, grouping=True))
+                        #total_vals_str.append(u"{:,.2f}".format(value))
                     else:
                         total_vals_str.append("")
                 table_data.append(total_vals_str)
