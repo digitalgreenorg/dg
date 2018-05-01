@@ -304,7 +304,7 @@ def get_table_data(data_dict):
                     value_data = []
                     for i, value in enumerate(value_list):
                         if type(value) is int or type(value) is float:
-                            value_data.append(u"{0:,.2f}".format(value))
+                            value_data.append(lc.format('%.2f', value, grouping=True))
                             if headers[i].get('total'):
                                 total_vals[i] += value
                             headers[i]['align'] = 'right'
