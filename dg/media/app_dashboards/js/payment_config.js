@@ -1755,7 +1755,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8.8,
+          'column_width': 10,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -1815,7 +1815,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 9,
+          'column_width': 8,
           'formula': null,
           'label': 'Farmer Comment',
           'total': false
