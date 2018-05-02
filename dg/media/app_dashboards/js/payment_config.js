@@ -493,13 +493,13 @@ var models = [
     net_quantity_const: "QUANTITY_POST_DEDUCTION",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.45,
+          'column_width': 3.5,
           'formula': null,
           'label': 'S No',
           'total': false
         },
         {
-          'column_width': 8.5,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -559,7 +559,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8,
+          'column_width': 9,
           'formula': null,
           'label': 'Farmer Comment',
           'total': false
@@ -609,7 +609,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -1118,13 +1118,13 @@ var models = [
     net_quantity_const: "QUANTITY",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.47,
+          'column_width': 3.5,
           'formula': null,
           'label': 'S No',
           'total': false
         },
         {
-          'column_width': 8.5,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -1178,7 +1178,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 8,
+          'column_width': 9,
           'formula': null,
           'label': 'Farmer Comment',
           'total': false
@@ -1228,7 +1228,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -1749,13 +1749,13 @@ var models = [
     net_quantity_const: "QUANTITY_POST_DEDUCTION",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.45,
+          'column_width': 3.5,
           'formula': null,
           'label': 'S No',
           'total': false
         },
         {
-          'column_width': 8.5,
+          'column_width': 10,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -1865,7 +1865,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -2386,49 +2386,49 @@ var models = [
     net_quantity_const: "QUANTITY",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.47,
+          'column_width': 3.2,
           'formula': null,
           'label': 'S No',
           'total': false
         },
         {
-          'column_width': 8.5,
+          'column_width': 10,
           'formula': null,
           'label': 'Date',
           'total': false
         },
         {
-          'column_width': 8.18,
+          'column_width': 8.1,
           'formula': null,
           'label': 'Market',
           'total': false
         },
         {
-          'column_width': 7.8,
+          'column_width': 8.2,
           'formula': null,
           'label': "Quantity [Q] (in Kg)",
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 8.1,
           'formula': null,
           'label': 'Aggregator Payment [AP] (in ৳)##',
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 8.1,
           'formula': null,
           'label': 'Farmer Share in Aggregator Payment (in ৳)##',
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 8.1,
           'formula': null,
           'label': 'Transport Cost [TC] (in ৳)',
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 8.1,
           'formula': null,
           'label': "Farmers' Contribution [FC] (in ৳)",
           'total': true
@@ -2440,19 +2440,19 @@ var models = [
           'total': true
         },
         {
-          'column_width': 8.73,
+          'column_width': 8.9,
           'formula': 'E + G - H - I',
           'label': 'Total Payment (in ৳) (AP + TC - FC - CAC)',
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 7.5,
           'formula': null,
           'label': 'Aggregator Comment',
           'total': false
         },
         {
-          'column_width': 8,
+          'column_width': 7.5,
           'formula': null,
           'label': 'Farmer Comment',
           'total': false
@@ -2502,7 +2502,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -3023,49 +3023,49 @@ var models = [
     net_quantity_const: "QUANTITY",
     header_dict: {
       'aggregator': [{
-          'column_width': 2.47,
+          'column_width': 3.2,
           'formula': null,
           'label': 'S No',
           'total': false
         },
         {
-          'column_width': 8.5,
+          'column_width': 10,
           'formula': null,
           'label': 'Date',
           'total': false
         },
         {
-          'column_width': 8.18,
+          'column_width': 8.1,
           'formula': null,
           'label': 'Market',
           'total': false
         },
         {
-          'column_width': 7.8,
+          'column_width': 8.2,
           'formula': null,
           'label': "Quantity [Q] (in Kg)",
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 8.1,
           'formula': null,
           'label': 'Aggregator Payment [AP] (in ৳)##',
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 8.1,
           'formula': null,
           'label': 'Farmer Share in Aggregator Payment (in ৳)##',
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 8.1,
           'formula': null,
           'label': 'Transport Cost [TC] (in ৳)',
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 8.1,
           'formula': null,
           'label': "Farmers' Contribution [FC] (in ৳)",
           'total': true
@@ -3077,19 +3077,19 @@ var models = [
           'total': true
         },
         {
-          'column_width': 8.73,
+          'column_width': 8.93,
           'formula': 'E + G - H - I',
           'label': 'Total Payment (in ৳) (AP + TC - FC - CAC)',
           'total': true
         },
         {
-          'column_width': 8,
+          'column_width': 7.5,
           'formula': null,
           'label': 'Aggregator Comment',
           'total': false
         },
         {
-          'column_width': 8,
+          'column_width': 7.5,
           'formula': null,
           'label': 'Farmer Comment',
           'total': false
@@ -3139,7 +3139,7 @@ var models = [
         }
       ],
       'transporter': [{
-          'column_width': 8.4,
+          'column_width': 8.8,
           'formula': null,
           'label': 'Date',
           'total': false
@@ -3151,7 +3151,7 @@ var models = [
           'total': false
         },
         {
-          'column_width': 17.3,
+          'column_width': 16.5,
           'formula': null,
           'label': 'Transporter',
           'total': false

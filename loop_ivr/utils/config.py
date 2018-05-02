@@ -36,6 +36,7 @@ MARKET_INFO_APP = '137265'
 
 SMS_SENDER_NAME = 'LOOPDG'
 TEXT_LOCAL_SINGLE_SMS_API = 'https://api.textlocal.in/send/'
+TEXT_LOCAL_SMS_STATUS_API = 'https://api.textlocal.in/status_message/?'
 
 RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/rcpt_response/')
 
