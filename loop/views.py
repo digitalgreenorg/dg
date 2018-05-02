@@ -135,7 +135,7 @@ def dashboard(request):
     return render(request, 'analytics/dist/loop/index.html')
     # return render(request, 'app_dashboards/loop_dashboard.html')
 
-
+# This function is used to download payment sheet in excel format.
 @csrf_exempt
 def download_data_workbook(request):
     if request.method == 'POST':
@@ -164,9 +164,23 @@ def download_data_workbook(request):
         workbook.close()
         excel_output.seek(0)
         response = HttpResponse(excel_output.read(),
-                                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                               content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         return response
 
+# This function is used to download pdf payment sheet, this and the function above are interchangeable, just replace
+# in views with the above function and you'll be able to download excel version of payment sheet
+@csrf_exempt
+def download_pdf(request):
+    if request.method == 'POST':
+        response = HttpResponse(content_type='application/pdf')
+        # this will prepare the data
+        formatted_post_data = format_web_request(request)
+        pdf_output = BytesIO()
+        filename = "payment_sheet"
+        response['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(filename)
+        pdf = generate_pdf(pdf_output, formatted_post_data)
+        response.write(pdf)
+        return response
 
 @csrf_exempt
 def farmer_payments(request):

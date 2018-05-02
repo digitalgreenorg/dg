@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loop Payment Sheet</title>
+    <style>
+        @page {
+            margin: 1.5cm 0.4cm;
+            @top-center {
+                content: "{{ header }}";
+                margin-top: 0.5cm;
+                font-size: 14px;
+            }
+
+            @bottom-center {
+                content: "{{ footer }}";
+                margin-bottom: 0.5cm;
+                font-size: 14px;
+            }
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #pageHead {
+            page-break-before: always;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 20px;
+        }
+
+        #paymentSheetTable1, #paymentSheetTable2, #paymentSheetTable3 {
+            border-collapse: collapse;
+            margin: 0.5cm 0 0;
+            width: 100%;
+        }
+
+        #comment {
+            font-size: 14px;
+        }
+
+        th {
+            text-align: center;
+            border: 1pt solid;
+            font-size: 10px;
+            padding: 12px 3px;
+            word-wrap: break-word;
+            line-height: 18px;
+        }
+
+        tr td {
+            border: 1pt solid;
+            font-size: 11px;
+            padding: 8px 2px;
+            vertical-align: bottom;
+            word-wrap: break-word;
+            line-height: 16px;
+        }
+
+        {% for page_data in values %}
+            {% for header_value in page_data.headers %}
+                #paymentSheetTable{{ forloop.parentloop.counter }} tr td:nth-child({{ forloop.counter }}) {
+                    width: {{  header_value.column_width }}px;
+                    text-align:
+                    {% if forloop.counter == 1 %}
+                        center;
+                    {% else %}
+                        {{ header_value.align }};
+                    {% endif %}
+                }
+                #paymentSheetTable{{ forloop.parentloop.counter }} th:nth-child({{ forloop.counter }}) {
+                    width: {{  header_value.column_width }}px;
+                }
+            {% endfor %}
+            #paymentSheetTable{{ forloop.counter }} tr:last-child td{
+                font-weight: bold;
+                font-size: 10px;
+            }
+        {% endfor %}
+    </style>
+</head>
+<body>
+{% for page_data in values %}
+    <p id="pageHead">{{ page_data.heading_of_sheet }}</p>
+    <table id="paymentSheetTable{{ forloop.counter }}">
+        <thead>
+        <tr>
+            {% for header in page_data.headers %}
+                <th>{{ header.label }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for value_list in page_data.data %}
+            <tr>
+                {% for value in value_list %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+
+
+    {% for comment in page_data.comments %}
+        <pre id="comment">{{ comment|safe }}</pre>
+    {% endfor %}
+{% endfor %}
+</body>
+</html>
