@@ -554,7 +554,17 @@ class PersonGroupResource(BaseResource):
                 bundle.data['village'] = None
         return bundle
 
+def map_dict():
+    data_dict = {}
+    dobj = DirectBeneficiaries.objects.values('id', 'direct_beneficiaries_category')
+    for item in dobj:
+        data_dict[item.get('id')] = item.get('direct_beneficiaries_category')
+    return data_dict
+
+
 class ScreeningResource(BaseResource):
+    global mapping_dict
+    mapping_dict = map_dict()
     village = fields.ForeignKey(VillageResource, 'village')
     animator = fields.ForeignKey(MediatorResource, 'animator')
     partner = fields.ForeignKey(PartnerResource, 'partner')
@@ -654,12 +664,10 @@ class ScreeningResource(BaseResource):
     def dehydrate_farmer_groups_targeted(self, bundle):
         return [{'id': group.id, 'group_name': group.group_name,} for group in bundle.obj.farmer_groups_targeted.all()]
     
-    def all_category(self, bundle):
-        data_list= []
-        db_list = DirectBeneficiaries.objects.values_list('id', flat=True)
-        int_db_list = [int(item) for item in db_list]
-        queryset = bundle.obj.personmeetingattendance_set.values('id', 'person_id', 'person__person_name', 'category')
-        list_queryset = list(queryset)
+    def all_category(self, bundle, list_queryset):
+        data_list= [] 
+        int_db_list = [int(item) for item in mapping_dict.keys()]
+        list_queryset = list_queryset
         for pma in filter(None, list_queryset):
             if isinstance(pma.get('category'), unicode):
                 try:
@@ -671,7 +679,7 @@ class ScreeningResource(BaseResource):
                         pass
                 for iterable in int_pma_db_list:
                     data_list.append({'id': iterable,
-                                      'category': DirectBeneficiaries.objects.get(id=iterable).direct_beneficiaries_category,
+                                      'category': mapping_dict.get(iterable),
                                       'person_id': pma.get('person_id'),
                                       'person_name': pma.get('person__person_name')
                                      })
@@ -682,7 +690,7 @@ class ScreeningResource(BaseResource):
         list_queryset = list(queryset)
         return  [{'person_id':pma.get('person_id'),
                   'person_name': pma.get('person__person_name'),
-                  'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.get('person_id')]
+                  'category': [item for item in self.all_category(bundle, list_queryset) if item['person_id'] == pma.get('person_id')]
                  }  
                  for pma in list_queryset]
 
@@ -691,7 +699,7 @@ class ScreeningResource(BaseResource):
         list_queryset = list(queryset)
         return [{'person_id':pma.get('person_id'),
                  'person_name': pma.get('person__person_name'),
-                 'category': [item for item in self.all_category(bundle) if item['person_id'] == pma.get('person_id')]
+                 'category': [item for item in self.all_category(bundle, list_queryset) if item['person_id'] == pma.get('person_id')]
                  }  
                  for pma in list_queryset]
     
