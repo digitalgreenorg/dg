@@ -22,7 +22,7 @@ def home(request):
     return render_to_response('deoanalytics.html' , context, context_instance = RequestContext(request))
 
 
-def districtsetter(request):
+def deodistrictsetter(request):
     selectedpartner = request.GET.get('partner', None)
     districts = District.objects.select_related().filter(block__village__person__partner_id=selectedpartner).values('district_name', 'id').distinct()
     resp = json.dumps({"district": list(districts)})

@@ -1168,8 +1168,10 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                     aggregatorAjaxSuccess = 1;
                                     for (var keys in rows_table2) {
 
-                                        aggregator_data_set[keys - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_COMMENT].innerHTML);
+                                        aggregator_data_set[keys - 1][PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_INCENTIVE].innerHTML);
                                         aggregator_data_set[keys - 1][PAYMENT_SUMMARY.AGGREGATOR_COMMENT] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.AGGREGATOR_COMMENT].innerHTML;
+                                        aggregator_data_set[keys - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.NET_PAYMENT].innerHTML);
+
                                     }
                                     rows_table2 = [];
                                 },
@@ -1194,6 +1196,8 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
                                     for (var keys in rows_table2_farmer) {
                                         aggregator_data_set[keys - 1][PAYMENT_SUMMARY.FARMER_SHARE] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.FARMER_SHARE].innerHTML);
                                         aggregator_data_set[keys - 1][PAYMENT_SUMMARY.FARMER_COMMENT] = $('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.FARMER_COMMENT].innerHTML;
+                                        aggregator_data_set[keys - 1][PAYMENT_SUMMARY.NET_PAYMENT] = parseFloat($('#table2 tr').eq(parseInt(keys) + 1)[0].childNodes[PAYMENT_SUMMARY.NET_PAYMENT].innerHTML);
+
                                     }
                                     rows_table2_farmer = [];
                                 },
@@ -1849,9 +1853,9 @@ function aggregator_payment_sheet(data_json, aggregator, agg_id, aggregator_name
         }
     });
 
-    aggregator_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Payment Summary_" + getCurrentTime();
-    gaddidar_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Commission Agent Details_" + getCurrentTime();
-    transporter_sheet_name = "Aggregator Payment_" + getFormattedDate(aggregator) + "Transporter Details_" + getCurrentTime();
+    aggregator_sheet_name = "Aggregator Payment " + getFormattedDate(aggregator) + " Payment Summary " + getCurrentTime();
+    gaddidar_sheet_name = "Aggregator Payment " + getFormattedDate(aggregator) + " Commission Agent Details " + getCurrentTime();
+    transporter_sheet_name = "Aggregator Payment " + getFormattedDate(aggregator) + " Transporter Details " + getCurrentTime();
     header_dict = payment_model["header_dict"];
 }
 
@@ -1863,7 +1867,7 @@ function getFormattedDate(aggregator_id) {
     var name = (aggregator_names[aggregator_index]).replace('.', '');
     var fromDate = new Date(payments_start_date);
     var toDate = new Date(payments_to_date);
-    var str = name + "(" + aggregator_id + ")" + "_" + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate() + "_";
+    var str = name + "(" + aggregator_id + ")" + " " + monthNames[fromDate.getMonth()] + fromDate.getDate() + " to " + monthNames[toDate.getMonth()] + toDate.getDate();
     return str;
 }
 
