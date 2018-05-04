@@ -666,6 +666,7 @@ class ScreeningResource(BaseResource):
     
     def all_category(self, bundle, list_queryset):
         data_list= [] 
+        int_pma_db_list = []
         int_db_list = [int(item) for item in mapping_dict.keys()]
         # list_queryset = list_queryset
         for pma in filter(None, list_queryset):
