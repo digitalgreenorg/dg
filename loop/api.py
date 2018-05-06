@@ -370,7 +370,7 @@ class FarmerResource(BaseResource):
             bundle = super(FarmerResource, self).obj_create(bundle, **kwargs)
             if bundle.obj.user_created_id in AGGREGATORS_IDEO:
                 user = LoopUser.objects.get(user=bundle.obj.user_created_id)
-                initiate_ivr_call(bundle.obj,user.preferred_language)
+                initiate_ivr_call(bundle.obj,user.preferred_language,1)
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle

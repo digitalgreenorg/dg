@@ -10,7 +10,7 @@ from django.core.management.base import BaseCommand
 from loop.config import *
 from dg.settings import MEDIA_ROOT, EMAIL_HOST_USER
 from loop_ivr.utils.config import AGGREGATORS_IDEO
-from loop.utils.send_log.registration import send_msg_after_first_trans,update_referrals
+from loop.utils.send_log.registration import send_msg_after_first_trans,update_referrals,automated_ivr
 from loop.views import referral_farmer
 import os
 
@@ -51,5 +51,7 @@ class Command(BaseCommand):
             send_msg_after_first_trans(from_date,to_date)
         elif type == 'csv':
             referral_farmer(from_date,to_date,AGGREGATORS_IDEO)
+        elif type == 'ivr':
+            automated_ivr(from_date,to_date)
         else:
             pass

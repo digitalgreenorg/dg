@@ -290,7 +290,7 @@ def ivr_response(request):
 
 #def initiate_ivr_call(caller_number, dg_number, incoming_time, incoming_call_id, call_source):
 
-def initiate_ivr_call(farmer,language):
+def initiate_ivr_call(farmer,language,type):
 
 	app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
 	app_id_br = 165528 # MARKET_INFO_APP
@@ -308,7 +308,10 @@ def initiate_ivr_call(farmer,language):
 	app_url = APP_URL%(app_id,)
 	phone_number = '0'+str(farmer.phone)
 	call_response_url = IVR_RECEIPT_URL #MARKET_INFO_CALL_RESPONSE_URL
-	reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=0)
+	msg_type=0
+	if type==2:
+		msg_type=5
+	reg_sms = RegistrationSms(farmer=farmer,state=SMS_STATE['S'][0],msg_type=msg_type)
 	reg_sms.save()
 	msg_type=0
 	parameters = {'From':phone_number,'CallerId':dg_number,'CallType':'trans','Url':app_url,'StatusCallback':call_response_url}
@@ -347,3 +350,10 @@ def initiate_ivr_call(farmer,language):
     # except Exception as e:
     #     # Save Errors in Logs
     #     write_log(LOG_FILE,module,str(e))
+def automated_ivr(start_date,end_date):
+	user = LoopUser.objects.filter(user_id__in=AGGREGATORS_IDEO).values('user_id','preferred_language')
+	cold_farmers = Farmer.objects.filter(time_created__gte=start_date,time_created__lt=end_date+datetime.timedelta(days=1),verified=0,user_created_id__in=user.values('user_id'))
+	for farmer in cold_farmers:
+		initiate_ivr_call(farmer,(item['preferred_language'] for item in user if item['user_id']==a.user_created_id).next(),2)
+
+#cold farmers: Farmers who did not pick up the ivr call
