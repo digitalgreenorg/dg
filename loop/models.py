@@ -21,7 +21,7 @@ EXPERT_STATUS = ((0, "Inactive"), (1, "Active"))
 BROADCAST_STATUS = ((0, "Pending"), (1, "Done"), (2, "DND-Failed"), (3, "Declined"))
 MANDI_CATEGORY = ((0, "Wholesale Market"), (1, "Retail Market"), (2, "Individual Entity"))
 PERSON_TYPE = ((0, 'Farmer'), (1, 'Transporter'))
-MSG_TYPE=((0,'Welcome'),(1,'After-Transport'),(2,'First-Transport'),(3,'Referral-Transport'),(4,'Already-exist-sms'))
+MSG_TYPE=((0,'Welcome'),(1,'After-Transport'),(2,'First-Transport'),(3,'Referral-Transport'),(4,'Already-exist-sms'),(5,'IVR-Retry'))
 SMS_STATUS = ((0, 'Fail'), (1, 'Success'))
 SMS_STATE = {'N':(0,'None'), 'S':(1,'SMS initiated'), 'F':(2,'SMS fired'), 'D':(3,'SMS delivered'), 'U':(4,'SMS undelivered'), 'P':(5,'pending en route'), 'I':(6,'invalid no.'), 'E':(7,'expired'), '?':(8,'pushed to network en route'), 'B':(9,'DND block')}
 QR_ACTIONS =((1,'Pick Up'),(2,'Payment'))
@@ -883,5 +883,4 @@ class QrMapping(LoopModel):
     id = models.AutoField(primary_key=True)
     url = models.CharField(max_length=40,blank=True,null=True)
     code = models.CharField(max_length=10,blank=True,null=True)
-
 
