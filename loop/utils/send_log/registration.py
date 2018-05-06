@@ -293,15 +293,15 @@ def ivr_response(request):
 def initiate_ivr_call(farmer,language,type):
 
 	app_request_url = APP_REQUEST_URL%(EXOTEL_ID,EXOTEL_TOKEN,EXOTEL_ID)
-	app_id_br = 171536
-	app_id_ap= 171536
-	#app_id_br = 165528 # MARKET_INFO_APP
-	#app_id_ap = 168599
+	# app_id_br = 171536
+	# app_id_ap= 171536
+	app_id_br = 165528 # MARKET_INFO_APP
+	app_id_ap = 168599
 	
-	dg_number_br='09513886363'
-	dg_number_ap='09513886363'
-	#dg_number_br='01139589707'
-	#dg_number_ap = '01139587500'
+	# dg_number_br='09513886363'
+	# dg_number_ap='09513886363'
+	dg_number_br='01139589707'
+	dg_number_ap = '01139587500'
 
 	if language == 'hi' or language.notation == 'hi':
 		dg_number= dg_number_br
