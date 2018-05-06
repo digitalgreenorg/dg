@@ -296,8 +296,10 @@ def initiate_ivr_call(farmer,language,type):
 	app_id_br = 165528 # MARKET_INFO_APP
 	app_id_ap = 168599
 	
-	dg_number_br='01139589707'
-	dg_number_ap = '01139587500'
+	dg_number_br='09513886363'
+	dg_number_ap='09513886363'
+	#dg_number_br='01139589707'
+	#dg_number_ap = '01139587500'
 
 	if language.notation == 'hi':
 		dg_number= dg_number_br
@@ -349,7 +351,7 @@ def initiate_ivr_call(farmer,language,type):
     #     price_info_incoming_obj.save()
     # except Exception as e:
     #     # Save Errors in Logs
-    #     write_log(LOG_FILE,module,str(e))
+    #     write_log(LOG_FILE,module,str(e)) 
 def automated_ivr(start_date,end_date):
 	user = LoopUser.objects.filter(user_id__in=AGGREGATORS_IDEO).values('user_id','preferred_language')
 	cold_farmers = Farmer.objects.filter(time_created__gte=start_date,time_created__lt=end_date+datetime.timedelta(days=1),verified=0,user_created_id__in=user.values('user_id'))
