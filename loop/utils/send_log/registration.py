@@ -303,7 +303,7 @@ def initiate_ivr_call(farmer,language,type):
 	#dg_number_br='01139589707'
 	#dg_number_ap = '01139587500'
 
-	if language.notation == 'hi':
+	if language == 'hi' or language.notation == 'hi':
 		dg_number= dg_number_br
 		app_id = app_id_br
 	else:
