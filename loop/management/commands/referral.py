@@ -46,8 +46,8 @@ class Command(BaseCommand):
             to_date = re.sub('-', '', options.get('to_date'))
             to_date = datetime.datetime.strptime(to_date, "%d%m%Y").date()
         else:
-            from_date = datetime.datetime.now()-datetime.datetime.timedelta(days=1)
-            to_date = datetime.datetime.now()-datetime.datetime.timedelta(days=1)
+            from_date = datetime.datetime.now()-datetime.timedelta(days=1)
+            to_date = datetime.datetime.now()-datetime.timedelta(days=1)
         type = options.get('type')
         if type == 'msg':
             update_referrals()
