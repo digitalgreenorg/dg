@@ -355,9 +355,9 @@ def initiate_ivr_call(farmer,language,type):
     #     # Save Errors in Logs
     #     write_log(LOG_FILE,module,str(e)) 
 def automated_ivr(start_date,end_date):
-	user = LoopUser.objects.filter(user_id__in=AGGREGATORS_IDEO).values('user_id','preferred_language')
+	user = LoopUser.objects.filter(user_id__in=AGGREGATORS_IDEO).values('user_id','preferred_language__notation')
 	cold_farmers = Farmer.objects.filter(time_created__gte=start_date,time_created__lt=end_date+datetime.timedelta(days=1),verified=0,user_created_id__in=user.values('user_id'))
 	for farmer in cold_farmers:
-		initiate_ivr_call(farmer,(item['preferred_language'] for item in user if item['user_id']==farmer.user_created_id).next(),2)
+		initiate_ivr_call(farmer,(item['preferred_language__notation'] for item in user if item['user_id']==farmer.user_created_id).next(),2)
 
 #cold farmers: Farmers who did not pick up the ivr call
