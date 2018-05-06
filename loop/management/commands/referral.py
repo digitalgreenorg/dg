@@ -40,11 +40,14 @@ class Command(BaseCommand):
     # generate the excel for the given command line arguments
     def handle(self, *args, **options):
         # from_to_date = date_setter.set_from_to_date(options.get('from_date'), options.get('to_date'))
-        
-        from_date = re.sub('-', '', options.get('from_date'))
-        from_date = datetime.datetime.strptime(from_date, "%d%m%Y").date()
-        to_date = re.sub('-', '', options.get('to_date'))
-        to_date = datetime.datetime.strptime(to_date, "%d%m%Y").date()
+        if not options.get('from_date') =="00-00-0000":
+            from_date = re.sub('-', '', options.get('from_date'))
+            from_date = datetime.datetime.strptime(from_date, "%d%m%Y").date()
+            to_date = re.sub('-', '', options.get('to_date'))
+            to_date = datetime.datetime.strptime(to_date, "%d%m%Y").date()
+        else:
+            from_date = datetime.datetime.now()-datetime.datetime.timedelta(days=1)
+            to_date = datetime.datetime.now()-datetime.datetime.timedelta(days=1)
         type = options.get('type')
         if type == 'msg':
             update_referrals()
