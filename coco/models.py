@@ -2,11 +2,11 @@ import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
-from base_models import CocoModel
-from geographies.models import Village
-from programs.models import Partner
-from videos.models import Video
-from base_models import TYPE_OF_COCOUSER
+# from base_models import CocoModel
+# # from geographies.models import Village
+# # from programs.models import Partner
+# # from videos.models import Video
+# from base_models import TYPE_OF_COCOUSER
 
 
 class FullDownloadStats(models.Model):
@@ -24,21 +24,21 @@ class ServerLog(models.Model):
     model_id = models.IntegerField(null=True)
     partner = models.IntegerField(null=True)
 
-
-class CocoUser(CocoModel):
-    id = models.AutoField(primary_key=True)
-    old_coco_id = models.IntegerField(editable=False, null=True)
-    user = models.OneToOneField(User, related_name="coco_user")
-    partner = models.ForeignKey(Partner)
-    villages = models.ManyToManyField(Village)
-    videos = models.ManyToManyField(Video)
-    type_of_cocouser = models.IntegerField(choices=TYPE_OF_COCOUSER, null=True, blank=True, validators=[MaxValueValidator(3)])
-
-    def get_villages(self):
-        return self.villages.all()
-
-    def get_videos(self):
-        return self.videos.all()
-
-    def __unicode__(self):
-        return  u'%s' % (self.user.username)
+#
+# class CocoUser(CocoModel):
+#     id = models.AutoField(primary_key=True)
+#     old_coco_id = models.IntegerField(editable=False, null=True)
+#     user = models.OneToOneField(User, related_name="coco_user")
+#     partner = models.ForeignKey(Partner)
+#     villages = models.ManyToManyField(Village)
+#     videos = models.ManyToManyField(Video)
+#     type_of_cocouser = models.IntegerField(choices=TYPE_OF_COCOUSER, null=True, blank=True, validators=[MaxValueValidator(3)])
+#
+#     def get_villages(self):
+#         return self.villages.all()
+#
+#     def get_videos(self):
+#         return self.videos.all()
+#
+#     def __unicode__(self):
+#         return  u'%s' % (self.user.username)

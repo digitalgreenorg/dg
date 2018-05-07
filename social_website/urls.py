@@ -2,10 +2,8 @@ from django.conf.urls import include, patterns, url
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 
-from communications.views import media_view
-from human_resources.views import job_view, member_view, privacy_policy_view
-from events import event_registration
-from views import social_home, collection_view, partner_view, search_view, collection_add_view, collection_edit_view, video_view, resource_view, picoseekho_view, disseminationprep_view, disseminationform_view, adoptionverification_view
+#from communications.views import media_view
+#from events import event_registration
 
 from dg.base_settings import PRODUCT_PAGE
 
