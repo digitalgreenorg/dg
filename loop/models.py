@@ -343,6 +343,7 @@ class Farmer(LoopModel):
     correct_phone_date = models.DateField(default=None, auto_now=False, null=True)
     registration_sms = models.BooleanField(default=False)
     registration_sms_id = models.CharField(max_length=15, null=True, blank=True)
+    farmer_name_en = models.CharField(max_length=100, blank=True, null=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.village.village_name_en)

@@ -107,7 +107,7 @@ class AdminUserAdmin(admin.ModelAdmin):
 
 
 class FarmerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'phone', '__village__', 'correct_phone_date', 'registration_sms')
+    list_display = ('id', 'name', 'phone', '__village__', 'correct_phone_date', 'registration_sms','farmer_name_en')
     search_fields = ['name', 'phone', 'village__village_name_en']
     list_filter = ['village__village_name_en', 'village__block__district__district_name_en', 'village__block__district__state__state_name_en',
                    'village__block__district__state__country']
