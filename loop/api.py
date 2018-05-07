@@ -602,6 +602,7 @@ class MandiResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        bundle.data['mandi_name'] = bundle.data['mandi_name_en']
         return bundle
 
 
