@@ -390,6 +390,7 @@ class FarmerResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        bundle.data['name'] = bundle.data['farmer_name_en']
 #        bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
         return bundle
 
@@ -726,6 +727,7 @@ class TransporterResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        bundle.data['transporter_name'] = bundle.data['transporter_name_en']
         online_id = bundle.data['id']
         if bundle.request.method=='POST':
             bundle.data.clear()
