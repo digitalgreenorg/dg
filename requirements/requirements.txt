@@ -1,5 +1,5 @@
 Django==1.8.13
-MySQL-python==1.2.3
+#MySQL-python==1.2.3
 XlsxWriter==0.5.1
 boto==2.8.0
 django-debug-toolbar==0.8.5
@@ -24,3 +24,4 @@ numpy==1.12.0
 isodate
 django-cors-headers
 WeasyPrint==0.42.3
+django-easy-select2
