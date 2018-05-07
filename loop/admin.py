@@ -65,6 +65,7 @@ class LoopUserAdmin(admin.ModelAdmin):
         if db_field.name == "user":
              kwargs["queryset"] = User.objects.all().order_by('username',)
         return super(LoopUserAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+    
     inlines = [LoopUserAssignedMandis, LoopUserAssignedVillages]
     fields = (
     'user', 'role', ('name', 'name_en'), 'phone_number', 'village', 'partner', 'mode', 'preferred_language', 'days_count',
@@ -111,7 +112,8 @@ class FarmerAdmin(admin.ModelAdmin):
     search_fields = ['name', 'phone', 'village__village_name_en']
     list_filter = ['village__village_name_en', 'village__block__district__district_name_en', 'village__block__district__state__state_name_en',
                    'village__block__district__state__country']
-    list_editable = ['registration_sms']
+    list_editable = ['registration_sms', 'farmer_name_en']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "village":
              kwargs["queryset"] = Village.objects.all().order_by('village_name_en',)
@@ -129,6 +131,7 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
                    'farmer__village__block__district__district_name_en', 'farmer__village__block__district__state__state_name_en', 'mandi__district__state__country')
     date_hierarchy = 'date'
     list_editable = ['payment_sms', 'status']
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "farmer":
              kwargs["queryset"] = Farmer.objects.all().order_by('village__village_name_en', 'name',)
@@ -143,9 +146,11 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
 
 class TransporterAdmin(admin.ModelAdmin):
     list_display = ('id', 'transporter_name',
-                    'transporter_phone', '__block__')
+                    'transporter_phone', '__block__', 'transporter_name_en')
     search_fields = ['transporter_name', 'transporter_phone', 'block__block_name_en']
     list_filter = ['block__district__district_name_en', 'block__district__state__state_name_en', 'block__district__state__country']
+    list_editable = ['transporter_name_en']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "block":
              kwargs["queryset"] = Block.objects.all().order_by('district__district_name_en', 'block_name_en',)
@@ -160,6 +165,7 @@ class DayTransportationAdmin(admin.ModelAdmin):
     list_filter = (UserListFilter, 'transportation_vehicle__transporter__transporter_name', 'mandi__mandi_name_en', 'mandi__district__district_name_en', 'mandi__district__state__state_name_en', 'mandi__district__state__country', 'payment_sms')
     date_hierarchy = 'date'
     list_editable = ['payment_sms']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "transportation_vehicle":
              kwargs["queryset"] = TransportationVehicle.objects.all().order_by('transporter__transporter_name', 'vehicle__vehicle_name',)
@@ -175,6 +181,7 @@ class GaddidarAdmin(admin.ModelAdmin):
     'id', 'gaddidar_name', 'gaddidar_name_en', 'gaddidar_phone', 'mandi', 'discount_criteria', 'commission', 'is_prime')
     search_fields = ['gaddidar_name_en', 'mandi__mandi_name_en', 'gaddidar_phone']
     list_filter = ['mandi__mandi_name_en', 'mandi__district__district_name_en', 'mandi__district__state__state_name_en', 'mandi__district__state__country']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "mandi":
              kwargs["queryset"] = Mandi.objects.all().order_by('district__district_name_en', 'mandi_name_en',)
@@ -191,6 +198,7 @@ class VehicleLanguageAdmin(admin.ModelAdmin):
     list_display = ('id', 'vehicle', 'vehicle_name')
     search_fields = ['vehicle_name', 'vehicle__vehicle_name_en']
     list_filter = ['vehicle']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "vehicle":
              kwargs["queryset"] = Vehicle.objects.all().order_by('vehicle_name',)
@@ -201,6 +209,7 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
     list_display = ('id', '__transporter__', '__vehicle__', 'vehicle_number')
     search_fields = ['transporter__transporter_name', 'vehicle__vehicle_name']
     list_filter = ['transporter__transporter_name', 'vehicle__vehicle_name']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "transporter":
              kwargs["queryset"] = Transporter.objects.all().order_by('transporter_name',)
@@ -214,6 +223,7 @@ class MandiAdmin(admin.ModelAdmin):
     list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type', 'latitude', 'longitude')
     search_fields = ['mandi_name', 'district__district_name_en', 'mandi_type__mandi_type_name', 'mandi_name_en']
     list_filter = ['district__district_name_en', 'district__state__state_name_en', 'district__state__country', 'mandi_type']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "district":
              kwargs["queryset"] = District.objects.all().order_by('state__state_name_en', 'district_name_en',)
@@ -232,6 +242,7 @@ class VillageAdmin(admin.ModelAdmin):
     list_display = ('id', 'village_name', 'village_name_en', 'block', 'latitude', 'longitude')
     search_fields = ['village_name', 'village_name_en', 'block__block_name_en', 'block__district__state__state_name_en']
     list_filter = ['block__block_name_en', 'block__district__district_name_en', 'block__district__state__state_name_en', 'block__district__state__country']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "block":
              kwargs["queryset"] = Block.objects.all().order_by('district__district_name_en', 'block_name_en',)
@@ -243,6 +254,7 @@ class BlockAdmin(admin.ModelAdmin):
     list_display = ('id', 'block_name', 'block_name_en', 'district')
     search_fields = ['block_name', 'block_name_en', 'district__district_name_en']
     list_filter = ['district__district_name_en', 'district__state__state_name_en', 'district__state__country']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "district":
              kwargs["queryset"] = District.objects.all().order_by('state__state_name_en', 'district_name_en',)
@@ -254,6 +266,7 @@ class DistrictAdmin(admin.ModelAdmin):
     list_display = ('id', 'district_name', 'district_name_en', 'state')
     search_fields = ['district_name', 'district_name_en', 'state__state_name_en']
     list_filter = ['state__state_name_en', 'state__country']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "state":
              kwargs["queryset"] = State.objects.all().order_by('state_name_en',)
@@ -285,6 +298,7 @@ class GaddidarCommisionAdmin(admin.ModelAdmin):
     list_display = ('id', 'start_date', '__unicode__', 'discount_percent')
     search_fields = ['gaddidar__gaddidar_name_en', 'mandi__mandi_name_en']
     list_filter = ['mandi__mandi_name_en', 'gaddidar__gaddidar_name_en', 'mandi__district__state__state_name_en', 'mandi__district__state__country']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "mandi":
              kwargs["queryset"] = Mandi.objects.all().order_by('district__district_name_en', 'mandi_name_en',)
@@ -297,6 +311,7 @@ class GaddidarShareOutliersAdmin(admin.ModelAdmin):
     search_fields = ['aggregator__name_en', 'mandi__mandi_name_en', 'gaddidar__gaddidar_name_en']
     list_filter = [UserListFilter, 'mandi__mandi_name_en', 'gaddidar__gaddidar_name_en', 'mandi__district__state__state_name_en', 'mandi__district__state__country']
     date_hierarchy = 'date'
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "aggregator":
              kwargs["queryset"] = LoopUser.objects.all().order_by('name_en',)
@@ -308,6 +323,7 @@ class CropLanguageAdmin(admin.ModelAdmin):
     list_display = ('__crop__', 'crop_name', 'language')
     list_filter = ['language', 'crop__crop_name']
     search_fields = ['crop_name', 'crop__crop_name']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "crop":
              kwargs["queryset"] = Crop.objects.all().order_by('crop_name',)
@@ -320,6 +336,7 @@ class AggregatorIncentiveAdmin(admin.ModelAdmin):
     search_fields = ['aggregator__name_en', 'incentive_model__description']
     list_filter = [UserListFilter, 'incentive_model']
     date_hierarchy = 'start_date'
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "aggregator":
              kwargs["queryset"] = LoopUser.objects.all().order_by('name_en',)
@@ -335,6 +352,7 @@ class AggregatorShareOutlierAdmin(admin.ModelAdmin):
     list_filter = (UserListFilter, 'mandi__mandi_name_en')
     date_hierarchy = 'date'
     search_fields = ['mandi__mandi_name_en', 'aggregator__name_en', 'comment']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "aggregator":
              kwargs["queryset"] = LoopUser.objects.all().order_by('name_en',)
@@ -350,6 +368,7 @@ class HelplineExpertAdmin(admin.ModelAdmin):
     list_filter = ('expert_status','state__state_name_en', 'partner')
     search_fields = ['name', 'phone_number', 'email_id', 'expert_status', 'state', 'partner']
     list_editable = ['expert_status', 'state', 'partner']
+    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "state":
              kwargs["queryset"] = State.objects.all().order_by('state_name_en',)

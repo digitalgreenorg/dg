@@ -410,6 +410,7 @@ class Transporter(LoopModel):
     transporter_phone = models.CharField(max_length=13)
     block = models.ForeignKey(Block)
     is_visible = models.BooleanField(default=True)
+    transporter_name_en = models.CharField(max_length=100, blank=True, null=True)
 
     def __unicode__(self):
         return "%s" % (self.transporter_name)
