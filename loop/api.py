@@ -329,7 +329,7 @@ class VillageResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        bundle.data[villae]
+        bundle.data['village_name'] = bundle.data['village_name_en']
         return bundle
 
 
@@ -390,7 +390,7 @@ class FarmerResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
+#        bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
         return bundle
 
     def is_phone_valid(self,bundle):
