@@ -329,6 +329,7 @@ class VillageResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        bundle.data[villae]
         return bundle
 
 
