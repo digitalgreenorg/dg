@@ -373,8 +373,8 @@ class FarmerResource(BaseResource):
         a ={}
         for item in extra_data:
             a[item['farmer']]=item
+            a[item['farmer']]['first_trans']=a[item['farmer']]['first_trans'].strftime("%d-%m-%Y")
             del a[item['farmer']]['farmer']
-        
         kwargs['village_id__in'] = villages
         resp = super(FarmerResource, self).get_list(request,**kwargs)
 
@@ -382,11 +382,11 @@ class FarmerResource(BaseResource):
         for d in data['objects']:
             try:
                 d['meta_data']=a[d['online_id']]
-                #print a[int(d['online_id'])]
-                # d['extra']=a[int(d['online_id'])]
             except Exception as e:
-                pass
-            print data
+                d['meta_data']={}
+                d['meta_data']['total_count']=0
+                d['meta_data']['total_mandi']=0
+                d['meta_data']['first_trans']=0
 
         data = json.dumps(data)
 
