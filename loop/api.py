@@ -13,6 +13,8 @@ from tastypie.bundle import Bundle
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
+from django.db.models import Count, Min
+
 import json
 
 from django.contrib.auth.models import User
@@ -77,6 +79,14 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     bundle.data[field_name] = resource_uri_list
     return bundle
 
+# class FarmerAuthorization(Authorization):
+#     def __init__(self,field):
+#         self.farmer_field = field
+
+#     def read_list(self, object_list, bundle):
+#         villages = LoopUser.objects.get(
+#             user_id=bundle.request.user.id).get_villages()
+#         ct_data = Farmer.objects.filter(village__in=villages).annotate(first_trans=min(date)).annotate(trans_count=count())
 
 class VillageAuthorization(Authorization):
     def __init__(self, field):
@@ -340,7 +350,7 @@ class FarmerResource(BaseResource):
         limit = 0
         max_limit = 0
         allowed_methods = ["get", "post", "put", "delete"]
-        queryset = Farmer.objects.all()
+        queryset = Farmer.objects.filter()
         resource_name = 'farmer'
         always_return_data = True
         authorization = VillageAuthorization('village_id__in')
@@ -351,6 +361,36 @@ class FarmerResource(BaseResource):
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+
+    def custom_fuc(self, request,villages):
+        extra_data = CombinedTransaction.objects.filter(farmer__village__in=villages).values('farmer').annotate(total_count=Count('date',distinct=True)).annotate(total_mandi=Count('mandi',distinct=True)).annotate(first_trans=Min('date'))
+        extra_data =list(extra_data)
+        return extra_data
+
+    def get_list(self,request,**kwargs):
+        villages = LoopUser.objects.get(user=request.user.id).get_villages()
+        extra_data = self.custom_fuc(request,villages)
+        a ={}
+        for item in extra_data:
+            a[item['farmer']]=item
+            del a[item['farmer']]['farmer']
+        
+        kwargs['village_id__in'] = villages
+        resp = super(FarmerResource, self).get_list(request,**kwargs)
+
+        data = json.loads(resp.content)
+        for d in data['objects']:
+            try:
+                d['meta_data']=a[d['online_id']]
+                #print a[int(d['online_id'])]
+                # d['extra']=a[int(d['online_id'])]
+            except Exception as e:
+                pass
+            print data
+
+        data = json.dumps(data)
+
+        return HttpResponse(data, content_type='application/json', status=200) 
 
     def obj_create(self, bundle, request=None, **kwargs):
         village = Village.objects.get(id=bundle.data["village"]["online_id"])
