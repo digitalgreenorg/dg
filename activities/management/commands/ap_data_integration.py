@@ -24,6 +24,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options): 
         
+        print "Pest tag,ap_pest tag"
+        call_command('bluefrog_pest')
+
+        print "Diseases,ap_diseases"
+        call_command('bluefrog_disease')        
+
         print "Geography,ap_geo"
         call_command('bluefrog_geo')
         
@@ -42,10 +48,13 @@ class Command(BaseCommand):
         print "Practice, ap_fertility_management"
         call_command('bluefrog_practice_new')
 
+        print "Botanical Extracts, ap_botanical"
+        call_command('bluefrog_botanical')
+
         print "Screening, ap_screening"
         call_command('bluefrog_screening')
 
-        print "Adoption, ap_adoption"
-        #call_command('bluefrog_adoptions')
+        # print "Adoption, ap_adoption"
+        # call_command('bluefrog_adoptions')
 
         self.send_mail()

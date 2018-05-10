@@ -279,7 +279,7 @@ class VideoForm(forms.ModelForm):
     video = forms.ModelChoiceField(queryset=None, widget=Select2(select2attrs={'width': '600px'}),required=True)
     practice = forms.ModelMultipleChoiceField(queryset=APPractice.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
     subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), widget=Select2(select2attrs={'width': '600px'}),required=True)
-    # districtscreening = forms.ModelMultipleChoiceField(queryset=DistrictScreening.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
+    aptags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
 
     def __init__(self, *args, **kwargs):
         super(VideoForm, self).__init__(*args, **kwargs)

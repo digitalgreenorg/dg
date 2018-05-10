@@ -24,9 +24,9 @@ class Command(BaseCommand):
 		partner=Partner.objects.get(id=72)
 		csv_file = open('ap/person_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('ap/person.xml')
-		root = tree.getroot()
-		data = json.loads(root.text)
+		# tree = ET.parse('ap/person.xml')
+		# root = tree.getroot()
+		data = json.loads(req.json())
 		state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
 		district_data_list = []

@@ -27,10 +27,10 @@ class Command(BaseCommand):
 		partner=Partner.objects.get(id=72)
 		csv_file = open('ap/screening.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('ap/screening.xml')
-		root = tree.getroot()
+		# tree = ET.parse('ap/screening.xml')
+		# root = tree.getroot()
 		try:
-			data = json.loads(root.text, strict=False)
+			data = json.loads(req.json(), strict=False)
 		except Exception as e:
 			pass
 		# state = State.objects.get(id=6)

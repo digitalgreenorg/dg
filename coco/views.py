@@ -202,7 +202,9 @@ class APVideoGenerator(View):
                         tags_q = video_iterable.video.tags.all()
                         for tag_item in tags_q:
                             tags.append({'id': tag_item.id,
-                                         'tag_name': tag_item.tag_name})
+                                         'tag_name': tag_item.tag_name,
+                                         'tag_code': tag_item.tag_code,
+                                         'tag_regional_name': tag_item.tag_regional_name})
 
                         data_list.append({'id': video_iterable.video.id,
                                          'video_title': video_iterable.video.title,

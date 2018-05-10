@@ -16,14 +16,14 @@ import ap_data_integration as ap
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		req = requests.get('http://45.127.101.204/DG_API/AP_MIS.svc/GetPestManagementDetails', auth=(settings.BLUEFROG_API_USERNAME, settings.BLUEFROG_API_PASSWORD))
-		xml_file = open("ap/practice.xml", 'w')
+		req = requests.get('http://45.127.101.204/DG_API/AP_MIS.svc/GetBotanicalExtractsDetails', auth=(settings.BLUEFROG_API_USERNAME, settings.BLUEFROG_API_PASSWORD))
+		xml_file = open("ap/botanical.xml", 'w')
 		xml_file.write(req.content)
 		xml_file.close()
 		# partner=Partner.objects.get(id=50)
-		csv_file = open('ap/practice_error.csv', 'wb')
+		csv_file = open('ap/botanical.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		# tree = ET.parse('ap/practice.xml')
+		# tree = ET.parse('ap/practice_new.xml')
 		# root = tree.getroot()
 		try:
 			data = json.loads(req.json())
@@ -31,10 +31,11 @@ class Command(BaseCommand):
 			print e
 		state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
+		district_data_list = []
 		for data_iterable in data:
-			pest_code = data_iterable.get('Pest_Id')
-			pest_name = data_iterable.get('Pest_Method_Name')
-			pest_name_telgu = data_iterable.get('Pest_Method_Name_Telugu')
+			pest_code = data_iterable.get('Control_Id')
+			pest_name = data_iterable.get('control_method_name')
+			pest_name_telgu = data_iterable.get('Control_method_name_telugu')
 			
 
 			try:
