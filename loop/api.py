@@ -79,15 +79,6 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     bundle.data[field_name] = resource_uri_list
     return bundle
 
-# class FarmerAuthorization(Authorization):
-#     def __init__(self,field):
-#         self.farmer_field = field
-
-#     def read_list(self, object_list, bundle):
-#         villages = LoopUser.objects.get(
-#             user_id=bundle.request.user.id).get_villages()
-#         ct_data = Farmer.objects.filter(village__in=villages).annotate(first_trans=min(date)).annotate(trans_count=count())
-
 class VillageAuthorization(Authorization):
     def __init__(self, field):
         self.village_field = field
