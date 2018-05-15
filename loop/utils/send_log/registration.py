@@ -166,7 +166,7 @@ def send_refer_transport_code(farmer):
 	# for farmer in farmer_list:
 	referred_by = farmer.referred_by
 	farmer_refer = Farmer.objects.filter(phone=referred_by)
-	if farmer_refer.count()>0: #and not farmer_refer[0].referral_free_transport:
+	if farmer_refer.count()>0 and FarmerTransportCode.objects.filter(phone=referred_by,msg_type=3).count()<1: #and not farmer_refer[0].referral_free_transport:
 		if  farmer_refer[0].time_created>datetime.datetime.strptime('05032018','%d%m%Y'):
 			code = random_with_N_digits(5)
 			reg_sms = FarmerTransportCode(code=code,phone=farmer_refer[0].phone,state=SMS_STATE['S'][0],msg_type=3)
