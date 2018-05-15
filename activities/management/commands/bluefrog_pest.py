@@ -16,7 +16,7 @@ import ap_data_integration as ap
 class Command(BaseCommand):
 	def handle(self, *args, **options):
 		#read xml from url
-		req = requests.get('http://45.127.101.204/DG_API/AP_MIS.svc/GetDiseaseDetails', auth=(settings.BLUEFROG_API_USERNAME, settings.BLUEFROG_API_PASSWORD))
+		req = requests.get('http://45.127.101.204/DG_API/AP_MIS.svc/GetPestDetails', auth=(settings.BLUEFROG_API_USERNAME, settings.BLUEFROG_API_PASSWORD))
 		xml_file = open("ap/pest_tag.xml", 'w')
 		xml_file.write(req.content)
 		xml_file.close()
