@@ -148,7 +148,7 @@ def send_msg_after_first_trans(from_date,to_date):
 			reg_sms.text_local_id = sms_id
 			reg_sms.sms_status = status_code
 			reg_sms.save()
-			send_refer_transport_code(farmer)
+		send_refer_transport_code(farmer)
 
 def send_referral_transportation_code(farmer,code,custom_id,language):
 	sms_body = ('%s %s %s') % (referral_transport_sms['beg'][language.notation],code ,referral_transport_sms['end'][language.notation])
