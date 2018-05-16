@@ -30,6 +30,8 @@ def overview_module(request):
     tot_per = run_query_dict(shared_sql.overview(type='person',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
     tot_vil = run_query_dict(shared_sql.overview(type='village',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
     #Merging all dictionaries (vid_prod, tot_prac, etc) into one big one 'table_data'
+    if '64' in partners or partners == []:
+        key, ap_tot_per = shared_sql.ap_overview(type='person',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners)
     table_data = run_query(shared_sql.child_geog_list(geog=geog,id=id, from_date = from_date, to_date=to_date))
     for i in table_data:
         if i['id'] in vid_prod:
@@ -64,7 +66,21 @@ def overview_module(request):
 
         i['geog'] =  geog_child
 
+    # now add the data ap specific data 
+    for item in ap_tot_per:
+        if item.get(key) in tot_per.keys():
+            tot_per[item.get(key)] = (int(item.get('ap_tot_per')) + int(tot_per[item.get(key)][0]),)
+        else:
+            tot_per.update( {item.get(key): (int(item.get('ap_tot_per')),)} )
 
+        for iterable in table_data:
+            if iterable['id'] == item[key]:
+                print "Match found\n"
+                try:
+                    iterable['tot_per'] = int(tot_per.get(item.get(key)))
+                except Exception as e:
+                    iterable['tot_per'] = int(tot_per.get(item.get(key))[0]) if tot_per.get(item.get(key)) else 0
+        
     #par_geog is summed data in the below table
     par_geog_data = {}
     par_geog_data['tot_vid'] = reduce(lambda x,y: x+y, map(lambda x: x[0], vid_prod.values()), 0)
@@ -76,12 +92,11 @@ def overview_module(request):
     par_geog_data['name'], par_geog_data['id'] = get_parent_geog_id(geog, id)
     par_geog_data['geog'] = geog_par
 
-
     #country data is the top-data
     country_data = {}
     #Total Person Group
     country_data.update(run_query(overview_analytics_sql.overview_tot_pg(geog, id, from_date, to_date, partners))[0])
-
+    
     if(to_date):
         date_var = to_date
     else:
@@ -115,7 +130,7 @@ def overview_module(request):
         template = 'jslps_overview_module.html'
     else:
         template = 'overview_module.html'
-    
+    # import pdb;pdb.set_trace()
     return render(request, template, dict(search_box_params = search_box_params, \
                                           country_data = country_data, \
                                           table_data = table_data, \
