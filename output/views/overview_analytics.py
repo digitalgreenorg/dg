@@ -11,6 +11,7 @@ from output.database.utility import run_query, run_query_dict, run_query_dict_li
 
 
 def overview_module(request):
+    ap_tot_per = []
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
     geog_list = [None,'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
