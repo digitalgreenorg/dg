@@ -212,6 +212,35 @@ def ap_overview(geog, id, from_date, to_date, partners, type):
     return (key, ap_total_per)
 
 
+# AP-Bluefrog specific data
+def ap_screening_overview(geog, id, from_date, to_date, partners):
+    print "Geography is - ", geog, 'From Date - ', from_date, 'To Date - ', to_date, "GEO", id
+    if geog is None:
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date]).aggregate(ap_tot_per=Sum('total_members'))
+    elif  geog == "COUNTRY":
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block__district__state__country_id=id).aggregate(ap_tot_per=Sum('total_members'))
+    elif geog == "STATE":
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block__district__state_id=id) \
+                .aggregate(ap_tot_per=Sum('total_members'))
+    elif geog == "DISTRICT":
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block__district_id=id) \
+                .aggregate(ap_tot_per=Sum('total_members'))
+    elif geog == "BLOCK":
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block_id=id) \
+                .aggregate(ap_tot_per=Sum('total_members'))
+    else:
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village_id=id) \
+                .aggregate(ap_tot_per=Sum('total_members'))
+
+    return ap_total_per
+
+
 #Query for Line Chart in Overview module. It returns date and count of the metric on that date.
 #Context Required:'type' can be (production/screening/adoption/practice/person)
 def overview_line_chart(geog,id,from_date, to_date, partners,type):
