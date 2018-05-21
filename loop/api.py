@@ -79,15 +79,6 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     bundle.data[field_name] = resource_uri_list
     return bundle
 
-# class FarmerAuthorization(Authorization):
-#     def __init__(self,field):
-#         self.farmer_field = field
-
-#     def read_list(self, object_list, bundle):
-#         villages = LoopUser.objects.get(
-#             user_id=bundle.request.user.id).get_villages()
-#         ct_data = Farmer.objects.filter(village__in=villages).annotate(first_trans=min(date)).annotate(trans_count=count())
-
 class VillageAuthorization(Authorization):
     def __init__(self, field):
         self.village_field = field
@@ -261,7 +252,7 @@ class CountryResource(BaseResource):
 
 class StateResource(BaseResource):
     country = fields.ForeignKey(
-        CountryResource, attribute='country', full=True)
+        CountryResource, attribute='country', full=False)
 
     class Meta:
         queryset = State.objects.all()
@@ -281,7 +272,7 @@ class StateResource(BaseResource):
 
 
 class DistrictResource(BaseResource):
-    state = fields.ForeignKey(StateResource, 'state', full=True)
+    state = fields.ForeignKey(StateResource, 'state', full=False)
 
     class Meta:
         queryset = District.objects.all()
@@ -343,7 +334,7 @@ class VillageResource(BaseResource):
 
 
 class FarmerResource(BaseResource):
-    village = fields.ForeignKey(VillageResource, 'village', full=True)
+    village = fields.ForeignKey(VillageResource, 'village', full=False)
     image = fields.FileField(attribute='img', null=True, blank=True)
 
     class Meta:
@@ -362,35 +353,34 @@ class FarmerResource(BaseResource):
         foreign_key_to_id, field_name='village', sub_field_names=['id'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
-    def custom_fuc(self, request,villages):
-        extra_data = CombinedTransaction.objects.filter(farmer__village__in=villages).values('farmer').annotate(total_count=Count('date',distinct=True)).annotate(total_mandi=Count('mandi',distinct=True)).annotate(first_trans=Min('date'))
-        extra_data =list(extra_data)
-        return extra_data
+    # def custom_fuc(self, request,villages):
+    #     extra_data = CombinedTransaction.objects.filter(farmer__village__in=villages).values('farmer').annotate(total_count=Count('date',distinct=True))
+    #     extra_data =list(extra_data)
+    #     return extra_data
 
-    def get_list(self,request,**kwargs):
-        villages = LoopUser.objects.get(user=request.user.id).get_villages()
-        extra_data = self.custom_fuc(request,villages)
-        a ={}
-        for item in extra_data:
-            a[item['farmer']]=item
-            a[item['farmer']]['first_trans']=a[item['farmer']]['first_trans'].strftime("%d-%m-%Y")
-            del a[item['farmer']]['farmer']
-        kwargs['village_id__in'] = villages
-        resp = super(FarmerResource, self).get_list(request,**kwargs)
+    # def get_list(self,request,**kwargs):
+    #     villages = LoopUser.objects.get(user=request.user.id).get_villages()
+    #     extra_data = self.custom_fuc(request,villages)
+    #     a ={}
+    #     for item in extra_data:
+    #         a[item['farmer']]=item
+    #         del a[item['farmer']]['farmer']
+    #     kwargs['village_id__in'] = villages
+    #     resp = super(FarmerResource, self).get_list(request,**kwargs)
 
-        data = json.loads(resp.content)
-        for d in data['objects']:
-            try:
-                d['meta_data']=a[d['online_id']]
-            except Exception as e:
-                d['meta_data']={}
-                d['meta_data']['total_count']=0
-                d['meta_data']['total_mandi']=0
-                d['meta_data']['first_trans']=0
+    #     data = json.loads(resp.content)
+    #     for d in data['objects']:
+    #         try:
+    #             d['meta_data']=a[d['online_id']]
+    #         except Exception as e:
+    #             d['meta_data']={}
+    #             d['meta_data']['total_count']=0
+    #             d['meta_data']['total_mandi']=0
+    #             d['meta_data']['first_trans']=0
 
-        data = json.dumps(data)
+    #     data = json.dumps(data)
 
-        return HttpResponse(data, content_type='application/json', status=200) 
+    #     return HttpResponse(data, content_type='application/json', status=200) 
 
     def obj_create(self, bundle, request=None, **kwargs):
         village = Village.objects.get(id=bundle.data["village"]["online_id"])
@@ -644,9 +634,59 @@ class MandiResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
+class FarmerMandiResource(BaseResource):
+    farmer = fields.ForeignKey(FarmerResource, 'farmer', full=False)
+    mandi = fields.ForeignKey(MandiResource, 'mandi', full=False)
+
+    class Meta:
+        limit = 0
+        max_limit = 0
+        allowed_methods = ["get", "post", "put", "delete"]
+        queryset = FarmerMandi.objects.filter()
+        resource_name = 'farmermandi'
+        always_return_data = True
+        authorization = VillageAuthorization('farmer__village_id__in')
+        authentication = ApiKeyAuthentication()
+        excludes = ('time_created', 'time_modified')
+        include_resource_uri = False
+
+    dehydrate_farmer = partial(
+        foreign_key_to_id, field_name='farmer', sub_field_names=['id'])
+    dehydrate_mandi = partial(
+        foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
+    hydrate_village = partial(dict_to_foreign_uri, field_name='farmer')
+    hydrate_village = partial(dict_to_foreign_uri, field_name='mandi')
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        farmer = Farmer.objects.get(id=bundle.data["farmer"]["online_id"])
+        mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
+        attempt = FarmerMandi.objects.filter(
+            farmer=farmer,mandi=mandi)
+        if attempt.count() < 1:
+            bundle = super(FarmerMandiResource, self).obj_create(bundle, **kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        try:
+            farmer = Farmer.objects.get(id=bundle.data["farmer"]["online_id"])
+            mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
+            attempt = FarmerMandi.objects.filter(farmer=farmer,mandi_id=mandi)
+            bundle = super(FarmerMandiResource, self).obj_update(bundle, **kwargs)
+        except Exception as e:
+            farmer = Farmer.objects.get(id=bundle.data["farmer"]["online_id"])
+            mandi = Mandi.objects.get(id=bundle.data["mandi"]["online_id"])
+            attempt = FarmerMandi.objects.filter(farmer=farmer,mandi_id=mandi)
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def dehydrate(self, bundle):
+        bundle.data['online_id'] = bundle.data['id']
+        return bundle
 
 class GaddidarResource(BaseResource):
-    mandi = fields.ForeignKey(MandiResource, 'mandi', full=True)
+    mandi = fields.ForeignKey(MandiResource, 'mandi', full=False)
 
     class Meta:
         limit = 0
@@ -659,9 +699,8 @@ class GaddidarResource(BaseResource):
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
-        dehydrate_mandi = partial(
-            foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
-        hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
+    dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
+    hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']

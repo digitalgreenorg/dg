@@ -343,6 +343,7 @@ class Farmer(LoopModel):
     correct_phone_date = models.DateField(default=None, auto_now=False, null=True)
     registration_sms = models.BooleanField(default=False)
     registration_sms_id = models.CharField(max_length=15, null=True, blank=True)
+    date_of_joining = models.DateField(default=None,auto_now=False,null=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.village.village_name_en)
@@ -357,6 +358,21 @@ class Farmer(LoopModel):
 post_save.connect(save_log, sender=Farmer)
 pre_delete.connect(save_log, sender=Farmer)
 
+class FarmerMandi(LoopModel):
+    id = models.AutoField(primary_key=True)
+    farmer = models.ForeignKey(Farmer)
+    mandi = models.ForeignKey(Mandi)
+    transaction_count = models.IntegerField(default=0)
+    
+    def __unicode__(self):
+        return "%s (%s)" % (self.farmer.name, self.farmer.village.village_name_en)
+
+    class Meta:
+        unique_together = ("farmer","mandi")
+
+
+post_save.connect(save_log, sender=FarmerMandi)
+pre_delete.connect(save_log, sender=FarmerMandi)
 
 class Crop(LoopModel):
     id = models.AutoField(primary_key=True)
