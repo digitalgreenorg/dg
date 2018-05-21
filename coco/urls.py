@@ -23,6 +23,7 @@ import vrppayment.urls
 import mrppayment.urls
 import deoanalytics.urls
 import data_upload.urls
+import dataexport.urls
 
 v1_api = Api(api_name='v2')
 v1_api.register(DistrictResource())
@@ -70,6 +71,7 @@ urlpatterns = patterns('',
     (r'^analytics/', include(output.urls)),
     (r'^jslps/analytics/', include(output.urls)),
     (r'^rda/', include(raw_data_analytics.urls)),
+    (r'^export/', include(dataexport.urls)),
     (r'^vrp/',include(vrppayment.urls)),
     (r'^mrp/',include(mrppayment.urls)),
     (r'^cocouser/',include(deoanalytics.urls)),

@@ -1,0 +1,40 @@
+{% include "internal-tools/header.html" %}
+
+ <script  src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ 
+
+<style type="text/css">
+  .errorlist{
+    color: red;
+  }
+  .error{
+    color: red;
+  }
+</style>
+
+<section id="upload-data" class="about-bg">
+
+  <div class="wrapper">
+    <div class="inner-wrapper">
+      <div class="row">
+        <div class="col-sm-12">
+          {{ data_list | safe}}
+        </div>
+        <br>
+      </div>
+    </div> <!-- End .inner-wrapper -->
+  </div> <!-- End .wrapper -->
+</section>
+
+<!-- <script type="text/javascript" src="{{STATIC_URL}}social_website/scripts/libs/external/jquery.dataTables.js"></script> -->
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.dataframe').DataTable({
+      buttons: [
+        'copy', 'excel', 'pdf'
+    ]
+    });
+  });
+</script>
+
