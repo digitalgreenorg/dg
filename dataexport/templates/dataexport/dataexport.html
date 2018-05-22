@@ -1,0 +1,93 @@
+{% include "internal-tools/header.html" %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
+<script type="text/javascript"  src="{{STATIC_URL}}coco/app/scripts/libs/jquery.validate.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}coco/app/scripts/libs/additional-methods.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<style type="text/css">
+.errorlist{
+	color: red;
+}
+.error{
+	color: red;
+}
+</style>
+
+<section id="upload-data" class="about-bg">
+
+	<div class="wrapper">
+		<div class="inner-wrapper">
+			<h2 class="hdg-a hdg-source-lt layout-vr-md">Data Extraction</h2>
+			<div class="row">
+				<div class="col-sm-12">
+					<form id="data-upload" class="form-horizontal" action="" method="post" enctype="multipart/form-data" target="_blank">
+						{% csrf_token %}
+						<div class="form-group row">
+
+
+							<label for="start_date" class="col-sm-2 col-form-label">Start Date</label>
+
+							<div {% if form.start_date.errors %} class="col-sm-5" {% else %} class="col-sm-8" {% endif %}>
+								{{ form.start_date }}
+							</div>
+							<label class="col-sm-3">{% if form.start_date.errors %}{{ form.start_date.errors}}{% endif %}</label>
+						</div>
+
+						<div class="form-group row">
+
+							<label for="end_date" class="col-sm-2 col-form-label">End Date</label>
+							<div {% if form.end_date.errors %} class="col-sm-5" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
+								{{ form.end_date }}
+							</div>
+							<label class="col-sm-3">{% if form.end_date.errors %}{{ form.end_date.errors}}{% endif %}</label>
+						</div>
+
+
+						<div class="form-group row">
+							<label for="data_category" class="col-sm-2 col-form-label">Data Category</label>
+							<div {% if form.data_category.errors %} class="col-sm-5" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
+								{{ form.data_category }}
+							</div>
+							<label class="col-sm-3">{% if form.data_category.errors %}{{ form.start_date.errors}}{% endif %}</label>
+						</div>
+
+
+						<div class="form-group row">
+							<label for="data" class="col-sm-2 col-form-label">Data</label>
+							<div {% if form.data.errors %} class="col-sm-5" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
+								{{ form.data }}
+							</div>
+							<label class="col-sm-3">{% if form.data.errors %}{{ form.start_date.errors}}{% endif %}</label>
+						</div>
+
+						<br>
+						<br>
+						<div class="form-group row">
+							<div class="col-sm-2"></div>
+							<div class="col-sm-8">
+								<button type="submit" id="upload" class="btn btn-success float-sm-right">Submit</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+				<br>
+			</div>
+		</div> <!-- End .inner-wrapper -->
+	</div> <!-- End .wrapper -->
+</section>
+
+<script type="text/javascript">
+	jQuery(document).ready(function ($) {
+
+		$('#id_data').select2({placeholder: "Select data for screening or Adoption",allowClear: true});
+		$('#id_data_category').select2({placeholder: "Select data for health or Agriculture",allowClear: true});
+
+	});
+
+</script>
+
+{% include "internal-tools/footer.html" %}

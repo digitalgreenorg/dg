@@ -184,7 +184,8 @@ INSTALLED_APPS = (
     'qacoco',
     'mrppayment',
     'smart_selects',
-    'loop_ivr'
+    'loop_ivr',
+    'dataexport',
 )
 
 # Store these package names here as they may change in the future since
