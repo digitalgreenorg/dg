@@ -1,11 +1,13 @@
 {% include "internal-tools/header.html" %}
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-<script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
-<script type="text/javascript"  src="{{STATIC_URL}}coco/app/scripts/libs/jquery.validate.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}coco/app/scripts/libs/additional-methods.js"></script>
-
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <style type="text/css">
 .errorlist{
@@ -82,7 +84,18 @@
 
 <script type="text/javascript">
 	jQuery(document).ready(function ($) {
-
+		$( "#id_start_date" ).datepicker({
+	      changeMonth: true,
+	      changeYear: true,
+	      maxDate: new Date(),
+	      dateFormat: 'yy-mm-dd'
+	    });
+	    $( "#id_end_date" ).datepicker({
+	      changeMonth: true,
+	      changeYear: true,
+	      maxDate: new Date(),
+	      dateFormat: 'yy-mm-dd'
+	    });
 		$('#id_data').select2({placeholder: "Select data for screening or Adoption",allowClear: true});
 		$('#id_data_category').select2({placeholder: "Select data for health or Agriculture",allowClear: true});
 

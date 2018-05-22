@@ -67,6 +67,7 @@ class ExportView(FormView):
     #     #                                                 paren)
 
     def form_valid(self, form):
+        data = ''
         cd = form.cleaned_data
         date_range = [cd.get('start_date'), cd.get('end_date')]
         data = int(cd.get('data'))
@@ -75,25 +76,24 @@ class ExportView(FormView):
             data_list = self.get_screening_data(date_range, data_category)
         elif data == 2:
             data_list = self.get_adoption_data(date_range, data_category)
+        if len(data_list):
 
+            data = pd.DataFrame(data_list)
+            data = data[['village__block__district__state__country_id', 'village__block__district__state__country__country_name',\
+                          'village__block__district__state_id', 'village__block__district__state__state_name',\
+                          'village__block__district_id', 'village__block__district__district_name',\
+                          'village__block_id', 'village__block__block_name', 'village_id', 'village__village_name', \
+                          'partner_id', 'partner__partner_name', 'video_id', 'video_title', 'date', 'parentcategory_id', 'parentcategory__parent_category_name',\
+                          'id', 'viewer_count']]
+            data.columns = ['CountryID', 'Country Name', 'StateID', "StateName", 'DistrictID', \
+                            'DistrictName', 'BlockId', 'BlockName', 'VillageID', 'VillageName',\
+                            'Partner ID', 'PartnerName', 'Video Id', 'Video Title', 'Date', 'Category ID', 'Category Name',
+                            'Screening#ID',
+                            'Viewers Count']
+            data = data.to_html()
+
+        context = {'data_list': data, 'start_date': cd.get('start_date'), 'end_date': cd.get('end_date')}
         template = "dataexport/table-data.html"
-        # data_list = list(data_list)
-        # data_list.insert(0, {})
-        data = pd.DataFrame(data_list)
-        data = data[['village__block__district__state__country_id', 'village__block__district__state__country__country_name',\
-                      'village__block__district__state_id', 'village__block__district__state__state_name',\
-                      'village__block__district_id', 'village__block__district__district_name',\
-                      'village__block_id', 'village__block__block_name', 'village_id', 'village__village_name', \
-                      'partner_id', 'partner__partner_name', 'video_id', 'video_title', 'date', 'parentcategory_id', 'parentcategory__parent_category_name',\
-                      'id', 'viewer_count']]
-        data.columns = ['CountryID', 'Country Name', 'StateID', "StateName", 'DistrictID', \
-                        'DistrictName', 'BlockId', 'BlockName', 'VillageID', 'VillageName',\
-                        'Partner ID', 'PartnerName', 'Video Id', 'Video Title', 'Date', 'Category ID', 'Category Name',
-                        'Screening#ID',
-                        'Viewers Count']
-        context = {'data_list': data.to_html()}
-
-        
         return render(self.request, template, context)
 
 
