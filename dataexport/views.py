@@ -16,8 +16,13 @@ class ExportView(FormView):
     form_class = PageView
 
     def get_screening_data(self, date_range, data_category):
+        category = []
+        if '3' in data_category:
+            category = [1,2]
+        else:
+            category = data_category
         data_list = Screening.objects.filter(date__range=date_range, 
-                                             parentcategory_id__range=[1,3]).exclude(farmers_attendance=None).values('village__block__district__state__country_id',\
+                                             parentcategory_id__in=category).exclude(farmers_attendance=None).values('village__block__district__state__country_id',\
                                              'village__block__district__state__country__country_name', \
                                              'village__block__district__state_id', 'village__block__district__state__state_name', \
                                              'village__block__district_id', 'village__block__district__district_name', \
@@ -101,37 +106,76 @@ class ExportView(FormView):
         return data_list, state_beneficiary_count_list
 
 
-    # def get_adoption_data(self, date_range, data):
-    #     # data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
-    #     #                                                 paren)
+    def get_adoption_data(self, date_range, data_category):
+        category = []
+        if '3' in data_category:
+            category = [1,2]
+        else:
+            category = data_category
+        data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range, parentcategory_id__in=category).values('person_id',\
+                    'person__person_name','person__gender','video_id','video__title','date_of_adoption','partner_id',\
+                    'partner__partner_name','parentcategory_id','parentcategory__parent_category_name',\
+                    'adopt_practice','adopt_practice_second','krp_one','krp_two','krp_three',\
+                    'krp_four', 'krp_five','person__village__block__district__state__country_id', \
+                    'person__village__block__district__state__country__country_name',\
+                    'person__village__block__district__state_id','person__village__block__district__state__state_name', \
+                    'person__village__block__district_id','person__village__block__district__district_name',\
+                    'person__village__block_id','person__village__block__block_name',\
+                    'person__village_id','person__village__village_name', 'id')
+        data_list = list(data_list)
+        return data_list
+       
 
     def form_valid(self, form):
         data = ''
         cd = form.cleaned_data
         date_range = [cd.get('start_date'), cd.get('end_date')]
-        data = int(cd.get('data'))
+        data_type = int(cd.get('data'))
         data_category = list(cd.get('data_category'))
-        if data == 1:
+        state_beneficiary_count_list = []
+        beneficiary_data = []
+        if data_type == 1:
             data_list, state_beneficiary_count_list = self.get_screening_data(date_range, data_category)
-        elif data == 2:
+        elif data_type == 2:
             data_list = self.get_adoption_data(date_range, data_category)
         if len(data_list):
-
             data = pd.DataFrame(data_list)
+            if data_type == 1:
+                data = data[['village__block__district__state__country_id', 'village__block__district__state__country__country_name',\
+                              'village__block__district__state_id', 'village__block__district__state__state_name',\
+                              'village__block__district_id', 'village__block__district__district_name',\
+                              'village__block_id', 'village__block__block_name', 'village_id', 'village__village_name', \
+                              'partner_id', 'partner__partner_name', 'video_id', 'video_title', 'date', 'parentcategory_id', 'parentcategory__parent_category_name',\
+                              'id', 'viewer_count']]
+
+                data.columns = ['CountryID', 'Country Name', 'StateID', "StateName", 'DistrictID', \
+                                'DistrictName', 'BlockId', 'BlockName', 'VillageID', 'VillageName',\
+                                'Partner ID', 'PartnerName', 'Video Id', 'Video Title', 'Date', 'Category ID', 'Category Name',
+                                'Screening#ID',
+                                'Viewers Count']
+            else:
+                data = data[['person__village__block__district__state__country_id','person__village__block__district__state__country__country_name',\
+                            'person__village__block__district__state_id',\
+                            'person__village__block__district__state__state_name','person__village__block__district_id',\
+                            'person__village__block__district__district_name','person__village__block_id',\
+                            'person__village__block__block_name','person__village_id',\
+                            'person__village__village_name','partner_id','partner__partner_name','video_id',\
+                            'video__title','date_of_adoption','id','parentcategory_id','parentcategory__parent_category_name',\
+                            'person_id','person__person_name','person__gender','adopt_practice',\
+                            'adopt_practice_second','krp_one','krp_two','krp_three',\
+                            'krp_four', 'krp_five']]
+
+                data.columns = ['CountryID', 'Country Name', 'StateID', "StateName", 'DistrictID', \
+                                'DistrictName', 'BlockId', 'BlockName', 'VillageID', 'VillageName',\
+                                'Partner ID', 'PartnerName', 'Video Id', 'Video Title', 'Date of Adoption', 'Adoption ID', 'Category ID', 'Category Name',
+                                'Person Id','Person Name','Gender','Adopt Practice', 'Adopt Practice 2','Krp 1', 'Krp 2',\
+                                'Krp 3','Krp 4', 'Krp 5' 
+                                ]
+
+            data = data.to_html()
+
+        if state_beneficiary_count_list:
             beneficiary_data = pd.DataFrame(state_beneficiary_count_list)
-
-            data = data[['village__block__district__state__country_id', 'village__block__district__state__country__country_name',\
-                          'village__block__district__state_id', 'village__block__district__state__state_name',\
-                          'village__block__district_id', 'village__block__district__district_name',\
-                          'village__block_id', 'village__block__block_name', 'village_id', 'village__village_name', \
-                          'partner_id', 'partner__partner_name', 'video_id', 'video_title', 'date', 'parentcategory_id', 'parentcategory__parent_category_name',\
-                          'id', 'viewer_count']]
-            data.columns = ['CountryID', 'Country Name', 'StateID', "StateName", 'DistrictID', \
-                            'DistrictName', 'BlockId', 'BlockName', 'VillageID', 'VillageName',\
-                            'Partner ID', 'PartnerName', 'Video Id', 'Video Title', 'Date', 'Category ID', 'Category Name',
-                            'Screening#ID',
-                            'Viewers Count']
-
             beneficiary_data = beneficiary_data[['State', 'Woman of reproductive age (15-49 years)',\
                           'Adolescent girl (10-19 years)', 'Mother of a child 2 to 5 years',\
                           'Mother of a child 6 months to 2 years', 'Mother of a child up to 6 months',\
@@ -141,9 +185,6 @@ class ExportView(FormView):
                           'Adolescent girl (10-19 years)', 'Mother of a child 2 to 5 years',\
                           'Mother of a child 6 months to 2 years', 'Mother of a child up to 6 months',\
                           'Pregnant woman']
-
-
-            data = data.to_html()
             beneficiary_data = beneficiary_data.to_html()
 
         context = {'data_list': data, 'beneficiary_data_list': beneficiary_data, 'start_date': cd.get('start_date'), 'end_date': cd.get('end_date')}

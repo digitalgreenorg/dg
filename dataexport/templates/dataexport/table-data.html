@@ -146,7 +146,11 @@
     <div class="inner-wrapper">
       <div class="row">
         <div class="col-sm-12" style="overflow-x: auto">
-          {{ data_list | safe}}
+          {% if data_list %}
+            {{ data_list | safe}}
+          {% else %}
+            No Data Available
+          {% endif %}
         </div>
         <br>
       </div>
@@ -155,20 +159,21 @@
 </section>
 
 
-
-
-<section id="beneficiary-data" class="about-bg">
-  <div class="wrapper">
-    <div class="inner-wrapper">
-      <div class="row">
-        <div class="col-sm-12" style="overflow-x: auto">
-          {{ beneficiary_data_list | safe}}
-        </div>
-        <br>
-      </div>
-    </div> <!-- End .inner-wrapper -->
-  </div> <!-- End .wrapper -->
-</section>
+{% if beneficiary_data_list %}
+    <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px;">Beneficiary Data</h2>
+    <section id="beneficiary-data" class="about-bg">
+      <div class="wrapper">
+        <div class="inner-wrapper">
+          <div class="row">
+            <div class="col-sm-12" style="overflow-x: auto">
+              {{ beneficiary_data_list | safe}}
+            </div>
+            <br>
+          </div>
+        </div> <!-- End .inner-wrapper -->
+      </div> <!-- End .wrapper -->
+    </section>
+{% endif %}
             </div>
           </div>
         </div>
