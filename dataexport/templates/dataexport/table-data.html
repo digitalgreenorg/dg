@@ -1,6 +1,8 @@
 {% include "internal-tools/header.html" %}
 
- <script  src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/jquery.dataTables.min.css" />
+ <link rel="stylesheet" href="{{STATIC_URL}}assets/styles/buttons.dataTables.min.css">
+
  
 
 <style type="text/css">
@@ -27,10 +29,15 @@
 </section>
 
 <!-- <script type="text/javascript" src="{{STATIC_URL}}social_website/scripts/libs/external/jquery.dataTables.js"></script> -->
-<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.11.1.min.js"></script>
+<script  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery.dataTables.min.js"></script>
+<script src="{{STATIC_URL}}social_website/scripts/libs/external/dataTables.buttons.min.js"></script>
+<script src="{{STATIC_URL}}social_website/scripts/libs/external/jszip.min.js"></script>
+<script src="{{STATIC_URL}}social_website/scripts/libs/external/buttons.html5.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
     $('.dataframe').DataTable({
+      dom: 'Bfrtip',
       buttons: [
         'copy', 'excel', 'pdf'
     ]

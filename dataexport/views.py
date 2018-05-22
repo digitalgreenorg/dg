@@ -32,13 +32,6 @@ class ExportView(FormView):
         data_list = list(data_list)
         screening_id_list = [item.get('id') for item in data_list]
         viewers_count_list = PersonMeetingAttendance.objects.filter(screening_id__in=screening_id_list).values('screening_id').annotate(viewer_count=Count('person_id'))
-        # viewers_list = PersonMeetingAttendance.objects.filter(screening_id__in=screening_id_list).values('screening_id','person_id').distinct()
-        # viewers_list = list(viewers_list)
-        # person_id_list = [item.get('person_id') for item in viewers_list]
-        # person_gender = list(Person.objects.filter(id__in=person_id_list, gender__in=['M','F']).values('id','gender'))
-        # person_gender_map = {}
-        # for item in person_gender:
-        #     person_gender_map[str(item.get('id'))] = item.get('gender')
 
         for item in data_list:
             try:
@@ -53,8 +46,6 @@ class ExportView(FormView):
             except Exception as e:
                 print e
 
-
-
         for item in viewers_count_list:
             item['id'] = item.get('screening_id')
             del item['screening_id']
@@ -64,7 +55,11 @@ class ExportView(FormView):
         for i, j in zip(sorted(data_list, key = sorting_key), sorted(viewers_count_list, key = sorting_key)):
             i.update(j)
 
-        return list(data_list)
+
+        '''Beneficiary Data State Wise'''
+
+
+        return data_list
 
 
     # def get_adoption_data(self, date_range, data):
@@ -84,7 +79,7 @@ class ExportView(FormView):
         template = "dataexport/table-data.html"
         # data_list = list(data_list)
         # data_list.insert(0, {})
-        data = pd.DataFrame(list(data_list))
+        data = pd.DataFrame(data_list)
         data = data[['village__block__district__state__country_id', 'village__block__district__state__country__country_name',\
                       'village__block__district__state_id', 'village__block__district__state__state_name',\
                       'village__block__district_id', 'village__block__district__district_name',\
