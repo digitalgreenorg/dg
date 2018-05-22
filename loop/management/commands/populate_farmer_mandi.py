@@ -13,7 +13,7 @@ class Command(BaseCommand):
         print(datetime.date.today())
         populate = Populate()
         #populate.updateFarmerMandiData()
-        populate.updateFarmerJoiningData()
+        #populate.updateFarmerJoiningData()
 
 class Populate():
 	def updateFarmerMandiData(self):
@@ -31,4 +31,10 @@ class Populate():
 			farmer.save()
 
 
-
+	def updateFarmerTransactionData(self):
+		farmers = Farmer.objects.filter(transaction_count=0)
+		farmerTransactions = CombinedTransaction.objects.filter(farmer__in=farmers).values('farmer').annotate(transaction_count=Count('date',distinct=True))
+		for transactionObject in farmerTransactions:
+			farmer =farmers.get(id=transactionObject['farmer'])
+			farmer.transaction_count = transactionObject['transaction_count']
+			farmer.save()		

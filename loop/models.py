@@ -344,6 +344,7 @@ class Farmer(LoopModel):
     registration_sms = models.BooleanField(default=False)
     registration_sms_id = models.CharField(max_length=15, null=True, blank=True)
     date_of_joining = models.DateField(default=None,auto_now=False,null=True)
+    transaction_count=models.IntegerField(default=0)
 
     def __unicode__(self):
         return "%s (%s)" % (self.name, self.village.village_name_en)

@@ -5,12 +5,12 @@ import xlsxwriter
 from io import BytesIO
 import re
 
-from weasyprint import HTML
+#from weasyprint import HTML
 
 from config import *
 from django.template.loader import render_to_string
-from dg.settings import LOCALE
-import locale as lc
+#from dg.settings import LOCALE
+#import locale as lc
 
 
 TOTAL_NUMBER_OF_PRINTABLE_COLUMNS = 10
