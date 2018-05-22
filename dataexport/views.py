@@ -7,7 +7,7 @@ from django.db.models import *
 # 
 import pandas as pd
 import numpy as np
-import operator
+import operator, ast
 
 
 class ExportView(FormView):
@@ -57,7 +57,34 @@ class ExportView(FormView):
 
 
         '''Beneficiary Data State Wise'''
+        state_beneficiary_count_map = {}
+        person_cat_map = {}
+        queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range).select_related('screening').values('screening__village__block__district__state__state_name','person_id','category'))
+        try:
+            for item in queryset:
+                if state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name'))) is None:
+                    state_beneficiary_count_map[str(item.get('screening__village__block__district__state__state_name'))] = {'1':0, '2':0, '3':0, '4':0, '5':0, '6':0}
 
+                if item.get('category') is not None:
+                    if person_cat_map.get(str(item.get('person_id'))) is None:
+                        person_cat_map[str(item.get('person_id'))] = []
+                    cat = ast.literal_eval(item.get('category'))
+                    if isinstance(cat[0], dict):
+                        for _dict in cat:
+                            if int(_dict.get('id')) not in person_cat_map.get(str(item.get('person_id'))):
+                                person_cat_map[str(item.get('person_id'))].append(int(_dict.get('id')))
+                                state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name'))).get(str(_dict.get('id'))) += 1
+
+                    else:
+                        for _id in cat:
+                            if int(_id) not in person_cat_map.get(str(item.get('person_id'))):
+                               person_cat_map[str(item.get('person_id'))].append(int(_id))
+                               state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name'))).get(str(_id)) += 1
+
+                else:
+                    pass
+        except Exception as e:
+            print e
 
         return data_list
 
