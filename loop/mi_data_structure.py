@@ -38,6 +38,7 @@ class GaddidarDetail:
     def __init__(self, **kwargs):
         self.id = kwargs['gaddidar_id']
         self.name = kwargs['gaddidar_name']
+        self.phone_no = kwargs['gaddidar_phone_no']
 
     def getGaddidarDetail(self):
         pass

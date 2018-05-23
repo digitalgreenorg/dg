@@ -1,0 +1,109 @@
+Mandi Id,Mandi Name,Mandi Category,Mandi Distance,Aggregator Id,Aggregator Name,Vehicle Id,Vehicle Name,Cost,Capacity
+134,Darhara,Medium,7,4846,सतेन्दर कुमार,2,Tempo,300,600
+134,Darhara,Medium,7,4846,सतेन्दर कुमार,5,ace,300,1500
+134,Darhara,Medium,7,4846,सतेन्दर कुमार,4,pick up,500,2500
+134,Darhara,Medium,8,4844,बिशेशवर प्रसाद,2,Tempo,400,600
+134,Darhara,Medium,8,4844,बिशेशवर प्रसाद,5,ace,400,1500
+134,Darhara,Medium,8,4844,बिशेशवर प्रसाद,4,pick up,600,2500
+134,Darhara,Medium,20,4992,धनराज सिंह,2,Tempo,600,600
+134,Darhara,Medium,20,4992,धनराज सिंह,5,ace,600,1500
+134,Darhara,Medium,20,4992,धनराज सिंह,4,pick up,800,2500
+134,Darhara,Medium,10,5025,रवि रंजन,2,Tempo,400,600
+134,Darhara,Medium,10,5025,रवि रंजन,5,ace,400,1500
+134,Darhara,Medium,10,5025,रवि रंजन,4,pick up,600,2500
+133,Buxar,Medium,31,4846,सतेन्दर कुमार,2,Tempo,600,600
+133,Buxar,Medium,31,4846,सतेन्दर कुमार,5,ace,700,1500
+133,Buxar,Medium,31,4846,सतेन्दर कुमार,4,pick up,1200,2500
+133,Buxar,Medium,17,4844,बिशेशवर प्रसाद,2,Tempo,500,600
+133,Buxar,Medium,17,4844,बिशेशवर प्रसाद,5,ace,500,1500
+133,Buxar,Medium,17,4844,बिशेशवर प्रसाद,4,pick up,750,2500
+133,Buxar,Medium,5,4992,धनराज सिंह,2,Tempo,300,600
+133,Buxar,Medium,5,4992,धनराज सिंह,5,ace,300,1500
+133,Buxar,Medium,5,4992,धनराज सिंह,4,pick up,500,2500
+133,Buxar,Medium,17,5025,रवि रंजन,2,Tempo,500,600
+133,Buxar,Medium,17,5025,रवि रंजन,5,ace,500,1500
+133,Buxar,Medium,17,5025,रवि रंजन,4,pick up,800,2500
+152,Bramhpur,Medium,15,4846,सतेन्दर कुमार,2,Tempo,500,600
+152,Bramhpur,Medium,15,4846,सतेन्दर कुमार,5,ace,500,1500
+152,Bramhpur,Medium,15,4846,सतेन्दर कुमार,4,pick up,700,2500
+152,Bramhpur,Medium,17,4844,बिशेशवर प्रसाद,2,Tempo,500,600
+152,Bramhpur,Medium,17,4844,बिशेशवर प्रसाद,5,ace,500,1500
+152,Bramhpur,Medium,17,4844,बिशेशवर प्रसाद,4,pick up,750,2500
+152,Bramhpur,Medium,30,4992,धनराज सिंह,2,Tempo,600,600
+152,Bramhpur,Medium,30,4992,धनराज सिंह,5,ace,700,1500
+152,Bramhpur,Medium,30,4992,धनराज सिंह,4,pick up,1200,2500
+152,Bramhpur,Medium,20,5025,रवि रंजन,2,Tempo,600,600
+152,Bramhpur,Medium,20,5025,रवि रंजन,5,ace,600,1500
+152,Bramhpur,Medium,20,5025,रवि रंजन,4,pick up,1100,2500
+16,Arra,Big,65,4846,सतेन्दर कुमार,2,Tempo,900,600
+16,Arra,Big,65,4846,सतेन्दर कुमार,5,ace,900,1500
+16,Arra,Big,65,4846,सतेन्दर कुमार,4,pick up,1500,2500
+16,Arra,Big,65,4844,बिशेशवर प्रसाद,2,Tempo,800,600
+16,Arra,Big,65,4844,बिशेशवर प्रसाद,5,ace,900,1500
+16,Arra,Big,65,4844,बिशेशवर प्रसाद,4,pick up,1500,2500
+16,Arra,Big,80,4992,धनराज सिंह,2,Tempo,1500,600
+16,Arra,Big,80,4992,धनराज सिंह,5,ace,1500,1500
+16,Arra,Big,80,4992,धनराज सिंह,4,pick up,2500,2500
+16,Arra,Big,70,5025,रवि रंजन,2,Tempo,800,600
+16,Arra,Big,70,5025,रवि रंजन,5,ace,900,1500
+16,Arra,Big,70,5025,रवि रंजन,4,pick up,2000,2500
+150,Nayabhojpur,Medium,15,4846,सतेन्दर कुमार,2,Tempo,500,600
+150,Nayabhojpur,Medium,15,4846,सतेन्दर कुमार,5,ace,500,1500
+150,Nayabhojpur,Medium,15,4846,सतेन्दर कुमार,4,pick up,700,2500
+150,Nayabhojpur,Medium,4,4844,बिशेशवर प्रसाद,2,Tempo,350,600
+150,Nayabhojpur,Medium,4,4844,बिशेशवर प्रसाद,5,ace,350,1500
+150,Nayabhojpur,Medium,4,4844,बिशेशवर प्रसाद,4,pick up,500,2500
+150,Nayabhojpur,Medium,12,4992,धनराज सिंह,2,Tempo,500,600
+150,Nayabhojpur,Medium,12,4992,धनराज सिंह,5,ace,500,1500
+150,Nayabhojpur,Medium,12,4992,धनराज सिंह,4,pick up,700,2500
+150,Nayabhojpur,Medium,3,5025,रवि रंजन,2,Tempo,350,600
+150,Nayabhojpur,Medium,3,5025,रवि रंजन,5,ace,350,1500
+150,Nayabhojpur,Medium,3,5025,रवि रंजन,4,pick up,500,2500
+14,Patna,Big,116,4846,सतेन्दर कुमार,2,Tempo,NA,600
+14,Patna,Big,116,4846,सतेन्दर कुमार,5,ace,2000,1500
+14,Patna,Big,116,4846,सतेन्दर कुमार,4,pick up,3000,2500
+14,Patna,Big,130,4844,बिशेशवर प्रसाद,2,Tempo,NA,600
+14,Patna,Big,130,4844,बिशेशवर प्रसाद,5,ace,1500,1500
+14,Patna,Big,130,4844,बिशेशवर प्रसाद,4,pick up,3000,2500
+14,Patna,Big,150,4992,धनराज सिंह,2,Tempo,NA,600
+14,Patna,Big,150,4992,धनराज सिंह,5,ace,NA,1500
+14,Patna,Big,150,4992,धनराज सिंह,4,pick up,4000,2500
+14,Patna,Big,140,5025,रवि रंजन,2,Tempo,NA,600
+14,Patna,Big,140,5025,रवि रंजन,5,ace,1500,1500
+14,Patna,Big,140,5025,रवि रंजन,4,pick up,3500,2500
+5,Chapra,Big,65,4846,सतेन्दर कुमार,2,Tempo,1200,600
+5,Chapra,Big,65,4846,सतेन्दर कुमार,5,ace,1200,1500
+5,Chapra,Big,65,4846,सतेन्दर कुमार,4,pick up,1700,2500
+5,Chapra,Big,75,4844,बिशेशवर प्रसाद,2,Tempo,1200,600
+5,Chapra,Big,75,4844,बिशेशवर प्रसाद,5,ace,1200,1500
+5,Chapra,Big,75,4844,बिशेशवर प्रसाद,4,pick up,2000,2500
+5,Chapra,Big,90,4992,धनराज सिंह,2,Tempo,1300,600
+5,Chapra,Big,90,4992,धनराज सिंह,5,ace,1400,1500
+5,Chapra,Big,90,4992,धनराज सिंह,4,pick up,2500,2500
+5,Chapra,Big,80,5025,रवि रंजन,2,Tempo,1200,600
+5,Chapra,Big,80,5025,रवि रंजन,5,ace,1200,1500
+5,Chapra,Big,80,5025,रवि रंजन,4,pick up,2000,2500
+151,Dumaraon,Medium,65,4846,सतेन्दर कुमार,2,Tempo,500,600
+151,Dumaraon,Medium,65,4846,सतेन्दर कुमार,5,ace,500,1500
+151,Dumaraon,Medium,65,4846,सतेन्दर कुमार,4,pick up,700,2500
+151,Dumaraon,Medium,75,4844,बिशेशवर प्रसाद,2,Tempo,350,600
+151,Dumaraon,Medium,75,4844,बिशेशवर प्रसाद,5,ace,350,1500
+151,Dumaraon,Medium,75,4844,बिशेशवर प्रसाद,4,pick up,600,2500
+151,Dumaraon,Medium,90,4992,धनराज सिंह,2,Tempo,500,600
+151,Dumaraon,Medium,90,4992,धनराज सिंह,5,ace,500,1500
+151,Dumaraon,Medium,90,4992,धनराज सिंह,4,pick up,700,2500
+151,Dumaraon,Medium,80,5025,रवि रंजन,2,Tempo,400,600
+151,Dumaraon,Medium,80,5025,रवि रंजन,5,ace,400,1500
+151,Dumaraon,Medium,80,5025,रवि रंजन,4,pick up,700,2500
+188,Dumri,Small,21,4846,सतेन्दर कुमार,2,Tempo,700,600
+188,Dumri,Small,21,4846,सतेन्दर कुमार,5,ace,700,1500
+188,Dumri,Small,21,4846,सतेन्दर कुमार,4,pick up,1000,2500
+188,Dumri,Small,6,4844,बिशेशवर प्रसाद,2,Tempo,350,600
+188,Dumri,Small,6,4844,बिशेशवर प्रसाद,5,ace,400,1500
+188,Dumri,Small,6,4844,बिशेशवर प्रसाद,4,pick up,600,2500
+188,Dumri,Small,18,4992,धनराज सिंह,2,Tempo,500,600
+188,Dumri,Small,18,4992,धनराज सिंह,5,ace,500,1500
+188,Dumri,Small,18,4992,धनराज सिंह,4,pick up,700,2500
+188,Dumri,Small,10,5025,रवि रंजन,2,Tempo,400,600
+188,Dumri,Small,10,5025,रवि रंजन,5,ace,400,1500
+188,Dumri,Small,10,5025,रवि रंजन,4,pick up,700,2500
