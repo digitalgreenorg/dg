@@ -129,7 +129,8 @@ class ExportView(FormView):
     def form_valid(self, form):
         data = ''
         cd = form.cleaned_data
-        date_range = [cd.get('start_date'), cd.get('end_date')]
+        date_range = cd.get('date_period').split(' -')
+        date_range = [dte.strip() for dte in date_range]
         data_type = int(cd.get('data'))
         data_category = list(cd.get('data_category'))
         state_beneficiary_count_list = []
@@ -187,7 +188,7 @@ class ExportView(FormView):
                           'Pregnant woman']
             beneficiary_data = beneficiary_data.to_html()
 
-        context = {'data_list': data, 'beneficiary_data_list': beneficiary_data, 'start_date': cd.get('start_date'), 'end_date': cd.get('end_date')}
+        context = {'data_list': data, 'beneficiary_data_list': beneficiary_data, 'start_date': date_range[0], 'end_date': date_range[1]}
         template = "dataexport/table-data.html"
         return render(self.request, template, context)
 
