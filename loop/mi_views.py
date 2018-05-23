@@ -18,8 +18,8 @@ fileDir = os.path.dirname(os.path.realpath('__file__'))
 
 def get_aggregator_mi_related_data(request):
     
-    apikey = request.GET['apikey']
-
+    request_data = request.META.get('HTTP_AUTHORIZATION', '')
+    username, apikey = request_data.split(':', 1)
     # Get User Id
     apikeyobj = ApiKey.objects.get(key=apikey)
     aggregator_id = [apikeyobj.user_id]
@@ -72,33 +72,32 @@ def get_aggregator_mi_related_data(request):
 def get_crop_prices(request):
     testing = 'Hi, want crop Prices?'
     data = json.dumps({"data": testing})
-
+    cropobj = Crop.objects.values_list('id', flat=True)
+    cropobj = map(int, cropobj)
     # Prepare data
-    crop_list = (22, 6)
-    mandi_list = (4,)
+    crop_list = tuple(cropobj)
+    mandi_list = (134, 133, 152, 16, 150, 14, 5, 151, 188)
 
     query = get_query.query_for_rates(crop_list , mandi_list, date_range=3)
     
     result = run_query(query)
     dataframe = remove_crop_outliers(ct_data = result)
 
-    pricedetailobj = []
     print 'crop mandi date Av_Rate STD PriceMax PriceMin delta'
-    for index, row in dataframe.iterrows():
-        crop, mandi, date, Av_Rate, STD, PriceMax, PriceMin = row['Crop'], row['Market_Real'], row['Date'], row['Av_Ratemean'], row['STDmean'], row['Pricemax'], row['Pricemin']
-        delta = PriceMax - PriceMin
-        print crop, mandi, date, Av_Rate, STD, PriceMax, PriceMin, delta
-        print type(date)
-        priceobj = PriceDetails(date=str(date), std=round(STD, 2), min_price=round(PriceMin, 2), max_price=round(PriceMax, 2),\
-                            delta=round(delta, 2), avg_price=round(Av_Rate, 2))
-        pricedetailobj.append(priceobj.__dict__)
-    
-    res = []
-    cropmandidata = CropMandiData(crop_id=6, mandi_id=4)
-    cropmandidata.price_details.append(pricedetailobj)
+    df = dataframe.groupby(['Crop', 'Market_Real'])
 
-    res.append(cropmandidata.__dict__)
-        
+    res = []
+    for obj in df:
+        cropmandidata = CropMandiData(crop_id=obj[0][0], mandi_id=obj[0][1])
+        print obj[0][0]
+        for index, row in obj[1].iterrows():
+            crop, mandi, date, Av_Rate, STD, PriceMax, PriceMin = row['Crop'], row['Market_Real'], row['Date'], row['Av_Ratemean'], row['STDmean'], row['Pricemax'], row['Pricemin']
+            delta = PriceMax - PriceMin
+            priceobj = PriceDetails(date=str(date), std=round(STD, 2), min_price=round(PriceMin, 2), max_price=round(PriceMax, 2),\
+                                delta=round(delta, 2), avg_price=round(Av_Rate, 2))
+            cropmandidata.price_details.append(priceobj.__dict__)
+        res.append(cropmandidata.__dict__)
+    
     data = json.dumps(res)
     return HttpResponse(data)
 
