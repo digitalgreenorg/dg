@@ -8,6 +8,7 @@
         <script  src="/media/social_website/scripts/libs/external/jquery.dataTables.min.js"></script>
         <script src="/media/social_website/scripts/libs/external/dataTables.buttons.min.js"></script>
         <script src="/media/social_website/scripts/libs/external/jszip.min.js"></script>
+
         <script src="/media/social_website/scripts/libs/external/buttons.html5.min.js"></script> 
         <script  src="/media/social_website/scripts/libs/external/dataTables.tableTools.js"></script>
         <meta property="og:title" content="Digital Green"/>
@@ -43,6 +44,7 @@
         <link rel="stylesheet" href="{{STATIC_URL}}assets/styles/buttons.dataTables.min.css">
         <!-- <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/dataTables.tableTools.css" /> -->
         <link rel="stylesheet" media="screen" href="{{STATIC_URL}}assets/styles/select2.css" />
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/clusterize.js/0.18.0/clusterize.min.css">
 
 
          <!--[if IE 9]><link rel="stylesheet" type="text/css" media="screen, projection" href="{{STATIC_URL}}assets/styles/ie9.css" /><![endif]-->
@@ -140,40 +142,41 @@
                 </div>
                 </br></br></br>
                 
-                <section id="upload-data" class="about-bg" style="padding-top: 0">
+                <section id="upload-data" class="about-bg">
+                  <a class="btn btn-success" href="/coco/export/download/{{ file_id }}">Download</a>
+                  <div class="wrapper">
+                    <div class="inner-wrapper">
+                      <div class="row">
+                        <div class="col-sm-12" style="overflow-x: auto">
+                          {% if data_list %}
+                            {{ data_list | safe}}
+                          {% else %}
+                            No Data Available
+                          {% endif %}
+                        </div>
+                        <br>
+                      </div>
+                    </div> <!-- End .inner-wrapper -->
+                  </div> <!-- End .wrapper -->
+                </section>
 
-  <div class="wrapper">
-    <div class="inner-wrapper">
-      <div class="row">
-        <div class="col-sm-12" style="overflow-x: auto">
-          {% if data_list %}
-            {{ data_list | safe}}
-          {% else %}
-            No Data Available
-          {% endif %}
-        </div>
-        <br>
-      </div>
-    </div> <!-- End .inner-wrapper -->
-  </div> <!-- End .wrapper -->
-</section>
 
+                {% if beneficiary_data_list %}
+                    <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px;">Beneficiary Data</h2>
+                    <section id="beneficiary-data" class="about-bg">
+                      <div class="wrapper">
+                        <div class="inner-wrapper">
+                          <div class="row">
+                            <div class="col-sm-12" style="overflow-x: auto">
+                              {{ beneficiary_data_list | safe}}
+                            </div>
+                            <br>
+                          </div>
+                        </div> <!-- End .inner-wrapper -->
+                      </div> <!-- End .wrapper -->
+                    </section>
+                {% endif %}
 
-{% if beneficiary_data_list %}
-    <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px;">Beneficiary Data</h2>
-    <section id="beneficiary-data" class="about-bg" style="padding-top: 0">
-      <div class="wrapper">
-        <div class="inner-wrapper">
-          <div class="row">
-            <div class="col-sm-12" style="overflow-x: auto">
-              {{ beneficiary_data_list | safe}}
-            </div>
-            <br>
-          </div>
-        </div> <!-- End .inner-wrapper -->
-      </div> <!-- End .wrapper -->
-    </section>
-{% endif %}
             </div>
           </div>
         </div>
@@ -203,16 +206,19 @@
 
         <!-- For Production -->
 
-      <script type="text/javascript">
-          $(document).ready(function() {
-            $('table').addClass('stripe');
-            $('.dataframe').DataTable({
-              dom: 'Bfrtip',
-              buttons: [
-                'copy', 'excel', 'pdf'
-            ]
-            });
-        });
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('table').addClass('stripe');
+    $('.dataframe').DataTable({
+       dom: 'Bfrtip',
+       buttons: [
+         'copy', 'excel', 'pdf'
+     ]
+     });
+    $($('.dt-buttons')[0]).hide()
+  });
+
 </script>
     </body>
 </html>

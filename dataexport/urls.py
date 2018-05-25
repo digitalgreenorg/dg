@@ -4,6 +4,6 @@ from dataexport import views
 
 urlpatterns = [
     url(r'^$', views.ExportView.as_view(), name="export-view"),
-    url(r'^screening/$', views.ExportScreening.as_view(), name="screening-export"),
+    url(r'^download/(?P<file_id>[0-9]+)/$', views.DownloadFile.as_view(), name="download"),
     # url(r'^adoption$', views.ExportScreening, name="screening-export"),
 ]
