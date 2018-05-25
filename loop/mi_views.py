@@ -87,10 +87,9 @@ def get_crop_prices(request):
     df = dataframe.groupby(['Crop', 'Market_Real'])
 
     res = []
-    for obj in df:
-        cropmandidata = CropMandiData(crop_id=obj[0][0], mandi_id=obj[0][1])
-        print obj[0][0]
-        for index, row in obj[1].iterrows():
+    for i, r in df:
+        cropmandidata = CropMandiData(crop_id=i[0], mandi_id= i[1])
+        for index, row in r.iterrows():
             crop, mandi, date, Av_Rate, STD, PriceMax, PriceMin = row['Crop'], row['Market_Real'], row['Date'], row['Av_Ratemean'], row['STDmean'], row['Pricemax'], row['Pricemin']
             delta = PriceMax - PriceMin
             priceobj = PriceDetails(date=str(date), std=round(STD, 2), min_price=round(PriceMin, 2), max_price=round(PriceMax, 2),\
