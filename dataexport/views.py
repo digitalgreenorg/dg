@@ -55,13 +55,9 @@ class ExportView(FormView):
                                          )
 
 
-        print "Length", len(list(data_list))
         return list(data_list)
 
     def prepare_data(self):
-        # village_list = Village.objects.select_related('block').values('id', 'village_name', 'block_id', 'block__block_name') 
-        # block_list = Block.objects.select_related('district').values('block_id', 'block_name', 'district_id', 'district__district_name')
-        # district_list = District.objects.select_related('state').values('id', 'district_name', '', 'block__block_name')
         geo_data_list = \
             Village.objects.values('id','village_name','block_id', 'block__block_name','block__district_id',
                                    'block__district__district_name','block__district__state_id',
@@ -74,9 +70,9 @@ class ExportView(FormView):
 
     def get_screening_data(self, date_range, data_category):
         category = []
+        data_list_to_be_rendered = []
         screening_data = pd.DataFrame(self.fetch_screening_data(date_range, data_category))
         geo_data = self.prepare_data()
-        import pdb;pdb.set_trace()
         data_list = pd.merge(geo_data, screening_data, on='village_id')
         
         screening_id_list = data_list['id'].tolist()
@@ -85,36 +81,14 @@ class ExportView(FormView):
 
         video_screened = Screening.objects.filter(id__in=screening_id_list).values('id', 'videoes_screened')
         video_title_data_list = Video.objects.values('id', 'title')
-
         scr_frame = pd.DataFrame(list(video_screened))
         v_frame = pd.DataFrame(list(video_title_data_list))
         v_frame = v_frame.rename(columns={'id': 'videoes_screened'})
         scr_vid_frame = pd.merge(scr_frame, v_frame, on="videoes_screened")
-
-        #hash map of videos and title
-        # video_data_dict = {}
-        # for item in video_title_data_list:
-        #     video_data_dict[item.get('id')]=item.get('title')
-
-
-        # for item in data_list:
-        #     item['video_id'] = []
-        #     item['video_title'] = []
-            
-        #     filtered_data = filter(lambda x: x.get('id') == item.get('id'), video_screened)
-        #     for it in filtered_data:
-        #         item['video_id'].append(it.get('videoes_screened'))
-        #         item['video_title'].append(video_data_dict.get(it.get('videoes_screened')))
- 
-
-        for item in viewers_count_list:
-            item['id'] = item.get('screening_id')
-            del item['screening_id']
-        
-
-        sorting_key = operator.itemgetter('id')    
-        for i, j in zip(sorted(data_list, key = sorting_key), sorted(viewers_count_list, key = sorting_key)):
-            i.update(j)
+        data_list_to_be_rendered = pd.merge(data_list, scr_vid_frame, on="id")
+        viewers_frame = pd.DataFrame(list(viewers_count_list))
+        viewers_frame = viewers_frame.rename(columns={'screening_id': 'id'})
+        data_list_rendered = pd.merge(data_list_to_be_rendered, viewers_frame, on="id")
 
 
         '''Beneficiary Data State Wise'''
@@ -159,7 +133,7 @@ class ExportView(FormView):
             obj['Pregnant woman'] = value.get('6')
             state_beneficiary_count_list.append(obj)
 
-        return data_list, state_beneficiary_count_list
+        return data_list_rendered, state_beneficiary_count_list
 
 
     def get_adoption_data(self, date_range, data_category):
@@ -202,13 +176,7 @@ class ExportView(FormView):
             table_data = pd.DataFrame(table_data_list)
             data = pd.DataFrame(data_list)
             if data_type == 1:
-                table_data = table_data[['village__block__district__state__country__country_name',\
-                              'village__block__district__state__state_name',\
-                              'village__block__district__district_name',\
-                              'village__block__block_name', 'village__village_name', \
-                              'partner__partner_name', 'video_id', 'video_title', 'date', 'parentcategory__parent_category_name',\
-                              'id', 'viewer_count']]
-
+                table_data = table_data[['block__district__state__country__country_name','block__district__state__state_name','block__district__district_name','block__block_name', 'village_name','partner__partner_name', 'videoes_screened', 'title', 'date', 'parentcategory__parent_category_name','id', 'viewer_count']]
                 table_data.columns = ['Country Name', 'StateName', \
                                 'DistrictName', 'BlockName', 'VillageName',\
                                 'PartnerName', 'Video Id', 'Video Title', 'Date', 'Category Name',
