@@ -71,67 +71,70 @@ class ExportView(FormView):
     def get_screening_data(self, date_range, data_category):
         category = []
         data_list_to_be_rendered = []
+        data_list_rendered = []
+        state_beneficiary_count_list = []
         screening_data = pd.DataFrame(self.fetch_screening_data(date_range, data_category))
         geo_data = self.prepare_data()
-        data_list = pd.merge(geo_data, screening_data, on='village_id')
-        
-        screening_id_list = data_list['id'].tolist()
-        viewers_count_list = \
-            PersonMeetingAttendance.objects.filter(screening_id__in=screening_id_list).values('screening_id').annotate(viewer_count=Count('person_id'))
+        if len(screening_data):
+            data_list = pd.merge(geo_data, screening_data, on='village_id')
+            
+            screening_id_list = data_list['id'].tolist()
+            viewers_count_list = \
+                PersonMeetingAttendance.objects.filter(screening_id__in=screening_id_list).values('screening_id').annotate(viewer_count=Count('person_id'))
 
-        video_screened = Screening.objects.filter(id__in=screening_id_list).values('id', 'videoes_screened')
-        video_title_data_list = Video.objects.values('id', 'title')
-        scr_frame = pd.DataFrame(list(video_screened))
-        v_frame = pd.DataFrame(list(video_title_data_list))
-        v_frame = v_frame.rename(columns={'id': 'videoes_screened'})
-        scr_vid_frame = pd.merge(scr_frame, v_frame, on="videoes_screened")
-        data_list_to_be_rendered = pd.merge(data_list, scr_vid_frame, on="id")
-        viewers_frame = pd.DataFrame(list(viewers_count_list))
-        viewers_frame = viewers_frame.rename(columns={'screening_id': 'id'})
-        data_list_rendered = pd.merge(data_list_to_be_rendered, viewers_frame, on="id")
+            video_screened = Screening.objects.filter(id__in=screening_id_list).values('id', 'videoes_screened')
+            video_title_data_list = Video.objects.values('id', 'title')
+            scr_frame = pd.DataFrame(list(video_screened))
+            v_frame = pd.DataFrame(list(video_title_data_list))
+            v_frame = v_frame.rename(columns={'id': 'videoes_screened'})
+            scr_vid_frame = pd.merge(scr_frame, v_frame, on="videoes_screened")
+            data_list_to_be_rendered = pd.merge(data_list, scr_vid_frame, on="id")
+            viewers_frame = pd.DataFrame(list(viewers_count_list))
+            viewers_frame = viewers_frame.rename(columns={'screening_id': 'id'})
+            data_list_rendered = pd.merge(data_list_to_be_rendered, viewers_frame, on="id")
 
 
-        '''Beneficiary Data State Wise'''
-        state_beneficiary_count_map = {}
-        person_cat_map = {}
-        queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range).select_related('screening').values('screening__village__block__district__state__state_name','person_id','category'))
-        try:
-            for item in queryset:
-                if state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name'))) is None:
-                    state_beneficiary_count_map[str(item.get('screening__village__block__district__state__state_name'))] = {'1':0, '2':0, '3':0, '4':0, '5':0, '6':0}
+            '''Beneficiary Data State Wise'''
+            state_beneficiary_count_map = {}
+            person_cat_map = {}
+            queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range).select_related('screening').values('screening__village__block__district__state__state_name','person_id','category'))
+            try:
+                for item in queryset:
+                    if state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name'))) is None:
+                        state_beneficiary_count_map[str(item.get('screening__village__block__district__state__state_name'))] = {'1':0, '2':0, '3':0, '4':0, '5':0, '6':0}
 
-                if item.get('category') is not None:
-                    if person_cat_map.get(str(item.get('person_id'))) is None:
-                        person_cat_map[str(item.get('person_id'))] = []
-                    cat = ast.literal_eval(item.get('category'))
-                    if isinstance(cat[0], dict):
-                        for _dict in cat:
-                            if int(_dict.get('id')) not in person_cat_map.get(str(item.get('person_id'))):
-                                person_cat_map[str(item.get('person_id'))].append(int(_dict.get('id')))
-                                state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name')))[str(_dict.get('id'))] += 1
+                    if item.get('category') is not None:
+                        if person_cat_map.get(str(item.get('person_id'))) is None:
+                            person_cat_map[str(item.get('person_id'))] = []
+                        cat = ast.literal_eval(item.get('category'))
+                        if isinstance(cat[0], dict):
+                            for _dict in cat:
+                                if int(_dict.get('id')) not in person_cat_map.get(str(item.get('person_id'))):
+                                    person_cat_map[str(item.get('person_id'))].append(int(_dict.get('id')))
+                                    state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name')))[str(_dict.get('id'))] += 1
+
+                        else:
+                            for _id in cat:
+                                if int(_id) not in person_cat_map.get(str(item.get('person_id'))):
+                                   person_cat_map[str(item.get('person_id'))].append(int(_id))
+                                   state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name')))[str(_id)]+= 1
 
                     else:
-                        for _id in cat:
-                            if int(_id) not in person_cat_map.get(str(item.get('person_id'))):
-                               person_cat_map[str(item.get('person_id'))].append(int(_id))
-                               state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name')))[str(_id)]+= 1
+                        pass
+            except Exception as e:
+                print e
 
-                else:
-                    pass
-        except Exception as e:
-            print e
-
-        state_beneficiary_count_list = []
-        for key, value in state_beneficiary_count_map.items():
-            obj = {}
-            obj['State'] = key
-            obj['Woman of reproductive age (15-49 years)'] = value.get('1')
-            obj['Adolescent girl (10-19 years)'] = value.get('2')
-            obj['Mother of a child 2 to 5 years'] = value.get('3')
-            obj['Mother of a child 6 months to 2 years'] = value.get('4')
-            obj['Mother of a child up to 6 months'] = value.get('5')
-            obj['Pregnant woman'] = value.get('6')
-            state_beneficiary_count_list.append(obj)
+            
+            for key, value in state_beneficiary_count_map.items():
+                obj = {}
+                obj['State'] = key
+                obj['Woman of reproductive age (15-49 years)'] = value.get('1')
+                obj['Adolescent girl (10-19 years)'] = value.get('2')
+                obj['Mother of a child 2 to 5 years'] = value.get('3')
+                obj['Mother of a child 6 months to 2 years'] = value.get('4')
+                obj['Mother of a child up to 6 months'] = value.get('5')
+                obj['Pregnant woman'] = value.get('6')
+                state_beneficiary_count_list.append(obj)
 
         return data_list_rendered, state_beneficiary_count_list
 
@@ -237,7 +240,7 @@ class ExportView(FormView):
 
 
         context = {'data_list': data, 'beneficiary_data_list': beneficiary_data, 
-                   'start_date': cd.get('start_date'), 'end_date': cd.get('end_date'),
+                   'start_date': date_range[0], 'end_date': date_range[1],
                    'file_id': file_id}
         template = "dataexport/table-data.html"
         return render(self.request, template, context)
