@@ -1,6 +1,6 @@
 # python imports
 import dg.settings
-import json
+import json, StringIO
 import re
 from os.path import join, dirname, abspath
 # django imports
@@ -19,7 +19,7 @@ from videos.models import APVideo
 from coco.models import FullDownloadStats
 from people.models import Person,Animator,AnimatorAssignedVillage
 from people.models import PersonGroup
-from geographies.models import Village,District
+from geographies.models import Village,District, Block
 from programs.models import Partner
 from videos.models import Video,Language,Category,Practice,SubCategory
 from activities.models import Screening
@@ -27,6 +27,7 @@ from activities.models import PersonAdoptPractice
 from coco.prepare_data import *
 from django.views.generic import View
 from tastypie.models import ApiKey
+import pandas as pd,os
 
 
 def coco_v2(request):
@@ -171,6 +172,79 @@ def upload_data(request):
     context = {'form': form_data}
     template = "coco/data_upload.html"
     return render(request, template, context)
+
+@login_required
+def upload_csv_data(request):
+    if request.method == 'POST':
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Gender,Phone Number,Age'
+        form_data = DataUploadForm(request.POST, request.FILES)
+        if form_data.is_valid():
+            cd = form_data.cleaned_data
+            csv_file = request.FILES.get('datafile').read()
+            try:
+                file_data = csv_file.decode('utf-8')
+                header = str(file_data.split('\n')[0])
+                if '\r' in header:
+                    header = header.strip('\r')
+                import pdb;pdb.set_trace()
+                if header == columns:
+                    lines = file_data.split('\n')[1:]
+                    for row in lines:
+                        row = row.split(',')
+                        block_obj, created = Block.objects.get_or_create(defaults={'block_name': row[2].strip(), \
+                                                                                    'district_id':int(row[1])},  \
+                                                                        block_name__iexact=row[2].strip())
+                        if block_obj or created:
+                            village_obj, created = \
+                            Village.objects.get_or_create(defaults={'village_name':row[3].strip(), \
+                                                                    'block_id':block_obj.id}, \
+                                                          village_name__iexact=row[3].strip(),block_id=block_obj.id)
+                            if village_obj or created:
+                                person_group, created = \
+                                PersonGroup.objects.get_or_create(defaults={'group_name': row[4].strip(),\
+                                                                'village_id':village_obj.id, \
+                                                                'partner_id':int(row[0])},\
+                                                                  group_name__iexact=row[4].strip())
+                                if person_group or created:
+                                    if row[8] != '' and row[8] != '\r':
+                                        person_obj, created = \
+                                        Person.objects.get_or_create(person_name=row[5], gender=row[6],\
+                                         village_id=village_obj.id,group_id=person_group.id, \
+                                         partner_id=int(row[0]), age=int(row[8]))
+                                    else:
+                                        person_obj, created = \
+                                        Person.objects.get_or_create(person_name=row[5], gender=row[6], \
+                                            village_id=village_obj.id, group_id=person_group.id, partner_id=int(row[0]))
+                    add_message(request, 25, 'Data Successfully uploaded')
+                else:
+                    add_message(request,25, "File Header is not in correct format")
+            except Exception as e:
+                add_message(request, 25, 'Unexpected error occured while uploading data')
+                pass
+            return redirect(".")
+        else:
+            add_message(request, 25, "Please correct the errors below.")
+    else:
+        form_data = DataUploadForm()
+    context = {'form': form_data}
+    template = "coco/data_upload.html"
+    return render(request, template, context)
+
+
+@login_required
+def getFileHeader(request):
+    if request.method == 'GET':
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Gender,Phone Number,Age'
+        output = StringIO.StringIO()
+        try:
+            output.write(columns)
+            response = HttpResponse(output.getvalue().encode('utf-8-sig'), content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename=header_format.csv'
+            return response
+        except Exception as e:
+            print e
+
+
 
 
 class APVideoGenerator(View):

@@ -6,7 +6,7 @@ from django.views.generic.base import RedirectView
 from tastypie.api import Api
 # django imports
 from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource, TagResource
-from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, APVideoGenerator
+from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, APVideoGenerator, upload_csv_data, getFileHeader
 
 from dg.base_settings import COCO_PAGE
 from dg.ap_admin import ap_admin
@@ -55,7 +55,8 @@ urlpatterns = patterns('',
     url(r'^faq/$', TemplateView.as_view(template_name='faq.html'), name="faq"),
     (r'^record_full_download_time/', record_full_download_time),
     (r'^reset_database_check/', reset_database_check),
-    (r'^upload/data/', upload_data),
+    (r'^upload/data/', upload_csv_data),
+    url(r'^getfileheader/', getFileHeader, name='getfileheader'),
     (r'^admin/coco/cocouser/add/state_wise_district', 'coco.admin_views.state_wise_district'),
     (r'^admin/coco/cocouser/add/district_wise_village', 'coco.admin_views.district_wise_village'),
     (r'^admin/coco/cocouser/add/partner_wise_video', 'coco.admin_views.partner_wise_video'),
