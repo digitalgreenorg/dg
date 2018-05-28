@@ -67,7 +67,9 @@ api2.register(api_admin.LoopUserAssignedVillageResource())
 api2.register(api_admin.LanguageResource())
 api2.register(api_admin.CropLanguageResource())
 api2.register(api_admin.VehicleLanguageResource())
-
+api2.register(api_admin.PartnerResource())
+api2.register(api_admin.IncentiveModelResource())
+api2.register(api_admin.AggregatorIncentiveResource())
 
 urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url=LOOP_PAGE)),

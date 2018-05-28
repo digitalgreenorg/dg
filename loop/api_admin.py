@@ -82,6 +82,7 @@ class LoopUserAuthorization(Authorization):
         kwargs[self.loopuser_field] = aggregators
         return object_list.filter(**kwargs).distinct()
 
+
 class VillageAuthorization(Authorization):
     def __init__(self, field):
         self.village_field = field
@@ -468,10 +469,30 @@ class LanguageResource(BaseResource):
         bundle.data['online_id'] = bundle.data['id']
         return bundle
 
+
+class PartnerResource(BaseResource):
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = Partner.objects.all()
+        allowed_methods = ['get']
+        always_return_data = True
+        resource_name = 'partner'
+        authorization = Authorization()
+        authentication = ApiKeyAuthentication()
+        excludes = ('time_created', 'time_modified','is_visible')
+        include_resource_uri = False
+
+    def dehydrate(self,bundle):
+        bundle.data['online_id']=bundle.data['id']
+        del bundle.data['id']
+        return bundle
+
 class LoopUserResource(BaseResource):
     user = fields.ForeignKey(UserResource, 'user')
     village = fields.ForeignKey(VillageResource, 'village')
     preferred_language = fields.ForeignKey(LanguageResource,'preferred_language')
+    partner = fields.ForeignKey(PartnerResource,'partner')
     assigned_villages = fields.ListField()
     assigned_mandis = fields.ListField()
 
@@ -485,15 +506,20 @@ class LoopUserResource(BaseResource):
         authorization = LoopUserAuthorization('id__in')
         authentication = ApiKeyAuthentication()
         always_return_data = True
+        include_resource_uri = False
+        excludes =('time_created','time_modified','registration','version','preferred_language')
 
     hydrate_user = partial(dict_to_foreign_uri, field_name='user')
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     hydrate_preferred_language = partial(dict_to_foreign_uri,field_name='preferred_language')
+    hydrate_partner = partial(dict_to_foreign_uri,field_name='partner')
   
     dehydrate_user = partial(
          foreign_key_to_id, field_name='user', sub_field_names=['id', 'username'])
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
+    dehydrate_partner = partial(foreign_key_to_id,field_name='partner',sub_field_names=['id'])
+    dehydrate_preferred_language = partial(foreign_key_to_id,field_name='preferred_language',sub_field_names=['id'])
 
     def obj_create(self, bundle, **kwargs):
         attempt = LoopUser.objects.filter(name=bundle.data['name'],phone_number=bundle.data['phone_number'])
@@ -1380,3 +1406,67 @@ class LoopUserAssignedMandiResource(BaseResource):
     def dehydrate(self,bundle):
         bundle.data['online_id']=bundle.data['id']
         return bundle
+
+
+
+
+class IncentiveModelResource(BaseResource):
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = IncentiveModel.objects.all()
+        allowed_methods = ['get']
+        always_return_data = True
+        resource_name = 'incentive_model'
+        authorization = Authorization()
+        authentication = ApiKeyAuthentication()
+        excludes = ('time_created', 'time_modified','is_visible')
+        include_resource_uri = False
+
+    def dehydrate(self,bundle):
+        bundle.data['online_id']=bundle.data['id']
+        del bundle.data['id']
+        return bundle
+
+
+class AggregatorIncentiveResource(BaseResource):
+    aggregator = fields.ForeignKey(LoopUserResource,'aggregator')
+    incentive_model = fields.ForeignKey(IncentiveModelResource,'incentive_model')
+    class Meta:
+        limit = 0
+        max_limit = 0
+        queryset = AggregatorIncentive.objects.all()
+        allowed_methods =['get','put','post','delete']
+        always_return_data = True
+        resource_name = 'aggregator_incentive'
+        authorization = LoopUserAuthorization('aggregator__in')
+        authentication = ApiKeyAuthentication()
+        excludes = ('time_created','time_modified','user_created_id','user_modified_id')
+        include_resource_uri = False
+
+    dehydrate_aggregator = partial(
+        foreign_key_to_id, field_name='aggregator', sub_field_names=['id'])
+    dehydrate_incentive_model = partial(
+        foreign_key_to_id, field_name='incentive_model', sub_field_names=['id'])
+
+    hydrate_aggregator = partial(dict_to_foreign_uri, field_name='aggregator')
+    hydrate_incentive_model = partial(dict_to_foreign_uri, field_name='incentive_model')
+
+    def dehydrate(self,bundle):
+        bundle.data['online_id']=bundle.data['id']
+        del bundle.data['id']
+        return bundle  
+
+    def obj_create(self, bundle, **kwargs):
+        aggregator = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
+        incentive_model = IncentiveModel.objects.get(id=bundle.data['incentive_model']['online_id'])
+        attempt = AggregatorIncentive.objects.filter(aggregator=aggregator ,incentive_model=incentive_model,start_date=bundle.data['start_date'])
+        if attempt.count() < 1:
+            bundle = super(AggregatorIncentiveResource,self).obj_create(bundle,**kwargs)
+        else:
+            send_duplicate_message(int(attempt[0].id))
+        return bundle
+
+    def dehydrate(self,bundle):
+        bundle.data['online_id']=bundle.data['id']
+        return bundle  

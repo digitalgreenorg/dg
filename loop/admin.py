@@ -327,7 +327,7 @@ class AggregatorIncentiveAdmin(admin.ModelAdmin):
 
 
 class IncentiveModelAdmin(admin.ModelAdmin):
-    list_display = ['calculation_method', 'description']
+    list_display = ['calculation_method', 'description','function_name']
 
 
 class AggregatorShareOutlierAdmin(admin.ModelAdmin):

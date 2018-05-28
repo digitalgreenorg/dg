@@ -23,7 +23,7 @@ MANDI_CATEGORY = ((0, "Wholesale Market"), (1, "Retail Market"), (2, "Individual
 PERSON_TYPE = ((0, 'Farmer'), (1, 'Transporter'))
 SMS_STATUS = ((0, 'Fail'), (1, 'Success'))
 SMS_STATE = {'N':(0,'None'), 'S':(1,'SMS initiated'), 'F':(2,'SMS fired'), 'D':(3,'SMS delivered'), 'U':(4,'SMS undelivered'), 'P':(5,'pending en route'), 'I':(6,'invalid no.'), 'E':(7,'expired'), '?':(8,'pushed to network en route'), 'B':(9,'DND block')}
-
+INCENTIVE_MODEL_TYPES = {"0":"BangladeshVolume0.5","1":"BiharpostNov","2":"BangladeshVolume1","3":"DailyPay250","4":"Volume0.25"} 
 class LoopModel(models.Model):
     user_created = models.ForeignKey(
         User, related_name="%(app_label)s_%(class)s_created", editable=False, null=True, blank=True)
@@ -653,10 +653,13 @@ class IncentiveParameter(models.Model):
 class IncentiveModel(models.Model):
     calculation_method = models.TextField()
     description = models.CharField(max_length=100, null=True, blank=True)
+    function_name = models.TextField(default=None,null=True,blank=True)
 
     def __unicode__(self):
         return "%s" % (self.description)
 
+    def __function_name(self):
+        return "%s" % (self.function_name)
 
 class AggregatorIncentive(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
