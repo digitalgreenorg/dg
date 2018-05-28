@@ -186,7 +186,6 @@ def upload_csv_data(request):
                 header = str(file_data.split('\n')[0])
                 if '\r' in header:
                     header = header.strip('\r')
-                import pdb;pdb.set_trace()
                 if header == columns:
                     lines = file_data.split('\n')[1:]
                     for row in lines:
@@ -219,7 +218,7 @@ def upload_csv_data(request):
                 else:
                     add_message(request,25, "File Header is not in correct format")
             except Exception as e:
-                add_message(request, 25, 'Unexpected error occured while uploading data')
+                print e
                 pass
             return redirect(".")
         else:
