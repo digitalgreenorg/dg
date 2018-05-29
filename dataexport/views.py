@@ -77,6 +77,7 @@ class ExportView(FormView):
         data_list_to_be_rendered = []
         data_list_rendered = []
         state_beneficiary_count_list = []
+        district_reach_dataframe = []
         # calling the screening data and converting it to data frame
         screening_data = pd.DataFrame(self.fetch_screening_data(date_range, data_category))
         # calling the gep frame data
@@ -90,6 +91,15 @@ class ExportView(FormView):
             viewers_count_list = \
                 PersonMeetingAttendance.objects.filter(screening_id__in=screening_id_list).values('screening_id').annotate(viewer_count=Count('person_id'))
 
+            # unique viewers district wise
+            district_reach_queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range\
+                    ).select_related('screening').values('screening__village__block__district_id', 'screening__village__block__district__district_name').annotate(unique_viewers=Count('person_id',distinct=True)))
+            district_reach_frame = pd.DataFrame(district_reach_queryset)
+            district_reach_frame = district_reach_frame.rename(columns={'screening__village__block__district_id': 'District ID',
+                                                                        'screening__village__block__district__district_name':
+                                                                        'District Name',
+                                                                        'unique_viewers': 'Reach'})
+            
             # get all videos screening from the list of screening ids. At this point we are sure
             # about screening ids and hence we are fetching its related videos.
             video_screened = Screening.objects.filter(id__in=screening_id_list).values('id', 'videoes_screened')
@@ -156,7 +166,8 @@ class ExportView(FormView):
                 obj['Pregnant woman'] = value.get('6')
                 state_beneficiary_count_list.append(obj)
 
-        return data_list_rendered, state_beneficiary_count_list
+        return {'data_list_rendered': data_list_rendered, 'state_beneficiary_count_list': state_beneficiary_count_list,
+                'district_reach': district_reach_frame}
 
 
     def get_adoption_data(self, date_range, data_category):
@@ -183,6 +194,7 @@ class ExportView(FormView):
         data = ''
         table_data_count = 0
         data_list_count = 0
+        district_reach = 0
         file_id = None
         cd = form.cleaned_data
         date_range = cd.get('date_period').split(' -')
@@ -194,7 +206,11 @@ class ExportView(FormView):
         data_file = None
         if data_type == 1:
             # fetching the screening data
-            data_list, state_beneficiary_count_list = self.get_screening_data(date_range, data_category)
+            screening_dict = self.get_screening_data(date_range, data_category)
+            data_list = screening_dict.get('data_list_rendered')
+            state_beneficiary_count_list = screening_dict.get('state_beneficiary_count_list')
+            district_reach = screening_dict.get('district_reach').to_html(index=False)
+
         elif data_type == 2:
             # fetching the adoption data
             data_list = self.get_adoption_data(date_range, data_category)
@@ -205,30 +221,43 @@ class ExportView(FormView):
             # converting the sliced data into data frame
             table_data = pd.DataFrame(table_data_list)
             data = pd.DataFrame(data_list)
+            data = data.rename(columns={'block__district__state__country_id':'Country Id',\
+                                        'block__district__state__country__country_name': 'Country Name',\
+                                        'block__district__state_id':'State Id',\
+                                        'block__district__state__state_name':'State Name',\
+                                        'block__district_id':'District Id',\
+                                        'block__district__district_name': 'District Name',\
+                                        'block_id': 'Block Id', 'block__block_name': 'Block Name',\
+                                        'village_id': 'Village Id', 'village__village_name': 'Village Name',\
+                                        'partner_id':'Partner Id', 'partner__partner_name': 'Partner Name',\
+                                        'videoes_screened': 'Video Id', 'title': 'Video Title', \
+                                        'date': 'Date', 'parentcategory_id':'Category', \
+                                        'parentcategory__parent_category_name': 'Category Name', \
+                                        'id': 'Screening Id', 'viewer_count': 'Viewer Count'})
             data_list_count = len(data)
             # for displying the table data we require less number of columns
             if data_type == 1:
                 # for screening we are specifying what columns we are displaying.
                 table_data = table_data[['block__district__state__country__country_name','block__district__state__state_name','block__district__district_name','block__block_name', 'village_name','partner__partner_name', 'videoes_screened', 'title', 'date', 'parentcategory__parent_category_name','id', 'viewer_count']]
                 table_data.columns = ['Country Name', 'StateName', \
-                                'DistrictName', 'BlockName', 'VillageName',\
-                                'PartnerName', 'Video Id', 'Video Title', 'Date', 'Category Name',
-                                'Screening#ID',
-                                'Viewers Count']
+                                        'DistrictName', 'BlockName', 'VillageName',\
+                                        'PartnerName', 'Video Id', 'Video Title', 'Date', 'Category Name',
+                                        'Screening#ID',
+                                        'Viewers Count']
                 # for screening we are renaming the columns
-                data = data.rename(columns={'village__block__district__state__country_id':'Country Id',\
-                                            'village__block__district__state__country__country_name': 'Country Name',\
-                                            'village__block__district__state_id':'State Id',\
-                                            'village__block__district__state__state_name':'State Name',\
-                                            'village__block__district_id':'District Id',\
-                                            'village__block__district__district_name': 'District Name',\
-                                            'village__block_id': 'Block Id', 'village__block__block_name': 'Block Name',\
-                                            'village_id': 'Village Id', 'village__village_name': 'Village Name',\
-                                            'partner_id':'Partner Id', 'partner__partner_name': 'Partner Name',\
-                                            'video_id': 'Video Id', 'video_title': 'Video Title', \
-                                            'date': 'Date', 'parentcategory_id':'Category', \
-                                            'parentcategory__parent_category_name': 'Category Name', \
-                                            'id': 'Screening Id', 'viewer_count': 'Viewer Count'})
+                data = data.rename(columns={'block__district__state__country_id':'Country Id',\
+                                        'block__district__state__country__country_name': 'Country Name',\
+                                        'block__district__state_id':'State Id',\
+                                        'block__district__state__state_name':'State Name',\
+                                        'block__district_id':'District Id',\
+                                        'block__district__district_name': 'District Name',\
+                                        'block_id': 'Block Id', 'block__block_name': 'Block Name',\
+                                        'village_id': 'Village Id', 'village__village_name': 'Village Name',\
+                                        'partner_id':'Partner Id', 'partner__partner_name': 'Partner Name',\
+                                        'videoes_screened': 'Video Id', 'title': 'Video Title', \
+                                        'date': 'Date', 'parentcategory_id':'Category', \
+                                        'parentcategory__parent_category_name': 'Category Name', \
+                                        'id': 'Screening Id', 'viewer_count': 'Viewer Count'})
             else:
                 # for adoption we are specifying what columns we are displaying.
                 table_data = table_data[['person__village__block__district__state__country__country_name',\
@@ -253,7 +282,7 @@ class ExportView(FormView):
             date_var = datetime.datetime.now()
             filename    = settings.PROJECT_PATH + '/data_file' + '-' + date_var.isoformat()+'.xlsx'
             writer      = pd.ExcelWriter(filename, engine='xlsxwriter')
-            data.to_excel(writer, "sheetname")
+            data.to_excel(writer, "sheetname", index=False)
             writer.save()
             dfile = open(filename, 'r')
             obj, created = TrackFile.objects.get_or_create(name_of_file=dfile.name)    
@@ -261,7 +290,7 @@ class ExportView(FormView):
 
             # this is the entire data set which got created above and now getting this
             # converted to html for display purpose.
-            table_data = table_data.to_html()
+            table_data = table_data.to_html(index=False)
 
 
         if state_beneficiary_count_list:
@@ -278,12 +307,13 @@ class ExportView(FormView):
                           'Mother of a child 6 months to 2 years', 'Mother of a child up to 6 months',\
                           'Pregnant woman']
             # finally converting to html for display purpose.
-            beneficiary_data = beneficiary_data.to_html()
+            beneficiary_data = beneficiary_data.to_html(index=False)
 
 
         context = {'data_list': table_data, 'beneficiary_data_list': beneficiary_data, 
                    'start_date': date_range[0], 'end_date': date_range[1],
-                   'file_id': file_id, 'data_list_count': data_list_count, 'table_data_count': table_data_count}
+                   'file_id': file_id, 'data_list_count': data_list_count,
+                   'table_data_count': table_data_count, 'district_reach': district_reach}
         template = "dataexport/table-data.html"
         return render(self.request, template, context)
 
