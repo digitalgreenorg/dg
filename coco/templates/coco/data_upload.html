@@ -18,9 +18,18 @@
       <span><h2 class="hdg-a hdg-source-lt layout-vr-md" style="display: inline;">COCO - Upload Data</h2>
       <a href="{% url 'getfileheader' %}" id="header-download" class="btn btn-primary" style="margin-left: 50px;">Download File Header</a></span>
         {% for message in messages %}
-          <div class="errorlist alert alert-success" role="alert">
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="errorlist alert alert-success" role="alert">
+                {{ message }}
+            </div>
+          {% else %}
+            <div class="alert alert-success" role="alert">
               {{ message }}
-          </div>
+            </div>
+
+          {% endif %}
+
+
         {% endfor %}
       <div class="row">
         <div class="col-sm-12">

@@ -188,7 +188,6 @@ def upload_csv_data(request):
                     header = header.strip('\r')
                 if header == columns:
                     lines = file_data.split('\n')[1:]
-                    import pdb;pdb.set_trace()
                     for row in lines:
                         row = row.split(',')
                         block_obj, created = Block.objects.get_or_create(block_name__iexact=row[2].strip(),\
@@ -220,13 +219,13 @@ def upload_csv_data(request):
                                             village_id=village_obj.id, group_id=person_group.id, partner_id=int(row[0]))
                     add_message(request, 25, 'Data Successfully uploaded')
                 else:
-                    add_message(request,25, "File Header is not in correct format")
+                    add_message(request,40, "File Header is not in correct format")
             except Exception as e:
                 print e
                 pass
             return redirect(".")
         else:
-            add_message(request, 25, "Please correct the errors below.")
+            add_message(request, 40, "Please correct the errors below.")
     else:
         form_data = DataUploadForm()
     context = {'form': form_data}
