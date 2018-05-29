@@ -140,16 +140,20 @@
                   From:&nbsp;{{ start_date }} &nbsp;&nbsp;&nbsp;&nbsp;
                   To:&nbsp;{{ end_date }}
                 </div>
-                </br></br></br>
-                
+                </br>
+                <div class="copy">
+                  <p>Total Entries :-  <b>{{ data_list_count }}</b></p>
+                  <p>Total Entries displaying in table :- <b>{{ table_data_count }}</b></p>
+                </div>
+                <br>
                 <section id="upload-data" class="about-bg">
-                  <a class="btn btn-success" href="/coco/export/download/{{ file_id }}">Download</a>
+                  <a class="btn btn-success" href="/coco/export/download/{{ file_id }}">Excel</a>
                   <div class="wrapper">
                     <div class="inner-wrapper">
                       <div class="row">
                         <div class="col-sm-12" style="overflow-x: auto">
                           {% if data_list %}
-                            {{ data_list | safe}}
+                            {{ data_list | safe}} 
                           {% else %}
                             No Data Available
                           {% endif %}
@@ -213,7 +217,7 @@
     $('.dataframe').DataTable({
        dom: 'Bfrtip',
        buttons: [
-         'copy', 'excel', 'pdf'
+         'excel'
      ]
      });
     $($('.dt-buttons')[0]).hide()
