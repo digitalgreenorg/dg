@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from tastypie.models import ApiKey
 import ast
-
+import datetime
 
 class UserDoesNotExist(Exception):
     pass
@@ -41,15 +41,15 @@ def send_sms(request):
             DayTransportation = get_model('loop', 'DayTransportation')
             try:
                 requesting_loop_user = LoopUser.objects.get(user_id=user.id)
-                if requesting_loop_user.village.block.district.state.country.country_name == 'India':
+                if requesting_loop_user.village.block.district.state.country.country_name == 'India' and requesting_loop_user.role == 2:
                     preferred_language = requesting_loop_user.preferred_language.notation
                     transactions_to_consider = CombinedTransaction.objects.filter(user_created_id=user.id, payment_sms=0,
-                                                                                  status=1)
+                                                                                  status=1, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
 
-                    transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0)
+                    transportations_to_consider = DayTransportation.objects.filter(user_created_id=user.id, payment_sms=0, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
 
-                    transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id)
-                    if requesting_loop_user.partner.id != 2:
+                    transportations_to_consider_for_ct = DayTransportation.objects.filter(user_created_id=user.id, date__gt=str(datetime.datetime.now().date() - datetime.timedelta(days=7)))
+                    if requesting_loop_user.partner is not None and requesting_loop_user.partner.id != 2:
                         helpline_no = requesting_loop_user.partner.helpline_number
                     else:
                         helpline_no = requesting_loop_user.village.block.district.state.helpline_number
@@ -68,7 +68,6 @@ def send_sms(request):
 
 def transactions_sms(user, transactions, language, transportations, helpline_num):
     try:
-        
         single_farmer_date_message = {}
         transactions_list = []
         for transaction in transactions:
@@ -155,8 +154,10 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                 trans.save()
             SmsLog = get_model('loop', 'SmsLog')
             smslog_obj = SmsLog(sms_body=message ,contact_no=farmer_no, person_type=0, model_ids = str(single_farmer_date_message[key]['transaction_id']))
-            smslog_obj.save()
-
+            try:
+                smslog_obj.save()
+            except Exception as e:
+                pass
             sms_response = send_sms_using_textlocal(farmer_no, message, smslog_obj.id)
             if sms_response['status'] == "success":
                 status_code = 1
@@ -165,10 +166,12 @@ def transactions_sms(user, transactions, language, transportations, helpline_num
                     trans.payment_sms=SMS_STATE['F'][0]
                     trans.payment_sms_id=sms_response['messages'][0]['id']
                     trans.save()
-
-            smslog_obj.text_local_id = sms_id
-            smslog_obj.status = status_code
-            smslog_obj.save()
+            try:
+                smslog_obj.text_local_id = sms_id
+                smslog_obj.status = status_code
+                smslog_obj.save()
+            except Exception as e:
+                pass
 
     except Exception as e:
         pass
@@ -240,8 +243,8 @@ def transportations_sms(user, transportations, language):
                     trans.payment_sms_id=sms_response['messages'][0]['id']
                     trans.save()
 
-            smslog_obj.text_local_id=sms_id
-            smslog_obj.status=status_code
+            smslog_obj.text_local_id = sms_id
+            smslog_obj.status = status_code
             smslog_obj.save()
 
     except Exception as e:
@@ -273,7 +276,7 @@ def make_transportation_sms(key, farmer_name, aggregator, value):
 def send_sms_using_textlocal(farmer_no, sms_body, custom_id):
     sms_request_url = TEXT_LOCAL_SINGLE_SMS_API
     parameters = {'apiKey': TEXTLOCAL_API_KEY, 'sender': SMS_SENDER_NAME, 'numbers': farmer_no,
-                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom':custom_id, 'receipt_url': RECEIPT_URL}
+                  'message': sms_body, 'test': 'false', 'unicode': 'true', 'custom': custom_id, 'receipt_url': RECEIPT_URL}
     response = requests.post(sms_request_url, params=parameters)
     response_text = json.loads(str(response.text))
     return response_text
