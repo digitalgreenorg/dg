@@ -187,6 +187,7 @@ def upload_csv_data(request):
                 header = str(file_data.split('\n')[0])
                 if '\r' in header:
                     header = header.strip('\r')
+                #Checking file header format    
                 if header == columns:
                     lines = file_data.split('\n')[1:]
                     for row in lines:
@@ -224,12 +225,10 @@ def upload_csv_data(request):
                                              partner_id=int(row[0]), defaults={'person_name':row[5].strip(), \
                                              'gender':row[6],'village_id':village_obj.id,'group_id':person_group.id, \
                                              'partner_id':int(row[0])})
+                        #Handle Duplicate KeyError
                         except IntegrityError as e:
                             print e
                             pass
-                        except Exception as e:
-                            print e
-                            add_message(request, 40, 'Unable to upload data, please contact system@digitalgreen.org for any issues')
                     add_message(request, 25, 'Data Successfully uploaded')
                 else:
                     add_message(request,40, "File Header is not in correct format")
