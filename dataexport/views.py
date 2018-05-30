@@ -3,7 +3,7 @@ from django.views.generic import View
 from django.views.generic.edit import FormView
 from django.db.models import *
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import pandas as pd
 import numpy as np
 import operator, ast
@@ -12,7 +12,7 @@ import time
 import os
 
 from io import BytesIO
-from forms import *
+from dataexport.forms import *
 from activities.models import *
 from dataexport.models import *
 
@@ -23,11 +23,25 @@ class ExportView(FormView):
     form_class = PageView
 
     
-    def fetch_screening_data(self, date_range, data_category):
+    def fetch_screening_data(self, date_range, data_category, country, state):
         data_list = []
-        if data_category == '3': 
+        if data_category == '3' and len(state): 
             data_list = \
-                Screening.objects.filter(date__range=date_range).exclude(farmers_attendance=None\
+                Screening.objects.filter(date__range=date_range,
+                                         village__block__district__state__country_id=country.id,
+                                         village__block__district__state_id__in=state).exclude(farmers_attendance=None\
+                                         ).values(
+                                         'village_id','partner_id', 'partner__partner_name',\
+                                         'date',\
+                                         'parentcategory_id',\
+                                         'parentcategory__parent_category_name','id',\
+                                         )
+
+        elif data_category == '3':
+            data_list = \
+                Screening.objects.filter(date__range=date_range,
+                                         village__block__district__state__country_id=country.id,
+                                         ).exclude(farmers_attendance=None\
                                          ).values(
                                          'village_id','partner_id', 'partner__partner_name',\
                                          'date',\
@@ -35,9 +49,34 @@ class ExportView(FormView):
                                          'parentcategory__parent_category_name','id',\
                                          )
         
+        elif data_category == '2' and len(state):
+            data_list = \
+                Screening.objects.filter(date__range=date_range,
+                                         village__block__district__state__country_id=country.id,
+                                         village__block__district__state_id__in=state).exclude(parentcategory_id=1).exclude(farmers_attendance=None\
+                                         ).values(
+                                         'village_id', 'partner_id', 'partner__partner_name',\
+                                         'date',\
+                                         'parentcategory_id',\
+                                         'parentcategory__parent_category_name','id',\
+                                         )
         elif data_category == '2':
             data_list = \
-                Screening.objects.filter(date__range=date_range).exclude(parentcategory_id=1).exclude(farmers_attendance=None\
+                Screening.objects.filter(date__range=date_range,
+                                         village__block__district__state__country_id=country.id,
+                                         ).exclude(parentcategory_id=1).exclude(farmers_attendance=None\
+                                         ).values(
+                                         'village_id', 'partner_id', 'partner__partner_name',\
+                                         'date',\
+                                         'parentcategory_id',\
+                                         'parentcategory__parent_category_name','id',\
+                                         )
+        elif data_category == '1' and len(state):
+            data_list = \
+                Screening.objects.filter(date__range=date_range, parentcategory_id=1,
+                                         village__block__district__state__country_id=country.id,
+                                         village__block__district__state_id__in=state
+                                         ).exclude(farmers_attendance=None\
                                          ).values(
                                          'village_id', 'partner_id', 'partner__partner_name',\
                                          'date',\
@@ -46,7 +85,10 @@ class ExportView(FormView):
                                          )
         elif data_category == '1':
             data_list = \
-                Screening.objects.filter(date__range=date_range, parentcategory_id=1).exclude(farmers_attendance=None\
+                Screening.objects.filter(date__range=date_range, parentcategory_id=1,
+                                         village__block__district__state__country_id=country.id,
+                                         village__block__district__state_id__in=state
+                                         ).exclude(farmers_attendance=None\
                                          ).values(
                                          'village_id', 'partner_id', 'partner__partner_name',\
                                          'date',\
@@ -71,15 +113,15 @@ class ExportView(FormView):
         return geo_frame
 
 
-    def get_screening_data(self, date_range, data_category):
+    def get_screening_data(self, date_range, data_category, country, state):
         # defining containers
         category = []
         data_list_to_be_rendered = []
         data_list_rendered = []
         state_beneficiary_count_list = []
-        district_reach_dataframe = []
+        district_reach_frame = []
         # calling the screening data and converting it to data frame
-        screening_data = pd.DataFrame(self.fetch_screening_data(date_range, data_category))
+        screening_data = pd.DataFrame(self.fetch_screening_data(date_range, data_category, country, state))
         # calling the gep frame data
         geo_data = self.prepare_data()
         if len(screening_data):
@@ -166,17 +208,20 @@ class ExportView(FormView):
                 obj['Pregnant woman'] = value.get('6')
                 state_beneficiary_count_list.append(obj)
 
+        if isinstance(data_list_rendered, list):
+            data_list_rendered = pd.DataFrame(data_list_rendered)
         return {'data_list_rendered': data_list_rendered, 'state_beneficiary_count_list': state_beneficiary_count_list,
                 'district_reach': district_reach_frame}
 
 
-    def get_adoption_data(self, date_range, data_category):
+    def get_adoption_data(self, date_range, data_category, country, state):
         category = []
-        if '3' in data_category:
+        if '3' in data_category and len(state):
             category = [1,2]
-        else:
-            category = data_category
-        data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range, parentcategory_id__in=category).values('person_id',\
+            data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
+                                                       parentcategory_id__in=category,
+                                                       person__village__block__district__state__country_id=country.id,
+                                                       person__village__block__district__state_id__in=state).values('person_id',\
                     'person__person_name','person__gender','video_id','video__title','date_of_adoption','partner_id',\
                     'partner__partner_name','parentcategory_id','parentcategory__parent_category_name',\
                     'adopt_practice','adopt_practice_second','krp_one','krp_two','krp_three',\
@@ -186,34 +231,87 @@ class ExportView(FormView):
                     'person__village__block__district_id','person__village__block__district__district_name',\
                     'person__village__block_id','person__village__block__block_name',\
                     'person__village_id','person__village__village_name', 'id')
-        data_list = list(data_list)
+        elif '3' in data_category:
+            category = [1,2]
+            data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
+                                                       parentcategory_id__in=category,
+                                                       person__village__block__district__state__country_id=country.id,
+                                                       ).values('person_id',\
+                    'person__person_name','person__gender','video_id','video__title','date_of_adoption','partner_id',\
+                    'partner__partner_name','parentcategory_id','parentcategory__parent_category_name',\
+                    'adopt_practice','adopt_practice_second','krp_one','krp_two','krp_three',\
+                    'krp_four', 'krp_five','person__village__block__district__state__country_id', \
+                    'person__village__block__district__state__country__country_name',\
+                    'person__village__block__district__state_id','person__village__block__district__state__state_name', \
+                    'person__village__block__district_id','person__village__block__district__district_name',\
+                    'person__village__block_id','person__village__block__block_name',\
+                    'person__village_id','person__village__village_name', 'id')
+
+
+        else:
+            category = data_category
+            if len(sate):
+                data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
+                                                       parentcategory_id__in=category,
+                                                       person__village__block__district__state__country_id=country.id,
+                                                       person__village__block__district__state_id__in=state).values('person_id',\
+                    'person__person_name','person__gender','video_id','video__title','date_of_adoption','partner_id',\
+                    'partner__partner_name','parentcategory_id','parentcategory__parent_category_name',\
+                    'adopt_practice','adopt_practice_second','krp_one','krp_two','krp_three',\
+                    'krp_four', 'krp_five','person__village__block__district__state__country_id', \
+                    'person__village__block__district__state__country__country_name',\
+                    'person__village__block__district__state_id','person__village__block__district__state__state_name', \
+                    'person__village__block__district_id','person__village__block__district__district_name',\
+                    'person__village__block_id','person__village__block__block_name',\
+                    'person__village_id','person__village__village_name', 'id')
+            else:
+                data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
+                                                       parentcategory_id__in=category,
+                                                       person__village__block__district__state__country_id=country.id,
+                                                       ).values('person_id',\
+                    'person__person_name','person__gender','video_id','video__title','date_of_adoption','partner_id',\
+                    'partner__partner_name','parentcategory_id','parentcategory__parent_category_name',\
+                    'adopt_practice','adopt_practice_second','krp_one','krp_two','krp_three',\
+                    'krp_four', 'krp_five','person__village__block__district__state__country_id', \
+                    'person__village__block__district__state__country__country_name',\
+                    'person__village__block__district__state_id','person__village__block__district__state__state_name', \
+                    'person__village__block__district_id','person__village__block__district__district_name',\
+                    'person__village__block_id','person__village__block__block_name',\
+                    'person__village_id','person__village__village_name', 'id')
+        
+        data_list = pd.DataFrame(list(data_list))
         return data_list
        
-
     def form_valid(self, form):
         data = ''
         table_data_count = 0
         data_list_count = 0
         district_reach = 0
         file_id = None
+        table_data = []
         cd = form.cleaned_data
         date_range = cd.get('date_period').split(' -')
         date_range = [dte.strip() for dte in date_range]
         data_type = int(cd.get('data'))
         data_category = cd.get('data_category')
+        country = cd.get('country')
+        state= self.request.POST.getlist('state')
         state_beneficiary_count_list = []
         beneficiary_data = []
         data_file = None
         if data_type == 1:
             # fetching the screening data
-            screening_dict = self.get_screening_data(date_range, data_category)
+            screening_dict = self.get_screening_data(date_range, data_category, country, state)
             data_list = screening_dict.get('data_list_rendered')
             state_beneficiary_count_list = screening_dict.get('state_beneficiary_count_list')
-            district_reach = screening_dict.get('district_reach').to_html(index=False)
+            district_reach = screening_dict.get('district_reach')
+            if len(district_reach):
+                district_reach= district_reach.to_html(index=False)
+
 
         elif data_type == 2:
             # fetching the adoption data
-            data_list = self.get_adoption_data(date_range, data_category)
+            data_list = self.get_adoption_data(date_range, data_category, country, state)
         # checking whether the data list frame is not empty.
         if not data_list.empty:
             # preparing the table data
@@ -309,11 +407,11 @@ class ExportView(FormView):
             # finally converting to html for display purpose.
             beneficiary_data = beneficiary_data.to_html(index=False)
 
-
         context = {'data_list': table_data, 'beneficiary_data_list': beneficiary_data, 
                    'start_date': date_range[0], 'end_date': date_range[1],
                    'file_id': file_id, 'data_list_count': data_list_count,
-                   'table_data_count': table_data_count, 'district_reach': district_reach}
+                   'table_data_count': table_data_count, 'district_reach': district_reach,
+                   'data_category': cd.get('data_category')}
         template = "dataexport/table-data.html"
         return render(self.request, template, context)
 
@@ -329,5 +427,18 @@ class DownloadFile(View):
                 response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
                 return response
         raise Http404
+
+
+class GetState(View):
+
+    def get(self, request, *args, **kwargs):
+        country_id = kwargs.get('country_id')
+        results = list(State.objects.filter(country_id__in=country_id).values('id','state_name'))
+        
+        for item in results:
+            item['text'] = item.get('state_name')
+            item['value'] = int(item.get('id'))
+            del item['state_name']
+        return JsonResponse({'results': results})
 
 

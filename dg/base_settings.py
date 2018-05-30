@@ -186,6 +186,8 @@ INSTALLED_APPS = (
     'smart_selects',
     'loop_ivr',
     'dataexport',
+    # 3rd Party
+    'easy_select2',
 )
 
 # Store these package names here as they may change in the future since
