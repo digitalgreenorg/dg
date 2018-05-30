@@ -34,7 +34,8 @@ class ExportView(FormView):
                                          'village_id','partner_id', 'partner__partner_name',\
                                          'date',\
                                          'parentcategory_id',\
-                                         'parentcategory__parent_category_name','id',\
+                                         'parentcategory__parent_category_name','id',
+                                         'time_created'
                                          )
 
         elif data_category == '3':
@@ -46,7 +47,8 @@ class ExportView(FormView):
                                          'village_id','partner_id', 'partner__partner_name',\
                                          'date',\
                                          'parentcategory_id',\
-                                         'parentcategory__parent_category_name','id',\
+                                         'parentcategory__parent_category_name','id',
+                                         'time_created'
                                          )
         
         elif data_category == '2' and len(state):
@@ -58,7 +60,8 @@ class ExportView(FormView):
                                          'village_id', 'partner_id', 'partner__partner_name',\
                                          'date',\
                                          'parentcategory_id',\
-                                         'parentcategory__parent_category_name','id',\
+                                         'parentcategory__parent_category_name','id',
+                                         'time_created'
                                          )
         elif data_category == '2':
             data_list = \
@@ -69,7 +72,8 @@ class ExportView(FormView):
                                          'village_id', 'partner_id', 'partner__partner_name',\
                                          'date',\
                                          'parentcategory_id',\
-                                         'parentcategory__parent_category_name','id',\
+                                         'parentcategory__parent_category_name','id',
+                                         'time_created'
                                          )
         elif data_category == '1' and len(state):
             data_list = \
@@ -81,7 +85,8 @@ class ExportView(FormView):
                                          'village_id', 'partner_id', 'partner__partner_name',\
                                          'date',\
                                          'parentcategory_id',\
-                                         'parentcategory__parent_category_name','id',\
+                                         'parentcategory__parent_category_name','id',
+                                         'time_created'
                                          )
         elif data_category == '1':
             data_list = \
@@ -93,7 +98,8 @@ class ExportView(FormView):
                                          'village_id', 'partner_id', 'partner__partner_name',\
                                          'date',\
                                          'parentcategory_id',\
-                                         'parentcategory__parent_category_name','id',\
+                                         'parentcategory__parent_category_name','id',
+                                         'time_created'
                                          )
 
 
@@ -134,7 +140,11 @@ class ExportView(FormView):
                 PersonMeetingAttendance.objects.filter(screening_id__in=screening_id_list).values('screening_id').annotate(viewer_count=Count('person_id'))
 
             # unique viewers district wise
-            district_reach_queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range\
+            if len(state):
+                district_reach_queryset = list(PersonMeetingAttendance.objects.filter(screening__village__block__district__state_id__in=state, screening__date__range=date_range\
+                    ).select_related('screening').values('screening__village__block__district_id', 'screening__village__block__district__district_name').annotate(unique_viewers=Count('person_id',distinct=True)))
+            else:
+                district_reach_queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range\
                     ).select_related('screening').values('screening__village__block__district_id', 'screening__village__block__district__district_name').annotate(unique_viewers=Count('person_id',distinct=True)))
             district_reach_frame = pd.DataFrame(district_reach_queryset)
             district_reach_frame = district_reach_frame.rename(columns={'screening__village__block__district_id': 'District ID',
@@ -230,7 +240,7 @@ class ExportView(FormView):
                     'person__village__block__district__state_id','person__village__block__district__state__state_name', \
                     'person__village__block__district_id','person__village__block__district__district_name',\
                     'person__village__block_id','person__village__block__block_name',\
-                    'person__village_id','person__village__village_name', 'id')
+                    'person__village_id','person__village__village_name', 'id', 'time_created')
         elif '3' in data_category:
             category = [1,2]
             data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
@@ -245,12 +255,12 @@ class ExportView(FormView):
                     'person__village__block__district__state_id','person__village__block__district__state__state_name', \
                     'person__village__block__district_id','person__village__block__district__district_name',\
                     'person__village__block_id','person__village__block__block_name',\
-                    'person__village_id','person__village__village_name', 'id')
+                    'person__village_id','person__village__village_name', 'id', 'time_created')
 
 
         else:
             category = data_category
-            if len(sate):
+            if len(state):
                 data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
                                                        parentcategory_id__in=category,
                                                        person__village__block__district__state__country_id=country.id,
@@ -263,7 +273,7 @@ class ExportView(FormView):
                     'person__village__block__district__state_id','person__village__block__district__state__state_name', \
                     'person__village__block__district_id','person__village__block__district__district_name',\
                     'person__village__block_id','person__village__block__block_name',\
-                    'person__village_id','person__village__village_name', 'id')
+                    'person__village_id','person__village__village_name', 'id', 'time_created')
             else:
                 data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
                                                        parentcategory_id__in=category,
@@ -277,7 +287,7 @@ class ExportView(FormView):
                     'person__village__block__district__state_id','person__village__block__district__state__state_name', \
                     'person__village__block__district_id','person__village__block__district__district_name',\
                     'person__village__block_id','person__village__block__block_name',\
-                    'person__village_id','person__village__village_name', 'id')
+                    'person__village_id','person__village__village_name', 'id', 'time_created')
         
         data_list = pd.DataFrame(list(data_list))
         return data_list
@@ -411,7 +421,7 @@ class ExportView(FormView):
                    'start_date': date_range[0], 'end_date': date_range[1],
                    'file_id': file_id, 'data_list_count': data_list_count,
                    'table_data_count': table_data_count, 'district_reach': district_reach,
-                   'data_category': cd.get('data_category')}
+                   'data_category': cd.get('data_category'), 'data': cd.get('data')}
         template = "dataexport/table-data.html"
         return render(self.request, template, context)
 
