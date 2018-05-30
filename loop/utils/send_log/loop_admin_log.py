@@ -171,9 +171,9 @@ def save_aggregatorincentive_log(instance,adminUser,kwargs):
               model_id=model_id, admin_user=admin_user)
     log.save()
 
-def save_incentive_model_log(instance,AdminUser,kwargs):
+def save_incentive_model_log(instance,adminUser,kwargs):
     admin_user = adminUser
-    user = instance.user_created
+    user = None
     sender = 'IncentiveModel'
     model_id = instance.id
     district_id=None
