@@ -186,6 +186,8 @@ class Partner(LoopModel):
 
     def __unicode__(self):
         return "%s" % (self.name)
+post_save.connect(save_admin_log,sender=Partner)
+pre_delete.connect(save_admin_log,sender=Partner)
 
 
 class LoopUser(LoopModel):
@@ -236,6 +238,7 @@ class LoopUserAssignedMandi(LoopModel):
     loop_user = models.ForeignKey(LoopUser)
     mandi = models.ForeignKey(Mandi)
     is_visible = models.BooleanField(default=True)
+    near_mandi = models.BooleanField(default=False)
 
 
 post_save.connect(save_log, sender=LoopUserAssignedMandi)
@@ -661,6 +664,9 @@ class IncentiveModel(models.Model):
     def __function_name(self):
         return "%s" % (self.function_name)
 
+post_save.connect(save_admin_log,sender=IncentiveModel)
+pre_delete.connect(save_admin_log,sender=IncentiveModel)
+
 class AggregatorIncentive(LoopModel):
     aggregator = models.ForeignKey(LoopUser)
     start_date = models.DateField(auto_now=False)
@@ -676,6 +682,8 @@ class AggregatorIncentive(LoopModel):
     def __incentive_model__(self):
         return "%s" % (self.incentive_model.description)
 
+post_save.connect(save_admin_log,sender=AggregatorIncentive)
+pre_delete.connect(save_admin_log,sender=AggregatorIncentive)
 
 class AggregatorShareOutliers(LoopModel):
     aggregator = models.ForeignKey(LoopUser)

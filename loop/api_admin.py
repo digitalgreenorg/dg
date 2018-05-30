@@ -480,7 +480,7 @@ class PartnerResource(BaseResource):
         resource_name = 'partner'
         authorization = Authorization()
         authentication = ApiKeyAuthentication()
-        excludes = ('time_created', 'time_modified','is_visible')
+        excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
     def dehydrate(self,bundle):
@@ -593,8 +593,10 @@ class LoopUserAssignedVillageResource(BaseResource):
         queryset = LoopUserAssignedVillage.objects.all()
         allowed_methods = ['get','post', 'put','delete']
         resource_name = 'loopuserassignedvillage'
-        authorization = Authorization()
+        authorization = LoopUserAuthorization('loop_user__in')
         authentication = ApiKeyAuthentication()
+        include_resource_uri = False
+        excludes =('time_created','time_modified','user_created','user_modified')
     
     dehydrate_aggregator = partial(foreign_key_to_id, field_name='loop_user', sub_field_names=['id'])
     dehydrate_village = partial(foreign_key_to_id,field_name='village',sub_field_names=['id'])
@@ -1367,11 +1369,13 @@ class LoopUserAssignedMandiResource(BaseResource):
         limit = 0
         max_limit = 0
         queryset = LoopUserAssignedMandi.objects.all()
-        allowed_methods = ['post', 'put','delete']
+        allowed_methods = ['get','post', 'put','delete']
         always_return_data = True
         resource_name = 'loopuserassignedmandi'
-        authorization = Authorization()
+        authorization = LoopUserAuthorization('loop_user__in')
         authentication = ApiKeyAuthentication()
+        include_resource_uri = False
+        excludes =('time_created','time_modified','user_created','user_modified')
     
     dehydrate_aggregator = partial(foreign_key_to_id, field_name="loop_user", sub_field_names=["id"])
     dehydrate_mandi = partial(foreign_key_to_id,field_name="mandi", sub_field_names=["id"])
@@ -1449,7 +1453,7 @@ class AggregatorIncentiveResource(BaseResource):
     dehydrate_incentive_model = partial(
         foreign_key_to_id, field_name='incentive_model', sub_field_names=['id'])
 
-    hydrate_aggregator = partial(dict_to_foreign_uri, field_name='aggregator')
+    hydrate_aggregator = partial(dict_to_foreign_uri, field_name='aggregator',resource_name='loopuser')
     hydrate_incentive_model = partial(dict_to_foreign_uri, field_name='incentive_model')
 
     def dehydrate(self,bundle):

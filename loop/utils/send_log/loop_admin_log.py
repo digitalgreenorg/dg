@@ -154,6 +154,52 @@ def save_loopuserassignedvillage_log(instance,adminUser,kwargs):
               model_id=model_id, admin_user=admin_user)
     log.save()
 
+def save_aggregatorincentive_log(instance,adminUser,kwargs):
+    
+    admin_user = adminUser
+    user = instance.user_created
+    sender='AggregatorIncentive'
+    model_id = instance.id
+    district_id=None
+    try:
+        action = kwargs["created"]
+    except Exception:
+        action = -1
+
+    Log = get_model('loop', 'AdminLog')
+    log = Log(district=district_id, user=user, action=action, entry_table=sender,
+              model_id=model_id, admin_user=admin_user)
+    log.save()
+
+def save_incentive_model_log(instance,AdminUser,kwargs):
+    admin_user = adminUser
+    user = instance.user_created
+    sender = 'IncentiveModel'
+    model_id = instance.id
+    district_id=None
+    try:
+        action = kwargs["created"]
+    except Exception:
+        action = -1
+
+    Log =get_model('loop','AdminLog')
+    log = Log(district=district_id,user=user,action=action,entry_table=sender,model_id=model_id,admin_user=admin_user)
+    log.save()
+
+def save_partner_log(instance,AdminUser,kwargs):
+    admin_user = adminUser
+    user = instance.user_created
+    sender = 'Partner'
+    model_id = instance.id
+    district_id=None
+    try:
+        action = kwargs["created"]
+    except Exception:
+        action = -1
+    Log =get_model('loop','AdminLog')
+    log = Log(district=district_id,user=user,action=action,entry_table=sender,model_id=model_id,admin_user=admin_user)
+    log.save()    
+
 def save_district_block(instance,kwargs):
     AdminUser = get_model('loop','AdminUser')
     Mandi = get_model('loop','Mandi')
@@ -369,6 +415,15 @@ def save_admin_log(sender, **kwargs):
     elif sender == "Block":
         district_id = instance.district.id
 
+    elif sender == "Partner":
+        save_partner_log(instance,admin_user,kwargs)
+
+    elif sender == "AggregatorIncentive":
+        save_aggregatorincentive_log(instance,admin_user,kwargs)
+
+    elif sender =="IncentiveModel":
+        save_incentive_model_log(instance,admin_user,kwargs)
+
     Log = get_model('loop', 'AdminLog')
     log = Log(district=district_id, user=user, action=action, entry_table=sender,
               model_id=model_id, admin_user=admin_user)
@@ -436,6 +491,7 @@ def send_updated_admin_log(request):
     if request.method == 'POST':
         apikey = request.POST['ApiKey']
         timestamp = request.POST['timestamp']
+        
         if timestamp:
             try:
                 apikey_object = ApiKey.objects.get(key=apikey)
@@ -467,6 +523,9 @@ def send_updated_admin_log(request):
             LoopUserAssignedMandi = get_model('loop','loopuserassignedmandi')
             District = get_model('loop','District')
             Block = get_model('loop','Block')
+            AggregatorIncentive = get_model('loop','AggregatorIncentive')
+            IncentiveModel = get_model('loop','IncentiveModel')
+            Partner =get_model('loop','Partner')
 
             list_rows = []
             #AdminUser Log
@@ -488,14 +547,22 @@ def send_updated_admin_log(request):
                     list_rows.append(vrow)
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.id,entry_table__in=['AdminUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table='Partner'))
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table='IncentiveModel'))
+
             loopuser_querset=Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'],admin_user=None)
+
             for row in loopuser_querset:
                 try:
                     if LoopUser.objects.get(id=row.model_id) in loopusers:
                         list_rows.append(row)
                 except:
                     pass
+
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'],admin_user=requesting_admin_user))
+            
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table='AggregatorIncentive',user_id=requesting_admin_user.user_id))
+            
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp, entry_table__in=['MandiType'], admin_user=None))
             #Mandi Log
             list_rows.append(Log.objects.filter(
