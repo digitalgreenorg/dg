@@ -28,6 +28,7 @@ from coco.prepare_data import *
 from django.views.generic import View
 from tastypie.models import ApiKey
 import pandas as pd,os
+from django.db import IntegrityError
 
 
 def coco_v2(request):
@@ -189,40 +190,52 @@ def upload_csv_data(request):
                 if header == columns:
                     lines = file_data.split('\n')[1:]
                     for row in lines:
-                        row = row.split(',')
-                        block_obj, created = Block.objects.get_or_create(block_name__iexact=row[2].strip(),\
-                                                                        district_id=int(row[1]), \
-                                                                        defaults={'block_name': row[2].strip(), \
-                                                                                 'district_id':int(row[1])})
-                        if block_obj or created:
-                            village_obj, created = \
-                            Village.objects.get_or_create(village_name__iexact=row[3].strip(),block_id=block_obj.id,\
-                                                            defaults={'village_name':row[3].strip(), \
-                                                                    'block_id':block_obj.id})
-                            if village_obj or created:
-                                person_group, created = \
-                                PersonGroup.objects.get_or_create(group_name__iexact=row[4].strip(),\
-                                                                village_id=village_obj.id, \
-                                                                partner_id=int(row[0]),\
-                                                                defaults={'group_name': row[4].strip(),\
-                                                                'village_id':village_obj.id, \
-                                                                'partner_id':int(row[0])},)
-                                if person_group or created:
-                                    if row[8] != '' and row[8] != '\r':
-                                        person_obj, created = \
-                                        Person.objects.get_or_create(person_name=row[5], gender=row[6],\
-                                         village_id=village_obj.id,group_id=person_group.id, \
-                                         partner_id=int(row[0]), age=int(row[8]))
-                                    else:
-                                        person_obj, created = \
-                                        Person.objects.get_or_create(person_name=row[5], gender=row[6], \
-                                            village_id=village_obj.id, group_id=person_group.id, partner_id=int(row[0]))
+                        try:
+                            row = row.split(',')
+                            block_obj, created = Block.objects.get_or_create(block_name__iexact=row[2].strip(),\
+                                                                            district_id=int(row[1]), \
+                                                                            defaults={'block_name': row[2].strip(), \
+                                                                                     'district_id':int(row[1])})
+                            if block_obj or created:
+                                village_obj, created = \
+                                Village.objects.get_or_create(village_name__iexact=row[3].strip(),block_id=block_obj.id,\
+                                                                defaults={'village_name':row[3].strip(), \
+                                                                        'block_id':block_obj.id})
+                                if village_obj or created:
+                                    person_group, created = \
+                                    PersonGroup.objects.get_or_create(group_name__iexact=row[4].strip(),\
+                                                                    village_id=village_obj.id, \
+                                                                    partner_id=int(row[0]),\
+                                                                    defaults={'group_name': row[4].strip(),\
+                                                                    'village_id':village_obj.id, \
+                                                                    'partner_id':int(row[0])},)
+                                    if person_group or created:
+                                        if row[8] != '' and row[8] != '\r':
+                                            person_obj, created = \
+                                            Person.objects.get_or_create(person_name__iexact=row[5], gender=row[6],\
+                                             village_id=village_obj.id,group_id=person_group.id, \
+                                             partner_id=int(row[0]), age=int(row[8]), defaults={'person_name':row[5].strip(), \
+                                             'gender':row[6],'village_id':village_obj.id,'group_id':person_group.id, \
+                                             'partner_id':int(row[0]), 'age':int(row[8])})
+                                        else:
+                                            person_obj, created = \
+                                            Person.objects.get_or_create(person_name__iexact=row[5], gender=row[6],\
+                                             village_id=village_obj.id,group_id=person_group.id, \
+                                             partner_id=int(row[0]), defaults={'person_name':row[5].strip(), \
+                                             'gender':row[6],'village_id':village_obj.id,'group_id':person_group.id, \
+                                             'partner_id':int(row[0])})
+                        except IntegrityError as e:
+                            print e
+                            pass
+                        except Exception as e:
+                            print e
+                            add_message(request, 40, 'Unable to upload data, please contact system@digitalgreen.org for any issues')
                     add_message(request, 25, 'Data Successfully uploaded')
                 else:
                     add_message(request,40, "File Header is not in correct format")
             except Exception as e:
                 print e
-                pass
+                add_message(request, 40, 'Unable to upload data, please contact system@digitalgreen.org for any issues')
             return redirect(".")
         else:
             add_message(request, 40, "Please correct the errors below.")
@@ -244,7 +257,7 @@ def getFileHeader(request):
             response['Content-Disposition'] = 'attachment; filename=header_format.csv'
             return response
         except Exception as e:
-            print e
+            add_message(request, 40, 'Unable to download header format, contact system@digitalgreen.org for further information')
 
 
 
