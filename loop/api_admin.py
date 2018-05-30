@@ -1397,8 +1397,8 @@ class LoopUserAssignedMandiResource(BaseResource):
         try:
             loop_user = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
             mandi = Mandi.objects.get(id=bundle.data['mandi']['online_id'])
-            assignedMandi = LoopUserAssignedMandi.objects.filter(loop_user=loop_user,mandi=mandi)
-            assignedMandi.update(near_mandi=True)
+            #assignedMandi = LoopUserAssignedMandi.objects.filter(loop_user=loop_user,mandi=mandi)
+            bundle = super(LoopUserAssignedMandiResource,self).obj_update(bundle, **kwargs)
             # bundle = super(LoopUserAssignedMandiResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             loop_user = LoopUser.objects.get(id=bundle.data['aggregator']['online_id'])
