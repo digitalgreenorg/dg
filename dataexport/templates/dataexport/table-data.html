@@ -129,7 +129,7 @@
 <!-- ######################################################################################################-->
             <section id="Raw Data Analytics" class="about-bg">
         <div class="wrapper">
-          <div class="inner-wrapper">
+          <div class="inner-wrapper" style="padding-left: 10px">
             <h2 class="hdg-a hdg-source-lt layout-vr-md">Raw Data Analytics - Data Result</h2>
               <div class="media layout-vr-xlg">
               </br>
@@ -168,7 +168,7 @@
                     <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px;">Beneficiary Data</h2>
                     <section id="beneficiary-data" class="about-bg">
                       <div class="wrapper">
-                        <div class="inner-wrapper">
+                        <div class="inner-wrapper" style="padding-left: 10px">
                           <div class="row">
                             <div class="col-sm-12" style="overflow-x: auto">
                               {{ beneficiary_data_list | safe}}
@@ -184,7 +184,7 @@
                 <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px;">District Wise Viewers Reach</h2>
                     <section id="beneficiary-data" class="about-bg">
                       <div class="wrapper">
-                        <div class="inner-wrapper">
+                        <div class="inner-wrapper" style="padding-left: 10px">
                           <div class="row">
                             <div class="col-sm-12" style="overflow-x: auto">
                               {{ district_reach | safe}}
@@ -229,6 +229,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $('table').addClass('stripe');
+
     $('.dataframe').DataTable({
        dom: 'Bfrtip',
        buttons: [
@@ -236,6 +237,7 @@
      ]
      });
     $($('.dt-buttons')[0]).hide()
+    $('tr').css('text-align','left');
   });
 
 </script>

@@ -15,11 +15,21 @@
 
   <div class="wrapper">
     <div class="inner-wrapper">
-      <h2 class="hdg-a hdg-source-lt layout-vr-md">COCO - Upload Data</h2>
+      <span><h2 class="hdg-a hdg-source-lt layout-vr-md" style="display: inline;">COCO - Upload Data</h2>
+      <a href="{% url 'getfileheader' %}" id="header-download" class="btn btn-primary" style="margin-left: 50px;">Download File Header</a></span>
         {% for message in messages %}
-          <div class="errorlist alert alert-success" role="alert">
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="errorlist alert alert-success" role="alert">
+                {{ message }}
+            </div>
+          {% else %}
+            <div class="alert alert-success" role="alert">
               {{ message }}
-          </div>
+            </div>
+
+          {% endif %}
+
+
         {% endfor %}
       <div class="row">
         <div class="col-sm-12">
@@ -27,7 +37,7 @@
               {% csrf_token %}
               <div class="control-group">
                 {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
-                <label class="control-label col-sm-2" for="datafile">DataFile</label>
+                <label class="control-label col-sm-2" for="datafile"></label>
                 <div {% if form.datafile.errors %} class="col-sm-8" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
                   {{ form.datafile }}
                 </div>
@@ -35,6 +45,7 @@
               <br>
               <br>
               <button type="submit" id="upload" class="btn btn-success">Submit</button>
+
 
             </form>
         </div>
@@ -45,12 +56,22 @@
 </section>
 
 <script>
+  var maxSizeExceeded = false;
+  $("#id_datafile").change(function () {
+    $('#id_datafile-error').html('');
+    if(this.files[0].size / 1024 / 1024 > 2){
+        maxSizeExceeded = true;
+      }
+    else
+      maxSizeExceeded = false;
+  });
+
 $('form').validate({
    ignore: [],
    rules:{
        datafile: {
             required: true,
-            extension: "json"
+            extension: "csv"
         }
    },
    messages:{
@@ -60,7 +81,12 @@ $('form').validate({
         }
    },
    submitHandler: function(form) {
+    if(!maxSizeExceeded){
       form.submit();
+      }
+    else{
+      alert('Max upload limit is 2 MB');
+    }
     }
 })
 
