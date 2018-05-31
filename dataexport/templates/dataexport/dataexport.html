@@ -68,8 +68,6 @@
 							</div>
 							<label class="col-sm-3">{% if form.data.errors %}{{ form.country.errors}}{% endif %}</label>
 						</div>
-						<br>
-						<br>
 						<div class="form-group row">
 							<label for="data" class="col-sm-2 col-form-label">State</label>
 							<div {% if form.data.errors %} class="col-sm-7" {% else %} class="col-sm-7" {% endif %}>
@@ -78,9 +76,6 @@
 							<label class="col-sm-3">{% if form.state.errors %}{{ form.state.errors}}{% endif %}</label>
 						</div>
 
-
-						<br>
-						<br>
 						<div class="form-group row">
 							<div class="col-sm-2"></div>
 							<div class="col-sm-8">
@@ -114,7 +109,7 @@
 		$('#id_data').select2({placeholder: "Select data for screening or Adoption",allowClear: true});
 		$('#id_data_category').select2({placeholder: "Select data for health or Agriculture",allowClear: true});
 		$('#id_country').select2({placeholder: "Select Country",allowClear: true});
-		$('#id_state').select2();
+		$('#id_state').select2({});
 
 	});
 
