@@ -4,6 +4,8 @@ from django.views.generic.edit import FormView
 from django.db.models import *
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 import pandas as pd
 import numpy as np
 import operator, ast
@@ -92,7 +94,6 @@ class ExportView(FormView):
             data_list = \
                 Screening.objects.filter(date__range=date_range, parentcategory_id=1,
                                          village__block__district__state__country_id=country.id,
-                                         village__block__district__state_id__in=state
                                          ).exclude(farmers_attendance=None\
                                          ).values(
                                          'village_id', 'partner_id', 'partner__partner_name',\
@@ -292,6 +293,10 @@ class ExportView(FormView):
         data_list = pd.DataFrame(list(data_list))
         return data_list
        
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+      return super(ExportView, self).dispatch(*args, **kwargs)
+
     def form_valid(self, form):
         data = ''
         table_data_count = 0
