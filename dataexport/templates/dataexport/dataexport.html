@@ -20,6 +20,9 @@
 .error{
 	color: red;
 }
+.ml-30{
+	margin-top: 40px;
+}
 </style>
 
 <section id="upload-data" class="about-bg">
@@ -31,7 +34,7 @@
 				<div class="col-sm-12">
 					<form id="data-upload" class="form-horizontal" action="" method="post" enctype="multipart/form-data" target="_blank">
 						{% csrf_token %}
-						<div class="form-group row">
+						<div class="form-group row ml-30">
 
 
 							<label for="date_period" class="col-sm-2 col-form-label">Select Date</label>
@@ -44,7 +47,7 @@
 
 
 
-						<div class="form-group row">
+						<div class="form-group row ml-30">
 							<label for="data_category" class="col-sm-2 col-form-label">Data Category</label>
 							<div {% if form.data_category.errors %} class="col-sm-7" {% else %} class="col-sm-7" {% endif %}>
 								{{ form.data_category }}
@@ -53,7 +56,7 @@
 						</div>
 
 						
-						<div class="form-group row">
+						<div class="form-group row ml-30">
 							<label for="data" class="col-sm-2 col-form-label">Data</label>
 							<div {% if form.data.errors %} class="col-sm-7" {% else %} class="col-sm-7" {% endif %}>
 								{{ form.data }}
@@ -61,14 +64,14 @@
 							<label class="col-sm-3">{% if form.data.errors %}{{ form.data.errors}}{% endif %}</label>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row ml-30">
 							<label for="data" class="col-sm-2 col-form-label">Country</label>
 							<div {% if form.data.errors %} class="col-sm-7" {% else %} class="col-sm-7" {% endif %}>
 								{{ form.country }}
 							</div>
 							<label class="col-sm-3">{% if form.data.errors %}{{ form.country.errors}}{% endif %}</label>
 						</div>
-						<div class="form-group row">
+						<div class="form-group row ml-30">
 							<label for="data" class="col-sm-2 col-form-label">State</label>
 							<div {% if form.data.errors %} class="col-sm-7" {% else %} class="col-sm-7" {% endif %}>
 								{{ form.state }}
@@ -76,7 +79,7 @@
 							<label class="col-sm-3">{% if form.state.errors %}{{ form.state.errors}}{% endif %}</label>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row ml-30">
 							<div class="col-sm-2"></div>
 							<div class="col-sm-8">
 								<button type="submit" id="upload" class="btn btn-success pull-right">Submit</button>

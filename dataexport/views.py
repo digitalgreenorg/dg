@@ -229,7 +229,7 @@ class ExportView(FormView):
                                                        parentcategory_id__in=category,
                                                        person__village__block__district__state__country_id=country.id,
                                                        person__village__block__district__state_id__in=state).values('person_id',\
-                    'person__person_name','person__gender','video_id','video__title','date_of_adoption','partner_id',\
+                    'person__person_name','person__gender','person__phone_no', 'video_id','video__title','date_of_adoption','partner_id',\
                     'partner__partner_name','parentcategory_id','parentcategory__parent_category_name',\
                     'adopt_practice','adopt_practice_second','krp_one','krp_two','krp_three',\
                     'krp_four', 'krp_five','person__village__block__district__state__country_id', \
@@ -244,7 +244,7 @@ class ExportView(FormView):
                                                        parentcategory_id__in=category,
                                                        person__village__block__district__state__country_id=country.id,
                                                        ).values('person_id',\
-                    'person__person_name','person__gender','video_id','video__title','date_of_adoption','partner_id',\
+                    'person__person_name','person__gender','person__phone_no', 'video_id','video__title','date_of_adoption','partner_id',\
                     'partner__partner_name','parentcategory_id','parentcategory__parent_category_name',\
                     'adopt_practice','adopt_practice_second','krp_one','krp_two','krp_three',\
                     'krp_four', 'krp_five','person__village__block__district__state__country_id', \
@@ -262,7 +262,7 @@ class ExportView(FormView):
                                                        parentcategory_id__in=category,
                                                        person__village__block__district__state__country_id=country.id,
                                                        person__village__block__district__state_id__in=state).values('person_id',\
-                    'person__person_name','person__gender','video_id','video__title','date_of_adoption','partner_id',\
+                    'person__person_name','person__gender','person__phone_no', 'video_id','video__title','date_of_adoption','partner_id',\
                     'partner__partner_name','parentcategory_id','parentcategory__parent_category_name',\
                     'adopt_practice','adopt_practice_second','krp_one','krp_two','krp_three',\
                     'krp_four', 'krp_five','person__village__block__district__state__country_id', \
@@ -276,7 +276,7 @@ class ExportView(FormView):
                                                        parentcategory_id__in=category,
                                                        person__village__block__district__state__country_id=country.id,
                                                        ).values('person_id',\
-                    'person__person_name','person__gender','video_id','video__title','date_of_adoption','partner_id',\
+                    'person__person_name','person__gender','person__phone_no', 'video_id','video__title','date_of_adoption','partner_id',\
                     'partner__partner_name','parentcategory_id','parentcategory__parent_category_name',\
                     'adopt_practice','adopt_practice_second','krp_one','krp_two','krp_three',\
                     'krp_four', 'krp_five','person__village__block__district__state__country_id', \
@@ -368,6 +368,7 @@ class ExportView(FormView):
                                             'parentcategory__parent_category_name': 'Category Name', \
                                             'id': 'Screening Id', 'viewer_count': 'Viewer Count'})
             else:
+                import pdb;pdb.set_trace()
                 data = data[['person__village__block__district__state__country_id',
                              'person__village__block__district__state__country__country_name',
                              'person__village__block__district__state_id',
@@ -389,6 +390,7 @@ class ExportView(FormView):
                              'person_id',
                              'person__person_name',
                              'person__gender',
+                             'person__phone_no',
                              'adopt_practice',
                              'adopt_practice_second',
                              'krp_one',
@@ -419,6 +421,7 @@ class ExportView(FormView):
                                    'person_id': 'Person #ID',
                                    'person__person_name': 'Person Name',
                                    'person__gender': 'Gender',
+                                   'person__phone_no': 'Phone Number',
                                    'adopt_practice': 'Adopt Practice',
                                    'adopt_practice_second': 'Adopt Practice 2',
                                    'krp_one': 'KRP1',
