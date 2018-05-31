@@ -368,7 +368,6 @@ class ExportView(FormView):
                                             'parentcategory__parent_category_name': 'Category Name', \
                                             'id': 'Screening Id', 'viewer_count': 'Viewer Count'})
             else:
-                import pdb;pdb.set_trace()
                 data = data[['person__village__block__district__state__country_id',
                              'person__village__block__district__state__country__country_name',
                              'person__village__block__district__state_id',
