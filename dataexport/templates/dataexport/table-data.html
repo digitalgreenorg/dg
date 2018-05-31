@@ -230,15 +230,27 @@
   $(document).ready(function() {
     $('table').addClass('stripe');
 
+    $('.dataframe tfoot th').each( function () {
+        var title = $('.dataframe thead th').eq( $(this).index() ).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    } );
+
     $('.dataframe').DataTable({
-       dom: 'Bfrtip',
-       buttons: [
-         'excel'
-     ]
+           dom: 'Bfrtip',
+           buttons: [
+             'excel'
+         ]
      });
+    $(".dataframe tfoot input").on( 'keyup change', function () {
+        table
+            .column( $(this).parent().index()+':visible' )
+            .search( this.value )
+            .draw();
+    } );
     $($('.dt-buttons')[0]).hide()
     $('tr').css('text-align','left');
   });
+
 
 $('li[class=grid-rt]').click(function(){
     $('.user-dropdown').toggle();

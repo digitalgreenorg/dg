@@ -330,25 +330,109 @@ class ExportView(FormView):
             # converting the sliced data into data frame
             table_data = pd.DataFrame(table_data_list)
             data = pd.DataFrame(data_list)
-            data = data.rename(columns={'block__district__state__country_id':'Country Id',\
-                                        'block__district__state__country__country_name': 'Country Name',\
-                                        'block__district__state_id':'State Id',\
-                                        'block__district__state__state_name':'State Name',\
-                                        'block__district_id':'District Id',\
-                                        'block__district__district_name': 'District Name',\
-                                        'block_id': 'Block Id', 'block__block_name': 'Block Name',\
-                                        'village_id': 'Village Id', 'village__village_name': 'Village Name',\
-                                        'partner_id':'Partner Id', 'partner__partner_name': 'Partner Name',\
-                                        'videoes_screened': 'Video Id', 'title': 'Video Title', \
-                                        'date': 'Date', 'parentcategory_id':'Category', \
-                                        'parentcategory__parent_category_name': 'Category Name', \
-                                        'id': 'Screening Id', 'viewer_count': 'Viewer Count'})
+            if data_type == 1:
+                # ordering of columns
+                data = data[['block__district__state__country_id',
+                             'block__district__state__country__country_name',
+                             'block__district__state_id',
+                             'block__district__state__state_name',
+                             'block__district_id',
+                             'block__district__district_name',
+                             'block_id',
+                             'block__block_name',
+                             'village_id',
+                             'village_name',
+                             'partner_id',
+                             'partner__partner_name',
+                             'videoes_screened',
+                             'title',
+                             'date',
+                             'time_created',
+                             'parentcategory_id',
+                             'parentcategory__parent_category_name',
+                             'id',
+                             'viewer_count']]
+                data = data.rename(columns={'block__district__state__country_id':'Country Id',\
+                                            'block__district__state__country__country_name': 'Country Name',\
+                                            'block__district__state_id':'State Id',\
+                                            'block__district__state__state_name':'State Name',\
+                                            'block__district_id':'District Id',\
+                                            'block__district__district_name': 'District Name',\
+                                            'block_id': 'Block Id', 'block__block_name': 'Block Name',\
+                                            'village_id': 'Village Id', 'village_name': 'Village Name',\
+                                            'partner_id':'Partner Id', 'partner__partner_name': 'Partner Name',\
+                                            'videoes_screened': 'Video Id', 'title': 'Video Title', \
+                                            'date': 'Date', 
+                                            'time_created': 'System Date',
+                                            'parentcategory_id':'Category #ID', \
+                                            'parentcategory__parent_category_name': 'Category Name', \
+                                            'id': 'Screening Id', 'viewer_count': 'Viewer Count'})
+            else:
+                data = data[['person__village__block__district__state__country_id',
+                             'person__village__block__district__state__country__country_name',
+                             'person__village__block__district__state_id',
+                             'person__village__block__district__state__state_name',
+                             'person__village__block__district_id',
+                             'person__village__block__district__district_name',
+                             'person__village__block_id',
+                             'person__village__block__block_name',
+                             'person__village_id',
+                             'person__village__village_name',
+                             'partner_id',
+                             'partner__partner_name',
+                             'video_id',
+                             'video__title',
+                             'date_of_adoption',
+                             'time_created',
+                             'id',
+                             'parentcategory__parent_category_name',
+                             'person_id',
+                             'person__person_name',
+                             'person__gender',
+                             'adopt_practice',
+                             'adopt_practice_second',
+                             'krp_one',
+                             'krp_two',
+                             'krp_three',
+                             'krp_four',
+                             'krp_five'
+                             ]]
+
+                data = data.rename(columns={'person__village__block__district__state__country_id': 'Country #ID',
+                                   'person__village__block__district__state__country__country_name': 'Country Name',
+                                   'person__village__block__district__state_id': 'State #ID',
+                                   'person__village__block__district__state__state_name': 'State Name',
+                                   'person__village__block__district_id': 'District #ID',
+                                   'person__village__block__district__district_name': 'District Name',
+                                   'person__village__block_id': 'Block #ID',
+                                   'person__village__block__block_name': 'Block Name',
+                                   'person__village_id': 'Village #ID',
+                                   'person__village__village_name': 'Village Name',
+                                   'partner_id': 'Partner #ID',
+                                   'partner__partner_name': 'Partner Name',
+                                   'video_id': 'Video #ID',
+                                   'video__title':'Video Title',
+                                   'date_of_adoption': 'Date of Adoption',
+                                   'time_created': 'System Date',
+                                   'id': 'Adoption #ID',
+                                   'parentcategory__parent_category_name': 'Parent Category Name',
+                                   'person_id': 'Person #ID',
+                                   'person__person_name': 'Person Name',
+                                   'person__gender': 'Gender',
+                                   'adopt_practice': 'Adopt Practice',
+                                   'adopt_practice_second': 'Adopt Practice 2',
+                                   'krp_one': 'KRP1',
+                                   'krp_two': 'KRP2',
+                                   'krp_three': 'KRP3',
+                                   'krp_four': 'KRP4',
+                                   'krp_five': 'KRP5'})
+
             data_list_count = len(data)
             # for displying the table data we require less number of columns
             if data_type == 1:
                 # for screening we are specifying what columns we are displaying.
-                table_data = table_data[['block__district__state__country__country_name','block__district__state__state_name','block__district__district_name','block__block_name', 'village_name','partner__partner_name', 'videoes_screened', 'title', 'date', 'parentcategory__parent_category_name','id', 'viewer_count']]
-                table_data.columns = ['Country Name', 'StateName', \
+                table_data = table_data[['block__district__district_name','block__block_name', 'village_name','partner__partner_name', 'videoes_screened', 'title', 'date', 'parentcategory__parent_category_name','id', 'viewer_count']]
+                table_data.columns = [
                                         'DistrictName', 'BlockName', 'VillageName',\
                                         'PartnerName', 'Video Id', 'Video Title', 'Date', 'Category Name',
                                         'Screening#ID',
@@ -375,15 +459,12 @@ class ExportView(FormView):
                             'person__village__block__block_name',\
                             'person__village__village_name', 'partner__partner_name','video_id',\
                             'video__title','date_of_adoption','id', 'parentcategory__parent_category_name',\
-                            'person_id','person__person_name','person__gender','adopt_practice',\
-                            'adopt_practice_second','krp_one','krp_two','krp_three',\
-                            'krp_four', 'krp_five']]
+                            'person_id','person__person_name','person__gender']]
 
                 table_data.columns = ['Country Name', 'StateName', \
                                 'DistrictName', 'BlockName', 'VillageName',\
                                 'PartnerName', 'Video Id', 'Video Title', 'Date of Adoption', 'Adoption ID', 'Category Name',
-                                'Person Id','Person Name','Gender','Adopt Practice', 'Adopt Practice 2','Krp 1', 'Krp 2',\
-                                'Krp 3','Krp 4', 'Krp 5' 
+                                'Person Id','Person Name','Gender' 
                                 ]
             table_data_count = len(table_data)
             # we are saving the file on server and storing in table.This id will be used
