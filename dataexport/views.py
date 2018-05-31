@@ -6,11 +6,10 @@ from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-import pandas as pd
-import numpy as np
+
 import ast
-import time
 import os
+import pandas as pd
 from dataexport.forms import *
 from activities.models import *
 from dataexport.models import *

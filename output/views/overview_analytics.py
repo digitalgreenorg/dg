@@ -79,7 +79,6 @@ def overview_module(request):
 
         for iterable in table_data:
             if iterable['id'] == item[key]:
-                print "Match found\n"
                 try:
                     iterable['tot_per'] = int(tot_per.get(item.get(key)))
                 except Exception as e:
