@@ -1,5 +1,6 @@
 from django.shortcuts import *
 from django.http import Http404, HttpResponse
+from django.conf import settings
 import datetime
 
 from geographies.models import Block, Country, District, State, Village
@@ -31,7 +32,9 @@ def overview_module(request):
     tot_per = run_query_dict(shared_sql.overview(type='person',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
     tot_vil = run_query_dict(shared_sql.overview(type='village',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
     #Merging all dictionaries (vid_prod, tot_prac, etc) into one big one 'table_data'
-    if '72' in partners or partners == []:
+    
+    # calling the DoAg-AP sepecfic data.
+    if settings.AP_PARTNER_ID in partners or partners == []:
         key, ap_tot_per = shared_sql.ap_overview(type='person',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners)
     table_data = run_query(shared_sql.child_geog_list(geog=geog,id=id, from_date = from_date, to_date=to_date))
     for i in table_data:
@@ -67,7 +70,7 @@ def overview_module(request):
 
         i['geog'] =  geog_child
 
-    # now add the data ap specific data 
+    # Merging child geography for AP partner(DoAg-AP) into overall child geography.
     for item in ap_tot_per:
         if item.get(key) in tot_per.keys():
             tot_per[item.get(key)] = (int(item.get('ap_tot_per')) + int(tot_per[item.get(key)][0]),)

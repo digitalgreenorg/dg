@@ -8,12 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 import pandas as pd
 import numpy as np
-import operator, ast
-import xlsxwriter
+import ast
 import time
 import os
-
-from io import BytesIO
 from dataexport.forms import *
 from activities.models import *
 from dataexport.models import *
@@ -177,7 +174,7 @@ class ExportView(FormView):
             data_list_rendered = pd.merge(data_list_to_be_rendered, viewers_frame, on="id")
 
 
-            '''Beneficiary Data State Wise'''
+            # Beneficiary Data State Wise
             state_beneficiary_count_map = {}
             person_cat_map = {}
             queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range).select_related('screening').values('screening__village__block__district__state__state_name','person_id','category'))

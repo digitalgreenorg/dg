@@ -1,5 +1,4 @@
 from django import forms
-from django.forms.extras.widgets import SelectDateWidget
 from geographies.models import Country
 from geographies.models import State
 

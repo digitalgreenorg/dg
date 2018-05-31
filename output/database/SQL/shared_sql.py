@@ -1,6 +1,7 @@
 from output.database.utility import *
 from activities.models import AP_Screening
 from django.db.models import *
+from django.conf import settings
 
 #Query for the drop down menu in search box
 def search_drop_down_list(geog, geog_parent, id):
@@ -178,7 +179,6 @@ def ap_overview(geog, id, from_date, to_date, partners, type):
         geog_child = geog_list[geog_list.index(geog)+1]
 
     key = None
-    print "Geography is - ", geog, 'From Date - ', from_date, 'To Date - ', to_date, "GEO", id
     if geog is None:
         key = 'screening__village__block__district__state__country_id'
         ap_total_per = \
@@ -214,7 +214,6 @@ def ap_overview(geog, id, from_date, to_date, partners, type):
 
 # AP-Bluefrog specific data
 def ap_screening_overview(geog, id, from_date, to_date, partners):
-    print "Geography is - ", geog, 'From Date - ', from_date, 'To Date - ', to_date, "GEO", id
     if geog is None:
         ap_total_per = \
              AP_Screening.objects.filter(screening__date__range=[from_date, to_date]).aggregate(ap_tot_per=Sum('total_members'))

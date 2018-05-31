@@ -27,7 +27,6 @@ from activities.models import PersonAdoptPractice
 from coco.prepare_data import *
 from django.views.generic import View
 from tastypie.models import ApiKey
-import pandas as pd,os
 from django.db import IntegrityError
 
 
