@@ -629,6 +629,8 @@ class GaddidarResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
+            bundle.date['gaddidar_name'] = bundle.data['gaddidar_name_en']
         return bundle
 
 class VehicleLanguageResource(BaseResource):

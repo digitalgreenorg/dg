@@ -107,11 +107,11 @@ class AdminUserAdmin(admin.ModelAdmin):
 
 
 class FarmerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'phone', '__village__', 'correct_phone_date', 'registration_sms')
-    search_fields = ['name', 'phone', 'village__village_name_en']
+    list_display = ('id', 'name', 'phone', '__village__', 'correct_phone_date', 'registration_sms', 'farmer_name_en')
+    search_fields = ['name', 'phone', 'village__village_name_en', 'farmer_name_en']
     list_filter = ['village__village_name_en', 'village__block__district__district_name_en', 'village__block__district__state__state_name_en',
                    'village__block__district__state__country']
-    list_editable = ['registration_sms']
+    list_editable = ['registration_sms', 'farmer_name_en']
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "village":
              kwargs["queryset"] = Village.objects.all().order_by('village_name_en',)
