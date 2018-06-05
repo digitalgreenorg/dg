@@ -28,6 +28,7 @@ def send_duplicate_message(obj_id):
     raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def foreign_key_to_id(bundle, field_name, sub_field_names):
+    #import pdb;pdb.set_trace()
     field = getattr(bundle.obj, field_name)
     if (field == None):
         dict = {}
@@ -42,7 +43,7 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict.get('online_id'):
-        bundle.data[field_name] = "/loop/api/v1/%s/%s/" % (resource_name if resource_name else field_name,
+        bundle.data[field_name] = "/loop/api/v2/%s/%s/" % (resource_name if resource_name else field_name,
                                                            str(field_dict.get('online_id')))
     else:
         bundle.data[field_name] = None
@@ -52,7 +53,7 @@ def dict_to_foreign_uri(bundle, field_name, resource_name=None):
 def id_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict:
-        bundle.data[field_name] = "/loop/api/v1/%s/%s/" % (resource_name if resource_name else field_name,
+        bundle.data[field_name] = "/loop/api/v2/%s/%s/" % (resource_name if resource_name else field_name,
                                                            str(field_dict))
     else:
         bundle.data[field_name] = None
@@ -64,7 +65,7 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     resource_uri_list = []
     for item in m2m_list:
         try:
-            resource_uri_list.append("/loop/api/v1/%s/%s/" %
+            resource_uri_list.append("/loop/api/v2/%s/%s/" %
                                      (resource_name, str(item.get('id'))))
         except:
             return bundle
@@ -342,7 +343,7 @@ class DistrictResource(BaseResource):
         return bundle
 
 class BlockResource(BaseResource):
-    district = fields.ForeignKey(DistrictResource, 'district', full=True)
+    district = fields.ForeignKey(DistrictResource, 'district')
 
     class Meta:
         limit = 0
@@ -363,7 +364,7 @@ class BlockResource(BaseResource):
         return bundle
 
 class VillageResource(BaseResource):
-    block = fields.ForeignKey(BlockResource, 'block', full=True)
+    block = fields.ForeignKey(BlockResource, 'block')
 
     class Meta:
         limit = 0
@@ -493,8 +494,8 @@ class LoopUserResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     preferred_language = fields.ForeignKey(LanguageResource,'preferred_language')
     partner = fields.ForeignKey(PartnerResource,'partner')
-    assigned_villages = fields.ListField()
-    assigned_mandis = fields.ListField()
+    #assigned_villages = fields.ListField()
+    #assigned_mandis = fields.ListField()
 
     class Meta:
         limit = 0
@@ -778,7 +779,7 @@ class MandiResource(BaseResource):
 
 
 class GaddidarResource(BaseResource):
-    mandi = fields.ForeignKey(MandiResource, 'mandi', full=True)
+    mandi = fields.ForeignKey(MandiResource, 'mandi')
 
     class Meta:
         limit = 0
@@ -791,8 +792,7 @@ class GaddidarResource(BaseResource):
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
-        dehydrate_mandi = partial(
-            foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
+        dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
         hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def obj_create(self, bundle, request=None, **kwargs):
@@ -817,10 +817,9 @@ class GaddidarResource(BaseResource):
             send_duplicate_message(int(attempt[0].id))
         return bundle
 
-    hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
-
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
+        bundle.data['mandi']= foreign_key_to_id(bundle,"mandi",["id"])
         return bundle
 
 
