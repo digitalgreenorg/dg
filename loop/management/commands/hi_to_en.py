@@ -25,13 +25,13 @@ class Command(BaseCommand):
             farmer_list = Farmer.objects.all()
             print farmer_list.count()
             for farmer in farmer_list:
-                farmer.farmer_name_en = self.translate_text(farmer.name)
+                farmer.farmer_name_en = self.translate_text(farmer.name).text
                 farmer.save()
 
         if options.get('table') == 'transporter':
             transporter_list = Transporter.objects.all()
             print transporter_list.count()
             for transporter in transporter_list:
-                transporter.transporter_name_en = self.translate_text(transporter.transporter_name)
+                transporter.transporter_name_en = self.translate_text(transporter.transporter_name).text
                 transporter.save()
 
