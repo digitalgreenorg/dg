@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css' type="text/css" href="">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
   </head>
 
   <body class="page-body">
@@ -33,8 +36,61 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+
+    <script type="text/javascript">
+  jQuery(document).ready(function ($) {
+   start_date = "", end_date = ""
+   $('input[name="date_period"]').daterangepicker({
+    autoUpdateInput: true,
+    locale: {
+        format: 'YYYY-MM-DD'
+      },
+      autoApply:true,
+      maxDate: new Date(),
+      maxSpan:{
+        'years': 1
+      }
+   })
+
+    $('#id_data').select2({placeholder: "Select data for screening or Adoption",allowClear: true});
+    $('#id_data_category').select2({placeholder: "Select data for health or Agriculture",allowClear: true});
+    $('#id_country').select2({placeholder: "Select Country",allowClear: true});
+    $('#id_state').select2({});
+
+  });
+
+</script>
+
+<script type="text/javascript">
+  $('#id_country').on('change', function() {
+    $("#id_state").html('').select2({data: [{id: '', text: ''}]});
+    // $('#id_state').val('').trigger('change');
+    var country_id = $("#id_country option:selected").val();
+      $.ajax({
+        type: "GET",
+        url: "/coco/export/get/state/"+country_id+'/',
+        datatype: 'json',
+        success: function(data){
+          console.log(data)
+           $("#id_state").select2({data: data.results});
+        }
+      });
+    });
+
+$('li[class=grid-rt]').click(function(){
+    $('.user-dropdown').toggle();
+   })
+
+</script>
     <!-- Custom Scroller Js CDN -->    
 
 </body></html>

@@ -5,73 +5,57 @@
         <h4>Filters</h4>
     </div>
 
-    <form name="form-filters" class="data-filter-form m-t-30" method="post" novalidate="">
-      <input type="hidden" name="csrfmiddlewaretoken" value="RgGPFReHpQAPcFdShGUqlPDfU7ZDOovxqUzmabxRqVihv16K3ZgzCX5ikQkO2DBv">
-      <div class="form-group ">
-          <label for="crop_type">Crop Type</label><br>
-          <select class="form-control" name="user__blast__crop_type">
-              <option value="">-- All --</option>
-              <option value="0" class="bold">Groundnut</option>
-              <option value="1" class="bold">Paddy</option>
-          </select>
-          <span class="help-block"></span>
-      </div>
-      
-      <div class="form-group">
-        <label for="village">Village</label><br>
-        <select class="form-control" name="user__village">
-            <option value="">-- All --</option>
-            <option value="0" class="bold">
-            Palavoi</option>
-        </select>
-        <span class="help-block"></span>
-      </div>
-      
-      <div class="form-group ">
-          <label for="stage_of_crop">Stage of Crop Cycle</label><br>
-          <select class="form-control" name="user__blast__stage_of_crop">
-              <option value="">-- All --</option>
-              <option value="0" class="bold">
-              Seedling</option>
-          </select>
+    <form name="form-filters" class="data-filter-form m-t-30" novalidate="" id="data-upload" action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+            <label for="date_period" class="col-sm-12 col-form-label">Select Date</label>
+            <div class="form-group row ml-30">
+              <div {% if form.date_period.errors %} class="col-sm-12" {% else %} class="col-sm-12" {% endif %}>
+                {{ form.date_period }}
+              </div>
+              <label class="col-sm-12">{% if form.date_period.errors %}{{ form.date_period.errors}}{% endif %}</label>
+            </div>
 
-          <span class="help-block"></span>
-      </div>
 
-      <div class="form-group ">
-        <label for="user__blast">Blast</label><br>
-        <select class="form-control" name="user__blast">
-            <option value="">-- All --</option>
-            
-            <option value="52" class="bold">
-            R Beejamrutham</option>
-            
-            <option value="53" class="bold">
-            R Ghanajeevamrutham</option>
-            
-            <option value="54" class="bold">
-            R Dravajeevamrutham</option>
-            
-            <option value="55" class="bold">
-            R Neemasthram</option>
-            
-            <option value="56" class="bold">
-            R Tonic</option>
-            
-            <option value="57" class="bold">
-            R Vavilaaku Kashaayam</option>
-            
-            <option value="58" class="bold">
-            R Pullati Majiga</option>
-            
-        </select>
-        <span class="help-block"></span>
-      </div>
-        
-      <div class="form-group m-t-30">
-          <button type="submit" class="btn btn-primary pull-right m-l-10">Apply</button>
-          <button type="button" id="btn-reset" class="btn btn-warning pull-right" onclick="window.location.href=document.URL">Reset</button>
-      </div>
+            <label for="data_category" class="col-sm-12 col-form-label">Data Category</label>
+            <div class="form-group row ml-30">
+              
+              <div {% if form.data_category.errors %} class="error errorlist col-sm-12" {% else %} class="col-sm-12" {% endif %}>
+                {{ form.data_category }}
+              </div>
+              <label class="col-sm-12">{% if form.data_category.errors %}{{ form.data_category.errors}}{% endif %}</label>
+            </div>
+
+            <label for="data" class="col-sm-12 col-form-label">Data</label>
+            <div class="form-group row ml-30">
+              
+              <div {% if form.data.errors %} class="col-sm-12" {% else %} class="col-sm-12" {% endif %}>
+                {{ form.data }}
+              </div>
+              <label class="col-sm-12">{% if form.data.errors %}{{ form.data.errors}}{% endif %}</label>
+            </div>
+
+            <label for="data" class="col-sm-12 col-form-label">Country</label>
+            <div class="form-group row ml-30">
+              <div {% if form.data.errors %} class="col-sm-12" {% else %} class="col-sm-12" {% endif %}>
+                {{ form.country }}
+              </div>
+              <label class="col-sm-12">{% if form.data.errors %}{{ form.country.errors}}{% endif %}</label>
+            </div>
+
+            <label for="data" class="col-sm-12 col-form-label">State</label>
+            <div class="form-group row ml-30">
+              
+              <div {% if form.data.errors %} class="col-sm-12" {% else %} class="col-sm-12" {% endif %}>
+                {{ form.state }}
+              </div>
+              <label class="col-sm-12">{% if form.state.errors %}{{ form.state.errors}}{% endif %}</label>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-sm-12">
+                <button type="submit" id="upload" class="col-sm-8 btn btn-primary float-right">Submit</button>
+              </div>
+            </div>
 
     </form>
   </div>
@@ -80,16 +64,17 @@
   <div id="page-content-wrapper">
     <div class="container-fluid">
 
+      
       <div class="row">
         <div class="col-sm-12 p-l-0">
-          <h4>Key Performance Indicators</h4>
+          <h4>Key Statistics</h4>
         </div>
       </div>
 
       <div class="row">
         <!-- Pickup Rate -->
         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
-          <div class="tile-stats white-bg m-5 border-1">
+          <div class="tile-stats white-bg border-1">
                             <span class="icon-help icon-question" data-html="true" data-toggle="popover" data-placement="bottom" data-content="The percentage of the total number of farmers who picked up the call out of all farmers that was attempted across platform. <br><br><i>Note: The total number of groundnut sowing farmers are 330.<i>" data-trigger="hover" data-original-title="" title=""></span>
 
             <div class="row">
@@ -108,7 +93,7 @@
 
         <!-- Average Listen Duration -->
         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
-          <div class="tile-stats white-bg m-5 border-1">
+          <div class="tile-stats white-bg border-1">
                             <span class="icon-help icon-question" data-toggle="popover" data-placement="bottom" data-content="This is the average listen duration across platform for reinforcement messages." data-trigger="hover" data-original-title="" title=""></span>
 
             <div class="row">
@@ -127,7 +112,7 @@
         
         <!-- Average Supplementary Messages heard per Farmer -->
         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
-          <div class="tile-stats white-bg m-5 border-1">
+          <div class="tile-stats white-bg border-1">
                             <span class="icon-help icon-question" data-toggle="popover" data-placement="bottom" data-content="This depicts, on average how many supplementary messages were heard per farmer. Supplementary messages are quick flash information messages which carries key points from reinforcement messages to be conveyed to farmers." data-trigger="hover" data-original-title="" title=""></span>
 
             <div class="row">
@@ -146,7 +131,7 @@
 
         <!-- Average Reinforcement Messages heard per Farmer -->
         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
-          <div class="tile-stats white-bg m-5 border-1">
+          <div class="tile-stats white-bg border-1">
                             <span class="icon-help icon-question" data-toggle="popover" data-placement="bottom" data-content="This depicts, on average how many reinforcement messages were heard per farmer. Reinforcement messages are the messages of the different practices of which are being screened on ground via video dissemination." data-trigger="hover" data-original-title="" title=""></span>
 
             <div class="row">
@@ -162,8 +147,11 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
         
-
+{% comment %}
         <!-- Total Calls on opt in Line -->
         <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
           <div class="tile-stats white-bg m-5 border-1">
@@ -203,60 +191,6 @@
         </div>
       </div>
 
-      <!------------------------------ Comparative Analysis --------------------------->
-      <div class="row m-t-25">
-        <div class="col-sm-12">
-          <div class="panel panel-default chart-box">
-            <div class="panel-head chart-box-header">
-              <div class="row">
-                <div class="col-sm-10">
-                  <h6 class="text-uppercase">
-                    Comparative Analysis
-                    <i class="icon-question p-b-40" data-toggle="popover" data-html="true" data-placement="bottom" data-content="This graph depicts the comparative analysis of cluster wise screenings and adoptions with their respective listen rate across all practices." data-trigger="hover" data-original-title="" title=""></i>
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-sm-12 chart-bar"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-                  <canvas id="adoptions_graph" class="chart chart-custom m-t-20 chartjs-render-monitor" width="968" height="420" style="display: block; width: 968px; height: 420px;">
-                  </canvas>
+      {% endcomment %}
 
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!------------------------------ Comparative Analysis video vs video+ivr + control group --------------------------->
-      <div class="row m-t-25">
-        <div class="col-sm-12">
-          <div class="panel panel-default chart-box">
-            <div class="panel-head chart-box-header">
-              <div class="row">
-                <div class="col-sm-10">
-                  <h6 class="text-uppercase">
-                    Comparative Analysis- Video vs Video+IVR vs Control Group
-                    <i class="icon-question p-b-40" data-toggle="popover" data-html="true" data-placement="bottom" data-content="The graph depicts a comparative analysis of three different data sets of farmers with their respective adoption rates: a. The treatment group farmers are exposed to video screenings, followed by voice messages. b.Among the treatment group, there were farmers who just attended the video screenings and c. The control group farmers are exposed to only video screenings in a different geography.<br><br><i>Note: The listen rate is calculated by considering the farmers who heard the voice message (reinforcement) for >=50% of the call duration.</i>" data-trigger="hover" data-original-title="" title=""></i>
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-sm-12 chart-bar"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-                  <canvas id="control_treatment_graph" class="chart chart-custom m-t-20 chartjs-render-monitor" width="968" height="420" style="display: block; width: 968px; height: 420px;">
-                  </canvas>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
+    
