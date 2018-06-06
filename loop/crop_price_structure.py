@@ -3,6 +3,7 @@ class CropMandiData:
         self.crop_id = kwargs['crop_id']
         self.mandi_id = kwargs['mandi_id']
         self.price_details = []
+        self.latest_price_date = None
     
 class PriceDetails:
     def __init__(self, **kwargs):

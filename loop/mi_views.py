@@ -102,13 +102,17 @@ def get_crop_prices(request):
         # Creation of JSON
         res = []
         for i, r in df:
+            # Assigning min date
+            latest_price_date = pd.Timestamp('2015-01-01')
             cropmandidata = CropMandiData(crop_id=i[0], mandi_id= i[1])
             for index, row in r.iterrows():
                 crop, mandi, date, Av_Rate, STD, PriceMax, PriceMin = row['Crop'], row['Market_Real'], row['Date'], row['Av_Ratemean'], row['STDmean'], row['Pricemax'], row['Pricemin']
                 delta = PriceMax - PriceMin
+                latest_price_date = max(latest_price_date, date)
                 priceobj = PriceDetails(date=str(date), std=round(STD, 2), min_price=round(PriceMin, 2), max_price=round(PriceMax, 2),\
                                     delta=round(delta, 2), avg_price=round(Av_Rate, 2))
                 cropmandidata.price_details.append(priceobj.__dict__)
+            cropmandidata.latest_price_date = str(latest_price_date)
             res.append(cropmandidata.__dict__)
         
         data = json.dumps(res)
