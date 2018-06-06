@@ -21,6 +21,7 @@ table.dataTable {
 
 #sidebar-wrapper.active {
     margin-left: -290px;
+    position: absolute;
 }
 
 #wrapper {
@@ -6185,7 +6186,7 @@ hr {
 /* sidebar */
 #sidebar-wrapper {
   z-index: 1000;
-  position: absolute;
+  position: fixed;
   left: 0;
   height: 100%;
   /*overflow-y: auto;*/
