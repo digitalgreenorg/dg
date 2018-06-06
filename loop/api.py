@@ -44,6 +44,10 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
         # dict["online_id"] = dict['id']
     return dict
 
+def check_user_language(bundle, sub_field, sub_field_to_use):
+    if LoopUser.objects.get(user__username=bundle.request.user).preferred_language.name == "English":
+        bundle.data[sub_field] = bundle.data[sub_field_to_use]
+    return bundle
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
@@ -329,8 +333,9 @@ class VillageResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
-            bundle.data['village_name'] = bundle.data['village_name_en']
+        check_user_language(bundle,'village_name', 'village_name_en')
+        # if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
+        #     bundle.data['village_name'] = bundle.data['village_name_en']
         return bundle
 
 
@@ -391,7 +396,8 @@ class FarmerResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
+
+#        bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
         return bundle
 
     def is_phone_valid(self,bundle):
@@ -604,8 +610,9 @@ class MandiResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
-            bundle.data['mandi_name'] = bundle.data['mandi_name_en']
+        check_user_language(bundle, 'mandi_name', 'mandi_name_en')
+        # if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
+        #     bundle.data['mandi_name'] = bundle.data['mandi_name_en']
         return bundle
 
 
@@ -629,8 +636,10 @@ class GaddidarResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
-            bundle.data['gaddidar_name'] = bundle.data['gaddidar_name_en']
+        check_user_language(bundle, 'gaddidar_name', 'gaddidar_name_en')
+
+        # if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
+        #     bundle.data['gaddidar_name'] = bundle.data['gaddidar_name_en']
         return bundle
 
 class VehicleLanguageResource(BaseResource):
