@@ -654,8 +654,10 @@ class FarmerMandiResource(BaseResource):
         foreign_key_to_id, field_name='farmer', sub_field_names=['id'])
     dehydrate_mandi = partial(
         foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
-    hydrate_village = partial(dict_to_foreign_uri, field_name='farmer')
-    hydrate_village = partial(dict_to_foreign_uri, field_name='mandi')
+    hydrate_farmer = partial(
+        dict_to_foreign_uri, field_name='farmer')
+    hydrate_mandi = partial(
+        dict_to_foreign_uri, field_name='mandi')
 
     def obj_create(self, bundle, request=None, **kwargs):
         farmer = Farmer.objects.get(id=bundle.data["farmer"]["online_id"])

@@ -364,6 +364,7 @@ class FarmerMandi(LoopModel):
     farmer = models.ForeignKey(Farmer)
     mandi = models.ForeignKey(Mandi)
     transaction_count = models.IntegerField(default=0)
+    volume = models.FloatField(default=0.0)
     
     def __unicode__(self):
         return "%s (%s)" % (self.farmer.name, self.farmer.village.village_name_en)

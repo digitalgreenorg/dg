@@ -2,7 +2,7 @@ import os
 import sys
 from django.core.management.base import BaseCommand, CommandError
 from loop.models import *
-from django.db.models import Count,Min
+from django.db.models import Count,Min,Sum
 
 class Command(BaseCommand):
     help = '''This command updates stats displayed on Loop dashboard. '''
@@ -38,3 +38,11 @@ class Populate():
 			farmer =farmers.get(id=transactionObject['farmer'])
 			farmer.transaction_count = transactionObject['transaction_count']
 			farmer.save()		
+
+	def updateFarmerVolumeData(self):
+		farmers = Farmer.objects.filter(volume=0)
+		farmerTransactions = CombinedTransaction.objects.filter(farmer__in=farmers).values('farmer').annotate(transaction_count=Sum('quantity',distinct=True))
+		for transactionObject in farmerTransactions:
+			farmer =farmers.get(id=transactionObject['farmer'])
+			farmer.transaction_count = transactionObject['transaction_count']
+			farmer.save()	

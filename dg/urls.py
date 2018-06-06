@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 
 from dg.settings import PRODUCT_PAGE
 
-import coco.urls
+#import coco.urls
 #import data_upload.urls
 import dimagi.urls
 import feeds.urls
