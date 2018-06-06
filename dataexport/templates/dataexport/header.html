@@ -1,41 +1,11 @@
-{% extends 'dataexport/base.html' %}
 
-{% block header %}
-	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-      <a  class="my-0 mr-md-auto font-weight-normal" href="www.digitalgreen.org"><img style="width:200px;height:34px;" class="" src="{{ STATIC_URL }}dataexport/img/dg_logo_horizontal.png" /></a>
+	<div class="fixed-top d-flex flex-column flex-md-row align-items-center p-3 px-md-4 bg-white border-bottom box-shadow">
+      <a  class="my-0 mr-md-auto font-weight-normal" href="/coco/export/"><img style="width:200px;height:34px;" class="" src="{{ STATIC_URL }}dataexport/img/dg_logo_horizontal.png" /></a>
       <nav class="my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark" href="https://getbootstrap.com/docs/4.0/examples/pricing/#">Raw Data</a>
-        <a class="p-2 text-dark" href="https://getbootstrap.com/docs/4.0/examples/pricing/#">Upload Data</a>
-        <a class="p-2 text-dark" href="https://getbootstrap.com/docs/4.0/examples/pricing/#">Extraction Tool</a>
+        <a class="p-2 text-dark" href="">Raw Data</a>
+        <a class="p-2 text-dark" href="">Upload Data</a>
+        <a class="p-2 text-dark" href="">Extraction Tool</a>
       </nav>
       <a class="btn btn-outline-primary" href="https://getbootstrap.com/docs/4.0/examples/pricing/#">Sign up</a>
     </div>
 
-{% endblock %}
-
-{% block sidebar %}
-<div class="wrapper">
-
-        <nav id="sidebar">
-            <!-- Sidebar Header -->
-            <div class="sidebar-header">
-                <h3>Collapsible Sidebar</div>
-            </div>
-
-            <!-- Sidebar Links -->
-            <ul class="list-unstyled components">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><!-- Link with dropdown items -->
-                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
-                    <ul class="collapse list-unstyled" id="homeSubmenu">
-                        <li><a href="#">Page</a></li>
-                        <li><a href="#">Page</a></li>
-                        <li><a href="#">Page</a></li>
-                    </ul>
-                <li><a href="#">Portfolio</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-</div>
-{% endblock %}
