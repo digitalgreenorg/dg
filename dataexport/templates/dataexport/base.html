@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="https://getbootstrap.com/favicon.ico">
-
     <title>Data Export</title>
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
@@ -17,7 +15,7 @@
     <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css' type="text/css" href="">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
   </head>
 
   <body class="page-body">
@@ -44,6 +42,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 
 
     <script type="text/javascript">
@@ -86,9 +86,85 @@
       });
     });
 
-$('li[class=grid-rt]').click(function(){
+  $('li[class=grid-rt]').click(function(){
     $('.user-dropdown').toggle();
    })
+
+   
+
+       $("#data-extract").submit(function(event){
+        event.preventDefault();
+        var data = $('#data-extract').serialize();
+            $.ajax({
+                 type:"POST",
+                 url:"/coco/export/",
+                 data: data,
+                 dataType: 'html',
+                 success: function(response){
+                   $('#wrapper-demo').html(response) 
+                   $('table').addClass('table table-hover table-no-bordered');
+
+                      $('.dataframe tfoot th').each( function () {
+                        var title = $('.dataframe thead th').eq( $(this).index() ).text();
+                        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+                      } );
+
+                      $('.dataframe').DataTable({
+                       dom: 'Bfrtip',
+                       buttons: [
+                       'excel'
+                       ]
+                     });
+                      $(".dataframe tfoot input").on( 'keyup change', function () {
+                        table
+                        .column( $(this).parent().index()+':visible' )
+                        .search( this.value )
+                        .draw();
+                      } );
+                      $($('.dt-buttons')[0]).hide()
+                      $('tr').css('text-align','left');
+                    
+                  },
+                  error: function(error){
+                    console.log(error)
+                  }
+            });
+            return false;
+       });
+
+
+
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('table').addClass('stripe');
+
+    $('.dataframe tfoot th').each( function () {
+      var title = $('.dataframe thead th').eq( $(this).index() ).text();
+      $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    } );
+
+    $('.dataframe').DataTable({
+     dom: 'Bfrtip',
+     buttons: [
+     'excel'
+     ]
+   });
+    $(".dataframe tfoot input").on( 'keyup change', function () {
+      table
+      .column( $(this).parent().index()+':visible' )
+      .search( this.value )
+      .draw();
+    } );
+    $($('.dt-buttons')[0]).hide()
+    $('tr').css('text-align','left');
+  });
+
+
+  $('li[class=grid-rt]').click(function(){
+    $('.user-dropdown').toggle();
+  })
 
 </script>
     <!-- Custom Scroller Js CDN -->    

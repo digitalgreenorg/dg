@@ -6,6 +6,7 @@ from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.template.loader import render_to_string
 
 import ast
 import os
@@ -507,7 +508,8 @@ class ExportView(FormView):
                    'table_data_count': table_data_count, 'district_reach': district_reach,
                    'data_category': cd.get('data_category'), 'data': cd.get('data')}
         template = "dataexport/table-data.html"
-        return render(self.request, template, context)
+        html = render_to_string(template, context=context)
+        return HttpResponse(html)
 
 
 
@@ -534,5 +536,10 @@ class GetState(View):
             item['value'] = int(item.get('id'))
             del item['state_name']
         return JsonResponse({'results': results})
+
+
+
+
+
 
 

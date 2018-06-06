@@ -2,10 +2,10 @@
   
   <div id="sidebar-wrapper" class="toggled">
     <div class="text-left">
-        <h4>Filters</h4>
+        <h4>Select Filters</h4>
     </div>
 
-    <form name="form-filters" class="data-filter-form m-t-30" novalidate="" id="data-upload" action="" method="post" enctype="multipart/form-data">
+    <form name="form-filters" class="data-filter-form m-t-30" id="data-extract" action="">
       {% csrf_token %}
             <label for="date_period" class="col-sm-12 col-form-label">Select Date</label>
             <div class="form-group row ml-30">
@@ -53,7 +53,7 @@
 
             <div class="form-group row">
               <div class="col-sm-12">
-                <button type="submit" id="upload" class="col-sm-8 btn btn-primary float-right">Submit</button>
+                <button type="submit" id="extract" class="col-sm-8 btn btn-primary float-right">Submit</button>
               </div>
             </div>
 
@@ -148,49 +148,15 @@
           </div>
         </div>
       </div>
+
+      <div id="wrapper-demo" class="row" style="overflow-x: auto;">
+      </div>
+    
+
     </div>
   </div>
-        
-{% comment %}
-        <!-- Total Calls on opt in Line -->
-        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
-          <div class="tile-stats white-bg m-5 border-1">
-                            <span class="icon-help icon-question" data-html="true" data-toggle="popover" data-placement="bottom" data-content="The percentage of the total number of farmers who picked up the call out of all farmers that was attempted across platform. <br><br><i>Note: The total number of groundnut sowing farmers are 330.<i>" data-trigger="hover" data-original-title="" title=""></span>
 
-            <div class="row">
-              <div class="col-sm-3">
-                <div class="dashboard-icon">
-                  <i class="icon-call-in"></i>
-                </div>
-              </div>
-              <div class="col-sm-9 stats-text ">
-                <h5> 835</h5>
-                <h6>Total Calls on Opt-In-Line</h6>
-              </div>
-            </div>
-          </div>
-        </div>
+  
 
-        <!-- Unique users reached -->
-        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
-          <div class="tile-stats white-bg m-5 border-1">
-                          <span class="icon-help icon-question" data-html="true" data-toggle="popover" data-placement="bottom" data-content="The percentage of the total number of farmers who picked up the call out of all farmers that was attempted across platform. <br><br><i>Note: The total number of groundnut sowing farmers are 330.<i>" data-trigger="hover" data-original-title="" title=""></span>
-
-            <div class="row">
-              <div class="col-sm-3">
-                <div class="dashboard-icon">
-                  <i class="icon-people"></i>
-                </div>
-              </div>
-              <div class="col-sm-9 stats-text ">
-                <h5> 919</h5>
-                <h6>Unique Users Reached</h6>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {% endcomment %}
 
     
