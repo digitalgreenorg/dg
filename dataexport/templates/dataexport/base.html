@@ -16,6 +16,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+  
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.bootstrap4.min.css">
   </head>
 
   <body class="page-body">
@@ -44,6 +46,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script type="text/javascript" src="http://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.bootstrap4.min.js"></script>
 
 
     <script type="text/javascript">
@@ -143,18 +147,34 @@
   $(document).ready(function() {
     $('table').addClass('stripe');
     $('table').css('border-collape','collapse');
+    $('#sidebarCollapse').click(function(){
+      if($('#page-content-wrapper').hasClass('active')){
+        $('#page-content-wrapper').removeClass('active');
+        $('#sidebar-wrapper').removeClass('active');
+      }
+      else{
+        $('#sidebar-wrapper').addClass('active');
+        $('#page-content-wrapper').addClass('active');
+
+      }
+    });
 
     $('.dataframe tfoot th').each( function () {
       var title = $('.dataframe thead th').eq( $(this).index() ).text();
       $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
     } );
 
-    $('.dataframe').DataTable({
-     dom: 'Bfrtip',
+    var table = $('.dataframe').DataTable({
+      lengthChange: false,
      buttons: [
      'excel'
      ]
    });
+
+    table.buttons().container()
+    .appendTo( '#DataTables_Table_1_wrapper .col-md-6:eq(0)' );
+
+
     $(".dataframe tfoot input").on( 'keyup change', function () {
       table
       .column( $(this).parent().index()+':visible' )

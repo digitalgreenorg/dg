@@ -19,10 +19,19 @@ table.dataTable {
   background-color: white !important;
 }
 
+#sidebar-wrapper.active {
+    margin-left: -290px;
+}
+
+#wrapper {
+  display: flex;
+  align-items: stretch;
+}
+
 #loader {
     display: block;
     position: relative;
-    left: 50%;
+    left: 40%;
     top: 50%;
     width: 150px;
     height: 150px;
@@ -6172,14 +6181,13 @@ hr {
   color: #2c343f;
   background-color: rgba(255, 255, 255, 0.2);
 }
+
 /* sidebar */
 #sidebar-wrapper {
   z-index: 1000;
-  position: fixed;
-  left: 280px;
-  width: 0;
+  position: absolute;
+  left: 0;
   height: 100%;
-  margin-left: -280px;
   /*overflow-y: auto;*/
   background: #fff;
   -webkit-transition: all 0.5s ease;
@@ -6190,6 +6198,11 @@ hr {
   padding: 30px 10px;
   box-shadow: 2px 0 2px rgba(0, 0, 0, 0.03), 1px 0 0 rgba(0, 0, 0, 0.03);
 }
+
+#sidebar-wrapper.active {
+  left: -290px;
+}
+
 /* content */
 #wrapper {
   padding-left: 280px;
@@ -6197,8 +6210,19 @@ hr {
 }
 #wrapper #page-content-wrapper {
   padding: 20px;
-  position: relative;
+  position: absolute;
+  right: 0;
+  left: 290px;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease; 
 }
+
+#wrapper #page-content-wrapper.active{
+  left: 0;
+}
+
 #wrapper-without-filter {
   padding-top: 60px;
 }
