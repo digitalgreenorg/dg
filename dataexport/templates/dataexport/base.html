@@ -94,6 +94,8 @@
 
        $("#data-extract").submit(function(event){
         event.preventDefault();
+        $('#wrapper-demo').html('');
+        $('#loader').show();
         var data = $('#data-extract').serialize();
             $.ajax({
                  type:"POST",
@@ -101,6 +103,7 @@
                  data: data,
                  dataType: 'html',
                  success: function(response){
+                   $('#loader').hide();
                    $('#wrapper-demo').html(response) 
                    $('table').addClass('table table-hover table-no-bordered');
 
@@ -139,6 +142,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $('table').addClass('stripe');
+    $('table').css('border-collape','collapse');
 
     $('.dataframe tfoot th').each( function () {
       var title = $('.dataframe thead th').eq( $(this).index() ).text();
