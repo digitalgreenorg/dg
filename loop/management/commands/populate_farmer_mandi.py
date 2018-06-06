@@ -9,10 +9,14 @@ class Command(BaseCommand):
 
     def handle(self,*args,**options):
         print("Log")
-        print("LOOP ETL LOG")
+        print("LOOP FARMER MANDI LOG")
         print(datetime.date.today())
         populate = Populate()
-        #populate.updateFarmerMandiData()
+        populate.updateFarmerJoiningData()
+        populate.updateFarmerMandiData()
+
+        populate.updateFarmerMandiData()
+        populate.updateFarmerTransactionData()
         #populate.updateFarmerJoiningData()
 
 class Populate():
@@ -41,8 +45,8 @@ class Populate():
 
 	def updateFarmerVolumeData(self):
 		farmers = Farmer.objects.filter(volume=0)
-		farmerTransactions = CombinedTransaction.objects.filter(farmer__in=farmers).values('farmer').annotate(transaction_count=Sum('quantity',distinct=True))
+		farmerTransactions = CombinedTransaction.objects.filter(farmer__in=farmers).values('farmer').annotate(volume=Sum('quantity',distinct=True))
 		for transactionObject in farmerTransactions:
 			farmer =farmers.get(id=transactionObject['farmer'])
-			farmer.transaction_count = transactionObject['transaction_count']
+			farmer.volume = transactionObject['volume']
 			farmer.save()	
