@@ -66,11 +66,15 @@
      start_date = "", end_date = ""
      $('.badge').css('cursor','pointer');
      $('[data-toggle="popover"]').popover();
+     var start = moment().subtract(365, 'days');
+     var end = moment();
      $('input[name="date_period"]').daterangepicker({
       autoUpdateInput: true,
       locale: {
           format: 'YYYY-MM-DD'
         },
+        startDate: start,
+        endDate: end,
         autoApply:true,
         maxDate: new Date(),
         maxSpan:{
@@ -137,6 +141,10 @@
                  success: function(response){
                    $('#loader').hide();
                    $('#wrapper-demo').html(response)
+                   $('#id_total_screenings').html($(response).filter('#tot_screenings').html())
+                   $('#id_total_adoptions').html($(response).filter('#tot_adoptions').html())
+                   $('#id_total_viewers').html($(response).filter('#tot_unique_viewers').html())
+                   $('#id_total_unique_adopters').html($(response).filter('#tot_unique_adopters').html())
                    $($('.dataframe')[0]).addClass('table0');
                    $($('.dataframe')[1]).addClass('table1');
 

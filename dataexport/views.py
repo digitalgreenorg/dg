@@ -26,6 +26,7 @@ class ExportView(FormView):
     def get(self, request):
         todays_date = datetime.datetime.now().strftime('%Y-%m-%d')
         year_ago_date = (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-%m-%d')
+        import pdb;pdb.set_trace()
         total_screenings = Screening.objects.filter(date__range=[year_ago_date, todays_date]).count();
         total_adoptions = PersonAdoptPractice.objects.filter(date_of_adoption__range=[year_ago_date, todays_date]).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
         total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=[year_ago_date, todays_date]).aggregate(unique_viewers=Count('person_id', distinct=True))
@@ -337,6 +338,10 @@ class ExportView(FormView):
         state_beneficiary_count_list = []
         beneficiary_data = []
         data_file = None
+        total_screenings = Screening.objects.filter(date__range=date_range).count();
+        total_adoptions = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
+        total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range).aggregate(unique_viewers=Count('person_id', distinct=True))
+        
         if data_type == 1:
             # fetching the screening data
             screening_dict = self.get_screening_data(date_range, data_category, country, state)
@@ -532,7 +537,10 @@ class ExportView(FormView):
                    'start_date': date_range[0], 'end_date': date_range[1],
                    'file_id': file_id, 'data_list_count': data_list_count,
                    'table_data_count': table_data_count, 'district_reach': district_reach,
-                   'data_category': cd.get('data_category'), 'data': cd.get('data')}
+                   'data_category': cd.get('data_category'), 'data': cd.get('data'),
+                   'total_screenings': total_screenings, 'total_adoptions' : total_adoptions.get('adoptions'), \
+                   'total_viewers': total_unique_viewers.get('unique_viewers'), \
+                   'total_unique_adopters': total_adoptions.get('unique_adopters')}
         template = "dataexport/table-data.html"
         html = render_to_string(template, context=context)
         return HttpResponse(html)
