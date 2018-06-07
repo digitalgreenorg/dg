@@ -22,9 +22,9 @@ class PageView(forms.Form):
     # end_date = forms.DateField(required=True, widget=forms.TextInput(attrs={'class' : 'form-control'}))
     data_category = forms.ChoiceField(choices=DATA_CATEGORY, required=True, widget=forms.Select(attrs={'class' : 'form-control'}))
     data = forms.ChoiceField(choices=DATA, required=True, widget=forms.Select(attrs={'class' : 'form-control'}))
-    country = forms.ModelChoiceField(queryset=Country.objects.all(), required=True,\
+    country = forms.ModelChoiceField(queryset=Country.objects.all(),
                                      empty_label=None,widget=forms.Select(attrs={'class' : 'form-control'}),
-                                     to_field_name="id")
+                                     )
     state = forms.CharField(
                                    widget=forms.Select(attrs={'class' : 'form-control', 'multiple': 'multiple'}),
                                    required=False,

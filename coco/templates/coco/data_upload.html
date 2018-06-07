@@ -1,7 +1,5 @@
-{% include "internal-tools/header.html" %}
-<script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
-<script type="text/javascript"  src="{{STATIC_URL}}coco/app/scripts/libs/jquery.validate.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}coco/app/scripts/libs/additional-methods.js"></script>
+{% extends "dataexport/base.html" %}
+
 <style type="text/css">
   .errorlist{
     color: red;
@@ -11,29 +9,43 @@
   }
 </style>
 
-<section id="upload-data" class="about-bg">
+{% block sidebar %}
+{% endblock %}
+{% block content %}
 
-  <div class="wrapper">
-    <div class="inner-wrapper">
-      <span><h2 class="hdg-a hdg-source-lt layout-vr-md" style="display: inline;">COCO - Upload Data</h2>
-      <a href="{% url 'getfileheader' %}" id="header-download" class="btn btn-primary" style="margin-left: 50px;">Download File Header</a></span>
-        {% for message in messages %}
-          {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-            <div class="errorlist alert alert-success" role="alert">
+  <div id="page-content-wrapper">
+    <div class="container-fluid p-d-r">
+      <div class="card">
+        <h5 class="card-header">Please read the instructions for uploading the data.</h5>
+        <div class="card-body">
+          <p class="alert alert-dark" role="alert">1. Download the Sample File. Fill in all the data mentioned in the same sheet.</p>
+          <p class="alert alert-dark" role="alert">2. Make sure the headers in the excel file is in the same order.</p>
+          <p class="alert alert-dark" role="alert">3. You can get Partner ID and District ID from COCO Admin.</p>
+          <p class="alert alert-dark" role="alert">4. In case of error, email system@digitalgreen.org.</p>
+        </div>
+      </div>
+      <br>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><h4>COCO - Upload Data<h4></div>
+        </div>
+      
+        <form id="data-upload" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+          
+          <a href="{% url 'getfileheader' %}" id="header-download" class="btn btn-primary float-right">Download Sample File</a>
+          {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+              <div class="errorlist alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+            {% else %}
+              <div class="alert alert-success" role="alert">
                 {{ message }}
-            </div>
-          {% else %}
-            <div class="alert alert-success" role="alert">
-              {{ message }}
-            </div>
-
-          {% endif %}
-
-
-        {% endfor %}
-      <div class="row">
-        <div class="col-sm-12">
-            <form id="data-upload" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+              </div>
+            {% endif %}
+          {% endfor %}
+            
               {% csrf_token %}
               <div class="control-group">
                 {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
@@ -42,54 +54,16 @@
                   {{ form.datafile }}
                 </div>
               </div>
-              <br>
-              <br>
-              <button type="submit" id="upload" class="btn btn-success">Submit</button>
-
-
-            </form>
         </div>
-        <br>
+        <div class="card-footer text-muted">
+          <button type="submit" id="upload" class="btn btn-success">Submit</button>
+        </div>
+        </form>
       </div>
-    </div> <!-- End .inner-wrapper -->
-  </div> <!-- End .wrapper -->
-</section>
+    </div>
+  </div>
+  
 
-<script>
-  var maxSizeExceeded = false;
-  $("#id_datafile").change(function () {
-    $('#id_datafile-error').html('');
-    if(this.files[0].size / 1024 / 1024 > 2){
-        maxSizeExceeded = true;
-      }
-    else
-      maxSizeExceeded = false;
-  });
 
-$('form').validate({
-   ignore: [],
-   rules:{
-       datafile: {
-            required: true,
-            extension: "csv"
-        }
-   },
-   messages:{
-       datafile:{
-          required:"Please upload the file",
-          extension:"Please upload a Valid file"
-        }
-   },
-   submitHandler: function(form) {
-    if(!maxSizeExceeded){
-      form.submit();
-      }
-    else{
-      alert('Max upload limit is 2 MB');
-    }
-    }
-})
 
-</script>
-
-{% include "internal-tools/footer.html" %}
+{% endblock %}
