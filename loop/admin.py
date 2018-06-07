@@ -143,9 +143,10 @@ class CombinedTransactionAdmin(admin.ModelAdmin):
 
 class TransporterAdmin(admin.ModelAdmin):
     list_display = ('id', 'transporter_name',
-                    'transporter_phone', '__block__')
-    search_fields = ['transporter_name', 'transporter_phone', 'block__block_name_en']
+                    'transporter_phone', '__block__', 'transporter_name_en')
+    search_fields = ['transporter_name', 'transporter_phone', 'block__block_name_en', 'transporter_name_en']
     list_filter = ['block__district__district_name_en', 'block__district__state__state_name_en', 'block__district__state__country']
+    list_editable = ['transporter_name_en']
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "block":
              kwargs["queryset"] = Block.objects.all().order_by('district__district_name_en', 'block_name_en',)
