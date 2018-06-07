@@ -26,7 +26,6 @@ class ExportView(FormView):
     def get(self, request):
         todays_date = datetime.datetime.now().strftime('%Y-%m-%d')
         year_ago_date = (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-%m-%d')
-        import pdb;pdb.set_trace()
         total_screenings = Screening.objects.filter(date__range=[year_ago_date, todays_date]).count();
         total_adoptions = PersonAdoptPractice.objects.filter(date_of_adoption__range=[year_ago_date, todays_date]).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
         total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=[year_ago_date, todays_date]).aggregate(unique_viewers=Count('person_id', distinct=True))
