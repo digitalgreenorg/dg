@@ -25,15 +25,20 @@ class Command(BaseCommand):
             farmer_list = Farmer.objects.filter(village__block__district__state=1)
             print farmer_list.count()
             for farmer in farmer_list:
-                print farmer.id
-                farmer.farmer_name_en = self.translate_text(farmer.name).text
-                farmer.save()
+                try:
+                    print farmer.id
+                    farmer.farmer_name_en = self.translate_text(farmer.name).text
+                    farmer.save()
+                except:
+                    pass
 
         if options.get('table') == 'transporter':
             transporter_list = Transporter.objects.filter(block__district__state=1)
             print transporter_list.count()
             for transporter in transporter_list:
-                print transporter.id
-                transporter.transporter_name_en = self.translate_text(transporter.transporter_name).text
-                transporter.save()
-
+                try:
+                    print transporter.id
+                    transporter.transporter_name_en = self.translate_text(transporter.transporter_name).text
+                    transporter.save()
+                except:
+                    pass
