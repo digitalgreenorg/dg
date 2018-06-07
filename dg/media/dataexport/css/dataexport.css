@@ -19,6 +19,11 @@ table, th, td
   border: 0;
 }
 
+.img-icons-height{
+  height: 70px!important;
+  margin-left: -10px;
+}
+
 table.dataTable {
   background-color: white !important;
 }
@@ -6193,7 +6198,7 @@ hr {
   position: fixed;
   left: 0;
   height: 100%;
-  /*overflow-y: auto;*/
+  overflow-y: auto;
   background: #fff;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;

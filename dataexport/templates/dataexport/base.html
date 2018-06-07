@@ -85,13 +85,13 @@
            $("#id_state").select2({data: data.results});
         }
     });
-
-
-    $('#id_data').select2({placeholder: "Select data for screening or Adoption",allowClear: true});
-    $('#id_data_category').select2({placeholder: "Select data for health or Agriculture",allowClear: true});
-    $('#id_country').select2({placeholder: "Select Country",allowClear: true});
-    $('#id_state').select2({placeholder: "Select State",allowClear: true});
     {% endif %}
+
+    $('#id_data').select2({placeholder: "Select data for screening or Adoption"});
+    $('#id_data_category').select2({placeholder: "Select data for health or Agriculture"});
+    $('#id_country').select2({placeholder: "Select Country"});
+    $('#id_state').select2({placeholder: "Select State"});
+    
   });
 
 </script>
@@ -119,6 +119,7 @@
    
 
    $("#data-extract").submit(function(event){
+    console.log("aa gaya")
     event.preventDefault();
     $('#wrapper-demo').html('');
     $('#loader').show();
@@ -155,10 +156,10 @@
                 
               },
               error: function(error){
-                console.log(error)
+                console.log(error);
               }
         });
-        return false;
+      return false;
    });
 
 
@@ -225,7 +226,7 @@
       maxSizeExceeded = false;
   });
 
-  $('form').validate({
+  $('#data-upload').validate({
      ignore: [],
      rules:{
          datafile: {

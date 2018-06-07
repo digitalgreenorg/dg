@@ -177,7 +177,14 @@ class ExportView(FormView):
             # Beneficiary Data State Wise
             state_beneficiary_count_map = {}
             person_cat_map = {}
-            queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range).select_related('screening').values('screening__village__block__district__state__state_name','person_id','category'))
+            if not len(state):
+                queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range,
+                        screening__village__block__district__state__country_id=country.id,
+                        ).select_related('screening').values('screening__village__block__district__state__state_name','person_id','category'))
+            else:
+                queryset = list(PersonMeetingAttendance.objects.filter(screening__date__range=date_range,
+                        screening__village__block__district__state_id__in=state,
+                        ).select_related('screening').values('screening__village__block__district__state__state_name','person_id','category'))
             try:
                 for item in queryset:
                     if state_beneficiary_count_map.get(str(item.get('screening__village__block__district__state__state_name'))) is None:
@@ -293,6 +300,11 @@ class ExportView(FormView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
       return super(ExportView, self).dispatch(*args, **kwargs)
+
+    def form_invalid(self, form):
+        print form.errors
+        return JsonResponse(form.errors)
+
 
     def form_valid(self, form):
         data = ''
@@ -460,14 +472,14 @@ class ExportView(FormView):
                             'person__village__block__district__state__state_name',\
                             'person__village__block__district__district_name',\
                             'person__village__block__block_name',\
-                            'person__village__village_name', 'partner__partner_name','video_id',\
-                            'video__title','date_of_adoption','id', 'parentcategory__parent_category_name',\
-                            'person_id','person__person_name','person__gender']]
+                            'person__village__village_name', 'partner__partner_name',\
+                            'video__title','date_of_adoption', 'parentcategory__parent_category_name',\
+                            'person__person_name','person__gender']]
 
                 table_data.columns = ['Country Name', 'StateName', \
                                 'DistrictName', 'BlockName', 'VillageName',\
-                                'PartnerName', 'Video Id', 'Video Title', 'Date of Adoption', 'Adoption ID', 'Category Name',
-                                'Person Id','Person Name','Gender' 
+                                'PartnerName', 'Video Title', 'Date of Adoption', 'Category Name',
+                                'Person Name','Gender' 
                                 ]
             table_data_count = len(table_data)
             # we are saving the file on server and storing in table.This id will be used
