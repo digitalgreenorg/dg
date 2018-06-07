@@ -65,6 +65,7 @@
     jQuery(document).ready(function ($) {
      start_date = "", end_date = ""
      $('.badge').css('cursor','pointer');
+     $('[data-toggle="popover"]').popover();
      $('input[name="date_period"]').daterangepicker({
       autoUpdateInput: true,
       locale: {
