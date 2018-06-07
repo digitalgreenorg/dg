@@ -22,14 +22,14 @@ class Command(BaseCommand):
         print("Start")
         if options.get('table') == 'farmer':
             #L.assigned_villages()
-            farmer_list = Farmer.objects.all()
+            farmer_list = Farmer.objects.filter(village__block__district__state=1)
             print farmer_list.count()
             for farmer in farmer_list:
                 farmer.farmer_name_en = self.translate_text(farmer.name).text
                 farmer.save()
 
         if options.get('table') == 'transporter':
-            transporter_list = Transporter.objects.all()
+            transporter_list = Transporter.objects.filter(block__district__state=1)
             print transporter_list.count()
             for transporter in transporter_list:
                 transporter.transporter_name_en = self.translate_text(transporter.transporter_name).text
