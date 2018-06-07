@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="icon" href="{{ STATIC_URL }}dataexport/img/dg_favicon.ico">
+
     <title>Data Export</title>
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
@@ -55,11 +57,14 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
 
 
     <script type="text/javascript">
     jQuery(document).ready(function ($) {
      start_date = "", end_date = ""
+     $('.badge').css('cursor','pointer');
      $('input[name="date_period"]').daterangepicker({
       autoUpdateInput: true,
       locale: {
@@ -119,46 +124,56 @@
    
 
    $("#data-extract").submit(function(event){
-    console.log("aa gaya")
     event.preventDefault();
     $('#wrapper-demo').html('');
     $('#loader').show();
     var data = $('#data-extract').serialize();
         $.ajax({
-             type:"POST",
-             url:"/coco/export/",
-             data: data,
-             dataType: 'html',
-             success: function(response){
-               $('#loader').hide();
-               $('#wrapper-demo').html(response) 
-               $('table').addClass('table table-hover table-no-bordered');
+                 type:"POST",
+                 url:"/coco/export/",
+                 data: data,
+                 dataType: 'html',
+                 success: function(response){
+                   $('#loader').hide();
+                   $('#wrapper-demo').html(response)
+                   $($('.dataframe')[0]).addClass('table0');
+                   $($('.dataframe')[1]).addClass('table1');
+
+                   var table_0 = $('table.table0').DataTable({
+                      lengthChange: false,
+                   });
+
+                   var table_1 = $('table.table1').DataTable({
+                      lengthChange: false,
+                      buttons: ['excel']
+                   });
+
+                   table_1.buttons().container().prependTo( $(table_1.table().container()) );
+                   
+                   $($('.dt-buttons')[0]).css('width','10%');
+                   $('.buttons-excel').css('width','100%');
+                
+
+                  $('table').addClass('table table-hover table-no-bordered');
 
                   $('.dataframe tfoot th').each( function () {
                     var title = $('.dataframe thead th').eq( $(this).index() ).text();
                     $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
                   } );
 
-                  $('.dataframe').DataTable({
-                   dom: 'Bfrtip',
-                   buttons: [
-                   'excel'
-                   ]
-                 });
                   $(".dataframe tfoot input").on( 'keyup change', function () {
-                    table
-                    .column( $(this).parent().index()+':visible' )
-                    .search( this.value )
-                    .draw();
+                    table_0.column( $(this).parent().index()+':visible' ).search( this.value ).draw();
+                    table_1.column( $(this).parent().index()+':visible' ).search( this.value ).draw();
                   } );
-                  $($('.dt-buttons')[0]).hide()
+
+
                   $('tr').css('text-align','left');
-                
-              },
-              error: function(error){
-                console.log(error);
-              }
-        });
+                    
+                  },
+                  error: function(error){
+                    console.log(error)
+                  }
+            });
       return false;
    });
 
@@ -172,12 +187,16 @@
     $('table').css('border-collape','collapse');
     $('#sidebarCollapse').click(function(){
       if($('#page-content-wrapper').hasClass('active')){
+        $('.badge').text('Hide Filters')
         $('#page-content-wrapper').removeClass('active');
         $('#sidebar-wrapper').removeClass('active');
+
       }
       else{
+        $('.badge').text('Show Filters')
         $('#sidebar-wrapper').addClass('active');
         $('#page-content-wrapper').addClass('active');
+
 
       }
     });

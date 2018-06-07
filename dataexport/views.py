@@ -14,6 +14,7 @@ import pandas as pd
 from dataexport.forms import *
 from activities.models import *
 from dataexport.models import *
+import datetime
 
 
 class ExportView(FormView):
@@ -21,6 +22,19 @@ class ExportView(FormView):
     template_name = "dataexport/dataexport.html"
     form_class = PageView
 
+
+    def get(self, request):
+        todays_date = datetime.datetime.now().strftime('%Y-%m-%d')
+        year_ago_date = (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-%m-%d')
+        total_screenings = Screening.objects.filter(date__range=[year_ago_date, todays_date]).count();
+        total_adoptions = PersonAdoptPractice.objects.filter(date_of_adoption__range=[year_ago_date, todays_date]).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
+        total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=[year_ago_date, todays_date]).aggregate(unique_viewers=Count('person_id', distinct=True))
+        context = {'total_screenings': total_screenings, 'total_adoptions' : total_adoptions.get('adoptions'), \
+                    'total_viewers': total_unique_viewers.get('unique_viewers'), \
+                    'total_unique_adopters': total_adoptions.get('unique_adopters'),\
+                    'form': self.form_class}
+        
+        return render(request, self.template_name, context)
     
     def fetch_screening_data(self, date_range, data_category, country, state):
         data_list = []

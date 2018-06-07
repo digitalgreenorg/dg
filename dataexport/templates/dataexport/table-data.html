@@ -1,9 +1,10 @@
 
 <section id="Raw Data Analytics" class="about-bg">
   <div class="wrapper">
+    <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px; margin-left: 25px;">Extraction Data</h2>
     <section id="upload-data" class="about-bg">
       {% if data_list %}
-      <a class="btn btn-primary" href="/coco/export/download/{{ file_id }}" style="margin-left: 15px; width: 10%;">Excel</a>
+      <a class="btn btn-secondary" href="/coco/export/download/{{ file_id }}" style="margin-left: 15px; width: 10%;">Excel</a>
       {% endif %}
       <div class="wrapper">
         <div class="inner-wrapper">
@@ -23,10 +24,10 @@
 
 
     {% if beneficiary_data_list and data_category != '2' and data == '1' %}
-    <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px;">Beneficiary Data</h2>
+    <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px; margin-left: 25px;">Beneficiary Data</h2>
     <section id="beneficiary-data" class="about-bg">
       <div class="wrapper">
-        <div class="inner-wrapper" style="padding-left: 10px">
+        <div class="inner-wrapper">
           <div class="row">
             <div class="col-sm-12" style="overflow-x: auto">
               {{ beneficiary_data_list | safe}}
