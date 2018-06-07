@@ -20,6 +20,7 @@ fileDir = os.path.dirname(os.path.realpath('__file__'))
 def get_aggregator_mi_related_data(request):
     
     agg_list_requested = is_authenticated(request)
+    
     if agg_list_requested :
         
         # Create Objects
@@ -61,7 +62,9 @@ def get_aggregator_mi_related_data(request):
             for index, row in transport_dataframe_obj.iterrows():
                 transportobj = TransportDetail(transport_id=row['Vehicle Id'], transport_name=row['Vehicle Name'], transport_cost=str(row['Cost']),\
                                 transport_capacity=row['Capacity'])
-                mandiobjdetail.distance = row['Mandi Distance']
+
+                mandiobjdetail.distance = row['Mandi Distance'] 
+                mandiobjdetail.category = row['Mandi Category']
                 mandiobjdetail.transport_list.append(transportobj.__dict__)
 
             mandi_res.append(mandiobjdetail.__dict__)
@@ -75,7 +78,7 @@ def get_aggregator_mi_related_data(request):
         data = json.dumps(agg_res)
         return HttpResponse(data)
     else :
-        return HttpResponse(json.dumps({}))
+        return HttpResponse(status=401)
     
 
 def get_crop_prices(request):
@@ -143,6 +146,7 @@ def is_authenticated(request):
         # Get User Id
         apikeyobj = ApiKey.objects.get(key=apikey)
         aggregator_id = [apikeyobj.user_id]
+        print aggregator_id
         agg_list_requested = list(set(aggregator_id) & set(agg_list))
         print agg_list_requested
     except Exception:
