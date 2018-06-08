@@ -18,9 +18,9 @@
       <div class="card">
         <h5 class="card-header">Please read the instructions for uploading the data.</h5>
         <div class="card-body">
-          <p class="alert alert-dark" role="alert">1. Download the Sample File. Fill in all the data mentioned in the same sheet.</p>
-          <p class="alert alert-dark" role="alert">2. Make sure the headers in the excel file is in the same order.</p>
-          <p class="alert alert-dark" role="alert">3. You can get Partner ID and District ID from COCO Admin.</p>
+          <p class="alert alert-dark" role="alert">1. <a href="{% url 'getfileheader' %}" id="header-download" class="btn btn-primary" style="line-height: 1rem">Download the sample file</a>. Fill in the data according to the format prescribed in the sheet. Please do not change the format.</p>
+          <p class="alert alert-dark" role="alert">2. You should get Partner ID and District ID from COCO Admin. If they don't exist in COCO, you will need to create one.</p>
+          <p class="alert alert-dark" role="alert">3. If you are entering data for a Block/Village/Group which already exist in COCO, ensure you use the exact same name as in COCO, e.g. Use Oromia instead of Oromiya. If they don't exist, this tool will create them.</p>
           <p class="alert alert-dark" role="alert">4. In case of error, email system@digitalgreen.org.</p>
         </div>
       </div>
@@ -33,7 +33,7 @@
         <form id="data-upload" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
         <div class="card-body">
           
-          <a href="{% url 'getfileheader' %}" id="header-download" class="btn btn-primary float-right">Download Sample File</a>
+          <!-- <a href="{% url 'getfileheader' %}" id="header-download" class="btn btn-primary float-right">Download Sample File</a> -->
           {% for message in messages %}
             {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
               <div class="errorlist alert alert-success" role="alert">
