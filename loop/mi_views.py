@@ -1,4 +1,4 @@
-import os
+import os, sys
 import json
 
 import requests
@@ -16,12 +16,13 @@ from mi_data_structure import *
 from crop_price_structure import *
 from loop.utils.mi_pilot_var import mandi_list, agg_list, transport_detail_filepath
 
-fileDir = os.path.dirname(os.path.realpath('__file__'))
+fileDir = os.path.dirname(os.path.abspath('__file__'))
 
 def get_aggregator_mi_related_data(request):
-    
-    agg_list_requested = is_authenticated(request)
 
+    agg_list_requested = is_authenticated(request)
+    agg_list_requested = [4846]
+    
     if agg_list_requested :
         
         # Create Objects
