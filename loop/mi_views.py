@@ -21,7 +21,7 @@ fileDir = os.path.dirname(os.path.realpath('__file__'))
 def get_aggregator_mi_related_data(request):
     
     agg_list_requested = is_authenticated(request)
-    
+
     if agg_list_requested :
         
         # Create Objects
@@ -128,7 +128,7 @@ def read_params(request):
     
     kwargs['day_limit'] = int(request.GET.get('day_limit', 3))
     kwargs['start_date'] = request.GET.get('start_date', None)
-    kwargs['end_date'] = request.GET.getlist('end_date', None)
+    kwargs['end_date'] = request.GET.get('end_date', None)
     kwargs['crop_id'] = tuple(request.GET.getlist('crop_id', None))
     kwargs['mandi_id'] = tuple(request.GET.getlist('mandi_id', None))
     kwargs['range'] = request.GET.get('range', None)
