@@ -39,7 +39,7 @@ def get_aggregator_mi_related_data(request):
         gaddidar_data_obj = Gaddidar.objects.filter(mandi__id__in=mandi_list)
 
         # Read CSV file and filter for requested Aggreagator
-        filepath = PROJECT_PATH + transport_detail_filepath
+        filepath = os.path.join(PROJECT_PATH, '..', transport_detail_filepath)
         transport_dataframe = pd.read_csv(filepath)
         transport_dataframe = transport_dataframe[transport_dataframe['Aggregator Id']==agg_list_requested[0]]
 
