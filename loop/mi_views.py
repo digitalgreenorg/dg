@@ -15,14 +15,12 @@ from tastypie.models import ApiKey
 from mi_data_structure import *
 from crop_price_structure import *
 from loop.utils.mi_pilot_var import mandi_list, agg_list, transport_detail_filepath
-
-fileDir = os.path.dirname(os.path.abspath('__file__'))
+from dg.base_settings import PROJECT_PATH
 
 def get_aggregator_mi_related_data(request):
 
     agg_list_requested = is_authenticated(request)
-    agg_list_requested = [4846]
-    
+
     if agg_list_requested :
         
         # Create Objects
@@ -41,7 +39,7 @@ def get_aggregator_mi_related_data(request):
         gaddidar_data_obj = Gaddidar.objects.filter(mandi__id__in=mandi_list)
 
         # Read CSV file and filter for requested Aggreagator
-        filepath = fileDir + transport_detail_filepath
+        filepath = PROJECT_PATH + transport_detail_filepath
         transport_dataframe = pd.read_csv(filepath)
         transport_dataframe = transport_dataframe[transport_dataframe['Aggregator Id']==agg_list_requested[0]]
 
