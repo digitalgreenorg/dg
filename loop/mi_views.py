@@ -13,14 +13,14 @@ from loop.models import *
 import pandas as pd
 from tastypie.models import ApiKey
 from crop_price_structure import *
-from loop.utils.mi_pilot_var import mandi_list, agg_list
+from loop.utils.mi_pilot_var import mandi_list, agg_list, transport_detail_filepath
 
 fileDir = os.path.dirname(os.path.realpath('__file__'))
 
 def get_aggregator_mi_related_data(request):
     
     agg_list_requested = is_authenticated(request)
-    
+
     if agg_list_requested :
         
         # Create Objects
@@ -39,8 +39,7 @@ def get_aggregator_mi_related_data(request):
         gaddidar_data_obj = Gaddidar.objects.filter(mandi__id__in=mandi_list)
 
         # Read CSV file and filter for requested Aggreagator
-        filepath = os.path.join(fileDir, "/home/trionfo/Documents/dg/loop/utils/Transport Cost & Capacity Data - Sheet1.csv")
-        print filepath
+        filepath = os.path.join(fileDir, transport_detail_filepath)
         transport_dataframe = pd.read_csv(filepath)
         transport_dataframe = transport_dataframe[transport_dataframe['Aggregator Id']==agg_list_requested[0]]
 
@@ -146,44 +145,8 @@ def is_authenticated(request):
         # Get User Id
         apikeyobj = ApiKey.objects.get(key=apikey)
         aggregator_id = [apikeyobj.user_id]
-        print aggregator_id
         agg_list_requested = list(set(aggregator_id) & set(agg_list))
-        print agg_list_requested
     except Exception:
         agg_list_requested = []
     
     return agg_list_requested
-    
-
-# def getJSONObj(**kwargs):
-
-#     aggobj = AggregatorDetail(aggregator_id=1, aggregator_name='Hello')
-#     mandiobj = MandiDetail(mandi_id=1, mandi_name='Samastipur', mandi_category='Chhoti Mandi',\
-#      mandi_distance='590')
-#     transportobj = TransportDetail(transport_id=1, transport_name='Jugaad',  transport_cost=123,\
-#      transport_capacity=1209)
-#     gaddidarobj = GaddidarDetail(gaddidar_id=1, gaddidar_name='Gajodhar')
-
-#     aggobj.mandi_list = [mandiobj.__dict__, mandiobj.__dict__]
-
-#     mandiobj.transport_list = [transportobj.__dict__, ]
-#     mandiobj.gaddidar_list = [gaddidarobj.__dict__, ]
-
-#     return aggobj.__dict__
-
-
-# def get_init_kwargs():
-#     kwargs = {}
-#     kwargs['aggregator_id'] = ''
-#     kwargs['aggregator_name'] = ''
-#     kwargs['mandi_id'] = ''
-#     kwargs['mandi_name'] = ''
-#     kwargs['mandi_category'] = ''
-#     kwargs['mandi_distance'] = ''
-#     kwargs['transport_id'] = ''
-#     kwargs['transport_name'] = ''
-#     kwargs['transport_cost'] = ''
-#     kwargs['transport_capacity'] = ''
-#     kwargs['gaddidar_id'] = ''
-#     kwargs['gaddidar_name'] = ''
-#     return kwargs
