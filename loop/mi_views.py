@@ -2,16 +2,17 @@ import os
 import json
 
 import requests
+import pandas as pd
+
 from django.http import HttpResponse
 
 from loop_ivr.outliers.removal import remove_crop_outliers
 from loop_ivr.helper_function import run_query
 from loop_ivr.utils.marketinfo import get_query
+from loop.models import *
+from tastypie.models import ApiKey
 
 from mi_data_structure import *
-from loop.models import *
-import pandas as pd
-from tastypie.models import ApiKey
 from crop_price_structure import *
 from loop.utils.mi_pilot_var import mandi_list, agg_list, transport_detail_filepath
 
@@ -20,7 +21,7 @@ fileDir = os.path.dirname(os.path.realpath('__file__'))
 def get_aggregator_mi_related_data(request):
     
     agg_list_requested = is_authenticated(request)
-
+    
     if agg_list_requested :
         
         # Create Objects
@@ -39,7 +40,7 @@ def get_aggregator_mi_related_data(request):
         gaddidar_data_obj = Gaddidar.objects.filter(mandi__id__in=mandi_list)
 
         # Read CSV file and filter for requested Aggreagator
-        filepath = os.path.join(fileDir, transport_detail_filepath)
+        filepath = fileDir + transport_detail_filepath
         transport_dataframe = pd.read_csv(filepath)
         transport_dataframe = transport_dataframe[transport_dataframe['Aggregator Id']==agg_list_requested[0]]
 
