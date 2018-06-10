@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 
 from dg.settings import PRODUCT_PAGE
 
-import coco.urls
+# import coco.urls
 #import data_upload.urls
 import dimagi.urls
 import feeds.urls
@@ -77,7 +77,7 @@ urlpatterns = patterns('',
     (r'^social/', include(social_website.api_urls)),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
     (r'^adminblog/', include(admin.site.urls)),
-    (r'^coco/', include(coco.urls)),
+    # (r'^coco/', include(coco.urls)),
     (r'^qacoco/', include(qacoco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
     (r'^videos/', include(videos.urls)),

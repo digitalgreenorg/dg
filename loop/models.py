@@ -9,7 +9,7 @@ from loop.utils.send_log.loop_admin_log import save_admin_log  # , delete_log
 from smart_selects.db_fields import ChainedForeignKey
 from constants.constants import *
 
-ROLE_CHOICE = ((ROLE_CHOICE_ADMIN, "Admin"), (ROLE_CHOICE_AGGREGATOR, "Aggregator"), (ROLE_CHOICE_TESTING, "Testing"))
+ROLE_CHOICE = ((ROLE_CHOICE_ADMIN, "Admin"), (ROLE_CHOICE_AGGREGATOR, "Aggregator"), (ROLE_CHOICE_TESTING, "Testing"), (ROLE_CHOICE_DEMO, "Demo"))
 MODEL_CHOICE = ((1, "Direct Sell"), (2, "Aggregate"))
 DISCOUNT_CRITERIA = ((DISCOUNT_CRITERIA_VOLUME, "Volume"), (DISCOUNT_CRITERIA_AMOUNT, "Amount"))
 MODEL_TYPES = (

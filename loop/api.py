@@ -45,7 +45,8 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
     return dict
 
 def check_user_language(bundle, sub_field, sub_field_to_use):
-    if LoopUser.objects.get(user__username=bundle.request.user).preferred_language.name == "English":
+    loop_user = LoopUser.objects.get(user__username=bundle.request.user)
+    if loop_user and loop_user.role == 4 and loop_user.preferred_language.name == "English":
         bundle.data[sub_field] = bundle.data[sub_field_to_use]
     return bundle
 
@@ -334,8 +335,6 @@ class VillageResource(BaseResource):
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         check_user_language(bundle,'village_name', 'village_name_en')
-        # if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
-        #     bundle.data['village_name'] = bundle.data['village_name_en']
         return bundle
 
 
@@ -396,8 +395,7 @@ class FarmerResource(BaseResource):
 
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
-        check_user_language(bundle, 'farmer_name', 'farmer_name_en')
-#        bundle.data['image_path'] = bundle.data['name'] + bundle.data['phone']
+        check_user_language(bundle, 'name', 'farmer_name_en')
         return bundle
 
     def is_phone_valid(self,bundle):
@@ -611,8 +609,6 @@ class MandiResource(BaseResource):
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         check_user_language(bundle, 'mandi_name', 'mandi_name_en')
-        # if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
-        #     bundle.data['mandi_name'] = bundle.data['mandi_name_en']
         return bundle
 
 
@@ -637,9 +633,6 @@ class GaddidarResource(BaseResource):
     def dehydrate(self, bundle):
         bundle.data['online_id'] = bundle.data['id']
         check_user_language(bundle, 'gaddidar_name', 'gaddidar_name_en')
-
-        # if LoopUser.objects.get(user__username = bundle.request.user).preferred_language.id == 2:
-        #     bundle.data['gaddidar_name'] = bundle.data['gaddidar_name_en']
         return bundle
 
 class VehicleLanguageResource(BaseResource):
