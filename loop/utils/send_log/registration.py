@@ -368,7 +368,7 @@ def ideo_incoming(request):
 	#import pdb;pdb.set_trace()
 	if request.method == 'GET':
 		call_id = str(request.GET['CallSid'])
-		farmer_number = str(request.GET['From'])
+		farmer_number = str(request.GET['CallFrom'])
 		farmer_number = re.sub('^0', '', farmer_number)
         farmer = Farmer.objects.filter(phone=farmer_number)
 
