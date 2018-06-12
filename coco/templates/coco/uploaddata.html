@@ -1,0 +1,95 @@
+{% extends "dataexport/base.html" %}
+
+{% block title %}
+<title>Upload Data</title>
+{% endblock title %}
+
+<style type="text/css">
+  .errorlist{
+    color: red;
+  }
+  .error{
+    color: red;
+  }
+</style>
+
+{% block sidebar %}
+{% endblock %}
+{% block content %}
+
+  <div id="page-content-wrapper">
+    <div class="container-fluid p-d-r">
+      <div class="card">
+        <div class="card-body">
+          <blockquote class="blockquote">Please read the instructions before uploading Person data</blockquote>
+          <p><a href="{% url 'getfileheader' %}" id="header-download" class="btn btn-secondary"><img src="{{ STATIC_URL }}dataexport/img/arrow-bottom-2x.png" />Template File</a></p>
+          <p>Fill the data as prescribed in the template file. Do not change the format of the file.</p>
+          <p>Get ID for partner and district you are updating/inserting data from COCO admin. If they do not exist, create one.</p>
+          <p>This tools inserts Block/Village/Group, and inserts and updates Person data into our database.</p>
+          <p>If you are inserting NEW:</p>
+          <div class="row">
+            <div class="col-sm-2">1.</div>
+            <div class="col-sm-4">Person data</div>
+            <div class="col-sm-6">Ensure Block/Village/Group matches exactly as in COCO</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2">2.</div>
+            <div class="col-sm-4">Group/Person dataa</div>
+            <div class="col-sm-6">Ensure Block/Village matches exactly as in COCO</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2">3.</div>
+            <div class="col-sm-4">Village/Group/Person data</div>
+            <div class="col-sm-6">Ensure Block matches exactly as in COCO</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2">4.</div>
+            <div class="col-sm-4">Block/Village/Group/Person data</div>
+            <div class="col-sm-6">Entire data series will be inserted as NEW</div>
+          </div>
+          <p>For more information/clarification email us at <a href="mailto:system@digitalgreen.org">system@digitalgreen.org</a></p>
+        </div>
+      </div>
+      <br>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><h4>COCO - Upload Data<h4></div>
+        </div>
+      
+        <form id="data-upload" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+        <div class="card-body">
+          
+          <!-- <a href="{% url 'getfileheader' %}" id="header-download" class="btn btn-primary float-right">Download Sample File</a> -->
+          {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+              <div class="errorlist alert alert-success" role="alert">
+                  {{ message }}
+              </div>
+            {% else %}
+              <div class="alert alert-success" role="alert">
+                {{ message }}
+              </div>
+            {% endif %}
+          {% endfor %}
+            
+              {% csrf_token %}
+              <div class="control-group">
+                {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
+                <label class="control-label col-sm-2" for="datafile"></label>
+                <div {% if form.datafile.errors %} class="col-sm-8" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
+                  {{ form.datafile }}
+                </div>
+              </div>
+        </div>
+        <div class="card-footer text-muted">
+          <button type="submit" id="upload" class="btn btn-secondary">Submit</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+{% endblock %}

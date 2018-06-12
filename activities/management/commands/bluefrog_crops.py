@@ -23,10 +23,10 @@ class Command(BaseCommand):
 		# partner=Partner.objects.get(id=50)
 		csv_file = open('ap/crop_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('ap/crop.xml')
-		root = tree.getroot()
+		# tree = ET.parse('ap/crop.xml')
+		# root = tree.getroot()
 		try:
-			data = json.loads(root.text, strict=False)
+			data = json.loads(req.json(), strict=False)
 		except Exception as e:
 			print e
 		state = State.objects.get(id=6)

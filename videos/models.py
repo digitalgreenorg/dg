@@ -20,6 +20,8 @@ from people.models import Animator
 from people.models import Person
 from training.log.training_log import enter_to_log
 from django.template.defaultfilters import truncatechars
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class PracticeSector(CocoModel):
@@ -189,7 +191,9 @@ pre_delete.connect(enter_to_log,sender=Language)
 
 
 class Tag(CocoModel):
-    tag_name = models.CharField(max_length=100, unique='True')
+    tag_name = models.CharField(max_length=255, unique='True')
+    tag_code = models.CharField(max_length=50, null=True)
+    tag_regional_name = models.CharField(max_length=255, null=True)
 
     def __unicode__(self):
         return self.tag_name
@@ -298,6 +302,7 @@ class APVideo(CocoModel):
     subcategory = models.ForeignKey(SubCategory, null=True, blank=True)
     # districtscreening = models.ManyToManyField(DistrictScreening, blank=True)
     practice = models.ManyToManyField(APPractice, blank=True)
+    aptags = models.ManyToManyField(Tag, blank=True)
 
     
     class Meta:
@@ -311,3 +316,4 @@ class APVideo(CocoModel):
 
     def __unicode__(self):
         return """%s:%s:%s""" % (str(self.id), self.video.title, self.video_short_name)
+
