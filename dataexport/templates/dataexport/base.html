@@ -6,9 +6,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="{{ STATIC_URL }}dataexport/img/dg_favicon.ico">
-
-    <title>Data Export</title>
-
+    {% block title %}
+      <title>Data Export</title>
+    {% endblock title %}
     <link href="{{ STATIC_URL }}dataexport/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="{{ STATIC_URL }}dataexport/css/dataexport.css" rel="stylesheet" type="text/css">
     <link href="{{ STATIC_URL }}dataexport/css/fontawesome.min.css" rel="stylesheet" type="text/css">

@@ -228,7 +228,7 @@ def upload_csv_data(request):
                         except IntegrityError as e:
                             print e
                             pass
-                    add_message(request, 25, 'Data Successfully uploaded')
+                    add_message(request, 25, 'Your data has been successfully uploaded in COCO. Please login in COCO to view this data.')
                 else:
                     add_message(request,40, "File Header is not in correct format")
             except Exception as e:
@@ -240,7 +240,7 @@ def upload_csv_data(request):
     else:
         form_data = DataUploadForm()
     context = {'form': form_data}
-    template = "coco/data_upload.html"
+    template = "coco/uploaddata.html"
     return render(request, template, context)
 
 
