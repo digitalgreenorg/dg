@@ -195,7 +195,7 @@ def upload_csv_data(request):
                             block_obj, created = Block.objects.get_or_create(block_name__iexact=row[2].strip(),\
                                                                             district_id=int(row[1]), \
                                                                             defaults={'block_name': row[2].strip(), \
-                                                                                     'district_id':int(row[1])})
+                                                                                     'district_id':int(row[1].strip())})
                             if block_obj or created:
                                 village_obj, created = \
                                 Village.objects.get_or_create(village_name__iexact=row[3].strip(),block_id=block_obj.id,\
@@ -208,27 +208,36 @@ def upload_csv_data(request):
                                                                     partner_id=int(row[0]),\
                                                                     defaults={'group_name': row[4].strip(),\
                                                                     'village_id':village_obj.id, \
-                                                                    'partner_id':int(row[0])},)
+                                                                    'partner_id':int(row[0].strip())},)
                                     if person_group or created:
                                         if row[8] != '' and row[8] != '\r':
+                                            row[8] = row[8].strip('\r')
                                             person_obj, created = \
-                                            Person.objects.get_or_create(person_name__iexact=row[5], gender=row[6],\
+                                            Person.objects.get_or_create(person_name__iexact=row[5].strip(),\
                                              village_id=village_obj.id,group_id=person_group.id, \
-                                             partner_id=int(row[0]), age=int(row[8]), defaults={'person_name':row[5].strip(), \
-                                             'gender':row[6],'village_id':village_obj.id,'group_id':person_group.id, \
-                                             'partner_id':int(row[0]), 'age':int(row[8])})
+                                             partner_id=int(row[0].strip()), defaults={'person_name':row[5].strip(), \
+                                             'gender':row[6].strip(),'village_id':village_obj.id,'group_id':person_group.id, \
+                                             'partner_id':int(row[0].strip()), 'age':int(row[8].strip()), 'phone_no': row[7].strip()})
+                                            person_obj.gender = row[6].strip()
+                                            person_obj.phone_no = row[7].strip()
+                                            person_obj.age = int(row[8].strip())
+                                            person_obj.save()
                                         else:
+                                            row[8] = row[8].strip('\r')
                                             person_obj, created = \
-                                            Person.objects.get_or_create(person_name__iexact=row[5], gender=row[6],\
+                                            Person.objects.get_or_create(person_name__iexact=row[5].strip(),\
                                              village_id=village_obj.id,group_id=person_group.id, \
-                                             partner_id=int(row[0]), defaults={'person_name':row[5].strip(), \
-                                             'gender':row[6],'village_id':village_obj.id,'group_id':person_group.id, \
-                                             'partner_id':int(row[0])})
+                                             partner_id=int(row[0].strip()), defaults={'person_name':row[5].strip(), \
+                                             'gender':row[6].strip(),'village_id':village_obj.id,'group_id':person_group.id, \
+                                             'partner_id':int(row[0]), 'phone_no': row[7].strip()})
+                                            person_obj.gender = row[6].strip()
+                                            person_obj.phone_no = row[7].strip()
+                                            person_obj.save()
                         #Handle Duplicate KeyError
                         except IntegrityError as e:
                             print e
                             pass
-                    add_message(request, 25, 'Your data has been successfully uploaded in COCO. Please login in COCO to view this data.')
+                    add_message(request, 25, 'Your data has been successfully uploaded. Please login in COCO to view this data.')
                 else:
                     add_message(request,40, "File Header is not in correct format")
             except Exception as e:

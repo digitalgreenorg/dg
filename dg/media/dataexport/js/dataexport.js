@@ -156,7 +156,8 @@ $("#data-extract").submit(function(event){
 // File size should be less than 2 MB
 var maxSizeExceeded = false;
 $("#id_datafile").change(function () {
-  $('#id_datafile-error').html('');
+  $($('#id_datafile-error')).remove();
+  $($('div.alert-success')).remove();
   if(this.files[0].size / 1024 / 1024 > 2){
       maxSizeExceeded = true;
     }
