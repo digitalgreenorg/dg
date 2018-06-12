@@ -361,3 +361,39 @@ def automated_ivr(start_date,end_date):
 		initiate_ivr_call(farmer,(item['preferred_language__notation'] for item in user if item['user_id']==farmer.user_created_id).next(),2)
 
 #cold farmers: Farmers who did not pick up the ivr call
+
+
+
+def ideo_incoming(request):
+	#import pdb;pdb.set_trace()
+	if request.method == 'GET':
+		call_id = str(request.GET['CallSid'])
+		farmer_number = str(request.GET['From'])
+		farmer_number = re.sub('^0', '', farmer_number)
+        farmer = Farmer.objects.filter(phone=farmer_number)
+
+        if farmer.count()>0:
+			user = LoopUser.objects.get(user_id = farmer.user_created_id)
+			initiate_ivr_call(farmer,user.preferred_language,1)
+			if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified and RegistrationSms.objects.filter(farmer=farmer[0],msg_type=0).count()>0:
+				user = LoopUser.objects.filter(user=farmer[0].user_created_id)
+				if query_code=="1":
+					code = random_with_N_digits(5)
+					reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
+					reg_sms.save()
+					response = send_first_transportation_code(farmer[0],code,query_code,farmer_number,user[0].preferred_language)
+					farmer.update(referral_free_transport_count=farmer[0].referral_free_transport_count+1)
+					status_code = 0
+					if response['status'] == "success":
+						status_code = 1
+						sms_id = response['messages'][0]['id']
+						reg_sms.state = SMS_STATE['F'][0]
+						farmer.update(verified=True)
+					reg_sms.text_local_id = sms_id
+					reg_sms.sms_status = status_code
+					reg_sms.save()
+				else:
+					response = send_first_transportation_code(farmer[0],1,query_code,farmer_number,user[0].preferred_language)
+        	
+	return HttpResponse("0")
+
