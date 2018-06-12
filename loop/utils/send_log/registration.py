@@ -373,10 +373,10 @@ def ideo_incoming(request):
         farmer = Farmer.objects.filter(phone=farmer_number)
 
         if farmer.count()>0:
-			user = LoopUser.objects.get(user_id = farmer.user_created_id)
-			initiate_ivr_call(farmer,user.preferred_language,1)
+			
 			if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified and RegistrationSms.objects.filter(farmer=farmer[0],msg_type=0).count()>0:
 				user = LoopUser.objects.filter(user=farmer[0].user_created_id)
+				initiate_ivr_call(farmer,user.preferred_language,1)
 				if query_code=="1":
 					code = random_with_N_digits(5)
 					reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
