@@ -311,6 +311,15 @@ class APVideoAdmin(admin.ModelAdmin):
                     'video_short_regionalname']
     search_fields = ['id', 'video', 'video_short_name',
                      'video_short_regionalname', 'practice']
+    def save_related(self, request, form, formsets, change):
+        super(APVideoAdmin, self).save_related(request, form, formsets, change)
+        current_instance_tag = form.cleaned_data.get('aptags')
+        tag_id_to_be_removed = form.instance.video.tags.values_list('id', flat=True)
+        if tag_id_to_be_removed:
+            form.instance.video.tags.remove(*tag_id_to_be_removed)
+        form.instance.video.tags.add(*current_instance_tag)
+
+
 
 
 class AP_DistrictAdmin(admin.ModelAdmin):
