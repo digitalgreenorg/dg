@@ -322,9 +322,9 @@ class APVideo(CocoModel):
 def links_tags_in_video(sender, instance, created, **kwargs):
     # every save will call this.
     current_instance_tag = instance.aptags.values_list('id', flat=True)
-    if instance.video.tags:
-        # remove existing tags associated if any
-        tag_id_to_be_removed = instance.video.tags.values_list('id', flat=True)
+    # remove existing tags associated if any
+    tag_id_to_be_removed = instance.video.tags.values_list('id', flat=True)
+    if tag_id_to_be_removed:
         instance.video.tags.remove(*tag_id_to_be_removed)
     # now add the current selected tags
     instance.video.tags.add(*current_instance_tag)
