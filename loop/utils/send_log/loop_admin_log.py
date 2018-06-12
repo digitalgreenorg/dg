@@ -548,6 +548,7 @@ def send_updated_admin_log(request):
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.id,entry_table__in=['AdminUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table='Partner'))
+            import pdb;pdb.set_trace()
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table='IncentiveModel'))
 
             loopuser_querset=Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'],admin_user=None)
@@ -580,7 +581,19 @@ def send_updated_admin_log(request):
                 timestamp__gt=timestamp, entry_table__in=['GaddidarCommission'],admin_user=requesting_admin_user))
             loopuserassignedvillage_queryset = Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUserAssignedVillage'],admin_user=None)
             loopuserassignedmandi_queryset = Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUserAssignedMandi'],admin_user=None)
+            
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUserAssignedMandi','LoopUserAssignedVillage'],admin_user=requesting_admin_user))
+            
+            #TODO: check if below condition holds true
+            list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUserAssignedMandi','LoopUserAssignedVillage'],user_id=requesting_admin_user.user_id))
+
+            aggregatorIncentive_querset=Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['AggregatorIncentive'],admin_user=None)
+            for row in aggregatorIncentive_querset:
+                try:
+                    if AggregatorIncentive.objects.get(id=row.model_id).aggregator in loopusers:
+                        list_rows.append(row)
+                except:
+                    pass
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
             croplanguage_query = Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['CropLanguage'])
             for row in croplanguage_query:
@@ -605,7 +618,7 @@ def send_updated_admin_log(request):
                 
 
             data_list = []
-
+            #import pdb;pdb.set_trace()
             for row in list_rows:
                 if row:
                     try:
