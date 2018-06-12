@@ -319,11 +319,6 @@ class ExportView(FormView):
     def dispatch(self, *args, **kwargs):
       return super(ExportView, self).dispatch(*args, **kwargs)
 
-    def form_invalid(self, form):
-        print form.errors
-        return JsonResponse(form.errors)
-
-
     def form_valid(self, form):
         data = ''
         table_data_count = 0
