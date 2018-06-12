@@ -72,7 +72,7 @@ class ScreeningAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['tag_name']
+    list_display = ['id','tag_name']
     search_fields = ['tag_name']
 
 
@@ -105,6 +105,9 @@ class DirectBeneficiariesAdmin(admin.ModelAdmin):
 
     list_display = ['id', 'direct_beneficiaries_category']
     search_fields = ['direct_beneficiaries_category']
+
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ['id', 'partner_name']
 
 
 
@@ -146,7 +149,7 @@ class AnimatorInline(admin.TabularInline):
     exclude = ('assigned_villages',)
 
 class VillageAdmin(admin.ModelAdmin):
-    list_display = ('village_name', 'block')
+    list_display = ('id', 'village_name', 'block')
     search_fields = ['village_name', 'block__block_name', 'block__district__state__state_name']
     inlines = [PersonGroupInline]
 
@@ -221,15 +224,15 @@ class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ('village','group')
 
 class BlockAdmin(admin.ModelAdmin):
-    list_display = ('block_name', 'district')
+    list_display = ('id', 'block_name', 'district')
     search_fields = ['block_name', 'district__district_name', 'district__state__state_name']
 
 class DistrictAdmin(admin.ModelAdmin):
-    list_display = ('district_name', 'state')
+    list_display = ('id', 'district_name', 'state')
     search_fields = ['district_name', 'state__state_name']
 
 class StateAdmin(admin.ModelAdmin):
-    list_display = ('state_name',)
+    list_display = ('id', 'state_name',)
     search_fields = ['state_name', 'country__country_name']
 
 class SubCategoryAdmin(admin.ModelAdmin):
@@ -261,7 +264,7 @@ class PracticeSubjectAdmin(admin.ModelAdmin):
 
 class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
-    list_display = ('user','partner','get_villages')
+    list_display = ('id', 'user', 'partner','get_villages')
     search_fields = ['user__username']
 
 class QACocoUserAdmin(admin.ModelAdmin):
@@ -279,7 +282,7 @@ class VideoForm(forms.ModelForm):
     video = forms.ModelChoiceField(queryset=None, widget=Select2(select2attrs={'width': '600px'}),required=True)
     practice = forms.ModelMultipleChoiceField(queryset=APPractice.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
     subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), widget=Select2(select2attrs={'width': '600px'}),required=True)
-    # districtscreening = forms.ModelMultipleChoiceField(queryset=DistrictScreening.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
+    aptags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
 
     def __init__(self, *args, **kwargs):
         super(VideoForm, self).__init__(*args, **kwargs)

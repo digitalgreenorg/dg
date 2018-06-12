@@ -1,0 +1,99 @@
+<div id="page-content-wrapper">
+  <div class="container-fluid">
+
+    <div class="row" style="margin-top: 20px;">
+      
+      <div class="col-sm-2">
+        <h4 id="sidebarCollapse"><span class="badge badge-secondary">Hide Filters</span></h4>
+      </div>
+      <div class="col-sm-10 p-l-0">
+        <h4>Key Statistics</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Pickup Rate -->
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
+        <div class="tile-stats white-bg border-1">
+          <span class="icon-help icon-question" data-html="true" data-toggle="popover" data-placement="bottom" data-content="Total Screenings in selected date range" data-trigger="hover" data-original-title="" title=""></span>
+
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="dashboard-icon">
+                <img src="{{ STATIC_URL }}dataexport/img/Screening-100.png" class="img-icons-height" />
+              </div>
+            </div>
+            <div class="col-sm-9 stats-text ">
+              <h5 id="id_total_screenings">{{ total_screenings }}</h5>
+              <h6>Total Screenings</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Average Listen Duration -->
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
+        <div class="tile-stats white-bg border-1">
+          <span class="icon-help icon-question" data-toggle="popover" data-placement="bottom" data-content="Total Adoptions in selected date range" data-trigger="hover" data-original-title="" title=""></span>
+
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="dashboard-icon">
+                <img src="{{ STATIC_URL }}dataexport/img/Adoptions-100.png" class="img-icons-height" />
+              </div>
+            </div>
+            <div class="col-sm-9 stats-text">
+              <h5 id="id_total_adoptions">{{ total_adoptions }}</h5>
+              <h6>Total Adoptions</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Average Supplementary Messages heard per Farmer -->
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
+        <div class="tile-stats white-bg border-1">
+          <span class="icon-help icon-question" data-toggle="popover" data-placement="bottom" data-content="Total Unique Viewers in selected date range" data-trigger="hover" data-original-title="" title=""></span>
+
+          <div class="row">
+            <div class="col-sm-2">
+              <div class="dashboard-icon">
+                <img src="{{ STATIC_URL }}dataexport/img/Viewers-100.png" class="img-icons-height" />
+              </div>
+            </div>
+            <div class="col-sm-10 stats-text">
+              <h5 id="id_total_viewers">{{ total_viewers }}</h5>
+              <h6>Total Unique Viewers</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Average Reinforcement Messages heard per Farmer -->
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 main_statistics">
+        <div class="tile-stats white-bg border-1">
+          <span class="icon-help icon-question" data-toggle="popover" data-placement="bottom" data-content="Total Unique Adopters in selected date range" data-trigger="hover" data-original-title="" title=""></span>
+
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="dashboard-icon">
+                <img src="{{ STATIC_URL }}dataexport/img/Adopters-100.png" class="img-icons-height" />
+              </div>
+            </div>
+            <div class="col-sm-9 stats-text">
+              <h5 id="id_total_unique_adopters">{{ total_unique_adopters }}</h5>
+              <h6>Total Unique Adopters</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="loader" style="margin-top: 10%; display: none;"></div>
+    <div id="wrapper-demo" class="row" style="overflow-x: auto;">
+
+    </div>
+    
+
+  </div>
+</div>

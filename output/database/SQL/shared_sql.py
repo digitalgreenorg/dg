@@ -1,5 +1,7 @@
 from output.database.utility import *
-
+from activities.models import AP_Screening
+from django.db.models import *
+from django.conf import settings
 
 #Query for the drop down menu in search box
 def search_drop_down_list(geog, geog_parent, id):
@@ -164,6 +166,79 @@ def overview(geog, id, from_date, to_date, partners, type):
     sql_ds['order by'].append(geog_child.lower()+"_id")
 
     return join_sql_ds(sql_ds);
+
+
+
+# AP-Bluefrog specific data
+def ap_overview(geog, id, from_date, to_date, partners, type):
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+
+    if(geog == 'VILLAGE'):
+        geog_child = 'VILLAGE'
+    else:
+        geog_child = geog_list[geog_list.index(geog)+1]
+
+    key = None
+    if geog is None:
+        key = 'screening__village__block__district__state__country_id'
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__village__block__district__state__country_id=1, screening__date__range=[from_date, to_date]).values('screening__village__block__district__state__country_id').annotate(ap_tot_per=Sum('total_members'))
+    elif  geog == "COUNTRY":
+        key = 'screening__village__block__district__state_id'
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block__district__state__country_id=id) \
+                   .values('screening__village__block__district__state_id').annotate(ap_tot_per=Sum('total_members'))
+    elif geog == "STATE":
+        key = 'screening__village__block__district_id'
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block__district__state_id=id) \
+                .values('screening__village__block__district_id').annotate(ap_tot_per=Sum('total_members'))
+    elif geog == "DISTRICT":
+        key = 'screening__village__block_id'
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block__district_id=id) \
+                .values('screening__village__block_id').annotate(ap_tot_per=Sum('total_members'))
+    elif geog == "BLOCK":
+        key = 'screening__village_id'
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block_id=id) \
+                .values('screening__village_id').annotate(ap_tot_per=Sum('total_members'))
+    else:
+        key = 'screening__village_id'
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village_id=id) \
+                .values('screening__village_id').annotate(ap_tot_per=Sum('total_members'))
+
+    return (key, ap_total_per)
+
+
+# AP-Bluefrog specific data
+def ap_screening_overview(geog, id, from_date, to_date, partners):
+    if geog is None:
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date]).aggregate(ap_tot_per=Sum('total_members'))
+    elif  geog == "COUNTRY":
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block__district__state__country_id=id).aggregate(ap_tot_per=Sum('total_members'))
+    elif geog == "STATE":
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block__district__state_id=id) \
+                .aggregate(ap_tot_per=Sum('total_members'))
+    elif geog == "DISTRICT":
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block__district_id=id) \
+                .aggregate(ap_tot_per=Sum('total_members'))
+    elif geog == "BLOCK":
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village__block_id=id) \
+                .aggregate(ap_tot_per=Sum('total_members'))
+    else:
+        ap_total_per = \
+             AP_Screening.objects.filter(screening__date__range=[from_date, to_date], screening__village_id=id) \
+                .aggregate(ap_tot_per=Sum('total_members'))
+
+    return ap_total_per
+
 
 #Query for Line Chart in Overview module. It returns date and count of the metric on that date.
 #Context Required:'type' can be (production/screening/adoption/practice/person)

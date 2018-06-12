@@ -22,9 +22,10 @@ class Command(BaseCommand):
 
 		csv_file = open('ap/geo_error.csv', 'wb')
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-		tree = ET.parse('ap/geo.xml')
-		root = tree.getroot()
-		data = json.loads(root.text)
+		# tree = ET.parse('ap/geo.xml')
+
+		# root = tree.getroot()
+		data = json.loads(req.json())
 		state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
 		district_data_list = []
@@ -65,6 +66,7 @@ class Command(BaseCommand):
 									                  user_created_id=user_obj.id)
 				print district_obj, "District Saved in AP_District Table"
 			except Exception as e:
+				district_obj = None
 				if "Duplicate entry" not in str(e):
 					ap.other_error_count += 1
 					wtr.writerow(['AP district',district_name, e])

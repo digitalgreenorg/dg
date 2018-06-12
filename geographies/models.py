@@ -27,9 +27,12 @@ class Country(CocoModel):
 class State(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
-    state_name = models.CharField(max_length=100, unique='True')
+    state_name = models.CharField(max_length=100)
     country = models.ForeignKey(Country)
     start_date = models.DateField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('state_name', 'country')
 
     def __unicode__(self):
         return self.state_name
@@ -38,13 +41,16 @@ class State(CocoModel):
 class District(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
-    district_name = models.CharField(max_length=100, unique='True')
+    district_name = models.CharField(max_length=100)
     start_date = models.DateField(null=True, blank=True)
     state = models.ForeignKey(State)
     latitude = models.DecimalField(max_digits=31, decimal_places=28, null=True, blank=True,
                                    validators=[MaxValueValidator(90), MinValueValidator(-90)])
     longitude = models.DecimalField(max_digits=32, decimal_places=28, null=True, blank=True,
                                     validators=[MaxValueValidator(180), MinValueValidator(-180)])
+
+    class Meta:
+        unique_together = ('district_name', 'state')
 
     def __unicode__(self):
         return self.district_name
@@ -67,12 +73,16 @@ pre_delete.connect(enter_to_log, sender=District)
 class Block(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
-    block_name = models.CharField(max_length=100, unique='True')
+    block_name = models.CharField(max_length=100)
     start_date = models.DateField(null=True, blank=True)
     district = models.ForeignKey(District)
 
+    class Meta:
+        unique_together = ('block_name', 'district')
+
     def __unicode__(self):
         return self.block_name
+
 
 class Village(CocoModel):
     id = models.AutoField(primary_key=True)

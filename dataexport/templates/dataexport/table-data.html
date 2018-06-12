@@ -1,0 +1,50 @@
+
+<div id="tot_screenings" style="display: none;">{{ total_screenings }}</div>
+<div id="tot_adoptions" style="display: none;">{{ total_adoptions }}</div>
+<div id="tot_unique_viewers" style="display: none;">{{ total_viewers }}</div>
+<div id="tot_unique_adopters" style="display: none;">{{ total_unique_adopters }}</div>
+
+<section id="Raw Data Analytics" class="about-bg" style="width: 100%;">
+  <div class="wrapper">
+    <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px; margin-left: 25px;">Extraction Data</h2>
+    <section id="upload-data" class="about-bg">
+      {% if data_list %}
+      <a class="btn btn-secondary" href="/coco/export/download/{{ file_id }}" style="margin-left: 15px; width: 10%;">Excel</a>
+      {% endif %}
+      <div class="wrapper">
+        <div class="inner-wrapper">
+          <div class="row">
+            <div class="col-sm-12" style="overflow-x: auto">
+              {% if data_list %}
+              {{ data_list | safe}} 
+              {% else %}
+              <h2 class="hdg-a hdg-source-lt layout-vr-md">No Data Available</h2>
+              {% endif %}
+            </div>
+            <br>
+          </div>
+        </div> <!-- End .inner-wrapper -->
+      </div> <!-- End .wrapper -->
+    </section>
+
+
+    {% if beneficiary_data_list and data_category != '2' and data == '1' %}
+    <h2 class="hdg-a hdg-source-lt layout-vr-md" style="margin-top:20px; margin-left: 25px;">Beneficiary Data</h2>
+    <section id="beneficiary-data" class="about-bg">
+      <div class="wrapper">
+        <div class="inner-wrapper">
+          <div class="row">
+            <div class="col-sm-12" style="overflow-x: auto">
+              {{ beneficiary_data_list | safe}}
+            </div>
+            <br>
+          </div>
+        </div> <!-- End .inner-wrapper -->
+      </div> <!-- End .wrapper -->
+    </section>
+    {% endif %}
+  </div>
+</section>
+
+
+

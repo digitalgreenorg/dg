@@ -23,6 +23,7 @@ from dashboard.admin import VideoPracticeAdmin
 from dashboard.admin import ParentCategoryAdmin
 from dashboard.admin import ProjectAdmin
 from dashboard.admin import TagAdmin
+from dashboard.admin import PartnerAdmin
 from activities.models import PersonAdoptPractice, Screening
 from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
@@ -65,7 +66,7 @@ coco_admin.register(State, StateAdmin)
 coco_admin.register(District, DistrictAdmin)
 coco_admin.register(Block, BlockAdmin)
 coco_admin.register(Village, VillageAdmin)
-coco_admin.register(Partner)
+coco_admin.register(Partner, PartnerAdmin)
 coco_admin.register(Project, ProjectAdmin)
 coco_admin.register(Person, PersonAdmin)
 coco_admin.register(PersonGroup, PersonGroupAdmin)

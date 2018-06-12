@@ -6,7 +6,7 @@ from django.views.generic.base import RedirectView
 from tastypie.api import Api
 # django imports
 from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource, TagResource
-from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, APVideoGenerator
+from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, APVideoGenerator, upload_csv_data, getFileHeader
 
 from dg.base_settings import COCO_PAGE
 from dg.ap_admin import ap_admin
@@ -23,6 +23,7 @@ import vrppayment.urls
 import mrppayment.urls
 import deoanalytics.urls
 import data_upload.urls
+import dataexport.urls
 
 v1_api = Api(api_name='v2')
 v1_api.register(DistrictResource())
@@ -55,6 +56,9 @@ urlpatterns = patterns('',
     (r'^record_full_download_time/', record_full_download_time),
     (r'^reset_database_check/', reset_database_check),
     (r'^upload/data/', upload_data),
+    (r'^uploaddata/', upload_csv_data),
+
+    url(r'^getfileheader/', getFileHeader, name='getfileheader'),
     (r'^admin/coco/cocouser/add/state_wise_district', 'coco.admin_views.state_wise_district'),
     (r'^admin/coco/cocouser/add/district_wise_village', 'coco.admin_views.district_wise_village'),
     (r'^admin/coco/cocouser/add/partner_wise_video', 'coco.admin_views.partner_wise_video'),
@@ -70,6 +74,7 @@ urlpatterns = patterns('',
     (r'^analytics/', include(output.urls)),
     (r'^jslps/analytics/', include(output.urls)),
     (r'^rda/', include(raw_data_analytics.urls)),
+    (r'^export/', include(dataexport.urls)),
     (r'^vrp/',include(vrppayment.urls)),
     (r'^mrp/',include(mrppayment.urls)),
     (r'^cocouser/',include(deoanalytics.urls)),
