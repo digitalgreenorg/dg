@@ -1,0 +1,47 @@
+{% extends 'dataexport/base.html' %}
+
+{% block title %}
+RAW DATA ANALYTICS
+{% endblock title %}
+
+{% block sidebar %}
+{% endblock sidebar %}
+
+{% block content %}
+<link rel="stylesheet" media="screen" href="{{STATIC_URL}}assets/styles/chosen.css" />
+        
+        <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/jquery.dataTables.css" />
+        <!-- <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/dataTables.tableTools.css" /> -->
+        <link rel="stylesheet" media="screen" href="{{STATIC_URL}}assets/styles/select2.css" />
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+<!-- ######################################################################################################-->
+            
+				
+					
+						
+					    <div class="row">
+							<div class="col-sm-12">
+								<h2 class="hdg-a hdg-source-lt layout-vr-md">Raw Data Analytics - Data Result</h2>	
+									From:&nbsp;{{ from_date }} &nbsp;&nbsp;&nbsp;&nbsp;
+									To:&nbsp;{{ to_date }}
+							</div>
+
+							<div class="col-sm-12">
+								<div id='tablex' data-val-json="{{dataf}}">
+							</div>
+								<table id="example" class="display" style="text-align:center;">
+							    </table>
+						
+						</div>
+
+				
+					
+				
+			
+
+<script src="/media/assets/scripts/jquery.min.js"></script>
+<script src="/media/assets/scripts/chosen.jquery.min.js"></script>
+<script src="/media/raw_data_analytics/raw_data_analytics.js"></script>
+<script  src="/media/raw_data_analytics/table_load.js"></script>
+{% endblock content %}

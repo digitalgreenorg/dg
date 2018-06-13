@@ -31,7 +31,7 @@
 
       
       <div id="wrapper">
-        {% if '/coco/rda' not in request.get_full_path %}
+        {% if 'rda' not in request.get_full_path %}
           {% block sidebar %}
             {% include 'dataexport/sidebar.html' %}
           {% endblock %}

@@ -349,6 +349,6 @@ def execute(request):
 
             else:
                 df = dataframe_result.to_json()
-                return render_to_response('raw_data_analytics/result.html', {'from_date': from_date, 'to_date': to_date,
+                return render_to_response('raw_data_analytics/result_new.html', {'from_date': from_date, 'to_date': to_date,
                                                                              'dataf': unicode(df, errors='ignore')},
                                           context_instance=RequestContext(request))
