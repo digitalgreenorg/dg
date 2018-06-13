@@ -2,6 +2,12 @@
 /** =================== MONTSERRAT =================== **/
 /** Montserrat Thin **/
 
+
+.login-sub-menu{
+  left: -85%;
+  top: 140%;
+}
+
 .errorlist{
   color: red;
   list-style: none;

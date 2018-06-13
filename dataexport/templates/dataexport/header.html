@@ -1,36 +1,123 @@
-	<div class="fixed-top d-flex flex-column flex-md-row align-items-center p-3 px-md-4 bg-white border-bottom box-shadow">
-      <a  class="my-0 mr-md-auto font-weight-normal" href="/coco/export/"><img style="width:200px;height:34px;" class="" src="{{ STATIC_URL }}dataexport/img/dg_logo_horizontal.png" /></a>
-      <nav class="my-2 my-md-0 mr-md-3">
-        {% if 'export' in request.get_full_path %}
-        <a class="p-2 text-dark" href="/coco/rda/" target="_blank">Raw Data</a>
-        <a class="p-2 text-dark" href="/coco/uploaddata/" target="_blank">Upload Data</a>
-        {% elif 'coco/rda/' in request.get_full_path %}
-        <a class="p-2 text-dark" href="/coco/export/" target="_blank">Extract Screening & Adoption</a>
-        <a class="p-2 text-dark" href="/coco/uploaddata/" target="_blank">Upload Data</a>
-        {% else %}
-        <a class="p-2 text-dark" href="/coco/rda/" target="_blank">Raw Data</a>
-        <a class="p-2 text-dark" href="/coco/export/" target="_blank">Extract Screening & Adoption</a>
-        {% endif %}
+
+  <div class="fixed-top d-flex flex-column flex-md-row align-items-center p-3 px-md-4 bg-white border-bottom box-shadow">
+      
+      
+      <nav class="navbar navbar-expand-lg navbar-light">
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          
+              
+              <a  class="my-0 mr-md-auto font-weight-normal" href="/coco/export/"><img style="width:200px;height:34px;" class="" src="{{ STATIC_URL }}dataexport/img/dg_logo_horizontal.png" /></a>
+              
+              <ul class="navbar-nav">
+              {% if 'export' in request.get_full_path %}
+              <a class="p-2 text-dark" href="/coco/rda/" target="_blank">Raw Data</a>
+              <a class="p-2 text-dark" href="/coco/uploaddata/" target="_blank">Upload Data</a>
+              {% elif 'coco/rda/' in request.get_full_path %}
+              <li><a class="p-2 text-dark ml-md-auto" href="/coco/export/" target="_blank">Extract Screening & Adoption</a></li>
+              <li><a class="p-2 text-dark" href="/coco/uploaddata/" target="_blank">Upload Data</a></li>
+              {% else %}
+              <li><a class="p-2 text-dark" href="/coco/rda/" target="_blank">Raw Data</a></li>
+              <li><a class="p-2 text-dark" href="/coco/export/" target="_blank">Extract Screening & Adoption</a></li>
+              {% endif %}
+            
+          </ul>
+            
+        
+
+          <ul class="navbar-nav">
+           
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle dropleft float-left" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ request.user.username}}
+              </a>
+              <div class="dropdown-menu login-sub-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'change_password' %}" target="_self"><i
+                          class="icon-lock"></i> Change Password</a>
+                <a class="dropdown-item" href="{% url 'logout' %}" target="_self"><i
+                          class="icon-logout"></i> Logout</a>
+              </div>
+            </li>
+            
+          </ul>
+        </div>
       </nav>
         <!-- {% if request.user.is_authenticated %}
         <a class="p-2 text-dark" href="/logout/">Logout</a>
         {% else %}
         <a class="p-2 text-dark" href="/accounts/login/">Login</a>
         {% endif %} -->
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                 aria-expanded="false">
-                  <span>{{ request.user.username }}</span>
-                  <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                  <li><a href="{% url 'change_password' %}" target="_self"><i
-                          class="icon-lock"></i> Change Password</a></li>
-                  <li><a href="{% url 'logout' %}" target="_self"><i
-                          class="icon-logout"></i> Logout</a></li>
-
-              </ul>
-          </li>
-        </ul>
+        
    </div>
+ 
+  {% comment %}
+<nav class="navbar navbar-default navbar-light bg-faded navbar-custom">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a  class="my-0 mr-md-auto font-weight-normal" href="/coco/export/"><img style="width:200px;height:34px;" class="" src="{{ STATIC_URL }}dataexport/img/dg_logo_horizontal.png" /></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse show" id="bs-navbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+
+                    <a class="text-uppercase  selected-nav-bar " href="/dashboard/">
+                        <i class="icon-home  selected-nav-bar "></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a class="text-uppercase " href="/dashboard/outbund/">
+                        <i class="icon-chart "></i>
+                        Outbound Analysis
+                    </a>
+                </li>
+                <li>
+                    <a class="text-uppercase " href="/dashboard/inbound/">
+                        <i class="icon-chart "></i>
+                        Inbound Analysis
+                    </a>
+                </li>
+                <li>
+                    <a class="text-uppercase " href="/dashboard/optin/">
+                        <i class="icon-chart "></i>
+                        Opt-In Analysis
+                    </a>
+                </li>
+                <li>
+                    <a class="text-uppercase " href="/dashboard/raw-data/">
+                        <i class="icon-list "></i>
+                        Raw Data
+                    </a>
+                </li>
+                
+                
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        
+                            <span>Digital Green</span>
+                        &nbsp;
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/accounts/password/change/" target="_self"><i class="icon-lock"></i> Change Password</a></li>
+                        <li><a href="/accounts/logout/" target="_self"><i class="icon-logout"></i> Logout</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</nav>
+
+ {% endcomment %}
 
