@@ -424,6 +424,9 @@ def save_admin_log(sender, **kwargs):
     elif sender =="IncentiveModel":
         save_incentive_model_log(instance,admin_user,kwargs)
 
+    elif sender == "GaddidarCommission":
+        save_gaddidarcommission_log(instance,admin_user,kwargs)
+
     Log = get_model('loop', 'AdminLog')
     log = Log(district=district_id, user=user, action=action, entry_table=sender,
               model_id=model_id, admin_user=admin_user)
