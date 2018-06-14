@@ -52,6 +52,7 @@ CONTAINS_ZERO = r'^[0]$'
 IVR_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/ivr_response/')
 REG_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_response/')
 AGGREGATORS_IDEO = [3775L,5049L,5050L,4630L,4790L,5053L,5055L]
+AGGREGATORS_IDEO_AP = [5053L,5055L]
 REG_AUTH_RECEIPT_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_auth_response/')
 REG_CODE_RESPONSE_URL = 'http://%s%s'%(CURRENT_DOMAIN, '/loop/reg_code_response/')
 REG_RESP_NUMBER="9246022444"

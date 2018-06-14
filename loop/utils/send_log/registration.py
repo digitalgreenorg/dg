@@ -297,18 +297,20 @@ def initiate_ivr_call(farmer,language,type):
 	# app_id_ap= 171536
 	app_id_br = 165528 # MARKET_INFO_APP
 	app_id_ap = 168599
-	
+	app_id_missed = 177493
 	# dg_number_br='09513886363'
 	# dg_number_ap='09513886363'
 	dg_number_br='01139589707'
 	dg_number_ap = '01139587500'
-
-	if language == 'hi' or language.notation == 'hi':
-		dg_number= dg_number_br
-		app_id = app_id_br
-	else:
-		dg_number= dg_number_ap
-		app_id = app_id_ap
+	dg_number_missed = '01139587500'
+	# if language == 'hi' or language.notation == 'hi':
+	# 	dg_number= dg_number_br
+	# 	app_id = app_id_br
+	# else:
+	# 	dg_number= dg_number_ap
+	# 	app_id = app_id_ap
+	dg_number=dg_number_missed
+	app_id=app_id_missed
 	app_url = APP_URL%(app_id,)
 	phone_number = '0'+str(farmer.phone)
 	call_response_url = IVR_RECEIPT_URL #MARKET_INFO_CALL_RESPONSE_URL
