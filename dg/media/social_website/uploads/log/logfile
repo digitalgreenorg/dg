@@ -1,0 +1,31 @@
+[30/Apr/2018 09:52:28] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 09:52:28] [loop_ivr.views] 
+[30/Apr/2018 09:53:05] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 09:53:05] [loop_ivr.views] 
+[30/Apr/2018 09:53:35] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 09:53:35] [loop_ivr.views] 
+[30/Apr/2018 09:54:06] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 09:54:06] [loop_ivr.views] msgId=1243&sender=9555624943&inNumber=9555624943&content=3
+[30/Apr/2018 09:54:55] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 09:54:55] [loop_ivr.views] msgId=1243&sender=9555624943&inNumber=9555624943&content=3**2
+[30/Apr/2018 10:53:31] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 10:53:31] [loop_ivr.views] msgId=1243&sender=9555624943&inNumber=9555624943&content=3**2
+[30/Apr/2018 10:53:33] [loop_ivr.helper_function] (1146, "Table 'loop.loop_ivr_smsstatus' doesn't exist")
+[30/Apr/2018 10:54:21] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 10:54:21] [loop_ivr.views] msgId=1243&sender=9555624943&inNumber=9555624943&content=3**2
+[30/Apr/2018 10:54:22] [loop_ivr.helper_function] (1146, "Table 'loop.loop_ivr_smsstatus' doesn't exist")
+[30/Apr/2018 10:55:03] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 10:55:03] [loop_ivr.views] msgId=1243&sender=9555624943&inNumber=9555624943&content=3
+[30/Apr/2018 10:55:04] [loop_ivr.helper_function] (1146, "Table 'loop.loop_ivr_smsstatus' doesn't exist")
+[30/Apr/2018 10:55:52] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 10:55:52] [loop_ivr.views] msgId=1243&sender=9555624943&inNumber=9555624943&content=3
+[30/Apr/2018 10:55:54] [loop_ivr.helper_function] (1146, "Table 'loop.loop_ivr_smsstatus' doesn't exist")
+[30/Apr/2018 11:06:13] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 11:06:13] [loop_ivr.views] msgId=1243&sender=9555624943&inNumber=9555624943&content=3
+[30/Apr/2018 11:06:14] [loop_ivr.helper_function] (1146, "Table 'loop.loop_ivr_smsstatus' doesn't exist")
+[30/Apr/2018 11:06:40] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 11:06:40] [loop_ivr.views] msgId=1243&sender=9555624943&inNumber=9555624943&content=2
+[30/Apr/2018 11:06:41] [loop_ivr.helper_function] (1146, "Table 'loop.loop_ivr_smsstatus' doesn't exist")
+[30/Apr/2018 11:07:12] [loop_ivr.views] Reached here in SMS View
+[30/Apr/2018 11:07:12] [loop_ivr.views] msgId=1243&sender=9555624943&inNumber=9555624943&content=2
+[30/Apr/2018 11:07:13] [loop_ivr.helper_function] (1146, "Table 'loop.loop_ivr_smsstatus' doesn't exist")

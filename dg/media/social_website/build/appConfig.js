@@ -1,1 +1,0 @@
-define({apiUrl:"/social/"});

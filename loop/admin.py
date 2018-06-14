@@ -211,7 +211,7 @@ class TransportationVehicleAdmin(admin.ModelAdmin):
 
 class MandiAdmin(admin.ModelAdmin):
     fields = ('district', ('mandi_name', 'mandi_name_en'), ('latitude', 'longitude'), 'is_visible', 'mandi_type')
-    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type')
+    list_display = ('id', 'mandi_name', 'district', 'mandi_name_en', 'mandi_type', 'latitude', 'longitude')
     search_fields = ['mandi_name', 'district__district_name_en', 'mandi_type__mandi_type_name', 'mandi_name_en']
     list_filter = ['district__district_name_en', 'district__state__state_name_en', 'district__state__country', 'mandi_type']
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -229,7 +229,7 @@ class MandiTypeAdmin(admin.ModelAdmin):
 
 class VillageAdmin(admin.ModelAdmin):
     fields = ('block', ('village_name', 'village_name_en'), ('latitude', 'longitude'), 'is_visible')
-    list_display = ('id', 'village_name', 'village_name_en', 'block')
+    list_display = ('id', 'village_name', 'village_name_en', 'block', 'latitude', 'longitude')
     search_fields = ['village_name', 'village_name_en', 'block__block_name_en', 'block__district__state__state_name_en']
     list_filter = ['block__block_name_en', 'block__district__district_name_en', 'block__district__state__state_name_en', 'block__district__state__country']
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -476,7 +476,7 @@ loop_admin.register(Farmer, FarmerAdmin)
 loop_admin.register(CombinedTransaction, CombinedTransactionAdmin)
 loop_admin.register(Mandi, MandiAdmin)
 loop_admin.register(Transporter, TransporterAdmin)
-loop_admin.register(Vehicle, VehicleAdmin) 
+loop_admin.register(Vehicle, VehicleAdmin)
 loop_admin.register(VehicleLanguage, VehicleLanguageAdmin)
 loop_admin.register(TransportationVehicle, TransportationVehicleAdmin)
 loop_admin.register(DayTransportation, DayTransportationAdmin)
