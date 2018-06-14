@@ -32,7 +32,7 @@ APPEND_SLASH = True
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media/social_website/uploads/'
 MEDIA_ROOT = os.path.join(PROJECT_PATH, *MEDIA_URL.strip("/").split("/"))
 
 # List of callables that know how to import templates from various sources.
@@ -158,7 +158,7 @@ INSTALLED_APPS = (
     # 'dimagi',
     'tastypie',
     # 'coco',
-    # 'social_website',
+    'social_website',
     'social.apps.django_app.default',
     # 'communications',
     # 'human_resources',
@@ -168,8 +168,8 @@ INSTALLED_APPS = (
     # 'raw_data_analytics',
     # 'mezzanine.boot',
     # 'mezzanine.conf',
-    # 'mezzanine.core',
-    # 'mezzanine.generic',
+    'mezzanine.core',
+    'mezzanine.generic',
     # 'mezzanine.blog',
     # 'mezzanine.forms',
     # 'mezzanine.pages',
@@ -185,8 +185,6 @@ INSTALLED_APPS = (
     # 'mrppayment',
     'smart_selects',
     'loop_ivr',
-    'django_unused_media',
-    'django_cleanup'
 )
 
 # Store these package names here as they may change in the future since
