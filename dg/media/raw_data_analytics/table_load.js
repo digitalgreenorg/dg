@@ -52,4 +52,12 @@ function table_load()
     ]
     } );
 	$('.dt-buttons').css('float','right');
+	
+		//$('.dataTables_wrapper').css('width','90%');
+	$('#example_length').css('padding-left','5%');
+	$('#example_info').css('padding-left','5%');
+	$('.dt-buttons').css('padding-left','5%');
+	$('.dt-buttons').css('padding-right','5%');
+
+	
 }
