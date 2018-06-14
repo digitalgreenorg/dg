@@ -55,8 +55,7 @@ class ExportView(FormView):
         elif data_category == '3':
             data_list = \
                 Screening.objects.filter(date__range=date_range,
-                                         village__block__district__state__country_id=country.id,
-                                         parentcategory_id__in=[1,2]
+                                         village__block__district__state__country_id=country.id
                                          ).exclude(farmers_attendance=None\
                                          ).values(
                                          'village_id','partner_id', 'partner__partner_name',\
@@ -70,8 +69,7 @@ class ExportView(FormView):
             data_list = \
                 Screening.objects.filter(date__range=date_range,
                                          village__block__district__state__country_id=country.id,
-                                         village__block__district__state_id__in=state,
-                                         parentcategory_id=data_category).exclude(farmers_attendance=None\
+                                         village__block__district__state_id__in=state).exclude(parentcategory_id=1).exclude(farmers_attendance=None\
                                          ).values(
                                          'village_id', 'partner_id', 'partner__partner_name',\
                                          'date',\
@@ -82,9 +80,8 @@ class ExportView(FormView):
         elif data_category == '2':
             data_list = \
                 Screening.objects.filter(date__range=date_range,
-                                         village__block__district__state__country_id=country.id,
-                                         parentcategory_id=data_category
-                                         ).exclude(farmers_attendance=None\
+                                         village__block__district__state__country_id=country.id
+                                         ).exclude(parentcategory_id=1).exclude(farmers_attendance=None\
                                          ).values(
                                          'village_id', 'partner_id', 'partner__partner_name',\
                                          'date',\
@@ -252,7 +249,6 @@ class ExportView(FormView):
         if '3' in data_category and len(state):
             category = [1,2]
             data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
-                                                       parentcategory_id__in=category,
                                                        person__village__block__district__state__country_id=country.id,
                                                        person__village__block__district__state_id__in=state).values('person_id',\
                     'person__person_name','person__gender','person__phone_no', 'video_id','video__title','date_of_adoption','partner_id',\
@@ -267,7 +263,6 @@ class ExportView(FormView):
         elif '3' in data_category:
             category = [1,2]
             data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
-                                                       parentcategory_id__in=category,
                                                        person__village__block__district__state__country_id=country.id,
                                                        ).values('person_id',\
                     'person__person_name','person__gender','person__phone_no', 'video_id','video__title','date_of_adoption','partner_id',\
@@ -285,7 +280,6 @@ class ExportView(FormView):
             category = data_category
             if len(state):
                 data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
-                                                       parentcategory_id__in=category,
                                                        person__village__block__district__state__country_id=country.id,
                                                        person__village__block__district__state_id__in=state).values('person_id',\
                     'person__person_name','person__gender','person__phone_no', 'video_id','video__title','date_of_adoption','partner_id',\
@@ -297,9 +291,12 @@ class ExportView(FormView):
                     'person__village__block__district_id','person__village__block__district__district_name',\
                     'person__village__block_id','person__village__block__block_name',\
                     'person__village_id','person__village__village_name', 'id', 'time_created')
+                if category == '2':
+                    data_list.exclude(parentcategory_id=1)
+                else:
+                    data_list.filter(parentcategory_id=1)
             else:
                 data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
-                                                       parentcategory_id__in=category,
                                                        person__village__block__district__state__country_id=country.id,
                                                        ).values('person_id',\
                     'person__person_name','person__gender','person__phone_no', 'video_id','video__title','date_of_adoption','partner_id',\
@@ -311,6 +308,10 @@ class ExportView(FormView):
                     'person__village__block__district_id','person__village__block__district__district_name',\
                     'person__village__block_id','person__village__block__block_name',\
                     'person__village_id','person__village__village_name', 'id', 'time_created')
+                if category == '2':
+                    data_list.exclude(parentcategory_id=1)
+                else:
+                    data_list.filter(parentcategory_id=1)
         
         data_list = pd.DataFrame(list(data_list))
         return data_list
@@ -339,48 +340,60 @@ class ExportView(FormView):
         category = []
         if '3' in data_category and len(state):
             category = [1,2]
-            total_screenings = Screening.objects.filter(date__range=date_range, parentcategory_id__in=category, \
+            total_screenings = Screening.objects.filter(date__range=date_range, \
                                 village__block__district__state_id__in=state).exclude(farmers_attendance=None\
                                          ).count();
             total_adoptions = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range, \
-                                parentcategory_id__in=category, \
                                 person__village__block__district__state_id__in=state).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
-            total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range,screening__parentcategory_id__in=category, \
+            total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range, \
                                 screening__village__block__district__state_id__in=state).aggregate(unique_viewers=Count('person_id', distinct=True))
     
         elif '3' in data_category:
             category = [1,2]
-            total_screenings = Screening.objects.filter(date__range=date_range, parentcategory_id__in=category, \
+            total_screenings = Screening.objects.filter(date__range=date_range, \
                                 village__block__district__state__country_id=country.id).exclude(farmers_attendance=None\
                                          ).count();
             total_adoptions = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range, \
-                                parentcategory_id__in=category, \
                                 person__village__block__district__state__country_id=country.id).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
-            total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range,screening__parentcategory_id__in=category, \
+            total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range,\
                                 screening__village__block__district__state__country_id=country.id).aggregate(unique_viewers=Count('person_id', distinct=True))
 
 
         else:
             category = data_category
             if len(state):
-                total_screenings = Screening.objects.filter(date__range=date_range, parentcategory_id__in=category, \
+                total_screenings = Screening.objects.filter(date__range=date_range, \
                                 village__block__district__state_id__in=state).exclude(farmers_attendance=None\
-                                         ).count();
+                                         )
                 total_adoptions = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range, \
-                                    parentcategory_id__in=category, \
-                                    person__village__block__district__state_id__in=state).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
-                total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range,screening__parentcategory_id__in=category, \
-                                    screening__village__block__district__state_id__in=state).aggregate(unique_viewers=Count('person_id', distinct=True))   
+                                    person__village__block__district__state_id__in=state)
+                total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range, \
+                                    screening__village__block__district__state_id__in=state) 
+                if category == '2':
+                    total_screenings = total_screenings.exclude(parentcategory_id=1).count()
+                    total_adoptions = total_adoptions.exclude(parentcategory_id=1).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
+                    total_unique_viewers = total_unique_viewers.exclude(parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))
+                else:
+                    total_screenings = total_screenings.filter(parentcategory_id=1).count()
+                    total_adoptions = total_adoptions.filter(parentcategory_id=1).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
+                    total_unique_viewers = total_unique_viewers.filter(parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))   
             
             else:
-                total_screenings = Screening.objects.filter(date__range=date_range, parentcategory_id__in=category, \
+                total_screenings = Screening.objects.filter(date__range=date_range,\
                                     village__block__district__state__country_id=country.id).exclude(farmers_attendance=None\
-                                         ).count();
+                                         )
                 total_adoptions = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range, \
-                                    parentcategory_id__in=category, \
-                                    person__village__block__district__state__country_id=country.id).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
-                total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range,screening__parentcategory_id__in=category, \
-                                    screening__village__block__district__state__country_id=country.id).aggregate(unique_viewers=Count('person_id', distinct=True))
+                                    person__village__block__district__state__country_id=country.id)
+                total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range, \
+                                    screening__village__block__district__state__country_id=country.id)
+                if category == '2':
+                    total_screenings = total_screenings.exclude(parentcategory_id=1).count()
+                    total_adoptions = total_adoptions.exclude(parentcategory_id=1).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
+                    total_unique_viewers = total_unique_viewers.exclude(parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))
+                else:
+                    total_screenings = total_screenings.filter(parentcategory_id=1).count()
+                    total_adoptions = total_adoptions.filter(parentcategory_id=1).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
+                    total_unique_viewers = total_unique_viewers.filter(parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))
  
         if data_type == 1:
             # fetching the screening data
