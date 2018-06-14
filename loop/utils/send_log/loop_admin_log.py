@@ -425,6 +425,7 @@ def save_admin_log(sender, **kwargs):
         save_incentive_model_log(instance,admin_user,kwargs)
 
     elif sender == "GaddidarCommission":
+
         save_gaddidarcommission_log(instance,admin_user,kwargs)
 
     Log = get_model('loop', 'AdminLog')
@@ -510,8 +511,10 @@ def send_updated_admin_log(request):
             except Exception:
                 raise UserDoesNotExist(
                     'User with id: ' + str(user.id) + 'does not exist')
+
             districts = requesting_admin_user.get_districts()
             loopusers = requesting_admin_user.get_loopusers()
+
             Log = get_model('loop', 'AdminLog')
             Mandi = get_model('loop', 'Mandi')
             Gaddidar = get_model('loop', 'Gaddidar')
@@ -529,6 +532,10 @@ def send_updated_admin_log(request):
             AggregatorIncentive = get_model('loop','AggregatorIncentive')
             IncentiveModel = get_model('loop','IncentiveModel')
             Partner =get_model('loop','Partner')
+
+            mandis =[]
+            for loopuser in loopusers:
+                mandis.append(loopusers.get_mandis())
 
             list_rows = []
             #AdminUser Log
@@ -551,7 +558,7 @@ def send_updated_admin_log(request):
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,model_id=requesting_admin_user.id,entry_table__in=['AdminUser']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['Crop','Vehicle']))
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table='Partner'))
-            import pdb;pdb.set_trace()
+            
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table='IncentiveModel'))
 
             loopuser_querset=Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUser'],admin_user=None)
@@ -589,11 +596,24 @@ def send_updated_admin_log(request):
             
             #TODO: check if below condition holds true
             list_rows.append(Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['LoopUserAssignedMandi','LoopUserAssignedVillage'],user_id=requesting_admin_user.user_id))
-
             aggregatorIncentive_querset=Log.objects.filter(timestamp__gt=timestamp,entry_table__in=['AggregatorIncentive'],admin_user=None)
             for row in aggregatorIncentive_querset:
                 try:
                     if AggregatorIncentive.objects.get(id=row.model_id).aggregator in loopusers:
+                        list_rows.append(row)
+                except:
+                    pass
+            gaddidar_queryset = Log.objects.filter(timestamp__gt=timestamp,entry_table="Gaddidar")
+            for row in gaddidar_queryset:
+                try:
+                    if Gaddidar.objects.get(id=row.model_id).mandi in mandis:
+                        list_rows.append(row)
+                except:
+                    pass
+            gaddidarcommission_queryset = Log.objects.filter(timestamp__gt=timestamp,entry_table="GaddidarCommission")
+            for row in gaddidarcommission_queryset:
+                try:
+                    if GaddidarCommission.objects.get(id=row.model_id).gaddidar.mandi in mandis:
                         list_rows.append(row)
                 except:
                     pass
@@ -621,7 +641,6 @@ def send_updated_admin_log(request):
                 
 
             data_list = []
-            #import pdb;pdb.set_trace()
             for row in list_rows:
                 if row:
                     try:

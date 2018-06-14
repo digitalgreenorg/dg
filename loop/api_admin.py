@@ -28,7 +28,6 @@ def send_duplicate_message(obj_id):
     raise ImmediateHttpResponse(response=HttpResponse(json.dumps(response), status=500, content_type="application/json"))
 
 def foreign_key_to_id(bundle, field_name, sub_field_names):
-    #import pdb;pdb.set_trace()
     field = getattr(bundle.obj, field_name)
     if (field == None):
         dict = {}
@@ -36,15 +35,13 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
             dict[sub_field] = None
     else:
         dict = model_to_dict(field, fields=sub_field_names, exclude=[])
-        # dict["online_id"] = dict['id']
     return dict
 
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict.get('online_id'):
-        bundle.data[field_name] = "/loop/api/v2/%s/%s/" % (resource_name if resource_name else field_name,
-                                                           str(field_dict.get('online_id')))
+        bundle.data[field_name] = "/loop/api/v1/%s/%s/" % (resource_name if resource_name else field_name,str(field_dict.get('online_id')))
     else:
         bundle.data[field_name] = None
     return bundle
@@ -53,8 +50,7 @@ def dict_to_foreign_uri(bundle, field_name, resource_name=None):
 def id_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
     if field_dict:
-        bundle.data[field_name] = "/loop/api/v2/%s/%s/" % (resource_name if resource_name else field_name,
-                                                           str(field_dict))
+        bundle.data[field_name] = "/loop/api/v1/%s/%s/" % (resource_name if resource_name else field_name,str(field_dict))
     else:
         bundle.data[field_name] = None
     return bundle
@@ -65,7 +61,7 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
     resource_uri_list = []
     for item in m2m_list:
         try:
-            resource_uri_list.append("/loop/api/v2/%s/%s/" %
+            resource_uri_list.append("/loop/api/v1/%s/%s/" %
                                      (resource_name, str(item.get('id'))))
         except:
             return bundle
@@ -791,17 +787,16 @@ class GaddidarResource(BaseResource):
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
-
-        dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
-        hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
+        
+    dehydrate_mandi = partial(foreign_key_to_id, field_name='mandi', sub_field_names=['id'])
+    hydrate_mandi = partial(dict_to_foreign_uri, field_name='mandi')
 
     def obj_create(self, bundle, request=None, **kwargs):
         mandi_id = bundle.data['mandi']['online_id']
         mandi = Mandi.objects.get(id=mandi_id)
         attempt = Gaddidar.objects.filter(gaddidar_phone=bundle.data['gaddidar_phone'],gaddidar_name=bundle.data['gaddidar_name'],mandi=mandi)
         if attempt.count() < 1:
-            bundle = super(GaddidarResource, self).obj_create(
-                bundle, **kwargs)
+            bundle = super(GaddidarResource, self).obj_create(bundle, **kwargs)
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle
