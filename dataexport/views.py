@@ -42,7 +42,6 @@ class ExportView(FormView):
             data_list = \
                 Screening.objects.filter(date__range=date_range,
                                          village__block__district__state__country_id=country.id,
-                                         parentcategory_id__in=[1,2],
                                          village__block__district__state_id__in=state).exclude(farmers_attendance=None\
                                          ).values(
                                          'village_id','partner_id', 'partner__partner_name',\
