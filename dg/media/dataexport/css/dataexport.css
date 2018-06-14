@@ -34,6 +34,10 @@ table.dataTable {
   background-color: white !important;
 }
 
+.custom-wrapper {
+  width: 90% !important;
+}
+
 #sidebar-wrapper.active {
     margin-left: -290px;
     position: absolute;

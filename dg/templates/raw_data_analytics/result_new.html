@@ -21,7 +21,7 @@ RAW DATA ANALYTICS
 					
 						
 					    <div class="row">
-							<div class="col-sm-12">
+							<div class="col-sm-12" style="padding-left: 6%">
 								<h2 class="hdg-a hdg-source-lt layout-vr-md">Raw Data Analytics - Data Result</h2>	
 									From:&nbsp;{{ from_date }} &nbsp;&nbsp;&nbsp;&nbsp;
 									To:&nbsp;{{ to_date }}
@@ -44,4 +44,19 @@ RAW DATA ANALYTICS
 <script src="/media/assets/scripts/chosen.jquery.min.js"></script>
 <script src="/media/raw_data_analytics/raw_data_analytics.js"></script>
 <script  src="/media/raw_data_analytics/table_load.js"></script>
+<script type="text/javascript">
+	$('#wrapper').css('padding-left',0);
+	$('table#example').css('width','90%');
+	$(document).ready(function(){
+		//$('.dataTables_wrapper').css('width','90%');
+		$('#example_length').css('padding-left','5%');
+		$('#example_info').css('padding-left','5%');
+		$('.dt-buttons').css('padding-left','5%');
+		$('.dt-buttons').css('padding-right','5%');
+		
+	})
+	
+	
+
+</script>
 {% endblock content %}

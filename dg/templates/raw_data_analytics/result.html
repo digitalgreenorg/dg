@@ -65,8 +65,8 @@
             Collections
             ViewCollections
             Profile
-    -->
-    <!-- Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work -->
+    
+    Implementation Note: the user-id data attribute on the body below must be present on page load for like functionality to work-->
     <body data-controller="{% if header.jsController %}{{header.jsController}}{% else %}DigitalGreenPage{% endif %}" data-user-id={{request.user.id}} >
         <!-- Begin Main Wrapper -->
         <div class="wrapper-main wrapper" >
