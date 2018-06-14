@@ -18,7 +18,6 @@
     {% get_current_language as LANGUAGE_CODE %}
     window.__home_link = '<a href="{% url "home" %}">{% trans "View site" %}</a>';
     window.__csrf_token = '{{ csrf_token }}';
-    window.__admin_keywords_submit_url = '{% url "admin_keywords_submit" %}';
     window.__filebrowser_url = '{{ fb_browse_url }}';
     window.__tinymce_css = '{% static "mezzanine/css/tinymce.css" %}';
     window.__admin_url = '{{ admin_index_url }}';
