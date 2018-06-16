@@ -402,6 +402,7 @@ def ideo_incoming(request):
 	return HttpResponse("0")
 
 def send_call_already_missed_call(farmer,preferred_language):
+	#TODO: Check the issues
 	missed_call=MissedCall.objects.filter(from_number=farmer.phone)
 	farmer_number=farmer.phone
 	if missed_call.count()>0:
