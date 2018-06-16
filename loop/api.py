@@ -19,7 +19,7 @@ from django.contrib.auth.models import User
 from models import *
 
 from loop.utils.send_log.registration import send_reg_sms as txtlcl
-from loop.utils.send_log.registration import initiate_ivr_call
+from loop.utils.send_log.registration import initiate_ivr_call,send_call_already_missed_call
 import datetime
 import time
 
@@ -371,6 +371,9 @@ class FarmerResource(BaseResource):
             if bundle.obj.user_created_id in AGGREGATORS_IDEO_AP:
                 user = LoopUser.objects.get(user=bundle.obj.user_created_id)
                 initiate_ivr_call(bundle.obj,user.preferred_language,1)
+            if bundle.obj.user_created_id in AGGREGATORS_IDEO:
+                user = LoopUser.objects.get(user=bundle.obj.user_created_id)
+                send_call_already_missed_call(bundle.obj,user.preferred_language)
         else:
             send_duplicate_message(int(attempt[0].id))
         return bundle

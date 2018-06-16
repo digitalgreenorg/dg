@@ -884,3 +884,9 @@ class QrMapping(LoopModel):
     url = models.CharField(max_length=40,blank=True,null=True)
     code = models.CharField(max_length=10,blank=True,null=True)
 
+
+class MissedCall(LoopModel):
+    id = models.AutoField(primary_key=True)
+    sid = models.CharField(max_length=80,null=True,default='')
+    from_number = models.CharField(max_length=13,blank=True,null=True)
+    start_time= models.CharField(max_length=20, blank=True,null=True)

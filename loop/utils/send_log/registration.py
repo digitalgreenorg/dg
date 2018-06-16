@@ -1,6 +1,6 @@
 
 from dg.settings import TEXTLOCAL_API_KEY
-from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode,Referral,LoopUser
+from loop.models import Farmer,RegistrationSms,SMS_STATE,FarmerTransportCode,CombinedTransaction,FarmerTransportCode,Referral,LoopUser,MissedCall
 from loop_ivr.utils.config import TEXT_LOCAL_SINGLE_SMS_API, SMS_SENDER_NAME, REG_RECEIPT_URL,REG_AUTH_RECEIPT_URL,REG_RESP_NUMBER,REG_CODE_RESPONSE_URL,IVR_RECEIPT_URL
 from loop.config import registration_sms,first_transaction_sms,referral_transport_sms,already_exist_sms
 import requests
@@ -373,7 +373,8 @@ def ideo_incoming(request):
 		farmer_number = str(request.GET['CallFrom'])
 		farmer_number = re.sub('^0', '', farmer_number)
         farmer = Farmer.objects.filter(phone=farmer_number)
-
+        start_time= str(request.GET['StartTime'])
+        MissedCall(callSid=call_id,from_number=farmer_number,start_time=start_time).save()
         if farmer.count()>0:
 			user = LoopUser.objects.filter(user=farmer[0].user_created_id)
 			initiate_ivr_call(farmer[0],user[0].preferred_language,1)
@@ -396,6 +397,34 @@ def ideo_incoming(request):
 					reg_sms.save()
 				else:
 					response = send_first_transportation_code(farmer[0],1,query_code,farmer_number,user[0].preferred_language)
-        	
+    
 	return HttpResponse("0")
+
+def send_call_already_missed_call(farmer,preferred_language):
+	missed_call=MissedCall.objects.filter(from_number=farmer.phone)
+	if missed_call.count()>0:
+		user = LoopUser.objects.filter(user=farmer.user_created_id)
+		initiate_ivr_call(farmer[0],user[0].preferred_language,1)
+		query_code="1"
+		if farmer[0].user_created_id in AGGREGATORS_IDEO and not farmer[0].verified and RegistrationSms.objects.filter(farmer=farmer[0],msg_type=0).count()>0:
+			if query_code=="1":
+				code = random_with_N_digits(5)
+				reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
+				reg_sms.save()
+				response = send_first_transportation_code(farmer[0],code,query_code,farmer_number,user[0].preferred_language)
+				farmer.update(referral_free_transport_count=farmer[0].referral_free_transport_count+1)
+				status_code = 0
+				if response['status'] == "success":
+					status_code = 1
+					sms_id = response['messages'][0]['id']
+					reg_sms.state = SMS_STATE['F'][0]
+					farmer.update(verified=True)
+				reg_sms.text_local_id = sms_id
+				reg_sms.sms_status = status_code
+				reg_sms.save()
+			else:
+				response = send_first_transportation_code(farmer[0],1,query_code,farmer_number,user[0].preferred_language)
+    
+	return HttpResponse("0")
+
 
