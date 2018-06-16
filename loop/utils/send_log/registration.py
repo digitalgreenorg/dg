@@ -403,6 +403,7 @@ def ideo_incoming(request):
 
 def send_call_already_missed_call(farmer,preferred_language):
 	missed_call=MissedCall.objects.filter(from_number=farmer.phone)
+	farmer_number=farmer.phone
 	if missed_call.count()>0:
 		user = LoopUser.objects.filter(user=farmer.user_created_id)
 		initiate_ivr_call(farmer,user[0].preferred_language,1)
@@ -410,9 +411,9 @@ def send_call_already_missed_call(farmer,preferred_language):
 		if farmer.user_created_id in AGGREGATORS_IDEO and not farmer.verified and RegistrationSms.objects.filter(farmer=farmer,msg_type=0).count()>0:
 			if query_code=="1":
 				code = random_with_N_digits(5)
-				reg_sms = FarmerTransportCode(code=code,phone=farmer_number,state=SMS_STATE['S'][0],msg_type=2)
+				reg_sms = FarmerTransportCode(code=code,phone=farmer.phone,state=SMS_STATE['S'][0],msg_type=2)
 				reg_sms.save()
-				response = send_first_transportation_code(farmer,code,query_code,farmer_number,user[0].preferred_language)
+				response = send_first_transportation_code(farmer,code,query_code,farmer.phone,user[0].preferred_language)
 				farmer.update(referral_free_transport_count=farmer.referral_free_transport_count+1)
 				status_code = 0
 				if response['status'] == "success":
@@ -424,7 +425,7 @@ def send_call_already_missed_call(farmer,preferred_language):
 				reg_sms.sms_status = status_code
 				reg_sms.save()
 			else:
-				response = send_first_transportation_code(farmer,1,query_code,farmer_number,user[0].preferred_language)
+				response = send_first_transportation_code(farmer,1,query_code,farmer.phone,user[0].preferred_language)
     
 	return HttpResponse("0")
 
