@@ -374,7 +374,8 @@ def ideo_incoming(request):
 		farmer_number = re.sub('^0', '', farmer_number)
         farmer = Farmer.objects.filter(phone=farmer_number)
         start_time= str(request.GET['StartTime'])
-        MissedCall(callSid=call_id,from_number=farmer_number,start_time=start_time).save()
+        miss_call=MissedCall(sid=call_id,from_number=farmer_number,start_time=start_time)
+        miss_call.save()
         if farmer.count()>0:
 			user = LoopUser.objects.filter(user=farmer[0].user_created_id)
 			initiate_ivr_call(farmer[0],user[0].preferred_language,1)
