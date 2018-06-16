@@ -918,7 +918,7 @@ class DayTransportationResource(BaseResource):
     class Meta:
         limit = 0
         max_limit = 0
-        queryset = DayTransportation.objects.all()
+        queryset = DayTransportation.objects.filter(date__gte=datetime.datetime.today()-datetime.timedelta(days=180))
         detail_allowed_methods = ["get", "post", "put", "delete","patch"]
         resource_name = 'daytransportation'
         authorization = DayTransportationAuthorization()
@@ -1109,7 +1109,7 @@ class CombinedTransactionResource(BaseResource):
         limit = 0
         max_limit = 0
         detail_allowed_methods = ["get", "post", "put", "delete"]
-        queryset = CombinedTransaction.objects.all()
+        queryset = CombinedTransaction.objects.filter(date__gte=datetime.datetime.today()-datetime.timedelta(days=180))   
         resource_name = 'combinedtransaction'
         authorization = CombinedTransactionAuthorization()
         authentication = ApiKeyAuthentication()
