@@ -5,11 +5,11 @@ import xlsxwriter
 from io import BytesIO
 import re
 
-from weasyprint import HTML
+#from weasyprint import HTML
 
 from config import *
 from django.template.loader import render_to_string
-from dg.settings import LOCALE
+#from dg.settings import LOCALE
 import locale as lc
 
 
@@ -81,7 +81,7 @@ def get_headers_from_template_dict(ws_obj, sheet_index, header_dict, bold):
                     column_formula_list.append({'formula': col.get('formula'),
                                                 'col_index': col_index})
             except Exception as e:
-                print e
+                pass
     data_dict = {'cell_value': cell_value, 'formulacolumn_dict': total_value_in_column,
                  'formula_list': column_formula_list}
     return data_dict
@@ -217,7 +217,7 @@ def excel_processing(workbook, name_of_sheets, heading_of_sheets, heading_format
                 ws.merge_range('E'+str(ap_formula_row+3)+':L'+str(ap_formula_row+3), " = 0.5*Q", row_format)
 
     except Exception as e:
-        print e
+        pass
     return workbook
 
 
@@ -273,7 +273,7 @@ def generate_pdf(pdf_output, data_dict):
         pdf_output.close()
         return pdf
     except Exception as e:
-        print e
+        pass
 
 
 def get_table_data(data_dict):
@@ -335,5 +335,5 @@ def get_table_data(data_dict):
 
         return table_data_final
     except Exception as e:
-        print e
+        pass
 

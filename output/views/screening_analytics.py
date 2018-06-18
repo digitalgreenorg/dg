@@ -1,6 +1,7 @@
 from django.shortcuts import *
-from django.db.models import Count, Min, Max
+from django.db.models import Count, Min, Max, Sum
 from django.http import Http404, HttpResponse
+from django.conf import settings
 import datetime,json
 from output.database.SQL import screening_analytics_sql, shared_sql
 from output import views
@@ -179,6 +180,7 @@ def screening_geog_pie_data(request):
 #        values_to_fetch can be None, which will fetch all
 def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, values_to_fetch=None):
     return_dict = {}
+    tot_ap_per = {}
     sql_values_to_fetch = set()
     if values_to_fetch is None or 'avg_att_per_sc' in values_to_fetch:
         sql_values_to_fetch.update(["tot_scr", "tot_att"])
@@ -187,7 +189,15 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
     if values_to_fetch is None or 'tot_scr' in values_to_fetch:
         sql_values_to_fetch.add('tot_scr')
 
+
     tot_val = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, sql_values_to_fetch))[0];
+    # for ap screening
+    if settings.AP_PARTNER_ID in partners or partners == []:
+        tot_ap_per = shared_sql.ap_screening_overview(geog, id, from_date, to_date, partners) 
+    
+    if tot_ap_per.get('ap_tot_per') is not None:
+        tot_val['tot_att'] = tot_val['tot_att'] + int(tot_ap_per.get('ap_tot_per'))
+    
     if tot_val['tot_scr'] is None:
         tot_val['tot_scr'] = 0
 

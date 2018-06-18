@@ -1,0 +1,17 @@
+	<div class="fixed-top d-flex flex-column flex-md-row align-items-center p-3 px-md-4 bg-white border-bottom box-shadow">
+      <a  class="my-0 mr-md-auto font-weight-normal" href="/coco/export/"><img style="width:200px;height:34px;" class="" src="{{ STATIC_URL }}dataexport/img/dg_logo_horizontal.png" /></a>
+      <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" href="/coco/rda/" target="_blank">Raw Data</a>
+        {% if 'export' in request.get_full_path %}
+        <a class="p-2 text-dark" href="/coco/uploaddata/" target="_blank">Upload Data</a>
+        {% else %}
+        <a class="p-2 text-dark" href="/coco/export/" target="_blank">Extract Data</a>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+        <a class="p-2 text-dark" href="/logout/">Logout</a>
+        {% else %}
+        <a class="p-2 text-dark" href="/accounts/login/">Login</a>
+        {% endif %}
+      </nav>
+   </div>
+
