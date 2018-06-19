@@ -726,7 +726,7 @@ class MandiTypeResource(BaseResource):
 
 class MandiResource(BaseResource):
     district = fields.ForeignKey(DistrictResource, 'district')
-    mandi_type = fields.ForeignKey(MandiTypeResource, 'mandi_type', null=True)
+    mandi_type = fields.ForeignKey(MandiTypeResource, 'mandi_type',null=True)
 
     class Meta:
         limit = 0
@@ -760,8 +760,10 @@ class MandiResource(BaseResource):
 
     def obj_update(self, bundle, request=None, **kwargs):
         try:
-            bundle = super(MandiResource, self).obj_update(
-                bundle, **kwargs)
+            if 'mandi_type' not in bundle.data:
+                bundle.data['mandi_type']={}
+                bundle.data['mandi_type']['online_id']=None
+            bundle = super(MandiResource, self).obj_update(bundle, **kwargs)
         except Exception, e:
             district_id = bundle.data['district']['online_id']
             district = District.objects.get(id=district_id)

@@ -535,7 +535,7 @@ def send_updated_admin_log(request):
 
             mandis =[]
             for loopuser in loopusers:
-                mandis.append(loopusers.get_mandis())
+                mandis.append(loopuser.get_mandis())
 
             list_rows = []
             #AdminUser Log
