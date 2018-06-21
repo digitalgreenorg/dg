@@ -24,12 +24,12 @@ class TrainingUserAdmin(admin.ModelAdmin):
 		return " , ".join([s.state_name for s in obj.states.all()])
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text', 'section','serial','tag','__assessment__')
+    list_display = ('id', 'text', 'section','serial','tag','__assessment__', 'active')
     search_fields = ['assessment__name', 'section','serial']
     list_filter = ['assessment__name','section','serial']
 
 class TrainerAdmin(admin.ModelAdmin):
-	list_display = ('id','name','email')
+	list_display = ('id','name','email','active','training_user')
 
 class LogDataAdmin(admin.ModelAdmin):
 	actions = None
