@@ -1,3 +1,4 @@
+# django imports
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.views.generic.edit import FormView
@@ -7,10 +8,12 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.template.loader import render_to_string
-
+# python imports
 import ast
 import os
 import pandas as pd
+from itertools import chain
+# app imports
 from dataexport.forms import *
 from activities.models import *
 from dataexport.models import *
@@ -27,9 +30,10 @@ class ExportView(FormView):
         todays_date = datetime.datetime.now().strftime('%Y-%m-%d')
         year_ago_date = (datetime.datetime.now() - datetime.timedelta(days=365)).strftime('%Y-%m-%d')
         total_screenings = Screening.objects.filter(date__range=[year_ago_date, todays_date]).exclude(farmers_attendance=None).count();
+        ap_scr_count = AP_Screening.objects.count()
         total_adoptions = PersonAdoptPractice.objects.filter(date_of_adoption__range=[year_ago_date, todays_date]).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
         total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=[year_ago_date, todays_date]).aggregate(unique_viewers=Count('person_id', distinct=True))
-        context = {'total_screenings': total_screenings, 'total_adoptions' : total_adoptions.get('adoptions'), \
+        context = {'total_screenings': total_screenings + ap_scr_count, 'total_adoptions' : total_adoptions.get('adoptions'), \
                     'total_viewers': total_unique_viewers.get('unique_viewers'), \
                     'total_unique_adopters': total_adoptions.get('unique_adopters'),\
                     'form': self.form_class}
@@ -51,6 +55,18 @@ class ExportView(FormView):
                                          'parentcategory__parent_category_name','id',
                                          'time_created'
                                          )
+            if '6' in state:
+                # include AP screening
+                ap_scr_obj = AP_Screening.objects.values_list('screening_id', flat=True)
+                ap_data_list = Screening.objects.filter(id__in=ap_scr_obj).values(
+                                             'village_id','partner_id', 'partner__partner_name',\
+                                             'date',\
+                                             'parentcategory_id',\
+                                             'parentcategory__parent_category_name','id',
+                                             'time_created'
+                                             )
+                return list(chain(data_list,ap_data_list))
+
 
         elif data_category == '3':
             data_list = \
@@ -65,6 +81,18 @@ class ExportView(FormView):
                                          'parentcategory__parent_category_name','id',
                                          'time_created'
                                          )
+
+            # include AP screening
+            ap_scr_obj = AP_Screening.objects.values_list('screening_id', flat=True)
+            ap_data_list = Screening.objects.filter(id__in=ap_scr_obj).exclude(farmers_attendance=None).values(
+                                         'village_id','partner_id', 'partner__partner_name',\
+                                         'date',\
+                                         'parentcategory_id',\
+                                         'parentcategory__parent_category_name','id',
+                                         'time_created'
+                                         )
+            return list(chain(data_list,ap_data_list))
+
         
         elif data_category == '2' and len(state):
             data_list = \
@@ -79,6 +107,19 @@ class ExportView(FormView):
                                          'parentcategory__parent_category_name','id',
                                          'time_created'
                                          )
+
+            if '6' in state:
+                # include AP screening
+                ap_scr_obj = AP_Screening.objects.values_list('screening_id', flat=True)
+                ap_data_list = Screening.objects.filter(id__in=ap_scr_obj).values(
+                                             'village_id','partner_id', 'partner__partner_name',\
+                                             'date',\
+                                             'parentcategory_id',\
+                                             'parentcategory__parent_category_name','id',
+                                             'time_created'
+                                             )
+                return list(chain(data_list,ap_data_list))
+
         elif data_category == '2':
             data_list = \
                 Screening.objects.filter(date__range=date_range,
@@ -92,6 +133,18 @@ class ExportView(FormView):
                                          'parentcategory__parent_category_name','id',
                                          'time_created'
                                          )
+
+            # include AP screening
+            ap_scr_obj = AP_Screening.objects.values_list('screening_id', flat=True)
+            ap_data_list = Screening.objects.filter(id__in=ap_scr_obj).values(
+                                         'village_id','partner_id', 'partner__partner_name',\
+                                         'date',\
+                                         'parentcategory_id',\
+                                         'parentcategory__parent_category_name','id',
+                                         'time_created'
+                                         )
+            return list(chain(data_list,ap_data_list))
+
         elif data_category == '1' and len(state):
             data_list = \
                 Screening.objects.filter(date__range=date_range, parentcategory_id=data_category,
@@ -118,7 +171,6 @@ class ExportView(FormView):
                                          'time_created'
                                          )
 
-
         return list(data_list)
 
     def prepare_data(self):
@@ -144,6 +196,7 @@ class ExportView(FormView):
         district_reach_frame = []
         # calling the screening data and converting it to data frame
         screening_data = pd.DataFrame(self.fetch_screening_data(date_range, data_category, country, state))
+        
         # calling the gep frame data
         geo_data = self.prepare_data()
         if len(screening_data):
