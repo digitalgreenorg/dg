@@ -2,6 +2,12 @@
 /** =================== MONTSERRAT =================== **/
 /** Montserrat Thin **/
 
+
+.login-sub-menu{
+  left: -85%;
+  top: 140%;
+}
+
 .errorlist{
   color: red;
   list-style: none;
@@ -26,6 +32,10 @@ table, th, td
 
 table.dataTable {
   background-color: white !important;
+}
+
+.custom-wrapper {
+  width: 90% !important;
 }
 
 #sidebar-wrapper.active {

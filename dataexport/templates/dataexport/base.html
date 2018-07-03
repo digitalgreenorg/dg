@@ -29,13 +29,17 @@
         {% include 'dataexport/header.html' %}
       {% endblock %}
 
+      
       <div id="wrapper">
-        {% block sidebar %}
-          {% include 'dataexport/sidebar.html' %}
-        {% endblock %}
+        {% if 'rda' not in request.get_full_path %}
+          {% block sidebar %}
+            {% include 'dataexport/sidebar.html' %}
+          {% endblock %}
+        {% endif %}
 
         {% block content %}
         {% endblock %}
+
       </div>
     </div>
 
@@ -82,6 +86,11 @@
           }
         });
       {% endif %}
+
+      $(function () {
+    // init toggle
+    $('[data-toggle="popover"]').popover();
+});
     </script>
 
 

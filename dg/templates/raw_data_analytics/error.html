@@ -1,4 +1,13 @@
-{% include "internal-tools/header.html" %}
+{% extends 'dataexport/base.html' %}
+
+{% block title %}
+RAW DATA ANALYTICS
+{% endblock title %}
+
+{% block sidebar %}
+{% endblock sidebar %}
+
+{% block content %}
 
 	<section id="Static Data Upload" class="about-bg">
     	<div class="wrapper">
@@ -14,4 +23,4 @@
 		</div>
 	</section>
 
-{% include "internal-tools/footer.html" %}
+{% endblock content %}
