@@ -353,34 +353,30 @@ class FarmerResource(BaseResource):
         foreign_key_to_id, field_name='village', sub_field_names=['id'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
 
-    # def custom_fuc(self, request,villages):
-    #     extra_data = CombinedTransaction.objects.filter(farmer__village__in=villages).values('farmer').annotate(total_count=Count('date',distinct=True))
-    #     extra_data =list(extra_data)
-    #     return extra_data
+    def custom_fuc(self, request,villages):
+        extra_data = CombinedTransaction.objects.filter(farmer__village__in=villages).values('farmer').annotate(total_count=Count('date',distinct=True))
+        extra_data =list(extra_data)
+        return extra_data
 
-    # def get_list(self,request,**kwargs):
-    #     villages = LoopUser.objects.get(user=request.user.id).get_villages()
-    #     extra_data = self.custom_fuc(request,villages)
-    #     a ={}
-    #     for item in extra_data:
-    #         a[item['farmer']]=item
-    #         del a[item['farmer']]['farmer']
-    #     kwargs['village_id__in'] = villages
-    #     resp = super(FarmerResource, self).get_list(request,**kwargs)
+    def get_list(self,request,**kwargs):
+        villages = LoopUser.objects.get(user=request.user.id).get_villages()
+        extra_data = self.custom_fuc(request,villages)
+        a ={}
+        for item in extra_data:
+            a[item['farmer']]=item
+            del a[item['farmer']]['farmer']
+        kwargs['village_id__in'] = villages
+        resp = super(FarmerResource, self).get_list(request,**kwargs)
+        data = json.loads(resp.content)
+        for d in data['objects']:
+            try:
+                d['total_count']=a[d['online_id']]['total_count']
+            except Exception as e:
+                d['total_count']=0
 
-    #     data = json.loads(resp.content)
-    #     for d in data['objects']:
-    #         try:
-    #             d['meta_data']=a[d['online_id']]
-    #         except Exception as e:
-    #             d['meta_data']={}
-    #             d['meta_data']['total_count']=0
-    #             d['meta_data']['total_mandi']=0
-    #             d['meta_data']['first_trans']=0
+        data = json.dumps(data)
 
-    #     data = json.dumps(data)
-
-    #     return HttpResponse(data, content_type='application/json', status=200) 
+        return HttpResponse(data, content_type='application/json', status=200) 
 
     def obj_create(self, bundle, request=None, **kwargs):
         village = Village.objects.get(id=bundle.data["village"]["online_id"])

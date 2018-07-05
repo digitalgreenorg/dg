@@ -14,10 +14,8 @@ class Command(BaseCommand):
         populate = Populate()
         populate.updateFarmerJoiningData()
         populate.updateFarmerMandiData()
-
-        populate.updateFarmerMandiData()
         populate.updateFarmerTransactionData()
-        #populate.updateFarmerJoiningData()
+        #populate.updateFarmerVolumeData()
 
 class Populate():
 	def updateFarmerMandiData(self):
