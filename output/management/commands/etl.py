@@ -366,6 +366,7 @@ class Command(BaseCommand):
     '''
 
     def handle(self, *args, **options):
+        print("Log")
         print("COCO ANALYTICS LOG")
         print(datetime.date.today())
         mysql_root_dbname = DATABASES['default']['NAME']
