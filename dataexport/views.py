@@ -187,14 +187,14 @@ class ExportView(FormView):
             # renaming the column for viewers frame.
             viewers_frame = viewers_frame.rename(columns={'screening_id': 'id'})
             viewers_frame_AP = viewers_frame_AP.rename(columns={'screening_id': 'id'})
-            viewers_frame_AP = viewers_frame_AP.rename(columns={'total_members': 'viewers_count'})
+            viewers_frame_AP = viewers_frame_AP.rename(columns={'total_members': 'viewer_count'})
 
-            viewers_frame_final=pd.append(viewers_frame,viewers_frame_AP)
+            viewers_frame_final=viewers_frame.append(viewers_frame_AP)
             
             # finally merging the viewers frame.
             data_list_rendered = pd.merge(data_list_to_be_rendered, viewers_frame_final, on="id")
             
-
+           ### import pdb; pdb.set_trace()
             # Beneficiary Data State Wise
             state_beneficiary_count_map = {}
             person_cat_map = {}
@@ -376,11 +376,11 @@ class ExportView(FormView):
                 if category == '2':
                     total_screenings = total_screenings.exclude(parentcategory_id=1).count()
                     total_adoptions = total_adoptions.exclude(parentcategory_id=1).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
-                    total_unique_viewers = total_unique_viewers.exclude(parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))
+                    total_unique_viewers = total_unique_viewers.exclude(screening__parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))
                 else:
                     total_screenings = total_screenings.filter(parentcategory_id=1).count()
                     total_adoptions = total_adoptions.filter(parentcategory_id=1).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
-                    total_unique_viewers = total_unique_viewers.filter(parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))   
+                    total_unique_viewers = total_unique_viewers.filter(screening__parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))   
             
             else:
                 total_screenings = Screening.objects.filter(date__range=date_range,\
@@ -392,11 +392,11 @@ class ExportView(FormView):
                 if category == '2':
                     total_screenings = total_screenings.exclude(parentcategory_id=1).count()
                     total_adoptions = total_adoptions.exclude(parentcategory_id=1).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
-                    total_unique_viewers = total_unique_viewers.exclude(parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))
+                    total_unique_viewers = total_unique_viewers.exclude(screening__parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))
                 else:
                     total_screenings = total_screenings.filter(parentcategory_id=1).count()
                     total_adoptions = total_adoptions.filter(parentcategory_id=1).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
-                    total_unique_viewers = total_unique_viewers.filter(parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))
+                    total_unique_viewers = total_unique_viewers.filter(screening__parentcategory_id=1).aggregate(unique_viewers=Count('person_id', distinct=True))
  
         if data_type == 1:
             # fetching the screening data
