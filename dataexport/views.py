@@ -7,6 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.template.loader import render_to_string
+from django.db.models import Count, Min, Sum, Avg, Max, F
 
 import ast
 import os
@@ -341,7 +342,6 @@ class ExportView(FormView):
                                 person__village__block__district__state_id__in=state).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
             total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range, \
                                 screening__village__block__district__state_id__in=state).aggregate(unique_viewers=Count('person_id', distinct=True))
-    
         elif '3' in data_category:
             category = [1,2]
             total_screenings = Screening.objects.filter(date__range=date_range, \
@@ -350,7 +350,6 @@ class ExportView(FormView):
                                 person__village__block__district__state__country_id=country.id).aggregate(adoptions=Count('id'), unique_adopters=Count('person_id', distinct=True))
             total_unique_viewers = PersonMeetingAttendance.objects.filter(screening__date__range=date_range,\
                                 screening__village__block__district__state__country_id=country.id).aggregate(unique_viewers=Count('person_id', distinct=True))
-
 
         else:
             category = data_category
@@ -629,6 +628,51 @@ class ExportView(FormView):
                           'Pregnant woman']
             # finally converting to html for display purpose.
             beneficiary_data = beneficiary_data.to_html(index=False)
+        
+        # import pdb;
+        # pdb.set_trace()
+            ###########################AP Screening Data added in viewrs count############################################
+        sum=0;
+        if '3' in data_category and len(state) and '6' in state:
+            category = [1,2]
+            total_unique_viewers_AP=AP_Screening.objects.filter(screening__date__range=date_range,\
+                                         screening__village__block__district__state__country_id=country.id,\
+                                         screening__village__block__district__state_id__in=state).values_list('total_members', flat=True)
+            for total in total_unique_viewers_AP:
+                sum+=int(total)
+        elif '3' in data_category and len(state)==0:
+            category = [1,2]
+            total_unique_viewers_AP=AP_Screening.objects.filter(screening__date__range=date_range,\
+                                         screening__village__block__district__state__country_id=country.id).values_list('total_members', flat=True)
+            for total in total_unique_viewers_AP:
+                sum+=int(total)
+        
+
+        elif '2' in data_category and len(state) and '6' in state:
+            total_unique_viewers_AP=AP_Screening.objects.filter(screening__date__range=date_range,\
+                                         screening__village__block__district__state__country_id=country.id,\
+                                         screening__village__block__district__state_id__in=state).exclude(screening__parentcategory_id=1).values_list('total_members', flat=True)
+            for total in total_unique_viewers_AP:
+                sum+=int(total)
+        elif '2' in data_category and len(state)==0:
+            total_unique_viewers_AP=AP_Screening.objects.filter(screening__date__range=date_range,\
+                                         screening__village__block__district__state__country_id=country.id).exclude(screening__parentcategory_id=1).values_list('total_members', flat=True)
+            for total in total_unique_viewers_AP:
+                sum+=int(total)
+        elif '1' in data_category and len(state) and '6' in state:
+            total_unique_viewers_AP=AP_Screening.objects.filter(screening__date__range=date_range,\
+                                         screening__village__block__district__state__country_id=country.id,\
+                                         screening__village__block__district__state_id__in=state).filter(screening__parentcategory_id=1).values_list('total_members', flat=True)
+            for total in total_unique_viewers_AP:
+                sum+=int(total)
+        elif '1' in data_category and len(state)==0:
+            total_unique_viewers_AP=AP_Screening.objects.filter(screening__date__range=date_range,\
+                                         screening__village__block__district__state__country_id=country.id).filter(screening__parentcategory_id=1).values_list('total_members', flat=True)
+            for total in total_unique_viewers_AP:
+                sum+=int(total)
+
+
+
 
         context = {'data_list': table_data, 'beneficiary_data_list': beneficiary_data, 
                    'start_date': date_range[0], 'end_date': date_range[1],
@@ -636,8 +680,10 @@ class ExportView(FormView):
                    'table_data_count': table_data_count, 'district_reach': district_reach,
                    'data_category': cd.get('data_category'), 'data': cd.get('data'),
                    'total_screenings': total_screenings, 'total_adoptions' : total_adoptions.get('adoptions'), \
-                   'total_viewers': total_unique_viewers.get('unique_viewers'), \
+                   'total_viewers': total_unique_viewers.get('unique_viewers')+sum, \
                    'total_unique_adopters': total_adoptions.get('unique_adopters')}
+        # import pdb;
+        # pdb.set_trace()
         template = "dataexport/table-data.html"
         html = render_to_string(template, context=context)
         return HttpResponse(html)
