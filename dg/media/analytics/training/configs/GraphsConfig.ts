@@ -7,7 +7,7 @@ export const chartsConfig = {
       renderTo: 'state_trainer_#trainings', // to be kept as same as the key for this particular object.
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col-6'
       },
       drillDown: true
     },
@@ -49,8 +49,8 @@ export const chartsConfig = {
       type: 'column',
       renderTo: 'state_trainer_#mediators',
       tab: {
-        'id': 'tab1',
-        'class': 'col-sm-6'
+        'id': 'tab3',
+        'class': 'col-6'
       },
       drillDown: true
     },
@@ -82,6 +82,36 @@ export const chartsConfig = {
       allowPointDrilldown: false,
       series: []
     },
+  },
+
+  'state_wise_gender_data': {
+    chart: {
+      type: 'column',
+      renderTo: 'state_wise_gender_data',
+      tab: {
+        'id': 'tab3',
+        'class': 'col-6'
+      },
+      drillDown: false
+    },
+    title: {
+      text: 'Gender Wise Distribution',
+      style: {
+        "color": "#656566",
+      }
+    },
+    xAxis: {
+      type: 'category',
+      labels: {
+        rotation: 0
+      }
+    },
+    yAxis: { title: { text: 'Number of Mediators' } },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> {series.name}<br/>'
+    },
+    series: [],
   },
 
   'question_wise_data': {
@@ -134,8 +164,8 @@ export const chartsConfig = {
       type: 'column',
       renderTo: 'year_month_wise_data',
       tab: {
-        'id': 'tab3',
-        'class': 'col-12'
+        'id': 'tab1',
+        'class': 'col-6'
       },
       drillDown: true
     },

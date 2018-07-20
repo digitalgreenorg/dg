@@ -6,7 +6,7 @@
   <div class="row">
     <div class="col-sm-6 col-md-3" *ngFor="let card of cardsOverall">
       <div class="card" [ngStyle]="{'background-color' : generalConfigs.overall_bg_color, 'margin-bottom':'4px'}">
-        <div #cardTitle id={{card.id}} class="card-block">
+        <div #cardTitle id={{card.id}} class="card-body">
           <h6 class="card-title text-white">{{card.text}}</h6>
           <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
         </div>
@@ -20,7 +20,7 @@
   <div class="row">
     <div class="col-sm-6 col-md-3" *ngFor="let card of cardsRecent">
       <div class="card" [ngStyle]="{'background-color' : generalConfigs.recent_bg_color, 'margin-bottom':'4px'}">
-        <div #cardTitle id={{card.id}} class="card-block">
+        <div #cardTitle id={{card.id}} class="card-body">
           <h6 class="card-title text-white">{{card.text}}</h6>
           <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
         </div>

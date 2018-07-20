@@ -9,7 +9,7 @@ import { globalFiltersConfig } from '../../loop/configs/GlobalFilters';
 export const environment = {
   production: true,
   // url: '/training/',
-  url: 'http://127.0.0.1:8000/training/',
+  url: 'http://127.0.0.1:4001/training/',
   chartsConfig: chartsConfig,
   cardsConfig: cardConfig,
   cardGraphConfig: cardGraphConfig,

@@ -226,6 +226,30 @@ def trainings_mediators_query(**kwargs):
     sql_q = join_sql_ds(sql_ds)
     return sql_q
 
+
+def state_wise_gender_data_query(**kwargs):
+    start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(kwargs)
+    sql_ds = get_init_sql_ds()
+    sql_ds['select'].append('gs.state_name state,COUNT(DISTINCT (CASE WHEN pa.gender = \'M\' THEN pa.id END)) as Males,COUNT(DISTINCT (CASE WHEN pa.gender = \'F\' THEN pa.id END)) as Females')
+    sql_ds['from'].append('training_training tt')
+    sql_ds['join'].append(['training_training_participants ttp','tt.id = ttp.training_id'])
+    sql_ds['join'].append(['training_training_trainer ttt','ttt.training_id = ttt.id'])
+    sql_ds['join'].append(['people_animator pa', 'pa.id = ttp.animator_id'])
+    sql_ds['join'].append(['geographies_district gd','pa.district_id = gd.id'])
+    sql_ds['join'].append(['geographies_state gs','gs.id = gd.state_id'])
+    sql_ds['group by'].append('gs.id')
+
+    if apply_filter:
+        sql_ds['where'].append('tt.date between \'' + start_date + '\' and \'' + end_date + '\'')
+        if len(trainers_list) > 0:
+            sql_ds['where'].append('ttt.trainer_id in (' + ",".join(trainers_list) + ")")
+        if len(states_list) > 0:
+            sql_ds['where'].append('gs.id in (' + ",".join(states_list) + ')')
+
+    
+    sql_q = join_sql_ds(sql_ds)
+    return sql_q
+
 def question_wise_data_query(**kwargs):
     start_date, end_date, apply_filter, trainers_list, states_list = read_kwargs(kwargs)
     sql_query_list = []

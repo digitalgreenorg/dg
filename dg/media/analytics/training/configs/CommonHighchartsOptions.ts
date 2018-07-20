@@ -3,7 +3,7 @@ export const commonOptions = {
     '#7C287D',
     '#9AA0A7',
   ],
-  legend: { enabled: false },
+  legend: { enabled: true },
   credits: {
     enabled: false
   },

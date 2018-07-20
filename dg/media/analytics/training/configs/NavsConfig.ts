@@ -8,19 +8,19 @@ export const navsConfig = {
         'recent': true,
       },
       'classes': {
-        'container1': 'col-md-11',
+        'container1': 'col-md-12',
       },
       'addTab': true,
       'containers': {
         'container1': {
           'Trainings': {
-            'addDivs': ['state_trainer_#trainings','state_trainer_#mediators']
+            'addDivs': ['state_trainer_#trainings','year_month_wise_data']
           },
-          'Question': {
+          'Assessment': {
             'addDivs': ['question_wise_data']
           },
-          'Time Period': {
-            'addDivs': ['year_month_wise_data']
+          'Mediators': {
+            'addDivs': ['state_trainer_#mediators', 'state_wise_gender_data']
           }
         }
       }
