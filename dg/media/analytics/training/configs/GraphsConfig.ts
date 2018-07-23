@@ -49,13 +49,13 @@ export const chartsConfig = {
       type: 'column',
       renderTo: 'state_trainer_#mediators',
       tab: {
-        'id': 'tab3',
+        'id': 'tab2',
         'class': 'col-6'
       },
       drillDown: true
     },
     title: {
-      text: 'Mediators trained',
+      text: 'Participants trained',
       style: {
         "color": "#656566",
       }
@@ -66,7 +66,7 @@ export const chartsConfig = {
         rotation: 0
       }
     },
-    yAxis: { title: { text: 'Number of Mediators' } },
+    yAxis: { title: { text: 'Number of Participants' } },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
@@ -89,7 +89,7 @@ export const chartsConfig = {
       type: 'column',
       renderTo: 'state_wise_gender_data',
       tab: {
-        'id': 'tab3',
+        'id': 'tab2',
         'class': 'col-6'
       },
       drillDown: false
@@ -106,7 +106,7 @@ export const chartsConfig = {
         rotation: 0
       }
     },
-    yAxis: { title: { text: 'Number of Mediators' } },
+    yAxis: { title: { text: 'Number of Participants' } },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> {series.name}<br/>'
@@ -119,7 +119,7 @@ export const chartsConfig = {
       type: 'column',
       renderTo: 'question_wise_data',
       tab: {
-        'id': 'tab2',
+        'id': 'tab3',
         'class': 'col-12'
       },
       drillDown: false

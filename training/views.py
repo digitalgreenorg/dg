@@ -53,7 +53,7 @@ def extract_filters_request(request):
         end_date = str(request.GET['end_date'])
     else:
         end_date = datetime.datetime.today().strftime('%Y-%m-%d')
-        delta = datetime.timedelta(days=365)
+        delta = datetime.timedelta(days=364)
         start_date = (datetime.datetime.today() - delta).strftime('%Y-%m-%d')
     if 'apply_filter' in request.GET:
         apply_filter = True if request.GET['apply_filter'] == 'true' else False
@@ -69,13 +69,15 @@ def extract_filters_request(request):
         chart_name = ''
     trainers_list = request.GET.getlist('Trainer')
     states_list = request.GET.getlist('State')
-
+    assessment_list = request.GET.getlist('Assessment')
+    
     filter_args = {}
     filter_args['start_date'] = start_date
     filter_args['end_date'] = end_date
     filter_args['apply_filter'] = apply_filter
     filter_args['trainers_list'] = trainers_list
     filter_args['states_list'] = states_list
+    filter_args['assessment_list'] = assessment_list
     filter_args['chart_name'] = chart_name
     filter_args['chart_type'] = chart_type
 
@@ -109,7 +111,11 @@ def get_filter_data(request):
         states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
         state_dict = {'name':'State', 'data':list(states_list)}
         response_list.extend([state_dict])
-
+    
+    assessment_list = list(Assessment.objects.annotate(value=F('name'), ).values('id','value').order_by('value'))
+    assessment_list[0]['checked'] = 'true'
+    assessment_dict = {'name':'Assessment', 'data':assessment_list}
+    response_list.extend([assessment_dict])
     json_data = json.dumps(response_list)
     return HttpResponse(json_data)
 
@@ -194,7 +200,7 @@ def pandas_default_aggregation(chart_name, result):
         state_grouped_data = result.groupby(['state']).sum().reset_index()
         try:
             outer_data = {'outerData': {'series':[],'categories':state_grouped_data['state'].tolist()}}
-            temp_dict_outer = {'name':'Mediators','data':[]}
+            temp_dict_outer = {'name':'Participants','data':[]}
             for row in state_grouped_data.iterrows():
                 temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].mediators),'drilldown':row[1].state+' mediators'})
             outer_data['outerData']['series'].append(temp_dict_outer)

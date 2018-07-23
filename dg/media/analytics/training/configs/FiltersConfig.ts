@@ -1,7 +1,7 @@
 export const filtersConfig = {
   'filter0': {
     name: 'Assessment',
-    show: false,
+    show: true,
     expand: false,
     initialLoad: true
   },

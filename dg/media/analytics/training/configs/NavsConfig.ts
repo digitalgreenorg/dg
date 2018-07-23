@@ -16,11 +16,11 @@ export const navsConfig = {
           'Trainings': {
             'addDivs': ['state_trainer_#trainings','year_month_wise_data']
           },
+          'Participants': {
+            'addDivs': ['state_trainer_#mediators', 'state_wise_gender_data']
+          },
           'Assessment': {
             'addDivs': ['question_wise_data']
-          },
-          'Mediators': {
-            'addDivs': ['state_trainer_#mediators', 'state_wise_gender_data']
           }
         }
       }
