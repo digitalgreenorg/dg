@@ -40,7 +40,8 @@ def login(request):
             else:
                 timestamp = log_obj.timestamp
             trainer = Trainer.objects.filter(training_user__user__id = user.id).first()
-            return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(timestamp),'TrainerId':trainer.id}))
+            return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(timestamp),'TrainerId':trainer.id,\
+                                            'trainer_name': trainer.name}))
         else:
             return HttpResponse("0",status=401)
     else:
