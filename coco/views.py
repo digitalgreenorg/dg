@@ -182,7 +182,7 @@ def upload_csv_data(request):
             cd = form_data.cleaned_data
             csv_file = request.FILES.get('datafile').read()
             try:
-                file_data = csv_file
+                file_data = csv_file.decode('utf-8')
                 header = str(file_data.split('\n')[0])
                 if '\r' in header:
                     header = header.strip('\r')
@@ -261,7 +261,7 @@ def getFileHeader(request):
         output = StringIO.StringIO()
         try:
             output.write(columns)
-            response = HttpResponse(output.getvalue().encode('utf-8'), content_type='text/csv')
+            response = HttpResponse(output.getvalue().encode('utf-8'), content_type='text/csv', charset='utf-8')
             response['Content-Disposition'] = 'attachment; filename=header_format.csv'
             return response
         except Exception as e:
