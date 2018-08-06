@@ -3,6 +3,7 @@ export const filtersConfig = {
     name: 'Assessment',
     show: true,
     expand: false,
+    parent: 'None',
     initialLoad: true
   },
   'filter1': {

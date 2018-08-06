@@ -31,7 +31,7 @@ body, html, div, nav {
 .nav-tabs .nav-item {
   margin-left: 1px;
   margin-right: 0.5px;
-  flex: 0 1 12%;
+  flex: 0 1 16%;
 }
 
 .customClass > a:hover {

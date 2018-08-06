@@ -206,7 +206,7 @@ def pandas_default_aggregation(chart_name, result):
                 temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].mediators),'drilldown':row[1].state+' mediators'})
             outer_data['outerData']['series'].append(temp_dict_outer)
 
-            temp_dict_outer = {'name':'Above70','data':[]}
+            temp_dict_outer = {'name':'Score Above70','data':[]}
             for row in state_grouped_data.iterrows():
                 temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].Above70),'drilldown':row[1].state+' above70'})
 
@@ -214,7 +214,7 @@ def pandas_default_aggregation(chart_name, result):
             final_data_list[chart_name] = outer_data
             inner_data = {'innerData': []}
             trainer_mediators_dict = {name: dict(zip(g['trainer'],g['mediators'])) for name,g in result.groupby('state')}
-            trainer_pass_dict = {name: dict(zip(g['trainer'],g['Above70'])) for name,g in result.groupby('state')}
+            trainer_pass_dict = {name: dict(zip(g['trainer'],g['Score Above70'])) for name,g in result.groupby('state')}
             for key, value in trainer_mediators_dict.iteritems():
                 temp_dict_inner = {'data':[]}
                 temp_dict_inner['name'] = key
@@ -304,6 +304,7 @@ def graph_data(request):
 
         if filter_args['chart_name'] == 'state_trainer_#mediators':
             data_to_send = pandas_default_aggregation(filter_args['chart_name'], result)
+            #import pdb;pdb.set_trace()
         elif filter_args['chart_name'] == 'state_trainer_#trainings':
             data_to_send = number_of_trainings(filter_args['chart_name'], result)
 

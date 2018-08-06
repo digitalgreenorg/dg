@@ -50,9 +50,9 @@ export const chartsConfig = {
       renderTo: 'state_trainer_#mediators',
       tab: {
         'id': 'tab2',
-        'class': 'col-6'
+        'class': 'col-12'
       },
-      drillDown: true
+      drillDown: false
     },
     title: {
       text: 'Participants trained',
@@ -72,16 +72,16 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
     },
     series: [],
-    drilldown: {
-      activeAxisLabelStyle: {
-        color: '#656566'
-      },
-      activeDataLabelStyle: {
-        color: '#656566'
-      },
-      allowPointDrilldown: false,
-      series: []
-    },
+    // drilldown: {
+    //   activeAxisLabelStyle: {
+    //     color: '#656566'
+    //   },
+    //   activeDataLabelStyle: {
+    //     color: '#656566'
+    //   },
+    //   allowPointDrilldown: false,
+    //   series: []
+    // },
   },
 
   'state_wise_gender_data': {
@@ -89,8 +89,8 @@ export const chartsConfig = {
       type: 'column',
       renderTo: 'state_wise_gender_data',
       tab: {
-        'id': 'tab2',
-        'class': 'col-6'
+        'id': 'tab3',
+        'class': 'col-12'
       },
       drillDown: false
     },
@@ -119,7 +119,7 @@ export const chartsConfig = {
       type: 'column',
       renderTo: 'question_wise_data',
       tab: {
-        'id': 'tab3',
+        'id': 'tab4',
         'class': 'col-12'
       },
       drillDown: false
@@ -156,7 +156,7 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
     },
     series: [],
-    drilldown: {}
+    // drilldown: {}
   },
 
   'year_month_wise_data': {

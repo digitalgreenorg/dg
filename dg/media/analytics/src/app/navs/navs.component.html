@@ -56,8 +56,8 @@
           <tab customClass="customClass" *ngFor="let tab of getDictKeys(containers[container]['containers'][option]); let idx=index;" [heading]="tab">
             <br>
             <div class="row">
-              <!-- For Training , use index + <tab_index> for full col-12 width. Eg- if 1st tab has col-12, use index+0, if 2nd tab has col-12, use index+! and so on. -->
-              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs'];" [class]="containers[container]['charts'][(idx + 2)]['chart']['chart']['tab']['class']">
+              <!-- For Training , use index + <tab_index> for full col-12 width. Eg- if 1st tab has col-12, use index+0, if 2nd tab has col-12, use index+1 and so on. -->
+              <div *ngFor="let div of containers[container]['containers'][option][tab]['addDivs'];" [class]="containers[container]['charts'][(idx + 1)]['chart']['chart']['tab']['class']">
                 <!-- TODO: TO BE FIXED -->
                 <div [id]="div"></div>
               </div>

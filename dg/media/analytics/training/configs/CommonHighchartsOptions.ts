@@ -9,7 +9,8 @@ export const commonOptions = {
   },
   plotOptions: {
     column: {
-      grouping: false,
+      grouping: true,
+      groupPadding: 0.1,
       borderWidth: 0,
       dataLabels: {
         enabled: true
