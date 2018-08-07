@@ -48,11 +48,12 @@ post_save.connect(enter_to_log, sender=Trainer)
 pre_delete.connect(enter_to_log, sender=Trainer)
 
 class Assessment(models.Model):
-	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    active = models.BooleanField(default=True)
 
-	def __unicode__(self):
-		return self.name
+    def __unicode__(self):
+        return self.name
 
 post_save.connect(enter_to_log, sender=Assessment)
 pre_delete.connect(enter_to_log,sender=Assessment)

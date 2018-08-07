@@ -31,6 +31,9 @@ class QuestionAdmin(admin.ModelAdmin):
 class TrainerAdmin(admin.ModelAdmin):
 	list_display = ('id','name','email','active','training_user')
 
+class AssessmentAdmin(admin.ModelAdmin):
+	list_display = ('id','name','active')
+
 class LogDataAdmin(admin.ModelAdmin):
 	actions = None
 	list_display = ('id','entry_table','model_id','action','user')
@@ -60,7 +63,7 @@ training_admin.logout_template = 'social_website/home.html'
 
 training_admin.register(Trainer, TrainerAdmin)
 training_admin.register(TrainingUser,TrainingUserAdmin)
-training_admin.register(Assessment)
+training_admin.register(Assessment,AssessmentAdmin)
 training_admin.register(Question, QuestionAdmin)
 training_admin.register(LogData, LogDataAdmin)
 training_admin.register(DeleteLog, DeleteLogAdmin)
