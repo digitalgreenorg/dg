@@ -55,7 +55,7 @@ export const chartsConfig = {
       drillDown: false
     },
     title: {
-      text: 'Participants trained',
+      text: 'Participants Trained',
       style: {
         "color": "#656566",
       }
@@ -72,16 +72,16 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
     },
     series: [],
-    // drilldown: {
-    //   activeAxisLabelStyle: {
-    //     color: '#656566'
-    //   },
-    //   activeDataLabelStyle: {
-    //     color: '#656566'
-    //   },
-    //   allowPointDrilldown: false,
-    //   series: []
-    // },
+    drilldown: {
+      activeAxisLabelStyle: {
+        color: '#656566'
+      },
+      activeDataLabelStyle: {
+        color: '#656566'
+      },
+      allowPointDrilldown: false,
+      series: []
+    },
   },
 
   'state_wise_gender_data': {

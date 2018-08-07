@@ -16,7 +16,7 @@ export const navsConfig = {
           'Trainings': {
             'addDivs': ['state_trainer_#trainings','year_month_wise_data']
           },
-          'Participants Score': {
+          'Participants Trained': {
             'addDivs': ['state_trainer_#mediators']
           },
           'Gender Distribution': {
