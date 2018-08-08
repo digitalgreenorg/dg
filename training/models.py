@@ -36,6 +36,7 @@ class Trainer(models.Model):
     email = models.EmailField()
     language = models.ForeignKey(Language, null=True, blank=True)
     training_user = models.ForeignKey(TrainingUser, null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     def __training_user__(self):
         return "%s" % (self.training_user.id)
@@ -64,6 +65,7 @@ class Question(models.Model):
     serial = models.IntegerField()
     text = models.CharField(max_length = 100)
     tag = models.CharField(max_length=20, default="")
+    active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.text
