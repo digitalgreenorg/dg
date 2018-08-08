@@ -12,6 +12,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
+            model_name='assessment',
+            name='active',
+            field=models.BooleanField(default=True),
+        ),
+        migrations.AddField(
             model_name='question',
             name='active',
             field=models.BooleanField(default=True),
