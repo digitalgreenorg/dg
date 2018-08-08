@@ -36,6 +36,7 @@ class Trainer(models.Model):
     email = models.EmailField()
     language = models.ForeignKey(Language, null=True, blank=True)
     training_user = models.ForeignKey(TrainingUser, null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     def __training_user__(self):
         return "%s" % (self.training_user.id)
@@ -47,11 +48,12 @@ post_save.connect(enter_to_log, sender=Trainer)
 pre_delete.connect(enter_to_log, sender=Trainer)
 
 class Assessment(models.Model):
-	id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=50)
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    active = models.BooleanField(default=True)
 
-	def __unicode__(self):
-		return self.name
+    def __unicode__(self):
+        return self.name
 
 post_save.connect(enter_to_log, sender=Assessment)
 pre_delete.connect(enter_to_log,sender=Assessment)
@@ -64,6 +66,7 @@ class Question(models.Model):
     serial = models.IntegerField()
     text = models.CharField(max_length = 100)
     tag = models.CharField(max_length=20, default="")
+    active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.text

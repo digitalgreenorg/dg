@@ -3,13 +3,14 @@ export const commonOptions = {
     '#7C287D',
     '#9AA0A7',
   ],
-  legend: { enabled: false },
+  legend: { enabled: true },
   credits: {
     enabled: false
   },
   plotOptions: {
     column: {
-      grouping: false,
+      grouping: true,
+      groupPadding: 0.1,
       borderWidth: 0,
       dataLabels: {
         enabled: true
