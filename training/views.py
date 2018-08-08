@@ -113,7 +113,7 @@ def get_filter_data(request):
         state_dict = {'name':'State', 'data':list(states_list)}
         response_list.extend([state_dict])
     
-    assessment_list = list(Assessment.objects.annotate(value=F('name'), ).values('id','value').order_by('value'))
+    assessment_list = list(Assessment.objects.annotate(value=F('name'), ).values('id','value').order_by('id'))
     assessment_list[0]['checked'] = 'true'
     assessment_dict = {'name':'Assessment', 'data':assessment_list}
     response_list.extend([assessment_dict])
