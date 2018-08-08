@@ -64,7 +64,7 @@ class Question(models.Model):
     language = models.ForeignKey(Language, null=True, blank=True)
     section = models.IntegerField()
     serial = models.IntegerField()
-    text = models.CharField(max_length = 100)
+    text = models.CharField(max_length = 500)
     tag = models.CharField(max_length=20, default="")
     active = models.BooleanField(default=True)
 
