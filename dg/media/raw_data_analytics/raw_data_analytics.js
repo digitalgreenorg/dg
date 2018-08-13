@@ -38,8 +38,8 @@ window.onload = date;
     });
 
     $("#partnerId").bind("change", function () {
-        $('#videoId').find('option').remove();
-        $("#videoId").val('').trigger("chosen:updated");
+        //$('#videoId').find('option').remove();
+        //$("#videoId").val('').trigger("chosen:updated");
     });
     $("#countryID").bind("change", function () {
         $("#partnerId").find('option').remove();
