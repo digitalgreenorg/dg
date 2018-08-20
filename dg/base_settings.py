@@ -185,7 +185,7 @@ INSTALLED_APPS = (
     'mrppayment',
     'smart_selects',
     'loop_ivr',
-    'dataexport',
+    'dataexport'
     # 3rd Party
 )
 
@@ -215,7 +215,7 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'standard': {
-            'format' : "[%(asctime)s] [%(name)s] %(message)s",
+            'format' : "[%(levelname)s] [%(asctime)s] [%(name)s] %(message)s",
             'datefmt' : "%d/%b/%Y %H:%M:%S"
         },
     },
@@ -228,6 +228,12 @@ LOGGING = {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/logfile'),
+            'formatter': 'standard',
+        },
+        'ap_migration_log': {
+            'level': 'INFO',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(PROJECT_PATH, '../geographies/management/commands/log/ap_migration_log'),
             'formatter': 'standard',
         },
         'console':{
@@ -250,6 +256,10 @@ LOGGING = {
             'handlers': ['logfile'],
             'level': 'DEBUG',
         },
+        'geographies': {
+            'handlers': ['ap_migration_log'],
+            'level' : 'INFO',
+        }
     }
 }
 

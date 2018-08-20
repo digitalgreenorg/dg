@@ -149,7 +149,7 @@ class AnimatorInline(admin.TabularInline):
     exclude = ('assigned_villages',)
 
 class VillageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'village_name', 'block')
+    list_display = ('id', 'village_name', 'block', 'active')
     search_fields = ['village_name', 'block__block_name', 'block__district__state__state_name']
     inlines = [PersonGroupInline]
 
@@ -224,15 +224,15 @@ class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ('village','group')
 
 class BlockAdmin(admin.ModelAdmin):
-    list_display = ('id', 'block_name', 'district')
+    list_display = ('id', 'block_name', 'district', 'active')
     search_fields = ['block_name', 'district__district_name', 'district__state__state_name']
 
 class DistrictAdmin(admin.ModelAdmin):
-    list_display = ('id', 'district_name', 'state')
+    list_display = ('id', 'district_name', 'state', 'active')
     search_fields = ['district_name', 'state__state_name']
 
 class StateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'state_name',)
+    list_display = ('id', 'state_name','active')
     search_fields = ['state_name', 'country__country_name']
 
 class SubCategoryAdmin(admin.ModelAdmin):
@@ -357,6 +357,12 @@ class AP_VillageAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+class AP_COCO_MappingAdmin(admin.ModelAdmin):
+    list_display = ['id', 'geo_type', 'ap_geo_id', 'coco_geo_id', 'user_created_id', 'user_modified_id', 'time_created','time_modified']
+    search_fields = ['id', 'geo_type', 'ap_geo_id', 'coco_geo_id']
+    list_filter = ['geo_type']
 
 
 class AP_HabitationAdmin(admin.ModelAdmin):
