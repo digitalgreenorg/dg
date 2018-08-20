@@ -58,6 +58,6 @@ class Command(BaseCommand):
         # call_command('bluefrog_adoptions')
 
         print "Migrating Bluefrog data to COCO"
-        call_command(os.path.join(PROJECT_PATH, '../geographies/management/commands/migrate_ap_data')
+        call_command('migrate_ap_data')
 
         self.send_mail()
