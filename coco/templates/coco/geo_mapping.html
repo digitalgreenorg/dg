@@ -1,0 +1,97 @@
+{% include "internal-tools/header.html" %}
+<link href="{{ STATIC_URL }}dataexport/css/select2.min.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+  .errorlist{
+    color: red;
+  }
+  .error{
+    color: red;
+  }
+</style>
+
+<section id="upload-data" class="about-bg">
+
+  <div class="wrapper">
+    <div class="inner-wrapper">
+      <h2 class="hdg-a hdg-source-lt layout-vr-md">COCO - Map AP Geographies</h2>
+        {% for message in messages %}
+          <div class="errorlist alert alert-success" role="alert">
+              {{ message }}
+          </div>
+        {% endfor %}
+      <div class="row">
+        <div class="col-sm-12">
+            <form id="data-upload" class="form-horizontal" action="" method="post">
+              {% csrf_token %}
+              <label for="data" class="col-sm-12 col-form-label">Geography Type</label>
+              <br>
+                <div class="form-group row ml-30">
+                    <div {% if form.geographytype.errors %} class="col-sm-12" {% else %} class="col-sm-12" {% endif %}>
+                    {{ form.geographytype }}
+                    </div>
+                    <label class="col-sm-12">{% if form.geographytype.errors %}{{ form.geographytype.errors}}{% endif %}</label>
+                </div>
+
+                <br><br>
+
+                <label for="data" class="col-sm-12 col-form-label">AP Geography</label>
+                <br>
+                <div class="form-group row ml-30">
+                    <div {% if form.apgeo.errors %} class="col-sm-12" {% else %} class="col-sm-12" {% endif %}>
+                    {{ form.apgeo }}
+                    </div>
+                    <label class="col-sm-12">{% if form.apgeo.errors %}{{ form.apgeo.errors}}{% endif %}</label>
+                </div>
+
+                <br><br>
+
+                <label for="data" class="col-sm-12 col-form-label">COCO Geography</label>
+                <br>
+                <div class="form-group row ml-30">
+                    <div {% if form.cocogeo.errors %} class="col-sm-12" {% else %} class="col-sm-12" {% endif %}>
+                    {{ form.cocogeo }}
+                    </div>
+                <label class="col-sm-12">{% if form.cocogeo.errors %}{{ form.cocogeo.errors}}{% endif %}</label>
+                </div>
+
+              <br>
+              <br>
+              <button type="submit" id="upload" class="btn btn-success">Submit</button>
+
+            </form>
+        </div>
+        <br>
+      </div>
+    </div> <!-- End .inner-wrapper -->
+  </div> <!-- End .wrapper -->
+</section>
+
+<script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
+<script type="text/javascript"  src="{{STATIC_URL}}coco/app/scripts/libs/jquery.validate.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}coco/app/scripts/libs/additional-methods.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}ap_geo_mapping/ap_mapping.js"></script>
+
+
+<script>
+$('form').validate({
+   ignore: [],
+   rules:{
+    //    datafile: {
+    //         required: true,
+    //         extension: "json"
+    //     }
+   },
+   messages:{
+    //    datafile:{
+    //       required:"Please upload the file",
+    //       extension:"Please upload a Valid file"
+    //     }
+   },
+   submitHandler: function(form) {
+      form.submit();
+    }
+})
+</script>
+
+{% include "internal-tools/footer.html" %}

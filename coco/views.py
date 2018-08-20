@@ -9,17 +9,18 @@ from django.contrib import auth
 from django.core import urlresolvers
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response, render, redirect
-from django.db.models import Q
+from django.db.models import Q, get_model, F, Value, CharField
+from django.db.models.functions import Concat
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message
 # app imports
-from forms import DataUploadForm
+from forms import DataUploadForm, GeographyMappingForm
 from models import CocoUser
 from videos.models import APVideo
-from coco.models import FullDownloadStats
+from coco.models import FullDownloadStats, CocoUser
 from people.models import Person,Animator,AnimatorAssignedVillage
 from people.models import PersonGroup
-from geographies.models import Village,District, Block
+from geographies.models import Village,District, Block, AP_District, AP_Mandal, AP_Village, AP_COCO_Mapping
 from programs.models import Partner
 from videos.models import Video,Language,Category,Practice,SubCategory
 from activities.models import Screening
@@ -172,6 +173,64 @@ def upload_data(request):
     context = {'form': form_data}
     template = "coco/data_upload.html"
     return render(request, template, context)
+
+
+@login_required
+def ap_geography_mapping(request):
+    if request.method == 'GET':
+        form_data = GeographyMappingForm()
+    else:
+        form_data = GeographyMappingForm(request.POST)
+        if form_data.is_valid():
+            #import pdb;pdb.set_trace()
+            cd = form_data.cleaned_data
+            geo_type = cd.get('geographytype')
+            apgeo = cd.get('apgeo')
+            cocogeo = cd.get('cocogeo')
+            # obj = CocoUser.objects.filter(villages__in=[apgeo])
+            # print geo_type, apgeo, cocogeo, request.user.id
+            try:
+                mapping_obj, created = AP_COCO_Mapping.objects.get_or_create(geo_type=geo_type, ap_geo_id=apgeo, coco_geo_id=cocogeo)
+                if created:
+                    mapping_obj.user_created_id=request.user.id
+                    mapping_obj.time_created=datetime.now()
+                    mapping_obj.save()
+                else:
+                    mapping_obj.user_modified_id=request.user.id
+                    mapping_obj.time_modified=datetime.now()
+                    mapping_obj.save()
+
+            except Exception as e:
+                print e
+    context = {'form': form_data}
+    template = "coco/geo_mapping.html"
+    return render(request, template, context)
+
+
+class GetGeography(View):
+
+    def get(self, request, *args, **kwargs):
+        selected_geography = kwargs.get('selected_geography')
+        if selected_geography == 'District':
+            ap_districts = AP_District.objects.all()
+            results_coco = list(District.objects.filter(state_id=6).exclude(id__in=ap_districts).annotate(value=F('id'), text=Concat(F('district_name'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+            results_ap = list(District.objects.filter(ap_district__in=ap_districts).annotate(value=F('id'), text=Concat(F('district_name'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+
+        elif selected_geography == 'Block':
+            ap_blocks = AP_Mandal.objects.all()
+            results_coco = list(Block.objects.filter(district__state_id=6).exclude(id__in=ap_blocks).annotate(value=F('id'), text=Concat(F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+            results_ap = list(Block.objects.filter(ap_mandal__in=ap_blocks).annotate(value=F('id'), text=Concat(F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+
+        else:
+            # import pdb;pdb.set_trace()
+            ap_villages = AP_Village.objects.all()
+            results_coco = list(Village.objects.filter(block__district__state_id=6).exclude(id__in=ap_villages).annotate(value=F('id'), text=Concat(F('village_name'), Value('( '), F('block__block_name'), Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','text','value'))
+            results_ap = list(Village.objects.filter(ap_village__in=ap_villages).annotate(value=F('id'), text=Concat(F('village_name'), Value('( '), F('block__block_name'), Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )') ,output_field=CharField())).values('id','text','value'))
+
+        results_list = [results_ap, results_coco]
+        data = {'results': results_list}
+        #import pdb;pdb.set_trace()
+        return JsonResponse(data)
 
 @login_required
 def upload_csv_data(request):
