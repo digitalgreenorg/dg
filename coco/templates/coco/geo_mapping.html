@@ -72,26 +72,4 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}ap_geo_mapping/ap_mapping.js"></script>
 
-
-<script>
-$('form').validate({
-   ignore: [],
-   rules:{
-    //    datafile: {
-    //         required: true,
-    //         extension: "json"
-    //     }
-   },
-   messages:{
-    //    datafile:{
-    //       required:"Please upload the file",
-    //       extension:"Please upload a Valid file"
-    //     }
-   },
-   submitHandler: function(form) {
-      form.submit();
-    }
-})
-</script>
-
 {% include "internal-tools/footer.html" %}
