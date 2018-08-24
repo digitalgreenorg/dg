@@ -797,7 +797,7 @@ class LanguageResource(ModelResource):
 class TagResource(ModelResource):    
     class Meta:
         max_limit = None
-        queryset = Tag.objects.filter(is_ap_tag=False)
+        queryset = Tag.objects.all()
         resource_name = 'tag'
         authentication = SessionAuthentication()
         authorization = Authorization()
