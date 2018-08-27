@@ -5,6 +5,7 @@ from django.db import models
 TYPE_OF_ROLE = (
 	(1, 'MRP'),
 	(0, 'Animator'),
+    (2, 'Video Producer')
 )
 
 ACTIVITY_CHOICES = (

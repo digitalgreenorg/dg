@@ -210,6 +210,8 @@ export class FiltersComponent implements OnInit {
           let filterElement = new FilterElement();
           filterElement.id = val['id'];
           filterElement.value = val['value'];
+          if(val['checked'] != null)
+            filterElement.checked = val['checked'];
           filter[0].element.push(filterElement);
         }
       }
