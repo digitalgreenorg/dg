@@ -194,6 +194,7 @@ class Tag(CocoModel):
     tag_name = models.CharField(max_length=255, unique='True')
     tag_code = models.CharField(max_length=50, null=True)
     tag_regional_name = models.CharField(max_length=255, null=True)
+    is_ap_tag = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.tag_name

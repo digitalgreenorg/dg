@@ -72,7 +72,7 @@ class ScreeningAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['id','tag_name']
+    list_display = ['id','tag_name','is_ap_tag']
     search_fields = ['tag_name']
 
 
@@ -123,6 +123,12 @@ class VideoAdmin(admin.ModelAdmin):
     list_filter = ('review_status', 'category', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name', 'reviewer')
     list_editable = ('review_status', 'video_grade', 'reviewer')
     raw_id_fields = ('village', 'production_team', 'related_practice')
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "tags":
+            kwargs["queryset"] = Tag.objects.filter(is_ap_tag=False)
+        return super(VideoAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+
     class Media:
         js = (
                 settings.STATIC_URL + "js/qa_video.js",
@@ -282,7 +288,7 @@ class VideoForm(forms.ModelForm):
     video = forms.ModelChoiceField(queryset=None, widget=Select2(select2attrs={'width': '600px'}),required=True)
     practice = forms.ModelMultipleChoiceField(queryset=APPractice.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
     subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), widget=Select2(select2attrs={'width': '600px'}),required=True)
-    aptags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
+    aptags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(is_ap_tag=True), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
 
     def __init__(self, *args, **kwargs):
         super(VideoForm, self).__init__(*args, **kwargs)
