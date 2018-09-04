@@ -252,18 +252,18 @@ def upload_csv_data(request):
                     for row in filter_lines:
                         try:
                             row = row.split(',')
-                            block_obj, created = Block.objects.get_or_create(block_name__iexact=row[2].strip(),\
+                            block_obj, created = Block.objects.get_or_create(block_name=row[2].strip(),\
                                                                             district_id=int(row[1]), \
                                                                             defaults={'block_name': row[2].strip(), \
                                                                                      'district_id':int(row[1].strip())})
                             if block_obj or created:
                                 village_obj, created = \
-                                Village.objects.get_or_create(village_name__iexact=row[3].strip(),block_id=block_obj.id,\
+                                Village.objects.get_or_create(village_name=row[3].strip(),block_id=block_obj.id,\
                                                                 defaults={'village_name':row[3].strip(), \
                                                                         'block_id':block_obj.id})
                                 if village_obj or created:
                                     person_group, created = \
-                                    PersonGroup.objects.get_or_create(group_name__iexact=row[4].strip(),\
+                                    PersonGroup.objects.get_or_create(group_name=row[4].strip(),\
                                                                     village_id=village_obj.id, \
                                                                     partner_id=int(row[0]),\
                                                                     defaults={'group_name': row[4].strip(),\
