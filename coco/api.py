@@ -177,7 +177,7 @@ def get_user_videos(user_id):
         ###FIRST GET VIDEOS PRODUCED IN STATE WITH SAME PARTNER
         videos = Video.objects.filter(village__block__district__state__in = user_states, partner_id = coco_user.partner_id).values_list('id', flat = True)
 
-        # ###Get videos screened to allow inter partner sharing of videos
+        ####Get videos screened to allow inter partner sharing of videos
         videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
     
     if coco_user.type_of_cocouser == 4:
