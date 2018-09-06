@@ -46,6 +46,7 @@ from dashboard.forms import PersonGroupForm
 from dashboard.forms import ScreeningForm
 from dashboard.forms import VideoForm
 
+
 class PMANotSaved(Exception):
     pass
 
@@ -179,7 +180,7 @@ def get_user_videos(user_id):
         # ###Get videos screened to allow inter partner sharing of videos
         videos_seen = set(Person.objects.filter(village__in = villages, partner_id = coco_user.partner_id).values_list('screening__videoes_screened', flat=True))
     
-    if coco_user.id in [840,774,773,758,757,756]:
+    if coco_user.type_of_cocouser == 4:
         return set(list(user_videos))
     else:
         return set(list(videos) + list(videos_seen) + list(user_videos))
