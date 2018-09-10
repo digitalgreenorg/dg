@@ -384,9 +384,6 @@ class APVideoGenerator(View):
                                             'video_type': video_iterable.video.video_type
                                             })
                         except Exception as e:
-                            print e
-                            print traceback.print_exc()
-                            errors_videos.append(video_iterable.video.id)
                             pass
 
                     print errors_videos
