@@ -114,7 +114,7 @@ class PartnerAdmin(admin.ModelAdmin):
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline]
     fieldsets = [
-                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice', 'tags']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'category','subcategory','videopractice', 'tags']}),
                 (None,{'fields':['village','production_team']}),
                 ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
