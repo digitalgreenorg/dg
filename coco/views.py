@@ -344,6 +344,7 @@ class APVideoGenerator(View):
                     practice_list = []
                     dg_practice_list = []
                     tags = []
+                    errors_videos = []
                     for video_iterable in video_list:
                         try:
                             dg_practice = video_iterable.video.videopractice.all()
@@ -385,9 +386,10 @@ class APVideoGenerator(View):
                         except Exception as e:
                             print e
                             print traceback.print_exc()
+                            errors_videos.append(video_iterable.video.id)
                             pass
 
-
+                    print errors_videos
                     return JsonResponse({'data': data_list})
             except Exception:
                 return HttpResponse("You are not authorized.Wrong Key", status=401)
