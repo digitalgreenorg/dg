@@ -29,7 +29,7 @@ from coco.prepare_data import *
 from django.views.generic import View
 from tastypie.models import ApiKey
 from django.db import IntegrityError
-import traceback
+#import traceback
 
 
 def coco_v2(request):
