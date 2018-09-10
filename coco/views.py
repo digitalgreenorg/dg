@@ -344,8 +344,8 @@ class APVideoGenerator(View):
                     practice_list = []
                     dg_practice_list = []
                     tags = []
-                    try:
-                        for video_iterable in video_list:
+                    for video_iterable in video_list:
+                        try:
                             dg_practice = video_iterable.video.videopractice.all()
                             for item in dg_practice:
                                 dg_practice_list.append({'id': item.id,
@@ -382,11 +382,11 @@ class APVideoGenerator(View):
                                             'version': 2,
                                             'video_type': video_iterable.video.video_type
                                             })
-                    except Exception as e:
-                        print e
-                        print traceback.print_exc()
-                        print video_iterable
-                        pass
+                        except Exception as e:
+                            print e
+                            print traceback.print_exc()
+                            pass
+
 
                     return JsonResponse({'data': data_list})
             except Exception:
