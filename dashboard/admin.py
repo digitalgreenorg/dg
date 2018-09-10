@@ -114,7 +114,7 @@ class PartnerAdmin(admin.ModelAdmin):
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline]
     fieldsets = [
-                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice', 'tags']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'category','subcategory','videopractice', 'tags']}),
                 (None,{'fields':['village','production_team']}),
                 ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
@@ -127,6 +127,8 @@ class VideoAdmin(admin.ModelAdmin):
         js = (
                 settings.STATIC_URL + "js/qa_video.js",
         )
+
+        
 
 class AnimatorAssignedVillages(admin.StackedInline):
     model = AnimatorAssignedVillage
@@ -287,6 +289,7 @@ class VideoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(VideoForm, self).__init__(*args, **kwargs)
         self.fields['video'].queryset = Video.objects.filter(partner_id=50)
+        #self.fields['video'].required = True
 
 
 
@@ -318,6 +321,10 @@ class APVideoAdmin(admin.ModelAdmin):
         if tag_id_to_be_removed:
             form.instance.video.tags.remove(*tag_id_to_be_removed)
         form.instance.video.tags.add(*current_instance_tag)
+
+
+
+
 
 
 
