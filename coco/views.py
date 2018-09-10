@@ -343,43 +343,48 @@ class APVideoGenerator(View):
                     practice_list = []
                     dg_practice_list = []
                     tags = []
-                    for video_iterable in video_list:
-                        dg_practice = video_iterable.video.videopractice.all()
-                        for item in dg_practice:
-                            dg_practice_list.append({'id': item.id,
-                                                     'practice_name': item.videopractice_name,
-                                                     })
-                        practice_q = video_iterable.practice.all()
-                        for item in practice_q:
-                            practice_list.append({'id': item.id,
-                                                  'practice_name': item.pest_name,
-                                                  'practice_code': item.pest_code,
-                                                  'practice_name_telgu': item.pest_name_telgu})
-                        tags_q = video_iterable.video.tags.all()
-                        for tag_item in tags_q:
-                            tags.append({'id': tag_item.id,
-                                         'tag_name': tag_item.tag_name,
-                                         'tag_code': tag_item.tag_code,
-                                         'tag_regional_name': tag_item.tag_regional_name})
+                    try:
+                        for video_iterable in video_list:
+                            dg_practice = video_iterable.video.videopractice.all()
+                            for item in dg_practice:
+                                dg_practice_list.append({'id': item.get('id'),
+                                                        'practice_name': item.get('videopractice_name'),
+                                                        })
+                            practice_q = video_iterable.practice.all()
+                            for item in practice_q:
+                                practice_list.append({'id': item.get('id'),
+                                                    'practice_name': item.get('pest_name'),
+                                                    'practice_code': item.get('pest_code'),
+                                                    'practice_name_telgu': item.get('pest_name_telgu')})
+                            tags_q = video_iterable.video.tags.all()
+                            for tag_item in tags_q:
+                                tags.append({'id': tag_item.get('id'),
+                                            'tag_name': tag_item.get('tag_name'),
+                                            'tag_code': tag_item.get('tag_code'),
+                                            'tag_regional_name': tag_item.get('tag_regional_name')})
 
-                        data_list.append({'id': video_iterable.video.id,
-                                         'video_title': video_iterable.video.title,
-                                         'district_name': video_iterable.video.village.block.district.district_name,
-                                         'video_short_name_english': video_iterable.video_short_name,
-                                         'video_short_regionalname': video_iterable.video_short_regionalname,
-                                         'category': {'id': video_iterable.video.category.id,
-                                                      'category_name': video_iterable.video.category.category_name},
-                                         'subcategory': {'id': video_iterable.video.subcategory.id,
-                                                         'subcategory_name': video_iterable.video.subcategory.subcategory_name},
-                                         'practice': practice_list,
-                                         'dg_practice': dg_practice_list,
-                                         'tags': tags,
-                                         'producton_date': video_iterable.video.production_date,
-                                         'youtube': video_iterable.video.youtubeid,
-                                         'updation_date': video_iterable.video.approval_date,
-                                         'version': 2,
-                                         'video_type': video_iterable.video.video_type
-                                         })
+                            data_list.append({'id': video_iterable.get('video.id'),
+                                            'video_title': video_iterable.get('video.title'),
+                                            'district_name': video_iterable.video.village.block.district.district_name,
+                                            'video_short_name_english': video_iterable.get('video_short_name'),
+                                            'video_short_regionalname': video_iterable.get('video_short_regionalname'),
+                                            'category': {'id': video_iterable.video.get('category').get('id'),
+                                                        'category_name': video_iterable.video.get('category').get('category_name')},
+                                            'subcategory': {'id': video_iterable.video.get('subcategory').get('id'),
+                                                            'subcategory_name': video_iterable.video.get('subcategory').get('subcategory_name')},
+                                            'practice': practice_list,
+                                            'dg_practice': dg_practice_list,
+                                            'tags': tags,
+                                            'producton_date': video_iterable.video.production_date,
+                                            'youtube': video_iterable.video.get('youtubeid'),
+                                            'updation_date': video_iterable.video.get('approval_date'),
+                                            'version': 2,
+                                            'video_type': video_iterable.video.video_type
+                                            })
+                    except Exception as e:
+                        print e
+                        print video_iterable
+                        pass
 
                     return JsonResponse({'data': data_list})
             except Exception:

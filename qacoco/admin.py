@@ -10,7 +10,6 @@ from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpResponseNotFound
 from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
-
 from videos.models import Video
 from geographies.models import State, District, Block, Village
 from people.models import Animator, PersonGroup, Person
@@ -57,26 +56,26 @@ class QAReviewerNameAdmin(admin.ModelAdmin):
     list_display = ('reviewer_category', 'name')
     search_fields = ['reviewer_category', 'name']
 
-class VideoAdmin(admin.ModelAdmin):
-    def get_model_perms(self, request):
-        return {}
+# class VideoAdmin(admin.ModelAdmin):
+#     def get_model_perms(self, request):
+#         return {}
 
-class VillageAdmin(admin.ModelAdmin):
-    def get_model_perms(self, request):
-        return {}
+# class VillageAdmin(admin.ModelAdmin):
+#     def get_model_perms(self, request):
+#         return {}
 
-class BlockAdmin(admin.ModelAdmin):
-    def get_model_perms(self, request):
-        return {}
+# class BlockAdmin(admin.ModelAdmin):
+#     def get_model_perms(self, request):
+#         return {}
 
-class AnimatorAdmin(admin.ModelAdmin):
-    def get_model_perms(self, request):
-        return {}
+# class AnimatorAdmin(admin.ModelAdmin):
+#     def get_model_perms(self, request):
+#         return {}
 
-class PersonAdmin(admin.ModelAdmin):
-    def get_model_perms(self, request):
-        return {}
+# class PersonAdmin(admin.ModelAdmin):
+#     def get_model_perms(self, request):
+#         return {}
 
-class PersonGroupAdmin(admin.ModelAdmin):
-    def get_model_perms(self, request):
-        return {}
+# class PersonGroupAdmin(admin.ModelAdmin):
+#     def get_model_perms(self, request):
+#         return {}
