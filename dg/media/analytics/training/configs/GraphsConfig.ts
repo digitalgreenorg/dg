@@ -7,7 +7,7 @@ export const chartsConfig = {
       renderTo: 'state_trainer_#trainings', // to be kept as same as the key for this particular object.
       tab: {
         'id': 'tab1',
-        'class': 'col-sm-6'
+        'class': 'col-6'
       },
       drillDown: true
     },
@@ -49,13 +49,13 @@ export const chartsConfig = {
       type: 'column',
       renderTo: 'state_trainer_#mediators',
       tab: {
-        'id': 'tab1',
-        'class': 'col-sm-6'
+        'id': 'tab2',
+        'class': 'col-12'
       },
-      drillDown: true
+      drillDown: false
     },
     title: {
-      text: 'Mediators trained',
+      text: 'Participants Trained',
       style: {
         "color": "#656566",
       }
@@ -66,7 +66,7 @@ export const chartsConfig = {
         rotation: 0
       }
     },
-    yAxis: { title: { text: 'Number of Mediators' } },
+    yAxis: { title: { text: 'Number of Participants' } },
     tooltip: {
       headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
@@ -84,12 +84,42 @@ export const chartsConfig = {
     },
   },
 
+  'state_wise_gender_data': {
+    chart: {
+      type: 'column',
+      renderTo: 'state_wise_gender_data',
+      tab: {
+        'id': 'tab3',
+        'class': 'col-12'
+      },
+      drillDown: false
+    },
+    title: {
+      text: 'Gender Wise Distribution',
+      style: {
+        "color": "#656566",
+      }
+    },
+    xAxis: {
+      type: 'category',
+      labels: {
+        rotation: 0
+      }
+    },
+    yAxis: { title: { text: 'Number of Participants' } },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> {series.name}<br/>'
+    },
+    series: [],
+  },
+
   'question_wise_data': {
     chart: {
       type: 'column',
       renderTo: 'question_wise_data',
       tab: {
-        'id': 'tab2',
+        'id': 'tab4',
         'class': 'col-12'
       },
       drillDown: false
@@ -126,7 +156,7 @@ export const chartsConfig = {
       pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> of total<br/>'
     },
     series: [],
-    drilldown: {}
+    // drilldown: {}
   },
 
   'year_month_wise_data': {
@@ -134,8 +164,8 @@ export const chartsConfig = {
       type: 'column',
       renderTo: 'year_month_wise_data',
       tab: {
-        'id': 'tab3',
-        'class': 'col-12'
+        'id': 'tab1',
+        'class': 'col-6'
       },
       drillDown: true
     },

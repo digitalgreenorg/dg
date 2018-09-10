@@ -38,7 +38,7 @@ function get_villages()
 		$.each(village_list, function (index) {
 			$('#village_from').append($("<option></option>")
 			.attr("value",village_list[index]['id'])
-			.text(village_list[index]['village_name']));
+			.text(village_list[index]['village_name'] + ' ('+ village_list[index]['id'] +')'));
 		});
 		SelectBox.init("village_from");
 	});
@@ -55,7 +55,7 @@ function get_district()
 		$.each(district_list, function (index) {
 			$('#id_district').append($("<option></option>")
 			.attr("value",district_list[index]['id'])
-			.text(district_list[index]['district_name']));
+			.text(district_list[index]['district_name'] + ' ('+ district_list[index]['id'] +')'));
 		});
 	});
 }
@@ -78,7 +78,7 @@ function get_video()
 		$.each(video_list, function (index) {
 			$('#id_video_from').append($("<option></option>")
 			.attr("value",video_list[index]['id'])
-			.text(video_list[index]['title']));
+			.text(video_list[index]['title'] + ' ('+ video_list[index]['id'] +')'));
 		});
 		SelectBox.init("id_video_from");
 	});

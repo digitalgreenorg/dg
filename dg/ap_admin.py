@@ -4,7 +4,7 @@ from videos.models import APVideo
 from geographies.models import AP_District
 from geographies.models import AP_Mandal
 from geographies.models import AP_Village
-from geographies.models import AP_Habitation
+from geographies.models import AP_Habitation, AP_COCO_Mapping
 from people.models import AP_Person
 from people.models import AP_Animator
 from activities.models import AP_Screening
@@ -24,6 +24,7 @@ from dashboard.admin import APCropAdmin
 from dashboard.admin import APPracticeAdmin
 from dashboard.admin import AP_ScreeningAdmin
 from dashboard.admin import AP_AdoptionAdmin
+from dashboard.admin import AP_COCO_MappingAdmin
 
 
 
@@ -51,6 +52,7 @@ ap_admin.register(AP_Village, AP_VillageAdmin)
 ap_admin.register(AP_Mandal, AP_BlockAdmin)
 ap_admin.register(AP_District, AP_DistrictAdmin)
 ap_admin.register(APVideo, APVideoAdmin)
+ap_admin.register(AP_COCO_Mapping, AP_COCO_MappingAdmin)
 # ap_admin.register(BluefrogSubcategory, BluefrogSubcategoryAdmin)
 # ap_admin.register(BluefrogPractice, BluefrogPracticeAdmin)
 # ap_admin.register(DistrictScreening, DistrictScreeningAdmin)

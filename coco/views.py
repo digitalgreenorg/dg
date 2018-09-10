@@ -9,17 +9,18 @@ from django.contrib import auth
 from django.core import urlresolvers
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response, render, redirect
-from django.db.models import Q
+from django.db.models import Q, get_model, F, Value, CharField
+from django.db.models.functions import Concat
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import add_message
 # app imports
-from forms import DataUploadForm
+from forms import DataUploadForm, GeographyMappingForm
 from models import CocoUser
 from videos.models import APVideo
-from coco.models import FullDownloadStats
+from coco.models import FullDownloadStats, CocoUser
 from people.models import Person,Animator,AnimatorAssignedVillage
 from people.models import PersonGroup
-from geographies.models import Village,District, Block
+from geographies.models import Village,District, Block, AP_District, AP_Mandal, AP_Village, AP_COCO_Mapping
 from programs.models import Partner
 from videos.models import Video,Language,Category,Practice,SubCategory
 from activities.models import Screening
@@ -28,6 +29,7 @@ from coco.prepare_data import *
 from django.views.generic import View
 from tastypie.models import ApiKey
 from django.db import IntegrityError
+#import traceback
 
 
 def coco_v2(request):
@@ -173,6 +175,64 @@ def upload_data(request):
     template = "coco/data_upload.html"
     return render(request, template, context)
 
+
+@login_required
+def ap_geography_mapping(request):
+    if request.method == 'GET':
+        form_data = GeographyMappingForm()
+    else:
+        form_data = GeographyMappingForm(request.POST)
+        if form_data.is_valid():
+            #import pdb;pdb.set_trace()
+            cd = form_data.cleaned_data
+            geo_type = cd.get('geographytype')
+            apgeo = cd.get('apgeo')
+            cocogeo = cd.get('cocogeo')
+            # obj = CocoUser.objects.filter(villages__in=[apgeo])
+            # print geo_type, apgeo, cocogeo, request.user.id
+            try:
+                mapping_obj, created = AP_COCO_Mapping.objects.get_or_create(geo_type=geo_type, ap_geo_id=apgeo, coco_geo_id=cocogeo)
+                if created:
+                    mapping_obj.user_created_id=request.user.id
+                    mapping_obj.time_created=datetime.now()
+                    mapping_obj.save()
+                else:
+                    mapping_obj.user_modified_id=request.user.id
+                    mapping_obj.time_modified=datetime.now()
+                    mapping_obj.save()
+
+            except Exception as e:
+                print e
+    context = {'form': form_data}
+    template = "coco/geo_mapping.html"
+    return render(request, template, context)
+
+
+class GetGeography(View):
+
+    def get(self, request, *args, **kwargs):
+        selected_geography = kwargs.get('selected_geography')
+        if selected_geography == 'District':
+            ap_districts = AP_District.objects.values_list('district_id',flat=True).distinct()
+            results_coco = list(District.objects.filter(state_id=6).exclude(id__in=ap_districts).annotate(value=F('id'), text=Concat(F('district_name'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+            results_ap = list(District.objects.filter(id__in=ap_districts).annotate(value=F('id'), text=Concat(F('district_name'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+
+        elif selected_geography == 'Block':
+            ap_blocks = AP_Mandal.objects.values_list('block_id',flat=True).distinct()
+            results_coco = list(Block.objects.filter(district__state_id=6).exclude(id__in=ap_blocks).annotate(value=F('id'), text=Concat(F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+            results_ap = list(Block.objects.filter(id__in=ap_blocks).annotate(value=F('id'), text=Concat(F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+
+        else:
+            # import pdb;pdb.set_trace()
+            ap_villages = AP_Village.objects.values_list('village_id',flat=True).distinct()
+            results_coco = list(Village.objects.filter(block__district__state_id=6).exclude(id__in=ap_villages).annotate(value=F('id'), text=Concat(F('village_name'), Value('( '), F('block__block_name'), Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','text','value'))
+            results_ap = list(Village.objects.filter(id__in=ap_villages).annotate(value=F('id'), text=Concat(F('village_name'), Value('( '), F('block__block_name'), Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )') ,output_field=CharField())).values('id','text','value'))
+
+        results_list = [results_ap, results_coco]
+        data = {'results': results_list}
+        #import pdb;pdb.set_trace()
+        return JsonResponse(data)
+
 @login_required
 def upload_csv_data(request):
     if request.method == 'POST':
@@ -182,7 +242,7 @@ def upload_csv_data(request):
             cd = form_data.cleaned_data
             csv_file = request.FILES.get('datafile').read()
             try:
-                file_data = csv_file
+                file_data = csv_file.decode('utf-8')
                 header = str(file_data.split('\n')[0])
                 if '\r' in header:
                     header = header.strip('\r')
@@ -193,18 +253,18 @@ def upload_csv_data(request):
                     for row in filter_lines:
                         try:
                             row = row.split(',')
-                            block_obj, created = Block.objects.get_or_create(block_name__iexact=row[2].strip(),\
+                            block_obj, created = Block.objects.get_or_create(block_name=row[2].strip(),\
                                                                             district_id=int(row[1]), \
                                                                             defaults={'block_name': row[2].strip(), \
                                                                                      'district_id':int(row[1].strip())})
                             if block_obj or created:
                                 village_obj, created = \
-                                Village.objects.get_or_create(village_name__iexact=row[3].strip(),block_id=block_obj.id,\
+                                Village.objects.get_or_create(village_name=row[3].strip(),block_id=block_obj.id,\
                                                                 defaults={'village_name':row[3].strip(), \
                                                                         'block_id':block_obj.id})
                                 if village_obj or created:
                                     person_group, created = \
-                                    PersonGroup.objects.get_or_create(group_name__iexact=row[4].strip(),\
+                                    PersonGroup.objects.get_or_create(group_name=row[4].strip(),\
                                                                     village_id=village_obj.id, \
                                                                     partner_id=int(row[0]),\
                                                                     defaults={'group_name': row[4].strip(),\
@@ -261,7 +321,7 @@ def getFileHeader(request):
         output = StringIO.StringIO()
         try:
             output.write(columns)
-            response = HttpResponse(output.getvalue().encode('utf-8'), content_type='text/csv')
+            response = HttpResponse(output.getvalue().encode('utf-8'), content_type='text/csv', charset='utf-8')
             response['Content-Disposition'] = 'attachment; filename=header_format.csv'
             return response
         except Exception as e:
@@ -284,43 +344,47 @@ class APVideoGenerator(View):
                     practice_list = []
                     dg_practice_list = []
                     tags = []
+                    errors_videos = []
                     for video_iterable in video_list:
-                        dg_practice = video_iterable.video.videopractice.all()
-                        for item in dg_practice:
-                            dg_practice_list.append({'id': item.id,
-                                                     'practice_name': item.videopractice_name,
-                                                     })
-                        practice_q = video_iterable.practice.all()
-                        for item in practice_q:
-                            practice_list.append({'id': item.id,
-                                                  'practice_name': item.pest_name,
-                                                  'practice_code': item.pest_code,
-                                                  'practice_name_telgu': item.pest_name_telgu})
-                        tags_q = video_iterable.video.tags.all()
-                        for tag_item in tags_q:
-                            tags.append({'id': tag_item.id,
-                                         'tag_name': tag_item.tag_name,
-                                         'tag_code': tag_item.tag_code,
-                                         'tag_regional_name': tag_item.tag_regional_name})
+                        try:
+                            dg_practice = video_iterable.video.videopractice.all()
+                            for item in dg_practice:
+                                dg_practice_list.append({'id': item.id,
+                                                        'practice_name': item.videopractice_name,
+                                                        })
+                            practice_q = video_iterable.practice.all()
+                            for item in practice_q:
+                                practice_list.append({'id': item.id,
+                                                    'practice_name': item.pest_name,
+                                                    'practice_code': item.pest_code,
+                                                    'practice_name_telgu': item.pest_name_telgu})
+                            tags_q = video_iterable.video.tags.all()
+                            for tag_item in tags_q:
+                                tags.append({'id': tag_item.id,
+                                            'tag_name': tag_item.tag_name,
+                                            'tag_code': tag_item.tag_code,
+                                            'tag_regional_name': tag_item.tag_regional_name})
 
-                        data_list.append({'id': video_iterable.video.id,
-                                         'video_title': video_iterable.video.title,
-                                         'district_name': video_iterable.video.village.block.district.district_name,
-                                         'video_short_name_english': video_iterable.video_short_name,
-                                         'video_short_regionalname': video_iterable.video_short_regionalname,
-                                         'category': {'id': video_iterable.video.category.id,
-                                                      'category_name': video_iterable.video.category.category_name},
-                                         'subcategory': {'id': video_iterable.video.subcategory.id,
-                                                         'subcategory_name': video_iterable.video.subcategory.subcategory_name},
-                                         'practice': practice_list,
-                                         'dg_practice': dg_practice_list,
-                                         'tags': tags,
-                                         'producton_date': video_iterable.video.production_date,
-                                         'youtube': video_iterable.video.youtubeid,
-                                         'updation_date': video_iterable.video.approval_date,
-                                         'version': 2,
-                                         'video_type': video_iterable.video.video_type
-                                         })
+                            data_list.append({'id': video_iterable.video.id,
+                                            'video_title': video_iterable.video.title,
+                                            'district_name': video_iterable.video.village.block.district.district_name,
+                                            'video_short_name_english': video_iterable.video_short_name,
+                                            'video_short_regionalname': video_iterable.video_short_regionalname,
+                                            'category': {'id': video_iterable.video.category.id,
+                                                        'category_name': video_iterable.video.category.category_name},
+                                            'subcategory': {'id': video_iterable.video.subcategory.id,
+                                                            'subcategory_name': video_iterable.video.subcategory.subcategory_name},
+                                            'practice': practice_list,
+                                            'dg_practice': dg_practice_list,
+                                            'tags': tags,
+                                            'producton_date': video_iterable.video.production_date,
+                                            'youtube': video_iterable.video.youtubeid,
+                                            'updation_date': video_iterable.video.approval_date,
+                                            'version': 2,
+                                            'video_type': video_iterable.video.video_type
+                                            })
+                        except Exception as e:
+                            pass
 
                     return JsonResponse({'data': data_list})
             except Exception:
