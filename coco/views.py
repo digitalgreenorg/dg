@@ -386,7 +386,6 @@ class APVideoGenerator(View):
                         except Exception as e:
                             pass
 
-                    print errors_videos
                     return JsonResponse({'data': data_list})
             except Exception:
                 return HttpResponse("You are not authorized.Wrong Key", status=401)
