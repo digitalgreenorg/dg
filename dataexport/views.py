@@ -299,7 +299,7 @@ class ExportView(FormView):
                     'person__village__block_id','person__village__block__block_name',\
                     'person__village_id','person__village__village_name', 'id', 'time_created')
                 if category == '2':
-                    data_list.exclude(parentcategory_id=1)
+                    data_list.exclude(parentcategory_id=1) 
                 else:
                     data_list.filter(parentcategory_id=1)
             else:
