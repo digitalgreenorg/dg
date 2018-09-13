@@ -299,9 +299,9 @@ class ExportView(FormView):
                     'person__village__block_id','person__village__block__block_name',\
                     'person__village_id','person__village__village_name', 'id', 'time_created')
                 if category == '2':
-                    data_list.exclude(parentcategory_id=1) 
+                    data_list = data_list.exclude(parentcategory_id=1)
                 else:
-                    data_list.filter(parentcategory_id=1)
+                    data_list = data_list.filter(parentcategory_id=1)
             else:
                 data_list = PersonAdoptPractice.objects.filter(date_of_adoption__range=date_range,
                                                        person__village__block__district__state__country_id=country.id,
@@ -316,9 +316,9 @@ class ExportView(FormView):
                     'person__village__block_id','person__village__block__block_name',\
                     'person__village_id','person__village__village_name', 'id', 'time_created')
                 if category == '2':
-                    data_list.exclude(parentcategory_id=1)
+                    data_list = data_list.exclude(parentcategory_id=1)
                 else:
-                    data_list.filter(parentcategory_id=1)
+                    data_list = data_list.filter(parentcategory_id=1)
         
         data_list = pd.DataFrame(list(data_list))
         return data_list
