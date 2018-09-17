@@ -178,36 +178,30 @@ def upload_data(request):
 
 @login_required
 def ap_geography_mapping(request):
-    flag = False
-    geo_type = ''
+    geo_type = 'District'
     if request.method == 'GET':
         form_data = GeographyMappingForm()
     else:
         form_data = GeographyMappingForm(request.POST)
         if form_data.is_valid():
-            #import pdb;pdb.set_trace()
             cd = form_data.cleaned_data
             geo_type = cd.get('geographytype')
             apgeo = cd.get('apgeo')
             cocogeo = cd.get('cocogeo')
-            # obj = CocoUser.objects.filter(villages__in=[apgeo])
-            # print geo_type, apgeo, cocogeo, request.user.id
             try:
                 mapping_obj, created = AP_COCO_Mapping.objects.get_or_create(geo_type=geo_type, ap_geo_id=apgeo, coco_geo_id=cocogeo)
                 if created:
                     mapping_obj.user_created_id=request.user.id
                     mapping_obj.time_created=datetime.now()
                     mapping_obj.save()
-                    flag = True
                 else:
                     mapping_obj.user_modified_id=request.user.id
                     mapping_obj.time_modified=datetime.now()
                     mapping_obj.save()
-                    flag = True
 
             except Exception as e:
                 print e
-    context = {'form': form_data, 'flag': flag, 'geo_type': geo_type}
+    context = {'form': form_data, 'geo_type': geo_type}
     template = "coco/geo_mapping.html"
     return render(request, template, context)
 
