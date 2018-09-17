@@ -178,6 +178,8 @@ def upload_data(request):
 
 @login_required
 def ap_geography_mapping(request):
+    flag = False
+    geo_type = ''
     if request.method == 'GET':
         form_data = GeographyMappingForm()
     else:
@@ -196,14 +198,16 @@ def ap_geography_mapping(request):
                     mapping_obj.user_created_id=request.user.id
                     mapping_obj.time_created=datetime.now()
                     mapping_obj.save()
+                    flag = True
                 else:
                     mapping_obj.user_modified_id=request.user.id
                     mapping_obj.time_modified=datetime.now()
                     mapping_obj.save()
+                    flag = True
 
             except Exception as e:
                 print e
-    context = {'form': form_data}
+    context = {'form': form_data, 'flag': flag, 'geo_type': geo_type}
     template = "coco/geo_mapping.html"
     return render(request, template, context)
 
@@ -213,24 +217,46 @@ class GetGeography(View):
     def get(self, request, *args, **kwargs):
         selected_geography = kwargs.get('selected_geography')
         if selected_geography == 'District':
+            mapped_districts = AP_COCO_Mapping.objects.filter(geo_type=selected_geography)
+            
+            #fetching already mapped bluefrog districts to remove them from the list
+            mapped_districts_ap = mapped_districts.values_list('ap_geo_id',flat=True).distinct()
+            mapped_districts_coco = mapped_districts.values_list('coco_geo_id',flat=True).distinct()
             ap_districts = AP_District.objects.values_list('district_id',flat=True).distinct()
-            results_coco = list(District.objects.filter(state_id=6).exclude(id__in=ap_districts).annotate(value=F('id'), text=Concat(F('district_name'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+
+             #removing already mapped COCO districts to remove them from the list
+            results_coco = list(District.objects.filter(state_id=6).exclude(id__in=ap_districts).exclude(id__in=mapped_districts_coco).annotate(value=F('id'), text=Concat(F('district_name'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+            ap_districts = filter(lambda x: x not in mapped_districts_ap, ap_districts)
             results_ap = list(District.objects.filter(id__in=ap_districts).annotate(value=F('id'), text=Concat(F('district_name'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
 
         elif selected_geography == 'Block':
+            mapped_blocks = AP_COCO_Mapping.objects.filter(geo_type=selected_geography)
+
+            #fetching already mapped bluefrog blocks to remove them from the list
+            mapped_blocks_ap = mapped_blocks.values_list('ap_geo_id',flat=True).distinct()
+            mapped_blocks_coco = mapped_blocks.values_list('coco_geo_id',flat=True).distinct()
             ap_blocks = AP_Mandal.objects.values_list('block_id',flat=True).distinct()
-            results_coco = list(Block.objects.filter(district__state_id=6).exclude(id__in=ap_blocks).annotate(value=F('id'), text=Concat(F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+
+            #removing already mapped COCO blocks to remove them from the list
+            results_coco = list(Block.objects.filter(district__state_id=6).exclude(id__in=ap_blocks).exclude(id__in=mapped_blocks_coco).annotate(value=F('id'), text=Concat(F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
+            ap_blocks = filter(lambda x: x not in mapped_blocks_ap, ap_blocks)
             results_ap = list(Block.objects.filter(id__in=ap_blocks).annotate(value=F('id'), text=Concat(F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','value','text'))
 
         else:
-            # import pdb;pdb.set_trace()
+            mapped_villages = AP_COCO_Mapping.objects.filter(geo_type=selected_geography)
+
+            #fetching already mapped bluefrog villages to remove them from the list
+            mapped_villages_ap = mapped_villages.values_list('ap_geo_id',flat=True).distinct()
+            mapped_villages_coco = mapped_villages.values_list('coco_geo_id',flat=True).distinct()
             ap_villages = AP_Village.objects.values_list('village_id',flat=True).distinct()
-            results_coco = list(Village.objects.filter(block__district__state_id=6).exclude(id__in=ap_villages).annotate(value=F('id'), text=Concat(F('village_name'), Value('( '), F('block__block_name'), Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','text','value'))
+
+             #removing already mapped COCO villages to remove them from the list
+            results_coco = list(Village.objects.filter(block__district__state_id=6).exclude(id__in=ap_villages).exclude(id__in=mapped_villages_coco).annotate(value=F('id'), text=Concat(F('village_name'), Value('( '), F('block__block_name'), Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id','text','value'))
+            ap_villages = filter(lambda x: x not in mapped_villages_ap, ap_villages)
             results_ap = list(Village.objects.filter(id__in=ap_villages).annotate(value=F('id'), text=Concat(F('village_name'), Value('( '), F('block__block_name'), Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )') ,output_field=CharField())).values('id','text','value'))
 
         results_list = [results_ap, results_coco]
         data = {'results': results_list}
-        #import pdb;pdb.set_trace()
         return JsonResponse(data)
 
 @login_required
