@@ -1,25 +1,30 @@
 jQuery(document).ready(function($){
+    $("select").css('width','40%');
+    $("span.select2").css('min-width','40%');
+
+    // Check if page is reloaded
     $("#id_geographytype").select2();
     $("#id_apgeo").select2();
     $("#id_cocogeo").select2();
-
-    $("select").css('width','40%');
-    $("span.select2").css('min-width','40%');
     $("#id_apgeo").html('').select2({data: [{id: '', text: ''}]});
     $("#id_cocogeo").html('').select2({data: [{id: '', text: ''}]});
+
+
     $.ajax({
           type: "GET",
-          url: "/coco/get/geography/District/",
+          url: "/coco/get/geography/"+geo_type+"/",
           datatype: 'json',
           success: function(data){
             // console.log(data)
-             $("#id_apgeo").select2({data: data.results[0]});
-             $("#id_cocogeo").select2({data: data.results[1]});
+            $("#id_apgeo").select2({data: data.results[0]});
+            $("#id_cocogeo").select2({data: data.results[1]});
           },
           error: function(error){
             console.log(error)
           }
         });
+  
+    
     $("#id_geographytype").on('change', function(){
       $("#id_apgeo").html('').select2({data: [{id: '', text: ''}]});
       $("#id_cocogeo").html('').select2({data: [{id: '', text: ''}]});
