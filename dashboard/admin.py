@@ -292,7 +292,12 @@ class VideoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(VideoForm, self).__init__(*args, **kwargs)
-        self.fields['video'].queryset = Video.objects.filter(partner_id=50)
+        mapped_videos = list(APVideo.objects.values_list('video_id',flat=True).distinct())
+        if kwargs.get('instance'):
+            instance_video_id = kwargs.get('instance').video_id
+            mapped_videos.remove(instance_video_id)        
+        self.fields['video'].queryset = Video.objects.filter(partner_id=50).exclude(id__in=mapped_videos)
+
 
 
 
@@ -324,6 +329,8 @@ class APVideoAdmin(admin.ModelAdmin):
         if tag_id_to_be_removed:
             form.instance.video.tags.remove(*tag_id_to_be_removed)
         form.instance.video.tags.add(*current_instance_tag)
+
+
 
 
 
