@@ -68,6 +68,14 @@ class PracticeSubject(CocoModel):
     def __unicode__(self):
         return self.name
 
+class Tag(CocoModel):
+    tag_name = models.CharField(max_length=255, unique='True')
+    tag_code = models.CharField(max_length=50, null=True)
+    tag_regional_name = models.CharField(max_length=255, null=True)
+
+    def __unicode__(self):
+        return self.tag_name
+
 ###############################################################################
 ###                     COCO USAGE                                          ###
 ###############################################################################
@@ -80,12 +88,14 @@ class Practice(CocoModel):
     practice_topic = models.ForeignKey(PracticeTopic, null=True, blank=True)
     practice_subtopic = models.ForeignKey(PracticeSubtopic, null=True, blank=True)
     practice_subject = models.ForeignKey(PracticeSubject, null=True, blank=True)
+    practice_tag = models.ForeignKey(Tag, null=True, blank=True)
 
     class Meta:
         verbose_name = "Practice"
-        unique_together = ("practice_sector", "practice_subsector", "practice_topic", "practice_subtopic", "practice_subject")
+        unique_together = ("practice_sector", "practice_subsector", "practice_topic", "practice_subtopic", "practice_subject","practice_tag")
 
     def __unicode__(self):
+        practice_tag = '' if self.practice_tag is None else self.practice_tag.tag_name
         practice_sector = '' if self.practice_sector is None else self.practice_sector.name
         practice_subject = '' if self.practice_subject is None else self.practice_subject.name
         practice_subsector = '' if self.practice_subsector is None else self.practice_subsector.name
@@ -190,13 +200,7 @@ post_save.connect(enter_to_log, sender=Language)
 pre_delete.connect(enter_to_log,sender=Language)
 
 
-class Tag(CocoModel):
-    tag_name = models.CharField(max_length=255, unique='True')
-    tag_code = models.CharField(max_length=50, null=True)
-    tag_regional_name = models.CharField(max_length=255, null=True)
 
-    def __unicode__(self):
-        return self.tag_name
 
 
 class Video(CocoModel):

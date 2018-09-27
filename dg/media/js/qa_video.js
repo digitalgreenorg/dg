@@ -60,7 +60,7 @@ function QAvideo() {
         jQuery("#id_reviewer").prop('disabled', true).css('background-color', '#e0e0e0');
     }
 
-    jQuery('div[class="submit-row"] input[name="_save"], input[name="_addanother"], input[name="_continue"]').click(function (event) {
+    jQuerfy('div[class="submit-row"] input[name="_save"], input[name="_addanother"], input[name="_continue"]').click(function (event) {
         if (jQuery('#id_video_grade').prop('disabled')!=true){
             if(jQuery("#id_reviewer").val() == ""){
                 alert("Please fill the \"Reviewer\" field");
@@ -69,6 +69,44 @@ function QAvideo() {
             }
 
              if(jQuery('#id_video_grade').val()==""){
+                alert("Kindly fill the \"Video Grade\" field");
+                event.preventDefault();
+            }
+        }
+    });
+    jQuery('div[class="submit-row"] input[name="_save"], input[name="_addanother"], input[name="_continue"]').click(function (event) {
+        if (jQuery('#id_category').prop('disabled')!=true){
+            if(jQuery("#id_category").val() == ""){
+                alert("Please fill the \"Category\" field");
+                event.preventDefault();
+                return false;
+            }
+
+             if(jQuery('#id_category').val()==""){
+                alert("Kindly fill the \"Video Grade\" field");
+                event.preventDefault();
+            }
+        }
+         if (jQuery('#id_subcategory').prop('disabled')!=true){
+            if(jQuery("#id_subcategory").val() == ""){
+                alert("Please fill the \"Subcategory\" field");
+                event.preventDefault();
+                return false;
+            }
+
+             if(jQuery('#id_subcategory').val()==""){
+                alert("Kindly fill the \"Video Grade\" field");
+                event.preventDefault();
+            }
+        }
+         if (jQuery('#id_videopractice').prop('disabled')!=true){
+            if(jQuery("#id_videopractice").val() == ""){
+                alert("Please fill the \"Video practice\" field");
+                event.preventDefault();
+                return false;
+            }
+
+             if(jQuery('#id_videopractice').val()==""){
                 alert("Kindly fill the \"Video Grade\" field");
                 event.preventDefault();
             }

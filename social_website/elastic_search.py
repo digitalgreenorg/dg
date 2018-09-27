@@ -16,7 +16,7 @@ def get_related_collections(collection, featured):
                                   "must_not" : {"term" : { "uid" : collection.uid }},
                             "should" : [
                                         {"terms" : { "subject" : [collection.subject] }},
-                                        {"terms" : { "topic" : [collection.topic] }},
+                                        {"terms" : { "practices" : [collection.practices] }},
                                         ],
                             "minimum_should_match" : 1,
                                 }
@@ -52,7 +52,7 @@ def create_query(params, language_name):
     partner = params.getlist('filters[partner][]', None)
     state = params.getlist('filters[state][]', None)
     country = params.getlist('filters[country][]', None)
-    topic = params.getlist('filters[topic][]', None)
+    practices = params.getlist('filters[practices][]', None)
     subject = params.getlist('filters[subject][]', None)
     query = []
     if language:
@@ -69,10 +69,10 @@ def create_query(params, language_name):
         query.append({"terms":{"state" : state}})
     if country:
         query.append({"terms":{"country" : country}})
-    if topic:
-        query.append({"terms":{"topic" : topic}})
-    if subject:
-        query.append({"terms":{"subject" : subject}})
+    if practices:
+        query.append({"terms":{"practices" : practices}})
+    if tags:
+        query.append({"terms":{"tags" : tags}})
     return query
 
 def get_collections_from_elasticsearch(request):
@@ -84,7 +84,7 @@ def get_collections_from_elasticsearch(request):
     featured = params.get('featured', None)
     # TODO: Change this from 'None'?
     if searchString != 'None':
-        match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "country.partial", "category.partial", "subcategory.partial" , "topic.partial"],
+        match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "country.partial", "category.partial", "subcategory.partial" , "practices.partial"],
                                 "like_text" : searchString
                                 }
                        }
@@ -116,7 +116,7 @@ def get_collections_from_elasticsearch(request):
         "facets" : {
                     "facet" :{
                               "terms": {
-                                        "fields" : ["language", "partner", "state", "country","category", "subcategory" , "topic", "subject"], 
+                                        "fields" : ["language", "partner", "state", "country","category", "subcategory" , "practices", "tags"], 
                                         "size" : MAX_RESULT_SIZE
                                         }
                               }
@@ -203,7 +203,7 @@ def get_related_videos(video):
                            "should": [
                                        {"term"  : { "uid" : video.uid } },
                                        {"terms" : { "category" : [video.category]}},
-                                       {"terms" : { "topic" : [video.topic]}},
+                                       {"terms" : { "practices" : [video.practices]}},
                                        {"terms" : { "language" : [video.language]}}
                                        ],
                            "minimum_should_match" : 1

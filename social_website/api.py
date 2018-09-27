@@ -1,9 +1,11 @@
 from functools import partial
+import geographies
 
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.forms import ModelForm
 from django.forms.models import model_to_dict, ModelChoiceField
+from geographies.models import State,Country
 
 from tastypie import fields
 from tastypie.authorization import Authorization, DjangoAuthorization
@@ -84,6 +86,7 @@ def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     return list(sub_fields)
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
+    # import pdb;pdb.set_trace()
     print bundle.data
     field_dict = bundle.data.get(field_name)
     print field_dict
@@ -213,6 +216,16 @@ class CollectionResource(BaseCorsResource):
         video_list = bundle.data.get('videos')
         if video_list:
             bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9 
+            state = str(bundle.data['state'])
+            bundle.data['tags']=[]
+            bundle.data['practices']=[]
+
+            qs = State.objects.get(state_name = state)
+            bundle.data['country']=qs.country.country_name
+            bundle.data['tags'] = bundle.data['subtopic']
+            del bundle.data['subtopic']
+            bundle.data['tags']=[]
+            # import pdb; pdb.set_trace()
             bundle = super(CollectionResource, self).obj_create(bundle, **kwargs)
             collection_id = getattr(bundle.obj,'uid')
             add_video_collection(collection_id, video_list)

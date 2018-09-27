@@ -137,7 +137,7 @@ def get_collection_pracs(videos,field1,field2,field3,field4,field5):
     pracs = {}
     pracs[field1] = videos[0].category if len(set(videos.values_list(field1)))==1 else ''
     pracs[field2] = videos[0].subcategory if len(set(videos.values_list(field2)))==1 else ''
-    pracs[field3] = videos[0].topic if len(set(videos.values_list(field3)))==1 else ''
+    pracs[field3] = videos[0].practices if len(set(videos.values_list(field3)))==1 else ''
     pracs[field4] = videos[0].subtopic if len(set(videos.values_list(field4)))==1 else ''
     pracs[field5] = videos[0].subject if len(set(videos.values_list(field5)))==1 else ''
     return pracs

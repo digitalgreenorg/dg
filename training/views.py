@@ -40,7 +40,8 @@ def login(request):
             else:
                 timestamp = log_obj.timestamp
             trainer = Trainer.objects.filter(training_user__user__id = user.id).first()
-            return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(timestamp),'TrainerId':trainer.id}))
+            return HttpResponse(json.dumps({'ApiKey':api_key.key,'timestamp':str(timestamp),'TrainerId':trainer.id,\
+                                            'trainer_name': trainer.name}))
         else:
             return HttpResponse("0",status=401)
     else:
@@ -53,7 +54,7 @@ def extract_filters_request(request):
         end_date = str(request.GET['end_date'])
     else:
         end_date = datetime.datetime.today().strftime('%Y-%m-%d')
-        delta = datetime.timedelta(days=365)
+        delta = datetime.timedelta(days=364)
         start_date = (datetime.datetime.today() - delta).strftime('%Y-%m-%d')
     if 'apply_filter' in request.GET:
         apply_filter = True if request.GET['apply_filter'] == 'true' else False
@@ -69,13 +70,15 @@ def extract_filters_request(request):
         chart_name = ''
     trainers_list = request.GET.getlist('Trainer')
     states_list = request.GET.getlist('State')
-
+    assessment_list = request.GET.getlist('Assessment')
+    
     filter_args = {}
     filter_args['start_date'] = start_date
     filter_args['end_date'] = end_date
     filter_args['apply_filter'] = apply_filter
     filter_args['trainers_list'] = trainers_list
     filter_args['states_list'] = states_list
+    filter_args['assessment_list'] = assessment_list
     filter_args['chart_name'] = chart_name
     filter_args['chart_type'] = chart_type
 
@@ -109,7 +112,11 @@ def get_filter_data(request):
         states_list = State.objects.annotate(value=F('state_name')).values('id','value').order_by('value')
         state_dict = {'name':'State', 'data':list(states_list)}
         response_list.extend([state_dict])
-
+    
+    assessment_list = list(Assessment.objects.annotate(value=F('name'), ).values('id','value').order_by('id'))
+    assessment_list[0]['checked'] = 'true'
+    assessment_dict = {'name':'Assessment', 'data':assessment_list}
+    response_list.extend([assessment_dict])
     json_data = json.dumps(response_list)
     return HttpResponse(json_data)
 
@@ -140,118 +147,153 @@ def get_overall_data(request):
 
 def question_wise_data(chart_name, result):
     final_data_list = {}
-    try:
-        outer_data = {'outerData': {'series':[],'categories':result['Questions'].tolist()}}
-        temp_dict_outer = {'name':'Questions','data':[]}
-        for row in result.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].Questions,'y':int(row[1].Percentage)})
-
-        outer_data['outerData']['series'].append(temp_dict_outer)
-        final_data_list[chart_name] = outer_data
-    except:
+    if len(result) == 0:
         final_data_list['error']="No data found for the filters applied"
+    else:
+        try:
+            outer_data = {'outerData': {'series':[],'categories':result['Questions'].tolist()}}
+            temp_dict_outer = {'name':'Questions','data':[]}
+            for row in result.iterrows():
+                temp_dict_outer['data'].append({'name':row[1].Questions,'y':int(row[1].Percentage)})
+
+            outer_data['outerData']['series'].append(temp_dict_outer)
+            final_data_list[chart_name] = outer_data
+        except:
+            final_data_list['error']="No data found for the filters applied"
     return final_data_list
 
 def number_of_trainings(chart_name, result):
     final_data_list = {}
-    state_grouped_data = result.groupby(['state']).sum().reset_index()
-    try:
-        outer_data = {'outerData': {'series':[],'categories':state_grouped_data['state'].tolist()}}
-
-        temp_dict_outer = {'name':'Trainings','data':[]}
-        for row in state_grouped_data.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].trainings),'drilldown':row[1].state +' trainings'})
-
-        outer_data['outerData']['series'].append(temp_dict_outer)
-        final_data_list[chart_name] = outer_data
-        inner_data = {'innerData': []}
-
-        trainer_training_dict = {name:dict(zip(g['trainer'],g['trainings'])) for name,g in result.groupby('state')}
-        for key,value in trainer_training_dict.iteritems():
-            temp_dict_inner = {'data':[]}
-            temp_dict_inner['name'] = key
-            temp_dict_inner['id'] = key + ' trainings'
-            for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,v])
-            inner_data['innerData'].append(temp_dict_inner)
-
-        final_data_list[chart_name].update(inner_data)
-    except:
+    if len(result) == 0:
         final_data_list['error']="No data found for the filters applied"
+    else:
+        state_grouped_data = result.groupby(['state']).sum().reset_index()
+        try:
+            outer_data = {'outerData': {'series':[],'categories':state_grouped_data['state'].tolist()}}
+
+            temp_dict_outer = {'name':'Trainings','data':[]}
+            for row in state_grouped_data.iterrows():
+                temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].trainings),'drilldown':row[1].state +' trainings'})
+
+            outer_data['outerData']['series'].append(temp_dict_outer)
+            final_data_list[chart_name] = outer_data
+            inner_data = {'innerData': []}
+
+            trainer_training_dict = {name:dict(zip(g['trainer'],g['trainings'])) for name,g in result.groupby('state')}
+            for key,value in trainer_training_dict.iteritems():
+                temp_dict_inner = {'data':[]}
+                temp_dict_inner['name'] = key
+                temp_dict_inner['id'] = key + ' trainings'
+                for k, v in value.iteritems():
+                    temp_dict_inner['data'].append([k,v])
+                inner_data['innerData'].append(temp_dict_inner)
+
+            final_data_list[chart_name].update(inner_data)
+        except:
+            final_data_list['error']="No data found for the filters applied"
     return final_data_list
 
 def pandas_default_aggregation(chart_name, result):
     final_data_list = {}
-    state_grouped_data = result.groupby(['state']).sum().reset_index()
-    try:
-        outer_data = {'outerData': {'series':[],'categories':state_grouped_data['state'].tolist()}}
-        temp_dict_outer = {'name':'Mediators','data':[]}
-        for row in state_grouped_data.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].mediators),'drilldown':row[1].state+' mediators'})
-        outer_data['outerData']['series'].append(temp_dict_outer)
-
-        temp_dict_outer = {'name':'Above70','data':[]}
-        for row in state_grouped_data.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].Above70),'drilldown':row[1].state+' above70'})
-
-        outer_data['outerData']['series'].append(temp_dict_outer)
-        final_data_list[chart_name] = outer_data
-        inner_data = {'innerData': []}
-        trainer_mediators_dict = {name: dict(zip(g['trainer'],g['mediators'])) for name,g in result.groupby('state')}
-        trainer_pass_dict = {name: dict(zip(g['trainer'],g['Above70'])) for name,g in result.groupby('state')}
-        for key, value in trainer_mediators_dict.iteritems():
-            temp_dict_inner = {'data':[]}
-            temp_dict_inner['name'] = key
-            temp_dict_inner['id'] = key + ' mediators'
-            for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,v])
-            inner_data['innerData'].append(temp_dict_inner)
-
-        for key, value in trainer_pass_dict.iteritems():
-            temp_dict_inner = {'data':[]}
-            temp_dict_inner['name'] = key
-            temp_dict_inner['id'] = key + ' above70'
-            for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,v])
-            inner_data['innerData'].append(temp_dict_inner)
-
-        final_data_list[chart_name].update(inner_data)
-    except:
+    if len(result) == 0:
         final_data_list['error']="No data found for the filters applied"
+    else:
+        state_grouped_data = result.groupby(['state']).sum().reset_index()
+        try:
+            outer_data = {'outerData': {'series':[],'categories':state_grouped_data['state'].tolist()}}
+            temp_dict_outer = {'name':'Participants','data':[]}
+            for row in state_grouped_data.iterrows():
+                temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].mediators),'drilldown':row[1].state+' mediators'})
+            outer_data['outerData']['series'].append(temp_dict_outer)
+
+            temp_dict_outer = {'name':'Score Above70','data':[]}
+            for row in state_grouped_data.iterrows():
+                temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].Above70),'drilldown':row[1].state+' above70'})
+
+            outer_data['outerData']['series'].append(temp_dict_outer)
+            final_data_list[chart_name] = outer_data
+            inner_data = {'innerData': []}
+            trainer_mediators_dict = {name: dict(zip(g['trainer'],g['mediators'])) for name,g in result.groupby('state')}
+            trainer_pass_dict = {name: dict(zip(g['trainer'],g['Score Above70'])) for name,g in result.groupby('state')}
+            for key, value in trainer_mediators_dict.iteritems():
+                temp_dict_inner = {'data':[]}
+                temp_dict_inner['name'] = key
+                temp_dict_inner['id'] = key + ' mediators'
+                for k, v in value.iteritems():
+                    temp_dict_inner['data'].append([k,v])
+                inner_data['innerData'].append(temp_dict_inner)
+
+            for key, value in trainer_pass_dict.iteritems():
+                temp_dict_inner = {'data':[]}
+                temp_dict_inner['name'] = key
+                temp_dict_inner['id'] = key + ' above70'
+                for k, v in value.iteritems():
+                    temp_dict_inner['data'].append([k,v])
+                inner_data['innerData'].append(temp_dict_inner)
+
+            final_data_list[chart_name].update(inner_data)
+        except:
+            final_data_list['error']="No data found for the filters applied"
+    return final_data_list
+
+def state_wise_gender_data(chart_name, result):
+    final_data_list = {}
+    if len(result) == 0:
+        final_data_list['error']="No data found for the filters applied"
+    else:
+        state_grouped_data = result.groupby(['state']).sum().reset_index()
+        try:
+            outer_data = {'outerData': {'series':[], 'categories': state_grouped_data['state'].tolist()}}
+            temp_dict_outer = {'name':'Females','data':[]}
+            for row in state_grouped_data.iterrows():
+                temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].Females)})
+            outer_data['outerData']['series'].append(temp_dict_outer)
+
+            temp_dict_outer = {'name':'Males','data':[]}
+            for row in state_grouped_data.iterrows():
+                temp_dict_outer['data'].append({'name':row[1].state,'y':int(row[1].Males)})
+
+            outer_data['outerData']['series'].append(temp_dict_outer)
+            final_data_list[chart_name] = outer_data
+        except:
+            final_data_list['error']="No data found for the filters applied"
     return final_data_list
 
 
 def year_month_wise_data(chart_name, result):
     final_data_list = {}
-    year_grouped_data = result.groupby(['year']).sum().reset_index()
-    # sorting months
-    months = {datetime.datetime(2000,i,1).strftime("%B"): i for i in range(1, 13)}
-    result['month_number'] = result['month'].map(months)
-    result = result.sort(columns=['month_number'])
-
-    month_training_dict_test = {}
-
-    try:
-        outer_data = {'outerData': {'series':[],'categories':year_grouped_data['year'].tolist()}}
-        temp_dict_outer = {'name':'Trainings','data':[]}
-        for row in year_grouped_data.iterrows():
-            temp_dict_outer['data'].append({'name':row[1].year,'y':int(row[1].trainings),'drilldown':str(row[1].year) +' trainings'})
-        outer_data['outerData']['series'].append(temp_dict_outer)
-        final_data_list[chart_name] = outer_data
-
-        inner_data = {'innerData': []}
-        month_training_dict = {name:OrderedDict(zip(g['month'],g['trainings'])) for name,g in result.groupby(['year'])}
-
-        for key,value in month_training_dict.iteritems():
-            temp_dict_inner = {'data':[]}
-            temp_dict_inner['name'] = str(key)
-            temp_dict_inner['id'] = str(key) + ' trainings'
-            for k, v in value.iteritems():
-                temp_dict_inner['data'].append([k,v])
-            inner_data['innerData'].append(temp_dict_inner)
-        final_data_list[chart_name].update(inner_data)
-    except:
+    if len(result) == 0:
         final_data_list['error']="No data found for the filters applied"
+    else:
+        year_grouped_data = result.groupby(['year']).sum().reset_index()
+        # sorting months
+        months = {datetime.datetime(2000,i,1).strftime("%B"): i for i in range(1, 13)}
+        result['month_number'] = result['month'].map(months)
+        result = result.sort(columns=['month_number'])
+
+        month_training_dict_test = {}
+
+        try:
+            outer_data = {'outerData': {'series':[],'categories':year_grouped_data['year'].tolist()}}
+            temp_dict_outer = {'name':'Trainings','data':[]}
+            for row in year_grouped_data.iterrows():
+                temp_dict_outer['data'].append({'name':row[1].year,'y':int(row[1].trainings),'drilldown':str(row[1].year) +' trainings'})
+            outer_data['outerData']['series'].append(temp_dict_outer)
+            final_data_list[chart_name] = outer_data
+
+            inner_data = {'innerData': []}
+            month_training_dict = {name:OrderedDict(zip(g['month'],g['trainings'])) for name,g in result.groupby(['year'])}
+
+            for key,value in month_training_dict.iteritems():
+                temp_dict_inner = {'data':[]}
+                temp_dict_inner['name'] = str(key)
+                temp_dict_inner['id'] = str(key) + ' trainings'
+                for k, v in value.iteritems():
+                    temp_dict_inner['data'].append([k,v])
+                inner_data['innerData'].append(temp_dict_inner)
+            final_data_list[chart_name].update(inner_data)
+        except:
+            final_data_list['error']="No data found for the filters applied"
     return final_data_list
 
 def graph_data(request):
@@ -262,6 +304,7 @@ def graph_data(request):
 
         if filter_args['chart_name'] == 'state_trainer_#mediators':
             data_to_send = pandas_default_aggregation(filter_args['chart_name'], result)
+            #import pdb;pdb.set_trace()
         elif filter_args['chart_name'] == 'state_trainer_#trainings':
             data_to_send = number_of_trainings(filter_args['chart_name'], result)
 
@@ -274,6 +317,12 @@ def graph_data(request):
         sql_query = year_month_wise_data_query(**filter_args)
         result = get_pandas_dataframe(sql_query)
         data_to_send = year_month_wise_data(filter_args['chart_name'], result)
+
+    elif filter_args['chart_name'] in ['state_wise_gender_data']:
+        sql_query = state_wise_gender_data_query(**filter_args)
+        result = get_pandas_dataframe(sql_query)
+        data_to_send = state_wise_gender_data(filter_args['chart_name'], result)
+       
 
     return HttpResponse(json.dumps(data_to_send))
 

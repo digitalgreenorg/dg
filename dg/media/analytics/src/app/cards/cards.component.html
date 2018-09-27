@@ -1,12 +1,12 @@
 <div *ngIf="cardsOverall.length > 0" class="container-fluid" [ngStyle]="{'width' : generalConfigs.body_width}">
   <br>
   <br>
-  <h5 class="text-muted">Overall</h5>
+  <h5 class="text-muted">All Assessments</h5>
   <hr/>
   <div class="row">
     <div class="col-sm-6 col-md-3" *ngFor="let card of cardsOverall">
       <div class="card" [ngStyle]="{'background-color' : generalConfigs.overall_bg_color, 'margin-bottom':'4px'}">
-        <div #cardTitle id={{card.id}} class="card-block">
+        <div #cardTitle id={{card.id}} class="card-body">
           <h6 class="card-title text-white">{{card.text}}</h6>
           <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
         </div>
@@ -15,12 +15,12 @@
   </div>
 </div>
 <div *ngIf="cardsRecent.length > 0" class="container-fluid" [ngStyle]="{'width' : generalConfigs.body_width}">
-  <h5 class="text-muted">Recent</h5>
+  <h5 class="text-muted">Filtered Data</h5>
   <hr/>
   <div class="row">
     <div class="col-sm-6 col-md-3" *ngFor="let card of cardsRecent">
       <div class="card" [ngStyle]="{'background-color' : generalConfigs.recent_bg_color, 'margin-bottom':'4px'}">
-        <div #cardTitle id={{card.id}} class="card-block">
+        <div #cardTitle id={{card.id}} class="card-body">
           <h6 class="card-title text-white">{{card.text}}</h6>
           <h6 class="card-text text-white small"><em><strong>{{card.value}}</strong></em></h6>
         </div>
