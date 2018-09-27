@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_delete, post_save
+from videos.models import VideoPractice, Tag
 
 from post_save_funcs import increase_online_video_like, update_stats, video_add_activity, collection_add_activity, video_collection_activity
 
@@ -109,14 +110,14 @@ class Collection(models.Model):
     title = models.CharField(max_length=200)
     thumbnailURL = models.URLField(max_length=200)
     state = models.CharField(max_length=100)
-    country = models.CharField(max_length=100,null=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
     partner = models.ForeignKey(Partner) #,related_name='partner_collections')
     language = models.CharField(max_length=20)
     videos = models.ManyToManyField(Video, through='VideoinCollection')
     category = models.CharField(max_length=500, blank=True)
     subcategory = models.CharField(max_length=500, blank=True)
-    topic = models.CharField(max_length=500, blank=True)
-    subtopic = models.CharField(max_length=500, blank=True)
+    practices = models.ManyToManyField(VideoPractice, db_table='videos_VideoPractice',blank=True)
+    tags = models.ManyToManyField(Tag, db_table='videos_Tag',blank=True)
     subject = models.CharField(max_length=500, blank=True)
     likes = models.IntegerField(default=0)
     views = models.IntegerField(default=0)

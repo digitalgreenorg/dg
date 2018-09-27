@@ -21,7 +21,7 @@ class VideoCollectionInline(admin.TabularInline):
 
 
 class CollectionAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['title', 'thumbnailURL', 'country', 'state', 'partner', 'language', 'category', 'subcategory', 'topic', 'subtopic', 'subject', 'featured', 'description']
+    fieldsets = [(None,  {'fields': ['title', 'thumbnailURL', 'country', 'state', 'partner', 'language', 'category', 'subcategory', 'practices', 'tags', 'featured', 'description']
                           }
                   )]
     inlines = [VideoCollectionInline,]

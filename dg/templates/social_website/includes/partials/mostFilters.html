@@ -1,8 +1,18 @@
                     {% for group in user.groups.all %}
                         {% if group.name == 'Collection Czars' %}
                         <ul class="filterOptions hdg-upper copy clearfix js-most-filters">
-                            <li><a href="{% url 'create_collection' %}" class="icon-coll-add icon-addedit mrg-lt filterOptions" title="Create a Collection"></a></li>
+                          <p align="right"><a href="{% url 'create_collection' %}" class = "button1" style = "
+    display: block;
+    width: 130px;
+    height: 15px;
+    background: #ea5589;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;" title="Create a Collection">Add Collection</a></p>
                         </ul>
+                        <br>
                         {% endif %}
                     {% endfor %}
                     <ul class="video filterOptions hdg-upper copy clearfix js-most-filters">

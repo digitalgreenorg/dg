@@ -326,7 +326,7 @@ define(function(require) {
 
             var i;
 
-            var filterorder = ['country','state', 'language', 'partner', 'category', 'subcategory', 'topic', 'subject'];
+            var filterorder = ['country','state', 'language', 'partner', 'category', 'subcategory', 'practices', 'subject'];
 
             var index;
             for (index in filterorder) {

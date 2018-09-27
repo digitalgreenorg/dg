@@ -36,6 +36,9 @@ class State(CocoModel):
     class Meta:
         unique_together = ('state_name', 'country')
 
+    # def get_country_name(self):
+    #     return self.country.country_name
+
     def __unicode__(self):
         return self.state_name
 

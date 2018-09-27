@@ -812,6 +812,7 @@ class CategoryResource(ModelResource):
         resource_name = 'category'
         authentication = MultiAuthentication(SessionAuthentication(), AnonymousGETAuthentication())
         authorization = Authorization()
+
     # dehydrate_parent_category = partial(foreign_key_to_id, field_name='parent_category',sub_field_names=['id','parent_category_name'])
     hydrate_parent_category = partial(dict_to_foreign_uri, field_name='parent_category', resource_name='parentcategory')
 

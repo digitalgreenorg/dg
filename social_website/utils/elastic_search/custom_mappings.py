@@ -66,9 +66,9 @@ FACET_MAPPING = {
                                                       },
                                             "type":"multi_field"
                                             },
-                               "topic" : {
+                               "practices" : {
                                             "fields":{
-                                                      "topic":{
+                                                      "practices":{
                                                                  "type":"string",
                                                                  "analyzer":"keyword"
                                                                  },
@@ -186,7 +186,7 @@ VIDEO_MAPPING = {
                                              "type":"string",
                                              "analyzer":"keyword"
                                             },
-                               "topic" :    {
+                               "practices" :    {
                                              "type":"string",
                                              "analyzer":"keyword"
                                             },
