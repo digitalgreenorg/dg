@@ -388,6 +388,7 @@ class APVideoGenerator(View):
                             data_list.append({'id': video_iterable.video.id,
                                             'video_title': video_iterable.video.title,
                                             'district_name': video_iterable.video.village.block.district.district_name,
+                                            'district_id': video_iterable.video.village.block.district.id,
                                             'video_short_name_english': video_iterable.video_short_name,
                                             'video_short_regionalname': video_iterable.video_short_regionalname,
                                             'category': {'id': video_iterable.video.category.id,
@@ -398,7 +399,7 @@ class APVideoGenerator(View):
                                             'dg_practice': dg_practice_list,
                                             'tags': tags,
                                             'producton_date': video_iterable.video.production_date,
-                                            'youtube': video_iterable.video.youtubeid,
+                                            'youtube': 'www.youtube.com/watch?v=' + video_iterable.video.youtubeid,
                                             'updation_date': video_iterable.video.approval_date,
                                             'version': 2,
                                             'video_type': video_iterable.video.video_type
