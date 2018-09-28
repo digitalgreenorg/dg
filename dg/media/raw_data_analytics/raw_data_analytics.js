@@ -1,10 +1,8 @@
 
-window.onload = date;
-
 //####################################Form Ready#######################################
 
   jQuery(document).ready(function ($) {
-
+    
     $('#partnerId').chosen({});
     $('#countryId').chosen({});
     $('#stateId').chosen({});
@@ -12,19 +10,33 @@ window.onload = date;
     $('#blockId').chosen({});
     $('#villageId').chosen({});
     $('#videoId').chosen({});
+    $('#categoryId').chosen({});
+    $('#subcategoryId').chosen({});
+    $('#videopId').chosen({});
+    $('#tagId').chosen({});
     $('#blocknumber_video').chosen();
     $('#villagenumber_video').chosen();
     $('#list_video').chosen();
+    $('#subcategoryId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+    $('#videopId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+    $('#tagId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        
 
     $('#resetId').click(function () {
 
         $('#partnerId').val('').trigger("chosen:updated");
         $('#countryId').val('').trigger("chosen:updated");
+        $('#categoryId').val('').trigger("chosen:updated");
         $('#stateId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
         $('#districtId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
         $('#blockId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
         $('#villageId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-        $('#videoId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        $('#videoId').find('option').remove().end().val('').prop('disabled', false).trigger("chosen:updated");
+        //$('#categoryId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        $('#subcategoryId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        $('#videopId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        $('#tagId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
+        
         $("#formId").each(function () {
             this.reset();
         });
@@ -39,25 +51,73 @@ window.onload = date;
 
     $("#partnerId").bind("change", function () {
         $('#videoId').find('option').remove();
+        $("#videoId").prop('disabled',false);
         $("#videoId").val('').trigger("chosen:updated");
+        $("#categoryId").prop('disabled',true);
+        $("#categoryId").val('').trigger("chosen:updated");
+        $("#categoryID").find('option').remove();
+        $("#subcategoryId").prop('disabled',true);
+        $("#subcategoryId").val('').trigger("chosen:updated");
+        $("#subcategoryId").find('option').remove();
+        $("#videopId").prop('disabled',true);
+        $("#videopId").val('').trigger("chosen:updated");
+        $("#videopId").find('option').remove();
+        $("#tagId").prop('disabled',true);
+        $("#tagId").val('').trigger("chosen:updated");
+        $("#tagId").find('option').remove();
     });
-    $("#countryID").bind("change", function () {
+    $("#videoId").bind("change", function(){
+        $("#categoryId").prop('disabled',true);
+        $("#categoryId").val('').trigger("chosen:updated");
+        $("#categoryID").find('option').remove();
+        $("#subcategoryId").prop('disabled',true);
+        $("#subcategoryId").val('').trigger("chosen:updated");
+        $("#subcategoryId").find('option').remove();
+        $("#videopId").prop('disabled',true);
+        $("#videopId").val('').trigger("chosen:updated");
+        $("#videopId").find('option').remove();
+        $("#tagId").prop('disabled',true);
+        $("#tagId").val('').trigger("chosen:updated");
+        $("#tagId").find('option').remove();
+    });
+    $("#categoryId").bind("change",function (){
+        $("#subcategoryId").find('option').remove();
+        $("#subcategoryId").prop('disabled',false);
+        $("#subcategoryId").val('').trigger("chosen:updated"); 
+        $("#videopId").find('option').remove();
+        $("#videopId").prop('disabled',false);
+        $("#videopId").val('').trigger("chosen:updated");
+        $("#tagId").find('option').remove();
+        $("#tagId").prop('disabled',false);
+        $("#tagId").val('').trigger("chosen:updated");
+        
+        
+    });
+    $("#subcategoryId").bind("change",function(){
+        $('#videopId').prop('disabled',false);
+        $('#videopId').find('option').remove();
+        $('#videopId').val('').trigger("chosen:updated");
+        $('#tagId').find('option').remove();
+        $('#tagId').val('').trigger("chosen:updated");
+        $('#tagId').prop('disabled',false);
+    });
+    $('#countryId').bind("change", function () {
         $("#partnerId").find('option').remove();
+        $("#partnerId").val('').trigger('chosen:updated');
         $('#stateId').prop('disabled', false);
         $('#stateId').find('option').remove();
-        $("#districtId").find('option').remove();
-        $("#blockId").find('option').remove();
-        $("#villageId").find('option').remove();
-        $("#partnerId").val('').trigger('chosen:updated');
         $("#stateId").val('').trigger("chosen:updated");
         $('#videoId').find('option').remove();
         $("#videoId").val('').trigger("chosen:updated");
+        $("#districtId").find('option').remove();
         $("#districtId").prop('disabled',true);
         $("#districtId").val('').trigger("chosen:updated");
+        $("#blockId").find('option').remove();
         $("#blockId").prop('disabled',true);
         $("#blockId").val('').trigger("chosen:updated");
         $("#villageId").prop('disabled',true);
         $("#villageId").val('').trigger("chosen:updated");
+        $("#villageId").find('option').remove();
     });
     $("#stateId").bind("change", function () {
         $("#districtId").find('option').remove();
@@ -125,6 +185,23 @@ window.onload = date;
         populate_video("video");
         $("#videoId").trigger("chosen:updated");
     });
+    $("#categoryId").next().bind("click", function () {
+        populate_category("category");
+        $("#categoryId").trigger("chosen:updated");
+    });
+    $("#subcategoryId").next().bind("click", function () {
+        populate("subcategory",$('#categoryId').val());
+        $("#subcategoryId").trigger("chosen:updated");
+    });
+    $("#videopId").next().bind("click", function () {
+        populate("videop",$('#subcategoryId').val());
+        $("#videopId").trigger("chosen:updated");
+    });
+    $("#tagId").next().bind("click", function () {
+        populate_tag("tag");
+        $("#tagId").trigger("chosen:updated");
+    });
+
 });
 //###############################Populate the dropdowns for filter######################################
 
@@ -159,7 +236,7 @@ function populate_video(src){
           .done(function (data) {
               data_json = JSON.parse(data);
               for (var jsonData in data_json) {
-                  if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData][0] + "']").length == 0)
+                  if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData][0].replace("'", "").replace("'","") + "']").length == 0)
                       $("#" + src + "Id").append('<option value="' + data_json[jsonData][0] + '">' + data_json[jsonData][0]+' ( '+data_json[jsonData][1]+' )' +'</option>');
               }
           });
@@ -180,6 +257,34 @@ function populate_partner(src){
                 for(var jsonData in data_json){
                     if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData][0] + "']").length == 0)
                         $("#" + src + "Id").append('<option value="' + data_json[jsonData][0] + '">' + data_json[jsonData][0] + '</option>');
+                }
+            });
+}
+
+function populate_category(src){
+    prevValue = {}
+
+    if (!(jQuery("#categoryId  option ").length != 0))
+        $.get("/coco/rda/dropdown_category", prevValue)
+            .done(function (data) {
+                data_json = JSON.parse(data);
+                for (var jsonData in data_json) {
+                    if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData].replace("'", "").replace("'","")+ "']").length == 0)
+                        $("#" + src + "Id").append('<option value="' + data_json[jsonData]+ '">' + data_json[jsonData] +'</option>');
+                }
+            });
+}
+
+function populate_tag(src){
+    prevValue = {}
+
+    if (!(jQuery("#tagId  option ").length != 0))
+        $.get("/coco/rda/dropdown_tag", prevValue)
+            .done(function (data) {
+                data_json = JSON.parse(data);
+                for (var jsonData in data_json) {
+                    if (jQuery("#" + src + "Id" + " option[value='" + data_json[jsonData]+ "']").length == 0)
+                        $("#" + src + "Id").append('<option value="' + data_json[jsonData] + '">' + data_json[jsonData] +'</option>');
                 }
             });
 }
@@ -290,23 +395,19 @@ function validation_check() {
             alert("No other value fields can be selected along with list!!");
             error = 1;
             event.preventDefault();
-    }
-    newfrom_date = new Date($('#from_date').val())
-    newto_date  = new Date($('#to_date').val());
-    span =new Date(newto_date-newfrom_date);
-    days = span/1000/60/60/24;
-     if(!(days>=0) && !isNaN( newfrom_date.getTime() ) && !isNaN( newto_date.getTime() )){
-        alert("'From Date' cannot be greater than 'To Date'");
-            error = 1;
-            event.preventDefault();
+    
     }
     
 }
 //#######################################onload-date################################################
-function date() {
-    date = new Date();
-    document.getElementById('to_date').valueAsDate = date;
-    date.setMonth(date.getMonth() - 1);
-    document.getElementById('from_date').valueAsDate = date;
-   
-}
+
+
+$(function() {
+    $('input[name="daterange"]').daterangepicker({
+        opens: 'right',
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
+    });
+});
+                    

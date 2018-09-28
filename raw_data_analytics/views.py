@@ -77,7 +77,30 @@ def dropdown_partner(request):
         partners = onrun_query(query)
     else:
         partners = Partner.objects.filter().values_list('partner_name')
+
     resp = json.dumps([partner for partner in partners])
+    return HttpResponse(resp)
+
+def dropdown_category(request):
+    categorys = Category.objects.filter().values_list('category_name', flat=True)
+    resp = json.dumps([unicode(category) for category in categorys])
+    return HttpResponse(resp)
+
+def dropdown_subcategory(request):
+    category_selected = request.GET.getlist('selected[]')
+    subcategorys = SubCategory.objects.filter(category__category_name__in=category_selected).values_list('subcategory_name', flat=True)
+    resp = json.dumps([unicode(subcategory) for subcategory in subcategorys])
+    return HttpResponse(resp)
+
+def dropdown_videop(request):
+    subcategory_selected = request.GET.getlist('selected[]')
+    videops = VideoPractice.objects.filter(subcategory__subcategory_name__in=subcategory_selected).values_list('videopractice_name', flat=True)
+    resp = json.dumps([unicode(videop) for videop in videops])
+    return HttpResponse(resp)
+
+def dropdown_tag(request):
+    tags=Tag.objects.filter().values_list('tag_name',flat=True)
+    resp=json.dumps([unicode(tag) for tag in tags])
     return HttpResponse(resp)
 
 def dropdown_state(request):
@@ -147,6 +170,10 @@ def dropdown_video(request):
     return HttpResponse(resp)
 
 def execute(request):
+
+    range_date = [request.POST.get("daterange")]
+    for date in range_date:
+        date_range=date.split('-')
     partner = request.POST.getlist("partner")
     country = request.POST.getlist("country")
     state = request.POST.getlist("state")
@@ -155,6 +182,22 @@ def execute(request):
     village = request.POST.getlist("village")
     video = request.POST.getlist("video")
 
+    category=request.POST.getlist("category")
+    subcategory=request.POST.getlist("subcategory")
+    videop=request.POST.getlist("videop")
+    tag=request.POST.getlist("tag")
+
+    
+    if not video:
+        filter_dict ={'category__category_name__in':category,'subcategory__subcategory_name__in':subcategory,'videopractice__videopractice_name__in':videop,'tags__tag_name__in':tag,'partner__partner_name__in':partner}
+        final_dict ={}
+        video = []
+        for key in filter_dict:
+            if  filter_dict[key]:
+                final_dict[key]=filter_dict[key]
+            if final_dict:
+                video=Video.objects.filter(**final_dict).values_list('title')
+        
 
     partner_chk = [request.POST.get("partner_chk")]
     country_chk = [request.POST.get("country_chk")]
@@ -184,8 +227,8 @@ def execute(request):
 
 
 
-    from_date = [request.POST.get("from_date")]
-    to_date = [request.POST.get("to_date")]
+    
+    # to_date = [request.POST.get("to_date")]
 
 #####################Dictionary for Generic  #################################
     dict ={'partner':[partner,partner_chk,'partner_name',Partner],
@@ -196,6 +239,8 @@ def execute(request):
         'village':[village,village_chk,'village_name',Village],
         'video':[video,video_chk,'title',Video]
         }
+
+    
 
     ###############################filter#################################
 
@@ -283,16 +328,16 @@ def execute(request):
                 break
     ##############################Date#################################
 
-    if (from_date[0] != ''):
-        from_date = from_date[0]
-    else:
-        from_date = '2004-01-01'
+    # if (from_date[0] != ''):
+    #     from_date = from_date[0]
+    # else:
+    #     from_date = '2004-01-01'
 
-    if (to_date[0] != ''):
-        to_date = to_date[0]
-    else:
-        now = datetime.datetime.now()
-        to_date = '%s-%s-%s' % (now.year, now.month, now.day)
+    # if (to_date[0] != ''):
+    #     to_date = to_date[0]
+    # else:
+    #     now = datetime.datetime.now()
+    #     to_date = '%s-%s-%s' % (now.year, now.month, now.day)
 
     partition = {
         'partner': dict['partner'][0],
@@ -322,8 +367,16 @@ def execute(request):
     options = {'partition': partition, 'value': value}
 
     args = []
-    args.append(from_date)
-    args.append(to_date)
+    # datetime.datetime.strptime("2013-1-25", '%Y-%m-%d').strftime('%m/%d/%y')
+    # date_range[0]=datetime.datetime.strptime("date_range[0]",'%d/%m/%y').strftime('%y-%m-%d')
+    # date_range[1]=datetime.datetime.strptime("date_range[1]",'%d/%m/%y').strftime('%y-%m-%d')
+    # date_range[0]=date_range[6:] + "-" +date_range[3:5] + "-" + date_range[:2]
+    args.append(date_range[0])
+    args.append(date_range[1])
+    args[0]=args[0][6:10]+"-"+args[0][3:5]+"-"+args[0][0:2]
+    args[1]=args[1][7:11]+"-"+args[1][4:6]+"-"+args[1][1:3]
+
+
     global dlib
     if not dlib:
         dlib = data_lib()
@@ -340,7 +393,6 @@ def execute(request):
                                       context_instance=RequestContext(request))
 
         else:
-
             dataframe_result = dlib.handle_controller(args, options)
             if len(dataframe_result.index) == 0:
                 error = 'No data available for given input!!'
@@ -349,6 +401,6 @@ def execute(request):
 
             else:
                 df = dataframe_result.to_json()
-                return render_to_response('raw_data_analytics/result_new.html', {'from_date': from_date, 'to_date': to_date,
+                return render_to_response('raw_data_analytics/result_new.html', {'from_date': date_range[0], 'to_date': date_range[1],
                                                                              'dataf': unicode(df, errors='ignore')},
                                           context_instance=RequestContext(request))

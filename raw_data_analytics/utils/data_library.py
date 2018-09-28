@@ -87,6 +87,7 @@ class data_lib():
                                       queryComponents[4])
 #            print "-------------------------------Result--------------------------------"
             df = self.runQuery(query)
+            
             if final_df.empty:
                 final_df = df
             else:
