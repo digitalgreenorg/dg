@@ -1,5 +1,6 @@
 from django.contrib import admin
 from models import Activity, Collection, FeaturedCollection, Partner, VideoinCollection, ResourceVideo
+from videos.models import VideoPractice, Tag
 
 class PartnerAdmin(admin.ModelAdmin):
 
@@ -21,7 +22,8 @@ class VideoCollectionInline(admin.TabularInline):
 
 
 class CollectionAdmin(admin.ModelAdmin):
-    fieldsets = [(None,  {'fields': ['title', 'thumbnailURL', 'country', 'state', 'partner', 'language', 'category', 'subcategory', 'topic', 'subtopic', 'subject', 'featured', 'description']
+    fieldsets = [(None,  {'fields': ['title', 'thumbnailURL', 'country', 'state', 'partner', 'language', 'category', 'subcategory', 'topic', 'subtopic', 'subject', 'featured', 'description',\
+                                        'tags','videopractice']
                           }
                   )]
     inlines = [VideoCollectionInline,]

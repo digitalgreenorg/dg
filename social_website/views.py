@@ -23,6 +23,7 @@ from dg.settings import PERMISSION_DENIED_URL
 from elastic_search import get_related_collections, get_related_videos
 from social_website.models import  Collection, Partner, FeaturedCollection, Video, ResourceVideo
 from videos.models import Practice, Video as Dashboard_Video
+from videos.models import Category, SubCategory, Tag, VideoPractice
 
 from mezzanine.blog.models import BlogPost
 import logging
@@ -451,33 +452,65 @@ def collection_add_view(request):
     return render_to_response('collection_add.html' , context, context_instance = RequestContext(request))
 
 
+# def mapping(request):
+#     practice_dictionary = {}
+
+#     query = Dashboard_Video.objects.values_list('related_practice', flat=True).distinct()
+#     for a in Practice.objects.select_related('practice_topic', 'practice_subtopic', 'practice_sector', 'practice_subsector', 'practice_subject').filter(id__in=query).order_by('practice_subtopic').order_by('practice_topic').order_by('practice_subsector').order_by('practice_sector'):
+
+#         if a.practice_sector.name not in practice_dictionary: #sector will be key
+#             practice_dictionary[a.practice_sector.name] = {'subject': []}
+#         sector_dictionary = practice_dictionary[a.practice_sector.name]
+#         if a.practice_subject:
+#             subject_list = practice_dictionary[a.practice_sector.name]['subject']
+#             if a.practice_subject.name not in subject_list:
+#                 subject_list.append(a.practice_subject.name)
+#         if a.practice_subsector:
+#             if a.practice_subsector.name not in sector_dictionary:
+#                 sector_dictionary[a.practice_subsector.name] = {}
+#             subsector_dictionary = sector_dictionary[a.practice_subsector.name]
+#             if a.practice_topic:
+#                 if a.practice_topic.name not in subsector_dictionary:
+#                     subsector_dictionary[a.practice_topic.name] = []
+#                 topic_list = subsector_dictionary[a.practice_topic.name]
+#                 if a.practice_subtopic:
+#                     if a.practice_subtopic.name not in topic_list:
+#                         topic_list.append(a.practice_subtopic.name)
+
+#     resp = json.dumps({"mapping_dropdown": practice_dictionary})
+#     return HttpResponse(resp)
+
+
+
 def mapping(request):
-    practice_dictionary = {}
-
-    query = Dashboard_Video.objects.values_list('related_practice', flat=True).distinct()
-    for a in Practice.objects.select_related('practice_topic', 'practice_subtopic', 'practice_sector', 'practice_subsector', 'practice_subject').filter(id__in=query).order_by('practice_subtopic').order_by('practice_topic').order_by('practice_subsector').order_by('practice_sector'):
-
-        if a.practice_sector.name not in practice_dictionary: #sector will be key
-            practice_dictionary[a.practice_sector.name] = {'subject': []}
-        sector_dictionary = practice_dictionary[a.practice_sector.name]
-        if a.practice_subject:
-            subject_list = practice_dictionary[a.practice_sector.name]['subject']
-            if a.practice_subject.name not in subject_list:
-                subject_list.append(a.practice_subject.name)
-        if a.practice_subsector:
-            if a.practice_subsector.name not in sector_dictionary:
-                sector_dictionary[a.practice_subsector.name] = {}
-            subsector_dictionary = sector_dictionary[a.practice_subsector.name]
-            if a.practice_topic:
-                if a.practice_topic.name not in subsector_dictionary:
-                    subsector_dictionary[a.practice_topic.name] = []
-                topic_list = subsector_dictionary[a.practice_topic.name]
-                if a.practice_subtopic:
-                    if a.practice_subtopic.name not in topic_list:
-                        topic_list.append(a.practice_subtopic.name)
-
-    resp = json.dumps({"mapping_dropdown": practice_dictionary})
+    dictionary = {}
+    category_obj = Category.objects.all()
+    for a in category_obj:
+        dictionary[a.category_name]={}
+        category_dictionary = dictionary[a.category_name]
+        subcategory_obj = SubCategory.objects.filter(category=a.id)
+        for b in subcategory_obj:
+            if a.category_name:
+                if b.subcategory_name not in category_dictionary:
+                    category_dictionary[b.subcategory_name] = {}
+                subcategory_dictionary = category_dictionary[b.subcategory_name]
+                videopractice_obj = VideoPractice.objects.filter(subcategory=b.id)
+                for c in videopractice_obj:
+                    if b.subcategory_name:
+                        if c.videopractice_name not in subcategory_dictionary:
+                            subcategory_dictionary[c.videopractice_name] = {}
+                        practice_dictionary=subcategory_dictionary[c.videopractice_name]
+                        
+    dictionary['tags'] = {}
+    tags_obj = Tag.objects.filter(is_ap_tag=False)
+    for d in tags_obj:
+        if d.tag_name not in dictionary['tags']:
+            dictionary['tags'][d.tag_name]={}
+    
+    resp = json.dumps({"mapping_dropdown": dictionary})
     return HttpResponse(resp)
+
+
   
 def login_view(request, template_name='registration/login.html',
                       redirect_field_name=REDIRECT_FIELD_NAME,
