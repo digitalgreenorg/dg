@@ -17,16 +17,18 @@
     $('#blocknumber_video').chosen();
     $('#villagenumber_video').chosen();
     $('#list_video').chosen();
+    $('#tagId').chosen();
     $('#subcategoryId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
     $('#videopId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-    $('#tagId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-        
+      
 
     $('#resetId').click(function () {
 
         $('#partnerId').val('').trigger("chosen:updated");
         $('#countryId').val('').trigger("chosen:updated");
         $('#categoryId').val('').trigger("chosen:updated");
+        $('#tagId').val('').trigger("chosen:updated");
+    
         $('#stateId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
         $('#districtId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
         $('#blockId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
@@ -35,8 +37,6 @@
         //$('#categoryId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
         $('#subcategoryId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
         $('#videopId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-        $('#tagId').find('option').remove().end().val('').prop('disabled', true).trigger("chosen:updated");
-        
         $("#formId").each(function () {
             this.reset();
         });
@@ -85,7 +85,7 @@
         $("#subcategoryId").prop('disabled',false);
         $("#subcategoryId").val('').trigger("chosen:updated"); 
         $("#videopId").find('option').remove();
-        $("#videopId").prop('disabled',false);
+        $("#videopId").prop('disabled',true);
         $("#videopId").val('').trigger("chosen:updated");
         $("#tagId").find('option').remove();
         $("#tagId").prop('disabled',false);

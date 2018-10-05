@@ -49,6 +49,7 @@ table.dataTable {
 #wrapper {
   display: flex;
   align-items: stretch;
+  overflow: scroll;
 }
 
 #loader {

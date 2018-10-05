@@ -181,22 +181,20 @@ def execute(request):
     block = request.POST.getlist("block")
     village = request.POST.getlist("village")
     video = request.POST.getlist("video")
-
     category=request.POST.getlist("category")
     subcategory=request.POST.getlist("subcategory")
     videop=request.POST.getlist("videop")
     tag=request.POST.getlist("tag")
-
     
-    if not video:
-        filter_dict ={'category__category_name__in':category,'subcategory__subcategory_name__in':subcategory,'videopractice__videopractice_name__in':videop,'tags__tag_name__in':tag,'partner__partner_name__in':partner}
-        final_dict ={}
-        video = []
-        for key in filter_dict:
-            if  filter_dict[key]:
-                final_dict[key]=filter_dict[key]
-            if final_dict:
-                video=Video.objects.filter(**final_dict).values_list('title')
+    # if not video:
+    #     filter_dict ={'category__category_name__in':category,'subcategory__subcategory_name__in':subcategory,'videopractice__videopractice_name__in':videop,'tags__tag_name__in':tag,'partner__partner_name__in':partner}
+    #     final_dict ={}
+    #     video = []
+    #     for key in filter_dict:
+    #         if  filter_dict[key]:
+    #             final_dict[key]=filter_dict[key]
+    #         if final_dict:
+    #             video=Video.objects.filter(**final_dict).values_list('title')
         
 
     partner_chk = [request.POST.get("partner_chk")]
@@ -237,30 +235,36 @@ def execute(request):
         'district':[district,district_chk,'district_name',District],
         'block':[block,block_chk,'block_name',Block],
         'village':[village,village_chk,'village_name',Village],
-        'video':[video,video_chk,'title',Video]
+        'video':[video,video_chk,'title',Video],
+        'category':[category,[None],'category_name',Category],
+        'subcategory':[subcategory,[None],'subcategory_name',SubCategory],
+        'videopractice':[videop,[None],'videopractice_name',VideoPractice],
+        'tag':[tag,[None],'tag_name',Tag],
         }
 
-    
-
     ###############################filter#################################
-
+    new_list=[]
     checked_list = []
-
     for keys in dict:
-        if (len(dict[keys][0]) == 0 and dict[keys][1][0] != None):
+        if keys=='videopractice' and len(dict[keys][0]) > 0:
+            new_list1=dict[keys][0]
+            dict[keys][0]=dict[keys][3].objects.filter(subcategory__subcategory_name__in= new_list,videopractice_name__in=new_list1).values_list('id',flat=True)
+        elif (len(dict[keys][0]) == 0 and dict[keys][1][0] != None):
             dict[keys][0] = True
             checked_list.append(str(keys))
         elif len(dict[keys][0]) > 0 :
             query = dict[keys][2]+'__in'
+            if keys=='subcategory':
+                new_list=dict[keys][0]
             dict[keys][0]=dict[keys][3].objects.filter(**{query:dict[keys][0]})
             Temp =[]
             for partitionObject in dict[keys][0] :
                 Temp.append(str(partitionObject.id))
                 dict[keys][0] = Temp
         elif (len(dict[keys][0])== 0 and dict[keys][1][0] == None):
-            dict[keys][0] = False
-
+            dict[keys][0] = False   
     ###############################Partition#################################
+  
     partdict = {
             'animator':animator_chk,
             'person':people_chk,
@@ -337,8 +341,7 @@ def execute(request):
     #     to_date = to_date[0]
     # else:
     #     now = datetime.datetime.now()
-    #     to_date = '%s-%s-%s' % (now.year, now.month, now.day)
-
+    #     to_date = '%s-%s-%s' % (now.year, now.month, now.da
     partition = {
         'partner': dict['partner'][0],
         'country': dict['country'][0],
@@ -349,9 +352,13 @@ def execute(request):
         'animator': partdict['animator'],
         'person': partdict['person'],
         'persongroup': partdict['group'],
-        'video': dict['video'][0]
+        'video': dict['video'][0],
+        'category':dict['category'][0],
+        'subcategory':dict['subcategory'][0],
+        'tag':dict['tag'][0],
+        'videopractice':dict['videopractice'][0],
     }
-
+   
     value = {
         'numScreening': valdict['val_screening'],
         'numAdoption': valdict['val_adoption'],
@@ -375,8 +382,6 @@ def execute(request):
     args.append(date_range[1])
     args[0]=args[0][6:10]+"-"+args[0][3:5]+"-"+args[0][0:2]
     args[1]=args[1][7:11]+"-"+args[1][4:6]+"-"+args[1][1:3]
-
-
     global dlib
     if not dlib:
         dlib = data_lib()

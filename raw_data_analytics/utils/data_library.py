@@ -9,6 +9,7 @@ from initialize_lookup_matrix import initialize_lookup
 
 class data_lib():
     Dict = {}
+    U_Dict={}
 
     lookup_matrix = {}
 
@@ -86,6 +87,7 @@ class data_lib():
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3],
                                       queryComponents[4])
 #            print "-------------------------------Result--------------------------------"
+            print query
             df = self.runQuery(query)
             
             if final_df.empty:
@@ -176,7 +178,6 @@ class data_lib():
         for vals in self.valueSpecial:
             if vals in valueElement:
                 specialCase = 1
-
         if not partitionElements and specialCase == 1:
             idElementVal = self.orderDictionary[self.categoryDictionary['partitionCumValues'][valueElement]]
             idElementKey = self.categoryDictionary['partitionCumValues'][valueElement]
@@ -279,12 +280,13 @@ class data_lib():
         whereString = '1=1'
         whereComponentList = [whereString]
 
+    
         for items in partitionElements:
             ll=[]
             if partitionElements[items] != True:
                 whereComponentList.append(
                 self.tableDictionary[items] + '.' + self.whereDictionary[items] + ' in (' + ','.join(str(n) for n in partitionElements[items])+')')
-
+            
         for i in Dictionary:
             for j in Dictionary[i]:
                 for k in range(0, len(lookup_matrix[i][j])):
