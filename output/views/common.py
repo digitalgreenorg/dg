@@ -275,7 +275,7 @@ def overview_line_graph(request):
     if('type' in request.GET):
         graph_type = request.GET.getlist('type')
     else:
-        graph_type = ['prod', 'screen', 'prac', 'person', 'adopt']
+        graph_type = ['prod', 'screen',  'person', 'adopt']
 
     if('prod' in graph_type):
         vid_prod_rs = run_query_dict(shared_sql.overview_line_chart(type='production',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
@@ -292,10 +292,10 @@ def overview_line_graph(request):
     else:
         adopt_rs = []
 
-    if('prac' in graph_type):
-        prac_rs = run_query_dict(shared_sql.overview_line_chart(type='practice',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
-    else:
-        prac_rs = []
+    # if('prac' in graph_type):
+    #     prac_rs = run_query_dict(shared_sql.overview_line_chart(type='practice',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
+    # else:
+    #     prac_rs = []
 
     if('person' in graph_type):
         person_rs = run_query_dict(shared_sql.overview_line_chart(type='person',geog=geog,id=id, from_date=from_date, to_date=to_date, partners=partners),'date');
@@ -310,8 +310,8 @@ def overview_line_graph(request):
         start_date = min(start_date,*(sc_rs.keys()))
     if adopt_rs:
         start_date = min(start_date,*(adopt_rs.keys()))
-    if prac_rs:
-        start_date = min(start_date,*(prac_rs.keys()))
+    # if prac_rs:
+    #     start_date = min(start_date,*(prac_rs.keys()))
     if person_rs:
         start_date = min(start_date,*(person_rs.keys()))
     diff = (today - start_date).days
@@ -327,8 +327,8 @@ def overview_line_graph(request):
             sum_sc += sc_rs[iter_date][0]
         if iter_date in adopt_rs:
             sum_adopt += adopt_rs[iter_date][0]
-        if iter_date in prac_rs:
-            sum_prac += prac_rs[iter_date][0]
+        # if iter_date in prac_rs:
+        #     sum_prac += prac_rs[iter_date][0]
         if iter_date in person_rs:
             sum_person += person_rs[iter_date][0]
 
@@ -336,7 +336,7 @@ def overview_line_graph(request):
         if('prod' in graph_type): append_str.append(float(sum_vid))
         if('screen' in graph_type): append_str.append(float(sum_sc))
         if('adopt' in graph_type): append_str.append(float(sum_adopt))
-        if('prac' in graph_type): append_str.append(float(sum_prac))
+        # if('prac' in graph_type): append_str.append(float(sum_prac))
         if('person' in graph_type): append_str.append(float(sum_person))
 
         str_list.append(append_str)
@@ -349,9 +349,9 @@ def overview_line_graph(request):
         header.append('Total disseminations')
     if('adopt' in graph_type):
         header.append('Total adoptions')
-    if('prac' in graph_type):
+    # if('prac' in graph_type):
 
-        header.append('Total practices')
+    #     header.append('Total practices')
     if('person' in graph_type):
         header.append('Total viewers')
 
@@ -376,6 +376,8 @@ def pie_chart_data(sqlFunc,pieNameDict, desc, **args):
             str_list.append([value,0])
             
     return HttpResponse(json.dumps(str_list))
+
+
 
 #generic function to render data for Scatter Charts
 #sqlFunc is the function which renders the SQL query.
@@ -410,6 +412,7 @@ def practice_scatter_chart_data(sqlFunc, **args):
 def scatter_chart_data(sqlFunc, **args):
     rs = run_query(sqlFunc(**args))
     return_val = [['','','','','Number']]
+
     if not rs:
         return HttpResponse(json.dumps([[]]));
 
