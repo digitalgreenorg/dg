@@ -99,7 +99,7 @@ def dropdown_videop(request):
     return HttpResponse(resp)
 
 def dropdown_tag(request):
-    tags=Tag.objects.filter().values_list('tag_name',flat=True)
+    tags=Tag.objects.filter(is_ap_tag=False).values_list('tag_name',flat=True)
     resp=json.dumps([unicode(tag) for tag in tags])
     return HttpResponse(resp)
 

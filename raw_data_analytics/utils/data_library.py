@@ -87,7 +87,7 @@ class data_lib():
             query = self.makeSQLquery(queryComponents[0], queryComponents[1], queryComponents[2], queryComponents[3],
                                       queryComponents[4])
 #            print "-------------------------------Result--------------------------------"
-            print query
+           
             df = self.runQuery(query)
             
             if final_df.empty:
