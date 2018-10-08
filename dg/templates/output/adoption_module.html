@@ -53,12 +53,12 @@
                         </div>
                     </div>
                     <div class="statnumber">
-                        <div class="statdesnumber"> {{ avg_ado_per_scr|floatformat:2|default:"0" }} </div>
+                        <div class="statdesnumber"> {{ avg_ado_per_scr|floatformat:0|default:"0"}} adoptions/screening</div>
                     </div>
                 </td>
             </tr>
-            <tr>
-                <td class="table1statdesc">
+            <!-- <tr> -->
+               <!--  <td class="table1statdesc">
                     <div class="statdesc">
                         <div class="statdescname"> Total number of adoptions </div>
                         <div id="statdescimg">
@@ -101,8 +101,8 @@
                     <div class='statnumber'>
                         <div class='statdesnumber'> {{ avg_ado_per_vid|floatformat:2|default:"0"}} adoptions/video</div>
                     </div>
-                </td>
-
+                </td> -->
+<!-- 
                 <td class="table1statdesc">
                     <div class="statdesc">
                         <div class="statdescname">Probability of adoption by a viewer </div>
@@ -117,12 +117,12 @@
                     </div>
                 </td>
 
-            </tr>
+            </tr> -->
 
             <tr>
                 <td class='table1statdesc'>
                     <div class='statdesc'>
-                        <div class='statdescname'> Total unique viewers adopting a practice</div>
+                        <div class='statdescname'> Total unique Adopters adopting a practice</div>
                         <div id='statdescimg'>
                             <div id='statdescimg1'>
                                 Number of unique viewers <br/> adopting any practice
@@ -133,7 +133,7 @@
                         <div class='statdesnumber'>{{tot_farmers}} Farmer{{tot_farmers|pluralize}}</div>
                     </div>
                 </td>
-
+<!-- 
                 <td class='table1statdesc'>
                     <div class='statdesc'>
                         <div class='statdescname'> Total Videos Adopted </div>
@@ -146,20 +146,32 @@
                     <div class='statnumber'>
                         <div class='statdesnumber'>{{tot_prac}} Video{{tot_prac|pluralize}}</div>
                     </div>
-                </td>
+                </td> -->
 
                 <td class='table1statdesc'>
                     <div class='statdesc'>
-                        <div class='statdescname'> Ratio of viewers with repeat adoption </div>
+                        <div class='statdescname'> percentage of adopters adopting more than 1 practice </div>
                         <div id='statdescimg'>
                             <div id='statdescimg1'>
-
-                                Ratio of viewers who repeated an adoption to the number of viewers who made at least one adoption. Repeating an adoption is adopting the same video again.
+                                 percentage of adopters that adopt more than 1 practice
                             </div>
                         </div>
                     </div>
                     <div class='statnumber'>
                         <div class='statdesnumber'>{{repeat_pract|floatformat:2|default:"0"}} %</div>
+                    </div>
+                </td>
+                 <td class='table1statdesc'>
+                    <div class='statdesc'>
+                        <div class='statdescname'> Average adoption per Adopter</div>
+                        <div id='statdescimg'>
+                            <div id='statdescimg1'>
+                                Average number of adoptions <br/> per Adopter
+                            </div>
+                        </div>
+                    </div>
+                    <div class='statnumber'>
+                        <div class='statdesnumber'> {{ avg_ado_per_adop|floatformat:0|default:"0"}} adoptions/adopter</div>
                     </div>
                 </td>
             </tr>
@@ -182,6 +194,7 @@
                 </td>
                 <td class='table1statdesc'>
                 </td>
+               
             </tr>
             {% endcomment %}
         </table>
@@ -248,7 +261,7 @@
                     <div class="graphdiv1desc" id="javascript_total_line" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">
                     </div>
                 </div>
-                <div id="graphdiv1">
+                <!-- <div id="graphdiv1">
                     <div id="graphdiv1title">
                         <div id="graphdiv1titledesc">
                             <div id="subgraphdiv1titledesc1"> Adoptions per practice </div>
@@ -292,11 +305,7 @@
 
                     <div class="graphdiv1desc" id="javascript_practice_type_bubble" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;min-height:360px">
                     </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td id="graphtabletd">
+                </div> -->
                 <div id="graphdiv1">
                     <div id="graphdiv1title">
                         <div id="graphdiv1titledesc">
@@ -309,6 +318,11 @@
                     <div class="graphdiv1desc" id="javascript_percent_line" style="background-image: url(/media/Output/Images/graph_loader.gif); background-repeat:no-repeat; background-position:center;">
                     </div>
                 </div>
+            </td>
+        </tr>
+        <tr>
+            <td id="graphtabletd">
+                
                 <div id="graphdiv1">
                     <div id="graphdiv1title">
                         <div id="graphdiv1titledesc">

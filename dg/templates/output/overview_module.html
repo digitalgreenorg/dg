@@ -18,10 +18,10 @@
       <tr>
         <td class='table1statdesc'>
           <div class='statdesc'>
-            <div class='statdescname'> Groups attending disseminations</div>
+            <div class='statdescname'>Farmer Groups attending disseminations</div>
             <div id='statdescimg'>
               <div id='statdescimg1'>
-                Total number of viewer groups that have attended a screening.
+                Total number of SHGs or Farmer Development groups that have attended a screening.
               </div>
             </div>
           </div>
@@ -65,7 +65,7 @@
             </div>
           </div>
           <div class='statnumber'>
-            <div class='statdesnumber'> {{country_data.avg_scr|floatformat:2}}</div>
+            <div class='statdesnumber'> {{country_data.avg_scr|floatformat:0}}</div>
           </div>
         </td>
 
@@ -79,12 +79,12 @@
             </div>
           </div>
           <div class='statnumber'>
-            <div class='statdesnumber'> {{country_data.avg_att|floatformat:2}}</div>
+            <div class='statdesnumber'> {{country_data.avg_att|floatformat:0}}</div>
           </div>
         </td>
 
 
-        <td class='table1statdesc'>
+        <!-- <td class='table1statdesc'>
           <div class='statdesc'>
             <div class='statdescname'> Villages with recent disseminations </div>
             <div id='statdescimg'>
@@ -96,7 +96,7 @@
           <div class='statnumber'>
             <div class='statdesnumber'> {{country_data.vil_oper}} </div>
           </div>
-        </td>
+        </td> -->
       </tr>
 
     </table>
@@ -130,13 +130,13 @@
           <div id='table2tddiv1'> </div>
         </th>
         <th class='table2statdesc1'>
-          <div id='table2tddiv'> Viewer Adoptions </div>
+          <div id='table2tddiv'> Unique Adopters </div>
           <div id='table2tddiv1'> </div>
         </th>
-        <th class='table2statdesc1'>
+        <!-- <th class='table2statdesc1'>
           <div id='table2tddiv'> Practices </div>
           <div id='table2tddiv1'> </div>
-        </th>
+        </th> -->
       </tr>
     </thead>
     <tbody>
@@ -168,9 +168,9 @@
           <a href='/coco/analytics/adoption_module/{% analytics_get_request item.geog item.id get_req_url %}'>
 										{{ item.tot_ado }} </a> {% else %} {{ item.tot_ado }} {% endifnotequal %}
         </td>
-        <td class='table2statdesc2'>
+        <!-- <td class='table2statdesc2'>
           {{ item.tot_pra }}
-        </td>
+        </td> -->
       </tr>
       {% endif %} {% endfor %}
     </tbody>
@@ -204,9 +204,9 @@
                            {{ par_geog_data.tot_ado }}</a>
       </td>
 
-      <td class='table2statdesc21'>
+      <!-- <td class='table2statdesc21'>
         {{ par_geog_data.tot_pra }}
-      </td>
+      </td> -->
     </tr>
   </table>
 </div>
