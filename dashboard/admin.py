@@ -296,7 +296,7 @@ class VideoForm(forms.ModelForm):
         if kwargs.get('instance'):
             instance_video_id = kwargs.get('instance').video_id
             mapped_videos.remove(instance_video_id)        
-        self.fields['video'].queryset = Video.objects.filter(partner_id=50).exclude(id__in=mapped_videos)
+        self.fields['video'].queryset = Video.objects.filter(partner_id=50,village__block__district__state_id= 6).exclude(id__in=mapped_videos)
 
 
 
