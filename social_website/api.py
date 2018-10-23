@@ -230,7 +230,6 @@ class CollectionResource(BaseCorsResource):
         video_list = bundle.data.get('videos')
         if video_list:
             bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9
-            import pdb;pdb.set_trace()
             bundle.data['country'] = list(State.objects.filter(state_name=bundle.data['state']).values_list('country__country_name', flat=True))[0]
             bundle.data['temp_tags'] = []
             bundle.data['temp_practices'] = []
@@ -246,6 +245,7 @@ class CollectionResource(BaseCorsResource):
             bundle.data['videopractice'] = bundle.data['temp_practices']
             del bundle.data['temp_tags']
             del bundle.data['temp_practices']
+            bundle.data['title'] = bundle.data['title'].strip()
             
             import pdb;pdb.set_trace()
             bundle = super(CollectionResource, self).obj_create(bundle, **kwargs)
@@ -258,7 +258,8 @@ class CollectionResource(BaseCorsResource):
     def obj_update(self, bundle, **kwargs):
         video_list = bundle.data.get('videos')
         if video_list:
-            bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9 
+            bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9
+            bundle.data['title'] = bundle.data['title'].strip() 
             bundle = super(CollectionResource, self).obj_update(bundle, **kwargs)
             collection_id = bundle.data.get('uid')
             add_video_collection(collection_id, video_list)

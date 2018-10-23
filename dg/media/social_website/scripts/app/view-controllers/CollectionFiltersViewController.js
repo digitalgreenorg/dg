@@ -326,7 +326,8 @@ define(function(require) {
 
             var i;
 
-            var filterorder = ['country','state', 'language', 'partner', 'category', 'subcategory', 'topic', 'subject'];
+            var filterorder = ['country','state', 'language', 'partner', 'category', 'subcategory', 'topic', 'subject',
+                                'videopractice', 'tags'];
 
             var index;
             for (index in filterorder) {
@@ -352,8 +353,8 @@ define(function(require) {
 
                     currentCategory.options[i]._optionId = i;
                 }
-
-                categoriesForRender.push(currentCategory);
+                if(index !== 'title')
+                    categoriesForRender.push(currentCategory);
             }
 
 

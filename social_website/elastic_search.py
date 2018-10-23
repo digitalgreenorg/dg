@@ -2,6 +2,7 @@ import datetime, json, urllib2
 from django.http import HttpResponse
 from pyes import ES
 from social_website.models import Partner
+import traceback
 from dg.settings import COMPLETION_INDEX, FACET_INDEX, VIDEO_INDEX
 
 MAX_RESULT_SIZE = 500 # max hits for elastic, default is 10
@@ -54,6 +55,9 @@ def create_query(params, language_name):
     country = params.getlist('filters[country][]', None)
     topic = params.getlist('filters[topic][]', None)
     subject = params.getlist('filters[subject][]', None)
+    videopractice = params.getlist('filters[videopractice][]', None)
+    tags = params.getlist('filters[tags][]', None)
+    title = params.getlist('filters[title][]', None)
     query = []
     if language:
         query.append({"terms":{"language" : language}})
@@ -73,6 +77,12 @@ def create_query(params, language_name):
         query.append({"terms":{"topic" : topic}})
     if subject:
         query.append({"terms":{"subject" : subject}})
+    if title:
+        query.append({"terms":{"title" : title}})
+    if videopractice:
+        query.append({"terms":{"videopractice.notanalyzed" : videopractice}})
+    if tags:
+        query.append({"terms":{"tags.notanalyzed" : tags}})
     return query
 
 def get_collections_from_elasticsearch(request):
@@ -84,7 +94,9 @@ def get_collections_from_elasticsearch(request):
     featured = params.get('featured', None)
     # TODO: Change this from 'None'?
     if searchString != 'None':
-        match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", "state.partial", "country.partial", "category.partial", "subcategory.partial" , "topic.partial"],
+        match_query = {"flt" : {"fields" : ["_all", "subject.partial", "language.partial", "partner.partial", \
+                                "state.partial", "country.partial", "category.partial", "subcategory.partial" , \
+                                "topic.partial", "videopractice.partial","tags.partial","title.partial"],
                                 "like_text" : searchString
                                 }
                        }
@@ -107,8 +119,8 @@ def get_collections_from_elasticsearch(request):
     conn = ES(['127.0.0.1:9200'])
     conn.default_indices = FACET_INDEX
     conn.refresh(FACET_INDEX)
-    q ={"query": {
-                  "filtered":{
+    q_uery ={"query": {
+                     "filtered":{
                               "query" : match_query,
                               "filter" : filter
                               }
@@ -116,10 +128,11 @@ def get_collections_from_elasticsearch(request):
         "facets" : {
                     "facet" :{
                               "terms": {
-                                        "fields" : ["language", "partner", "state", "country","category", "subcategory" , "topic", "subject"], 
+                                        "fields" : ["language", "partner", "state", "country","category", "subcategory" ,\
+                                         "topic", "subject","videopractice.notanalyzed", "tags.notanalyzed","title"], 
                                         "size" : MAX_RESULT_SIZE
-                                        }
-                              }
+                                        },
+                            },
                     },
         "sort" : {
                   order_by : {"order" : "desc"}
@@ -129,9 +142,10 @@ def get_collections_from_elasticsearch(request):
 
     result_list = []
     try :
-        query = json.dumps(q)
+        query = json.dumps(q_uery)
         url = "http://localhost:9200/%s/_search" % FACET_INDEX
         response = urllib2.urlopen(url, query)
+
         result = json.loads(response.read())
         for res in result['hits']['hits']:
             result_list.append(res['_source'])
@@ -142,6 +156,7 @@ def get_collections_from_elasticsearch(request):
             resp = json.dumps({"meta": {"limit": str(limit), "next": "", "offset": str(offset), "previous": "null", "total_count": "1"},"objects": [{'Message': 'No Collections Found', 'error': "1"}], "facets" : facets})
         return HttpResponse(resp)
     except Exception, ex:
+        print traceback.print_exc()
         return HttpResponse(str(ex))
     
 def searchCompletions(request):

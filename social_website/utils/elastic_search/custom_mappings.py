@@ -38,6 +38,20 @@ SETTINGS = {
 FACET_MAPPING = {
          FACET_INDEX :{
                  "properties":{
+                               "title": {
+                                       "fields":{
+                                                      "title":{
+                                                                     "type":"string",
+                                                                     "analyzer":"keyword"
+                                                                 },
+                                                      "partial":{
+                                                                 "search_analyzer":"full_name",
+                                                                 "index_analyzer":"partial_name",
+                                                                 "type":"string"
+                                                                 }
+                                                      },
+                                            "type":"multi_field"
+                               },
                                "subcategory" : {
                                             "fields":{
                                                       "subcategory":{
@@ -123,6 +137,44 @@ FACET_MAPPING = {
                                                       },
                                             "type":"multi_field"
                                             },
+                                "videopractice": {
+                                        "type": "multi_field",
+                                        "store": "yes",
+                                        "fields": {
+                                        "analyzed": {
+                                                "type": "string",
+                                                "analyzer": "keyword"
+                                        },
+                                        "notanalyzed": {
+                                                "type": "string",
+                                                "index": "not_analyzed"
+                                        },
+                                        "partial":{
+                                                "search_analyzer":"full_name",
+                                                "index_analyzer":"partial_name",
+                                                "type":"string"
+                                        }
+                                        }
+                                },
+                               "tags": {
+                                        "type": "multi_field",
+                                        "store": "yes",
+                                        "fields": {
+                                        "analyzed": {
+                                                "type": "string",
+                                                "analyzer": "keyword"
+                                        },
+                                        "notanalyzed": {
+                                                "type": "string",
+                                                "index": "not_analyzed"
+                                        },
+                                        "partial":{
+                                                "search_analyzer":"full_name",
+                                                "index_analyzer":"partial_name",
+                                                "type":"string"
+                                        }
+                                        }
+                                },
                                "state" : {
                                           "fields":{
                                                     "state":{

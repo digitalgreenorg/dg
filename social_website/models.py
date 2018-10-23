@@ -109,7 +109,7 @@ class Collection(models.Model):
     title = models.CharField(max_length=200)
     thumbnailURL = models.URLField(max_length=200)
     state = models.CharField(max_length=100)
-    country = models.CharField(max_length=100,null=True)
+    country = models.CharField(max_length=100,null=True, blank=False)
     partner = models.ForeignKey(Partner) #,related_name='partner_collections')
     language = models.CharField(max_length=20)
     videos = models.ManyToManyField(Video, through='VideoinCollection')

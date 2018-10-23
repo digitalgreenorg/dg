@@ -7,7 +7,8 @@ def get_absolute_url_for_completion(self):
 
 def enter_data_into_facet_search(conn, index_name):
     i = 0
-    for obj in Collection.objects.all():
+    collection_set = Collection.objects.all().prefetch_related('videopractice','tags')
+    for obj in collection_set:
         vid_data = []
         time = 0
         for index, vid_collection in enumerate(obj.videoincollection_set.all()):
@@ -22,8 +23,17 @@ def enter_data_into_facet_search(conn, index_name):
                              "youtubeID" : vid.youtubeID,
                              "videoURL" : url})
             time += vid.duration
+
+        videopractice_data = []
+        tags_data = []
+        for _id in obj.videopractice.values('videopractice_name'):
+            videopractice_data.append(_id.get('videopractice_name'))
         
-        data = json.dumps({"title" : obj.title,
+        for _id in obj.tags.values('tag_name'):
+            tags_data.append(_id.get('tag_name'))
+    
+        
+        data = json.dumps({"title" : obj.title.strip(),
                            "url" : obj.get_absolute_url(), 
                            "language" : obj.language,
                            "partner" : obj.partner.name,
@@ -41,6 +51,8 @@ def enter_data_into_facet_search(conn, index_name):
                            "videos" : vid_data,
                            "duration" : time,
                            "featured": obj.featured,
+                           "videopractice": videopractice_data,
+                           "tags": tags_data
                            })    
         conn.index(data, index_name, index_name,i+1)
         i+= 1
@@ -88,6 +100,14 @@ def enter_data_into_completion_search(conn, index_name):
                                "type" : "Collections"}) 
             conn.index(data, index_name, index_name, i+1)
             i+= 1
+        if collection.title != '':
+            url = '%s/?title=%s' % (get_absolute_url_for_completion(collection), collection.title)
+            data = json.dumps({"searchTerm" : collection.title,
+                               "targetURL" : url, 
+                               "type" : "Collections"})
+            conn.index(data, index_name, index_name, i+1)
+            i+= 1
+
     
     # Partners
     for partner in Partner.objects.all():

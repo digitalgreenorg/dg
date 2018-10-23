@@ -268,17 +268,41 @@ def search_view(request):
         }
     return render_to_response('collections.html', context, context_instance=RequestContext(request))
 
-def make_sub_filter(filters, field, active_filter_list, facet_dict):
+def make_sub_filter(filters, field, active_filter_list, facet_dict, m2m_field=False):
     kwargs = {}
-    kwargs[field] = ''
+    if m2m_field:
+        kwargs[field] = None
+    else:
+        kwargs[field] = ''
     filters[field] = {}
     filters[field]['title'] = field.title()
     filters[field]['options'] = []
     facet_dict = {k.lower():v for k,v in facet_dict.items()}
-    for obj in sorted(set(Collection.objects.exclude(**kwargs).values_list(field, flat=True))): #works same as .exclude(field = '')
-        facet_count = facet_dict[obj.lower()] if facet_dict.has_key(obj.lower()) else 0
-        if facet_count or facet_dict == {}:
-            filters[field]['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in active_filter_list, "count" : facet_count})
+    if m2m_field:
+        m2m_list = sorted(set([obj[field] for obj in Collection.objects.exclude(**kwargs).values(field)]))
+        if field == 'videopractice':
+            m2m_values = [item for item in VideoPractice.objects.filter(id__in=m2m_list).values_list('videopractice_name', \
+                                            flat=True)]
+        elif field == 'tags':
+            m2m_values = [item for item in Tag.objects.filter(id__in=m2m_list).values_list('tag_name', \
+                                            flat=True)]
+        for obj in m2m_values:
+            
+            facet_count = facet_dict[obj.lower()] if facet_dict.has_key(obj.lower()) else 0
+            if facet_count or facet_dict == {}:
+                filters[field]['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in active_filter_list,\
+                                                "count" : facet_count})
+    elif field == 'title':
+        for obj in sorted(Collection.objects.exclude(**kwargs).values_list(field, flat=True)): #works same as .exclude(field = '')
+            facet_count = facet_dict[obj.lower()] if facet_dict.has_key(obj.lower()) else 0
+            if facet_count or facet_dict == {}:
+                filters[field]['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in active_filter_list, "count" : facet_count})
+        
+    else:
+        for obj in sorted(set(Collection.objects.exclude(**kwargs).values_list(field, flat=True))): #works same as .exclude(field = '')
+            facet_count = facet_dict[obj.lower()] if facet_dict.has_key(obj.lower()) else 0
+            if facet_count or facet_dict == {}:
+                filters[field]['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in active_filter_list, "count" : facet_count})
     return filters
 
 @csrf_exempt
@@ -305,6 +329,9 @@ def searchFilters(request):
     country = params.getlist('filters[country][]', None)
     topic = params.getlist('filters[topic][]', None)
     subject = params.getlist('filters[subject][]', None)
+    videopractice = params.getlist('filters[videopractice][]', None)
+    tags = params.getlist('filters[tags][]', None)
+    title = params.getlist('filters[title][]', None)
     filters = {}
     filters['partner'] = {}
     filters['partner']['title'] = 'Partner'
@@ -322,6 +349,9 @@ def searchFilters(request):
     filters = make_sub_filter(filters, 'state', state, facet_dict)
     filters = make_sub_filter(filters, 'subject', subject, facet_dict)
     filters = make_sub_filter(filters, 'language', language, facet_dict)
+    filters = make_sub_filter(filters, 'videopractice', videopractice, facet_dict, True, )
+    filters = make_sub_filter(filters, 'tags', tags, facet_dict, True)
+    filters = make_sub_filter(filters, 'title', title, facet_dict)
     data = json.dumps({"categories" : filters})
     return HttpResponse(data)
 

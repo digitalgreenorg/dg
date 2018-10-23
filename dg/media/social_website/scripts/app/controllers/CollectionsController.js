@@ -100,6 +100,7 @@ define(function(require) {
                 if ($(".js-collections-wrapper").attr('data-title') != 'None'){
                     this._references.collectionFiltersViewController._setFilterStatus('topic', $(".js-collections-wrapper").attr('data-title'), true);
                     this._references.collectionFiltersViewController._setFilterStatus('subject', $(".js-collections-wrapper").attr('data-title'), true);
+                    this._references.collectionFiltersViewController._setFilterStatus('title', $(".js-collections-wrapper").attr('data-title'), true);
                 }
                 if ($(".js-collections-wrapper").attr('data-country') != 'None'){
                     this._references.collectionFiltersViewController._setFilterStatus('country', $(".js-collections-wrapper").attr('data-country'), true);
