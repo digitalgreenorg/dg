@@ -289,7 +289,7 @@ def upload_csv_data(request):
                                                                     partner_id=int(row[0]),\
                                                                     defaults={'group_name': row[4].strip(),\
                                                                     'village_id':village_obj.id, \
-                                                                    'partner_id':int(row[0].strip())},)
+                                                                    'partner_id':int(row[0].strip())},)####comment
                                     if person_group or created:
                                         if row[9] != '' and row[9] != '\r':
                                             row[9] = row[9].strip('\r')
