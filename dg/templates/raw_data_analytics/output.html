@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block sidebar %}
+
 {% endblock %}
 
 {% block content %}
@@ -15,6 +16,10 @@
         <!-- <link rel="stylesheet" media="screen, projection" href="{{STATIC_URL}}assets/styles/dataTables.tableTools.css" /> -->
         <link rel="stylesheet" media="screen" href="{{STATIC_URL}}assets/styles/select2.css" />
         <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <script src="/media/assets/scripts/jquery.min.js"></script>
 <script src="/media/assets/scripts/chosen.jquery.min.js"></script>
 <script src="/media/raw_data_analytics/raw_data_analytics.js"></script>
@@ -27,66 +32,34 @@
 
             <div class="media layout-vr-xlg">
 
-                <form target="_blank" action="/coco/rda/execute/" id="formId" method="POST"
+                <form target="_blank" class="data-filter-form m-t-30" action="/coco/rda/execute/" id="formId" method="POST"  autocomplete="off"
                       enctype="multipart/form-data"  style="margin-top: -5%">
                     {% csrf_token %}
+                    <br><br><br>
+            
+            
 
 
-                    </br></br></br>
-                    <!--<center>-->
-                    <!--  -->
-
-                    <script type="text/javascript">
-                        var datefield = document.createElement("input")
-                        datefield.setAttribute("type", "date")
-                        if (datefield.type != "date") { //if browser doesn't support input type="date", load files for jQuery UI Date Picker
-                            document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
-                            document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
-                            document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n')
-                        }
-                    </script>
-
-                    <script>
-                        if (datefield.type != "date") { //if browser doesn't support input type="date", initialize date picker widget:
-                            var d = new Date();
-                            d.setMonth(d.getMonth() - 1);
-                            jQuery(function ($) { //on document.ready
-                                $('#to_date').datepicker({dateFormat: 'yy-mm-dd',minDate: -0,maxDate: new Date()}).datepicker("setDate", new Date());
-                                $('#from_date').datepicker({dateFormat: 'yy-mm-dd',minDate: -0,maxDate: new Date()}).datepicker("setDate", d);
-                                $('#to_date').attr('max',new Date());
-                                $('#from_date').attr('max',new Date());
-                            })
-                        }
-                    </script>
-
-                    <script type="text/javascript">
-                        jQuery(function($){
-                            $('#from_date').click(function(){
-                                $('#from_date').attr('value','2008-01-01');
-                            })
-                        })
-                    </script>
-                    <div id="date" name="Date">
-                        <p class="copy">
-                        <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm" style="font-size: 20px">Date:
-                        </h3>
-                        <h3 class="hdg-source-semibold hdg-f hdg-black layout-vr-sm" style="font-size: 15px">From:
-                            &nbsp;<input type="date" id="from_date" name="from_date" size="20" min="2000-01-01" >&nbsp;&nbsp;
-                            To: &nbsp; <input type="date" id="to_date" name="to_date" size="20" min="2000-01-01">
-                        </h3>
-                        </p>
-                    </div>
-                    <div id="rightdiv" style="width:55%;float: left;margin-bottom: 27%">
-
-
-                        <!--</center>-->
-
-                        <div id="Filters"
-                             style=' float:left; margin-top: 2%'>
+            <div class="filter" style="width:55%;float: left;margin-bottom: 27%;border-right: 2px ridge #6c757d59;">
+            <div id="Filters"
+                             style=' float:left; margin-top: 15px;'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Filters:</h3>
                             <div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
+
+                                <!-- date filter -->
+                    <div id="date" name="Date">
+                        <p class="copy">
+                        <div  id="date" name="Date">
+                            <label style="width: 110px;">Date Range</label>
+                        <input  style=" width: 450px;" type="text" name="daterange" value="01/01/2017 - 01/06/2018" />
+                        </div>
+                        </p>
+                    </div>
+                            
+                                <hr style="background:#CECECE; border:0; height:1px" />
+                                <br>
                                 <div name='country' id='countryID' style="">
-                                    <label style="width: 70px;">Country</label>
+                                    <label style="width: 110px;">Country</label>
                                     <select class='select' multiple name='country' id='countryId'
                                             style=" width: 450px; " >
 
@@ -99,7 +72,7 @@
                                 <br>
 
                                 <div name='state' id='stateID' style="">
-                                    <label style="width: 70px;">State</label>
+                                    <label style="width: 110px;">State</label>
                                     <select class='State' multiple name='state' id='stateId' disabled="true"
 
                                             style="width: 450px;">
@@ -109,7 +82,7 @@
                                 <br>
 
                                 <div name='district' id='districtID' style=" ">
-                                    <label style="width: 70px;">District</label>
+                                    <label style="width: 110px;">District</label>
                                     <select class='select' multiple="multiple" name='district' id='districtId'
 
                                             disabled="true" style="width: 450px;"
@@ -121,7 +94,7 @@
 
                                 <div name='block' id='blockID'
                                      style="">
-                                    <label style="width: 70px;">Block</label>
+                                    <label style="width: 110px;">Block</label>
                                     <select class='select' multiple="multiple" name='block' id='blockId'
 
                                             style="  width: 450px; " disabled="true"
@@ -134,22 +107,21 @@
                                 <br>
                                 <div name='village' id='villageID'
                                      style=" ">
-                                    <label style="width: 70px;">Village</label>
+                                    <label style="width: 110px;">Village</label>
                                     <select class='select' multiple="multiple" name='village' id='villageId'
                                             style="width: 450px;" disabled="true">
 
                                     </select>
                                 </div>
                                 <br>
-                                <hr style="background:#CECECE; border:0; height:.25px" />
+                                <hr style="background:#CECECE; border:0; height: 1px" />
                                 <br>
+                                <!-- partner -->
                                 <div name='partner' id='partnerID' style="">
-                                    <label style="width: 70px;">Partner</label>
+                                    <label style="width: 110px;">Partner</label>
 
                                     <select class="select" multiple name='partner' id='partnerId'
                                             style=" width: 450px; ">
-
-
                                         {% if partners %}
                                             {% for partner in partners %}
                                                 <option value="{{ partner }}"> {{ partner }} </option>{% endfor %}
@@ -158,26 +130,74 @@
                                 </div>
                                 <br>
                                 <hr style="background:#CECECE; border:0; height:1px" />
+                            
                                 <br>
+                                <!-- video -->
                                 <div name="video" id=" videoID"
                                      style="">
-                                    <label style="width: 70px;">Video</label>
+                                    <label style="width: 110px;">Video</label>
                                     <select class="select" multiple="multiple" name='video' id="videoId"
                                             style="width: 450px;height: auto">
                                     </select>
                                 </div>
+                              
+                                 <br>
+                                <hr style="background:#CECECE; border:0; height:1px" />
+                            
+                                <br>
+                                <!-- category -->
+                                
+                                 <div name='category' id='categoryID' style="">
+                                    <label style="width: 110px;">Category</label>
 
+                                    <select class="select" multiple name='category' id='categoryId'
+                                            style=" width: 450px; height: auto;">
+                                    </select>
+                                </div>
+                                <br>
+                                <!-- subcategory -->
+                                 <div name='subcategory' id='subcategoryID' style="">
+                                    <label style="width: 110px;">Subcatgeory</label>
+
+                                    <select class="select" multiple name='subcategory' id='subcategoryId'
+                                            style=" width: 450px; ">
+                                        
+                                    </select>
+                                </div>
+                                <br>
+                                <!-- video practice -->
+                                 <div name='videop' id='videopID' style="">
+                                    <label style="width: 110px;">Video Practice</label>
+
+                                    <select class="select" multiple name='videop' id='videopId'
+                                            style=" width: 450px; ">
+                                       
+                                    </select>
+                                </div>
+                                <br>
+                                <!-- tags -->
+                                 <div name='tag' id='tagID' style="">
+                                    <label style="width: 110px;">Tags</label>
+
+                                    <select class="select" multiple name='tag' id='tagId'
+                                            style=" width: 450px; ">
+                                        
+                                    </select>
+                                </div>
+                                
+                                
 
                             </div>
 
                         </div>
                     </div>
-                    <div id="leftdiv" style="width:40% ; float:left">
+                    <div id="leftdiv" style="width:40% ; float:left; padding-left: 80px; margin-top: 15px;">
                         <div name="Partition"
                              style=' padding-right:10px; display:inline-block; float:left;margin-left: 5%;margin-top:0%;'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Partitions:</h3>
                             <div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
-                                <ul style='list-style-type: none;'>
+
+                                <ul style='list-style-type: none; padding-left: 0px;'>
                                     <li><input type="checkbox" id="partner" name="partner_chk" value="partner">Partner
                                     <li><input type="checkbox" id="country" name="country_chk" value="country">Country
                                     <li><input type="checkbox" id="state" name="state_chk" value="state">State
@@ -188,16 +208,17 @@
                                     <li><input type="checkbox" id="people" name="people_chk" value="animator">Registered
                                         Viewers
                                     <li><input type="checkbox" id="group" name="group_chk" value="animator">SHG
+                                    
                                     <li><input type="checkbox" id="video" name="video_chk" value="videos" onchange="dropdown_control($('#video').parent().parent().parent().parent().parent().children('[name='+ 'Values'+']').children().children().children().children('input[type=' + 'checkbox' + ']:checked').attr('id'));">Videos
                                 </ul>
                             </div>
                         </div>
 
                         <div name="Values"
-                             style='float:left; display: inline-block; padding-top: 2%;margin-left: 5%;margin-top:1%'>
+                             style='float:left; display: inline-block; padding-top: 13%;margin-left: 5%;margin-top:1%'>
                             <h3 class="hdg-source-semibold hdg-c hdg-black layout-vr-sm">Values:</h3>
                             <div class="hdg-source-semibold hdg-f hdg-black layout-vr-sm">
-                                <ul style='list-style-type: none;'>
+                                <ul style='list-style-type: none; padding-left: 0px;'>
                                     <li><input type="checkbox" id="screening" name="screening_chk" value="screening">Number
                                         of Screenings
                                     <li><input type="checkbox" id="adoption" name="adoption_chk" value="adoption">Number
@@ -246,7 +267,7 @@
                             </div>
                         </div>
                         <div name="Buttons" class="centered layout-vr-lg"
-                             style="padding-top:20px; float:left;margin-bottom: 20%;margin-top: 0%;margin-right:15%;">
+                             style="padding-top:13%; float:left;margin-bottom: 20%;margin-left: 5%;margin-right:15%;">
                             <input class="btn btn-secondary" type="submit" value="Submit" onclick="validation_check(this)"> &nbsp;&nbsp;
                             <input class="btn btn-secondary" type="button" id="resetId" value="Reset">
                         </div>
