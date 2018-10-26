@@ -6,7 +6,7 @@ from django.views.generic.base import RedirectView
 from tastypie.api import Api
 # django imports
 from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource, TagResource
-from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, APVideoGenerator, upload_csv_data, getFileHeader
+from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, APVideoGenerator, upload_csv_data, getFileHeader, ap_geography_mapping, GetGeography
 
 from dg.base_settings import COCO_PAGE
 from dg.ap_admin import ap_admin
@@ -57,6 +57,8 @@ urlpatterns = patterns('',
     (r'^reset_database_check/', reset_database_check),
     (r'^upload/data/', upload_data),
     (r'^uploaddata/', upload_csv_data),
+    (r'^geo_mapping/', ap_geography_mapping),
+    url(r'^get/geography/(?P<selected_geography>[\w\-]+)/$', GetGeography.as_view(), name="get-geography"),
 
     url(r'^getfileheader/', getFileHeader, name='getfileheader'),
     (r'^admin/coco/cocouser/add/state_wise_district', 'coco.admin_views.state_wise_district'),

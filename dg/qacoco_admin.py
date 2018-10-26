@@ -5,8 +5,8 @@ from qacoco.models import QACocoUser, QAReviewerCategory,QAReviewerName, VideoQu
 from videos.models import Video
 from geographies.models import State, District, Block, Village
 from people.models import Animator, Person, PersonGroup
-
-from qacoco.admin import QACocoUserAdmin, QAReviewerNameAdmin, VideoQualityReviewAdmin, DisseminationQualityAdmin, AdoptionVerificationAdmin, VideoAdmin, VillageAdmin, BlockAdmin, AnimatorAdmin, PersonGroupAdmin, PersonAdmin
+from dashboard.admin import VideoAdmin, VillageAdmin, BlockAdmin, AnimatorAdmin, PersonAdmin, PersonGroupAdmin
+from qacoco.admin import QACocoUserAdmin, QAReviewerNameAdmin, VideoQualityReviewAdmin, DisseminationQualityAdmin, AdoptionVerificationAdmin
 
 
 class QACocoAdmin(AdminSite):
@@ -28,7 +28,7 @@ qacoco_admin.register(DisseminationQuality, DisseminationQualityAdmin)
 qacoco_admin.register(AdoptionVerification, AdoptionVerificationAdmin)
 qacoco_admin.register(Video, VideoAdmin)
 qacoco_admin.register(Village, VillageAdmin)
-qacoco_admin.register(Block, VideoAdmin)
-qacoco_admin.register(Animator, VillageAdmin)
+qacoco_admin.register(Block, BlockAdmin)
+qacoco_admin.register(Animator, AnimatorAdmin)
 qacoco_admin.register(Person, PersonAdmin)
 qacoco_admin.register(PersonGroup, PersonGroupAdmin)

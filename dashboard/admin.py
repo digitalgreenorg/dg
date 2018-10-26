@@ -72,7 +72,7 @@ class ScreeningAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['id','tag_name']
+    list_display = ['id','tag_name','is_ap_tag']
     search_fields = ['tag_name']
 
 
@@ -114,7 +114,7 @@ class PartnerAdmin(admin.ModelAdmin):
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline]
     fieldsets = [
-                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'related_practice', 'category','subcategory','videopractice', 'tags']}),
+                (None, {'fields':['title','video_type','production_date','language','benefit', 'partner', 'category','subcategory','videopractice', 'tags']}),
                 (None,{'fields':['village','production_team']}),
                 ('Review', {'fields': ['approval_date','youtubeid','review_status','video_grade','reviewer']}),
     ]
@@ -123,6 +123,12 @@ class VideoAdmin(admin.ModelAdmin):
     list_filter = ('review_status', 'category', 'video_grade', 'village__block__district__state__state_name', 'partner__partner_name', 'reviewer')
     list_editable = ('review_status', 'video_grade', 'reviewer')
     raw_id_fields = ('village', 'production_team', 'related_practice')
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "tags":
+            kwargs["queryset"] = Tag.objects.filter(is_ap_tag=False)
+        return super(VideoAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+
     class Media:
         js = (
                 settings.STATIC_URL + "js/qa_video.js",
@@ -149,7 +155,7 @@ class AnimatorInline(admin.TabularInline):
     exclude = ('assigned_villages',)
 
 class VillageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'village_name', 'block')
+    list_display = ('id', 'village_name', 'block', 'active')
     search_fields = ['village_name', 'block__block_name', 'block__district__state__state_name']
     inlines = [PersonGroupInline]
 
@@ -224,15 +230,15 @@ class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ('village','group')
 
 class BlockAdmin(admin.ModelAdmin):
-    list_display = ('id', 'block_name', 'district')
+    list_display = ('id', 'block_name', 'district', 'active')
     search_fields = ['block_name', 'district__district_name', 'district__state__state_name']
 
 class DistrictAdmin(admin.ModelAdmin):
-    list_display = ('id', 'district_name', 'state')
+    list_display = ('id', 'district_name', 'state', 'active')
     search_fields = ['district_name', 'state__state_name']
 
 class StateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'state_name',)
+    list_display = ('id', 'state_name','active')
     search_fields = ['state_name', 'country__country_name']
 
 class SubCategoryAdmin(admin.ModelAdmin):
@@ -282,11 +288,16 @@ class VideoForm(forms.ModelForm):
     video = forms.ModelChoiceField(queryset=None, widget=Select2(select2attrs={'width': '600px'}),required=True)
     practice = forms.ModelMultipleChoiceField(queryset=APPractice.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
     subcategory = forms.ModelChoiceField(queryset=SubCategory.objects.all(), widget=Select2(select2attrs={'width': '600px'}),required=True)
-    aptags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
+    aptags = forms.ModelMultipleChoiceField(queryset=Tag.objects.filter(is_ap_tag=True), widget=Select2Multiple(select2attrs={'width': '600px'}),required=True)
 
     def __init__(self, *args, **kwargs):
         super(VideoForm, self).__init__(*args, **kwargs)
-        self.fields['video'].queryset = Video.objects.filter(partner_id=50)
+        mapped_videos = list(APVideo.objects.values_list('video_id',flat=True).distinct())
+        if kwargs.get('instance'):
+            instance_video_id = kwargs.get('instance').video_id
+            mapped_videos.remove(instance_video_id)        
+        self.fields['video'].queryset = Video.objects.filter(partner_id=50,village__block__district__state_id= 6).exclude(id__in=mapped_videos)
+
 
 
 
@@ -318,6 +329,8 @@ class APVideoAdmin(admin.ModelAdmin):
         if tag_id_to_be_removed:
             form.instance.video.tags.remove(*tag_id_to_be_removed)
         form.instance.video.tags.add(*current_instance_tag)
+
+
 
 
 
@@ -357,6 +370,12 @@ class AP_VillageAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+class AP_COCO_MappingAdmin(admin.ModelAdmin):
+    list_display = ['id', 'geo_type', 'ap_geo_id', 'coco_geo_id', 'user_created_id', 'user_modified_id', 'time_created','time_modified']
+    search_fields = ['id', 'geo_type', 'ap_geo_id', 'coco_geo_id']
+    list_filter = ['geo_type']
 
 
 class AP_HabitationAdmin(admin.ModelAdmin):

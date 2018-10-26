@@ -323,3 +323,5 @@ training_env/*
 /scripts/*.sql
 /scripts/*.gz
 /dg/media/social_website/uploads/loop/loop_ivr_log.log
+*/log/*
+geographies/management/commands/log/ap_migration_log

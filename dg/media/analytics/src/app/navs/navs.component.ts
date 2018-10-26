@@ -79,6 +79,7 @@ export class NavsComponent implements OnInit,
         nativeChart: null
       });
     })
+  
     this.renderNavs();
   }
 
