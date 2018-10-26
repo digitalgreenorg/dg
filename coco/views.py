@@ -256,7 +256,7 @@ class GetGeography(View):
 @login_required
 def upload_csv_data(request):
     if request.method == 'POST':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Father Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Husband Name,Gender,Phone Number,Age'
         form_data = DataUploadForm(request.POST, request.FILES)
         if form_data.is_valid():
             cd = form_data.cleaned_data
@@ -339,7 +339,7 @@ def upload_csv_data(request):
 @login_required
 def getFileHeader(request):
     if request.method == 'GET':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Father Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Husband Name,Gender,Phone Number,Age'
         output = StringIO.StringIO()
         try:
             output.write(columns)
