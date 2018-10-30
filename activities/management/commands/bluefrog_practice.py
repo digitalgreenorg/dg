@@ -26,7 +26,7 @@ class Command(BaseCommand):
 		# tree = ET.parse('ap/practice.xml')
 		# root = tree.getroot()
 		try:
-			data = json.loads(req.json())
+			data = json.loads(req.json(), strict = False)
 		except Exception as e:
 			print e
 		state = State.objects.get(id=6)

@@ -26,7 +26,7 @@ class Command(BaseCommand):
 		wtr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
 		# tree = ET.parse('ap/mediator.xml')
 		# root = tree.getroot()
-		data = json.loads(req.json())
+		data = json.loads(req.json(), strict = False)
 		state = State.objects.get(id=6)
 		user_obj = User.objects.get(username="apvideo")
 		for data_iterable in data:
