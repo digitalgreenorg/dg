@@ -1,1 +1,541 @@
-define(["require","framework/controllers/Controller","framework/ViewRenderer","framework/Util","jquery","libs/NCarousel/NCarousel","app/libs/CollectionsDataFeed","text!app/views/collection.html","text!app/views/collection-video-drawer.html","text!app/views/collection-pagination.html"],function(e){var t=e("framework/controllers/Controller"),n=e("framework/ViewRenderer"),r=e("framework/Util"),i=e("jquery"),s=e("libs/NCarousel/NCarousel"),o=e("app/libs/CollectionsDataFeed"),u=e("text!app/views/collection.html"),a=e("text!app/views/collection-video-drawer.html"),f=e("text!app/views/collection-pagination.html"),l=t.extend({constructor:function(e,t){return this.base(e,t),this},_initConfig:function(){this.base();var e=this._config;e.filterChangeRefreshDelay=1e3,e.containerOpenHeight=213},_initReferences:function(e,t){this.base();var n=this._references;n.dataFeed=new o(t),n.$collectionsWrapper=e,n.$loadingIndicator=e.find(".js-loading-indicator"),n.$collectionsContainer=e.find(".js-collections-container"),n.$paginationContainers=e.find(".js-pagination")},_initState:function(){this.base();var e=this._state;e.currentPageNumber=0,e.collectionsPerPage=12,e.collectionsPerRow=4,e.videoDrawerClasses="",e.videosPerDrawer=5},_initEvents:function(){this.base();var e=this._boundFunctions,t=this._references;e.onDataProcessed=this._onDataProcessed.bind(this),t.dataFeed.on("dataProcessed",e.onDataProcessed),e.onInputParamChanged=this._onInputParamChanged.bind(this),t.dataFeed.on("inputParamChanged",e.onInputParamChanged),e.onCollectionItemClick=this._onCollectionItemClick.bind(this),t.$collectionsContainer.on("click",".js-collection-item",e.onCollectionItemClick),e.onPaginationItemClick=this._onPaginationItemClick.bind(this),t.$collectionsWrapper.find(".js-pagination").on("click",".js-pagination-item",e.onPaginationItemClick)},setCollectionsPerPage:function(e){return this._state.collectionsPerPage=e,this},setCollectionsPerRow:function(e){return this._state.collectionsPerRow=e,this},setVideoDrawerClasses:function(e){return this._state.videoDrawerClasses=e,this},setVideosPerDrawer:function(e){return this._state.videosPerDrawer=e,this},getCollections:function(e,t){e==undefined?e=this._state.currentPageNumber:this._state.currentPageNumber=e,t==undefined?t=this._state.collectionsPerPage:this._state.collectionsPerPage=t;var n=this._references.dataFeed;n.setInputParam("offset",e,!0),n.setInputParam("limit",t,!0),$(".js-collections-wrapper").attr("data-searchstring")!=""&&n.setInputParam("searchString",$(".js-collections-wrapper").attr("data-searchstring"));var r=n.getCollections(),i=n.getTotalCount();if(r==0)return!1;this._updateCollectionsDisplay(r,i)},_onDataProcessed:function(){$(".js-collections-wrapper-outer").show(),this.getCollections()},_updateCollectionsDisplay:function(e,t){this._renderCollections(e),this._renderPagination(t),this._initVideoCarousels(),this._references.$loadingIndicator.hide();var n={totalCount:t};this.trigger("collectionsUpdated",n)},_initVideoCarousels:function(){var e=this._references.$collectionsContainer.find(".js-carousel-wrapper"),t=0,n=e.length;for(;t<n;t++)new s(e.eq(t),{autoPlay:!1,allowWrapping:!1})},_renderCollections:function(e,t){if(e.length=="1"&&e[0]["error"]=="1"){var i=n.render(u,{error:!0});this._references.$collectionsContainer.html(i);return}var s=this._state,o=s.collectionsPerRow,f=s.videoDrawerClasses,l="",c=[],h=0,p,d=e.length;for(;h<d;h++){var v=r.Object.clone(e[h],!0);v._index=h,v._collectionStats=this._getCollectionStats(v),v._plural=v.videos.length!=1,l+=n.render(u,v);for(p=0;p<v.videos.length;p++)v.videos[p]._time=r.secondsToHMSFormat(v.videos[p].duration);var m=this._prepareVideoDrawerData(v.videos);m._index=h,c.push(m);if((h+1)%o==0||h==d-1)l+=n.render(a,{_videoDrawerClasses:f,_videoDrawers:c}),c.splice(0)}this._references.$collectionsContainer.html(l)},_getCollectionStats:function(e){var t=0,n=e.videos;if(!n)throw new Error("CollectionViewController._getCollectionStats(): trying to get collection stats on an object with no videos array");var i=0,s=n.length;for(;i<s;i++){var o=n[i];t+=o.duration}var u="";e.adoptions<1e4?u=r.integerCommaFormat(e.adoptions):u=r.integerAbbreviatedFormat(e.adoptions);var a="";e.views<1e4?a=r.integerCommaFormat(e.views):a=r.integerAbbreviatedFormat(e.views);var f="";return e.likes<1e4?f=r.integerCommaFormat(e.likes):f=r.integerAbbreviatedFormat(e.likes),{time:r.secondsToHMSFormat(t),adoptions:u,views:a,likes:f}},_prepareVideoDrawerData:function(e){var t=this._state.videosPerDrawer,n=[],r=0,i=e.length,s,o;for(;r<i;r+=t){o=[];for(s=0;s<t&&s+r<i;s++){var u=e[r+s];u._videoIndex=s+r+1,o.push(u)}n.push({videos:o})}return{carouselSlides:n}},_renderPagination:function(e){var t=this._state.collectionsPerPage,r=Math.ceil(e/t),i=[],s=10,o=this._state.currentPageNumber;if(r<s)var u=0,a=r,l=!1,c=!1;else if(o<s-1)var u=0,a=s,l=!1,c=!0;else if(o+s>r)var u=r-s,a=u+s,l=!0,c=!1;else var u=o-1,a=u+s,l=!0,c=!0;for(;u<a;u++){var h={pageIndex:u,pageNumber:u+1};u==this._state.currentPageNumber&&(h.classes="selected"),i.push(h)}var p=n.render(f,{pages:i,first:l,last:c,lastPage:r,lastIndex:r-1});this._references.$paginationContainers.html(p)},_onPaginationItemClick:function(e){e.preventDefault();var t=i(e.currentTarget),n=t.data("pageIndex");if(n==this._state.currentPageNumber)return;var r=this._references.$paginationContainers.find(".js-pagination-item");r.removeClass("selected");var s=r.filter("[data-page-index="+n+"]");s.addClass("selected"),this._references.$loadingIndicator.show(),this.getCollections(n)},_onCollectionItemClick:function(e){var t=i(e.currentTarget),n=t.data("collectionItemIndex"),r=this._references.$collectionsContainer.find(".js-video-container"),s=r.find(".js-video-drawer"),o,u=0,a=s.length;for(;u<a;u++){var f=s.eq(u);if(f.data("parentCollectionItemIndex")==n){o=f;break}}var l=o.closest(".js-video-container"),c=l.find(".js-video-drawer").not(o),h=l.hasClass("open");h||(this._openVideoDrawerContainers(l),this._closeVideoDrawerContainers(r.not(l)));var p;this._references.$collectionsContainer.find(".js-video-container").each(function(){$(this).hasClass("open")&&(p=$(this).find(".js-video-drawer").filter(function(){return $(this).css("visibility")=="visible"}))});if(n==p.data("parentCollectionItemIndex"))this._hideDrawers(o),this._closeVideoDrawerContainers(l);else{this._showDrawers(o),this._hideDrawers(c);var d=l.find(".js-pointer"),v=t.offset().left,m=t.width(),g=o.offset().left,y=d.width(),b=20,w=v-g+m/2-y/2+b;h?d.animate({left:w+"px"}):d.css("left",w)}},_openVideoDrawerContainers:function(e){e.stop(!0).animate({height:this._config.containerOpenHeight+"px"}).addClass("open")},_closeVideoDrawerContainers:function(e){e.stop(!0).animate({height:"0px"}).removeClass("open")},_showDrawers:function(e){e.css({position:"relative",visibility:"visible"})},_hideDrawers:function(e){e.css({position:"",visibility:""})},setInputParam:function(e,t,n){this._references.dataFeed.setInputParam(e,t,n)},setFilterStatus:function(e,t,n){this._references.dataFeed.setFilterStatus(e,t,n)},clearFilters:function(){if(!this._references.dataFeed.clearFilters())return;this._onSearchCriteriaChanged()},_onInputParamChanged:function(){this._onSearchCriteriaChanged()},_onSearchCriteriaChanged:function(){this._references.$loadingIndicator.show(),this.getCollections(0)},destroy:function(){this.base()}});return l});
+/**
+ * CollectionViewController Class File
+ *
+ * @author rdeluca
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+
+    var Controller = require('framework/controllers/Controller');
+    var viewRenderer = require('framework/ViewRenderer');
+    var Util = require('framework/Util');
+    var jQuery = require('jquery');
+
+    var NCarousel = require('libs/NCarousel/NCarousel');
+
+    var CollectionsDataFeed = require('app/libs/CollectionsDataFeed');
+    var collectionTemplate = require('text!app/views/collection.html');
+    var collectionVideoDrawerTemplate = require('text!app/views/collection-video-drawer.html');
+    var collectionPaginationTemplate = require('text!app/views/collection-pagination.html');
+
+    var CollectionViewController = Controller.extend({
+
+        /**
+         * Controller constructor
+         * @return {Controller} this
+         */
+        constructor: function($referenceBase, $language) {
+            this.base($referenceBase, $language);
+
+            return this;
+        },
+
+        _initConfig: function() {
+            this.base();
+
+            var config = this._config;
+
+            config.filterChangeRefreshDelay = 1000;
+            config.containerOpenHeight = 213;
+        },
+
+        _initReferences: function($referenceBase, $language) {
+            this.base();
+
+            var references = this._references;
+
+            references.dataFeed = new CollectionsDataFeed($language);
+
+            references.$collectionsWrapper = $referenceBase;
+            references.$loadingIndicator = $referenceBase.find('.js-loading-indicator');
+            references.$collectionsContainer = $referenceBase.find('.js-collections-container');
+            references.$paginationContainers = $referenceBase.find('.js-pagination');
+        },
+
+        _initState: function() {
+            this.base();
+
+            var state = this._state;
+            state.currentPageNumber = 0;
+
+            // these are set to home page defaults here
+            state.collectionsPerPage = 12;
+            state.collectionsPerRow = 4;
+            state.videoDrawerClasses = '';
+            state.videosPerDrawer = 5;
+        },
+
+        _initEvents: function() {
+            this.base();
+
+            var boundFunctions = this._boundFunctions;
+            var references = this._references;
+
+            // data processed
+            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
+
+            // input param changed alert from data feed
+            boundFunctions.onInputParamChanged = this._onInputParamChanged.bind(this);
+            references.dataFeed.on('inputParamChanged', boundFunctions.onInputParamChanged)
+
+            // collection rendering events
+            boundFunctions.onCollectionItemClick = this._onCollectionItemClick.bind(this);
+            references.$collectionsContainer.on('click', '.js-collection-item', boundFunctions.onCollectionItemClick);
+
+            // collection pagination
+            boundFunctions.onPaginationItemClick = this._onPaginationItemClick.bind(this);
+            references.$collectionsWrapper.find('.js-pagination').on('click', '.js-pagination-item', boundFunctions.onPaginationItemClick);
+        },
+
+        setCollectionsPerPage: function(n) {
+            this._state.collectionsPerPage = n;
+            return this;
+        },
+
+        setCollectionsPerRow: function(n) {
+            this._state.collectionsPerRow = n;
+            return this;
+        },
+
+        setVideoDrawerClasses: function(classes) {
+            this._state.videoDrawerClasses = classes;
+            return this;
+        },
+
+        setVideosPerDrawer: function(n) {
+            this._state.videosPerDrawer = n;
+            return this;
+        },
+
+        getCollections: function(page, collectionsPerPage) {
+            if (page == undefined) {
+                page = this._state.currentPageNumber;
+            } else {
+                this._state.currentPageNumber = page;
+            }
+
+            if (collectionsPerPage == undefined) {
+                collectionsPerPage = this._state.collectionsPerPage;
+            } else {
+                this._state.collectionsPerPage = collectionsPerPage;
+            }
+            
+            var dataFeed = this._references.dataFeed;
+            dataFeed.setInputParam('offset', page, true)
+            dataFeed.setInputParam('limit', collectionsPerPage, true);
+		    
+			if ($(".js-collections-wrapper").attr('data-searchstring') != ""){
+				dataFeed.setInputParam('searchString', $(".js-collections-wrapper").attr('data-searchstring'));
+			}
+            
+            var collectionsArray = dataFeed.getCollections();
+            var totalCount = dataFeed.getTotalCount();
+            if (collectionsArray == false) {
+                return false;
+            }
+
+            this._updateCollectionsDisplay(collectionsArray, totalCount);
+        },
+
+        _onDataProcessed: function() {
+        	$('.js-collections-wrapper-outer').show();
+            this.getCollections();
+        },
+
+        _updateCollectionsDisplay: function(collectionsArray, totalCount) {
+
+            this._renderCollections(collectionsArray);
+            this._renderPagination(totalCount);
+            this._initVideoCarousels();
+
+            this._references.$loadingIndicator.hide();
+
+            var broadcastData = {
+                totalCount: totalCount
+            };
+
+            this.trigger('collectionsUpdated', broadcastData);
+        },
+
+        _initVideoCarousels: function() {
+            var $carouselWrappers = this._references.$collectionsContainer.find('.js-carousel-wrapper');
+
+            var i = 0;
+            var len = $carouselWrappers.length;
+            for (; i < len; i++) {
+                new NCarousel($carouselWrappers.eq(i), {
+                    autoPlay: false,
+                    allowWrapping: false
+                });
+            }
+        },
+
+
+
+
+
+
+        _renderCollections: function(collectionsArray, totalCount) {
+            if (collectionsArray.length == "1" && collectionsArray[0]['error'] == "1"){
+                var renderedHTML = viewRenderer.render(collectionTemplate, {error: true});
+
+                this._references.$collectionsContainer.html(renderedHTML);
+                return;
+            }
+            // local references
+            var state = this._state;
+            var collectionsPerRow = state.collectionsPerRow;
+            var videoDrawerClasses = state.videoDrawerClasses;
+
+            var entireRenderedHTML = '';
+
+            var tempVideoDrawerArray = [];
+
+            var i = 0;
+            var j;
+            var len = collectionsArray.length;
+            for (; i < len; i++) {
+                var currentCollectionData = Util.Object.clone(collectionsArray[i], true);
+                currentCollectionData._index = i;
+                currentCollectionData._collectionStats = this._getCollectionStats(currentCollectionData);
+                currentCollectionData._plural = (currentCollectionData.videos.length != 1);
+
+                // render collections
+                entireRenderedHTML += viewRenderer.render(collectionTemplate, currentCollectionData);
+                
+                // add length to each video
+                for (j = 0; j < currentCollectionData.videos.length; j++) {
+                    currentCollectionData.videos[j]._time = Util.secondsToHMSFormat(currentCollectionData.videos[j].duration);
+                }
+
+                // organize videos into slides
+                var videoDrawerData = this._prepareVideoDrawerData(currentCollectionData.videos);
+                
+                // assign remaining needed rendering data
+                videoDrawerData._index = i;
+
+                // store the video drawer data
+                tempVideoDrawerArray.push(videoDrawerData);
+
+                // once we've displayed our desired amount of videos in this column.
+                // include accumulated video drawer html with the overall html
+                if ((i + 1) % collectionsPerRow == 0 || i == len - 1) {
+                    entireRenderedHTML += viewRenderer.render(collectionVideoDrawerTemplate, {
+                        _videoDrawerClasses: videoDrawerClasses,
+                        _videoDrawers: tempVideoDrawerArray
+                    });
+
+                    tempVideoDrawerArray.splice(0);
+                }
+            }
+
+            this._references.$collectionsContainer.html(entireRenderedHTML);
+        },
+
+        _getCollectionStats: function(collectionData) {
+            var time = 0;
+
+            var videos = collectionData.videos;
+
+            if (!videos) {
+                throw new Error('CollectionViewController._getCollectionStats(): trying to get collection stats on an object with no videos array');
+            }
+
+            var i = 0;
+            var len = videos.length;
+            for (; i < len; i++) {
+                var currentVideo = videos[i];
+
+                time += currentVideo.duration;
+            }
+            
+            var adoptions = ''
+            	if (collectionData.adoptions < 10000){
+            		adoptions = Util.integerCommaFormat(collectionData.adoptions);
+            	}
+            	else{
+            		adoptions = Util.integerAbbreviatedFormat(collectionData.adoptions);
+            	}
+
+            var views = ''
+            	if (collectionData.views < 10000){
+            		views = Util.integerCommaFormat(collectionData.views);
+            	}
+            	else{
+            		views = Util.integerAbbreviatedFormat(collectionData.views);
+            	}
+            
+            var likes = ''
+            	if (collectionData.likes < 10000){
+            		likes = Util.integerCommaFormat(collectionData.likes);
+            	}
+            	else{
+            		likes = Util.integerAbbreviatedFormat(collectionData.likes);
+            	}
+            
+            return {
+                time: Util.secondsToHMSFormat(time),
+                adoptions: adoptions,
+                views: views,
+                likes: likes
+            };
+        },
+
+        _prepareVideoDrawerData: function(videos) {
+
+            var videosPerDrawer = this._state.videosPerDrawer;
+
+            var carouselSlides = [];
+
+            var i = 0;
+            var len = videos.length;
+            var j;
+            var slideVideos;
+            for (; i < len; i += videosPerDrawer) {
+                slideVideos = [];
+                for (j = 0; j < videosPerDrawer && j + i < len; j++) {
+                    var currentVideo = videos[i + j];
+                    currentVideo._videoIndex = j + i + 1;
+                    slideVideos.push(currentVideo);
+                }
+                carouselSlides.push({
+                    videos: slideVideos
+                });
+            }
+
+            return {
+                carouselSlides: carouselSlides
+            };
+        },
+
+        _renderPagination: function(totalCount) {
+            var collectionsPerPage = this._state.collectionsPerPage;
+            var pages = Math.ceil(totalCount / collectionsPerPage);
+            //alert (pages);
+            var paginationPages = [];
+            var paginationPerPage = 10;
+            
+            var currentPage = this._state.currentPageNumber
+            
+            if (pages < paginationPerPage){
+                var i = 0;
+                var counter = pages;
+                var first = false;
+                var last = false;
+            }
+            else if (currentPage < paginationPerPage-1){
+                var i = 0
+                var counter = paginationPerPage;
+                var first = false;
+                var last = true;
+            }
+            else if (currentPage + paginationPerPage > pages ){
+                var i = pages - paginationPerPage
+                var counter = i + paginationPerPage
+                var first = true;
+                var last = false;
+            }
+            else{
+                var i = currentPage - 1
+                var counter = i + paginationPerPage
+                var first = true;
+                var last = true;
+            }
+            for (; i < counter; i++) {
+                var currentPageData = {
+                        pageIndex: i,
+                        pageNumber: i + 1
+                        
+                };
+
+                if (i == this._state.currentPageNumber) {
+                    currentPageData.classes = 'selected';
+                }
+
+                paginationPages.push(currentPageData);
+            }
+            var renderedPagination = viewRenderer.render(collectionPaginationTemplate, {pages: paginationPages, first: first, last:last, lastPage:pages, lastIndex:pages-1});
+
+            this._references.$paginationContainers.html(renderedPagination);
+        },
+
+        _onPaginationItemClick: function(e) {
+            e.preventDefault();
+
+            var $currentTarget = jQuery(e.currentTarget);
+            var pageIndex = $currentTarget.data('pageIndex');
+
+            // if we're already viewing the page clicked, no need to continue
+            if (pageIndex == this._state.currentPageNumber) {
+                return;
+            }
+
+            var $paginationItems = this._references.$paginationContainers.find('.js-pagination-item');
+            $paginationItems.removeClass('selected');
+
+            var $selectedItems = $paginationItems.filter('[data-page-index=' + pageIndex + ']');
+            $selectedItems.addClass('selected');
+
+            this._references.$loadingIndicator.show();
+            this.getCollections(pageIndex);
+        },
+
+        _onCollectionItemClick: function(e) {
+            var $collectionItem = jQuery(e.currentTarget);
+
+            var collectionItemIndex = $collectionItem.data('collectionItemIndex');
+
+            var $videoDrawerContainers = this._references.$collectionsContainer.find('.js-video-container');
+            var $videoDrawers = $videoDrawerContainers.find('.js-video-drawer');
+
+            var $currentDrawer;
+            var i = 0;
+            var len = $videoDrawers.length;
+
+            for (; i < len; i++) {
+                var $tempVideoDrawer = $videoDrawers.eq(i);
+                if ($tempVideoDrawer.data('parentCollectionItemIndex') == collectionItemIndex) {
+                    $currentDrawer = $tempVideoDrawer;
+                    break;
+                }
+            }
+
+            var $currentVideoDrawerContainer = $currentDrawer.closest('.js-video-container');
+            var $videoDrawersToHide = $currentVideoDrawerContainer
+                .find('.js-video-drawer')
+                .not($currentDrawer);
+
+            var containerAlreadyOpen = $currentVideoDrawerContainer.hasClass('open');
+            
+            if (!containerAlreadyOpen) {
+                // animate the desired container open
+                this._openVideoDrawerContainers($currentVideoDrawerContainer);
+
+                // animate any containers aside from our to-be-open container closed
+                this._closeVideoDrawerContainers($videoDrawerContainers.not($currentVideoDrawerContainer));
+            }
+                        
+            // to check if the collection clicked is the same which has the carousel open
+            var visible;
+            // TODO use container already open
+            this._references.$collectionsContainer.find('.js-video-container').each(function() {
+            	if($(this).hasClass('open')) {
+            	visible = $(this).find('.js-video-drawer').filter(function() {
+                    return $(this).css('visibility') == 'visible';
+                    });
+            	}
+            });
+            
+           if(collectionItemIndex==visible.data('parentCollectionItemIndex')){
+        	   this._hideDrawers($currentDrawer);
+        	   this._closeVideoDrawerContainers($currentVideoDrawerContainer);
+            }
+           else{
+        	   
+            // display the desired drawer
+            this._showDrawers($currentDrawer);
+
+            // hide any other drawers
+            this._hideDrawers($videoDrawersToHide);
+            
+
+            // position the pointer
+            var $drawerPointer = $currentVideoDrawerContainer.find('.js-pointer');
+
+            var collectionItemLeftOffset = $collectionItem.offset().left;
+            var collectionItemWidth = $collectionItem.width();
+
+            var currentDrawerLeftOffset = $currentDrawer.offset().left;
+
+            var drawerPointerWidth = $drawerPointer.width();
+
+            
+            var staticOffset = 20;
+
+            var newLeftPosition = (collectionItemLeftOffset - currentDrawerLeftOffset) + (collectionItemWidth / 2) - (drawerPointerWidth / 2) + staticOffset;
+
+            if (containerAlreadyOpen) {
+                $drawerPointer.animate({
+                    left: newLeftPosition + 'px'
+                });
+            } else {
+                $drawerPointer.css('left', newLeftPosition);
+            }
+           }
+        },
+
+        _openVideoDrawerContainers: function($videoDrawerContainers) {
+            $videoDrawerContainers
+                .stop(true)
+                .animate({
+                    height: this._config.containerOpenHeight + 'px'
+                })
+                .addClass('open');
+        },
+
+        _closeVideoDrawerContainers: function($videoDrawerContainers) {
+            $videoDrawerContainers
+                .stop(true)
+                .animate({
+                    height: '0px'
+                })
+                .removeClass('open');
+        },
+
+        _showDrawers: function($drawer) {
+            $drawer.css({
+                position: 'relative',
+                visibility: 'visible'
+            });
+        },
+
+        _hideDrawers: function($drawer) {
+            $drawer.css({
+                position: '',
+                visibility: ''
+            });
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            this._references.dataFeed.setInputParam(key, value, disableCacheClearing);
+        },
+
+        setFilterStatus: function(filterParam, filterValue, active) {
+            this._references.dataFeed.setFilterStatus(filterParam, filterValue, active);
+        },
+
+        clearFilters: function() {
+            if (!this._references.dataFeed.clearFilters()) {
+                return;
+            }
+
+            this._onSearchCriteriaChanged();
+        },
+
+        _onInputParamChanged: function() {
+            this._onSearchCriteriaChanged();
+        },
+
+        _onSearchCriteriaChanged: function() {
+            this._references.$loadingIndicator.show();
+            this.getCollections(0);
+        },
+
+        /**
+         * Controller destructor
+         * @return {void}
+         */
+        destroy: function() {
+            this.base();
+
+            // TODO: clean up
+        }
+    });
+
+    return CollectionViewController;
+});

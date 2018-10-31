@@ -1,1 +1,206 @@
-define(["require","framework/controllers/Controller"],function(e){var t=e("framework/controllers/Controller"),n=t.extend({constructor:function(e,t){this.base(e),this._init()},_initReferences:function(e,t){this.base(e);var n=this._references;n.$customSelectElement=e,n.$selectFormElement=e.find("select"),n.$selectedItemLabel=e.find(".js-selected-item-label"),n.$selectOptions=e.find(".js-options")},_initEvents:function(e){this.base();var t=this._references,n=this._boundFunctions;n.preventDefault=function(e){e.preventDefault()},n.onCustomSelectClick=this._onCustomSelectClick.bind(this),t.$customSelectElement.on("click",n.onCustomSelectClick).on("mousedown",n.preventDefault),n.onSelectOptionClick=this._onSelectOptionClick.bind(this),t.$selectOptions.on("click","li",n.onSelectOptionClick).on("mousedown",n.preventDefault),n.onOutsideClick=this._onOutsideClick.bind(this),jQuery("body").on("click",n.onOutsideClick)},_initState:function(e){this.base(),this._state.isOpen=!1},_init:function(){this.base(),this._populateOptions()},_populateOptions:function(){var e=this._references,t=e.$selectFormElement,n=e.$selectOptions,r=t.find("option"),i,s,o=!1,u=0,a=r.length;for(;u<a;u++){s=r.eq(u);var f=s.html(),l=s.attr("value"),c=s.attr("selected")!=""&&s.attr("selected")!=undefined;c&&(o=!0),this.addOption(f,l,c,!1)}o||this._markAsSelected(n.find("li").eq(0)),n.hide(),t.hide()},_onCustomSelectClick:function(e){e.preventDefault(),e.stopPropagation(),this._state.isOpen?this._hideOptions():this._showOptions()},_onSelectOptionClick:function(e){e.preventDefault(),e.stopPropagation();var t=jQuery(e.currentTarget);this._markAsSelected(t),this._hideOptions()},_onOutsideClick:function(){this._hideOptions()},_findByValue:function(e){return this._references.$selectOptions.find("li").filter(function(){return jQuery(this).data("value")==e})},_markAsSelected:function(e){if(e==undefined||!e.length)return!1;var t=this._references,n=e.html(),r=e.data("value");t.$selectedItemLabel.html(n),t.$selectFormElement.find("option").attr("selected",!1),t.$selectFormElement.find('option[value="'+r+'"]').attr("selected","selected"),t.$selectOptions.find("li").not(e).removeClass("selected"),e.addClass("selected"),this.trigger("optionChanged",n,r)},_showOptions:function(){this._references.$selectOptions.show(),this._state.isOpen=!0},_hideOptions:function(){this._references.$selectOptions.hide(),this._state.isOpen=!1},addOption:function(e,t,n,r){r==undefined&&(r=!0);var i=this._references,s=i.$selectOptions;$li=jQuery("<li />").html(e).data("value",t).addClass("item"),s.append($li);if(r){var o=jQuery("<option />").html(e).attr("value",t);i.$selectFormElement.append(o)}n&&this._markAsSelected($li)},setOption:function(e){this._markAsSelected(this._findByValue(e))},destroy:function(){this.base()}});return n});
+define(function(require) {
+
+    var Controller = require('framework/controllers/Controller');
+    
+    var CustomSelectBox = Controller.extend({
+
+        constructor: function($customSelectElement, params) {
+
+            this.base($customSelectElement);
+
+            this._init();
+        },
+
+        _initReferences: function($customSelectElement, params) {
+            this.base($customSelectElement);
+
+            var references = this._references;
+
+            references.$customSelectElement = $customSelectElement;
+            references.$selectFormElement = $customSelectElement.find('select');
+            references.$selectedItemLabel = $customSelectElement.find('.js-selected-item-label');
+            references.$selectOptions = $customSelectElement.find('.js-options');
+        },
+
+        _initEvents: function(params) {
+            this.base();
+
+            var references = this._references;
+            var boundFunctions = this._boundFunctions;
+
+            boundFunctions.preventDefault = function(e) {
+                e.preventDefault();
+            };
+
+            boundFunctions.onCustomSelectClick = this._onCustomSelectClick.bind(this);
+            references.$customSelectElement
+                .on('click', boundFunctions.onCustomSelectClick)
+                .on('mousedown', boundFunctions.preventDefault);
+
+            boundFunctions.onSelectOptionClick = this._onSelectOptionClick.bind(this);
+            references.$selectOptions
+                .on('click', 'li', boundFunctions.onSelectOptionClick)
+                .on('mousedown', boundFunctions.preventDefault);
+
+            boundFunctions.onOutsideClick = this._onOutsideClick.bind(this);
+            jQuery('body').on('click', boundFunctions.onOutsideClick);
+        },
+
+        _initState: function(params) {
+            this.base();
+
+            this._state.isOpen = false;
+        },
+
+        _init: function() {
+            this.base();
+
+            this._populateOptions();
+        },
+
+        _populateOptions: function() {
+            var references = this._references;
+
+            var $selectFormElement = references.$selectFormElement;
+            var $selectOptions = references.$selectOptions;
+
+            var $selectFormElementOptions = $selectFormElement.find('option');
+            var $li;
+            var $currentSelectFormElementOption;
+
+            var foundSelected = false;
+
+            var i = 0;
+            var len = $selectFormElementOptions.length;
+            for (; i < len; i++) {
+                $currentSelectFormElementOption = $selectFormElementOptions.eq(i);
+                
+                var label = $currentSelectFormElementOption.html();
+                var value = $currentSelectFormElementOption.attr('value');
+                var selected = (
+                    $currentSelectFormElementOption.attr('selected') != '' 
+                    && $currentSelectFormElementOption.attr('selected') != undefined
+                );
+
+                if (selected) {
+                    foundSelected = true;
+                }
+
+                this.addOption(label, value, selected, false);
+            }
+
+            if (!foundSelected) {
+                this._markAsSelected($selectOptions.find('li').eq(0));
+            }
+
+            $selectOptions.hide();
+            $selectFormElement.hide();
+        },
+
+        _onCustomSelectClick: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!this._state.isOpen) {
+                this._showOptions();
+            } else {
+                this._hideOptions();
+            }
+        },
+
+        _onSelectOptionClick: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var $option = jQuery(e.currentTarget);
+            this._markAsSelected($option);
+
+            this._hideOptions();
+        },
+
+        _onOutsideClick: function() {
+            this._hideOptions();
+        },
+
+        _findByValue: function(value) {
+            return this._references.$selectOptions.find('li').filter(function() {
+                return (jQuery(this).data('value') == value);
+            });
+        },
+
+        _markAsSelected: function($option) {
+            if ($option == undefined || !$option.length) {
+                return false;
+            }
+
+            var references = this._references;
+
+            var optionLabel = $option.html();
+            var optionValue = $option.data('value');
+
+            references.$selectedItemLabel.html(optionLabel);
+
+            // NOTE: there's a problem here if the form select box didn't have a value set
+            // for each option when the _populateOptions was run
+            references.$selectFormElement.find('option').attr('selected', false);
+            references.$selectFormElement.find('option[value="' + optionValue + '"]').attr('selected', 'selected');
+
+            references.$selectOptions.find('li').not($option).removeClass('selected');
+            $option.addClass('selected');
+
+            // send alerts
+            this.trigger('optionChanged', optionLabel, optionValue);
+        },
+
+        _showOptions: function() {
+            this._references.$selectOptions.show();
+            this._state.isOpen = true;
+        },
+
+        _hideOptions: function() {
+            this._references.$selectOptions.hide();
+            this._state.isOpen = false;
+        },
+
+        addOption: function(label, value, selected, addToFormElement) {
+            if (addToFormElement == undefined) {
+                addToFormElement = true;
+            }
+
+            var references = this._references;
+
+            var $selectOptions = references.$selectOptions;
+
+            $li = jQuery('<li />')
+                .html(label)
+                .data('value', value)
+                .addClass('item');
+
+            $selectOptions.append($li);
+
+
+            if (addToFormElement) {
+                var $option = jQuery('<option />')
+                    .html(label)
+                    .attr('value', value);
+
+                references.$selectFormElement.append($option);
+            }
+
+            if (selected) {
+                this._markAsSelected($li);
+            }
+        },
+
+        setOption: function(value) {
+            this._markAsSelected(this._findByValue(value));
+        },
+
+        destroy: function() {
+            this.base();
+        }
+    });
+
+    return CustomSelectBox;
+
+});

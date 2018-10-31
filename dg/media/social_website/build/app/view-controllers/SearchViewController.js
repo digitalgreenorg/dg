@@ -1,1 +1,355 @@
-define(["require","framework/controllers/Controller","framework/ViewRenderer","framework/Util","jquery","app/libs/SearchCompletionsDataFeed","text!app/views/searchCompletion.html"],function(e){var t=e("framework/controllers/Controller"),n=e("framework/ViewRenderer"),r=e("framework/Util"),i=e("jquery"),s=e("app/libs/SearchCompletionsDataFeed"),o=e("text!app/views/searchCompletion.html"),u=t.extend({constructor:function(e){return this.base(e),this},_initConfig:function(){this.base(),this._config.searchInputChangeRefreshDelay=10},_initReferences:function(e){this.base();var t=this._references;t.dataFeed=new s,t.$searchWrapper=e,t.$searchInputBox=e.find("input#search"),t.$searchItemsContainer=e.find(".js-search-items-container")},_initState:function(){this.base();var e=this._state;e.maxCount=10,e.searchInputVal="",e.searchInputChangedTimeout=undefined},_initEvents:function(){this.base();var e=this._boundFunctions,t=this._references;e.preventDefaultStopPropagation=function(e){e.preventDefault(),e.stopPropagation()},t.$searchWrapper.on("click",e.preventDefaultStopPropagation),e.onDataProcessed=this._onDataProcessed.bind(this),t.dataFeed.on("dataProcessed",e.onDataProcessed),e.onKeyDown=this._onKeyDown.bind(this),t.$searchInputBox.keydown(e.onKeyDown),e.onKeyUp=this._onKeyUp.bind(this),t.$searchInputBox.keyup(e.onKeyUp),e.onSearchItemMouseEnter=this._onSearchItemMouseEnter.bind(this),t.$searchItemsContainer.on("mouseenter",".js-search-completion-item",e.onSearchItemMouseEnter),e.onSearchItemMouseClick=this._onSearchItemMouseClick.bind(this),t.$searchItemsContainer.on("click",".js-search-completion-item",e.onSearchItemMouseClick),e.onSearchInputChangedTimeout=this._onSearchInputChangedTimeout.bind(this),e.onBodyClick=this._onBodyClick.bind(this),i("body").on("click",e.onBodyClick)},setMaxCount:function(e){return this._state.maxCount=e,this},getMaxCount:function(){return this._state.maxCount},setSearchInputVal:function(e){return this._state.searchInputVal=e,this},getSearchInputVal:function(){return this._state.searchInputVal},getSearchItems:function(e,t){t==undefined?t=this.getMaxCount():this.setMaxCount(t);var n=this._references.dataFeed;n.setInputParam("searchString",e,!0),n.setInputParam("maxCount",t,!0);var r=n.getSearchItems();if(r==0)return!1;this._updateSearchDisplay(r)},_onDataProcessed:function(){this.getSearchItems()},_updateSearchDisplay:function(e){var t=[],n=0,r,i=e.length,s;for(;n<i;n++){s=undefined;for(r=0;r<t.length;r++)if(t[r].type==e[n].type){s=t[r];break}if(s==undefined){var s={type:e[n].type,items:[]};t.push(s)}s.items.push(e[n])}t.sort(function(e,t){return e.type>t.type});var o={categories:t};this._renderSearchItems(o)},_renderSearchItems:function(e){n.renderHTML(this._references.$searchItemsContainer,o,e)},_updateSelectedItem:function(e){var t=this._references.$searchItemsContainer.find(".js-search-completion-item"),n=t.filter(".hover"),i=t.index(n),s;i==-1?e==1&&(s=0):s=i+e,s=r.Math.mod(s,t.length),n.removeClass("hover"),t.eq(s).addClass("hover")},_selectItem:function(){var e=this._references.$searchItemsContainer.find(".js-search-completion-item.hover");if(e.length==0){var t=this._references.$searchWrapper.attr("data-url"),n=this._references.$searchInputBox.val();r=t+"?searchString="+n}else{var r=e.attr("href");if(!r)return}window.location.href=r},_onKeyDown:function(e){switch(e.keyCode){case 13:e.preventDefault(),this._selectItem();break;case 27:e.preventDefault(),this._clearSearchResults();break;case 38:e.preventDefault(),this._updateSelectedItem(-1);break;case 40:e.preventDefault(),this._updateSelectedItem(1)}},_onKeyUp:function(e){switch(e.keyCode){case 16:case 17:case 18:case 45:case 46:case 36:case 35:case 33:case 34:case 37:case 38:case 39:case 40:break;default:clearTimeout(this._state.searchInputChangedTimeout),this._state.searchInputChangedTimeout=setTimeout(this._boundFunctions.onSearchInputChangedTimeout,this._config.searchInputChangeRefreshDelay)}},_onSearchItemMouseClick:function(e){e.preventDefault(),this._selectItem()},_onSearchItemMouseEnter:function(e){this._references.$searchItemsContainer.find(".js-search-completion-item.hover").removeClass("hover");var t=i(e.currentTarget);t.addClass("hover")},_onBodyClick:function(e){this._clearSearchResults()},_clearSearchResults:function(){this._renderSearchItems([])},_onSearchInputChangedTimeout:function(){var e=this._references.$searchInputBox.val();e!=this.getSearchInputVal()&&(this.setSearchInputVal(e),this._references.dataFeed.clearSearchCompletionCache(),e==""?this._clearSearchResults():this.getSearchItems(e))},setInputParam:function(e,t,n){if(!this._references.dataFeed.setInputParam(e,t,n))return},destroy:function(){this.base()}});return u});
+/**
+ * NewsFeedViewController Class File
+ *
+ * @author dlakes
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+
+    var Controller = require('framework/controllers/Controller');
+    var viewRenderer = require('framework/ViewRenderer');
+    var Util = require('framework/Util');
+    var jQuery = require('jquery');
+
+    var SearchCompletionsDataFeed = require('app/libs/SearchCompletionsDataFeed');
+    var searchCompletionTemplate = require('text!app/views/searchCompletion.html');
+
+    var SearchViewController = Controller.extend({
+
+        /**
+         * Controller constructor
+         * @return {Controller} this
+         */
+        constructor: function($referenceBase) {
+            this.base($referenceBase);
+
+            return this;
+        },
+
+        _initConfig: function() {
+            this.base();
+
+            this._config.searchInputChangeRefreshDelay = 10; //  was initially 1000
+        },
+
+        _initReferences: function($referenceBase) {
+            this.base();
+
+            var references = this._references;
+
+            references.dataFeed = new SearchCompletionsDataFeed();
+
+            references.$searchWrapper = $referenceBase;
+            references.$searchInputBox = $referenceBase.find('input#search');
+            references.$searchItemsContainer = $referenceBase.find('.js-search-items-container');
+        },
+
+        _initState: function() {
+            this.base();
+
+            var state = this._state;
+            state.maxCount = 10;
+            state.searchInputVal = "";
+            state.searchInputChangedTimeout = undefined;
+        },
+
+        _initEvents: function() {
+            this.base();
+
+            var boundFunctions = this._boundFunctions;
+            var references = this._references;
+
+            // prevent default & stop propagation
+            boundFunctions.preventDefaultStopPropagation = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            };
+            references.$searchWrapper.on('click', boundFunctions.preventDefaultStopPropagation);
+
+            // data processed
+            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
+
+            // on key down
+            boundFunctions.onKeyDown = this._onKeyDown.bind(this);
+            references.$searchInputBox.keydown(boundFunctions.onKeyDown);
+
+            // on key up
+            boundFunctions.onKeyUp = this._onKeyUp.bind(this);
+            references.$searchInputBox.keyup(boundFunctions.onKeyUp);
+
+            // on search item mouse enter
+            boundFunctions.onSearchItemMouseEnter = this._onSearchItemMouseEnter.bind(this);
+            references.$searchItemsContainer.on('mouseenter', '.js-search-completion-item', boundFunctions.onSearchItemMouseEnter);
+
+            // on search item mouse click
+            boundFunctions.onSearchItemMouseClick = this._onSearchItemMouseClick.bind(this);
+            references.$searchItemsContainer.on('click', '.js-search-completion-item', boundFunctions.onSearchItemMouseClick);
+            
+            // search input timeout
+            boundFunctions.onSearchInputChangedTimeout = this._onSearchInputChangedTimeout.bind(this);
+
+            // body click
+            boundFunctions.onBodyClick = this._onBodyClick.bind(this);
+            jQuery('body').on('click', boundFunctions.onBodyClick);
+        },
+
+        setMaxCount: function(n) {
+            this._state.maxCount = n;
+            return this;
+        },
+
+        getMaxCount: function(){
+            return this._state.maxCount;
+        },
+
+        setSearchInputVal: function(value){
+            this._state.searchInputVal = value;
+            return this;
+        },
+
+        getSearchInputVal: function(){
+            return this._state.searchInputVal;
+        },
+
+        getSearchItems: function(term, maxCount) {
+            if (maxCount == undefined) {
+                maxCount = this.getMaxCount();
+            } else {
+                this.setMaxCount(maxCount)
+            }
+            
+            var dataFeed = this._references.dataFeed;
+            dataFeed.setInputParam('searchString', term, true);
+            dataFeed.setInputParam('maxCount', maxCount, true);
+
+            var searchItemsArray = dataFeed.getSearchItems();
+
+            if(searchItemsArray == false){
+                return false;
+            }
+
+            this._updateSearchDisplay(searchItemsArray);
+        },
+
+        _onDataProcessed: function() {
+            this.getSearchItems();
+        },
+
+        _updateSearchDisplay: function(searchItemsArray) {
+
+            // format the data how we'll need it
+            var categories = [];
+
+            var i = 0;
+            var j;
+            var len = searchItemsArray.length;
+            var categoryReference;
+
+            for (; i < len; i++) {
+                categoryReference = undefined;
+                
+                for (j = 0; j < categories.length; j++) {
+                    if (categories[j].type == searchItemsArray[i].type) {
+                        categoryReference = categories[j];
+                        break;
+                    }
+                }
+
+                if (categoryReference == undefined) {
+                    var categoryReference = {
+                        type: searchItemsArray[i].type,
+                        items: []
+                    };
+                    categories.push(categoryReference);
+                }
+
+                categoryReference.items.push(searchItemsArray[i]);
+            }
+
+            // sort categories
+            categories.sort(function(a, b) {
+                return a.type > b.type;
+            });
+
+            var renderData = {
+                categories: categories
+            };
+
+            this._renderSearchItems(renderData);
+        },
+
+
+
+
+
+
+
+        _renderSearchItems: function(renderData) {
+            viewRenderer.renderHTML(this._references.$searchItemsContainer, searchCompletionTemplate, renderData);
+        },
+
+        _updateSelectedItem: function(offset) {
+            var $searchItems = this._references.$searchItemsContainer.find('.js-search-completion-item');
+
+            var $currentActive = $searchItems.filter('.hover');
+
+            var currentIndex = $searchItems.index($currentActive);
+            var nextIndex;
+
+            if (currentIndex == -1) {
+                if (offset == 1) {
+                    nextIndex = 0;
+                }
+            } else {
+                nextIndex = currentIndex + offset;
+            }
+
+            nextIndex = Util.Math.mod(nextIndex, $searchItems.length);
+
+            $currentActive.removeClass('hover');
+            $searchItems.eq(nextIndex).addClass('hover');
+
+        },
+
+        _selectItem: function() {
+            var $currentActive = this._references.$searchItemsContainer.find('.js-search-completion-item.hover');
+            if ($currentActive.length==0){
+            	var $url = this._references.$searchWrapper.attr("data-url");
+            	var searchString = this._references.$searchInputBox.val();
+            	currentURL = $url+"?searchString=" + searchString;
+            }
+            else{
+            var currentURL = $currentActive.attr('href');
+
+            if (!currentURL) {
+                return;
+            }
+            }
+
+            window.location.href = currentURL;
+        },
+
+        _onKeyDown: function(e) {
+            switch (e.keyCode) {
+                // enter
+                case 13:
+                    e.preventDefault();
+                    this._selectItem();
+                    break;
+                // escape
+                case 27:
+                    e.preventDefault();
+                    this._clearSearchResults();
+                    break;
+                // up arrow
+                case 38:
+                    e.preventDefault();
+                    this._updateSelectedItem(-1);
+                    break;
+                // down arrow
+                case 40:
+                    e.preventDefault();
+                    this._updateSelectedItem(1);
+                    break;
+            }
+        },
+
+        _onKeyUp: function(e) {
+            switch (e.keyCode) {
+                // no need to send extra requests to the server
+                // catch these non-changing keys
+
+                // shift
+                case 16:
+                // control
+                case 17:
+                // alt
+                case 18:
+                // insert
+                case 45:
+                // delete
+                case 46:
+                // home
+                case 36:
+                // end
+                case 35:
+                // page up
+                case 33:
+                // page down
+                case 34:
+                // left arrow
+                case 37:
+                // up arrow
+                case 38:
+                // right arrow
+                case 39:
+                // down arrow
+                case 40:
+                    break;
+
+                default:
+                    clearTimeout(this._state.searchInputChangedTimeout);
+                    this._state.searchInputChangedTimeout = setTimeout(this._boundFunctions.onSearchInputChangedTimeout, this._config.searchInputChangeRefreshDelay);
+                    break;
+            }
+        },
+
+        _onSearchItemMouseClick: function(e){
+        	e.preventDefault();
+            this._selectItem();
+        },
+        
+        _onSearchItemMouseEnter: function(e) {
+            this._references.$searchItemsContainer.find('.js-search-completion-item.hover').removeClass('hover');
+            
+            var $currentTarget = jQuery(e.currentTarget);
+            $currentTarget.addClass('hover');
+        },
+
+        _onBodyClick: function(e) {
+            this._clearSearchResults();
+        },
+
+        _clearSearchResults: function() {
+            this._renderSearchItems([]);
+        },
+
+        _onSearchInputChangedTimeout: function(){
+            var value = this._references.$searchInputBox.val();
+
+            if (value != this.getSearchInputVal()) {
+                this.setSearchInputVal(value);
+                this._references.dataFeed.clearSearchCompletionCache();
+
+                if (value == "") {
+                    this._clearSearchResults();
+                } else {
+                    this.getSearchItems(value);
+                }
+            }
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            if (!this._references.dataFeed.setInputParam(key, value, disableCacheClearing)) {
+                return;
+            }
+        },
+
+        /**
+         * Controller destructor
+         * @return {void}
+         */
+        destroy: function() {
+            this.base();
+
+            // TODO: clean up
+        }
+    });
+
+    return SearchViewController;
+});

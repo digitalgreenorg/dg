@@ -10,4 +10,157 @@
 *   12/12/12    AMD support added
 */
 
-(function(){var e=function(){};typeof define!="undefined"?define([],function(){return e}):typeof window!="undefined"?window.Base=e:module.exports=e,e.extend=function(t,n){var r=e.prototype.extend;e._prototyping=!0;var i=new this;r.call(i,t),i.base=function(){},delete e._prototyping;var s=i.constructor,o=i.constructor=function(){if(!e._prototyping)if(this._constructing||this.constructor==o)this._constructing=!0,s.apply(this,arguments),delete this._constructing;else if(arguments[0]!=null)return(arguments[0].extend||r).call(arguments[0],i)};return o.ancestor=this,o.extend=this.extend,o.forEach=this.forEach,o.implement=this.implement,o.prototype=i,o.toString=this.toString,o.valueOf=function(e){return e=="object"?o:s.valueOf()},r.call(n||{},this),r.call(o,n),typeof o.init=="function"&&o.init(),o},e.prototype={extend:function(t,n){if(arguments.length>1){var r=this[t];if(r&&typeof n=="function"&&(!r.valueOf||r.valueOf()!=n.valueOf())&&/\bbase\b/.test(n)){var i=n.valueOf();n=function(){var t,n=this.base||e.prototype.base;return this.base=r,arguments.length===0?t=i.call(this):t=i.apply(this,arguments),this.base=n,t},n.valueOf=function(e){return e=="object"?n:i},n.toString=e.toString}this[t]=n}else if(t){var s=e.prototype.extend;!e._prototyping&&typeof this!="function"&&(s=this.extend||s);var o={toSource:null},u=["constructor","toString","valueOf"],a=e._prototyping?0:1;while(f=u[a++])t[f]!=o[f]&&s.call(this,f,t[f]);for(var f in t)o[f]||s.call(this,f,t[f])}return this}},e=e.extend({constructor:function(){this.extend(arguments[0])}},{ancestor:Object,version:"1.1",forEach:function(e,t,n){for(var r in e)this.prototype[r]===undefined&&t.call(n,e[r],r,e)},implement:function(){for(var e=0;e<arguments.length;e++)typeof arguments[e]=="function"?arguments[e](this.prototype):this.prototype.extend(arguments[e]);return this},toString:function(){return String(this.valueOf())}})})();
+(function () {
+    var Base = function() {
+        // dummy
+    };
+
+    // Define AMD module or attach Base object to head object
+    if (typeof define !== 'undefined') {
+        // AMD Module
+        define(function () {
+                return Base;
+        });
+    } else if (typeof window !== 'undefined') {
+        // Browser
+        window.Base = Base;
+    } else {
+        // CommonJS
+        module.exports = Base;
+    }
+
+    Base.extend = function(_instance, _static) { // subclass
+        var extend = Base.prototype.extend;
+        
+        // build the prototype
+        Base._prototyping = true;
+        var proto = new this;
+        extend.call(proto, _instance);
+        proto.base = function() {
+        // call this method from any other method to invoke that method's ancestor
+        };
+        delete Base._prototyping;
+        
+        // create the wrapper for the constructor function
+        //var constructor = proto.constructor.valueOf(); //-dean
+        var constructor = proto.constructor;
+        var klass = proto.constructor = function() {
+            if (!Base._prototyping) {
+                if (this._constructing || this.constructor == klass) { // instantiation
+                    this._constructing = true;
+                    constructor.apply(this, arguments);
+                    delete this._constructing;
+                } else if (arguments[0] != null) { // casting
+                    
+                    return (arguments[0].extend || extend).call(arguments[0], proto);
+                }
+            }
+        };
+        // build the class interface
+        klass.ancestor = this;
+        klass.extend = this.extend;
+        klass.forEach = this.forEach;
+        klass.implement = this.implement;
+        klass.prototype = proto;
+        klass.toString = this.toString;
+        klass.valueOf = function(type) {
+            //return (type == "object") ? klass : constructor; //-dean
+            return (type == "object") ? klass : constructor.valueOf();
+        };
+        extend.call(_static || {}, this);
+        extend.call(klass, _static);
+        // class initialisation
+        if (typeof klass.init == "function") klass.init();
+        return klass;
+    };
+
+    Base.prototype = {      
+        extend: function(source, value) {
+            if (arguments.length > 1) { // extending with a name/value pair
+                var ancestor = this[source];
+                if (ancestor && (typeof value == "function") && // overriding a method?
+                    // the valueOf() comparison is to avoid circular references
+                    (!ancestor.valueOf || ancestor.valueOf() != value.valueOf()) &&
+                    /\bbase\b/.test(value)) {
+                    // get the underlying method
+                    var method = value.valueOf();
+                    // override
+                    value = function() {
+                        var returnValue;
+                        var previous = this.base || Base.prototype.base;
+                        this.base = ancestor;
+                        if (arguments.length === 0) {
+                            returnValue = method.call(this);
+                        } else {
+                            returnValue = method.apply(this, arguments);
+                        }
+                        this.base = previous;
+                        return returnValue;
+                    };
+                    // point to the underlying method
+                    value.valueOf = function(type) {
+                        return (type == "object") ? value : method;
+                    };
+                    value.toString = Base.toString;
+                }
+                 this[source] = value;
+            } else if (source) { // extending with an object literal
+                var extend = Base.prototype.extend;
+                // if this object has a customised extend method then use it
+                if (!Base._prototyping && typeof this != "function") {
+                    extend = this.extend || extend;
+                }
+                var proto = {toSource: null};
+                // do the "toString" and other methods manually
+                var hidden = ["constructor", "toString", "valueOf"];
+                // if we are prototyping then include the constructor
+                var i = Base._prototyping ? 0 : 1;
+                while (key = hidden[i++]) {
+                    if (source[key] != proto[key]) {
+                        extend.call(this, key, source[key]);
+                    }
+                }
+                // copy each of the source object's properties to this object
+                for (var key in source) {
+                    if (!proto[key]) extend.call(this, key, source[key]);
+                }
+            }
+            return this;
+        }
+    };
+
+    // initialise
+    Base = Base.extend({
+        constructor: function() {
+            this.extend(arguments[0]);
+        }
+    }, {
+        ancestor: Object,
+        version: "1.1",
+        
+        forEach: function(object, block, context) {
+            for (var key in object) {
+                if (this.prototype[key] === undefined) {
+                    block.call(context, object[key], key, object);
+                }
+            }
+        },
+            
+        implement: function() {
+            for (var i = 0; i < arguments.length; i++) {
+                if (typeof arguments[i] == "function") {
+                    // if it's a function, call it
+                    arguments[i](this.prototype);
+                } else {
+                    // add the interface using the extend method
+                    this.prototype.extend(arguments[i]);
+                }
+            }
+            return this;
+        },
+        
+        toString: function() {
+            return String(this.valueOf());
+        }
+    });
+})();

@@ -1,1 +1,97 @@
-define(["require","app/libs/DigitalGreenDataFeed","app/libs/DataModel"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=e("app/libs/DataModel"),r=t.extend({constructor:function(){this.base("api/searchCompletions"),this._dataModel.addSubModel("searchCompletions",!0),this.addInputParam("searchString",!0,""),this.addInputParam("maxCount",!1,10)},fetch:function(e,t){e==undefined&&(e=0),t==undefined&&(t=10),this.setInputParam("searchString",e,!0),this.setInputParam("maxCount",t,!0),this.base()},_processData:function(e){this.base(e);var t=this._dataModel,n=t.get("searchCompletions"),r=e.completions;return n.clear(),n.addSubset(r,0),r},setInputParam:function(e,t,n){var r=this.base(e,t);return r&&!n&&this.clearSearchCompletionCache(),r},clearSearchCompletionCache:function(){this._dataModel.get("searchCompletions").clear()},getSearchItems:function(){var e=this.getInputParam("searchString"),t=this.getInputParam("maxCount"),n=this._dataModel.get("searchCompletions").getSubset(0,t);return n?n:(this.fetch(e,t),!1)}});return r});
+/**
+ * NewsDataFeed Class File
+ *
+ * @author dlakes
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+    var DataModel = require('app/libs/DataModel');
+
+    var SearchCompletionsDataFeed = DigitalGreenDataFeed.extend({
+
+        /*
+        Input params:
+
+        searchString {String}
+        maxCount {Number}
+
+        Output params:
+        completions {SearchCompletion[]}
+        totalCount {Number}
+        */
+
+        constructor: function() {
+            this.base('api/searchCompletions');
+            // prepare data model
+            this._dataModel.addSubModel('searchCompletions', true);
+
+            this.addInputParam('searchString', true, '');
+            this.addInputParam('maxCount', false, 10);
+        },
+
+        fetch: function(searchString, maxCount) {
+            if (searchString == undefined) {
+                searchString = 0;
+            }
+
+            if (maxCount == undefined) {
+                maxCount = 10;
+            }
+
+            this.setInputParam('searchString', searchString, true);
+            this.setInputParam('maxCount', maxCount, true);
+
+            // perform the fetch
+            this.base();
+        },
+
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            // local references
+            var dataModel = this._dataModel;
+            var searchCompletionsModel = dataModel.get('searchCompletions');
+
+            // import news from data
+            var searchCompletionsToAdd = unprocessedData.completions;
+
+            searchCompletionsModel.clear();
+            searchCompletionsModel.addSubset(searchCompletionsToAdd, 0);
+            return searchCompletionsToAdd;
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            var paramChanged = this.base(key, value);
+            if (paramChanged && !disableCacheClearing) {
+                this.clearSearchCompletionCache();
+            }
+
+            return paramChanged;
+        },
+
+        clearSearchCompletionCache: function() {
+            this._dataModel.get('searchCompletions').clear();
+        },
+
+        getSearchItems: function() {
+            var searchString = this.getInputParam('searchString');
+            var maxCount = this.getInputParam('maxCount');
+
+            var searchCompletions = this._dataModel.get('searchCompletions').getSubset(0, maxCount);
+            if (!searchCompletions) {
+                this.fetch(searchString, maxCount);
+                return false;
+            }
+
+            return searchCompletions;
+        }
+
+    });
+
+    return SearchCompletionsDataFeed;
+
+});

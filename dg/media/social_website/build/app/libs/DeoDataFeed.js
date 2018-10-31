@@ -1,1 +1,67 @@
-define(["require","app/libs/DigitalGreenDataFeed","app/libs/DataModel"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=e("app/libs/DataModel"),r=t.extend({constructor:function(e){this.base("api/getdeo/");var t=this._dataModel.addSubModel("deo",!0)},fetch:function(e){this.base()},_processData:function(e){this.base(e);var t=this._dataModel,n=t.get("deo");return n.set("deoObj",e.deo),e.deo},setInputParam:function(e,t,n){var r=this.base(e,t);return r&&!n&&this.cleardeoCache(),r},cleardeoCache:function(){this._dataModel.get("deo").clear()},getDeo:function(){var e=this._dataModel.get("deo"),t=e.get("deoObj");return t?t:(this.fetch(),!1)}});return r});
+/**
+ * PracticeMappingDataFeed Class File
+ *
+ * @author aadish
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+    var DataModel = require('app/libs/DataModel');
+    
+    var DeoDataFeed = DigitalGreenDataFeed.extend({
+
+        constructor: function($language) {
+            this.base('api/getdeo/');
+
+            // prepare data model
+            var deoSubModel = this._dataModel.addSubModel('deo', true);
+        },
+
+        fetch: function(language) {
+            this.base();
+        },
+
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            
+            var dataModel = this._dataModel;
+            var deoModel = dataModel.get('deo');
+            
+            deoModel.set('deoObj', unprocessedData.deo);
+            return unprocessedData.deo;
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            var paramChanged = this.base(key, value);
+            if (paramChanged && !disableCacheClearing) {
+                this.cleardeoCache();
+            }
+
+            return paramChanged;
+        },
+
+        cleardeoCache: function() {
+            this._dataModel.get('deo').clear();
+        },
+
+        getDeo: function() {
+            var deoModel = this._dataModel.get('deo');
+            var deo = deoModel.get('deoObj');
+
+            if (!deo) {
+                this.fetch();
+                return false;
+            }
+            return deo;
+        }
+
+    });
+
+    return DeoDataFeed;
+
+});

@@ -1,1 +1,107 @@
-define(["require","app/libs/DigitalGreenDataFeed","app/libs/DataModel"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=e("app/libs/DataModel"),r=t.extend({_filters:undefined,constructor:function(){this.base("api/activity/");var e=this._dataModel.addSubModel("activities",!0);this.addInputParam("partner",!1,undefined,!0,e),this.addInputParam("farmerID",!1,undefined,!0,e),this.addInputParam("userUID",!1,undefined,!0,e),this.addInputParamCacheClear("language__name",e),this.addInputParam("offset",!1),this.addInputParam("limit",!1)},fetch:function(e,t){e==undefined&&(e=0),t==undefined&&(t=10),this.setInputParam("offset",e*t,!0),this.setInputParam("limit",t,!0),this.base()},_processData:function(e){this.base(e);var t=this._dataModel,n=t.get("activities"),r=e.meta.limit,i=e.meta.offset;t.set("totalCount",e.meta.total_count);var s=e.objects,o=i;return n.addSubset(s,o),s},clearCollectionCache:function(){this._dataModel.get("activities").clear()},getTotalCount:function(){return this._dataModel.get("totalCount")},getActivities:function(){var e=this.getInputParam("offset"),t=this.getInputParam("limit"),n=this._dataModel.get("activities").getSubset(e*t,t);return n?n:(this.fetch(e,t),!1)}});return r});
+define(function(require) {
+    'use strict';
+    
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+    var DataModel = require('app/libs/DataModel');
+
+    var ActivitiesDataFeed = DigitalGreenDataFeed.extend({
+
+        _filters: undefined,
+
+        /*
+        Input params:
+
+        One of:
+        partnerUID {String}
+        farmerID {String}
+        userUID {String}
+
+        page {Number}
+        count {Number}
+
+        Output params:
+        collections {Collection[]}
+        totalCount {Number}
+        */
+
+        constructor: function() {
+            this.base('api/activity/');
+
+            // prepare data model
+            var activitiesSubModel = this._dataModel.addSubModel('activities', true);
+
+            this.addInputParam('partner', false, undefined, true, activitiesSubModel);
+            this.addInputParam('farmerID', false, undefined, true, activitiesSubModel);
+            this.addInputParam('userUID', false, undefined, true, activitiesSubModel);
+            this.addInputParamCacheClear('language__name', activitiesSubModel);
+
+            this.addInputParam('offset', false);
+            this.addInputParam('limit', false);
+        },
+
+        fetch: function(page, countPerPage) {
+            if (page == undefined) {
+                page = 0;
+            }
+
+            if (countPerPage == undefined) {
+                countPerPage = 10;
+            }
+
+            this.setInputParam('offset', page*countPerPage, true);
+            this.setInputParam('limit', countPerPage, true);
+
+            // perform the fetch
+            this.base();
+        },
+
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            
+            // local references
+            var dataModel = this._dataModel;
+            var model = dataModel.get('activities');
+
+            // gather count and page for caching and saving purposes
+            var countPerPage = unprocessedData.meta.limit;
+            var page = unprocessedData.meta.offset;
+
+            // store total count
+            dataModel.set('totalCount', unprocessedData.meta.total_count);
+            
+            // import
+            var dataToAdd = unprocessedData.objects;
+            var startingCacheId = page;
+
+            model.addSubset(dataToAdd, startingCacheId);
+            return dataToAdd;
+        },
+
+        clearCollectionCache: function() {
+            this._dataModel.get('activities').clear();
+        },
+
+        getTotalCount: function() {
+            return this._dataModel.get('totalCount');
+        },
+
+        getActivities: function() {
+
+            var page = this.getInputParam('offset');
+            var countPerPage = this.getInputParam('limit');
+
+            var data = this._dataModel.get('activities').getSubset(page * countPerPage, countPerPage);
+
+            if (!data) {
+                this.fetch(page, countPerPage);
+                return false;
+            }
+
+            return data;
+        }
+
+    });
+
+    return ActivitiesDataFeed;
+
+});

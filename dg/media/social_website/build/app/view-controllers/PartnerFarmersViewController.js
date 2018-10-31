@@ -1,1 +1,217 @@
-define(["require","framework/controllers/Controller","framework/ViewRenderer","framework/Util","jquery","app/libs/PartnerFarmersDataFeed","text!app/views/partnerFarmer.html"],function(e){var t=e("framework/controllers/Controller"),n=e("framework/ViewRenderer"),r=e("framework/Util"),i=e("jquery"),s=e("app/libs/PartnerFarmersDataFeed"),o=e("text!app/views/partnerFarmer.html"),u=t.extend({constructor:function(e){return this.base(e),this},_initConfig:function(){this.base()},_initReferences:function(e){this.base();var t=this._references;t.dataFeed=new s,t.$farmerCarouselContainer=e,t.$farmerPagesContainer=e.find(".js-partner-farmers-pages-container"),t.$prevFarmerPageInput=e.find(".js-prev-partner-farmers-page"),t.$nextFarmerPageInput=e.find(".js-next-partner-farmers-page")},_initState:function(){this.base();var e=this._state;e.currentPageNumber=0,e.farmersPerPage=12,e.currentCount=0,e.totalCount=0},_initEvents:function(){this.base();var e=this._boundFunctions,t=this._references;e.onDataProcessed=this._onDataProcessed.bind(this),t.dataFeed.on("dataProcessed",e.onDataProcessed),e.onCarouselPagingPreviousClick=this._onCarouselPagingClick.bind(this,-1),t.$prevFarmerPageInput.click(e.onCarouselPagingPreviousClick),e.onCarouselPagingNextClick=this._onCarouselPagingClick.bind(this,1),t.$nextFarmerPageInput.click(e.onCarouselPagingNextClick)},setCurrentPageNumber:function(e){return this._state.currentPageNumber=e,this},getCurrentPageNumber:function(){return this._state.currentPageNumber},setFarmersPerPage:function(e){return this._state.farmersPerPage=e,this},getFarmersPerPage:function(){return this._state.farmersPerPage},addToCurrentCount:function(e){return this._state.currentCount+=e,this},getTotalPages:function(){return Math.ceil(this.getTotalCount()/this.getFarmersPerPage())-1},setTotalCount:function(e){return this._state.totalCount=e,this},getTotalCount:function(){return this._state.totalCount},getPartnerFarmers:function(e,t){e==undefined?e=this.getCurrentPageNumber():this.setCurrentPageNumber(e),t==undefined?t=this.getFarmersPerPage():this.setFarmersPerPage(t);var n=this._references.dataFeed;n.setInputParam("offset",e,!0),n.setInputParam("limit",t,!0);var r=n.getPartnerFarmers(),i=n.getTotalCount();if(r==0)return!1;this._updateFarmersDisplay(r,i)},_onDataProcessed:function(){$(".js-partner-farmers-carousel-container-outer").show(),this.getPartnerFarmers()},_updateFarmersDisplay:function(e,t){this._renderPartnerFarmers(e),this.setTotalCount(t),this.addToCurrentCount(e.length),this.updatePartnerFarmersPaginationDisplay()},_renderPartnerFarmers:function(e){var t=[],i=0,s=e.length;for(;i<s;i++){var u=r.Object.clone(e[i],!0);t.push(u)}this._references.$farmerPagesContainer.empty();var a={farmers:e};n.renderAppend(this._references.$farmerPagesContainer,o,a)},updatePartnerFarmersPaginationDisplay:function(){this.getCurrentPageNumber()<=0?this._references.$prevFarmerPageInput.hide():this._references.$prevFarmerPageInput.show(),this.getCurrentPageNumber()>=this.getTotalPages()?this._references.$nextFarmerPageInput.hide():this._references.$nextFarmerPageInput.show()},_onCarouselPagingClick:function(e,t){t.preventDefault(),t.stopPropagation(),this.getPartnerFarmers(this.getCurrentPageNumber()+e)},setInputParam:function(e,t,n){this._references.dataFeed.setInputParam(e,t,n)},destroy:function(){this.base()}});return u});
+/**
+ * NewsFeedViewController Class File
+ *
+ * @author dlakes
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+
+    var Controller = require('framework/controllers/Controller');
+    var viewRenderer = require('framework/ViewRenderer');
+    var Util = require('framework/Util');
+    var jQuery = require('jquery');
+
+    var PartnerFarmersDataFeed = require('app/libs/PartnerFarmersDataFeed');
+    var partnerFarmerTemplate = require('text!app/views/partnerFarmer.html');
+
+    var PartnerFarmersViewController = Controller.extend({
+
+        /**
+         * Controller constructor
+         * @return {Controller} this
+         */
+        constructor: function($referenceBase) {
+            this.base($referenceBase);
+
+            return this;
+        },
+
+        _initConfig: function() {
+            this.base();
+
+        },
+
+        _initReferences: function($referenceBase) {
+            this.base();
+
+            var references = this._references;
+
+            references.dataFeed = new PartnerFarmersDataFeed();
+
+            references.$farmerCarouselContainer = $referenceBase;
+            references.$farmerPagesContainer = $referenceBase.find(".js-partner-farmers-pages-container");
+            references.$prevFarmerPageInput = $referenceBase.find(".js-prev-partner-farmers-page");
+            references.$nextFarmerPageInput = $referenceBase.find(".js-next-partner-farmers-page");
+        },
+
+        _initState: function() {
+            this.base();
+
+            var state = this._state;
+            state.currentPageNumber = 0;
+            state.farmersPerPage = 12;
+            state.currentCount = 0;
+            state.totalCount = 0;
+        },
+
+        _initEvents: function() {
+            this.base();
+
+            var boundFunctions = this._boundFunctions;
+            var references = this._references;
+
+            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
+
+            // handle paging clicks
+            // previons
+            boundFunctions.onCarouselPagingPreviousClick = this._onCarouselPagingClick.bind(this, -1);
+            references.$prevFarmerPageInput.click(boundFunctions.onCarouselPagingPreviousClick);
+
+            // next
+            boundFunctions.onCarouselPagingNextClick = this._onCarouselPagingClick.bind(this, 1);
+            references.$nextFarmerPageInput.click(boundFunctions.onCarouselPagingNextClick);
+        },
+
+        setCurrentPageNumber: function(n) {
+            this._state.currentPageNumber = n;
+            return this;
+        },
+
+        getCurrentPageNumber: function(){
+            return this._state.currentPageNumber;
+        },
+
+        setFarmersPerPage: function(value){
+            this._state.farmersPerPage = value;
+            return this;
+        },
+
+        getFarmersPerPage: function(){
+            return this._state.farmersPerPage;
+        },
+
+        addToCurrentCount: function(n) {
+            this._state.currentCount += n;
+            return this;
+        },
+
+        getTotalPages: function(){
+            return Math.ceil(this.getTotalCount()/this.getFarmersPerPage())-1;
+        },
+
+        setTotalCount: function(n) {
+            this._state.totalCount = n;
+            return this;
+        },
+
+        getTotalCount: function(){
+            return this._state.totalCount;
+        },
+
+        getPartnerFarmers: function(page, farmersPerPage) {
+            if (page == undefined) {
+                page = this.getCurrentPageNumber();
+            } else {
+                this.setCurrentPageNumber(page);
+            }
+
+            if (farmersPerPage == undefined) {
+                farmersPerPage = this.getFarmersPerPage();
+            } else {
+                this.setFarmersPerPage(farmersPerPage);
+            }
+            
+            var dataFeed = this._references.dataFeed;
+            dataFeed.setInputParam('offset', page, true)
+            dataFeed.setInputParam('limit', farmersPerPage, true);
+
+
+            var partnerFarmersArray = dataFeed.getPartnerFarmers();
+            var totalCount = dataFeed.getTotalCount();
+
+            if(partnerFarmersArray == false){
+                return false;
+            }
+
+            this._updateFarmersDisplay(partnerFarmersArray, totalCount);
+        },
+
+        _onDataProcessed: function() {
+        	$('.js-partner-farmers-carousel-container-outer').show();
+            this.getPartnerFarmers();
+        },
+
+        _updateFarmersDisplay: function(partnerFarmersArray, totalCount) {
+            this._renderPartnerFarmers(partnerFarmersArray);
+
+            this.setTotalCount(totalCount);
+            this.addToCurrentCount(partnerFarmersArray.length);
+            this.updatePartnerFarmersPaginationDisplay();
+        },
+
+        _renderPartnerFarmers: function(partnerFarmersArray) {
+            var partnerFarmersRenderArray = [];
+
+            var i = 0;
+            var len = partnerFarmersArray.length;
+            for (; i < len; i++) {
+                var currentPartnerFarmerData = Util.Object.clone(partnerFarmersArray[i], true);
+                partnerFarmersRenderArray.push(currentPartnerFarmerData);
+            }
+
+            this._references.$farmerPagesContainer.empty();
+
+            var renderData = {
+                farmers: partnerFarmersArray
+            };
+
+            viewRenderer.renderAppend(this._references.$farmerPagesContainer, partnerFarmerTemplate, renderData);
+        },
+
+
+        updatePartnerFarmersPaginationDisplay: function(){
+            //update prev button
+            if (this.getCurrentPageNumber() <= 0) {
+                this._references.$prevFarmerPageInput.hide();
+            } else {
+                this._references.$prevFarmerPageInput.show();
+            }
+
+            //update next button
+            if (this.getCurrentPageNumber() >= this.getTotalPages()) {
+                this._references.$nextFarmerPageInput.hide();
+            } else {
+                this._references.$nextFarmerPageInput.show();
+
+            }
+        },
+
+        _onCarouselPagingClick: function(offset, event){
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.getPartnerFarmers(this.getCurrentPageNumber() + offset);
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            this._references.dataFeed.setInputParam(key, value, disableCacheClearing);
+        },
+
+        /**
+         * Controller destructor
+         * @return {void}
+         */
+        destroy: function() {
+            this.base();
+
+            // TODO: clean up
+        }
+    });
+
+    return PartnerFarmersViewController;
+});

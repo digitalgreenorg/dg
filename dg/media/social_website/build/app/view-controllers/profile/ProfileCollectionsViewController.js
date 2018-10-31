@@ -1,1 +1,273 @@
-define(["require","app/view-controllers/GenericCollectionsViewController","libs/NCarousel/NCarousel","app/libs/GenericCollectionsDataFeed","text!app/views/collection.html","text!app/views/collection-video-drawer.html"],function(e){var t=e("app/view-controllers/GenericCollectionsViewController"),n=e("libs/NCarousel/NCarousel"),r=e("app/libs/GenericCollectionsDataFeed"),i=e("text!app/views/collection.html"),s=e("text!app/views/collection-video-drawer.html"),o=t.extend({constructor:function(e,t){return t==undefined&&(t={}),this.base(e,t),this._setActiveCollection("recent"),this._getCollectionsPage("first"),this},_initReferences:function(e,t){this.base(e,t);var n=this._references,i=new r("api/collectionsSearch");i.addInputParam("userId",!0),this._addCollectionsDataFeed("recent",i);var s=new r("api/collectionsSearch");s.addInputParam("userId",!0),this._addCollectionsDataFeed("completed",s),n.$profileWrapper=e,n.$showMoreButton=e.find(".js-show-more"),n.$hideCollectionsButton=e.find(".js-hide-collections"),n.$collectionsContainer=e.find(".js-collections-container")},_initEvents:function(e){this.base();var t=this._references,n=this._boundFunctions;n.onCollectionTypeClick=this._onCollectionDisplayTypeClick.bind(this),t.$profileWrapper.on("click",".js-collection-type",n.onCollectionTypeClick),n.onShowMoreClick=this._onShowMoreClick.bind(this),t.$showMoreButton.on("click",n.onShowMoreClick),n.onHideCollectionsClick=this._onHideCollectionsClick.bind(this),t.$hideCollectionsButton.on("click",n.onHideCollectionsClick)},_initState:function(e){this.base();var t=this._state;t.currentPage=0;var n=4;this.setCollectionsPerRow(4).setCollectionsPerPage(n).setVideoDrawerClasses("").setVideosPerDrawer(5),this._setAllCollectionsInputParam("offset",t.currentPage)._setAllCollectionsInputParam("limit",n)._setAllCollectionsInputParam("userId",1337)},_onCollectionDisplayTypeClick:function(e){e.preventDefault();var t=jQuery(e.currentTarget),n=t.data("collection-id");this._setActiveCollection(n);var r=this._getAllCurrentCollectionsPages();r.collections.length==0&&this._getCollectionsPage("first")},_onShowMoreClick:function(e){e.preventDefault(),this._getCollectionsPage("next")},_onHideCollectionsClick:function(e){e.preventDefault();var t=this._references,n=t.$collectionsContainer.find(".js-collections-page");if(n.length<=1)return;var r=n.eq(n.length-1),i=this._updateHideCollectionsButtonDisplay.bind(this);r.animate({height:"0px"},function(){r.remove(),i()}),this._setCollectionsPage("previous"),t.$showMoreButton.show()},_onTotalNumberOfCollectionsReached:function(e,t){this.base(),t.currentPage>=t.totalPages-1&&this._references.$showMoreButton.hide()},_setActiveCollection:function(e){var t=this._references.$profileWrapper.find(".js-collection-type"),n=t.filter(".active").data("collection-id");if(e==n)return;var r=t.filter("[data-collection-id="+e+"]");t.removeClass("active"),r.addClass("active"),this._references.$showMoreButton.show(),this._setCurrentCollectionsDataFeed(e)},_renderPartialCollections:function(e){var t=jQuery("<div />");t.append(e);var n=t.find(".js-collections-page");n.css({position:"absolute",visibility:"hidden"}),this._references.$collectionsContainer.append(n);var r=n.height();n.css({height:"0px",position:"",visibility:""}),n.animate({height:r+"px"},function(){n.css({height:""})}),this._updateHideCollectionsButtonDisplay(),this._initVideoCarousels()},_renderAllCollections:function(e){this._references.$collectionsContainer.html(e),this._updateHideCollectionsButtonDisplay(),this._initVideoCarousels()},_updateHideCollectionsButtonDisplay:function(){var e=this._references,t=e.$collectionsContainer.find(".js-collections-page");t.length<=1?e.$hideCollectionsButton.hide():e.$hideCollectionsButton.show()},_initVideoCarousels:function(){var e=this._references.$collectionsContainer.find(".js-carousel-wrapper"),t=0,r=e.length;for(;t<r;t++){var i=e.eq(t);new n(i,{transition:"basic",autoPlay:!1,allowWrapping:!1})}},destroy:function(){this.base()}});return o});
+/**
+ * RecentlyViewedCollectionsViewController Class File
+ *
+ * @author rdeluca
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+
+    var GenericCollectionsViewController = require('app/view-controllers/GenericCollectionsViewController');
+    var NCarousel = require('libs/NCarousel/NCarousel');
+
+    var GenericCollectionsDataFeed = require('app/libs/GenericCollectionsDataFeed');
+
+    var collectionTemplate = require('text!app/views/collection.html');
+    var collectionVideoDrawerTemplate = require('text!app/views/collection-video-drawer.html');
+
+
+    var RecentlyViewedCollectionsViewController = GenericCollectionsViewController.extend({
+
+        /**
+         * Controller constructor
+         * @return {Controller} this
+         */
+        constructor: function($referenceBase, params) {
+
+            // set up params prior to calling parent
+            if (params == undefined) {
+                params = {};
+            }
+
+            // call parent
+            this.base($referenceBase, params);
+            
+            this._setActiveCollection('recent');
+            this._getCollectionsPage('first');
+
+            return this;
+        },
+
+        _initReferences: function($referenceBase, params) {
+            this.base($referenceBase, params);
+
+            var references = this._references;
+            
+            // data feeds
+            
+            //change back to
+            // var recentlyViewedDataFeed = new GenericCollectionsDataFeed('api/recentlyViewed');
+            // after user is added and recently viewed is recorded
+            var recentlyViewedDataFeed = new GenericCollectionsDataFeed('api/collectionsSearch');
+            //
+            recentlyViewedDataFeed.addInputParam('userId', true);
+            this._addCollectionsDataFeed('recent', recentlyViewedDataFeed);
+
+            //change back to
+            // var recentlyViewedDataFeed = new GenericCollectionsDataFeed('api/recentlyViewed');
+            // after user is added and recently viewed is recorded
+            var completedCollectionsDataFeed = new GenericCollectionsDataFeed('api/collectionsSearch');
+            //
+            completedCollectionsDataFeed.addInputParam('userId', true);
+            this._addCollectionsDataFeed('completed', completedCollectionsDataFeed);
+
+            // html element references
+            references.$profileWrapper = $referenceBase;
+            references.$showMoreButton = $referenceBase.find('.js-show-more');
+            references.$hideCollectionsButton = $referenceBase.find('.js-hide-collections');
+            references.$collectionsContainer = $referenceBase.find('.js-collections-container');
+        },
+
+        _initEvents: function(params) {
+            this.base();
+
+            var references = this._references;
+            var boundFunctions = this._boundFunctions;
+
+            // collection type switching buttons (Recent, Completed)
+            boundFunctions.onCollectionTypeClick = this._onCollectionDisplayTypeClick.bind(this);
+            references.$profileWrapper.on('click', '.js-collection-type', boundFunctions.onCollectionTypeClick);
+
+            // show more
+            boundFunctions.onShowMoreClick = this._onShowMoreClick.bind(this);
+            references.$showMoreButton.on('click', boundFunctions.onShowMoreClick);
+
+            boundFunctions.onHideCollectionsClick = this._onHideCollectionsClick.bind(this);
+            references.$hideCollectionsButton.on('click', boundFunctions.onHideCollectionsClick);
+        },
+
+        _initState: function(params) {
+            this.base();
+
+            var state = this._state;
+            state.currentPage = 0;
+
+            var collectionsPerPage = 4;
+
+            this
+                .setCollectionsPerRow(4)
+                .setCollectionsPerPage(collectionsPerPage)
+                .setVideoDrawerClasses('')
+                .setVideosPerDrawer(5);
+
+            // TODO: where do we get the uid from??
+            this
+                ._setAllCollectionsInputParam('offset', state.currentPage)
+                ._setAllCollectionsInputParam('limit', collectionsPerPage)
+                ._setAllCollectionsInputParam('userId', 1337);
+        },
+
+        _onCollectionDisplayTypeClick: function(e) {
+            e.preventDefault();
+
+            var $currentTarget = jQuery(e.currentTarget);
+            var newCollectionId = $currentTarget.data('collection-id');
+
+            this._setActiveCollection(newCollectionId);
+
+            var currentCollectionsData = this._getAllCurrentCollectionsPages();
+
+            // on first load of each collection, we won't have any data
+            // therefore, we'll ensure we have some data to display
+            if (currentCollectionsData.collections.length == 0) {
+                this._getCollectionsPage('first');
+            }
+        },
+
+        _onShowMoreClick: function(e) {
+            e.preventDefault();
+            this._getCollectionsPage('next');
+        },
+
+        _onHideCollectionsClick: function(e) {
+            e.preventDefault();
+
+            var references = this._references;
+
+            var $collectionsPages = references.$collectionsContainer.find('.js-collections-page');
+
+            if ($collectionsPages.length <= 1) {
+                return;
+            }
+
+            var $pageToRemove = $collectionsPages.eq($collectionsPages.length - 1);
+            var updateHideCollectionsButtonDisplayBind = this._updateHideCollectionsButtonDisplay.bind(this);
+            $pageToRemove
+                .animate({
+                    height: '0px'
+                }, function() {
+                    $pageToRemove.remove();
+                    updateHideCollectionsButtonDisplayBind();
+                });
+
+            this._setCollectionsPage('previous');
+
+            references.$showMoreButton.show();
+        },
+
+        _onTotalNumberOfCollectionsReached: function(collectionId, feedInformation) {
+            this.base();
+
+            if (feedInformation.currentPage >= feedInformation.totalPages - 1) {
+                this._references.$showMoreButton.hide();
+            }
+
+        },
+
+        _setActiveCollection: function(newCollectionId) {
+            var $collectionOptions = this._references.$profileWrapper.find('.js-collection-type');
+
+            // get the previously active filter id
+            var oldCollectionId = $collectionOptions.filter('.active').data('collection-id');
+
+            // exit early if the filter hasn't changed
+            // TODO: might we want the filter changing to be a toggle on/off?
+            if (newCollectionId == oldCollectionId) {
+                return;
+            }
+
+            // get new filter element
+            var $newFilterElement = $collectionOptions.filter('[data-collection-id=' + newCollectionId + ']');
+
+            // clear active classes
+            $collectionOptions.removeClass('active');
+            // add new active class
+            $newFilterElement.addClass('active');
+
+            // reveal the show more button again
+            this._references.$showMoreButton.show();
+
+            this._setCurrentCollectionsDataFeed(newCollectionId);
+        },
+
+
+        _renderPartialCollections: function(collectionHTML) {
+            var $div = jQuery('<div />');
+            $div.append(collectionHTML);
+            var $page = $div.find('.js-collections-page');
+            $page.css({
+                position: 'absolute',
+                visibility: 'hidden'
+            });
+
+            this._references.$collectionsContainer.append($page);
+
+            var height = $page.height();
+            $page.css({
+                height: '0px',
+                position: '',
+                visibility: ''
+            });
+
+            $page.animate({
+                height: height + 'px'
+            }, function() {
+                $page.css({
+                    height: ''
+                });
+            });
+            
+            this._updateHideCollectionsButtonDisplay();
+            this._initVideoCarousels();
+        },
+
+        _renderAllCollections: function(collectionHTML) {
+            this._references.$collectionsContainer.html(collectionHTML);
+            this._updateHideCollectionsButtonDisplay();
+            this._initVideoCarousels();
+        },
+
+        _updateHideCollectionsButtonDisplay: function() {
+            var references = this._references;
+
+            var $collectionsPages = references.$collectionsContainer.find('.js-collections-page');
+
+            if ($collectionsPages.length <= 1) {
+                references.$hideCollectionsButton.hide();
+            } else {
+                references.$hideCollectionsButton.show();
+            }
+        },
+
+        _initVideoCarousels: function() {
+            var $carouselWrappers = this._references.$collectionsContainer.find('.js-carousel-wrapper');
+
+            var i = 0;
+            var len = $carouselWrappers.length;
+            for (; i < len; i++) {
+                var $currentCarouselWrapper = $carouselWrappers.eq(i);
+                new NCarousel($currentCarouselWrapper, {
+                    transition: 'basic',
+                    autoPlay: false,
+                    allowWrapping: false
+                });
+            }
+        },
+
+
+        /**
+         * Controller destructor
+         * @return {void}
+         */
+        destroy: function() {
+            this.base();
+
+            // TODO: clean up
+        }
+    });
+
+    return RecentlyViewedCollectionsViewController;
+});

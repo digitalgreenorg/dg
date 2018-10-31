@@ -1,1 +1,59 @@
-define([],function(){var e={VALIDATION_TYPES:{BOOL:0,NUMBER:1,INT:2,UINT:3,STRING:4},validate:function(e,t){switch(t){case this.VALIDATION_TYPES.BOOL:return this.isBool(e);case this.VALIDATION_TYPES.NUMBER:return this.isNumeric(e);case this.VALIDATION_TYPES.INT:return this.isInt(e);case this.VALIDATION_TYPES.UINT:return this.isUInt(e);case this.VALIDATION_TYPES.STRING:return this.isString(e);default:throw"ERROR: Validator: Invalid validation type provided"}},isBool:function(e){return e===!0||e===!1||e===1||e===0},isNumeric:function(e){return typeof e=="number"&&isFinite(e)},isInt:function(e){return this.isNumeric(e)&&parseInt(e,10)===e},isUInt:function(e){return this.isInt(e)&&e>=0},isString:function(e){return typeof e=="string"}};return e});
+define(function() {
+    "use strict";
+
+    var Validator = {
+        // static declaration for validation type fields
+        VALIDATION_TYPES: {
+            // true, false, 1, 0
+            BOOL: 0,
+            // numeric
+            NUMBER: 1,
+            // integer
+            INT: 2,
+            // integer >= 0
+            UINT: 3,
+            // string
+            STRING: 4
+        },
+
+        validate: function(value, type) {
+            switch (type) {
+                case this.VALIDATION_TYPES.BOOL:
+                    return this.isBool(value);
+                case this.VALIDATION_TYPES.NUMBER:
+                    return this.isNumeric(value);
+                case this.VALIDATION_TYPES.INT:
+                    return this.isInt(value);
+                case this.VALIDATION_TYPES.UINT:
+                    return this.isUInt(value);
+                case this.VALIDATION_TYPES.STRING:
+                    return this.isString(value);
+                default:
+                    throw 'ERROR: Validator: Invalid validation type provided';
+                    return;
+            }
+        },
+
+        isBool: function(value) {
+            return (value === true || value === false || value === 1 || value === 0);
+        },
+
+        isNumeric: function(value) {
+            return typeof value == 'number' && isFinite(value);
+        },
+
+        isInt: function(value) {
+            return this.isNumeric(value) && parseInt(value, 10) === value;
+        },
+
+        isUInt: function(value) {
+            return this.isInt(value) && value >= 0;
+        },
+
+        isString: function(value) {
+            return typeof value == 'string';
+        }
+    };
+
+    return Validator;
+});

@@ -1,1 +1,443 @@
-define(["require","framework/controllers/Controller","framework/ViewRenderer","jquery","libs/external/select2","app/libs/PracticeMappingDataFeed","app/libs/CollectionVideoDropDownDataFeed","app/libs/CollectionsAddDataFeed","text!app/views/practice-mapping.html","text!app/views/collection-add-video-dropdown.html","text!app/views/collection-add-video-carousel.html"],function(e){var t=e("framework/controllers/Controller"),n=e("framework/ViewRenderer"),r=e("jquery"),i=e("libs/external/select2"),s=e("app/libs/PracticeMappingDataFeed"),o=e("app/libs/CollectionVideoDropDownDataFeed"),u=e("app/libs/CollectionsAddDataFeed"),a=e("text!app/views/practice-mapping.html"),f=e("text!app/views/collection-add-video-dropdown.html"),l=e("text!app/views/collection-add-video-carousel.html"),c=t.extend({constructor:function(e){return this.base(e),this.getPracticeMapping(),this.initSelect2(),this},_initReferences:function(e){this.base();var t=this._references;t.dataFeed=new s,t.videodataFeed=new o,t.addDataFeed=new u,t.$collectionAddWrapper=e,t.$collectionUid=e.find(".js-uid").data("collectionuid"),t.$metaInformationContainer=e.find(".js-meta-dropdown"),t.$collectionContainer=e.find(".js-collection-container"),t.$videoContainer=e.find(".js-video-container"),t.$videoDropDownContainer=e.find(".js-collection-video-dropdown-container"),t.$practiceMappingContainer=e.find(".js-collection-mapping-container"),t.$saveButton=e.find(".collection-save-button"),t.$resetButton=e.find(".collection-reset-button"),t.$collectionTitle=e.find(".js-collection-title"),t.$dropDown=e.find(".js-video-criteria"),t.$partnerList=e.find(".js-partnerlist"),t.$countryList=e.find(".js-countrylist"),t.$stateList=e.find(".js-statelist"),t.$langList=e.find(".js-langlist")},_initEvents:function(){this.base();var e=this._boundFunctions,t=this._references;e.onDataProcessed=this._onDataProcessed.bind(this),t.dataFeed.on("dataProcessed",e.onDataProcessed),e.onVideoDataProcessed=this._onVideoDataProcessed.bind(this),t.videodataFeed.on("dataProcessed",e.onVideoDataProcessed),e.onSaveCollectionClick=this._onSaveCollectionClick.bind(this),t.$saveButton.on("click",e.onSaveCollectionClick),e.onResetCollectionClick=this._onResetCollectionClick.bind(this),t.$resetButton.on("click",e.onResetCollectionClick),this._boundFunctions.onDropDownChosen=this._onDropDownChosen.bind(this),t.$dropDown.on("change",this._boundFunctions.onDropDownChosen),this.selectVideoSelectionCriteria()},selectVideoSelectionCriteria:function(){var e=this._references;e.$collectionUid&&(e.$partnerList.val(e.$metaInformationContainer.data("collectionpartner")).change(),e.$countryList.val(e.$metaInformationContainer.data("collectioncountry")).change(),e.$stateList.val(e.$metaInformationContainer.data("collectionstate")).change(),e.$langList.val(e.$metaInformationContainer.data("collectionlanguage")).change())},selectCollectionMapping:function(){var e=this._references;e.$collectionUid&&e.$practiceMappingContainer.data("category").trim()&&(e.$catList.val(e.$practiceMappingContainer.data("category").trim()).change(),e.$subCatList.val(e.$practiceMappingContainer.data("subcategory").trim()).change(),e.$topicList.val(e.$practiceMappingContainer.data("topic").trim()).change(),e.$subTopicList.val(e.$practiceMappingContainer.data("subtopic").trim()),e.$subjectList.val(e.$practiceMappingContainer.data("subject").trim()))},getPracticeMapping:function(){var e=this._references.dataFeed.getPracticeMapping();if(e==0)return!1;this._references.mapping=e,this._renderPracticeMapping(e),this.selectCollectionMapping(),this.initSelect2()},getCollectionVideoDropDown:function(){var e=this._references,t=e.videodataFeed.getCollectionVideoDropDown();if(t==0)return!1;e.videoArray=t,this._renderVideoCollectionDropDown(t),e.$partnerList.prop("disabled",!0),e.$countryList.prop("disabled",!0),e.$stateList.prop("disabled",!0),e.$langList.prop("disabled",!0);if(e.$collectionUid){var n=e.$videoDropDownContainer.data("videos"),r;for(r in n)e.$vidList.val(n[r]).change()}},_onDataProcessed:function(){this.getPracticeMapping()},_onVideoDataProcessed:function(){this.getCollectionVideoDropDown()},afterCollectionAdd:function(){var e=this._references,t="/videos/library/"+e.$partnerList.find("option:selected").text()+"/"+e.$countryList.val()+"/"+e.$stateList.val()+"/"+e.$langList.val()+"/"+e.$collectionTitle.val();window.location.assign(t)},_onSaveCollectionClick:function(e){e.preventDefault();var t=this._references,n=t.$videoContainer.sortable("toArray");if(n.length<2){t.$videoContainer.notify("Collection Should Have Atleast 2 Videos",{position:"bottom"});return}t.$collectionUid&&(t.addDataFeed.addInputParam("uid",!1,t.$collectionUid),t.addDataFeed.setInputParam("uid",t.$collectionUid,!0)),t.addDataFeed.addInputParam("title",!1,t.$collectionTitle.val()),t.addDataFeed.addInputParam("partner",!1,t.$partnerList.val()),t.addDataFeed.addInputParam("language",!1,t.$langList.val()),t.addDataFeed.addInputParam("country",!1,t.$countryList.val()),t.addDataFeed.addInputParam("state",!1,t.$stateList.val()),t.addDataFeed.addInputParam("videos",!1,n),t.addDataFeed.addInputParam("category",!1,t.$catList.val()),t.addDataFeed.addInputParam("subcategory",!1,t.$subCatList.val()),t.addDataFeed.addInputParam("topic",!1,t.$topicList.val()),t.addDataFeed.addInputParam("subtopic",!1,t.$subTopicList.val()),t.addDataFeed.addInputParam("subject",!1,t.$subjectList.val()),t.addDataFeed.setInputParam("title",t.$collectionTitle.val(),!0),t.addDataFeed.setInputParam("partner",t.$partnerList.val(),!0),t.addDataFeed.setInputParam("language",t.$langList.val(),!0),t.addDataFeed.setInputParam("country",t.$countryList.val(),!0),t.addDataFeed.setInputParam("state",t.$stateList.val(),!0),t.addDataFeed.setInputParam("videos",n,!0),t.addDataFeed.setInputParam("category",t.$catList.val(),!0),t.addDataFeed.setInputParam("subcategory",t.$subCatList.val(),!0),t.addDataFeed.setInputParam("topic",t.$topicList.val(),!0),t.addDataFeed.setInputParam("subtopic",t.$subTopicList.val(),!0),t.addDataFeed.setInputParam("subject",t.$subjectList.val(),!0),t.$collectionUid?t.addDataFeed._fetch(null,this.afterCollectionAdd.bind(this),"PUT"):t.addDataFeed._fetch(null,this.afterCollectionAdd.bind(this),"POST")},_onResetCollectionClick:function(e){e.preventDefault();var t=this._references;t.$videoContainer.empty(),t.$videoDropDownContainer.empty(),t.$partnerList.prop("disabled",!1),t.$countryList.prop("disabled",!1),t.$stateList.prop("disabled",!1),t.$langList.prop("disabled",!1),t.$partnerList.val("").change(),t.$countryList.val("").change(),t.$stateList.val("").change(),t.$langList.val("").change(),t.$catList.val(""),t.$subCatList.find("option:not(:first)").remove(),t.$topicList.find("option:not(:first)").remove(),t.$subTopicList.find("option:not(:first)").remove(),t.$subjectList.find("option:not(:first)").remove(),t.$collectionContainer.hide(),t.$videoDropDownContainer.data("videos",[]),this.initSelect2()},_renderPracticeMapping:function(e){var t=this._references,i=[],s;for(s in e)i.push(s);var o={category:i.sort()},u=n.render(a,o);this._references.$practiceMappingContainer.html(u),this._references.category=i.sort(),t.$catList=r(".js-catlist"),t.$subCatList=r(".js-subcatlist"),t.$topicList=r(".js-topiclist"),t.$subTopicList=r(".js-subtopiclist"),t.$subjectList=r(".js-subjectlist"),this._boundFunctions.onCategoryChosen=this._onCategoryChosen.bind(this),t.$catList.on("change",this._boundFunctions.onCategoryChosen),this._boundFunctions.onsubCategoryChosen=this._onsubCategoryChosen.bind(this),t.$subCatList.on("change",this._boundFunctions.onsubCategoryChosen),this._boundFunctions.onTopicChosen=this._onTopicChosen.bind(this),t.$topicList.on("change",this._boundFunctions.onTopicChosen)},_renderVideoCollectionDropDown:function(e){var t=this._references,i={video:e},s=n.render(f,i);t.$videoDropDownContainer.html(s),t.$vidList=r(".js-vidlist"),this._boundFunctions.onVideoChosen=this._onVideoChosen.bind(this),t.$vidList.on("change",this._boundFunctions.onVideoChosen),this.initSelect2()},initSelect2:function(){var e=this._references;try{$(".chosen-select").select2({no_results_text:"No results match",width:"90%"})}catch(t){$("select.chosen-select").select2({no_results_text:"No results match",width:"90%"})}},_onDropDownChosen:function(){var e=this._references;e.$partnerList.val()!=""&&e.$countryList.val()!=""&&e.$stateList.val()!=""&&e.$langList.val()!=""&&(e.videodataFeed.addInputParam("limit",!1,0),e.videodataFeed.setInputParam("limit",0,!1),e.videodataFeed.addInputParam("country",!1,e.$countryList.val()),e.videodataFeed.setInputParam("country",e.$countryList.val(),!1),e.videodataFeed.addInputParam("state",!1,e.$stateList.val()),e.videodataFeed.setInputParam("state",e.$stateList.val(),!1),e.videodataFeed.addInputParam("partner",!1,e.$partnerList.val()),e.videodataFeed.setInputParam("partner",e.$partnerList.val(),!1),e.videodataFeed.addInputParam("language",!1,e.$langList.val()),e.videodataFeed.setInputParam("language",e.$langList.val(),!1),this.getCollectionVideoDropDown())},_onCategoryChosen:function(){var e=this._references,t=e.$catList.val(),n=this._references.mapping;e.$subCatList.find("option:not(:first)").remove(),e.$topicList.find("option:not(:first)").remove(),e.$subTopicList.find("option:not(:first)").remove(),e.$subjectList.find("option:not(:first)").remove();var r=n[t],i;for(i in r)i!="subject"&&e.$subCatList.append(new Option(i,i));var s=n[t].subject.sort(),o;for(o in s)e.$subjectList.append(new Option(s[o],s[o]));this.initSelect2()},_onsubCategoryChosen:function(){var e=this._references,t=e.$catList.val(),n=e.$subCatList.val(),r=e.mapping;e.$topicList.find("option:not(:first)").remove(),e.$subTopicList.find("option:not(:first)").remove();var i=[],s;for(s in r[t][n])i.push(s),e.$topicList.append(new Option(s,s));this.initSelect2()},_onTopicChosen:function(){var e=this._references,t=e.$catList.val(),n=e.$subCatList.val(),r=e.$topicList.val(),i=e.mapping,s=i[t][n][r];s=s.sort(),e.$subTopicList.find("option:not(:first)").remove();var o;for(o in s)e.$subTopicList.append(new Option(s[o],s[o]));this.initSelect2()},_onVideoChosen:function(){var e=this._references,t=e.$vidList.val(),r=this._references.videoArray,i,s;for(var o=0;o<r.length;o++)r[o].uid==t&&(s=r[o].title,i=r[o].thumbnailURL16by9);var u={title:s,uid:t,thumbnailURL:i};e.$collectionContainer.show(),n.renderAppend(e.$videoContainer,l,u);var a=this;$(".sortable li .video-remove").click(function(){e.$vidList.append(new Option($(this).parent().attr("data-title"),$(this).parent().attr("id").trim())),$(this).parent().remove(),a.initSelect2()}),e.$vidList.find("option[value="+t+"]").remove(),e.$vidList.select2("val","")},setInputParam:function(e,t,n){this._references.dataFeed.setInputParam(e,t,n)},_onInputParamChanged:function(){this.getCollectionDropDown()},destroy:function(){this.base()}});return c});
+/**
+ * CollectionAddEditController Class File
+ *
+ * @author aadish
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+    var Controller = require('framework/controllers/Controller');
+    var viewRenderer = require('framework/ViewRenderer');
+    var jQuery = require('jquery');
+    var Select2 = require('libs/external/select2');
+    
+    var PracticeMappingDataFeed = require('app/libs/PracticeMappingDataFeed');
+    var CollectionVideoDropDownDataFeed = require('app/libs/CollectionVideoDropDownDataFeed');
+    var CollectionAddDataFeed = require('app/libs/CollectionsAddDataFeed');
+    
+    var practiceMappingTemplate = require('text!app/views/practice-mapping.html');
+    var collectionVideoDropDownTemplate = require('text!app/views/collection-add-video-dropdown.html');
+    var carouselTemplate = require('text!app/views/collection-add-video-carousel.html');
+    
+    var CollectionDropDownController = Controller.extend({
+
+        /**
+         * Controller constructor
+         * @return {Controller} this
+         */
+        constructor: function($referenceBase) {
+            this.base($referenceBase);
+            this.getPracticeMapping();
+            this.initSelect2();
+            return this;
+        },
+
+        _initReferences: function($referenceBase) {
+            this.base();
+            var references = this._references;
+            references.dataFeed = new PracticeMappingDataFeed();
+            references.videodataFeed = new CollectionVideoDropDownDataFeed();
+            references.addDataFeed = new CollectionAddDataFeed();
+            references.$collectionAddWrapper = $referenceBase;
+            references.$collectionUid = $referenceBase.find('.js-uid').data('collectionuid');
+            references.$metaInformationContainer = $referenceBase.find('.js-meta-dropdown');
+            references.$collectionContainer = $referenceBase.find('.js-collection-container');
+            references.$videoContainer = $referenceBase.find('.js-video-container');
+            references.$videoDropDownContainer = $referenceBase.find('.js-collection-video-dropdown-container');
+            references.$practiceMappingContainer = $referenceBase.find('.js-collection-mapping-container');
+            references.$saveButton = $referenceBase.find('.collection-save-button');
+            references.$resetButton = $referenceBase.find('.collection-reset-button');
+            references.$collectionTitle = $referenceBase.find('.js-collection-title');
+            references.$dropDown = $referenceBase.find('.js-video-criteria');
+            references.$partnerList = $referenceBase.find('.js-partnerlist');
+            references.$countryList = $referenceBase.find('.js-countrylist');
+            references.$stateList = $referenceBase.find('.js-statelist');
+            references.$langList = $referenceBase.find('.js-langlist');
+        },
+
+        _initEvents: function() {
+            this.base();
+            var boundFunctions = this._boundFunctions;
+            var references = this._references;
+            
+            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
+            
+            boundFunctions.onVideoDataProcessed = this._onVideoDataProcessed.bind(this);
+            references.videodataFeed.on('dataProcessed', boundFunctions.onVideoDataProcessed);
+            
+            boundFunctions.onSaveCollectionClick = this._onSaveCollectionClick.bind(this);
+            references.$saveButton.on("click", boundFunctions.onSaveCollectionClick);
+            
+            boundFunctions.onResetCollectionClick = this._onResetCollectionClick.bind(this);
+            references.$resetButton.on("click", boundFunctions.onResetCollectionClick);
+            
+            this._boundFunctions.onDropDownChosen = this._onDropDownChosen.bind(this);
+            references.$dropDown.on('change', this._boundFunctions.onDropDownChosen);
+            
+            this.selectVideoSelectionCriteria();
+            
+        },
+        
+        selectVideoSelectionCriteria: function(){
+            var references = this._references;
+            if (references.$collectionUid){
+                references.$partnerList.val(references.$metaInformationContainer.data('collectionpartner')).change();
+                references.$countryList.val(references.$metaInformationContainer.data('collectioncountry')).change();
+                references.$stateList.val(references.$metaInformationContainer.data('collectionstate')).change();
+                references.$langList.val(references.$metaInformationContainer.data('collectionlanguage')).change();
+            }
+        },
+        
+        selectCollectionMapping: function(){
+            var references = this._references;
+            if (references.$collectionUid && references.$practiceMappingContainer.data('category').trim()){
+                references.$catList.val(references.$practiceMappingContainer.data('category').trim()).change();
+                references.$subCatList.val(references.$practiceMappingContainer.data('subcategory').trim()).change();
+                references.$topicList.val(references.$practiceMappingContainer.data('topic').trim()).change();
+                references.$subTopicList.val(references.$practiceMappingContainer.data('subtopic').trim());
+                //references.$subjectList.val(references.$practiceMappingContainer.data('subject').trim());
+            }
+        },
+        
+        getPracticeMapping: function() {
+            var practicemappingData = this._references.dataFeed.getPracticeMapping();
+            if (practicemappingData == false) {
+                return false;
+            }
+            this._references.mapping = practicemappingData;
+            this._renderPracticeMapping(practicemappingData);
+            
+            this.selectCollectionMapping();
+            this.initSelect2();
+            
+            
+        },
+
+        getCollectionVideoDropDown: function() {
+            var references = this._references
+            var collectionvideodropdownData = references.videodataFeed.getCollectionVideoDropDown();
+            if (collectionvideodropdownData == false) {
+                return false;
+            }
+            references.videoArray = collectionvideodropdownData;
+            this._renderVideoCollectionDropDown(collectionvideodropdownData);
+            
+            references.$partnerList.prop("disabled", true);
+            references.$countryList.prop("disabled", true);
+            references.$stateList.prop("disabled", true);
+            references.$langList.prop("disabled", true);
+            
+            if (references.$collectionUid){
+            var videos_collection = references.$videoDropDownContainer.data('videos');
+            var a;
+            for (a in videos_collection){
+                references.$vidList.val(videos_collection[a]).change();
+            }
+            
+            }
+            
+        },
+        _onDataProcessed: function() {
+            this.getPracticeMapping();
+        },
+        
+        _onVideoDataProcessed: function() {
+        	this.getCollectionVideoDropDown();
+        },
+
+        afterCollectionAdd: function(){
+            var references = this._references;
+            var url = "/videos/library" +"/"+ references.$partnerList.find("option:selected").text() +"/"+ references.$countryList.val() +"/"+ references.$stateList.val() +"/"+ references.$langList.val() +"/"+ references.$collectionTitle.val()
+            window.location.assign(url)
+        },
+        
+        _onSaveCollectionClick: function(e) {
+        	e.preventDefault();
+        	var references = this._references;
+        	var order = references.$videoContainer.sortable('toArray');
+        	// Atleast 2 Videos in a Collection
+        	if (order.length < 2){
+        	    references.$videoContainer.notify("Collection Should Have Atleast 2 Videos", {position:"bottom"});
+        	    return
+        	}
+        	if (references.$collectionUid){
+        	    references.addDataFeed.addInputParam('uid', false, references.$collectionUid);
+        	    references.addDataFeed.setInputParam('uid', references.$collectionUid, true);
+        	}
+        	references.addDataFeed.addInputParam('title', false, references.$collectionTitle.val());
+            references.addDataFeed.addInputParam('partner', false, references.$partnerList.val());
+            references.addDataFeed.addInputParam('language', false, references.$langList.val());
+            references.addDataFeed.addInputParam('country', false, references.$countryList.val());
+            references.addDataFeed.addInputParam('state', false, references.$stateList.val());
+            references.addDataFeed.addInputParam('videos', false, order);
+            references.addDataFeed.addInputParam('category', false, references.$catList.val());
+            references.addDataFeed.addInputParam('subcategory', false, references.$subCatList.val());
+            references.addDataFeed.addInputParam('videopractice', false, references.$topicList.val());
+            references.addDataFeed.addInputParam('tags', false, references.$subTopicList.val());
+            //references.addDataFeed.addInputParam('subject', false, references.$subjectList.val());
+            
+            
+            references.addDataFeed.setInputParam('title', references.$collectionTitle.val(), true);
+            references.addDataFeed.setInputParam('partner', references.$partnerList.val(), true);
+            references.addDataFeed.setInputParam('language', references.$langList.val(), true);
+            references.addDataFeed.setInputParam('country', references.$countryList.val(), true);
+            references.addDataFeed.setInputParam('state', references.$stateList.val(), true);
+            references.addDataFeed.setInputParam('videos', order, true);
+            references.addDataFeed.setInputParam('category', references.$catList.val(), true);
+            references.addDataFeed.setInputParam('subcategory', references.$subCatList.val(), true);
+            references.addDataFeed.setInputParam('videopractice', references.$topicList.val(), true);
+            references.addDataFeed.setInputParam('tags', references.$subTopicList.val(), true);
+            //references.addDataFeed.setInputParam('subject', references.$subjectList.val(), true);
+            
+            if (references.$collectionUid){
+                references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'PUT');
+            }
+            else{
+                references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'POST');
+            }
+            
+        	
+        },
+        
+        _onResetCollectionClick: function(e) {
+            e.preventDefault();
+            var references = this._references;
+            
+            references.$videoContainer.empty();
+            references.$videoDropDownContainer.empty();
+            references.$partnerList.prop("disabled", false);
+            references.$countryList.prop("disabled", false);
+            references.$stateList.prop("disabled", false);
+            references.$langList.prop("disabled", false);
+            references.$partnerList.val("").change();
+            references.$countryList.val("").change();
+            references.$stateList.val("").change();
+            references.$langList.val("").change();
+            references.$catList.val("");
+            references.$subCatList.find('option:not(:first)').remove();
+            references.$topicList.find('option:not(:first)').remove();
+            references.$subTopicList.find('option:not(:first)').remove();
+            //references.$subjectList.find('option:not(:first)').remove();
+            references.$collectionContainer.hide();
+            references.$videoDropDownContainer.data('videos', []);
+            this.initSelect2();
+            
+        },
+        
+        _renderPracticeMapping: function(practicemappingData) {
+            var references = this._references;
+            var category = [];
+            var arr;
+            var tags = []
+            for (let tag in practicemappingData['tags']){
+                tags.push(tag)
+            }
+
+            for (arr in practicemappingData){
+                if (arr !== 'tags')
+                    category.push(arr);
+            }
+            var renderData = {
+                    category: category.sort(),
+                    tags: tags
+                };
+            var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
+            this._references.$practiceMappingContainer.html(renderedPracticeMapping);
+            this._references.category = category.sort();
+            
+            references.$catList = jQuery('.js-catlist');
+            references.$subCatList = jQuery('.js-subcatlist');
+            references.$topicList = jQuery('.js-topiclist');
+            references.$subTopicList = jQuery('.js-subtopiclist');
+            //references.$subjectList = jQuery('.js-subjectlist');
+            
+            this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
+            references.$catList.on('change', this._boundFunctions.onCategoryChosen);
+            
+            this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
+            references.$subCatList.on('change', this._boundFunctions.onsubCategoryChosen);
+            
+            // this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
+            // references.$topicList.on('change', this._boundFunctions.onTopicChosen);
+            
+            
+        },
+        
+        _renderVideoCollectionDropDown: function(collectionvideodropdownData) {
+            var references = this._references;
+            
+            var renderData = {
+                     video: collectionvideodropdownData
+            };
+            
+            var renderedCollectionVideoDropDown = viewRenderer.render(collectionVideoDropDownTemplate, renderData);
+            
+            references.$videoDropDownContainer.html(renderedCollectionVideoDropDown);
+            
+            references.$vidList = jQuery('.js-vidlist')
+            
+            this._boundFunctions.onVideoChosen = this._onVideoChosen.bind(this);
+            references.$vidList.on('change', this._boundFunctions.onVideoChosen);
+            
+            this.initSelect2();
+        },
+
+        initSelect2: function(){
+        	var references = this._references;
+        	try{
+        	    $(".chosen-select").select2({no_results_text: "No results match", width: "90%"});
+        	   }
+        	catch(err){
+        	    $("select.chosen-select").select2({no_results_text: "No results match", width: "90%"});
+        	}
+            
+        },
+        
+        _onDropDownChosen: function(){
+        	var references = this._references;
+        	if( references.$partnerList.val()!="" && references.$countryList.val()!="" && references.$stateList.val()!="" && references.$langList.val()!=""){
+        		references.videodataFeed.addInputParam('limit', false, 0);
+        		references.videodataFeed.setInputParam('limit', 0, false);
+                references.videodataFeed.addInputParam('country', false, references.$countryList.val());
+                references.videodataFeed.setInputParam('country', references.$countryList.val(), false);
+        		references.videodataFeed.addInputParam('state', false, references.$stateList.val());
+        		references.videodataFeed.setInputParam('state', references.$stateList.val(), false);
+        		references.videodataFeed.addInputParam('partner', false, references.$partnerList.val());
+        		references.videodataFeed.setInputParam('partner', references.$partnerList.val(), false);
+        		references.videodataFeed.addInputParam('language', false, references.$langList.val());
+        		references.videodataFeed.setInputParam('language', references.$langList.val(), false);
+				this.getCollectionVideoDropDown();
+        	}
+        	else{
+        	//TODO: What happens if value becomes default again
+        	}
+        },
+        
+        _onCategoryChosen: function(){
+            var references = this._references;
+            var category_name = references.$catList.val();
+            
+            var mapping_data = this._references.mapping;
+            
+            references.$subCatList.find('option:not(:first)').remove();
+            references.$topicList.find('option:not(:first)').remove();
+            //references.$subTopicList.find('option:not(:first)').remove();
+            // references.$subjectList.find('option:not(:first)').remove();
+            
+            var subcategory = mapping_data[category_name]
+            var arr;
+            for (arr in subcategory){
+                if (arr != 'subject'){
+                    references.$subCatList.append(new Option(arr,arr));
+                }
+            }
+            
+            // var subject = (mapping_data[category_name]).sort();
+            // var i;
+            // for (i in subject){
+            //     references.$subjectList.append(new Option(subject[i],subject[i]));
+            // }
+            
+            this.initSelect2();
+
+        },
+        
+        _onsubCategoryChosen: function(){
+            var references = this._references;
+            
+            var category_name = references.$catList.val();
+            var subcategory_name = references.$subCatList.val();
+            var mapping_data = references.mapping;
+            
+            references.$topicList.find('option:not(:first)').remove();
+            //references.$subTopicList.find('option:not(:first)').remove();
+            
+            var topic=[];
+            var arr;
+            for (arr in mapping_data[category_name][subcategory_name]){
+                topic.push(arr);
+                references.$topicList.append(new Option(arr,arr));
+            }
+            this.initSelect2();
+        },
+        
+        _onTopicChosen: function(){
+            // var references = this._references;
+            
+            // var category_name = references.$catList.val();
+            // var subcategory_name = references.$subCatList.val();
+            // var topic_name = references.$topicList.val();
+            // var mapping_data = references.mapping;
+            
+            // var subtopic=mapping_data[category_name][subcategory_name][topic_name];
+            // //subtopic=subtopic.sort()
+            
+            // references.$subTopicList.find('option:not(:first)').remove();
+            
+            // var i;
+            // for (i in subtopic){
+            //     references.$subTopicList.append(new Option(i,i));
+            // }
+            //this.initSelect2();
+        },
+        
+        _onVideoChosen: function(){
+            var references = this._references;
+            var vid = references.$vidList.val();
+            var vidarray = this._references.videoArray;
+            var image;
+            var title;
+            for (var i=0; i<vidarray.length; i++)
+            {
+                if (vidarray[i].uid == vid){
+                    title = vidarray[i].title;
+                    image = vidarray[i].thumbnailURL16by9;
+                }
+            }
+        	
+            var renderData = {
+                    title: title,
+                    uid:vid,
+                    thumbnailURL:image,
+                };
+            references.$collectionContainer.show();
+        	viewRenderer.renderAppend(references.$videoContainer, carouselTemplate, renderData);
+        	var that = this;
+            $('.sortable li .video-remove').click(function(){
+                references.$vidList.append(new Option($(this).parent().attr('data-title'), $(this).parent().attr('id').trim()));
+                $(this).parent().remove();
+                that.initSelect2();
+            });
+            
+            // Remove from Drop-Down
+        	references.$vidList.find('option[value=' + vid + ']').remove();
+        	references.$vidList.select2("val", "");
+        	
+        	
+        },
+
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            this._references.dataFeed.setInputParam(key, value, disableCacheClearing);
+        },
+
+        _onInputParamChanged: function() {
+            this.getCollectionDropDown();
+        },
+        /**
+         * Controller destructor
+         * @return {void}
+         */
+        destroy: function() {
+            this.base();
+
+            // TODO: clean up
+        }
+    });
+
+    return CollectionDropDownController;
+});

@@ -1,1 +1,82 @@
-define(["require","app/libs/DigitalGreenDataFeed","app/libs/DataModel"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=e("app/libs/DataModel"),r=t.extend({constructor:function(e){this.base("api/featuredCollection/");var t=this._dataModel.addSubModel("featuredCollection",!0);this.addInputParamCacheClear("language__name",t)},fetch:function(e){this.setInputParam("language__name",e,!0),this.base()},_processData:function(e){this.base(e);var t=this._dataModel,n=t.get("featuredCollection");return n.set("featuredCollectionObj",e.featured_collection),e.featured_collection},setInputParam:function(e,t,n){var r=this.base(e,t);return r&&!n&&this.clearFeaturedCollectionCache(),r},clearFeaturedCollectionCache:function(){this._dataModel.get("featuredCollection").clear()},getFeaturedCollection:function(){var e=this.getInputParam("language__name"),t=this._dataModel.get("featuredCollection"),n=t.get("featuredCollectionObj");return n?n:(this.fetch(e),!1)}});return r});
+/**
+ * FeaturedCollectionViewController Class File
+ *
+ * @author aadish
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+    var DataModel = require('app/libs/DataModel');
+    
+    var FeaturedCollectionDataFeed = DigitalGreenDataFeed.extend({
+
+        /*
+         * Input params:
+         * language {string}
+         * 
+         * Output params: featuredCollection {FeaturedCollection}
+         * 
+         */
+
+        constructor: function($language) {
+            this.base('api/featuredCollection/');
+
+            // prepare data model
+            var featuredCollectionsSubModel = this._dataModel.addSubModel('featuredCollection', true);
+            this.addInputParamCacheClear('language__name',
+            		featuredCollectionsSubModel);
+        },
+
+        fetch: function(language) {
+            this.setInputParam('language__name', language, true);
+            
+            // perform the fetch
+            this.base();
+        },
+
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            
+            // local references
+            var dataModel = this._dataModel;
+            var featuredCollectionModel = dataModel.get('featuredCollection');
+            
+            featuredCollectionModel.set('featuredCollectionObj', unprocessedData.featured_collection);
+            return unprocessedData.featured_collection;
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            var paramChanged = this.base(key, value);
+            if (paramChanged && !disableCacheClearing) {
+                this.clearFeaturedCollectionCache();
+            }
+
+            return paramChanged;
+        },
+
+        clearFeaturedCollectionCache: function() {
+            this._dataModel.get('featuredCollection').clear();
+        },
+
+        getFeaturedCollection: function() {
+            var language = this.getInputParam('language__name');
+            var featuredCollectionModel = this._dataModel.get('featuredCollection');
+            var featuredCollection = featuredCollectionModel.get('featuredCollectionObj');
+
+            if (!featuredCollection) {
+                this.fetch(language);
+                return false;
+            }
+            return featuredCollection;
+        }
+
+    });
+
+    return FeaturedCollectionDataFeed;
+
+});

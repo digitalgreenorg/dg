@@ -1,1 +1,55 @@
-define(["require","libs/NCarousel/transitions/Transition","libs/NCarousel/transitions/BasicTransition","framework/Util"],function(e){var t=e("libs/NCarousel/transitions/Transition"),n=e("libs/NCarousel/transitions/BasicTransition"),r=e("framework/Util"),i=t.extend({_virtualNumberOfSlidesModifier:2,constructor:function(e){this.base(e),this._basicTransition=new n(this._carouselReference)},_prepareSlides:function(){this.base();var e=this._getDOMReference("carouselList"),t=this._getDOMReference("carouselSlides"),n=t.eq(0);e.prepend(n.clone(!0)),e.prepend(n.clone(!0))},triggerTransition:function(e,t){var n=this._getDOMReference("carouselList"),r=n.find("> li"),i=e%this._getNumberOfSlides();r.eq(0).replaceWith(r.eq(1).clone(!0)),this._changeSlide(0);var s=r.eq(i+2).clone(!0);r.eq(1).replaceWith(s),this._basicTransition.triggerTransition(1,t)}});return i});
+define(function(require) {
+    'use strict';
+
+    var Transition = require('libs/NCarousel/transitions/Transition');
+    var BasicTransition = require('libs/NCarousel/transitions/BasicTransition');
+    var Util = require('framework/Util');
+
+    var SlideTransition = Transition.extend({
+
+        _virtualNumberOfSlidesModifier: 2,
+
+        constructor: function(carousel) {
+            this.base(carousel);
+
+            this._basicTransition = new BasicTransition(this._carouselReference);
+        },
+
+        _prepareSlides: function() {
+
+            this.base();
+
+            var $carouselList = this._getDOMReference('carouselList');
+            var $carouselSlides = this._getDOMReference('carouselSlides');
+            var $firstSlide = $carouselSlides.eq(0);
+
+            $carouselList.prepend($firstSlide.clone(true));
+            $carouselList.prepend($firstSlide.clone(true));
+
+        },
+
+        triggerTransition: function(newSlideNumber, options) {
+
+            var $carouselList = this._getDOMReference('carouselList');
+            var $carouselSlides = $carouselList.find('> li');
+
+            var slideNumber = newSlideNumber % (this._getNumberOfSlides());
+
+            // copy slide 1 to slot 0
+            $carouselSlides.eq(0).replaceWith($carouselSlides.eq(1).clone(true));
+
+            // jump to slot 0 to prepare for transition
+            this._changeSlide(0);
+
+            // clone desired slide to slot 1
+            var $clone = $carouselSlides.eq(slideNumber + 2).clone(true);
+            $carouselSlides.eq(1).replaceWith($clone);
+
+            // do transition
+            this._basicTransition.triggerTransition(1, options);
+            
+        }
+    });
+
+    return SlideTransition;
+});

@@ -1,1 +1,58 @@
-define(["require","app/libs/DigitalGreenDataFeed","app/libs/DataModel"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=e("app/libs/DataModel"),r=t.extend({constructor:function(e){this.base("api/getblock/");var t=this._dataModel.addSubModel("block",!0)},fetch:function(e){this.base()},_processData:function(e){this.base(e);var t=this._dataModel,n=t.get("block");return n.set("blockObj",e.block),e.block},setInputParam:function(e,t,n){var r=this.base(e,t);return r&&!n&&this.clearblockCache(),r},clearblockCache:function(){this._dataModel.get("block").clear()},getBlock:function(){var e=this._dataModel.get("block"),t=e.get("blockObj");return t?t:(this.fetch(),!1)}});return r});
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+    var DataModel = require('app/libs/DataModel');
+    
+    var BlockDataFeed = DigitalGreenDataFeed.extend({
+
+        constructor: function($language) {
+            this.base('api/getblock/');
+
+            // prepare data model
+            var blockSubModel = this._dataModel.addSubModel('block', true);
+        },
+
+        fetch: function(language) {
+            this.base();
+        },
+
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            
+            var dataModel = this._dataModel;
+            var blockModel = dataModel.get('block');
+            
+            blockModel.set('blockObj', unprocessedData.block);
+            return unprocessedData.block;
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            var paramChanged = this.base(key, value);
+            if (paramChanged && !disableCacheClearing) {
+                this.clearblockCache();
+            }
+
+            return paramChanged;
+        },
+
+        clearblockCache: function() {
+            this._dataModel.get('block').clear();
+        },
+
+        getBlock: function() {
+            var blockModel = this._dataModel.get('block');
+            var block = blockModel.get('blockObj');
+
+            if (!block) {
+                this.fetch();
+                return false;
+            }
+            return block;
+        }
+
+    });
+
+    return BlockDataFeed;
+
+});

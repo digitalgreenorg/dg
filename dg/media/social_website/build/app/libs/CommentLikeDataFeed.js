@@ -1,1 +1,45 @@
-define(["require","app/libs/DigitalGreenDataFeed"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=t.extend({constructor:function(){this.base("api/commentLike.php"),this.addInputParam("commentUID",!0),this.addInputParam("userID",!0),this.addInputParam("liked",!0)},fetch:function(e,t,n,r){this.setInputParam("commentUID",e),this.setInputParam("userID",t),this.setInputParam("liked",n),this.base(null,r)},_initConfig:function(){this.base(),this._config.fetchDelay=0},_processData:function(e){return this.base(e),e}});return n});
+/**
+ * CommentLikeDataFeed Class File
+ *
+ * @author Ryan DeLuca
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+
+    var CommentLikeDataFeed = DigitalGreenDataFeed.extend({
+
+        constructor: function() {
+            this.base('api/commentLike.php');
+            
+            this.addInputParam('commentUID', true);
+            this.addInputParam('userID', true);
+            this.addInputParam('liked', true);
+        },
+
+        fetch: function(commentUID, userID, liked, customCallback) {
+            this.setInputParam('commentUID', commentUID);
+            this.setInputParam('userID', userID);
+            this.setInputParam('liked', liked);
+
+            this.base(null, customCallback);
+        },
+
+        _initConfig: function() {
+            this.base();
+            this._config.fetchDelay = 0;
+        },
+
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            return unprocessedData;
+        }
+    });
+
+    return CommentLikeDataFeed;
+
+});

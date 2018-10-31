@@ -1,1 +1,24 @@
-define(["libs/NCarousel/transitions/Transition"],function(e){var t=e.extend({constructor:function(e){this.base(e)},_prepareSlides:function(){},triggerTransition:function(e,t){this._changeSlide(e,!0,t)}});return t});
+define([
+    'libs/NCarousel/transitions/Transition'
+],
+function(
+    Transition
+) {
+    "use strict";
+
+    var BasicTransition = Transition.extend({
+        constructor: function(carousel) {
+            this.base(carousel);
+        },
+
+        _prepareSlides: function() {
+
+        },
+
+        triggerTransition: function(slideNumber, options) {
+            this._changeSlide(slideNumber, true, options);
+        }
+    });
+
+    return BasicTransition;
+});

@@ -1,1 +1,63 @@
-define("controllers/TeamController",["require","controllers/DigitalGreenPageController","jquery"],function(e){var t=e("controllers/DigitalGreenPageController"),n=e("jquery"),r=t.extend({constructor:function(e,t){this.base(e,t);var n=this._references;return this},_initReferences:function(){this.base();var e=this._references;e.$showMoreButton=n(".js-show-more")},_initEvents:function(){this.base();var e=this._references,t=this._boundFunctions;t.onShowMoreButtonClick=this._onShowMoreButtonClick.bind(this),e.$showMoreButton.on("click",t.onShowMoreButtonClick)},_onShowMoreButtonClick:function(e){e.preventDefault();var t=this._references,n=e.currentTarget,r=$(n).parent().children("p.js-intro")[0];$(r).hasClass("line-clamp")?($(r).removeClass("line-clamp"),$(n).text("Show Less")):($(r).addClass("line-clamp"),$(n).text("Show More"))},destroy:function(){this.base()}});return r});
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenPageController = require('controllers/DigitalGreenPageController');
+    // var VrpPaymentViewController = require('app/view-controllers/VrpPaymentViewController');
+    var jQuery = require('jquery');
+//    var dataTables = require('libs/external/jquery.dataTables.min.js');
+
+    var TeamController = DigitalGreenPageController.extend({
+
+        /**
+         * Controller constructor
+         * @return {CollectionsController} this
+         */
+        constructor: function(bootstrapConfig, globalHelpers) {
+            this.base(bootstrapConfig, globalHelpers);
+            var references = this._references;
+
+            return this;
+        },
+
+        _initReferences: function() {
+            this.base();
+            var references = this._references;
+            references.$showMoreButton = jQuery('.js-show-more');
+            
+        },
+
+        _initEvents: function() {
+            this.base();
+            var references = this._references;
+            var boundFunctions = this._boundFunctions;
+
+            boundFunctions.onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
+            references.$showMoreButton.on('click', boundFunctions.onShowMoreButtonClick);
+        },
+
+        _onShowMoreButtonClick: function(e){
+            e.preventDefault();
+            var references = this._references;
+            var $currentTarget = e.currentTarget;
+            var $introText = $($currentTarget).parent().children('p.js-intro')[0]
+            if ($($introText).hasClass('line-clamp')){
+                $($introText).removeClass("line-clamp");
+                $($currentTarget).text("Show Less");
+            }
+            else{
+                $($introText).addClass("line-clamp");
+                $($currentTarget).text("Show More");
+            }
+        },
+
+        /**
+         * Controller destructor
+         * @return {void}
+         */
+        destroy: function() {
+            this.base();
+        }
+    });
+
+    return TeamController;
+});

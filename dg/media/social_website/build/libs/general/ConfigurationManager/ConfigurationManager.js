@@ -1,1 +1,70 @@
-define(["libs/external/Base","libs/general/ConfigurationManager/ConfigurationOption"],function(e,t){var n=e.extend({_configurationData:null,constructor:function(){this._configurationData={}},addOption:function(e,n){return this._configurationData[e]=new t(e,n)},importConfiguration:function(e){if(!e||typeof e!="object")return;var t=null;for(t in e)t in this._configurationData&&this._configurationData[t].setValue(e[t])},getValue:function(e){if(!this.isOptionPresent(e))throw"ERROR: ConfigurationManager: unable to find configuration value for "+e;return this._configurationData[e].getValue()},setValue:function(e,t){return this.isOptionPresent(e)?(this._configurationData[e].setValue(t),!0):!1},isOptionPresent:function(e){return e in this._configurationData},isOptionValid:function(e){return this.isOptionPresent(e)&&this._configurationData[e].isValid()},validate:function(){for(var e in this._configurationData)this._configurationData[e].validate()}});return n});
+define(
+[
+    'libs/external/Base',
+    'libs/general/ConfigurationManager/ConfigurationOption'
+],
+function(
+    Base,
+    ConfigurationOption
+) {
+    "use strict";
+
+    var ConfigurationManager = Base.extend({
+    
+        _configurationData: null,
+
+        constructor: function() {
+            this._configurationData = {};
+        },
+
+        addOption: function(name, value) {
+            return this._configurationData[name] = new ConfigurationOption(name, value);
+        },
+        
+        importConfiguration: function(userConfiguration) {
+            if (!userConfiguration || typeof userConfiguration != 'object') {
+                return;
+            }
+
+            var id = null;
+            for (id in userConfiguration) {
+                if (id in this._configurationData) {
+                    this._configurationData[id].setValue(userConfiguration[id]);
+                }
+            }
+        },
+
+        getValue: function(name) {
+            if (!this.isOptionPresent(name)) {
+                throw 'ERROR: ConfigurationManager: unable to find configuration value for ' + name;
+            }
+
+            return this._configurationData[name].getValue();
+        },
+
+        setValue: function(name, value) {
+            if (!this.isOptionPresent(name)) {
+                return false;
+            }
+
+            this._configurationData[name].setValue(value);
+            return true;
+        },
+
+        isOptionPresent: function(name) {
+            return (name in this._configurationData);
+        },
+
+        isOptionValid: function(name) {
+            return this.isOptionPresent(name) && this._configurationData[name].isValid();
+        },
+
+        validate: function() {
+            for (var key in this._configurationData) {
+                this._configurationData[key].validate();
+            }
+        }
+    });
+
+    return ConfigurationManager;
+});

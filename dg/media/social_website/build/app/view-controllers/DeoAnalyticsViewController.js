@@ -1,1 +1,837 @@
-define(["require","framework/controllers/Controller","framework/ViewRenderer","jquery","libs/external/select2","libs/external/highcharts","app/libs/DistrictDataFeed","app/libs/DeoDataFeed","app/libs/DeoAnalyticsDataFeed","text!app/views/district.html","text!app/views/deo.html","text!app/views/deo_name_tab.html"],function(e){var t=e("framework/controllers/Controller"),n=e("framework/ViewRenderer"),r=e("jquery"),i=e("libs/external/select2"),s=e("libs/external/highcharts"),o=e("app/libs/DistrictDataFeed"),u=e("app/libs/DeoDataFeed"),a=e("app/libs/DeoAnalyticsDataFeed"),f=e("text!app/views/district.html"),l=e("text!app/views/deo.html"),c=e("text!app/views/deo_name_tab.html"),h=t.extend({constructor:function(e){return this.base(e),this.initSelect2(),this},_initReferences:function(e){this.base();var t=this._references;t.districtdataFeed=new o,t.deodataFeed=new u,t.analyticsdataFeed=new a,t.$analyticsWrapper=e,t.$districtContainer=e.find(".js-district-container"),t.$deoContainer=e.find(".js-deo-container"),t.$deoTabContainer=e.find(".js-deo-tab-container"),t.$goButton=e.find(".js-go-btn"),t.$dayTab=e.find(".js-daily-tab"),t.$weekTab=e.find(".js-weekly-tab"),t.$monthTab=e.find(".js-monthly-tab"),t.$prevPointer=e.find(".js-prev-pointer"),t.$nextPointer=e.find(".js-next-pointer"),t.$partnerList=e.find(".js-partnerlist")},_initEvents:function(){this.base();var e=this._boundFunctions,t=this._references;e.onDistrictDataProcessed=this._onDistrictDataProcessed.bind(this),t.districtdataFeed.on("dataProcessed",e.onDistrictDataProcessed),e.onDeoDataProcessed=this._onDeoDataProcessed.bind(this),t.deodataFeed.on("dataProcessed",e.onDeoDataProcessed),e.onAnalyticsDataProcessed=this._onAnalyticsDataProcessed.bind(this),t.analyticsdataFeed.on("dataProcessed",e.onAnalyticsDataProcessed),e.onGoBtnClick=this._onGoBtnClick.bind(this),t.$goButton.on("click",e.onGoBtnClick),e.onDayTabClick=this._onDayTabClick.bind(this),t.$dayTab.on("click",e.onDayTabClick),e.onWeekTabClick=this._onWeekTabClick.bind(this),t.$weekTab.on("click",e.onWeekTabClick),e.onMonthTabClick=this._onMonthTabClick.bind(this),t.$monthTab.on("click",e.onMonthTabClick),e.onPrevPointerClick=this._onPrevPointerClick.bind(this),t.$prevPointer.on("click",e.onPrevPointerClick),e.onNextPointerClick=this._onNextPointerClick.bind(this),t.$nextPointer.on("click",e.onNextPointerClick),e.onPartnerChosen=this._onPartnerChosen.bind(this),t.$partnerList.on("change",this._boundFunctions.onPartnerChosen)},setDate:function(e,t){var n=this._references;e==-1?t.setDate(t.getDate()-1):e==1&&t.setDate(t.getDate()+1);var i=t.getDate();n.days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],n.months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];var s=n.days[t.getDay()],o=n.months[t.getMonth()],u=t.getFullYear();i<10&&(i="0"+i),t=s+" "+i+" "+o+" "+u,r("div#dateshow").html(t)},setWeekSingleDate:function(e){var t=e.getDay(),n=new Date(e),r=new Date(e);t==0?(n.setDate(e.getDate()-6),r.setDate(e.getDate())):t==1?(n.setDate(e.getDate()),r.setDate(e.getDate()+6)):t==2?(n.setDate(e.getDate()-1),r.setDate(e.getDate()+5)):t==3?(n.setDate(e.getDate()-2),r.setDate(e.getDate()+4)):t==4?(n.setDate(e.getDate()-3),r.setDate(e.getDate()+3)):t==5?(n.setDate(e.getDate()-4),r.setDate(e.getDate()+2)):t==6&&(r.setDate(e.getDate()+1),n.setDate(e.getDate()-5)),this.setWeekTwoDates(0,n,r)},setWeekTwoDates:function(e,t,n){var r=this._references;e==-1?(t.setDate(t.getDate()-7),n.setDate(n.getDate()-7)):e==1&&(t.setDate(t.getDate()+7),n.setDate(n.getDate()+7));var i=r.months[t.getMonth()],s=r.months[n.getMonth()],o=t.getFullYear(),u=n.getFullYear(),a=t.getDate()+" "+i+" "+o+"-"+n.getDate()+" "+s+" "+o;$("div#dateshow").html(a)},setMonthDate:function(e){var t=this._references,n=t.months[e.getMonth()],r=e.getFullYear();e=n+" "+r,$("div#dateshow").html(e)},getScreenDate:function(e){var t=this._references,n=r("#dateshow").html(),i=n.split(" "),s=i[1],o=i[3],u=t.months.indexOf(i[2]);e==2&&(u+=1),u<10&&(u="0"+u);var a;return e==1?a=new Date(o,u,s):e==2?a=o+"-"+u+"-"+s:e==3&&(a=new Date(o,u,s),a.setDate(a.getDate()+1),o=a.getFullYear(),u=a.getMonth()+1,u<10&&(u="0"+u),s=a.getDate(),a=o+"-"+u+"-"+s),a},getScreenWeekDate:function(e,t){var n=this._references,r=t.split(" "),i=r[0],s=r[2],o=n.months.indexOf(r[1]);e==2&&(o+=1),o<10&&(o="0"+o);var u;return e==1?u=new Date(s,o,i):e==2&&(u=s+"-"+o+"-"+i),u},getMonthFirstDate:function(e){var t=this._references,n=r("#dateshow").html(),i=n.split(" "),s=new Date(i[1],t.months.indexOf(i[0]),"01");if(e==2){var o=s.getMonth()+1;s=s.getFullYear()+"-"+o+"-"+s.getDate()}return s},getMonthLastDate:function(){var e=this.getMonthFirstDate(1),t=new Date(e.getFullYear(),e.getMonth()+1,0),n=t.getMonth()+1,t=t.getFullYear()+"-"+n+"-"+t.getDate();return t},setDay:function(){var e=this._references,t=r("#dateshow").html(),n=t.split(" ");if(n[0]==parseInt(n[0])){var i=t.split("-"),s=this.getScreenWeekDate(1,i[0]);this.setDate(0,s)}else if(r.inArray(n[0],e.months)>=0){var o=this.getMonthFirstDate(1),u=e.days[o.getDay()],a=e.months[o.getMonth()];o=u+" "+o.getDate()+" "+a+" "+o.getFullYear(),$("div#dateshow").html(o)}},setWeek:function(){var e=this._references,t=r("#dateshow").html(),n=t.split(" ");if(r.inArray(n[0],e.days)>=0){var i=this.getScreenDate(1);this.setWeekSingleDate(i)}else if(r.inArray(n[0],e.months)>=0){var s=this.getMonthFirstDate(1);this.setWeekSingleDate(s)}},setMonth:function(){var e=this._references,t=r("#dateshow").html(),n=t.split(" ");if(r.inArray(n[0],e.days)>=0){var i=this.getScreenDate(1);this.setMonthDate(i)}else if(n[0]==parseInt(n[0])){var s=t.split("-"),o=this.getScreenWeekDate(1,s[1]);this.setMonthDate(o)}},getDistrict:function(){var e=this._references.districtdataFeed.getDistrict();if(e==0)return!1;this._renderDistrict(e),this.initSelect2()},getDeo:function(){var e=this._references.deodataFeed.getDeo();if(e==0)return!1;this._renderDeo(e),this.initSelect2()},getAnalytics:function(){var e=this._references.analyticsdataFeed.getAnalytics();if(e==0)return!1;var t=this._references.datelist,n=this._references.s_list,r=this._references.a_list,i=0,s=0;if(e.mode==1){for(var o in e.screenings)n[0]=e.screenings[o],i+=e.screenings[o];for(var u in e.adoptions)r[0]=e.adoptions[u],s+=e.adoptions[u]}if(e.mode==2){for(var o in e.screenings){var a=o.split("-")[2];a=a.replace(/^0+/,"");for(var f=0;f<=6;f++)t[f].split(" ")[0]==a&&(n[f]=e.screenings[o]);i+=e.screenings[o]}for(var u in e.adoptions){var a=u.split("-")[2];a=a.replace(/^0+/,"");for(var f=0;f<=6;f++)t[f].split(" ")[0]==a&&(r[f]=e.adoptions[u]);s+=e.adoptions[u]}}if(e.mode==3){for(var o in e.screenings){var a=o.split("-")[2];a=a.replace(/^0+/,""),n[a-1]=e.screenings[o],i+=e.screenings[o]}for(var u in e.adoptions){var a=u.split("-")[2];a=a.replace(/^0+/,""),r[a-1]=e.adoptions[u],s+=e.adoptions[u]}}var l=i,c=s,h=e.persons;if(e.slag=="NA")var p=e.slag;else var p=e.slag+" days";if(e.alag=="NA")var d=e.alag;else var d=e.alag+" days";$("p#screenings").html(l),$("p#adoptions").html(c),$("p#persons").html(h),$("p#s-lag").html(p),$("p#a-lag").html(d),this.makeChart(t,n,r)},analyzeDeo:function(){var e=this._references,t,n=[],i=[],s=[];if($("#daily").hasClass("active")==1){t=1;var o=this.getScreenDate(2),u=this.getScreenDate(3);n.push(0),i.push(0);var a=this.getScreenDate(1),f=a.getDate(),l=e.months[a.getMonth()];v=f+" "+l,s.push(v)}else if($("#weekly").hasClass("active")==1){t=2;var c=r("#dateshow").html(),h=c.split("-"),o=this.getScreenWeekDate(2,h[0]),u=this.getScreenWeekDate(2,h[1]),p=this.getScreenWeekDate(1,h[0]);for(var d=0;d<=6;d++){n.push(0),i.push(0);var f=p.getDate(),l=e.months[p.getMonth()],v=f+" "+l;s.push(v),p.setDate(p.getDate()+1)}}else if($("#monthly").hasClass("active")==1){var c=r("#dateshow").html(),m=c.split(" "),l=m[0];t=3;var o=this.getMonthFirstDate(2),u=this.getMonthLastDate(),g=u.split("-")[2];for(var d=1;d<=g;d++)s.push(d),i.push(0),n.push(0)}e.analyticsdataFeed.addInputParam("limit",!1,0),e.analyticsdataFeed.setInputParam("limit",0,!1),e.analyticsdataFeed.addInputParam("deo",!1,e.$selectedDeo),e.analyticsdataFeed.setInputParam("deo",e.$selectedDeo,!1),e.analyticsdataFeed.addInputParam("sdate",!1,o),e.analyticsdataFeed.setInputParam("sdate",o,!1),e.analyticsdataFeed.addInputParam("edate",!1,u),e.analyticsdataFeed.setInputParam("edate",u,!1),e.analyticsdataFeed.addInputParam("mode",!1,t),e.analyticsdataFeed.setInputParam("mode",t,!1),e.datelist=s,e.a_list=i,e.s_list=n,this.getAnalytics()},makeChart:function(e,t,n){var r=new Highcharts.Chart({chart:{renderTo:"chartcontainer"},title:{text:"DEO Performance",x:-20},xAxis:{categories:e},yAxis:{title:{text:"Entries made"},plotLines:[{value:0,width:1,color:"#808080"}]},plotOptions:{series:{cursor:"pointer",point:{events:{click:function(){if($("#weekly").hasClass("active")==1){var e=document.getElementById("dateshow").innerHTML,t=e.split("-"),n=t[0].split(" "),r=n[2];curdate=this.category;var i=curdate.split(" ")[0],s=curdate.split(" ")[1],o=getmonthnofromname(s);i<10&&(i="0"+i),o<10&&(o="0"+o);var u=new Date(r,o,i);makeactive(1),setdate(0,u),analyzedeo()}else if($("#monthly").hasClass("active")==1){var e=document.getElementById("dateshow").innerHTML,a=e.split(" "),s=a[0],r=a[1],o=getmonthnofromname(s);o<10&&(o="0"+o);var i=this.category;i<10&&(i="0"+i);var u=new Date(r,o,i);makeactive(1),setdate(0,u),analyzedeo()}}}}}},series:[{name:"Screenings",data:t},{name:"Adoptions",data:n}]})},_onDistrictDataProcessed:function(){this.getDistrict()},_onDeoDataProcessed:function(){this.getDeo()},_onAnalyticsDataProcessed:function(){this.getAnalytics()},_onGoBtnClick:function(e){e.preventDefault();var t=this._references;r("#deolist").addClass("nodisplay"),r("#thegrid").removeClass("hidden"),r("#deobox").removeClass("hidden");var n=[];t.$deoList.find(":selected").each(function(){n.push({deo_id:r(this).val(),deo_name:r(this).text()})}),console.log(n),this._renderDeoTab(n),t.$deoList.val([]),this.initSelect2(),this.analyzeDeo()},_onDayTabClick:function(e){e.preventDefault();var t=this._references;t.$dayTab.addClass("active"),t.$weekTab.removeClass("active"),t.$monthTab.removeClass("active"),this.setDay(),this.analyzeDeo()},_onWeekTabClick:function(e){e.preventDefault();var t=this._references;t.$dayTab.removeClass("active"),t.$weekTab.addClass("active"),t.$monthTab.removeClass("active"),this.setWeek(),this.analyzeDeo()},_onMonthTabClick:function(e){e.preventDefault();var t=this._references;t.$dayTab.removeClass("active"),t.$weekTab.removeClass("active"),t.$monthTab.addClass("active"),this.setMonth(),this.analyzeDeo()},_onNextPointerClick:function(e){e.preventDefault();if($("#daily").hasClass("active")==1)this.setDate(1,this.getScreenDate(1));else if($("#weekly").hasClass("active")==1){var t=r("#dateshow").html(),n=t.split("-"),i=this.getScreenWeekDate(1,n[0]),s=this.getScreenWeekDate(1,n[1]);this.setWeekTwoDates(1,i,s)}else if($("#monthly").hasClass("active")==1){var o=this.getMonthFirstDate(1);o.setMonth(o.getMonth()+1),this.setMonthDate(o)}this.analyzeDeo()},_onPrevPointerClick:function(e){e.preventDefault();if($("#daily").hasClass("active")==1)this.setDate(-1,this.getScreenDate(1));else if($("#weekly").hasClass("active")==1){var t=r("#dateshow").html(),n=t.split("-"),i=this.getScreenWeekDate(1,n[0]),s=this.getScreenWeekDate(1,n[1]);this.setWeekTwoDates(-1,i,s)}else if($("#monthly").hasClass("active")==1){var o=this.getMonthFirstDate(1);o.setMonth(o.getMonth()-1),this.setMonthDate(o)}this.analyzeDeo()},_renderDistrict:function(e){var t=this._references,i={district:e},s=n.render(f,i);this._references.$districtContainer.html(s),t.$districtList=r(".js-districtlist"),this._boundFunctions.onDistrictChosen=this._onDistrictChosen.bind(this),t.$districtList.on("change",this._boundFunctions.onDistrictChosen)},_renderDeo:function(e){var t=this._references,i={deo:e},s=n.render(l,i);this._references.$deoContainer.html(s),t.$deoList=r(".js-deolist")},_renderDeoTab:function(e){var t=this._references,i={deo:e},s=n.render(c,i);t.$deoTabContainer.html(s),t.$deoTabContainer.find("li:first a").addClass("active"),t.$selectedDeo=t.$deoTabContainer.find("li:first a").attr("id");var o=this;t.$deoTabContainer.find("li").click(function(e){t.$deoTabContainer.find("li").each(function(e){r(this).find("a").removeClass("active")}),r(this).find("a").addClass("active"),t.$selectedDeo=r(this).find("a").attr("id"),o.analyzeDeo()})},initSelect2:function(){var e=this._references;try{$(".chosen-select").select2({no_results_text:"No results match",width:"100%",placeholder:"Choose Username"})}catch(t){$("select.chosen-select").select2({no_results_text:"No results match",width:"100%",placeholder:"Choose Username"})}},_onPartnerChosen:function(){var e=this._references;e.$partnerList.val()!=""&&(e.districtdataFeed.addInputParam("limit",!1,0),e.districtdataFeed.setInputParam("limit",0,!1),e.districtdataFeed.addInputParam("partner",!1,e.$partnerList.val()),e.districtdataFeed.setInputParam("partner",e.$partnerList.val(),!1),this.getDistrict())},_onDistrictChosen:function(){var e=this._references;e.$districtList.val()!=""&&(e.deodataFeed.addInputParam("limit",!1,0),e.deodataFeed.setInputParam("limit",0,!1),e.deodataFeed.addInputParam("partner",!1,e.$partnerList.val()),e.deodataFeed.setInputParam("partner",e.$partnerList.val(),!1),e.deodataFeed.addInputParam("district",!1,e.$districtList.val()),e.deodataFeed.setInputParam("district",e.$districtList.val(),!1),this.getDeo())},setInputParam:function(e,t,n){this._references.dataFeed.setInputParam(e,t,n)},_onInputParamChanged:function(){this.getCollectionDropDown()},destroy:function(){this.base()}});return h});
+/**
+ * CollectionAddEditController Class File
+ *
+ * @author aadish
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+    var Controller = require('framework/controllers/Controller');
+    var viewRenderer = require('framework/ViewRenderer');
+    var jQuery = require('jquery');
+    var Select2 = require('libs/external/select2');
+    var HighChart = require('libs/external/highcharts');
+    
+    var DistrictDataFeed = require('app/libs/DistrictDataFeed');
+    var DeoDataFeed = require('app/libs/DeoDataFeed');
+    var AnalyticsDataFeed = require('app/libs/DeoAnalyticsDataFeed');
+    
+    var districtTemplate = require('text!app/views/district.html');
+    var deoTemplate = require('text!app/views/deo.html');
+    var deoTabTemplate = require('text!app/views/deo_name_tab.html');
+    
+    var DeoAnalyticsViewController = Controller.extend({
+
+        /**
+         * Controller constructor
+         * @return {Controller} this
+         */
+        constructor: function($referenceBase) {
+            this.base($referenceBase);
+            this.initSelect2();
+            return this;
+        },
+
+        _initReferences: function($referenceBase) {
+            this.base();
+            var references = this._references;
+            references.districtdataFeed = new DistrictDataFeed();
+            references.deodataFeed = new DeoDataFeed();
+            references.analyticsdataFeed = new AnalyticsDataFeed();
+            references.$analyticsWrapper = $referenceBase;
+            references.$districtContainer = $referenceBase.find('.js-district-container');
+            references.$deoContainer = $referenceBase.find('.js-deo-container');
+            references.$deoTabContainer = $referenceBase.find('.js-deo-tab-container');
+            references.$goButton = $referenceBase.find('.js-go-btn');
+            references.$dayTab = $referenceBase.find('.js-daily-tab');
+            references.$weekTab = $referenceBase.find('.js-weekly-tab');
+            references.$monthTab = $referenceBase.find('.js-monthly-tab');
+            references.$prevPointer = $referenceBase.find('.js-prev-pointer');
+            references.$nextPointer = $referenceBase.find('.js-next-pointer');
+            references.$partnerList = $referenceBase.find('.js-partnerlist');
+        },
+
+        _initEvents: function() {
+            this.base();
+            var boundFunctions = this._boundFunctions;
+            var references = this._references;
+            
+            boundFunctions.onDistrictDataProcessed = this._onDistrictDataProcessed.bind(this);
+            references.districtdataFeed.on('dataProcessed', boundFunctions.onDistrictDataProcessed);
+            
+            boundFunctions.onDeoDataProcessed = this._onDeoDataProcessed.bind(this);
+            references.deodataFeed.on('dataProcessed', boundFunctions.onDeoDataProcessed);
+            
+            boundFunctions.onAnalyticsDataProcessed = this._onAnalyticsDataProcessed.bind(this);
+            references.analyticsdataFeed.on('dataProcessed', boundFunctions.onAnalyticsDataProcessed);
+            
+            boundFunctions.onGoBtnClick = this._onGoBtnClick.bind(this);
+            references.$goButton.on("click", boundFunctions.onGoBtnClick);
+            
+            boundFunctions.onDayTabClick = this._onDayTabClick.bind(this);
+            references.$dayTab.on("click", boundFunctions.onDayTabClick);
+            
+            boundFunctions.onWeekTabClick = this._onWeekTabClick.bind(this);
+            references.$weekTab.on("click", boundFunctions.onWeekTabClick);
+            
+            boundFunctions.onMonthTabClick = this._onMonthTabClick.bind(this);
+            references.$monthTab.on("click", boundFunctions.onMonthTabClick);
+            
+            boundFunctions.onPrevPointerClick = this._onPrevPointerClick.bind(this);
+            references.$prevPointer.on("click", boundFunctions.onPrevPointerClick);
+            
+            boundFunctions.onNextPointerClick = this._onNextPointerClick.bind(this);
+            references.$nextPointer.on("click", boundFunctions.onNextPointerClick);
+            
+            boundFunctions.onPartnerChosen = this._onPartnerChosen.bind(this);
+            references.$partnerList.on('change', this._boundFunctions.onPartnerChosen);
+            
+        },
+        
+        setDate: function(counter, d)
+        {
+            var references = this._references
+            if (counter == -1)
+            {
+                d.setDate(d.getDate() - 1);
+            }
+            else
+            {
+                if (counter == 1)  
+                {
+                    d.setDate(d.getDate() + 1);
+                }
+            }
+           
+            var dd = d.getDate();
+           
+            references.days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            references.months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+            var day = references.days[d.getDay()];
+            var mon = references.months[d.getMonth()];
+            var yyyy = d.getFullYear();
+
+            if(dd<10) {dd='0'+dd} 
+
+            d = day+' '+ dd+' '+mon+' '+yyyy;
+            jQuery("div#dateshow").html(d);
+        },
+        
+        setWeekSingleDate: function(d)
+        {
+          var day = d.getDay();
+
+          var startweek = new Date(d);
+          var endweek = new Date(d);
+          
+          if (day == 0) {startweek.setDate(d.getDate() - 6); endweek.setDate(d.getDate());}
+          else if (day == 1) {startweek.setDate(d.getDate()); endweek.setDate(d.getDate() + 6);}
+          else if (day == 2) {startweek.setDate(d.getDate() - 1); endweek.setDate(d.getDate() + 5);}
+          else if (day == 3) {startweek.setDate(d.getDate() - 2); endweek.setDate(d.getDate() + 4);}
+          else if (day == 4) {startweek.setDate(d.getDate() - 3); endweek.setDate(d.getDate() + 3);}
+          else if (day == 5) {startweek.setDate(d.getDate() - 4); endweek.setDate(d.getDate() + 2);}
+          else if (day == 6) {endweek.setDate(d.getDate() + 1); startweek.setDate(d.getDate() - 5);}
+          
+          this.setWeekTwoDates(0, startweek, endweek);
+        },
+        
+        setWeekTwoDates: function(counter, startweek, endweek)
+        {
+            var references = this._references  
+            if (counter == -1)  {startweek.setDate(startweek.getDate() - 7); endweek.setDate(endweek.getDate() - 7);}
+            else if (counter == 1)  {startweek.setDate(startweek.getDate() + 7); endweek.setDate(endweek.getDate() + 7);}
+           
+            var startweekmon = references.months[startweek.getMonth()];
+            var endweekmon = references.months[endweek.getMonth()];
+         
+            var yrstartweek = startweek.getFullYear();
+            var yrendweek = endweek.getFullYear();
+
+            var d = startweek.getDate()+ ' ' + startweekmon + ' ' + yrstartweek + '-'+ endweek.getDate() +' '+ endweekmon + ' '+ yrstartweek;  
+
+            $("div#dateshow").html(d);    
+        },
+        
+        setMonthDate: function(d)
+        {
+            var references = this._references;
+            var mon = references.months[d.getMonth()];
+            
+            var yyyy = d.getFullYear();
+
+            d = mon +' '+ yyyy;
+            $("div#dateshow").html(d);
+        },
+        
+        getScreenDate: function(cn)
+        {
+            var references = this._references;
+            var userdate = jQuery('#dateshow').html();; 
+            var datesplitted = userdate.split(" ");
+
+            var dd = datesplitted[1];
+           
+            var yyyy = datesplitted[3];
+            var mm = references.months.indexOf(datesplitted[2]);
+       
+            if (cn == 2) {mm = mm+1}
+            if(mm<10) {mm='0'+mm}
+       
+            var dateformatted;
+            if (cn==1)
+             {
+               dateformatted = new Date (yyyy, mm, dd);        
+             }
+            else if (cn == 2)
+             {
+               dateformatted = yyyy+'-'+mm+'-'+dd;
+             }
+            else if (cn == 3)
+             {
+               dateformatted = new Date (yyyy, mm, dd);
+               dateformatted.setDate(dateformatted.getDate() + 1);
+               
+               yyyy = dateformatted.getFullYear();
+               mm = dateformatted.getMonth() + 1;
+               if(mm<10) {mm='0'+mm}
+               dd = dateformatted.getDate();
+               
+               dateformatted = yyyy+'-'+mm+'-'+dd;
+             }
+            return dateformatted;
+        },
+        
+        getScreenWeekDate: function(cn, rdate)
+        {
+            var references = this._references
+            var date = rdate.split(" ");
+           
+            var dd = date[0];       
+            var yyyy = date[2];
+            var mm = references.months.indexOf(date[1]);
+            if (cn == 2) {mm = mm+1}
+            if(mm<10) {mm='0'+mm}
+       
+            var dateformatted;
+            if (cn==1)
+            {
+               dateformatted = new Date (yyyy, mm, dd);        
+            }
+            else if (cn == 2)
+            {
+               dateformatted = yyyy+'-'+mm+'-'+dd;
+            }  
+            return dateformatted;
+        },
+        
+        getMonthFirstDate: function(cn)
+        {
+            var references = this._references
+            var data = jQuery('#dateshow').html();
+            var usermonth = data.split(" ");
+           
+            var d = new Date (usermonth[1], references.months.indexOf(usermonth[0]), '01');
+           
+            if (cn == 2)
+            {
+                var mm = d.getMonth() + 1;
+                d = d.getFullYear()+'-'+mm+'-'+d.getDate();
+            }   
+            return d;
+        },
+        
+        getMonthLastDate: function()
+        {
+            var d = this.getMonthFirstDate(1);
+            
+            var ld = new Date(d.getFullYear(), d.getMonth()+1, 0);
+            
+            var ldmm = ld.getMonth() + 1;
+            var ld = ld.getFullYear()+'-'+ldmm+'-'+ld.getDate();
+            
+            return ld;
+            
+        },
+        
+        setDay: function()
+        {
+            var references = this._references
+            var userdate = jQuery('#dateshow').html();
+            var first = userdate.split(" ");
+
+            if (first[0] == parseInt(first[0])) //coming to DAILY view from WEEKLY view
+            {
+                var dates = userdate.split("-");
+                var date1 = this.getScreenWeekDate(1, dates[0]);        
+                this.setDate(0, date1);
+            }
+            else if (jQuery.inArray(first[0], references.months) >= 0) 
+                //coming to DAILY from MONTHLY              
+            {
+                var d = this.getMonthFirstDate(1);
+                
+                var dayofweek = references.days[d.getDay()];
+                var mon = references.months[d.getMonth()];
+                
+                d = dayofweek+' '+ d.getDate() +' '+mon+' '+d.getFullYear();
+                $("div#dateshow").html(d);          
+            }
+        },
+        
+        setWeek: function()
+        {
+            var references = this._references
+            var userdate = jQuery('#dateshow').html();
+            var first = userdate.split(" ");
+           
+            if (jQuery.inArray(first[0], references.days) >= 0) //coming to WEEKLY view from DAILY view      
+            {
+                var mydate = this.getScreenDate(1);    
+                this.setWeekSingleDate(mydate);
+            }
+            else if ((jQuery.inArray(first[0], references.months) >= 0)) //coming to WEEKLY from MONTHLY view
+            {
+               var d = this.getMonthFirstDate(1);     
+               this.setWeekSingleDate(d);
+            }
+        },
+        
+        setMonth: function()
+        {
+            var references = this._references
+            var userdate = jQuery('#dateshow').html();
+            var first = userdate.split(" ");
+
+            if ((jQuery.inArray(first[0], references.days) >= 0)) //coming to MONTHLY view from DAILY view
+            {
+                var mydate = this.getScreenDate(1);
+                this.setMonthDate(mydate);
+            }
+            else if (first[0] == parseInt(first[0])) //coming to MONTHLY view from WEEKLY view
+            {
+                var dates = userdate.split("-");
+                var date2 = this.getScreenWeekDate(1, dates[1]);        
+                this.setMonthDate(date2);
+            }
+        },
+        
+        getDistrict: function() {
+            var districtData = this._references.districtdataFeed.getDistrict();
+            if (districtData == false) {
+                return false;
+            }
+            this._renderDistrict(districtData);
+            this.initSelect2();
+        },
+        
+        getDeo: function() {
+            var deoData = this._references.deodataFeed.getDeo();
+            if (deoData == false) {
+                return false;
+            }
+            this._renderDeo(deoData);
+            this.initSelect2();
+        },
+        
+        getAnalytics: function() {
+            var analyticsData = this._references.analyticsdataFeed.getAnalytics();
+            if (analyticsData == false) {
+                return false;
+            }
+            
+            var datelist = this._references.datelist;
+            var s_list = this._references.s_list;
+            var a_list = this._references.a_list;
+            var sumscreenings = 0;
+            var sumadoptions = 0;
+            
+            if (analyticsData.mode == 1)
+            {
+                 for (var key1 in analyticsData.screenings)
+                 {
+                    s_list[0] = analyticsData.screenings[key1];
+                    sumscreenings += analyticsData.screenings[key1];
+                 }
+                 for (var key2 in analyticsData.adoptions)
+                 {
+                    a_list[0] = analyticsData.adoptions[key2];
+                    sumadoptions += analyticsData.adoptions[key2];
+                 }                       
+            }
+            if (analyticsData.mode == 2)
+            {
+                 for (var key1 in analyticsData.screenings)
+                 {
+                     var keydate = key1.split("-")[2];
+                     keydate = keydate.replace(/^0+/, '');
+                     
+                     for (var i = 0; i <= 6; i++)
+                     {
+                         if (datelist[i].split(" ")[0] == keydate)
+                         {
+                             s_list[i] = analyticsData.screenings[key1];
+                         }
+                     }                               
+                     sumscreenings += analyticsData.screenings[key1];                             
+                 }
+                 
+                 for (var key2 in analyticsData.adoptions)
+                 {
+                     var keydate = key2.split("-")[2];
+                     keydate = keydate.replace(/^0+/, '');
+                     
+                     for (var i = 0; i <= 6; i++)
+                     {
+                         if (datelist[i].split(" ")[0] == keydate)
+                         {
+                             a_list[i] = analyticsData.adoptions[key2];
+                         }
+                     }                               
+                     sumadoptions += analyticsData.adoptions[key2];                               
+                 }                           
+            }                   
+            if (analyticsData.mode == 3)
+                {
+                     for (var key1 in analyticsData.screenings) 
+                     {
+                        var keydate = key1.split("-")[2];
+                        keydate = keydate.replace(/^0+/, '');
+                        s_list[keydate-1] = analyticsData.screenings[key1];
+                        sumscreenings += analyticsData.screenings[key1];
+                     }
+                     
+                     for (var key2 in analyticsData.adoptions) 
+                     {
+                        var keydate = key2.split("-")[2];
+                        keydate = keydate.replace(/^0+/, '');
+                        a_list[keydate-1] = analyticsData.adoptions[key2];
+                        sumadoptions += analyticsData.adoptions[key2];
+                     }                           
+                }
+             
+            var lin1 = sumscreenings;
+            var lin2 = sumadoptions;
+            var lin3 = analyticsData.persons;
+            if (analyticsData.slag == "NA")   {var lin4 = analyticsData.slag;}
+            else {var lin4 = analyticsData.slag + " days";}
+            if (analyticsData.alag == "NA")   {var lin5 = analyticsData.alag;}
+            else {var lin5 = analyticsData.alag + " days";}
+            
+            $("p#screenings").html(lin1);
+            $("p#adoptions").html(lin2);
+            $("p#persons").html(lin3);
+            $("p#s-lag").html(lin4);
+            $("p#a-lag").html(lin5);
+            
+            this.makeChart(datelist,s_list,a_list);
+        },
+        
+        analyzeDeo: function(){
+            var references = this._references
+            var mode;
+            var s_list = [];
+            var a_list = [];
+            var datelist = [];
+         
+            if ($("#daily").hasClass("active") == true)
+            { 
+                mode = 1;
+                var start_date = this.getScreenDate(2);
+                var end_date = this.getScreenDate(3);
+             
+                s_list.push(0);
+                a_list.push(0);
+             
+                var date_for_datelist = this.getScreenDate(1);
+
+                var date = date_for_datelist.getDate();        
+                var mon = references.months[date_for_datelist.getMonth()];
+             
+                k = date + " "+ mon;
+             
+                datelist.push(k);   
+            }
+         
+            else if ($("#weekly").hasClass("active") == true) 
+            { 
+                mode = 2;
+                var userdate = jQuery('#dateshow').html(); 
+                var dates = userdate.split("-");
+                
+                var start_date = this.getScreenWeekDate(2, dates[0]);
+                var end_date = this.getScreenWeekDate(2, dates[1]);     
+             
+                var start_date_for_datelist = this.getScreenWeekDate(1, dates[0]);
+            
+                for (var i = 0; i <= 6; i++) 
+                {
+                    s_list.push(0);
+                    a_list.push(0);
+                 
+                    var date = start_date_for_datelist.getDate();          
+                    var mon = references.months[start_date_for_datelist.getMonth()];
+                 
+                    var k = date + " "+ mon;
+                 
+                    datelist.push(k);   
+                 
+                    start_date_for_datelist.setDate(start_date_for_datelist.getDate() + 1);
+                }
+            }
+            else if ($("#monthly").hasClass("active") == true) 
+            { 
+                var userdate = jQuery('#dateshow').html();
+                var getmon = userdate.split(" ");
+                var mon = getmon[0];
+             
+                mode = 3;
+                var start_date = this.getMonthFirstDate(2);
+                var end_date = this.getMonthLastDate();
+
+                var lastdate = end_date.split("-")[2];
+                     
+                for (var i = 1; i <= lastdate; i++) 
+                {
+                    datelist.push(i);
+                    a_list.push(0);
+                    s_list.push(0);
+                }
+            }
+            references.analyticsdataFeed.addInputParam('limit', false, 0);
+            references.analyticsdataFeed.setInputParam('limit', 0, false);
+            references.analyticsdataFeed.addInputParam('deo', false, references.$selectedDeo);
+            references.analyticsdataFeed.setInputParam('deo', references.$selectedDeo, false);
+            references.analyticsdataFeed.addInputParam('sdate', false, start_date);
+            references.analyticsdataFeed.setInputParam('sdate', start_date, false);
+            references.analyticsdataFeed.addInputParam('edate', false, end_date);
+            references.analyticsdataFeed.setInputParam('edate', end_date, false);
+            references.analyticsdataFeed.addInputParam('mode', false, mode);
+            references.analyticsdataFeed.setInputParam('mode', mode, false);
+            references.datelist = datelist;
+            references.a_list = a_list;
+            references.s_list = s_list;
+            this.getAnalytics();
+        },
+        
+        makeChart: function(datelist,s_list,a_list)
+        {
+             var chart1 = new Highcharts.Chart({         
+             chart: {
+                 renderTo: 'chartcontainer'
+              },
+               title: {
+                    text: 'DEO Performance',
+                    x: -20 //center
+                },
+                xAxis: {
+                    categories: datelist
+                },
+                yAxis: {
+                    title: {
+                        text: 'Entries made'
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+
+                plotOptions: {
+                    series: {
+                        cursor: 'pointer',
+                        point: {
+                            events: {
+                                click: function() {
+                                    //dateformatted = new Date (yyyy, mm, dd);
+                                    if ($("#weekly").hasClass("active") == true)
+                                        {
+                                            var userdate = document.getElementById('dateshow').innerHTML;
+                                            var dates = userdate.split("-");
+                                            var date1 = dates[0].split(" ");
+                                            var yyyy = date1[2];
+         
+                                            curdate = this.category;
+                                            var dd = curdate.split(' ')[0];
+                                            var mon = curdate.split(' ')[1];
+                                            var mm = getmonthnofromname(mon);
+                                            
+                                            if(dd<10) {dd='0'+dd}
+                                            if(mm<10) {mm='0'+mm}
+                                            
+                                            var dateformatted = new Date (yyyy, mm, dd);
+                                            
+                                            makeactive(1);
+                                            setdate(0, dateformatted);
+                                            analyzedeo();                                   
+                                      }
+                                    else if ($("#monthly").hasClass("active") == true)
+                                      {
+                                        var userdate = document.getElementById('dateshow').innerHTML;
+                                        var splitteduserdate = userdate.split(" ");
+                                        
+                                        var mon = splitteduserdate[0];
+                                        var yyyy = splitteduserdate[1];
+                                        
+                                        var mm = getmonthnofromname(mon);
+                                        
+                                        if(mm<10) {mm='0'+mm}                           
+                                        var dd = this.category;
+                                        if(dd<10) {dd='0'+dd}
+
+                                        var dateformatted = new Date (yyyy, mm, dd);                                
+                                                                        
+                                        makeactive(1);
+                                        setdate(0, dateformatted);
+                                        analyzedeo();    
+                                      }
+                                }
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Screenings',
+                    data: s_list
+                }, {
+                    name: 'Adoptions',
+                    data: a_list
+                }]
+             });   
+        },
+
+        _onDistrictDataProcessed: function() {
+            this.getDistrict();
+        },
+        
+        _onDeoDataProcessed: function() {
+            this.getDeo();
+        },
+        
+        _onAnalyticsDataProcessed: function() {
+            this.getAnalytics();
+        },
+        
+        _onGoBtnClick: function(e) {
+            e.preventDefault();
+            var references = this._references
+            jQuery('#deolist').addClass('nodisplay');      
+            jQuery('#thegrid').removeClass('hidden');
+            jQuery('#deobox').removeClass('hidden');
+            
+            var selectedDeos=[];
+            references.$deoList.find(":selected").each(function(){
+                selectedDeos.push(
+                        {
+                            deo_id: jQuery(this).val(),
+                            deo_name: jQuery(this).text()
+                        });
+               });
+            console.log(selectedDeos);
+            this._renderDeoTab(selectedDeos);
+            references.$deoList.val([]);
+            this.initSelect2();
+            this.analyzeDeo();
+            
+        },
+        
+        _onDayTabClick: function(e) {
+            e.preventDefault();
+            var references = this._references
+            references.$dayTab.addClass('active');
+            references.$weekTab.removeClass('active');
+            references.$monthTab.removeClass('active');
+            
+            this.setDay();
+            this.analyzeDeo();
+            
+        },
+        
+        _onWeekTabClick: function(e) {
+            e.preventDefault();
+            var references = this._references
+            references.$dayTab.removeClass('active');
+            references.$weekTab.addClass('active');
+            references.$monthTab.removeClass('active');
+            this.setWeek()
+            this.analyzeDeo();
+        },
+        
+        _onMonthTabClick: function(e) {
+            e.preventDefault();
+            var references = this._references
+            references.$dayTab.removeClass('active');
+            references.$weekTab.removeClass('active');
+            references.$monthTab.addClass('active');
+            this.setMonth()
+            this.analyzeDeo();
+        },
+        
+        _onNextPointerClick: function(e) {
+            e.preventDefault();
+            if ($("#daily").hasClass("active") == true)
+            {
+                 this.setDate(1, this.getScreenDate(1));    
+            }
+            else if ($("#weekly").hasClass("active") == true)
+            {
+                var userdate = jQuery('#dateshow').html(); 
+                var dates = userdate.split("-");
+                
+                var date1 = this.getScreenWeekDate(1, dates[0]);
+                var date2 = this.getScreenWeekDate(1, dates[1]);
+                
+                this.setWeekTwoDates(1, date1, date2);
+            }
+            else if ($("#monthly").hasClass("active") == true)
+            {
+                var d = this.getMonthFirstDate(1);
+                d.setMonth(d.getMonth() + 1);
+                this.setMonthDate(d);        
+            }    
+            this.analyzeDeo();
+        },
+        
+        _onPrevPointerClick: function(e) {
+            e.preventDefault();
+            if ($("#daily").hasClass("active") == true)
+            {
+                 this.setDate(-1, this.getScreenDate(1));       
+            }
+            else if ($("#weekly").hasClass("active") == true)
+            {
+                var userdate = jQuery('#dateshow').html(); 
+                var dates = userdate.split("-");
+                
+                var date1 = this.getScreenWeekDate(1, dates[0]);
+                var date2 = this.getScreenWeekDate(1, dates[1]);
+
+                this.setWeekTwoDates(-1, date1, date2);
+            }    
+            else if ($("#monthly").hasClass("active") == true)
+            {
+                var d = this.getMonthFirstDate(1);     
+                d.setMonth(d.getMonth() - 1);
+                this.setMonthDate(d);        
+            }
+            this.analyzeDeo();
+        },
+        
+        _renderDistrict: function(districtData) {
+            var references = this._references;
+            var renderData = {
+                    district: districtData
+           };
+            var renderedDistrict = viewRenderer.render(districtTemplate, renderData);
+            this._references.$districtContainer.html(renderedDistrict);
+            
+            references.$districtList = jQuery('.js-districtlist');
+            
+            this._boundFunctions.onDistrictChosen = this._onDistrictChosen.bind(this);
+            references.$districtList.on('change', this._boundFunctions.onDistrictChosen);
+            
+        },
+        
+        _renderDeo: function(deoData) {
+            var references = this._references;
+            
+            var renderData = {
+                    deo: deoData
+           };
+           var renderedDeo = viewRenderer.render(deoTemplate, renderData);
+           this._references.$deoContainer.html(renderedDeo);
+            
+           references.$deoList = jQuery('.js-deolist');
+            
+        },
+        
+        _renderDeoTab: function(deoDataTab) {
+            
+            var references = this._references;
+            
+            var renderData = {
+                    deo: deoDataTab
+           };
+           var renderedDeoTab = viewRenderer.render(deoTabTemplate, renderData);
+           references.$deoTabContainer.html(renderedDeoTab);
+           references.$deoTabContainer.find("li:first a").addClass('active');
+           references.$selectedDeo = references.$deoTabContainer.find("li:first a").attr("id");
+           var that = this;
+           references.$deoTabContainer.find("li").click(function(e) 
+           {
+               references.$deoTabContainer.find("li").each(function(e)
+                       {
+                           jQuery(this).find("a").removeClass('active');
+                       });
+               jQuery(this).find("a").addClass('active');
+               references.$selectedDeo = jQuery(this).find("a").attr("id");
+               that.analyzeDeo();
+           });
+           
+            
+        },
+        
+        initSelect2: function(){
+            var references = this._references;
+            try{
+                $(".chosen-select").select2({no_results_text: "No results match", width: "100%", placeholder: "Choose Username"});
+               }
+            catch(err){
+                $("select.chosen-select").select2({no_results_text: "No results match", width: "100%", placeholder: "Choose Username"});
+            }
+            
+        },
+        
+        _onPartnerChosen: function(){
+            var references = this._references;
+            
+            if( references.$partnerList.val()!=""){
+                references.districtdataFeed.addInputParam('limit', false, 0);
+                references.districtdataFeed.setInputParam('limit', 0, false);
+                references.districtdataFeed.addInputParam('partner', false, references.$partnerList.val());
+                references.districtdataFeed.setInputParam('partner', references.$partnerList.val(), false);
+                this.getDistrict();
+            }
+            else{
+            //TODO: What happens if value becomes default again
+            }
+        },
+        
+        _onDistrictChosen: function(){
+            var references = this._references;
+            
+            if( references.$districtList.val()!=""){
+                references.deodataFeed.addInputParam('limit', false, 0);
+                references.deodataFeed.setInputParam('limit', 0, false);
+                references.deodataFeed.addInputParam('partner', false, references.$partnerList.val());
+                references.deodataFeed.setInputParam('partner', references.$partnerList.val(), false);
+                references.deodataFeed.addInputParam('district', false, references.$districtList.val());
+                references.deodataFeed.setInputParam('district', references.$districtList.val(), false);
+                this.getDeo();
+            }
+            else{
+            //TODO: What happens if value becomes default again
+            }
+        },
+        
+        setInputParam: function(key, value, disableCacheClearing) {
+            this._references.dataFeed.setInputParam(key, value, disableCacheClearing);
+        },
+
+        _onInputParamChanged: function() {
+            this.getCollectionDropDown();
+        },
+        
+        destroy: function() {
+            this.base();
+
+            // TODO: clean up
+        }
+    });
+
+    return DeoAnalyticsViewController;
+});

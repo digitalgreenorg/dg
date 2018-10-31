@@ -1,1 +1,93 @@
-define(["require","framework/controllers/Controller","framework/ViewRenderer","jquery","app/libs/FeaturedCollectionDataFeed","text!app/views/featured-collection.html"],function(e){var t=e("framework/controllers/Controller"),n=e("framework/ViewRenderer"),r=e("jquery"),i=e("app/libs/FeaturedCollectionDataFeed"),s=e("text!app/views/featured-collection.html"),o=t.extend({constructor:function(e,t){return this.base(e,t),this},_initReferences:function(e,t){this.base();var n=this._references;n.dataFeed=new i(t),n.$featuredCollectionContainer=e},_initEvents:function(){this.base();var e=this._boundFunctions,t=this._references;e.onDataProcessed=this._onDataProcessed.bind(this),t.dataFeed.on("dataProcessed",e.onDataProcessed),e.onInputParamChanged=this._onInputParamChanged.bind(this),t.dataFeed.on("inputParamChanged",e.onInputParamChanged)},getFeaturedCollection:function(){var e=this._references.dataFeed.getFeaturedCollection();if(e==0)return!1;this._renderFeaturedCollection(e)},_onDataProcessed:function(){this.getFeaturedCollection()},_renderFeaturedCollection:function(e){var t=n.render(s,e);this._references.$featuredCollectionContainer.html(t)},setInputParam:function(e,t,n){this._references.dataFeed.setInputParam(e,t,n)},_onInputParamChanged:function(){this.getFeaturedCollection()},destroy:function(){this.base()}});return o});
+/**
+ * FeaturedCollectionViewController Class File
+ *
+ * @author aadish
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+
+    var Controller = require('framework/controllers/Controller');
+    var viewRenderer = require('framework/ViewRenderer');
+    var jQuery = require('jquery');
+    var FeaturedCollectionDataFeed = require('app/libs/FeaturedCollectionDataFeed');
+    var featuredCollectionTemplate = require('text!app/views/featured-collection.html');
+
+    var FeaturedCollectionViewController = Controller.extend({
+
+        /**
+         * Controller constructor
+         * @return {Controller} this
+         */
+        constructor: function($referenceBase, $language) {
+            this.base($referenceBase, $language);
+            
+            return this;
+        },
+
+        _initReferences: function($referenceBase, $language) {
+            this.base();
+            
+            var references = this._references;
+            
+            references.dataFeed = new FeaturedCollectionDataFeed($language);
+            
+            references.$featuredCollectionContainer = $referenceBase;
+        },
+
+        _initEvents: function() {
+            this.base();
+            
+            var boundFunctions = this._boundFunctions;
+            var references = this._references;
+            
+            boundFunctions.onDataProcessed = this._onDataProcessed.bind(this);
+            references.dataFeed.on('dataProcessed', boundFunctions.onDataProcessed);
+            
+            // input param changed alert from data feed
+            boundFunctions.onInputParamChanged = this._onInputParamChanged.bind(this);
+            references.dataFeed.on('inputParamChanged', boundFunctions.onInputParamChanged)
+        },
+
+        getFeaturedCollection: function() {
+            var featuredcollectionData = this._references.dataFeed.getFeaturedCollection();
+            if (featuredcollectionData == false) {
+                return false;
+            }
+            this._renderFeaturedCollection(featuredcollectionData);
+        },
+
+        _onDataProcessed: function() {
+            this.getFeaturedCollection();
+        },
+
+        _renderFeaturedCollection: function(featuredcollectionData) {
+            var renderedFeaturedCollection = viewRenderer.render(featuredCollectionTemplate, featuredcollectionData);
+            this._references.$featuredCollectionContainer.html(renderedFeaturedCollection);
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            this._references.dataFeed.setInputParam(key, value, disableCacheClearing);
+        },
+
+        _onInputParamChanged: function() {
+            this.getFeaturedCollection();
+        },
+
+        
+        /**
+         * Controller destructor
+         * @return {void}
+         */
+        destroy: function() {
+            this.base();
+
+            // TODO: clean up
+        }
+    });
+
+    return FeaturedCollectionViewController;
+});

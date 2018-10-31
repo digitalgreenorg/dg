@@ -1,1 +1,130 @@
-define(["require","app/libs/DigitalGreenDataFeed","app/libs/DataModel","framework/Util"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=e("app/libs/DataModel"),r=e("framework/Util"),i=t.extend({constructor:function(){this.base("api/comment/"),this._dataModel.addSubModel("objects",!0),this.addInputParam("offset",!1,0),this.addInputParam("limit",!1,10)},fetch:function(e,t,n){e==undefined&&(e=0),t==undefined&&(t=12),this.setInputParam("offset",e,!0),this.setInputParam("limit",t,!0),this.base(null,n)},_onFetchError:function(e){this.base(e);if(e.status==401){var t="/login/?next="+window.location.pathname;window.location.assign(t)}},_processData:function(e){this.base(e);if(e.objects==undefined&&e.uid!=undefined){this.clearCommentCache();var t=[];return t}var n=this._dataModel,r=n.get("objects"),i=e.meta.limit,s=e.meta.offset;n.set("totalCount",e.meta.total_count);var t=e.objects,o=s*i;return r.addSubset(t,o),t},setInputParam:function(e,t,n){var r=this.base(e,t);return r&&!n&&this.clearCommentCache(),r},clearCommentCache:function(){this._dataModel.get("objects").clear()},getTotalCount:function(){return this._dataModel.get("totalCount")},getComments:function(){var e=this.getInputParam("offset"),t=this.getInputParam("limit"),n=this._dataModel.get("objects").getSubset(e*t,t);return n?n:(this.fetch(e,t),!1)}});return i});
+/**
+ * CommentsDataFeed Class File
+ *
+ * @author dlakes
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+    var DataModel = require('app/libs/DataModel');
+    var Util = require('framework/Util');
+
+    var CommentsDataFeed = DigitalGreenDataFeed.extend({
+
+        /*
+        Input params:
+        activityUID|videoUID {Number}
+        page {Number}
+        count {Number}
+
+        Output params:
+        comments {Comment[]}
+        totalCount {Number}
+        */
+
+        constructor: function() {
+            this.base('api/comment/');
+
+            // prepare data model
+            this._dataModel.addSubModel('objects', true);
+
+            this.addInputParam('offset', false, 0);
+            this.addInputParam('limit', false, 10);
+        },
+
+        fetch: function(page, countPerPage, customCallback) {
+            if (page == undefined) {
+                page = 0;
+            }
+
+            if (countPerPage == undefined) {
+                countPerPage = 12;
+            }
+
+            this.setInputParam('offset', page, true);
+            this.setInputParam('limit', countPerPage, true);
+
+            // perform the fetch
+            this.base(null, customCallback);
+        },
+
+        _onFetchError: function(error) {
+            this.base(error);
+            if(error.status == 401){
+                var url = "/login/?next=" + window.location.pathname
+                window.location.assign(url)
+            }
+        },
+        
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            // If this was a post of a comment, then an object is returned not an array.
+            if (unprocessedData.objects == undefined) {
+                if (unprocessedData.uid != undefined) {
+                    /* Clear cache so next fetch includes this newly added comment. */
+                    this.clearCommentCache();
+                    var commentsToAdd = [];
+                    return commentsToAdd;
+                }
+            }
+            
+            // local references
+            var dataModel = this._dataModel;
+            var commentsModel = dataModel.get('objects');
+
+            // gather count and page for caching and saving purposes
+            var countPerPage = unprocessedData.meta.limit;
+            var page = unprocessedData.meta.offset;
+
+            // store total count
+            dataModel.set('totalCount', unprocessedData.meta.total_count);
+
+            // import comments from data
+            var commentsToAdd = unprocessedData.objects;
+            var startingCacheId = page * countPerPage;
+
+            commentsModel.addSubset(commentsToAdd, startingCacheId);
+            return commentsToAdd;
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            var paramChanged = this.base(key, value);
+            if (paramChanged && !disableCacheClearing) {
+                this.clearCommentCache();
+            }
+
+            return paramChanged;
+        },
+
+        clearCommentCache: function() {
+            this._dataModel.get('objects').clear();
+        },
+
+        getTotalCount: function() {
+            return this._dataModel.get('totalCount');
+        },
+
+        getComments: function() {
+
+            var page = this.getInputParam('offset');
+            var countPerPage = this.getInputParam('limit');
+
+            var comments = this._dataModel.get('objects').getSubset(page * countPerPage, countPerPage);
+
+            if (!comments) {
+                this.fetch(page, countPerPage);
+                return false;
+            }
+
+            return comments;
+        }
+
+    });
+
+    return CommentsDataFeed;
+
+});

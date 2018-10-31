@@ -1,1 +1,18 @@
-define(["require","framework/EventManager"],function(e){var t=e("framework/EventManager"),n=new t;return n});
+/**
+ * Controller Class File
+ *
+ * @author rdeluca
+ * @version $Id$
+ * @requires require.js
+ * @requires EventManager.js
+ */
+
+define(function(require) {
+    'use strict';
+
+    var EventManager = require('framework/EventManager');
+
+    var globalEventManager = new EventManager();
+
+    return globalEventManager;
+});

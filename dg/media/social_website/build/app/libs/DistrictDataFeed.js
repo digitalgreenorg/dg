@@ -1,1 +1,67 @@
-define(["require","app/libs/DigitalGreenDataFeed","app/libs/DataModel"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=e("app/libs/DataModel"),r=t.extend({constructor:function(e){this.base("api/getdistrict/");var t=this._dataModel.addSubModel("district",!0)},fetch:function(e){this.base()},_processData:function(e){this.base(e);var t=this._dataModel,n=t.get("district");return n.set("districtObj",e.district),e.district},setInputParam:function(e,t,n){var r=this.base(e,t);return r&&!n&&this.cleardistrictCache(),r},cleardistrictCache:function(){this._dataModel.get("district").clear()},getDistrict:function(){var e=this._dataModel.get("district"),t=e.get("districtObj");return t?t:(this.fetch(),!1)}});return r});
+/**
+ * PracticeMappingDataFeed Class File
+ *
+ * @author aadish
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+    var DataModel = require('app/libs/DataModel');
+    
+    var DistrictDataFeed = DigitalGreenDataFeed.extend({
+
+        constructor: function($language) {
+            this.base('api/getdistrict/');
+
+            // prepare data model
+            var districtSubModel = this._dataModel.addSubModel('district', true);
+        },
+
+        fetch: function(language) {
+            this.base();
+        },
+
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            
+            var dataModel = this._dataModel;
+            var districtModel = dataModel.get('district');
+            
+            districtModel.set('districtObj', unprocessedData.district);
+            return unprocessedData.district;
+        },
+
+        setInputParam: function(key, value, disableCacheClearing) {
+            var paramChanged = this.base(key, value);
+            if (paramChanged && !disableCacheClearing) {
+                this.cleardistrictCache();
+            }
+
+            return paramChanged;
+        },
+
+        cleardistrictCache: function() {
+            this._dataModel.get('district').clear();
+        },
+
+        getDistrict: function() {
+            var districtModel = this._dataModel.get('district');
+            var district = districtModel.get('districtObj');
+
+            if (!district) {
+                this.fetch();
+                return false;
+            }
+            return district;
+        }
+
+    });
+
+    return DistrictDataFeed;
+
+});

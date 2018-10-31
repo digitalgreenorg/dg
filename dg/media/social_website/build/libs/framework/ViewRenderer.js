@@ -1,1 +1,53 @@
-define(["require","jquery","libs/external/mustache"],function(e){var t="mustache",n=e("jquery"),r=function(){this._renderingEngine=undefined,this._renderFunction=undefined;switch(t){case"mustache":this._renderingEngine=e("libs/external/mustache"),this._renderFunction=this._mustacheRender;break;case"dust":throw new Error("Not implemented");case"default":throw new Error("No rendering engine provided")}};return r.prototype._mustacheRender=function(e,t,n){var r=this._renderingEngine.render(e,t);return n&&typeof n=="function"&&n(r),r},r.prototype.render=function(e,t,n){return this._renderFunction(e,t,n)},r.prototype.renderAppend=function(e,t,n,r){e.append(this.render(t,n))},r.prototype.renderHTML=function(e,t,n,r){e.html(this.render(t,n))},new r});
+define(function(require) {
+    'use strict';
+
+    var RENDERING_ENGINE = 'mustache';
+
+    var jQuery = require('jquery');
+
+    var ViewRenderer = function() {
+
+        /**
+         * Internal rendering function based of the desired rendering engine
+         */
+        this._renderingEngine = undefined;
+        this._renderFunction = undefined;
+
+        switch (RENDERING_ENGINE) {
+            case 'mustache':
+                this._renderingEngine = require('libs/external/mustache');
+                this._renderFunction = this._mustacheRender;
+                break;
+            case 'dust':
+                throw new Error('Not implemented');
+                break;
+            case 'default':
+                throw new Error('No rendering engine provided');
+                break;
+        }
+    };
+
+    ViewRenderer.prototype._mustacheRender = function(template, data, callback) {
+        var renderedTemplate = this._renderingEngine.render(template, data);
+
+        if (callback && typeof callback == 'function') {
+            callback(renderedTemplate);
+        }
+        
+        return renderedTemplate;
+    },
+
+    ViewRenderer.prototype.render = function(template, data, callback) {
+        return this._renderFunction(template, data, callback);
+    };
+
+    ViewRenderer.prototype.renderAppend = function($element, template, data, callback) {
+        $element.append(this.render(template, data));
+    };
+
+    ViewRenderer.prototype.renderHTML = function($element, template, data, callback) {
+        $element.html(this.render(template, data));
+    };
+
+    return new ViewRenderer();
+});

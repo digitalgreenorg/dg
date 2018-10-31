@@ -3,4 +3,533 @@
  * http://github.com/janl/mustache.js
  */
 
-(function(e,t){typeof exports=="object"&&exports?module.exports=t:typeof define=="function"&&define.amd?define(t):e.Mustache=t})(this,function(){function f(e,t){return u.call(e,t)}function l(e){return!f(r,e)}function h(e){return e.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g,"\\$&")}function d(e){return String(e).replace(/[&<>"'\/]/g,function(e){return p[e]})}function v(e){this.string=e,this.tail=e,this.pos=0}function m(e,t){this.view=e,this.parent=t,this._cache={}}function g(){this.clearCache()}function y(t,n,r,i){var s="",o,u,a;for(var f=0,l=t.length;f<l;++f){o=t[f],u=o[1];switch(o[0]){case"#":a=r.lookup(u);if(typeof a=="object")if(c(a))for(var h=0,p=a.length;h<p;++h)s+=y(o[4],n,r.push(a[h]),i);else a&&(s+=y(o[4],n,r.push(a),i));else if(typeof a=="function"){var d=i==null?null:i.slice(o[3],o[5]);a=a.call(r.view,d,function(e){return n.render(e,r)}),a!=null&&(s+=a)}else a&&(s+=y(o[4],n,r,i));break;case"^":a=r.lookup(u);if(!a||c(a)&&a.length===0)s+=y(o[4],n,r,i);break;case">":a=n.getPartial(u),typeof a=="function"&&(s+=a(r));break;case"&":a=r.lookup(u),a!=null&&(s+=a);break;case"name":a=r.lookup(u),a!=null&&(s+=e.escape(a));break;case"text":s+=u}}return s}function b(e){var t=[],n=t,r=[],i;for(var s=0,o=e.length;s<o;++s){i=e[s];switch(i[0]){case"#":case"^":r.push(i),n.push(i),n=i[4]=[];break;case"/":var u=r.pop();u[5]=i[2],n=r.length>0?r[r.length-1][4]:t;break;default:n.push(i)}}return t}function w(e){var t=[],n,r;for(var i=0,s=e.length;i<s;++i)n=e[i],n&&(n[0]==="text"&&r&&r[0]==="text"?(r[1]+=n[1],r[3]=n[3]):(r=n,t.push(n)));return t}function E(e){return[new RegExp(h(e[0])+"\\s*"),new RegExp("\\s*"+h(e[1]))]}var e={};e.name="mustache.js",e.version="0.7.2",e.tags=["{{","}}"],e.Scanner=v,e.Context=m,e.Writer=g;var t=/\s*/,n=/\s+/,r=/\S/,i=/\s*=/,s=/\s*\}/,o=/#|\^|\/|>|\{|&|=|!/,u=RegExp.prototype.test,a=Object.prototype.toString,c=Array.isArray||function(e){return a.call(e)==="[object Array]"},p={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#x2F;"};e.escape=d,v.prototype.eos=function(){return this.tail===""},v.prototype.scan=function(e){var t=this.tail.match(e);return t&&t.index===0?(this.tail=this.tail.substring(t[0].length),this.pos+=t[0].length,t[0]):""},v.prototype.scanUntil=function(e){var t,n=this.tail.search(e);switch(n){case-1:t=this.tail,this.pos+=this.tail.length,this.tail="";break;case 0:t="";break;default:t=this.tail.substring(0,n),this.tail=this.tail.substring(n),this.pos+=n}return t},m.make=function(e){return e instanceof m?e:new m(e)},m.prototype.push=function(e){return new m(e,this)},m.prototype.lookup=function(e){var t=this._cache[e];if(!t){if(e==".")t=this.view;else{var n=this;while(n){if(e.indexOf(".")>0){t=n.view;var r=e.split("."),i=0;while(t&&i<r.length)t=t[r[i++]]}else t=n.view[e];if(t!=null)break;n=n.parent}}this._cache[e]=t}return typeof t=="function"&&(t=t.call(this.view)),t},g.prototype.clearCache=function(){this._cache={},this._partialCache={}},g.prototype.compile=function(t,n){var r=this._cache[t];if(!r){var i=e.parse(t,n);r=this._cache[t]=this.compileTokens(i,t)}return r},g.prototype.compilePartial=function(e,t,n){var r=this.compile(t,n);return this._partialCache[e]=r,r},g.prototype.getPartial=function(e){return!(e in this._partialCache)&&this._loadPartial&&this.compilePartial(e,this._loadPartial(e)),this._partialCache[e]},g.prototype.compileTokens=function(e,t){var n=this;return function(r,i){if(i)if(typeof i=="function")n._loadPartial=i;else for(var s in i)n.compilePartial(s,i[s]);return y(e,n,m.make(r),t)}},g.prototype.render=function(e,t,n){return this.compile(e)(t,n)},e.parse=function(r,u){function y(){if(m&&!g)while(d.length)delete p[d.pop()];else d=[];m=!1,g=!1}r=r||"",u=u||e.tags,typeof u=="string"&&(u=u.split(n));if(u.length!==2)throw new Error("Invalid tags: "+u.join(", "));var a=E(u),f=new v(r),c=[],p=[],d=[],m=!1,g=!1,S,x,T,N,C;while(!f.eos()){S=f.pos,T=f.scanUntil(a[0]);if(T)for(var k=0,L=T.length;k<L;++k)N=T.charAt(k),l(N)?d.push(p.length):g=!0,p.push(["text",N,S,S+1]),S+=1,N=="\n"&&y();if(!f.scan(a[0]))break;m=!0,x=f.scan(o)||"name",f.scan(t),x==="="?(T=f.scanUntil(i),f.scan(i),f.scanUntil(a[1])):x==="{"?(T=f.scanUntil(new RegExp("\\s*"+h("}"+u[1]))),f.scan(s),f.scanUntil(a[1]),x="&"):T=f.scanUntil(a[1]);if(!f.scan(a[1]))throw new Error("Unclosed tag at "+f.pos);C=[x,T,S,f.pos],p.push(C);if(x==="#"||x==="^")c.push(C);else if(x==="/"){if(c.length===0)throw new Error('Unopened section "'+T+'" at '+S);var A=c.pop();if(A[1]!==T)throw new Error('Unclosed section "'+A[1]+'" at '+S)}else if(x==="name"||x==="{"||x==="&")g=!0;else if(x==="="){u=T.split(n);if(u.length!==2)throw new Error("Invalid tags at "+S+": "+u.join(", "));a=E(u)}}var A=c.pop();if(A)throw new Error('Unclosed section "'+A[1]+'" at '+f.pos);return p=w(p),b(p)};var S=new g;return e.clearCache=function(){return S.clearCache()},e.compile=function(e,t){return S.compile(e,t)},e.compilePartial=function(e,t,n){return S.compilePartial(e,t,n)},e.compileTokens=function(e,t){return S.compileTokens(e,t)},e.render=function(e,t,n){return S.render(e,t,n)},e.to_html=function(t,n,r,i){var s=e.render(t,n,r);if(typeof i!="function")return s;i(s)},e}());
+/*global define: false*/
+
+(function (root, factory) {
+  if (typeof exports === "object" && exports) {
+    module.exports = factory; // CommonJS
+  } else if (typeof define === "function" && define.amd) {
+    define(factory); // AMD
+  } else {
+    root.Mustache = factory; // <script>
+  }
+}(this, (function () {
+
+  var exports = {};
+
+  exports.name = "mustache.js";
+  exports.version = "0.7.2";
+  exports.tags = ["{{", "}}"];
+
+  exports.Scanner = Scanner;
+  exports.Context = Context;
+  exports.Writer = Writer;
+
+  var whiteRe = /\s*/;
+  var spaceRe = /\s+/;
+  var nonSpaceRe = /\S/;
+  var eqRe = /\s*=/;
+  var curlyRe = /\s*\}/;
+  var tagRe = /#|\^|\/|>|\{|&|=|!/;
+
+  var _test = RegExp.prototype.test;
+  var _toString = Object.prototype.toString;
+
+  // Workaround for https://issues.apache.org/jira/browse/COUCHDB-577
+  // See https://github.com/janl/mustache.js/issues/189
+  function testRe(re, string) {
+    return _test.call(re, string);
+  }
+
+  function isWhitespace(string) {
+    return !testRe(nonSpaceRe, string);
+  }
+
+  var isArray = Array.isArray || function (obj) {
+    return _toString.call(obj) === '[object Array]';
+  };
+
+  function escapeRe(string) {
+    return string.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+  }
+
+  var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+  };
+
+  function escapeHtml(string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+      return entityMap[s];
+    });
+  }
+
+  // Export the escaping function so that the user may override it.
+  // See https://github.com/janl/mustache.js/issues/244
+  exports.escape = escapeHtml;
+
+  function Scanner(string) {
+    this.string = string;
+    this.tail = string;
+    this.pos = 0;
+  }
+
+  /**
+   * Returns `true` if the tail is empty (end of string).
+   */
+  Scanner.prototype.eos = function () {
+    return this.tail === "";
+  };
+
+  /**
+   * Tries to match the given regular expression at the current position.
+   * Returns the matched text if it can match, the empty string otherwise.
+   */
+  Scanner.prototype.scan = function (re) {
+    var match = this.tail.match(re);
+
+    if (match && match.index === 0) {
+      this.tail = this.tail.substring(match[0].length);
+      this.pos += match[0].length;
+      return match[0];
+    }
+
+    return "";
+  };
+
+  /**
+   * Skips all text until the given regular expression can be matched. Returns
+   * the skipped string, which is the entire tail if no match can be made.
+   */
+  Scanner.prototype.scanUntil = function (re) {
+    var match, pos = this.tail.search(re);
+
+    switch (pos) {
+    case -1:
+      match = this.tail;
+      this.pos += this.tail.length;
+      this.tail = "";
+      break;
+    case 0:
+      match = "";
+      break;
+    default:
+      match = this.tail.substring(0, pos);
+      this.tail = this.tail.substring(pos);
+      this.pos += pos;
+    }
+
+    return match;
+  };
+
+  function Context(view, parent) {
+    this.view = view;
+    this.parent = parent;
+    this._cache = {};
+  }
+
+  Context.make = function (view) {
+    return (view instanceof Context) ? view : new Context(view);
+  };
+
+  Context.prototype.push = function (view) {
+    return new Context(view, this);
+  };
+
+  Context.prototype.lookup = function (name) {
+    var value = this._cache[name];
+
+    if (!value) {
+      if (name == '.') {
+        value = this.view;
+      } else {
+        var context = this;
+
+        while (context) {
+          if (name.indexOf('.') > 0) {
+            value = context.view;
+            var names = name.split('.'), i = 0;
+            while (value && i < names.length) {
+              value = value[names[i++]];
+            }
+          } else {
+            value = context.view[name];
+          }
+
+          if (value != null) break;
+
+          context = context.parent;
+        }
+      }
+
+      this._cache[name] = value;
+    }
+
+    if (typeof value === 'function') value = value.call(this.view);
+
+    return value;
+  };
+
+  function Writer() {
+    this.clearCache();
+  }
+
+  Writer.prototype.clearCache = function () {
+    this._cache = {};
+    this._partialCache = {};
+  };
+
+  Writer.prototype.compile = function (template, tags) {
+    var fn = this._cache[template];
+
+    if (!fn) {
+      var tokens = exports.parse(template, tags);
+      fn = this._cache[template] = this.compileTokens(tokens, template);
+    }
+
+    return fn;
+  };
+
+  Writer.prototype.compilePartial = function (name, template, tags) {
+    var fn = this.compile(template, tags);
+    this._partialCache[name] = fn;
+    return fn;
+  };
+
+  Writer.prototype.getPartial = function (name) {
+    if (!(name in this._partialCache) && this._loadPartial) {
+      this.compilePartial(name, this._loadPartial(name));
+    }
+
+    return this._partialCache[name];
+  };
+
+  Writer.prototype.compileTokens = function (tokens, template) {
+    var self = this;
+    return function (view, partials) {
+      if (partials) {
+        if (typeof partials === 'function') {
+          self._loadPartial = partials;
+        } else {
+          for (var name in partials) {
+            self.compilePartial(name, partials[name]);
+          }
+        }
+      }
+
+      return renderTokens(tokens, self, Context.make(view), template);
+    };
+  };
+
+  Writer.prototype.render = function (template, view, partials) {
+    return this.compile(template)(view, partials);
+  };
+
+  /**
+   * Low-level function that renders the given `tokens` using the given `writer`
+   * and `context`. The `template` string is only needed for templates that use
+   * higher-order sections to extract the portion of the original template that
+   * was contained in that section.
+   */
+  function renderTokens(tokens, writer, context, template) {
+    var buffer = '';
+
+    var token, tokenValue, value;
+    for (var i = 0, len = tokens.length; i < len; ++i) {
+      token = tokens[i];
+      tokenValue = token[1];
+
+      switch (token[0]) {
+      case '#':
+        value = context.lookup(tokenValue);
+
+        if (typeof value === 'object') {
+          if (isArray(value)) {
+            for (var j = 0, jlen = value.length; j < jlen; ++j) {
+              buffer += renderTokens(token[4], writer, context.push(value[j]), template);
+            }
+          } else if (value) {
+            buffer += renderTokens(token[4], writer, context.push(value), template);
+          }
+        } else if (typeof value === 'function') {
+          var text = template == null ? null : template.slice(token[3], token[5]);
+          value = value.call(context.view, text, function (template) {
+            return writer.render(template, context);
+          });
+          if (value != null) buffer += value;
+        } else if (value) {
+          buffer += renderTokens(token[4], writer, context, template);
+        }
+
+        break;
+      case '^':
+        value = context.lookup(tokenValue);
+
+        // Use JavaScript's definition of falsy. Include empty arrays.
+        // See https://github.com/janl/mustache.js/issues/186
+        if (!value || (isArray(value) && value.length === 0)) {
+          buffer += renderTokens(token[4], writer, context, template);
+        }
+
+        break;
+      case '>':
+        value = writer.getPartial(tokenValue);
+        if (typeof value === 'function') buffer += value(context);
+        break;
+      case '&':
+        value = context.lookup(tokenValue);
+        if (value != null) buffer += value;
+        break;
+      case 'name':
+        value = context.lookup(tokenValue);
+        if (value != null) buffer += exports.escape(value);
+        break;
+      case 'text':
+        buffer += tokenValue;
+        break;
+      }
+    }
+
+    return buffer;
+  }
+
+  /**
+   * Forms the given array of `tokens` into a nested tree structure where
+   * tokens that represent a section have two additional items: 1) an array of
+   * all tokens that appear in that section and 2) the index in the original
+   * template that represents the end of that section.
+   */
+  function nestTokens(tokens) {
+    var tree = [];
+    var collector = tree;
+    var sections = [];
+
+    var token;
+    for (var i = 0, len = tokens.length; i < len; ++i) {
+      token = tokens[i];
+      switch (token[0]) {
+      case '#':
+      case '^':
+        sections.push(token);
+        collector.push(token);
+        collector = token[4] = [];
+        break;
+      case '/':
+        var section = sections.pop();
+        section[5] = token[2];
+        collector = sections.length > 0 ? sections[sections.length - 1][4] : tree;
+        break;
+      default:
+        collector.push(token);
+      }
+    }
+
+    return tree;
+  }
+
+  /**
+   * Combines the values of consecutive text tokens in the given `tokens` array
+   * to a single token.
+   */
+  function squashTokens(tokens) {
+    var squashedTokens = [];
+
+    var token, lastToken;
+    for (var i = 0, len = tokens.length; i < len; ++i) {
+      token = tokens[i];
+      if (token) {
+        if (token[0] === 'text' && lastToken && lastToken[0] === 'text') {
+          lastToken[1] += token[1];
+          lastToken[3] = token[3];
+        } else {
+          lastToken = token;
+          squashedTokens.push(token);
+        }
+      }
+    }
+
+    return squashedTokens;
+  }
+
+  function escapeTags(tags) {
+    return [
+      new RegExp(escapeRe(tags[0]) + "\\s*"),
+      new RegExp("\\s*" + escapeRe(tags[1]))
+    ];
+  }
+
+  /**
+   * Breaks up the given `template` string into a tree of token objects. If
+   * `tags` is given here it must be an array with two string values: the
+   * opening and closing tags used in the template (e.g. ["<%", "%>"]). Of
+   * course, the default is to use mustaches (i.e. Mustache.tags).
+   */
+  exports.parse = function (template, tags) {
+    template = template || '';
+    tags = tags || exports.tags;
+
+    if (typeof tags === 'string') tags = tags.split(spaceRe);
+    if (tags.length !== 2) throw new Error('Invalid tags: ' + tags.join(', '));
+
+    var tagRes = escapeTags(tags);
+    var scanner = new Scanner(template);
+
+    var sections = [];     // Stack to hold section tokens
+    var tokens = [];       // Buffer to hold the tokens
+    var spaces = [];       // Indices of whitespace tokens on the current line
+    var hasTag = false;    // Is there a {{tag}} on the current line?
+    var nonSpace = false;  // Is there a non-space char on the current line?
+
+    // Strips all whitespace tokens array for the current line
+    // if there was a {{#tag}} on it and otherwise only space.
+    function stripSpace() {
+      if (hasTag && !nonSpace) {
+        while (spaces.length) {
+          delete tokens[spaces.pop()];
+        }
+      } else {
+        spaces = [];
+      }
+
+      hasTag = false;
+      nonSpace = false;
+    }
+
+    var start, type, value, chr, token;
+    while (!scanner.eos()) {
+      start = scanner.pos;
+
+      // Match any text between tags.
+      value = scanner.scanUntil(tagRes[0]);
+      if (value) {
+        for (var i = 0, len = value.length; i < len; ++i) {
+          chr = value.charAt(i);
+
+          if (isWhitespace(chr)) {
+            spaces.push(tokens.length);
+          } else {
+            nonSpace = true;
+          }
+
+          tokens.push(['text', chr, start, start + 1]);
+          start += 1;
+
+          // Check for whitespace on the current line.
+          if (chr == '\n') stripSpace();
+        }
+      }
+
+      // Match the opening tag.
+      if (!scanner.scan(tagRes[0])) break;
+      hasTag = true;
+
+      // Get the tag type.
+      type = scanner.scan(tagRe) || 'name';
+      scanner.scan(whiteRe);
+
+      // Get the tag value.
+      if (type === '=') {
+        value = scanner.scanUntil(eqRe);
+        scanner.scan(eqRe);
+        scanner.scanUntil(tagRes[1]);
+      } else if (type === '{') {
+        value = scanner.scanUntil(new RegExp('\\s*' + escapeRe('}' + tags[1])));
+        scanner.scan(curlyRe);
+        scanner.scanUntil(tagRes[1]);
+        type = '&';
+      } else {
+        value = scanner.scanUntil(tagRes[1]);
+      }
+
+      // Match the closing tag.
+      if (!scanner.scan(tagRes[1])) throw new Error('Unclosed tag at ' + scanner.pos);
+
+      token = [type, value, start, scanner.pos];
+      tokens.push(token);
+
+      if (type === '#' || type === '^') {
+        sections.push(token);
+      } else if (type === '/') {
+        // Check section nesting.
+        if (sections.length === 0) throw new Error('Unopened section "' + value + '" at ' + start);
+        var openSection = sections.pop();
+        if (openSection[1] !== value) throw new Error('Unclosed section "' + openSection[1] + '" at ' + start);
+      } else if (type === 'name' || type === '{' || type === '&') {
+        nonSpace = true;
+      } else if (type === '=') {
+        // Set the tags for the next time around.
+        tags = value.split(spaceRe);
+        if (tags.length !== 2) throw new Error('Invalid tags at ' + start + ': ' + tags.join(', '));
+        tagRes = escapeTags(tags);
+      }
+    }
+
+    // Make sure there are no open sections when we're done.
+    var openSection = sections.pop();
+    if (openSection) throw new Error('Unclosed section "' + openSection[1] + '" at ' + scanner.pos);
+
+    tokens = squashTokens(tokens);
+
+    return nestTokens(tokens);
+  };
+
+  // All Mustache.* functions use this writer.
+  var _writer = new Writer();
+
+  /**
+   * Clears all cached templates and partials in the default writer.
+   */
+  exports.clearCache = function () {
+    return _writer.clearCache();
+  };
+
+  /**
+   * Compiles the given `template` to a reusable function using the default
+   * writer.
+   */
+  exports.compile = function (template, tags) {
+    return _writer.compile(template, tags);
+  };
+
+  /**
+   * Compiles the partial with the given `name` and `template` to a reusable
+   * function using the default writer.
+   */
+  exports.compilePartial = function (name, template, tags) {
+    return _writer.compilePartial(name, template, tags);
+  };
+
+  /**
+   * Compiles the given array of tokens (the output of a parse) to a reusable
+   * function using the default writer.
+   */
+  exports.compileTokens = function (tokens, template) {
+    return _writer.compileTokens(tokens, template);
+  };
+
+  /**
+   * Renders the `template` with the given `view` and `partials` using the
+   * default writer.
+   */
+  exports.render = function (template, view, partials) {
+    return _writer.render(template, view, partials);
+  };
+
+  // This is here for backwards compatibility with 0.4.x.
+  exports.to_html = function (template, view, partials, send) {
+    var result = exports.render(template, view, partials);
+
+    if (typeof send === "function") {
+      send(result);
+    } else {
+      return result;
+    }
+  };
+
+  return exports;
+
+}())));

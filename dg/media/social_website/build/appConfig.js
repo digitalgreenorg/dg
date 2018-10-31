@@ -1,1 +1,3 @@
-define({apiUrl:"/social/"});
+define({
+	apiUrl: "/social/"
+});

@@ -1,1 +1,71 @@
-define(["require","app/libs/DigitalGreenDataFeed"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=t.extend({constructor:function(){this.base("api/updateVideoLike/"),this.addInputParam("video",!0),this.addInputParam("user",!0)},fetch:function(e,t,n,r){this.setInputParam("video",e),this.setInputParam("user",t),this.base(null,n,r)},_onFetchError:function(e){this.base(e);if(e.status==401){var t="/login/?next="+window.location.pathname;window.location.assign(t)}},_initConfig:function(){this.base(),this._config.fetchDelay=0},_processData:function(e){this.base(e);if(e.objects==undefined)return e.id!=undefined?[{liked:!0}]:[{liked:!1}];var t=e.objects;return t.length>0?[{liked:!0}]:[{liked:!1}]}});return n});
+/**
+ * VideoLikeDataFeed Class File
+ *
+ * @author Ryan DeLuca
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+
+    var VideoLikeDataFeed = DigitalGreenDataFeed.extend({
+
+        constructor: function() {
+            // NOTE: response code testing; only one is required for implementation
+            this.base('api/updateVideoLike/');
+            // this.base('api/genericReturnError');
+            
+            this.addInputParam('video', true);
+            this.addInputParam('user', true);
+        },
+
+        fetch: function(videoUID, userID, customCallback, type) {
+            this.setInputParam('video', videoUID);
+            this.setInputParam('user', userID);
+
+            this.base(null, customCallback, type);
+        },
+        
+        _onFetchError: function(error) {
+            this.base(error);
+            if(error.status == 401){
+                var url = "/login/?next=" + window.location.pathname
+                window.location.assign(url)
+            }
+        },
+
+        _initConfig: function() {
+            this.base();
+            this._config.fetchDelay = 0;
+        },
+
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            if (unprocessedData.objects == undefined) {
+                if (unprocessedData.id != undefined) {
+                    return [{
+                      'liked': true
+                    }];
+                }
+                return [{
+                  'liked': false
+                }];
+            }
+            var likedEntries = unprocessedData.objects;
+            if (likedEntries.length > 0) {
+                return [{
+                  'liked': true
+                }];
+            }
+            return [{
+              'liked': false
+            }];
+        }
+    });
+
+    return VideoLikeDataFeed;
+
+});

@@ -1,1 +1,45 @@
-define(["require","app/libs/DigitalGreenDataFeed"],function(e){var t=e("app/libs/DigitalGreenDataFeed"),n=t.extend({constructor:function(){this.base("api/genericReturnOK"),this.addInputParam("userID",!0),this.addInputParam("activityId",!0)},fetch:function(e,t,n){this.setInputParam("userID",t),this.setInputParam("activityId",e),this.base(null,n)},_initConfig:function(){this.base(),this._config.fetchDelay=0},_processData:function(e){return this.base(e),e}});return n});
+/**
+ * FollowDataFeed Class File
+ *
+ * @author Ryan DeLuca
+ * @version $Id$
+ * @requires require.js
+ * @requires jQuery
+ */
+define(function(require) {
+    'use strict';
+
+    var DigitalGreenDataFeed = require('app/libs/DigitalGreenDataFeed');
+
+    var FollowDataFeed = DigitalGreenDataFeed.extend({
+
+        constructor: function() {
+            // NOTE: response code testing; only one is required for implementation
+            this.base('api/genericReturnOK');
+            // this.base('api/genericReturnError');
+            
+            this.addInputParam('userID', true);
+            this.addInputParam('activityId', true);
+        },
+
+        fetch: function(activityId, userID, customCallback) {
+            this.setInputParam('userID', userID);
+            this.setInputParam('activityId', activityId);
+
+            this.base(null, customCallback);
+        },
+
+        _initConfig: function() {
+            this.base();
+            this._config.fetchDelay = 0;
+        },
+
+        _processData: function(unprocessedData) {
+            this.base(unprocessedData);
+            return unprocessedData;
+        }
+    });
+
+    return FollowDataFeed;
+
+});
