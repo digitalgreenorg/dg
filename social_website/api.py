@@ -246,8 +246,6 @@ class CollectionResource(BaseCorsResource):
             del bundle.data['temp_tags']
             del bundle.data['temp_practices']
             bundle.data['title'] = bundle.data['title'].strip()
-            
-            import pdb;pdb.set_trace()
             bundle = super(CollectionResource, self).obj_create(bundle, **kwargs)
             collection_id = getattr(bundle.obj,'uid')
             add_video_collection(collection_id, video_list)
