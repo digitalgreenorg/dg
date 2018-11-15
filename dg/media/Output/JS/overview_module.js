@@ -4,10 +4,10 @@ google.load("visualization", "1", {
 google.setOnLoadCallback(drawCharts);
 
 var exp_total_line_chart;
-var color_arr = ['#26A5DD', '#3D3D3F', '#1489B6', '#9BA0A7', '#66E214'];
+var color_arr = ['#008000', '#ff0000', '#1489B6', '#9BA0A7', '#66E214'];
 var line_options = {
   colors: color_arr,
-  lineWidth: 1,
+  lineWidth: 2,
   hAxis: {
     slantedText: false,
     maxAlternation: 1
@@ -39,7 +39,36 @@ function overview_line(json) {
     width: "90%",
     height: "70%"
   };
+  options['vAxis'] = {
+    logScale: true
+  }
+  // var options = {
+  // series: {
+  //         0: {targetAxisIndex: 0},
+  //         1: {targetAxisIndex: 1}
+  //       },
+  //       vAxes: {
+  //         // Adds titles to each axis.
+  //         0: {title: 'Temps (Celsius)'},
+  //         1: {title: 'Daylight'}
+  //       },
+  //       chartArea:{
+          
+  //   width: "80%",
+    
+  // },
+  // legend : {
+  //   position: 'bottom',
+  //   alignment: 'start',
+  //   textStyle: {
+  //     fontSize: 12
+  //   }
+  // }
+  // vAxis: {
+  //           logScale: true
+  //       }
 
+  //     };
 
   var total_line_chart = new google.visualization.ChartWrapper({
     'chartType': 'LineChart',

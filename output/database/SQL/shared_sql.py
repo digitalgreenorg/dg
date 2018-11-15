@@ -90,23 +90,23 @@ def child_geog_list(geog, id, from_date, to_date):
     elif(geog == "COUNTRY"):
         sql_ds['select'].extend(['DISTINCT S.id', 'STATE_NAME AS name'])
         sql_ds['from'].append("geographies_STATE S")
-        sql_ds['where'].append("S.country_id = " + str(id))
+        sql_ds['where'].append("S.country_id = " + str(id) + " And C.active = " +True)
     elif(geog == "STATE"):
         sql_ds['select'].extend(['DISTINCT D.id', 'DISTRICT_NAME AS name'])
         sql_ds['from'].append("geographies_DISTRICT D")
-        sql_ds['where'].append("state_id = " + str(id))
+        sql_ds['where'].append("state_id = " + str(id) + " And S.active = " + True)
     elif(geog == 'DISTRICT'):
         sql_ds['select'].extend(['id', 'BLOCK_NAME as name'])
         sql_ds['from'].append('geographies_BLOCK B')
-        sql_ds['where'].append("district_id = " + str(id))
+        sql_ds['where'].append("district_id = " + str(id) + " And D.active = " + True)
     elif(geog == "BLOCK"):
         sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
         sql_ds['from'].append("geographies_VILLAGE V")
-        sql_ds['where'].append("block_id = " + str(id))
+        sql_ds['where'].append("block_id = " + str(id)+  " And B.active = " + True)
     elif(geog == "VILLAGE"):
         sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
         sql_ds['from'].append("geographies_VILLAGE V")
-        sql_ds['where'].append("id = " + str(id))
+        sql_ds['where'].append("id = " + str(id) + " And V.active = " + True)
         sql="SELECT id, VILLAGE_NAME AS name FROM geographies_VILLAGE WHERE id = "+str(id);
 
     return join_sql_ds(sql_ds);
@@ -157,6 +157,7 @@ def overview(geog, id, from_date, to_date, partners, type):
         sql_ds['select'].append('COUNT(DISTINCT PMAM.person_id) as tot_per')
         sql_ds['from'].append('person_meeting_attendance_myisam PMAM')
         sql_ds['force index'].append('(person_meeting_attendance_myisam_village_id)')
+        
         main_tab_abb = "PMAM"
         date_field = "PMAM.date"
  
@@ -268,11 +269,11 @@ def overview_line_chart(geog,id,from_date, to_date, partners,type):
 
         sql_ds['from'].append('('+join_sql_ds(sql_inn_ds)+') as tab1')
         sql_ds['group by'].append('date');
-#        sql_ds['select'].extend(["date_of_joining as date", "COUNT(*)"])
-#        sql_ds['from'].append("PERSON P")
-#        sql_ds['where'].append("P.date_of_joining is not NULL")
-#        filter_partner_geog_date(sql_ds,"P",'dummy',geog,id,None,None,partners)
-#        sql_ds['group by'].append('date');
+       # sql_ds['select'].extend(["date_of_joining as date", "COUNT(*)"])
+       # sql_ds['from'].append("PERSON P")
+       # sql_ds['where'].append("P.date_of_joining is not NULL")
+       # filter_partner_geog_date(sql_ds,"P",'dummy',geog,id,None,None,partners)
+       # sql_ds['group by'].append('date');
     elif(type=='production'):
         sql_ds['select'].extend(["date", "SUM(total_videos_produced)"])
         sql_ds['from'].append("village_precalculation_copy VPC");

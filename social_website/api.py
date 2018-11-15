@@ -12,9 +12,11 @@ from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
-
+from coco.api import TagResource, VideoPracticeResource
+from geographies.models import *
 from social_website.models import Activity, Collection, Comment, ImageSpec, Partner, Person, Animator, Video, VideoinCollection, VideoLike
 from social_website.utils.api_functions import add_video_collection
+from videos.models import VideoPractice, Tag
 
 
 ### Reference for below class https://github.com/toastdriven/django-tastypie/issues/152
@@ -84,11 +86,20 @@ def many_to_many_to_subfield(bundle, field_name, sub_field_names):
     return list(sub_fields)
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
-    print bundle.data
     field_dict = bundle.data.get(field_name)
-    print field_dict
     bundle.data[field_name] = "/social/api/%s/%s/"%(resource_name if resource_name else field_name, 
                                                     str(field_dict))
+    return bundle
+
+def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
+    m2m_list = bundle.data.get(field_name)
+    resource_uri_list = []
+    for item in m2m_list:
+        try:
+            resource_uri_list.append("/coco/api/v2/%s/%s/"%(resource_name, str(item.get('id'))))
+        except:
+            return bundle
+    bundle.data[field_name] = resource_uri_list
     return bundle
 
 
@@ -199,6 +210,12 @@ class CollectionResource(BaseCorsResource):
     videos = fields.ListField()
     partner = fields.ForeignKey(PartnerResource, 'partner', null=True)
     hydrate_partner = partial(dict_to_foreign_uri, field_name='partner', resource_name='partner')
+    videopractice = fields.ToManyField(VideoPracticeResource, 'videopractice', null=True)
+    tags = fields.ToManyField(TagResource, 'tags', null=True)
+    hydrate_videopractice = partial(dict_to_foreign_uri_m2m, field_name='videopractice', resource_name='videopractice')
+    hydrate_tags = partial(dict_to_foreign_uri_m2m, field_name='tags', resource_name='tag')
+  
+
 
     class Meta:
         always_return_data = True
@@ -212,7 +229,25 @@ class CollectionResource(BaseCorsResource):
     def obj_create(self, bundle, **kwargs):
         video_list = bundle.data.get('videos')
         if video_list:
-            bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9 
+            bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9
+            import pdb;pdb.set_trace()
+            bundle.data['country'] = list(State.objects.filter(state_name=bundle.data['state']).values_list('country__country_name', flat=True))[0]
+            bundle.data['temp_tags'] = []
+            bundle.data['temp_practices'] = []
+            for tag in bundle.data['tags']:
+                tag_obj = Tag.objects.filter(tag_name=tag).values('id','tag_name').first()
+                bundle.data['temp_tags'].append({'id': tag_obj.get('id'), 'tag_name': tag_obj.get('tag_name')})
+            
+            for videopractice in bundle.data['videopractice']:
+                videopractice_obj = VideoPractice.objects.filter(videopractice_name=videopractice).values('id','videopractice_name').first()
+                bundle.data['temp_practices'].append({'id': videopractice_obj.get('id'), 'videopractice_name': videopractice_obj.get('videopractice_name')})
+            
+            bundle.data['tags'] = bundle.data['temp_tags']
+            bundle.data['videopractice'] = bundle.data['temp_practices']
+            del bundle.data['temp_tags']
+            del bundle.data['temp_practices']
+            
+            import pdb;pdb.set_trace()
             bundle = super(CollectionResource, self).obj_create(bundle, **kwargs)
             collection_id = getattr(bundle.obj,'uid')
             add_video_collection(collection_id, video_list)
@@ -230,6 +265,13 @@ class CollectionResource(BaseCorsResource):
             return bundle
         else:
             return bundle
+    
+
+    def dehydrate_videopractice(self, bundle):
+        return [{'id': iterable.id, 'name': iterable.videopractice_name} for iterable in bundle.obj.videopractice.all()]
+
+    def dehydrate_tags(self, bundle):
+        return [{'id': iterable.id, 'name': iterable.tag_name} for iterable in bundle.obj.tags.all()]
 
 
 class ActivityResource(BaseResource):

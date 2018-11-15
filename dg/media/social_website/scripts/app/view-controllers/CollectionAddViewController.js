@@ -99,7 +99,7 @@ define(function(require) {
                 references.$subCatList.val(references.$practiceMappingContainer.data('subcategory').trim()).change();
                 references.$topicList.val(references.$practiceMappingContainer.data('topic').trim()).change();
                 references.$subTopicList.val(references.$practiceMappingContainer.data('subtopic').trim());
-                references.$subjectList.val(references.$practiceMappingContainer.data('subject').trim());
+                //references.$subjectList.val(references.$practiceMappingContainer.data('subject').trim());
             }
         },
         
@@ -176,9 +176,9 @@ define(function(require) {
             references.addDataFeed.addInputParam('videos', false, order);
             references.addDataFeed.addInputParam('category', false, references.$catList.val());
             references.addDataFeed.addInputParam('subcategory', false, references.$subCatList.val());
-            references.addDataFeed.addInputParam('topic', false, references.$topicList.val());
-            references.addDataFeed.addInputParam('subtopic', false, references.$subTopicList.val());
-            references.addDataFeed.addInputParam('subject', false, references.$subjectList.val());
+            references.addDataFeed.addInputParam('videopractice', false, references.$topicList.val());
+            references.addDataFeed.addInputParam('tags', false, references.$subTopicList.val());
+            //references.addDataFeed.addInputParam('subject', false, references.$subjectList.val());
             
             
             references.addDataFeed.setInputParam('title', references.$collectionTitle.val(), true);
@@ -189,9 +189,9 @@ define(function(require) {
             references.addDataFeed.setInputParam('videos', order, true);
             references.addDataFeed.setInputParam('category', references.$catList.val(), true);
             references.addDataFeed.setInputParam('subcategory', references.$subCatList.val(), true);
-            references.addDataFeed.setInputParam('topic', references.$topicList.val(), true);
-            references.addDataFeed.setInputParam('subtopic', references.$subTopicList.val(), true);
-            references.addDataFeed.setInputParam('subject', references.$subjectList.val(), true);
+            references.addDataFeed.setInputParam('videopractice', references.$topicList.val(), true);
+            references.addDataFeed.setInputParam('tags', references.$subTopicList.val(), true);
+            //references.addDataFeed.setInputParam('subject', references.$subjectList.val(), true);
             
             if (references.$collectionUid){
                 references.addDataFeed._fetch(null, this.afterCollectionAdd.bind(this), 'PUT');
@@ -221,7 +221,7 @@ define(function(require) {
             references.$subCatList.find('option:not(:first)').remove();
             references.$topicList.find('option:not(:first)').remove();
             references.$subTopicList.find('option:not(:first)').remove();
-            references.$subjectList.find('option:not(:first)').remove();
+            //references.$subjectList.find('option:not(:first)').remove();
             references.$collectionContainer.hide();
             references.$videoDropDownContainer.data('videos', []);
             this.initSelect2();
@@ -232,11 +232,18 @@ define(function(require) {
             var references = this._references;
             var category = [];
             var arr;
+            var tags = []
+            for (let tag in practicemappingData['tags']){
+                tags.push(tag)
+            }
+
             for (arr in practicemappingData){
-                category.push(arr);
+                if (arr !== 'tags')
+                    category.push(arr);
             }
             var renderData = {
-                    category: category.sort()
+                    category: category.sort(),
+                    tags: tags
                 };
             var renderedPracticeMapping = viewRenderer.render(practiceMappingTemplate, renderData);
             this._references.$practiceMappingContainer.html(renderedPracticeMapping);
@@ -246,7 +253,7 @@ define(function(require) {
             references.$subCatList = jQuery('.js-subcatlist');
             references.$topicList = jQuery('.js-topiclist');
             references.$subTopicList = jQuery('.js-subtopiclist');
-            references.$subjectList = jQuery('.js-subjectlist');
+            //references.$subjectList = jQuery('.js-subjectlist');
             
             this._boundFunctions.onCategoryChosen = this._onCategoryChosen.bind(this);
             references.$catList.on('change', this._boundFunctions.onCategoryChosen);
@@ -254,8 +261,8 @@ define(function(require) {
             this._boundFunctions.onsubCategoryChosen = this._onsubCategoryChosen.bind(this);
             references.$subCatList.on('change', this._boundFunctions.onsubCategoryChosen);
             
-            this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
-            references.$topicList.on('change', this._boundFunctions.onTopicChosen);
+            // this._boundFunctions.onTopicChosen = this._onTopicChosen.bind(this);
+            // references.$topicList.on('change', this._boundFunctions.onTopicChosen);
             
             
         },
@@ -318,8 +325,8 @@ define(function(require) {
             
             references.$subCatList.find('option:not(:first)').remove();
             references.$topicList.find('option:not(:first)').remove();
-            references.$subTopicList.find('option:not(:first)').remove();
-            references.$subjectList.find('option:not(:first)').remove();
+            //references.$subTopicList.find('option:not(:first)').remove();
+            // references.$subjectList.find('option:not(:first)').remove();
             
             var subcategory = mapping_data[category_name]
             var arr;
@@ -329,11 +336,11 @@ define(function(require) {
                 }
             }
             
-            var subject = (mapping_data[category_name]['subject']).sort();
-            var i;
-            for (i in subject){
-                references.$subjectList.append(new Option(subject[i],subject[i]));
-            }
+            // var subject = (mapping_data[category_name]).sort();
+            // var i;
+            // for (i in subject){
+            //     references.$subjectList.append(new Option(subject[i],subject[i]));
+            // }
             
             this.initSelect2();
 
@@ -347,7 +354,7 @@ define(function(require) {
             var mapping_data = references.mapping;
             
             references.$topicList.find('option:not(:first)').remove();
-            references.$subTopicList.find('option:not(:first)').remove();
+            //references.$subTopicList.find('option:not(:first)').remove();
             
             var topic=[];
             var arr;
@@ -359,23 +366,23 @@ define(function(require) {
         },
         
         _onTopicChosen: function(){
-            var references = this._references;
+            // var references = this._references;
             
-            var category_name = references.$catList.val();
-            var subcategory_name = references.$subCatList.val();
-            var topic_name = references.$topicList.val();
-            var mapping_data = references.mapping;
+            // var category_name = references.$catList.val();
+            // var subcategory_name = references.$subCatList.val();
+            // var topic_name = references.$topicList.val();
+            // var mapping_data = references.mapping;
             
-            var subtopic=mapping_data[category_name][subcategory_name][topic_name];
-            subtopic=subtopic.sort()
+            // var subtopic=mapping_data[category_name][subcategory_name][topic_name];
+            // //subtopic=subtopic.sort()
             
-            references.$subTopicList.find('option:not(:first)').remove();
+            // references.$subTopicList.find('option:not(:first)').remove();
             
-            var i;
-            for (i in subtopic){
-                references.$subTopicList.append(new Option(subtopic[i],subtopic[i]));
-            }
-            this.initSelect2();
+            // var i;
+            // for (i in subtopic){
+            //     references.$subTopicList.append(new Option(i,i));
+            // }
+            //this.initSelect2();
         },
         
         _onVideoChosen: function(){

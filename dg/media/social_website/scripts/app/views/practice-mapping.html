@@ -18,29 +18,19 @@
                                     </select>
                                 </div>
                                 <div class="grid-size1of5 grid-col">
-                                    <label class="copy layout-vr-tiny">Topic</label>
-                                    <select id = "topiclist" class="chosen-select js-topiclist">
-                                    <option value='' selected='selected'>---------</option>
+                                    <label class="copy layout-vr-tiny">Video Practices</label>
+                                    <select id = "topiclist" class="chosen-select js-topiclist" multiple>
                                     {{#topic}}
                                         <option value = "{{.}}">{{.}}</option>
                                     {{/topic}}
                                     </select>
                                 </div>
                                 <div class="grid-size1of5 grid-col">
-                                    <label class="copy layout-vr-tiny">Subtopic</label>
-                                    <select id = "subtopiclist" class="chosen-select js-subtopiclist">
-                                    <option value='' selected='selected'>---------</option>
-                                    {{#subtopic}}
+                                    <label class="copy layout-vr-tiny">Tags</label>
+                                    <select id = "subtopiclist" class="chosen-select js-subtopiclist" multiple>
+                                    {{#tags}}
                                         <option value = "{{.}}">{{.}}</option>
-                                    {{/subtopic}}
+                                    {{/tags}}
                                     </select>
                                 </div>
-                                <div class="grid-size1of5 grid-col">
-                                    <label class="copy layout-vr-tiny">Subject</label>
-                                    <select id = "subjectlist" class="chosen-select js-subjectlist">
-                                    <option value='' selected='selected'>---------</option>
-                                    {{#subject}}
-                                        <option value = "{{.}}">{{.}}</option>
-                                    {{/subject}}
-                                    </select>
-                                </div>
+                                

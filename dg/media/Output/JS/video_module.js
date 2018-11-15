@@ -18,7 +18,7 @@ var pie_options = { colors: color_arr };
 var line_options = {
     colors: color_arr,
     lineWidth: 1,
-    hAxis: { slantedText: false, maxAlternation: 1 }
+    hAxis: { slantedText: false, maxAlternation: 1 } 
 };
 // var column_options={colors: ['#ced916','#7edc32','#26d52f','#05f866','#f9c423','#3bfaab'],
 var column_options = {
@@ -37,6 +37,7 @@ function drawCharts() {
 
     $.getJSON('/coco/analytics/video_geog_pie_data/' + search_params, function(json) { geog_pie(json) });
     $.getJSON('/coco/analytics/video_monthwise_bar_data/' + search_params, function(json) { monthwise_column(json); });
+    $.getJSON('/coco/analytics/video_monthwise_bar/' + search_params, function(json) { monthwise_col(json); });
     $.getJSON('/coco/analytics/video_language_wise_scatter_data/' + search_params, function(json) { language_bubble(json) });
     $.getJSON('/coco/analytics/video_practice_wise_scatter/' + search_params, function(json) { practice_bubble(json) });
     $.getJSON('/coco/analytics/overview_line_graph/' + search_params, { type: ['prod'] }, function(json) { total_line(json) });
@@ -71,28 +72,29 @@ function monthwise_column(json) {
     remove_loader('javascript_monthwise_column');
 }
 
+
 function language_bubble(json) {
 
     var language_bubble_chart_data = google.visualization.arrayToDataTable(json, false);
     if (json.length > 1) {
-        var xrange = language_bubble_chart_data.getColumnRange(1);
-        var yrange = language_bubble_chart_data.getColumnRange(2);
+        // var xrange = language_bubble_chart_data.getColumnRange(1);
+        // var yrange = language_bubble_chart_data.getColumnRange(2);
         var options = jQuery.extend(true, {}, bubble_options);
-        options['hAxis'] = { title: 'Languages', maxValue: xrange.max, minValue: xrange.min, gridlines: { count: 12 }, textColor: '#ffffff' };
-        options['vAxis'] = { title: 'Number of Videos', gridlines: { count: 12 }, maxValue: yrange.max };
+        options['hAxis'] = { title: 'Languages' };
+        options['vAxis'] = { title: 'Number of Videos'};
         options['sizeAxis'] = { maxSize: 20 };
         options['chartArea'] = { left: 60, top: 40, width: "85%", height: "75%" };
 
         var language_bubble_chart = new google.visualization.ChartWrapper({
-            'chartType': 'BubbleChart',
+            'chartType': 'ColumnChart',
             'containerId': 'javascript_language_bubble',
             'options': options,
             'dataTable': language_bubble_chart_data
         });
         remove_loader(language_bubble_chart.getContainerId());
-        language_bubble_chart.draw(json);
+        language_bubble_chart.draw();
         exp_language_bubble_chart = new google.visualization.ChartWrapper({
-            'chartType': 'BubbleChart',
+            'chartType': 'ColumnChart',
             'options': options,
             'dataTable': language_bubble_chart_data
         });

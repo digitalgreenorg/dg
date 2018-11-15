@@ -21,7 +21,7 @@ def adoption_month_bar(geog,id, from_date, to_date, partners):
 
 def adoption_malefemale_ratio(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].extend(["PAPM.gender as pie_key", "COUNT(*) as count"])
+    sql_ds['select'].extend(["PAPM.gender as pie_key", "COUNT(DISTINCT person_id) as count"])
     sql_ds['from'].append("person_adopt_practice_myisam PAPM")
     sql_ds['force index'].append("(person_adopt_practice_myisam_village_id)")
     filter_partner_geog_date(sql_ds,'PAPM','PAPM.date_of_adoption',geog,id,from_date,to_date,partners)
