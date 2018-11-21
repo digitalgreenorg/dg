@@ -98,15 +98,15 @@ def child_geog_list(geog, id, from_date, to_date):
     elif(geog == 'DISTRICT'):
         sql_ds['select'].extend(['id', 'BLOCK_NAME as name'])
         sql_ds['from'].append('geographies_BLOCK B')
-        sql_ds['where'].append("district_id = " + str(id) )
+        sql_ds['where'].append("district_id = " + str(id) + " and active = True")
     elif(geog == "BLOCK"):
         sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
         sql_ds['from'].append("geographies_VILLAGE V")
-        sql_ds['where'].append("block_id = " + str(id))
+        sql_ds['where'].append("block_id = " + str(id) + " and active = True")
     elif(geog == "VILLAGE"):
         sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
         sql_ds['from'].append("geographies_VILLAGE V")
-        sql_ds['where'].append("id = " + str(id))
+        sql_ds['where'].append("id = " + str(id) + " and active = True")
         sql="SELECT id, VILLAGE_NAME AS name FROM geographies_VILLAGE WHERE id = "+str(id);
 
     return join_sql_ds(sql_ds);
