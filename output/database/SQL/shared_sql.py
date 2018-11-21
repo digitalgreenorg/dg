@@ -94,11 +94,11 @@ def child_geog_list(geog, id, from_date, to_date):
     elif(geog == "STATE"):
         sql_ds['select'].extend(['DISTINCT D.id', 'DISTRICT_NAME AS name'])
         sql_ds['from'].append("geographies_DISTRICT D")
-        sql_ds['where'].append("state_id = " + str(id))
+        sql_ds['where'].append("state_id = " + str(id) + " and active = True")
     elif(geog == 'DISTRICT'):
         sql_ds['select'].extend(['id', 'BLOCK_NAME as name'])
         sql_ds['from'].append('geographies_BLOCK B')
-        sql_ds['where'].append("district_id = " + str(id))
+        sql_ds['where'].append("district_id = " + str(id) )
     elif(geog == "BLOCK"):
         sql_ds['select'].extend(['id', 'VILLAGE_NAME AS name'])
         sql_ds['from'].append("geographies_VILLAGE V")
