@@ -63,7 +63,7 @@ class Command(BaseCommand):
 					AP_District.objects.get_or_create(district_name=district_name,
 													  district_code=district_code,
 									                  district = district,
-									                  user_created_id=user_obj.id)
+									                  user_created_id=user_obj.id,active = 1)
 				print district_obj, "District Saved in AP_District Table"
 			except Exception as e:
 				district_obj = None
@@ -76,7 +76,7 @@ class Command(BaseCommand):
 			if mandal not in block_set.values():
 				try:
 					blck, created = Block.objects.get_or_create(block_name=mandal,
-																district=district)
+																district=district,active = 1)
 					ap.new_count += 1
 					print blck, "block saved in DG table"
 				except Exception as e:
@@ -88,7 +88,7 @@ class Command(BaseCommand):
 						wtr.writerow(['block', e, c])
 			
 			try:
-				block = Block.objects.get(block_name=mandal)
+				block = Block.objects.get(block_name=mandal, active = 1)
 				block_added = AP_Mandal.objects.values_list('mandal_name',flat=True)
 				#block_added = [i[0] for i in block_added]
 				mandal_obj, created = \
@@ -111,7 +111,7 @@ class Command(BaseCommand):
 			if village_name not in village_set.values():
 				try:
 					vil, created = Village.objects.get_or_create(village_name=village_name,
-																 block=block)
+																 block=block, active = 1)
 					ap.new_count += 1
 					print vil, "village saved in geaography_village table"
 				except Exception as e:
