@@ -20,12 +20,12 @@ export const cardConfig = {
   },
 
   'no_mediators': {
-    text: 'Number of Mediators',
+    text: 'Number of Participants',
     helpTip: 'Group of villages in close proximity served by one Loop aggregator.',
     overall: {
       filter: false,
       show: true,
-      text: 'No_of_mediators',
+      text: 'No_of_Participants',
       borrowData: true,
       cards: true,
     },
@@ -33,7 +33,7 @@ export const cardConfig = {
       dateRange: 60, // In days
       filter: true,
       show: true,
-      text: 'No_of_mediators',
+      text: 'No_of_Participants',
       borrowData: true,
       cards: true,
     },

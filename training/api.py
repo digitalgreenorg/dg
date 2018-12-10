@@ -296,7 +296,7 @@ class MediatorResource(ModelResource):
         resource_name = 'mediator'
         authorization = MediatorAuthorization()
         always_return_data = True
-        excludes = ('time_created', 'time_modified','role','total_adoptions')
+        excludes = ('time_created', 'time_modified','total_adoptions')
         include_resource_uri = False
 
     dehydrate_partner = partial(
@@ -415,14 +415,14 @@ class TrainingResource(BaseResource):
     hydrate_partner = partial(dict_to_foreign_uri, field_name='partner')
 
     dehydrate_language = partial(
-        foreign_key_to_id, field_name='language', sub_field_names=['id'])
+        foreign_key_to_id, field_name='language', sub_field_names=['id','language_name'])
     dehydrate_assessment = partial(
-        foreign_key_to_id, field_name='assessment', sub_field_names=['id'])
+        foreign_key_to_id, field_name='assessment', sub_field_names=['id','name'])
     dehydrate_partner = partial(
-        foreign_key_to_id, field_name='partner', sub_field_names=['id'])
+        foreign_key_to_id, field_name='partner', sub_field_names=['id','partner_name'])
     # dehydrate_district = partial(
     #     foreign_key_to_id, field_name='district', sub_field_names=['id', 'district_name'])
-    dehydrate_facilitator = partial(foreign_key_to_id, field_name='facilitator', sub_field_names=['id'])
+    dehydrate_facilitator = partial(foreign_key_to_id, field_name='facilitator', sub_field_names=['id','name'])
 
     def dehydrate_trainer(self, bundle):
         return [{'online_id': trainer.id} for trainer in bundle.obj.trainer.all()]

@@ -24,12 +24,15 @@ class TrainingUserAdmin(admin.ModelAdmin):
 		return " , ".join([s.state_name for s in obj.states.all()])
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text', 'section','serial','tag','__assessment__')
+    list_display = ('id', 'text', 'section','serial','tag','__assessment__', 'active')
     search_fields = ['assessment__name', 'section','serial']
     list_filter = ['assessment__name','section','serial']
 
 class TrainerAdmin(admin.ModelAdmin):
-	list_display = ('id','name','email')
+	list_display = ('id','name','email','active','training_user')
+
+class AssessmentAdmin(admin.ModelAdmin):
+	list_display = ('id','name','active')
 
 class LogDataAdmin(admin.ModelAdmin):
 	actions = None
@@ -60,7 +63,7 @@ training_admin.logout_template = 'social_website/home.html'
 
 training_admin.register(Trainer, TrainerAdmin)
 training_admin.register(TrainingUser,TrainingUserAdmin)
-training_admin.register(Assessment)
+training_admin.register(Assessment,AssessmentAdmin)
 training_admin.register(Question, QuestionAdmin)
 training_admin.register(LogData, LogDataAdmin)
 training_admin.register(DeleteLog, DeleteLogAdmin)

@@ -16,6 +16,7 @@ class Country(CocoModel):
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     country_name = models.CharField(max_length=100, unique='True')
     start_date = models.DateField(null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "countries"
@@ -30,6 +31,7 @@ class State(CocoModel):
     state_name = models.CharField(max_length=100)
     country = models.ForeignKey(Country)
     start_date = models.DateField(null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('state_name', 'country')
@@ -48,6 +50,7 @@ class District(CocoModel):
                                    validators=[MaxValueValidator(90), MinValueValidator(-90)])
     longitude = models.DecimalField(max_digits=32, decimal_places=28, null=True, blank=True,
                                     validators=[MaxValueValidator(180), MinValueValidator(-180)])
+    active = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('district_name', 'state')
@@ -76,6 +79,7 @@ class Block(CocoModel):
     block_name = models.CharField(max_length=100)
     start_date = models.DateField(null=True, blank=True)
     district = models.ForeignKey(District)
+    active = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('block_name', 'district')
@@ -95,6 +99,7 @@ class Village(CocoModel):
     grade = models.CharField(max_length=1, null=True, blank=True)
     objects = models.Manager() #The default manager
     farmerbook_village_objects = VillageFarmerbookManager() #The manager for farmerbook
+    active = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ("village_name","block")
@@ -115,6 +120,7 @@ class JSLPS_District(CocoModel):
     district_name = models.CharField(max_length=100)
     district = models.ForeignKey(District, null=True, blank=True)
     activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "JSLPS District"
@@ -127,6 +133,7 @@ class JSLPS_Block(CocoModel):
     district_code = models.CharField(max_length=100)
     block = models.ForeignKey(Block, null=True, blank=True)
     activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "JSLPS Block"
@@ -140,6 +147,7 @@ class JSLPS_Village(CocoModel):
     block_code = models.CharField(max_length=100)
     Village = models.ForeignKey(Village, null=True, blank=True)
     activity = models.CharField(max_length=10, choices=ACTIVITY_CHOICES, null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "JSLPS Village"
@@ -160,6 +168,7 @@ class AP_District(CocoModel):
     district_code = models.CharField(max_length=100)
     district_name = models.CharField(max_length=100)
     district = models.ForeignKey(District, null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "AP District"
@@ -174,6 +183,7 @@ class AP_Mandal(CocoModel):
     mandal_code = models.CharField(max_length=100)
     mandal_name = models.CharField(max_length=100)
     block = models.ForeignKey(Block, null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "AP Block"
@@ -188,6 +198,7 @@ class AP_Village(CocoModel):
     village_code = models.CharField(max_length=100)
     village_name = models.CharField(max_length=100)
     village = models.ForeignKey(Village, null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "AP Village"
@@ -209,3 +220,18 @@ class AP_Habitation(CocoModel):
     def __unicode__(self):
         return self.habitation_name
 
+
+
+class AP_COCO_Mapping(CocoModel):
+    geo_type = models.CharField(blank=False, null=False, max_length=25)
+    ap_geo_id = models.PositiveIntegerField(blank=False,null=False)
+    coco_geo_id = models.PositiveIntegerField(blank=False,null=False)
+    processed = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = "AP_COCO_Mapping"
+        verbose_name_plural = "AP_COCO_Mapping"
+        unique_together = ('geo_type','ap_geo_id', 'coco_geo_id')
+
+    def __unicode__(self):
+        return 'Geo Type - %s, AP Id - , %s, COCO Id - , %s' % (self.geo_type, self.ap_geo_id, self.coco_geo_id)
