@@ -256,7 +256,7 @@ class GetGeography(View):
 @login_required
 def upload_csv_data(request):
     if request.method == 'POST':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Father/Husband Name,Gender,Phone Number,Age'
         form_data = DataUploadForm(request.POST, request.FILES)
         if form_data.is_valid():
             cd = form_data.cleaned_data
@@ -291,28 +291,30 @@ def upload_csv_data(request):
                                                                     'village_id':village_obj.id, \
                                                                     'partner_id':int(row[0].strip())},)
                                     if person_group or created:
-                                        if row[8] != '' and row[8] != '\r':
-                                            row[8] = row[8].strip('\r')
+                                        if row[9] != '' and row[9] != '\r':
+                                            row[9] = row[9].strip('\r')
                                             person_obj, created = \
                                             Person.objects.get_or_create(person_name__iexact=row[5].strip(),\
                                              village_id=village_obj.id,group_id=person_group.id, \
-                                             partner_id=int(row[0].strip()), defaults={'person_name':row[5].strip(), \
-                                             'gender':row[6].strip(),'village_id':village_obj.id,'group_id':person_group.id, \
-                                             'partner_id':int(row[0].strip()), 'age':int(row[8].strip()), 'phone_no': row[7].strip()})
-                                            person_obj.gender = row[6].strip()
-                                            person_obj.phone_no = row[7].strip()
-                                            person_obj.age = int(row[8].strip())
+                                             partner_id=int(row[0].strip()), defaults={'person_name':row[5].strip(),'father_name':row[6].strip(), \
+                                             'gender':row[7].strip(),'village_id':village_obj.id,'group_id':person_group.id, \
+                                             'partner_id':int(row[0].strip()), 'age':int(row[9].strip()), 'phone_no': row[8].strip()})
+                                            person_obj.father_name=row[6].strip()
+                                            person_obj.gender = row[7].strip()
+                                            person_obj.phone_no = row[8].strip()
+                                            person_obj.age = int(row[9].strip())
                                             person_obj.save()
                                         else:
-                                            row[8] = row[8].strip('\r')
+                                            row[9] = row[9].strip('\r')
                                             person_obj, created = \
                                             Person.objects.get_or_create(person_name__iexact=row[5].strip(),\
                                              village_id=village_obj.id,group_id=person_group.id, \
-                                             partner_id=int(row[0].strip()), defaults={'person_name':row[5].strip(), \
-                                             'gender':row[6].strip(),'village_id':village_obj.id,'group_id':person_group.id, \
-                                             'partner_id':int(row[0]), 'phone_no': row[7].strip()})
-                                            person_obj.gender = row[6].strip()
-                                            person_obj.phone_no = row[7].strip()
+                                             partner_id=int(row[0].strip()), defaults={'person_name':row[5].strip(), 'father_name':row[6].strip(),\
+                                             'gender':row[7].strip(),'village_id':village_obj.id,'group_id':person_group.id, \
+                                             'partner_id':int(row[0]), 'phone_no': row[8].strip()})
+                                            person_obj.father_name=row[6].strip()
+                                            person_obj.gender = row[7].strip()
+                                            person_obj.phone_no = row[8].strip()
                                             person_obj.save()
                         #Handle Duplicate KeyError
                         except IntegrityError as e:
@@ -337,7 +339,7 @@ def upload_csv_data(request):
 @login_required
 def getFileHeader(request):
     if request.method == 'GET':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Father/Husband Name,Gender,Phone Number,Age'
         output = StringIO.StringIO()
         try:
             output.write(columns)
@@ -346,6 +348,8 @@ def getFileHeader(request):
             return response
         except Exception as e:
             add_message(request, 40, 'Unable to download header format, contact system@digitalgreen.org for further information')
+
+
 
 
 
