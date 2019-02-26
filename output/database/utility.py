@@ -101,8 +101,12 @@ def get_dates_partners(request):
         to_date = request.GET['to_date']
     else:
         to_date = (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
-
-    partner_id = request.GET.getlist('partners')
+    if 'partners' in request.GET:
+        partner_id = request.GET.getlist('partners')
+    elif "/coco/ethopia/analytics/" in request.get_full_path():
+        partner_id = [u'83',u'82']
+    else:
+        partner_id=request.GET.getlist('partners')
     return from_date, to_date, partner_id;
 
 #Function to get project from Request object
@@ -111,13 +115,16 @@ def get_projects(request):
         return []
     project_id = []
     if 'projects' in request.GET:
-        project_id = request.GET.getlist('projects')
+        project_id=request.GET.getlist('projects')
+        project_id=[int(i) for i in project_id]
+    elif "/coco/ethopia/analytics/" in request.get_full_path():
+        project_id=['5']
     return project_id
 
 def filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date,partners):
     if(partners):
         # filtering on partners
-        sql_ds['where'].append("%s.partner_id in (%s)" %(par_table_id, ','.join(partners)))
+        sql_ds['where'].append("%s.partner_id in (%s)" %(par_table_id, ','.join([str(i) for i in partners])))
 
     attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date)
 

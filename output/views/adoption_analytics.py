@@ -65,6 +65,8 @@ def adoption_module(request):
     
     if  "/coco/jslps/analytics/" in request.get_full_path():
         template = 'jslps_adoption_module.html'
+    elif "/coco/ethopia/analytics/" in request.get_full_path():
+        template = 'ethopia_adoption_module.html'
     else:
         template = 'adoption_module.html'
     

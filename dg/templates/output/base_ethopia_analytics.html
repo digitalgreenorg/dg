@@ -1,0 +1,380 @@
+{% extends "base_ethopia_all_analytics.html" %}
+{% load analytics_extra_tags %}
+
+{% block title %} DigitalGreen - Progress Dashboard{% endblock %}
+
+
+{% block cssfile %}
+	{{ block.super }}
+	<link type='text/css' rel='stylesheet' href='/media/Output/CSS/analytics.css' />
+{% endblock cssfile %}
+
+{% block jsfile %}
+    <script type="text/javascript" src="/media/Output/JS/Janalytics.js"></script>
+    <script type ='text/javascript'>
+    var search_params = "{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}";
+    	//Function to set the default dates when the page loads
+    	window.onload = function(){
+			//Calling code for tablesorter
+			$('#table2').tablesorter({textExtraction: function(node) {
+				if($(node).find("a").length)
+					return $(node).find("a").html();
+				return node.innerHTML;
+				}
+			});
+
+			//highlight projects based on partner
+			{% if search_box_params.projects %}
+				{% if search_box_params.partners %}
+					highlight_bucket = []
+					simple_bucket = []
+					{% for partner in search_box_params.partners %}
+						{% if partner.highlight == 1 and not partner.unmarked %}
+							highlight_bucket.push({{partner.partner_id}})
+						{% elif partner.highlight == 1 %}
+							simple_bucket.push({{partner.partner_id}})
+						{% endif %}
+					{% endfor %}
+					simple_bucket = simple_bucket.filter(function(partner_id) { return highlight_bucket.indexOf(partner_id) < 0 })
+					project_wise_partners = JSON.parse("{{search_box_params.project_wise_partner}}".replace(/&quot;/g,'"'));
+					$.each(project_wise_partners,function(index,partner_list){
+						// Highlight project if any of its partner exist in highlight_bucket of partner
+						highlighted_match_found = partner_list.filter(function(partner) { return highlight_bucket.indexOf(parseInt(partner)) >= 0 });
+						if(highlighted_match_found.length > 0){
+							$("#projectbodytable input:checkbox[value="+index+"]").parent()
+							.prev().attr('style',  'font-weight:bolder; font-size:100%; color:#3D3D3F; background-color:rgba(38,167,223,0.5);');
+						}
+						else{
+							// Add bold style to project if any of its partner exist in simple_bucket of partner
+							bold_match_found = partner_list.filter(function(partner) { return simple_bucket.indexOf(parseInt(partner)) >= 0 });
+							if(bold_match_found.length > 0){
+								$("#projectbodytable input:checkbox[value="+index+"]").parent()
+								.prev().attr('style',  'font-weight:bolder; font-size:100%; color:#3D3D3F;');
+							}
+						}
+					});
+				{% endif %}
+			{% endif %}
+		}
+
+		function reset(){
+			window.location.href = '{{search_box_params.base_url}}';
+		}
+
+		function go(){
+			var base_url = '{{search_box_params.base_url}}';
+			var is_date_selected = {{search_box_params.is_date_selected}};
+			var url = new Array();
+			var orig_from_date = '{{search_box_params.from_date}}';
+			var orig_to_date = '{{search_box_params.to_date}}';
+			var cur_from_date = $("#inlinedatepicker1").html();
+			var cur_to_date = $("#inlinedatepicker2").html();
+			if(is_date_selected || orig_from_date!=cur_from_date || orig_to_date!=cur_to_date) {
+				url.push('from_date='+cur_from_date);
+				url.push('to_date='+cur_to_date);
+			}
+
+			if($("#partnerbodytable input:checkbox:not(:checked)").length > 0) {
+				$("#partnerbodytable input:checked").each(function() {
+				    if($(this).val()!='-1')
+				    {
+				        url.push("partners="+$(this).val())
+				    }
+				});
+			}
+
+			$("#projectbodytable input:checkbox:checked").each(function(){
+				url.push("projects="+$(this).val())
+			});
+
+			var geog = null, id = '1';
+			$("#selectbody select").each(function() {
+				if($(this).val()==-1)
+					return false;
+				if($(this).attr('name')!="")
+					{
+						geog = $(this).attr('name');
+						id = $(this).val();
+					}
+			});
+			if(geog != null) {
+				url.push("geog="+geog);
+				url.push("id="+id)
+			};
+
+			if(url.length > 0) {
+				window.location.href = base_url+'?'+url.join('&');
+			}
+			else {
+				window.location.href = base_url;
+			};
+
+		}
+
+		//Select or Deselect all Partners
+		function select_deselect(e){
+		    if(e.checked) {
+		        $("#partnerbodytable input").each(function() {
+		            this.checked = true;
+                });
+		    }
+		    else{
+		        $("#partnerbodytable input").each(function() {
+                    this.checked = false;
+                });
+		    }
+		}
+
+		//Function to enable/disable and fill option in Selects for region select drop downs
+    	function dochange(src, val) {
+			$.ajax({ type: "GET",
+					url: "/coco/analytics/drop_down_val?geog="+src+"&id="+val,
+					success: function(html) {
+              		var flag = false;
+					$(".select").each(function() {
+						if(flag == true)
+							$(this).val(-1).attr('disabled','disabled');
+						if (this.name == src)
+							flag = true;
+					});
+
+				   $("#"+src+"Id").html(html).removeAttr('disabled');
+              }
+         });
+        }
+
+        function project_wise_partner(){
+			project_wise_partners = JSON.parse("{{search_box_params.project_wise_partner}}".replace(/&quot;/g,'"'));
+			partner_list = [];
+			$("#projectbodytable input:checkbox:checked").each(function(){
+				partner_list = partner_list.concat(project_wise_partners[$(this).val()]);
+			});
+			$("#partnerbodytable input:checkbox").each(function() {
+				if($(this).val()!='-1' && $.inArray($(this).val(),partner_list)!=-1)
+					$(this).prop('checked', true);
+				else
+				    $(this).prop('checked', false);
+			});
+		}
+
+    </script>
+{% endblock jsfile %}
+
+
+{% block bodytitle %}  {% endblock bodytitle %}
+
+{% block mainbodycontent %} {% endblock mainbodycontent %}
+
+
+{% block content %}
+<div id='analyticsheader'>
+	<div>
+		<a href="{{ WEBSITE_DOMAIN }}" target="_blank"><img src="/media/Output/Images/dg_logo.png" alt="DigitalGreen" class="digitalgreen_logo"></a>
+	</div>
+	<div id='analyticslogo'>
+		<a href="{% if '/coco/ethopia/analytics/' in request.get_full_path %}/coco/ethopia/analytics/ {% else %} /coco/analytics/?geog=country&id=2{% endif %}"> <img src="/media/Output/Images/CocoLogo_White.png" style="height:40px;" alt='COCO '/></a>
+		<div class="solution">Analytics</div>
+	</div>
+
+	<div id='analyticsnav'>
+		<div class='analyticsnavlink' id='analyticsnavdiv'>
+			<a id='analyticsnavlink' href="#">Select Dashboard <img src="/media/Output/Images/navbtn1.png" alt=""></a>
+			<div id='analyticsnav1'>
+				<ul>
+
+					<li> <a href="{% if search_box_params %}/coco/ethopia/analytics/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/?geog=country&id=2{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
+					
+					<li> <a href="{% if search_box_params %}/coco/ethopia/analytics/video_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/data/video_module?geog=country&id=2{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
+					<li> <a href="{% if search_box_params %}/coco/ethopia/analytics/screening_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/screening_module?geog=country&id=2{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/coco/ethopia/analytics/adoption_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/adoption_module?geog=country&id=2{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
+					
+				</ul>
+			</div>
+		</div>
+		<!-- <div class='analyticsnavlink'>
+			<a href='/'>Home</a>
+		</div> -->
+
+	</div>
+
+</div>
+<!-- <div id='analyticspagetitle'>
+	&nbsp;
+	{% block analyticsbreadcrums %}
+		<a href='/'>Home</a> /
+		<a href="{% if search_box_params %}/analytics/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/analytics/?geog=country&id=1{%endif%}" title='Progress Dashboard'>Analytics</a>
+	{% endblock analyticsbreadcrums %}
+
+</div> -->
+<div id='content'>
+	<div id='customize'>
+		<div id='customizetitle'>
+			<div id='customizetitlename'>  </div>
+		</div>
+		<div id='submitdiv'>
+                    <table id='submittable' cellspacing='0' cellpadding='0'>
+                        <tr>
+                            <td class='resetbtn'> <input id='Reset1' type='reset' onclick="reset()"  value="Reset"> </td>
+                            <td class='submitbtn'>  <input id='Submit1' type='submit' onclick="go()" value="Go"> </td>
+                        </tr>
+                    </table>
+        </div>
+		<div id='customizebody'>
+			<div id='calender' class='customdiv'>
+				<div id='calendertitle' class='customtitle'>
+					<table id='calendertitletable' class='customtitletable' cellspacing='0' cellpadding='0'>
+						<tr>
+							<td class='customtitlename'> Calendar </td>
+							<td class='customtitleimg'>  </td>
+						</tr>
+					</table>
+				</div>
+				<div id='arrowimg'>  </div>
+				<div id='calenderbody' class='custombody'>
+					<table id='calenderbodytable' class='custombodytable'>
+						<tr>
+							<td id='calenderbodytitle' colspan='2'> date: 'yyyy-mm-dd' format  </td>
+						</tr>
+						<tr>
+							<td id='calenderbodytd1' class='custombodytd1'> <div id='calendertodatetitle'> From: </div> 	 </td>
+							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker1' class='inputdiv'>{{search_box_params.from_date}}</div> </td>
+						</tr>
+						<tr>
+							<td id='calenderbodytd1' class='custombodytd1'> <div id='calenderfromdatetitle'> To: </div>  </td>
+							<td id='calenderbodytd2' class='custombodytd2'> <div id='inlinedatepicker2' class='inputdiv'>{{search_box_params.to_date}}</div> </td>
+						</tr>
+					</table>
+				</div>
+
+			</div>
+
+
+			<div id='searchdiv' class='customdiv'>
+				<div id='searchtitle' class='customtitle'>
+					<table id='searchtitletable' class='customtitletable' cellspacing='0' cellpadding='0'>
+						<tr>
+							<td class='customtitlename'> Search by </td>
+							<td class='customtitleimg'>  </td>
+						</tr>
+					</table>
+				</div>
+				<div id='selectbody'>
+							
+							<div class='searchbody1' id='country'>
+				   				<select class='select' name='country' id = 'countryId' onChange="dochange('state', this.value)">
+					    			<option value='-1'>Select Country</option>
+										{% for key,item in search_box_params.geog_val.0.items %}
+										{% if key == 2 %}
+											<option value='{{key}}' {% if item.1 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endif%}
+										{%endfor%}
+				    			</select>
+							</div>
+							<div class='searchbody1' id='state'>
+				   				<select class='select' name='state' id = 'stateId' onChange="dochange('district', this.value)" {% if not search_box_params.geog_val.1 %}disabled='disabled' {% endif %}>
+					    			<option value='-1'>Select State</option>
+									{%if search_box_params.geog_val.1 %}
+										{% for key,item in search_box_params.geog_val.1.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}
+				    			</select>
+							</div>
+
+
+							
+							<div class='searchbody1' id='district'>
+				    			<select class='select' name='district' id = 'districtId' onChange="dochange('block', this.value)" {% if not search_box_params.geog_val.2 %}{% endif %}>
+					    			<option value='-1'>Select District</option>
+					    			{%if search_box_params.geog_val.2 %}
+										{% for key,item in search_box_params.geog_val.2.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}
+				    			</select>
+							</div>
+							<div class='searchbody1' id='block'>
+				    			<select class='select' name='block' id = 'blockId' onChange="dochange('village', this.value)">
+					   		 		<option value='-1'>Select Block</option>
+					   		 		{%if search_box_params.geog_val.3 %}
+										{% for key,item in search_box_params.geog_val.3.items %}
+											<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+										{%endfor%}
+									{%endif%}
+				    			</select>
+							</div>
+							<div class='searchbody1' id='village'>
+				   	 			<select class='select' name='village' id = 'villageId'  {% if not search_box_params.geog_val.4 %} {% endif %}>
+					    			<option value='-1'>Select Village</option>
+										{%if search_box_params.geog_val.4 %}
+											{% for key,item in search_box_params.geog_val.4.items %}
+												<option value='{{key}}' {% if item.2 %}selected="selected"{% endif %}>{{item.0}}</option>
+											{%endfor%}
+										{%endif%}
+				    			</select>
+							</div>
+							
+				</div>
+			</div>
+
+		</div>
+
+	{% if search_box_params.partners %}
+			<div id='partner' class='customdiv'>
+				<div id='partnertitle' class='customtitle'>
+					<table id='partnertitletable' class='customtitletable' cellspacing='0' cellpadding='0'>
+						<tr>
+							<td class='customtitlename'> Partners </td>
+							<td class='customtitleimg'>  </td>
+						</tr>
+					</table>
+				</div>
+				<div id='arrowimg'>  </div>
+				<div id='partnerbody' class='custombody'>
+					<table id='partnerbodytable' class='custombodytable'>
+					   <tr>
+                            <td id='partnerbodytd2' class='custompartnerbodytd'>
+                                <div id='selectalltag' class='partnerdiv' style="font-style:italic;">Select All</div>
+                                <div class='partnercheckbox'>
+                                    <input type="checkbox" id="selectall" value="-1" {% if search_box_params.checked != 0 %} checked {% endif %}onclick="select_deselect(this)"/>
+                                </div>
+                            </td>
+                        </tr>
+					{% for partner in search_box_params.partners %}
+						<tr>
+							<td id='partnerbodytd2' class='custompartnerbodytd'>
+								<div id='partnername' class='partnerdiv' title='{{partner.FULL_PARTNER_NAME}}' {% if partner.highlight == 1 and not partner.unmarked %} style="font-weight:bolder; font-size:100%; color:#3D3D3F; background-color:rgba(38,167,223,0.5);" {% elif partner.highlight == 1 %} style="font-weight:bolder; font-size: 100%; color:#3D3D3F;" {% endif %}>{{partner.PARTNER_NAME}}</div>
+								<div class='partnercheckbox'>
+									<input type="checkbox" name="partners" value="{{partner.partner_id}}" {% if not partner.unmarked %}checked="checked"{% endif %} {%ifequal search_box_params.partners|length 1 %}disabled="disabled"{% endifequal %}/>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+					</table>
+				</div>
+			</div>
+			{% endif %}
+
+
+			<!--  -->
+
+		</div>
+
+
+	</div>
+
+	<div id='contentbody'>
+		{% block contentbody %}
+			<div id='contentheader'>
+				<table id='contentheadertable'>
+					<tr>
+						<td class='contentheadertitle' > {% block datepick1 %} {% endblock datepick1 %} </td>
+						<td class='contentheadertitle'> {% block datepick2 %} {% endblock datepick2 %}  </td>
+					</tr>
+				</table>
+			</div>
+
+		{% endblock contentbody %}
+	</div>
+</div>
+{% endblock content %}
