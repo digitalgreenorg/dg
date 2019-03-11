@@ -361,11 +361,13 @@ class APVideoGenerator(View):
                 if apikey_object:
                     video_list = APVideo.objects.filter(video__partner_id=50)
                     data_list = []
-                    practice_list = []
-                    dg_practice_list = []
-                    tags = []
+                    
                     errors_videos = []
+                    a =0
                     for video_iterable in video_list:
+                        practice_list = []
+                        dg_practice_list = []
+                        tags = []
                         try:
                             dg_practice = video_iterable.video.videopractice.all()
                             for item in dg_practice:
@@ -406,7 +408,9 @@ class APVideoGenerator(View):
                                             })
                         except Exception as e:
                             pass
-
+                        a = a+1
+                        if a == 5:
+                            break
                     return JsonResponse({'data': data_list})
             except Exception:
                 return HttpResponse("You are not authorized.Wrong Key", status=401)
