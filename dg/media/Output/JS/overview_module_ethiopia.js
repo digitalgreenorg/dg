@@ -16,7 +16,7 @@ var line_options = {
 
 function drawCharts() {
 
-  $.getJSON('/coco/ethopia/analytics/overview_line_graph/' + search_params, {
+  $.getJSON('/coco/ethiopia/analytics/overview_line_graph/' + search_params, {
     type: ['prod', 'screen', 'prac', 'person', 'adopt']
   }, function(json) {
     overview_line(json);

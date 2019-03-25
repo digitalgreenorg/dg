@@ -173,7 +173,7 @@ def practice_options(sec, subsec, top, subtop, sub):
 def get_geog_id(request):
     if "id" in request.GET and 'geog' in request.GET:
         return request.GET['geog'].upper(),int(request.GET['id'])
-    if  "/coco/ethopia/analytics/" in request.get_full_path():
+    if  "/coco/ethiopia/analytics/" in request.get_full_path():
         return "COUNTRY", 2
     if  "/coco/jslps/analytics/" in request.get_full_path():
         return "STATE", 2
@@ -215,7 +215,7 @@ def get_partner_list(geog, id, partners,request):
     if(sql):
         part_list = run_query(sql)
         filtered_partners = [x['partner_id'] for x in part_list]
-        if  "/coco/ethopia/analytics/" in request.get_full_path():
+        if  "/coco/ethiopia/analytics/" in request.get_full_path():
             coco_partners = Partner.objects.filter(id__in=(82,83)).values_list('id', 'partner_name', 'full_partner_name').order_by('partner_name')
             filtered_partners.append(long('82'))
             filtered_partners.append(long('83'))

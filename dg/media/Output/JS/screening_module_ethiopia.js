@@ -31,13 +31,13 @@ var bubble_options = {
 };
 
 function drawCharts() {
-    $.getJSON('/coco/ethopia/analytics/screening_geog_pie_data/' + search_params, function(json) { geog_pie(json); });
-    $.getJSON('/coco/ethopia/analytics/screening_monthwise_bar_data/' + search_params, function(json) { monthwise_column(json); });
-    $.getJSON('/coco/ethopia/analytics/screening_practice_wise_scatter_data/' + search_params, function(json) { practice_bubble(json); });
-    $.getJSON('/coco/ethopia/analytics/screening_mf_ratio/' + search_params, function(json) { gender_pie(json); });
-    $.getJSON('/coco/ethopia/analytics/screening_per_day_line/' + search_params, function(json) { day_line(json); });
-    $.getJSON('/coco/ethopia/analytics/screening_tot_lines/' + search_params, function(json) { total_line(json); });
-    $.getJSON('/coco/ethopia/analytics/screening_percent_lines/' + search_params, function(json) { percent_line(json); });
+    $.getJSON('/coco/ethiopia/analytics/screening_geog_pie_data/' + search_params, function(json) { geog_pie(json); });
+    $.getJSON('/coco/ethiopia/analytics/screening_monthwise_bar_data/' + search_params, function(json) { monthwise_column(json); });
+    $.getJSON('/coco/ethiopia/analytics/screening_practice_wise_scatter_data/' + search_params, function(json) { practice_bubble(json); });
+    $.getJSON('/coco/ethiopia/analytics/screening_mf_ratio/' + search_params, function(json) { gender_pie(json); });
+    $.getJSON('/coco/ethiopia/analytics/screening_per_day_line/' + search_params, function(json) { day_line(json); });
+    $.getJSON('/coco/ethiopia/analytics/screening_tot_lines/' + search_params, function(json) { total_line(json); });
+    $.getJSON('/coco/ethiopia/analytics/screening_percent_lines/' + search_params, function(json) { percent_line(json); });
 }
 
 function remove_loader(div_id) {

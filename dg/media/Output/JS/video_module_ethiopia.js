@@ -35,11 +35,11 @@ var bubble_options = {
 
 function drawCharts() {
 
-    $.getJSON('/coco/ethopia/analytics/video_geog_pie_data/' + search_params, function(json) { geog_pie(json) });
-    $.getJSON('/coco/ethopia/analytics/video_monthwise_bar_data/' + search_params, function(json) { monthwise_column(json); });
-    $.getJSON('/coco/ethopia/analytics/video_language_wise_scatter_data/' + search_params, function(json) { language_bubble(json) });
-    $.getJSON('/coco/ethopia/analytics/video_practice_wise_scatter/' + search_params, function(json) { practice_bubble(json) });
-    $.getJSON('/coco/ethopia/analytics/overview_line_graph/' + search_params, { type: ['prod'] }, function(json) { total_line(json) });
+    $.getJSON('/coco/ethiopia/analytics/video_geog_pie_data/' + search_params, function(json) { geog_pie(json) });
+    $.getJSON('/coco/ethiopia/analytics/video_monthwise_bar_data/' + search_params, function(json) { monthwise_column(json); });
+    $.getJSON('/coco/ethiopia/analytics/video_language_wise_scatter_data/' + search_params, function(json) { language_bubble(json) });
+    $.getJSON('/coco/ethiopia/analytics/video_practice_wise_scatter/' + search_params, function(json) { practice_bubble(json) });
+    $.getJSON('/coco/ethiopia/analytics/overview_line_graph/' + search_params, { type: ['prod'] }, function(json) { total_line(json) });
 }
 
 function remove_loader(div_id) {

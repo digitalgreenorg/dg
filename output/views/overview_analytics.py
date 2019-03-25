@@ -128,8 +128,8 @@ def overview_module(request):
     else:
         header_geog = "Village"
 
-    if  "/coco/ethopia/analytics" in request.get_full_path():
-        template='ethopia_overview_module.html'
+    if  "/coco/ethiopia/analytics" in request.get_full_path():
+        template='ethiopia_overview_module.html'
     elif  "/coco/jslps/analytics/" in request.get_full_path():
         template = 'jslps_overview_module.html'
     else:

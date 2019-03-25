@@ -1,4 +1,4 @@
-{% extends "base_ethopia_all_analytics.html" %}
+{% extends "base_ethiopia_all_analytics.html" %}
 {% load analytics_extra_tags %}
 
 {% block title %} DigitalGreen - Progress Dashboard{% endblock %}
@@ -172,7 +172,7 @@
 		<a href="{{ WEBSITE_DOMAIN }}" target="_blank"><img src="/media/Output/Images/dg_logo.png" alt="DigitalGreen" class="digitalgreen_logo"></a>
 	</div>
 	<div id='analyticslogo'>
-		<a href="{% if '/coco/ethopia/analytics/' in request.get_full_path %}/coco/ethopia/analytics/ {% else %} /coco/analytics/?geog=country&id=2{% endif %}"> <img src="/media/Output/Images/CocoLogo_White.png" style="height:40px;" alt='COCO '/></a>
+		<a href="{% if '/coco/ethiopia/analytics/' in request.get_full_path %}/coco/ethiopia/analytics/ {% else %} /coco/analytics/?geog=country&id=2{% endif %}"> <img src="/media/Output/Images/CocoLogo_White.png" style="height:40px;" alt='COCO '/></a>
 		<div class="solution">Analytics</div>
 	</div>
 
@@ -182,11 +182,11 @@
 			<div id='analyticsnav1'>
 				<ul>
 
-					<li> <a href="{% if search_box_params %}/coco/ethopia/analytics/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/?geog=country&id=2{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
+					<li> <a href="{% if search_box_params %}/coco/ethiopia/analytics/{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/?geog=country&id=2{%endif%}" title='Progress Dashboard'>Overall Statistics</a></li>
 					
-					<li> <a href="{% if search_box_params %}/coco/ethopia/analytics/video_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/data/video_module?geog=country&id=2{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
-					<li> <a href="{% if search_box_params %}/coco/ethopia/analytics/screening_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/screening_module?geog=country&id=2{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
-					<li> <a href="{% if search_box_params %}/coco/ethopia/analytics/adoption_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/adoption_module?geog=country&id=2{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/coco/ethiopia/analytics/video_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/data/video_module?geog=country&id=2{%endif%}" title='Video Production Statistics'> Production Statistics </a></li>
+					<li> <a href="{% if search_box_params %}/coco/ethiopia/analytics/screening_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/screening_module?geog=country&id=2{%endif%}" title='Video Screening Statistics'> Screening Statistics </a> </li>
+					<li> <a href="{% if search_box_params %}/coco/ethiopia/analytics/adoption_module{% analytics_get_request search_box_params.cur_geog search_box_params.cur_id get_req_url %}{%else%}/coco/analytics/adoption_module?geog=country&id=2{%endif%}" title='Adoption Statistics'> Adoption Statistics </a> </li>
 					
 				</ul>
 			</div>

@@ -103,7 +103,7 @@ def get_dates_partners(request):
         to_date = (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
     if 'partners' in request.GET:
         partner_id = request.GET.getlist('partners')
-    elif "/coco/ethopia/analytics/" in request.get_full_path():
+    elif "/coco/ethiopia/analytics/" in request.get_full_path():
         partner_id = [u'83',u'82']
     else:
         partner_id=request.GET.getlist('partners')
@@ -117,7 +117,7 @@ def get_projects(request):
     if 'projects' in request.GET:
         project_id=request.GET.getlist('projects')
         project_id=[int(i) for i in project_id]
-    elif "/coco/ethopia/analytics/" in request.get_full_path():
+    elif "/coco/ethiopia/analytics/" in request.get_full_path():
         project_id=['5']
     return project_id
 
