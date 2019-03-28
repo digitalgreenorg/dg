@@ -23,7 +23,6 @@ def overview_module(request):
         geog_par = geog_list[geog_list.index(geog)-1]
     if geog != "VILLAGE":
         geog_child = geog_list[geog_list.index(geog)+1]
-
     #Constructing table data
     vid_prod = run_query_dict(shared_sql.overview(type='production',geog=geog,id=id, from_date = from_date, to_date=to_date, partners=partners),'id');
     vid_screening = run_query_dict(shared_sql.overview(type='screening',geog=geog,id=id,from_date = from_date, to_date=to_date, partners=partners),'id');
@@ -129,7 +128,9 @@ def overview_module(request):
     else:
         header_geog = "Village"
 
-    if  "/coco/jslps/analytics/" in request.get_full_path():
+    if  "/coco/ethiopia/analytics" in request.get_full_path():
+        template='ethiopia_overview_module.html'
+    elif  "/coco/jslps/analytics/" in request.get_full_path():
         template = 'jslps_overview_module.html'
     else:
         template = 'overview_module.html'

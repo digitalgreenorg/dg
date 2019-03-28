@@ -40,6 +40,8 @@ def video_module(request):
 
     if  "/coco/jslps/analytics/" in request.get_full_path():
         template = 'jslps_video_module.html'
+    elif  "/coco/ethiopia/analytics/" in request.get_full_path():
+        template = 'ethiopia_video_module.html'
     else:
         template = 'video_module.html'
 

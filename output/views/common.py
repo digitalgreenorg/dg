@@ -76,9 +76,8 @@ def get_search_box(request):
     from_date, to_date, partner = utility.get_dates_partners(request);
     project = utility.get_projects(request)
     search_box_params = {}
-    search_box_params['partners'] = get_partner_list(geog,id, partner);
+    search_box_params['partners'] = get_partner_list(geog,id, partner,request);
     search_box_params['projects'],search_box_params['project_wise_partner'] = get_project_list(project)
-
     if(from_date == (datetime.datetime.utcnow() - datetime.timedelta(365)).strftime('%Y-%m-%d') and to_date == (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')):
         search_box_params['is_date_selected'] = 0
     else:
@@ -174,6 +173,8 @@ def practice_options(sec, subsec, top, subtop, sub):
 def get_geog_id(request):
     if "id" in request.GET and 'geog' in request.GET:
         return request.GET['geog'].upper(),int(request.GET['id'])
+    if  "/coco/ethiopia/analytics/" in request.get_full_path():
+        return "COUNTRY", 2
     if  "/coco/jslps/analytics/" in request.get_full_path():
         return "STATE", 2
     else:
@@ -196,20 +197,30 @@ def get_project_list(projects):
             project_included[project['id']] = 1
             project_dict = {'id':project['id'],'project_name':project['project_name'],'project_description':project['project_description']}
             if projects:
-                if str(project['id']) not in projects:
+                if (project['id']) not in projects:
                     project_dict['unmarked'] = 1    
             coco_projects.append(project_dict)  
+    # print projects
+    # print "-------"
+    # print coco_projects_detail
+    # print "-------------"
+    # print coco_projects
     return coco_projects,json.dumps(project_wise_partner)
 
 #Returns a dictionary of list of PARTNER_NAME, id
 #If partners were selected i.e. argument 'partners' is not empty,
 #  those that are not present are marked with 'unmarked = 1'
-def get_partner_list(geog, id, partners):
+def get_partner_list(geog, id, partners,request):   
     sql = shared_sql.get_partners_sql(geog, id)
     if(sql):
         part_list = run_query(sql)
         filtered_partners = [x['partner_id'] for x in part_list]
-        coco_partners = Partner.objects.values_list('id', 'partner_name', 'full_partner_name').order_by('partner_name')
+        if  "/coco/ethiopia/analytics/" in request.get_full_path():
+            coco_partners = Partner.objects.filter(id__in=(82,83)).values_list('id', 'partner_name', 'full_partner_name').order_by('partner_name')
+            filtered_partners.append(long('82'))
+            filtered_partners.append(long('83'))
+        else:
+            coco_partners = Partner.objects.values_list('id', 'partner_name', 'full_partner_name').order_by('partner_name')
         partner_list = []
         for id, partner_name, full_partner_name in coco_partners:
             partner_dict = {'partner_id': id, 'PARTNER_NAME': partner_name, 'FULL_PARTNER_NAME': full_partner_name}
@@ -261,7 +272,6 @@ def drop_down_val(request):
 def overview_line_graph(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
-
     if('type' in request.GET):
         graph_type = request.GET.getlist('type')
     else:

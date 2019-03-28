@@ -32,6 +32,8 @@ def screening_module(request):
     
     if  "/coco/jslps/analytics/" in request.get_full_path():
         template = 'jslps_screening_module.html'
+    elif  "/coco/ethiopia/analytics/" in request.get_full_path():
+        template = 'ethiopia_screening_module.html'
     else:
         template = 'screening_module.html'
 
