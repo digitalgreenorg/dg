@@ -23,7 +23,7 @@ def adoption_module(request):
 
     #Adoption rate
     date_var = to_date if to_date else (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
-    adopt_rate_data = run_query(shared_sql.adoption_rate_totals(geog, id, date_var, partners))[0]
+    adopt_rate_data = run_query(shared_sql.adoption_rate_totals(geog, id, from_date,date_var, partners))[0]
     if(adopt_rate_data and adopt_rate_data['tot_per']):
         main_stats.update(adopt_rate = (adopt_rate_data['tot_adopt_per']*100)/adopt_rate_data['tot_per'])
         main_stats.update(avg_ado_per_farmer = adopt_rate_data['tot_active_adop'] / adopt_rate_data['tot_per'])
@@ -143,10 +143,10 @@ def adoption_rate_line(request):
     return HttpResponse(json.dumps(return_val))
 
 
-def adoption_rate(geog, id, to_date, partners):
+def adoption_rate(geog, id,from_date, to_date, partners):
     if not to_date:
         to_date = datetime.date.today()
-    adopt_rate_data = run_query(shared_sql.adoption_rate_totals(geog, id, to_date, partners))[0]
+    adopt_rate_data = run_query(shared_sql.adoption_rate_totals(geog, id, from_date,to_date, partners))[0]
     if(adopt_rate_data and adopt_rate_data['tot_per']):
         return (adopt_rate_data['tot_adopt_per']*100)/adopt_rate_data['tot_per']
     else:
