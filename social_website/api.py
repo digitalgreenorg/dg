@@ -171,7 +171,7 @@ class PartnerFarmerResource(BaseResource):
 class VideoResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner', null=True)
     class Meta:
-        queryset = Video.objects.all().exclude(category="")
+        queryset = Video.objects.all()
         resource_name = 'video'
         excludes = ['category','subcategory','topic','subtopic','subject']
         filtering={
