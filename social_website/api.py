@@ -225,6 +225,7 @@ class CollectionResource(BaseCorsResource):
         video_list = bundle.data.get('videos')
         if video_list:
             bundle.data['thumbnailURL'] = Video.objects.get(uid=video_list[0]).thumbnailURL16by9 
+            bundle.data['country']='India'
             bundle = super(CollectionResource, self).obj_update(bundle, **kwargs)
             collection_id = bundle.data.get('uid')
             add_video_collection(collection_id, video_list)
