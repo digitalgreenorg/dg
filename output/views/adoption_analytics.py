@@ -56,6 +56,10 @@ def adoption_module(request):
         main_stats.update(avg_ado_per_scr = float(main_stats['tot_ado']) / float(totals['tot_scr']))
     else:
         main_stats.update(avg_ado_per_scr = 0)
+    if(adopt_rate_data['tot_adopt_per'] and main_stats['tot_ado']):
+        main_stats.update(avg_ado_per_adop = float(main_stats['tot_ado']) / float(adopt_rate_data['tot_adopt_per']))
+    else:
+        main_stats.update(avg_ado_per_adop = 0)
 
     search_box_params = views.common.get_search_box(request)
 
