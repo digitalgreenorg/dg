@@ -57,7 +57,7 @@ class AnalyticsSync():
         database = 'digitalgreen_clone'
         print "Database:", database
         # send database to telegram
-        telegram_bot_sendtext(str(database))
+        telegram_bot_sendtext("database: %s" % (str(database)))
 
         print datetime.datetime.utcnow()
         # send datetime to telegram
@@ -74,7 +74,7 @@ class AnalyticsSync():
         # Fill Data
         print "Filling data in ", database
         # send Filling data to telegram
-        telegram_bot_sendtext("Filling data in")
+        telegram_bot_sendtext("Filling data in %s" % (database))
         try:
             self.db_connection_clone = MySQLdb.connect(host=self.db_root_host,
                                                        port=self.db_root_port,
@@ -92,10 +92,10 @@ class AnalyticsSync():
                                         JOIN geographies_district gd on gb.district_id=gd.id
                                         JOIN geographies_state gs on gd.state_id =  gs.id
                                         JOIN geographies_country gc on gs.country_id=gc.id""")
-            print "Finished insert into village_partner_myisam"
+            print "Finished insert into village_partner_myisam %s" % (time.time() - start_time)
             # send DB to telegram
             telegram_bot_sendtext(
-                "Finished insert into village_partner_myisam")
+                "Finished insert into village partner myisam %s" % (time.time() - start_time))
 
             # screening_myisam
             self.db_connection_clone.execute("""INSERT INTO screening_myisam (screening_id, date, video_id, practice_id, group_id,
@@ -111,9 +111,9 @@ class AnalyticsSync():
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id""")
-            print "Finished insert into screening_myisam"
+            print "Finished insert into screening_myisam %s" % (time.time() - start_time)
             # send message to telegram
-            telegram_bot_sendtext("Finished insert into screening_myisam")
+            telegram_bot_sendtext("Finished insert into screening myisam %s" % (time.time() - start_time))
 
             # video_myisam
             self.db_connection_clone.execute("""INSERT INTO video_myisam (video_id, video_production_date, practice_id, video_type,
@@ -128,9 +128,9 @@ class AnalyticsSync():
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id
                                         WHERE vid.video_type = 1""")
-            print "Finished insert into video_myisam"
+            print "Finished insert into video_myisam %s" % (time.time() - start_time)
             # send message to telegram
-            telegram_bot_sendtext("Finished insert into video_myisam")
+            telegram_bot_sendtext("Finished insert into video myisam %s" % (time.time() - start_time))
 
             # person_meeting_attendance_myisam
             self.db_connection_clone.execute("""INSERT INTO person_meeting_attendance_myisam (pma_id, person_id, screening_id, gender, date,
@@ -145,10 +145,10 @@ class AnalyticsSync():
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id""")
-            print "Finished insert into person_meeting_attendance_myisam"
+            print "Finished insert into person_meeting_attendance_myisam %s" % (time.time() - start_time)
             # send message to telegram
             telegram_bot_sendtext(
-                "Finished insert into person_meeting_attendance_myisam")
+                "Finished insert into person meeting attendance myisam %s" % (time.time() - start_time))
 
             # person_adopt_practice_myisam
             self.db_connection_clone.execute("""INSERT INTO person_adopt_practice_myisam (adoption_id, person_id, video_id, gender, date_of_adoption,
@@ -162,10 +162,10 @@ class AnalyticsSync():
                                         JOIN geographies_block b on b.id = v.block_id
                                         JOIN geographies_district d on d.id = b.district_id
                                         JOIN geographies_state s on s.id = d.state_id""")
-            print "Finished insert into person_adopt_practice_myisam"
+            print "Finished insert into person_adopt_practice_myisam %s" % (time.time() - start_time) 
             # send message to telegram
             telegram_bot_sendtext(
-                "Finished insert into person_adopt_practice_myisam")
+                "Finished insert into person adopt practice myisam %s" % (time.time() - start_time))
 
             # activities_screeningwisedata
             self.db_connection_clone.execute("""INSERT INTO activities_screeningwisedata (user_created_id, time_created, user_modified_id, time_modified,
@@ -179,10 +179,10 @@ class AnalyticsSync():
                                         AND A.date > DATE_ADD(Now(), Interval -1 year)
                                         JOIN videos_video D on B.video_id=D.id
                                         JOIN activities_screening_farmer_groups_targeted C on C.SCREENING_ID = A.id""")
-            print "Finished insert into activities_screeningwisedata"
+            print "Finished insert into activities_screeningwisedata %s" % (time.time() - start_time)
             # send message to telegram
             telegram_bot_sendtext(
-                "Finished insert into activities_screeningwisedata")
+                "Finished insert into activities screeningwisedata %s" % (time.time() - start_time))
 
             # people_animatorwisedata
             self.db_connection_clone.execute("""INSERT INTO people_animatorwisedata (user_created_id, time_created, user_modified_id, time_modified,
@@ -192,10 +192,10 @@ class AnalyticsSync():
                                         A.gender, A.phone_no, A.partner_id, A.district_id, A.total_adoptions, B.village_id, B.start_date
                                         FROM people_animator A
                                         JOIN people_animatorassignedvillage B on A.id=B.animator_id""")
-            print "Finished insert into people_animatorwisedata"
+            print "Finished insert into people_animatorwisedata %s"% (time.time() - start_time)
             # send message to telegram
             telegram_bot_sendtext(
-                "Finished insert into people_animatorwisedata")
+                "Finished insert into people animatorwisedata %s" % (time.time() - start_time))
 
             # main_data_dst stores all the counts for every date , every
             # village and every partner
@@ -270,9 +270,9 @@ class AnalyticsSync():
             # Free memory
             del pmas_df
             del scr
-            print "Finished date calculations"
+            print "Finished date calculations %s" % (time.time() - start_time)
             # send message to telegram
-            telegram_bot_sendtext("Finished date calculations")
+            telegram_bot_sendtext("Finished date calculations %s" % (time.time() - start_time))
 
             # Total adoption calculation and gender wise adoption totals
             paps = PersonAdoptPractice.objects.values_list(
@@ -291,9 +291,9 @@ class AnalyticsSync():
                     main_data_dst[dt][vil][partner]['tot_fem_ado'] = main_data_dst[
                         dt][vil][partner]['tot_fem_ado'] + 1
             del paps
-            print "Finished adoption counts"
+            print "Finished adoption counts %s" % (time.time() - start_time)
             # send message to telegram
-            telegram_bot_sendtext("Finished adoption counts")
+            telegram_bot_sendtext("Finished adoption counts %s" % (time.time() - start_time))
 
             today = datetime.date.today()
             for per, date_list in person_att_dict.iteritems():
@@ -321,9 +321,9 @@ class AnalyticsSync():
                         counts['tot_active'] = counts['tot_active'] + 1
 
             del person_att_dict, person_video_seen_date_dict, pap_dict
-            print "Finished active attendance counts"
+            print "Finished active attendance counts %s" % (time.time() - start_time)
             # send message to telegram
-            telegram_bot_sendtext("Finished active attendance counts")
+            telegram_bot_sendtext("Finished active attendance counts %s" % (time.time() - start_time))
 
             # tot sc calculations
             try:
@@ -336,6 +336,7 @@ class AnalyticsSync():
                     main_data_dst[dt][vil][partner]['tot_exp_att'] = main_data_dst[
                         dt][vil][partner]['tot_exp_att'] + gr_size
                 del scs
+                print "screening completed %s" % (time.time() - start_time)
 
                 vids = Video.objects.values_list('id', 'production_date',
                                                  'village', 'partner').order_by('id')
@@ -373,7 +374,7 @@ class AnalyticsSync():
                 print "To insert", str(len(values_list)), "rows"
                 # send message to telegram
                 telegram_bot_sendtext(
-                    "To insert", str(len(values_list)), "rows")
+                    "To insert " + str(len(values_list)) + "rows")
 
                 for i in range(1, (len(values_list) / 5000) + 2):
 
@@ -386,9 +387,10 @@ class AnalyticsSync():
                 print "Total time on clone DB = ", time.time() - start_time
                 # send message to telegram
                 telegram_bot_sendtext(
-                    "Total time on clone DB = ", time.time() - start_time)
+                    "Total time on clone DB = %s" % (time.time() - start_time))
                 self.copy_myisam_main()
             except Exception as sql_exception:
+                print sql_exception
                 telegram_bot_sendtext("Error Occured %s" % (sql_exception))
                 sys.exit(1)
         except MySQLdb.Error, e:
@@ -402,7 +404,7 @@ class AnalyticsSync():
         database = self.db_root_dbname
         print "Database:", database
         # send message to telegram
-        telegram_bot_sendtext("Database:", database)
+        telegram_bot_sendtext("Database: ", database)
 
         try:
             # Create schema
@@ -417,7 +419,7 @@ class AnalyticsSync():
             print "Total Time On Main DB = ", time.time() - start_time
             # send message to telegram
             telegram_bot_sendtext(
-                "Total Time On Main DB = ", time.time() - start_time)
+                "Total Time On Main DB = %s" % (time.time() - start_time))
         except Exception as e:
             print "Error %d: %s" % (e.args[0], e.args[1])
             # send message to telegram
@@ -437,7 +439,7 @@ class Command(BaseCommand):
         print("COCO ANALYTICS LOG")
         telegram_bot_sendtext("COCO ANALYTICS LOG")
         print(datetime.date.today())
-        telegram_bot_sendtext(str(datetime.date.today()))
+        telegram_bot_sendtext("started at %s" %(str(datetime.date.today())))
         mysql_root_dbname = DATABASES['default']['NAME']
         mysql_root_username = DATABASES['default']['USER']
         mysql_root_password = DATABASES['default']['PASSWORD']
