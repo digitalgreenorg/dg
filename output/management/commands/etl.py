@@ -404,7 +404,7 @@ class AnalyticsSync():
         database = self.db_root_dbname
         print "Database:", database
         # send message to telegram
-        telegram_bot_sendtext("Database: ", database)
+        telegram_bot_sendtext("Database:%s " %(database))
 
         try:
             # Create schema
