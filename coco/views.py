@@ -362,6 +362,7 @@ class APVideoGenerator(View):
             apikey = meta_auth_container.split('ApiKey')[-1].split(':')[-1]
             try:
                 apikey_object = ApiKey.objects.get(key=apikey)
+   
                 if apikey_object:
                     video_list = APVideo.objects.filter(video__partner_id__in = [50,72])
                     
@@ -370,27 +371,62 @@ class APVideoGenerator(View):
                     errors_videos = []
                     for video_iterable in video_list:
                         
+                        
                         practice_list = []
                         dg_practice_list = []
                         tags = []
                         try:
                             dg_practice = video_iterable.video.videopractice.all()
                             for item in dg_practice:
-                                dg_practice_list.append({'id': item.id,
+                                try:
+                                    dg_practice_list.append({'id': item.id,
                                                         'practice_name': item.videopractice_name,
                                                         })
+                                except:
+                                    dg_practice_list.append({'id': None,
+                                                        'practice_name': None,
+                                                        })
+
                             practice_q = video_iterable.practice.all()
                             for item in practice_q:
-                                practice_list.append({'id': item.id,
+                                try:
+                                    practice_list.append({'id': item.id,
                                                     'practice_name': item.pest_name,
                                                     'practice_code': item.pest_code,
                                                     'practice_name_telgu': item.pest_name_telgu})
+                                except:
+                                    practice_list.append({'id': None,
+                                                    'practice_name': None,
+                                                    'practice_code': None,
+                                                    'practice_name_telgu':None})
+
                             tags_q = video_iterable.video.tags.all()
                             for tag_item in tags_q:
-                                tags.append({'id': tag_item.id,
+                                try:
+                                    tags.append({'id': tag_item.id,
                                             'tag_name': tag_item.tag_name,
                                             'tag_code': tag_item.tag_code,
                                             'tag_regional_name': tag_item.tag_regional_name})
+                                except:
+                                    tags.append({'id': None,
+                                            'tag_name': None,
+                                            'tag_code': None,
+                                            'tag_regional_name': None})
+                            category = []
+                            try:
+                                category.append({'id': video_iterable.video.category.id,
+                                                'category_name': video_iterable.video.category.category_name})
+                            except:
+                                category.append({'id': None,
+                                                'category_name': None})
+                            sub_category = []
+                            try:
+                                sub_category.append({'id': video_iterable.video.subcategory.id,
+                                                            'subcategory_name': video_iterable.video.subcategory.subcategory_name})
+                            except:
+                                sub_category.append({'id': None,
+                                                            'subcategory_name': None})
+
 
                             data_list.append({'id': video_iterable.video.id,
                                             'video_title': video_iterable.video.title,
@@ -398,10 +434,8 @@ class APVideoGenerator(View):
                                             'district_id': video_iterable.video.village.block.district.id,
                                             'video_short_name_english': video_iterable.video_short_name,
                                             'video_short_regionalname': video_iterable.video_short_regionalname,
-                                            'category': {'id': video_iterable.video.category.id,
-                                                        'category_name': video_iterable.video.category.category_name},
-                                            'subcategory': {'id': video_iterable.video.subcategory.id,
-                                                            'subcategory_name': video_iterable.video.subcategory.subcategory_name},
+                                            'category': category,
+                                            'subcategory': sub_category,
                                             'practice': practice_list,
                                             'dg_practice': dg_practice_list,
                                             'tags': tags,
@@ -411,7 +445,9 @@ class APVideoGenerator(View):
                                             'version': 2,
                                             'video_type': video_iterable.video.video_type
                                             })
+                            
                         except Exception as e:
+                            print e
                             pass
                     
                     return JsonResponse({'data': data_list})
