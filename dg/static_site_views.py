@@ -161,6 +161,8 @@ def teamalumni(request):
 
 def teammember(request):    
     return render_to_response('base_team_members.html')
+def icc(request):    
+    return render_to_response('base_team_icc.html')
 
 def press(request):
     
