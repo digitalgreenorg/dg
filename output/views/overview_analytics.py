@@ -132,6 +132,8 @@ def overview_module(request):
         template='ethiopia_overview_module.html'
     elif  "/coco/jslps/analytics/" in request.get_full_path():
         template = 'jslps_overview_module.html'
+    elif  "/coco/brlps/analytics/" in request.get_full_path():
+        template = 'brlps_overview_module.html'
     else:
         template = 'overview_module.html'
     # import pdb;pdb.set_trace()

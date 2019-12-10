@@ -177,6 +177,8 @@ def get_geog_id(request):
         return "COUNTRY", 2
     if  "/coco/jslps/analytics/" in request.get_full_path():
         return "STATE", 2
+    if  "/coco/brlps/analytics/" in request.get_full_path():
+        return "STATE", 5
     else:
         return None, None
 

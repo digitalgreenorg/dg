@@ -65,10 +65,11 @@ def adoption_module(request):
 
     get_req_url = request.META['QUERY_STRING']
     get_req_url = '&'.join([i for i in get_req_url.split('&') if i[:4]!='geog' and i[:2]!='id'])
-
-    
+ 
     if  "/coco/jslps/analytics/" in request.get_full_path():
         template = 'jslps_adoption_module.html'
+    elif  "/coco/brlps/analytics/" in request.get_full_path():
+        template = 'brlps_adoption_module.html'
     elif "/coco/ethiopia/analytics/" in request.get_full_path():
         template = 'ethiopia_adoption_module.html'
     else:
