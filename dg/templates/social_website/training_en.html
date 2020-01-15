@@ -90,7 +90,7 @@
             <div class="header-margin"></div>
 
 <div class="grid" id="tabs">                                 
-    <div style="width: 600px;float: left">
+    <div style="width: 700px;float: left">
       <ul class="nav-training-courseware" style="border: 1px solid #EEEEEE;background: #f3f2eb;color: #8F288C;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
         <li><a href="#tabs-1" class="selected"><span>Mobile Courseware</span></span></a></li>
         <li><a href="#tabs-2" class="selected"><span>Production</span></span></a></li>
@@ -99,7 +99,7 @@
       </ul>
     </div>
     <div style="margin-left:200px;margin-top:4px;background: #f3f2eb" class="nav">
-    <select style="border: 1px solid #ffffff;background: #ffffff; height: 32px; width: 400px; color: #8F288C;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
+    <select style="border: 1px solid #ffffff;background: #ffffff; height: 32px; width: 300px; color: #8F288C;font-weight: bold;" id="id_language" name="language" class="nav" onchange="handleChange()">
       <option value="/training/courseware/en/" {% if request.get_full_path == "/training/courseware/en/"  or  request.get_full_path == "/training/courseware/en/" %} selected="true"{% endif %}>English</option>
       <option value="/training/courseware/hi/" {% if request.get_full_path == "/training/courseware/hi/" %} selected="true"{% endif %}>Hindi</option>
       <option value="/training/courseware/fr/" {% if request.get_full_path == "/training/courseware/fr/" %} selected="true"{% endif %}>French</option>
