@@ -92,9 +92,10 @@
 <div class="grid" id="tabs">                                 
     <div style="width: 600px;float: left">
       <ul class="nav-training-courseware" style="border: 1px solid #EEEEEE;background: #f3f2eb;color: #8F288C;font-weight: bold;margin: 0;padding: .2em 1.2em 0;">
-        <li><a href="#tabs-1" class="selected"><span>Production</span></span></a></li>
-        <li><a href="#tabs-2"><span><span>Dissemination</span></span></a></li>
-        <li><a href="#tabs-3" class="selected"><span>Data Management</span></span></a></li>
+        <li><a href="#tabs-1" class="selected"><span>Mobile Courseware</span></span></a></li>
+        <li><a href="#tabs-2" class="selected"><span>Production</span></span></a></li>
+        <li><a href="#tabs-3"><span><span>Dissemination</span></span></a></li>
+        <li><a href="#tabs-4" class="selected"><span>Data Management</span></span></a></li>
       </ul>
     </div>
     <div style="margin-left:200px;margin-top:4px;background: #f3f2eb" class="nav">
@@ -105,9 +106,49 @@
     </select>
     </div>
   
-  <div id="tabs-1" class="active" style="margin-left:-21px;background: #f3f2eb">
+    
+    
+    <div id="tabs-1" class="active" style="margin-left:-21px;background: #f3f2eb">
+    {% comment %} Mobile Courseware Tab 1{% endcomment %}
+        <div class="wrapper about-bg">
+          <div class="inner-wrapper">
+            <div class="media layout-vr-xlg">
+              
+              <div class="hdg-f hdg-source-reg grid">
+              
+                <div class="grid-col grid-size1of4 layout-vr-lg">
+                  <a href="https://play.google.com/store/apps/details?id=com.trainingcourseware.trainingcourseware" target="_blank">
+                    <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                      <img src="{{STATIC_URL}}docs/training/Curriculum_TC.png" height="260" width="190" alt=""/> 
+                    </div>
+                    <div class="hdg-purple centered">Video-based curriculum on video production, dissemination, agriculture and nutrition topics.</div>
+                  </a>
+                </div>
+                <div class="grid-col grid-size1of4 layout-vr-lg">
+                    <a href="https://play.google.com/store/apps/details?id=com.trainingcourseware.trainingcourseware" target="_blank">
+                      <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                        <img src="{{STATIC_URL}}docs/training/Test_TC.png" height="260" width="190" alt=""/> 
+                      </div>
+                      <div class="hdg-purple centered">Quizzes are pre and post-test taken by frontline workers as self-assessment. The scores are recorded and keep a track of individual frontline workers' learning.</div>
+                    </a>
+                  </div>
+                  <div class="grid-col grid-size1of4 layout-vr-lg">
+                    <a href="https://play.google.com/store/apps/details?id=com.trainingcourseware.trainingcourseware" target="_blank">
+                      <div class="training img-connect grid-pad-lt-tiny grid-pad-rt-tiny layout-vr-sm centered">
+                        <img src="{{STATIC_URL}}docs/training/Certificate_TC.png" height="260" width="190" alt=""/>
+                      </div>
+                      <div class="hdg-purple centered">Certification at course completion of each course, and gaining atleast 70% marks</div>
+                    </a>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    {% comment %} Mobile Couuseware {% endcomment %}
+    </div>
 
-    {% comment %} Production  Tab 1{% endcomment %}
+    <div id="tabs-2" class="active" style="margin-left:-21px;background: #f3f2eb">
+    {% comment %} Production {% endcomment %}
     <div class="wrapper about-bg">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
@@ -405,7 +446,7 @@
 
   
   {% comment %} Data Management {% endcomment %}  
-  <div id="tabs-3" class="active" style="margin-left:-21px;background: #f3f2eb">
+  <div id="tabs-4" class="active" style="margin-left:-21px;background: #f3f2eb">
     <div class="wrapper about-bg">
       <div class="inner-wrapper">
         <div class="media layout-vr-xlg">
@@ -428,7 +469,7 @@
   {% comment %} End Data Management {% endcomment %}
 
 
-  <div id="tabs-2" class="active" style="margin-left:-21px;background: #f3f2eb">
+  <div id="tabs-3" class="active" style="margin-left:-21px;background: #f3f2eb">
     {% comment %} Manual {% endcomment %}
     <div class="wrapper about-bg">
       <div class="inner-wrapper">
@@ -895,5 +936,3 @@
 
     </body>
 </html>
-
-
