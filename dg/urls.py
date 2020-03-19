@@ -65,8 +65,37 @@ ivr_admin.logout_template = 'social_website/home.html'
 # loop_ivr_admin.login_template = 'social_website/login.html'
 # loop_ivr_admin.logout_template = 'social_website/home.html'
 
+from django.conf.urls import url, include
+from django.contrib.auth.models import User
+from rest_framework import routers, serializers, viewsets
+from people.models import Person
+# Serializers define the API representation.
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['url', 'username', 'email', 'is_staff']
+class FarmerSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Person
+        fields = ['person_name', 'phone_no', 'gender']
+
+class FarmerViewSet(viewsets.ModelViewSet):
+    queryset = Person.objects.all()[:10]
+    serializer_class = FarmerSerializer
+
+# ViewSets define the view behavior.
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'farmer', FarmerViewSet)
+
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
+    url(r'^api/', include(router.urls)),
     #(r'^', include(website_archive_urls)),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
     url(r'^login/$', 'social_website.views.login_view', {'template_name': 'social_website/login.html'}, name='signin'),
@@ -140,6 +169,8 @@ urlpatterns = patterns('',
     #(r'^agri/', include(videokheti.urls)),
     #AJAX for Feedback
     #url(r'^feedbacksubmit_json$', 'dg.feedback_view.ajax'),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+
 )
 
 # Static files serving locally

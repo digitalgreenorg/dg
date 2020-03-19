@@ -185,7 +185,8 @@ INSTALLED_APPS = (
     'mrppayment',
     'smart_selects',
     'loop_ivr',
-    'dataexport'
+    'dataexport',
+    'rest_framework',
     # 3rd Party
 )
 
@@ -270,3 +271,10 @@ TRAINING_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'training/')
 VIDEOS_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'videos/')
 LOOP_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=loop.org.digitalgreen.loop')
 TRAINING_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=org.digitalgreen.trainingapp')
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
