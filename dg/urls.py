@@ -69,19 +69,16 @@ from django.conf.urls import url, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 from people.models import Person
+from geographies.models import Country,Village
+import people.urls 
+
+from people.views import VillagesViewSet, FarmerViewSet, FarmerDetailView, BlockViewSet
+
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ['url', 'username', 'email', 'is_staff']
-class FarmerSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Person
-        fields = ['person_name', 'phone_no', 'gender']
-
-class FarmerViewSet(viewsets.ModelViewSet):
-    queryset = Person.objects.all()[:10]
-    serializer_class = FarmerSerializer
 
 # ViewSets define the view behavior.
 class UserViewSet(viewsets.ModelViewSet):
@@ -92,6 +89,9 @@ class UserViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'farmer', FarmerViewSet)
+router.register(r'villages', VillagesViewSet)
+router.register(r'block', BlockViewSet)
+# router.register(r'farmers/<int:pk>/', FarmerDetailView.as_view(), base_name="farmer-detail")
 
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
@@ -110,6 +110,7 @@ urlpatterns = patterns('',
     (r'^qacoco/', include(qacoco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
     (r'^videos/', include(videos.urls)),
+
     # ivrsadmin/logout/ should be above admin/ URL
     url(r'^ivrsadmin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/ivrsadmin'}),
     (r'^ivrsadmin/', include(ivr_admin.urls)),
@@ -169,7 +170,11 @@ urlpatterns = patterns('',
     #(r'^agri/', include(videokheti.urls)),
     #AJAX for Feedback
     #url(r'^feedbacksubmit_json$', 'dg.feedback_view.ajax'),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    #changes for geographies
+    # (r'^people/$', include(people.urls))
+    #changed till here
 
 )
 
