@@ -12,6 +12,10 @@ from dg.website_admin import website_admin
 
 import videokheti.urls
 
+# coco_api specific import
+from videos import views
+
+
 urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url=VIDEOS_PAGE)),
     url(r'^collection-add/(?P<collection>.+)/$', collection_edit_view, name='edit_collection'),
@@ -28,4 +32,9 @@ urlpatterns = patterns('',
     # admin/logout/ should be above admin/ URL
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/videos/admin/'}),
     (r'^admin/', include(website_admin.urls)),
+
+    # coco_api video urls
+    # as_view method takes type of request as key and class's method name as value 
+    url('api/videos', views.VideoViewSet.as_view()), 
+
 )

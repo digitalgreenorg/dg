@@ -1,16 +1,10 @@
-from rest_framework import routers, serializers, viewsets
-from django.conf.urls import patterns, include, url
-from . import views
+from django.conf.urls import url, include
 
-# router = routers.DefaultRouter()
-# router.register(r'farmer', FarmerViewSet)
-# router.register(r'villages', VillagesViewSet)
+from people import views
 
-
-urlpatterns = patterns('',
-    # url(r'^$', views.index, name='index'),
-    # url(r'^new/$', include(router.urls)),
-    # (r'^villages/$', VillagesViewSet),
-    # (r'^farmer/$', FarmerViewSet),
-
-)
+urlpatterns=[
+    url(r'^$', views.DefaultView.as_view()), 
+    url('farmers', views.FarmersList.as_view()),
+    url(r'^csv$', views.CSVView.as_view()), # r'^$' is used for regex of exact match as mentioned
+    # url(r'^farmers-list', views.FarmerViewSet.as_view({'get': 'list'})),
+]
