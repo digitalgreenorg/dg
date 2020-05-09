@@ -78,8 +78,9 @@ class VillageAPIView(generics.ListAPIView):
         elif end_limit: # case3: only end_limit is present
             queryset = queryset[:int(end_limit)] 
 
-        count = self.request.POST.get("count", "False")
-        if count in ["True","true","t","T","Yes","yes","Y","y"]:
+        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
+        # returns count only if param value matched
+        if count.lower() in ["true","t","yes","y"]:
             return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
@@ -127,8 +128,9 @@ class BlockAPIView(generics.ListAPIView):
         elif end_limit: # case3: only end_limit is present
             queryset = queryset[:int(end_limit)]
         
-        count = self.request.POST.get("count", "False")
-        if count in ["True","true","t","T","Yes","yes","Y","y"]:
+        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
+        # returns count only if param value matched
+        if count.lower() in ["true","t","yes","y"]:
             return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
@@ -175,8 +177,9 @@ class DistrictAPIView(generics.ListAPIView):
         elif end_limit: # case3: only end_limit is present
             queryset = queryset[:int(end_limit)]
 
-        count = self.request.POST.get("count", "False")
-        if count in ["True","true","t","T","Yes","yes","Y","y"]:
+        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
+        # returns count only if param value matched
+        if count.lower() in ["true","t","yes","y"]:
             return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
@@ -223,8 +226,9 @@ class StateAPIView(generics.ListAPIView):
         elif end_limit: # case3: only end_limit is present
             queryset = queryset[:int(end_limit)]
 
-        count = self.request.POST.get("count", "False")
-        if count in ["True","true","t","T","Yes","yes","Y","y"]:
+        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
+        # returns count only if param value matched
+        if count.lower() in ["true","t","yes","y"]:
             return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
@@ -271,8 +275,9 @@ class CountryAPIView(generics.ListAPIView):
         elif end_limit: # case3: only end_limit is present
             queryset = queryset[:int(end_limit)]
 
-        count = self.request.POST.get("count", "False")
-        if count in ["True","true","t","T","Yes","yes","Y","y"]:
+        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
+        # returns count only if param value matched
+        if count.lower() in ["true","t","yes","y"]:
             return Response({"count": queryset.count()})
             
         if fields_values: # fields provided in POST request and if not empty serves those fields only

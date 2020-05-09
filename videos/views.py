@@ -54,7 +54,8 @@ class VideoViewSet(generics.ListCreateAPIView):
             elif end_limit: # case3: only end_limit is present
                 queryset = queryset[:int(end_limit)]
 
-        count = self.request.POST.get("count", "False")
+        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
+        # returns count only if param value matched
         if count.lower() in ["true","t","yes","y"]:
             return Response({"count": queryset.count()})
 
