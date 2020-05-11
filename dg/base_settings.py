@@ -188,6 +188,10 @@ INSTALLED_APPS = (
     'dataexport',
     'rest_framework',
     # 3rd Party
+    'django_extensions',
+
+    #drf TokenAuthentication
+    'rest_framework.authtoken',
 )
 
 # Store these package names here as they may change in the future since
@@ -211,58 +215,58 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.google.GoogleOAuth2',
 )
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'standard': {
-            'format' : "[%(levelname)s] [%(asctime)s] [%(name)s] %(message)s",
-            'datefmt' : "%d/%b/%Y %H:%M:%S"
-        },
-    },
-    'handlers': {
-        'null': {
-            'level':'DEBUG',
-            'class':'django.utils.log.NullHandler',
-        },
-        'logfile': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/logfile'),
-            'formatter': 'standard',
-        },
-        'ap_migration_log': {
-            'level': 'INFO',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(PROJECT_PATH, '../geographies/management/commands/log/ap_migration_log'),
-            'formatter': 'standard',
-        },
-        'console':{
-            'level':'INFO',
-            'class':'logging.StreamHandler',
-            'formatter': 'standard'
-        },
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': True,
+#     'formatters': {
+#         'standard': {
+#             'format' : "[%(levelname)s] [%(asctime)s] [%(name)s] %(message)s",
+#             'datefmt' : "%d/%b/%Y %H:%M:%S"
+#         },
+#     },
+#     'handlers': {
+#         'null': {
+#             'level':'DEBUG',
+#             'class':'django.utils.log.NullHandler',
+#         },
+#         'logfile': {
+#             'level':'DEBUG',
+#             'class':'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/logfile'),
+#             'formatter': 'standard',
+#         },
+#         'ap_migration_log': {
+#             'level': 'INFO',
+#             'class':'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(PROJECT_PATH, '../geographies/management/commands/log/ap_migration_log'),
+#             'formatter': 'standard',
+#         },
+#         'console':{
+#             'level':'INFO',
+#             'class':'logging.StreamHandler',
+#             'formatter': 'standard'
+#         },
 
-    },
-    'loggers': {
-        'social_website': {
-            'handlers': ['logfile'],
-            'level': 'DEBUG',
-        },
-        'dashboard': {
-            'handlers': ['logfile'],
-            'level': 'DEBUG',
-        },
-        'loop_ivr': {
-            'handlers': ['logfile'],
-            'level': 'DEBUG',
-        },
-        'geographies': {
-            'handlers': ['ap_migration_log'],
-            'level' : 'INFO',
-        }
-    }
-}
+#     },
+#     'loggers': {
+#         'social_website': {
+#             'handlers': ['logfile'],
+#             'level': 'DEBUG',
+#         },
+#         'dashboard': {
+#             'handlers': ['logfile'],
+#             'level': 'DEBUG',
+#         },
+#         'loop_ivr': {
+#             'handlers': ['logfile'],
+#             'level': 'DEBUG',
+#         },
+#         'geographies': {
+#             'handlers': ['ap_migration_log'],
+#             'level' : 'INFO',
+#         }
+#     }
+# }
 
 PRODUCT_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'solutions/')
 LOOP_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'loop/')
@@ -271,10 +275,13 @@ TRAINING_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'training/')
 VIDEOS_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'videos/')
 LOOP_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=loop.org.digitalgreen.loop')
 TRAINING_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=org.digitalgreen.trainingapp')
+
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [        
+        'rest_framework.permissions.IsAuthenticated', 
+    ],
 }
