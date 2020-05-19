@@ -153,7 +153,8 @@ urlpatterns = patterns('',
     url(r'api-token-auth', views.obtain_auth_token), # POST;params: {'username':'','password':''}; generates token 
     url(r'api/farmer/', include('people.urls')),  # includes people.urls.py
     url(r'api/geo/', include('geographies.urls')), # includes geographies.urls.py
-    url(r'api/activities/', include('activities.urls')), # includes activities.urls.py
+    (r'^api/activities/', include('activities.urls')), # includes activities.urls.py
+    url(r'api/programs/', include('programs.urls')), # includes programs.urls.py
     #coco_api changes ends here
 
 )

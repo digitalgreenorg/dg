@@ -14,12 +14,16 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
 
-#authentication
+# authentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+# csrf
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
-class UpavanViewSet(generics.ListCreateAPIView):
+
+class UpavanViewSet( generics.ListCreateAPIView):
     ''' 
     coco_api class-based view to query Screening model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
@@ -31,8 +35,7 @@ class UpavanViewSet(generics.ListCreateAPIView):
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
-
-    serializer_class = ScreeningSerializer 
+    # import pdb;pdb.set_trace()
 
     # GET request 
     def get(self, request):
@@ -40,6 +43,7 @@ class UpavanViewSet(generics.ListCreateAPIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
+        
         queryset = Screening.objects.get_queryset().order_by('id')
 
 
@@ -102,5 +106,11 @@ class UpavanViewSet(generics.ListCreateAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = ScreeningSerializer(queryset, many=True)
+
+        # context = RequestContext(request)
+        # context_dict = {}
+        # # Update the dictionary with csrf_token 
+        # conext_dict.update(csrf(request))
+
         # JSON Response is provided by default
-        return Response(serializer.data)
+        return Response(serializer.data) #, context_dict, context)
