@@ -1,10 +1,8 @@
-from django.conf.urls import url, include
+from django.conf.urls import url, include, patterns
 
 from activities import views
-from django.views.decorators.csrf import csrf_exempt
-
 
 urlpatterns=[
-    url(r'^upavan', views.UpavanViewSet.as_view()),
+    url('upavan', views.UpavanViewSet.as_view()),
 ]
 

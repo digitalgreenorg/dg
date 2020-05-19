@@ -18,10 +18,6 @@ from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-# csrf
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-
 
 class UpavanViewSet( generics.ListCreateAPIView):
     ''' 
@@ -35,7 +31,6 @@ class UpavanViewSet( generics.ListCreateAPIView):
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
-    # import pdb;pdb.set_trace()
 
     # GET request 
     def get(self, request):
@@ -43,9 +38,7 @@ class UpavanViewSet( generics.ListCreateAPIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
-        
         queryset = Screening.objects.get_queryset().order_by('id')
-
 
         uc_id = request.POST.get('user_created') # POST param 'user_created', default value is empty string
         if uc_id:

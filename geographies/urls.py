@@ -3,7 +3,7 @@ from django.conf.urls import url, include
 from geographies import views
 
 urlpatterns=[
-    url('^$', views.DefaultView.as_view({'get': 'message'})),
+    url('default', views.DefaultView.as_view({'get': 'message'})),
     url('village', views.VillageAPIView.as_view()),
     url('block', views.BlockAPIView.as_view()),
     url('district', views.DistrictAPIView.as_view()),

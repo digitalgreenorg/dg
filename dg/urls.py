@@ -20,6 +20,10 @@ import videokheti.urls
 import ivr.urls
 import training.urls
 import videos.urls
+import people.urls
+import activities.urls
+import geographies.urls
+import programs.urls
 
 from django.contrib import admin
 admin.autodiscover()
@@ -89,6 +93,16 @@ urlpatterns = patterns('',
     (r'^dimagi/', include(dimagi.urls)),
     (r'^videos/', include(videos.urls)),
 
+
+    #coco_api changes starts here
+    (r'^api-token-auth', views.obtain_auth_token), # POST;params: {'username':'','password':''}; generates token 
+    (r'^api/farmer/', include(people.urls)),  # includes people.urls.py
+    (r'^api/geo/', include(geographies.urls)), # includes geographies.urls.py
+    (r'^api/activities/', include(activities.urls)), # includes activities.urls.py
+    (r'^api/programs/', include(programs.urls)), # includes programs.urls.py
+    #coco_api changes ends here
+
+
     # ivrsadmin/logout/ should be above admin/ URL
     url(r'^ivrsadmin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/ivrsadmin'}),
     (r'^ivrsadmin/', include(ivr_admin.urls)),
@@ -149,13 +163,9 @@ urlpatterns = patterns('',
     #AJAX for Feedback
     #url(r'^feedbacksubmit_json$', 'dg.feedback_view.ajax'),
 
-    #coco_api changes starts here
-    url(r'api-token-auth', views.obtain_auth_token), # POST;params: {'username':'','password':''}; generates token 
-    url(r'api/farmer/', include('people.urls')),  # includes people.urls.py
-    url(r'api/geo/', include('geographies.urls')), # includes geographies.urls.py
-    (r'^api/activities/', include('activities.urls')), # includes activities.urls.py
-    url(r'api/programs/', include('programs.urls')), # includes programs.urls.py
-    #coco_api changes ends here
+
+
+
 
 )
 

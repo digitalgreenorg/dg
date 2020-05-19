@@ -10,6 +10,8 @@ from output.views import video_analytics
 from dg.base_settings import VIDEOS_PAGE
 from dg.website_admin import website_admin
 
+from activities import urls as acturls
+
 import videokheti.urls
 
 # coco_api specific import
