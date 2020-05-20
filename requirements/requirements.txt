@@ -26,7 +26,7 @@ gdata==2.0.15
 google-api-python-client==1.6.3
 grappelli-safe==0.4.5
 html5lib==1.0.1
-httplib2==0.10.3
+httplib2==0.18.0
 idna==2.6
 ijson==2.3
 ipython==5.5.0
