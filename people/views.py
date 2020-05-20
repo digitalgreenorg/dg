@@ -47,7 +47,6 @@ class DefaultView(generics.ListCreateAPIView):
         return Response({"detail":"Method \"GET\" not allowed."})
 
 
-
 class FarmersJsonAPIView(generics.ListCreateAPIView):
     ''' 
     coco_api class-based view to query Person model and provide JSON response.
@@ -70,7 +69,8 @@ class FarmersJsonAPIView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         country_id = self.request.POST.get('country_id', 0) # POST param 'country_id', default value is 0
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
-             
+        phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'filter_phone_no', default value is empty string
+
         try:
             # fetches country id from database model Country to verify param value
             got_country_id = Country.objects.get(id=country_id).id 
@@ -79,6 +79,9 @@ class FarmersJsonAPIView(generics.ListCreateAPIView):
         except:
             # in case of failure of above try statement, all Person objects are retrieved
             queryset = Person.objects.all().order_by('id')
+
+        if phoneNumberExists in ["true","t","yes","y"]:
+            queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])
 
         start_limit = request.POST.get('start_limit') # POST param 'start_limit'
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'       
