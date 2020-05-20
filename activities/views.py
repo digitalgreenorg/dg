@@ -19,7 +19,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 
-class UpavanViewSet( generics.ListCreateAPIView):
+class ScreeningAPIView( generics.ListCreateAPIView):
     ''' 
     coco_api class-based view to query Screening model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 

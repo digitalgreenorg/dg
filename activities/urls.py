@@ -3,6 +3,6 @@ from django.conf.urls import url, include, patterns
 from activities import views
 
 urlpatterns=[
-    url('upavan', views.UpavanViewSet.as_view()),
+    url(r'^api/screening', views.ScreeningAPIView.as_view()),
 ]
 

@@ -17,7 +17,7 @@ from geographies.models import *
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-class DefaultView(viewsets.ViewSet):
+class DefaultView(generics.ListAPIView):
     ''' 
     coco_api class-based view to provide default message in JSON format.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
@@ -33,12 +33,12 @@ class DefaultView(viewsets.ViewSet):
     # POST request
     def post(self, request):
         # dictionary results as JSON format message 
-        return Response({"message":"Welcome to COCO APIs", "base_url":"api/geo", 
-        "url_list":["api/geo/village", 
-                    "api/geo/block",
-                    "api/geo/district",
-                    "api/geo/state",
-                    "api/geo/country"]})
+        return Response({"message":"Welcome to COCO APIs", "base_url":"/geo/api/", 
+        "url_list":["/geo/api/village", 
+                    "/geo/api/block",
+                    "/geo/api/district",
+                    "/geo/api/state",
+                    "/geo/api/country"]})
     # GET request
     def get(self, request, *args, **kwargs):
         return Response({"detail":"Method \"GET\" not allowed"})

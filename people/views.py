@@ -39,15 +39,16 @@ class DefaultView(generics.ListCreateAPIView):
     # POST request
     def post(self, request, *args, **kwargs):
         # dictionary results as JSON format message 
-        return Response({"message":"Welcome to COCO APIs", "base_url":"api/farmer", 
-        "url_list":["api/farmer/farmers"]})
+        return Response({"message":"Welcome to COCO APIs", "base_url":"/farmer/api", 
+        "url_list":["/farmer/api/farmers", "/farmer/api/csv"]})
     
     # GET request 
     def get(self, request):
         return Response({"detail":"Method \"GET\" not allowed."})
 
 
-class FarmersList(generics.ListCreateAPIView):
+
+class FarmersJsonAPIView(generics.ListCreateAPIView):
     ''' 
     coco_api class-based view to query Person model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
@@ -59,6 +60,7 @@ class FarmersList(generics.ListCreateAPIView):
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
+
 
     # GET request 
     def get(self, request):
@@ -104,7 +106,7 @@ class FarmersList(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
-class CSVView(APIView):
+class FarmersCsvAPIView(APIView):
     ''' 
     coco_api class-based view to query Person model and provide CSV response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 

@@ -37,6 +37,6 @@ urlpatterns = patterns('',
 
     # coco_api video urls
     # as_view method takes type of request as key and class's method name as value 
-    url('api/videos', views.VideoViewSet.as_view()), 
+    url(r'^api/video', views.VideoAPIView.as_view()), 
 
 )

@@ -96,10 +96,10 @@ urlpatterns = patterns('',
 
     #coco_api changes starts here
     (r'^api-token-auth', views.obtain_auth_token), # POST;params: {'username':'','password':''}; generates token 
-    (r'^api/farmer/', include(people.urls)),  # includes people.urls.py
-    (r'^api/geo/', include(geographies.urls)), # includes geographies.urls.py
-    (r'^api/activities/', include(activities.urls)), # includes activities.urls.py
-    (r'^api/programs/', include(programs.urls)), # includes programs.urls.py
+    (r'^farmer/', include(people.urls)),  # includes people.urls.py
+    (r'^geo/', include(geographies.urls)), # includes geographies.urls.py
+    (r'^activities/', include(activities.urls)), # includes activities.urls.py
+    (r'^programs/', include(programs.urls)), # includes programs.urls.py
     #coco_api changes ends here
 
 

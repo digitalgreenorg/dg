@@ -4,8 +4,8 @@ from  views import *
 
 urlpatterns = [
 
-    url('partner', PartnerAPIView.as_view()),
-    url('project', ProjectAPIView.as_view()),
+    url(r'^api/partner', PartnerAPIView.as_view()),
+    url(r'^api/project', ProjectAPIView.as_view()),
 
 ]
     
