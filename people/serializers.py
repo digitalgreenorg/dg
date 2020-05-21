@@ -41,10 +41,16 @@ class FarmerSerializer(DynamicFieldsModelSerializer):
     country_id = serializers.IntegerField(source='village.block.district.state.country.id', read_only=True)
     country_name = serializers.CharField(source='village.block.district.state.country.country_name', read_only=True)
 
+    F_count = serializers.SerializerMethodField() # added for visualization 
 
     class Meta:
         model = Person 
         fields = '__all__'
+
+    # returns 1 to indicate present of a Person object as a numeric field
+    def get_F_count(self, obj):
+        return 1
+    
 
 
 
