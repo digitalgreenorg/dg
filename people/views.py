@@ -23,6 +23,7 @@ from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
 
+
 class DefaultView(generics.ListCreateAPIView):
     ''' 
     coco_api class-based view to provide default message in JSON format.
@@ -47,7 +48,7 @@ class DefaultView(generics.ListCreateAPIView):
         return Response({"detail":"Method \"GET\" not allowed."})
 
 
-class FarmersJsonAPIView(generics.ListCreateAPIView):
+class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView):
     ''' 
     coco_api class-based view to query Person model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
@@ -66,7 +67,7 @@ class FarmersJsonAPIView(generics.ListCreateAPIView):
         return Response({"detail":"Method \"GET\" not allowed"})
 
     # POST request
-    def post(self, request, *args, **kwargs):
+    def getAllFarmers(self, request, *args, **kwargs):
         country_id = self.request.POST.get('country_id', 0) # POST param 'country_id', default value is 0
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
         phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'filter_phone_no', default value is empty string
@@ -107,6 +108,51 @@ class FarmersJsonAPIView(generics.ListCreateAPIView):
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = FarmerSerializer(queryset, many=True)
         # JSON Response is provided by default
+        return Response(serializer.data)
+
+    # POST request
+    def getPhoneMatchedResults(self, request, *args, **kwargs):
+        queryset = Person.objects.all().order_by('id')
+
+        fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
+        phone_numbers = request.POST.get('phoneNumbers', '') # POST param 'fields', default value is empty string
+
+        phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'filter_phone_no', default value is empty string
+
+        # phone number exists or not    
+        if phoneNumberExists in ["true","t","yes","y"]:
+            queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])
+
+
+        # phone number matches     
+        if phone_numbers:
+            ph_no_values = [ph.strip() for ph in phone_numbers.split(",")]
+            queryset = queryset.filter(phone_no__in=ph_no_values)
+
+        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
+        # returns count only if param value matched
+        if count.lower() in ["true","t","yes","y"]:
+            return Response({"count": queryset.count()})
+
+
+        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
+        end_limit = request.POST.get('end_limit') # POST param 'end_limit'       
+        # limits the total response count        
+        if start_limit and end_limit: # case1: both are present
+            queryset = queryset[int(start_limit)-1:int(end_limit)]
+        elif start_limit: # case2: only start_limit is present
+            queryset = queryset[int(start_limit)-1:]
+        elif end_limit: # case3: only end_limit is present
+            queryset = queryset[:int(end_limit)]
+
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = FarmerSerializer(queryset, fields=fields_values, many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = FarmerSerializer(queryset, many=True)
+        # CSV Response is provided
         return Response(serializer.data)
 
 
@@ -238,5 +284,3 @@ class FarmersMatchAPIView(generics.ListCreateAPIView):
             serializer = FarmerSerializer(queryset, many=True)
         # CSV Response is provided
         return Response(serializer.data)
-
-
