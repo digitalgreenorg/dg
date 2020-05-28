@@ -23,6 +23,8 @@ from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
 
+from coco_api_utils import Utils
+
 
 class DefaultView(generics.ListCreateAPIView):
     ''' 
@@ -61,18 +63,6 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
 
-    def limitQueryset(self, queryset, start_limit, end_limit):
-        # limits the total response count        
-        if start_limit and end_limit: # case1: both are present
-            queryset = queryset[int(start_limit)-1:int(end_limit)]
-        elif start_limit: # case2: only start_limit is present
-            queryset = queryset[int(start_limit)-1:]
-        elif end_limit: # case3: only end_limit is present
-            queryset = queryset[:int(end_limit)]
-
-        return queryset
-
-
 
     # GET request 
     def get(self, request):
@@ -100,8 +90,8 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
         start_limit = request.POST.get('start_limit') # POST param 'start_limit'
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'       
 
-        queryset = self.limitQueryset(queryset, start_limit, end_limit) 
-
+        utils = Utils()
+        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
 
         count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
         # returns count only if param value matched
@@ -145,8 +135,8 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
         start_limit = request.POST.get('start_limit') # POST param 'start_limit'
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'      
-
-        queryset = self.limitQueryset(queryset, start_limit, end_limit) 
+        utils = Utils()
+        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
   
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
@@ -156,7 +146,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = FarmerSerializer(queryset, many=True)
-        # CSV Response is provided
+        # JSON Response is provided
         return Response(serializer.data)
 
 
@@ -175,17 +165,6 @@ class FarmersCsvAPIView(APIView):
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
-
-    def limitQueryset(self, queryset, start_limit, end_limit):
-        # limits the total response count        
-        if start_limit and end_limit: # case1: both are present
-            queryset = queryset[int(start_limit)-1:int(end_limit)]
-        elif start_limit: # case2: only start_limit is present
-            queryset = queryset[int(start_limit)-1:]
-        elif end_limit: # case3: only end_limit is present
-            queryset = queryset[:int(end_limit)]
-
-        return queryset
 
     # GET request 
     def get(self, request):
@@ -214,8 +193,9 @@ class FarmersCsvAPIView(APIView):
 
         start_limit = request.POST.get('start_limit') # POST param 'start_limit'
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'       
-        queryset = self.limitQueryset(queryset, start_limit, end_limit) 
 
+        utils = Utils()
+        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
 
         count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
         # returns count only if param value matched
