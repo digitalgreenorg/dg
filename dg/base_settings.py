@@ -215,58 +215,68 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.google.GoogleOAuth2',
 )
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': True,
-#     'formatters': {
-#         'standard': {
-#             'format' : "[%(levelname)s] [%(asctime)s] [%(name)s] %(message)s",
-#             'datefmt' : "%d/%b/%Y %H:%M:%S"
-#         },
-#     },
-#     'handlers': {
-#         'null': {
-#             'level':'DEBUG',
-#             'class':'django.utils.log.NullHandler',
-#         },
-#         'logfile': {
-#             'level':'DEBUG',
-#             'class':'logging.handlers.RotatingFileHandler',
-#             'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/logfile'),
-#             'formatter': 'standard',
-#         },
-#         'ap_migration_log': {
-#             'level': 'INFO',
-#             'class':'logging.handlers.RotatingFileHandler',
-#             'filename': os.path.join(PROJECT_PATH, '../geographies/management/commands/log/ap_migration_log'),
-#             'formatter': 'standard',
-#         },
-#         'console':{
-#             'level':'INFO',
-#             'class':'logging.StreamHandler',
-#             'formatter': 'standard'
-#         },
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format' : "[%(levelname)s] [%(asctime)s] [%(name)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'null': {
+            'level':'DEBUG',
+            'class':'django.utils.log.NullHandler',
+        },
+        'logfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/logfile'),
+            'formatter': 'standard',
+        },
+        'ap_migration_log': {
+            'level': 'INFO',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(PROJECT_PATH, '../geographies/management/commands/log/ap_migration_log'),
+            'formatter': 'standard',
+        },
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'formatter': 'standard'
+        },
+        'api_access_log': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(PROJECT_PATH, '../coco_api/log/logfile'),
+            'formatter': 'standard',
+        },
 
-#     },
-#     'loggers': {
-#         'social_website': {
-#             'handlers': ['logfile'],
-#             'level': 'DEBUG',
-#         },
-#         'dashboard': {
-#             'handlers': ['logfile'],
-#             'level': 'DEBUG',
-#         },
-#         'loop_ivr': {
-#             'handlers': ['logfile'],
-#             'level': 'DEBUG',
-#         },
-#         'geographies': {
-#             'handlers': ['ap_migration_log'],
-#             'level' : 'INFO',
-#         }
-#     }
-# }
+    },
+    'loggers': {
+        'social_website': {
+            'handlers': ['logfile'],
+            'level': 'DEBUG',
+        },
+        'dashboard': {
+            'handlers': ['logfile'],
+            'level': 'DEBUG',
+        },
+        'loop_ivr': {
+            'handlers': ['logfile'],
+            'level': 'DEBUG',
+        },
+        'geographies': {
+            'handlers': ['ap_migration_log'],
+            'level' : 'INFO',
+        },
+        'coco_api':{
+            'handlers': ['api_access_log'],
+            'level': 'INFO',
+        }
+    }
+}
 
 PRODUCT_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'solutions/')
 LOOP_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'loop/')

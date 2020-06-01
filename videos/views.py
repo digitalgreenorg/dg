@@ -16,6 +16,10 @@ from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth.models import User
+
+import logging
+logger = logging.getLogger('coco_api')
 
 class VideoAPIView(generics.ListCreateAPIView):
     ''' 
@@ -36,7 +40,9 @@ class VideoAPIView(generics.ListCreateAPIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
-        
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.VideoAPIView.post, user: %s" % ( __name__,user_obj))
+
         start_limit = request.POST.get('start_limit') # POST param 'start_limit'
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'
         fields_values = request.POST.get('fields', '') # POST param 'fields'

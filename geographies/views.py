@@ -17,6 +17,11 @@ from geographies.models import *
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth.models import User
+
+import logging
+logger = logging.getLogger('coco_api')
+
 class DefaultView(generics.ListAPIView):
     ''' 
     coco_api class-based view to provide default message in JSON format.
@@ -63,6 +68,8 @@ class VillageAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.VillageAPIView.post, user: %s" % ( __name__,user_obj))
 
         queryset = Village.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
 
@@ -113,7 +120,9 @@ class BlockAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
-        
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.BlockAPIView.post, user: %s" % ( __name__,user_obj))
+
         queryset = Block.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
         fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
@@ -162,7 +171,9 @@ class DistrictAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
-        
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.DistrictAPIView.post, user: %s" % ( __name__,user_obj))
+
         queryset = District.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
         fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
@@ -211,7 +222,9 @@ class StateAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
-        
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.StateAPIView.post, user: %s" % ( __name__,user_obj))
+
         queryset = State.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
         fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
@@ -260,7 +273,9 @@ class CountryAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
-        
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.CountryAPIView.post, user: %s" % ( __name__,user_obj))
+
         queryset = Country.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
         fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value

@@ -13,6 +13,11 @@ from serializers import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth.models import User
+
+import logging
+logger = logging.getLogger('coco_api')
+
 class PartnerAPIView(generics.ListCreateAPIView):
     ''' 
     coco_api class-based view to query Partner model and provide JSON response.
@@ -32,7 +37,9 @@ class PartnerAPIView(generics.ListCreateAPIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
-        
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.PartnerAPIView.post, user: %s" % ( __name__,user_obj))
+
         start_limit = request.POST.get('start_limit') # POST param 'start_limit'
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'
         fields_values = request.POST.get('fields', '') # POST param 'fields'
@@ -89,7 +96,9 @@ class ProjectAPIView(generics.ListCreateAPIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
-        
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.ProjectAPIView.post, user: %s" % ( __name__,user_obj))
+
         start_limit = request.POST.get('start_limit') # POST param 'start_limit'
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'
         fields_values = request.POST.get('fields', '') # POST param 'fields'

@@ -25,6 +25,10 @@ from rest_framework_csv import renderers as r
 
 from coco_api_utils import Utils
 
+from django.contrib.auth.models import User
+
+import logging
+logger = logging.getLogger('coco_api')
 
 class DefaultView(generics.ListCreateAPIView):
     ''' 
@@ -70,6 +74,9 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
     # POST request
     def getAllFarmers(self, request, *args, **kwargs):
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.getAllFarmers, user: %s" % ( __name__,user_obj))
+
         country_id = self.request.POST.get('country_id', 0) # POST param 'country_id', default value is 0
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
         phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'filter_phone_no', default value is empty string
@@ -110,6 +117,9 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
     # POST request
     def getPhoneMatchedResults(self, request, *args, **kwargs):
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.getPhoneMatchedResults, user: %s" % ( __name__,user_obj))
+
         queryset = Person.objects.all().order_by('id')
 
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
@@ -172,7 +182,8 @@ class FarmersCsvAPIView(APIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
-
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.FarmersCsvAPIView.post, user: %s" % (__name__,user_obj))
         country_id = self.request.POST.get('country_id', 0) # POST param 'country_id', default value is 0
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
 

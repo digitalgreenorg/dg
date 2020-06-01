@@ -18,6 +18,10 @@ from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth.models import User
+
+import logging
+logger = logging.getLogger('coco_api')
 
 class ScreeningAPIView( generics.ListCreateAPIView):
     ''' 
@@ -38,6 +42,9 @@ class ScreeningAPIView( generics.ListCreateAPIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
+        user_obj = User.objects.get(username=request.user)
+        logger.info("accessed: %s.ScreeningAPIView.post, user: %s" % ( __name__,user_obj))
+
         queryset = Screening.objects.get_queryset().order_by('id')
 
         uc_id = request.POST.get('user_created') # POST param 'user_created', default value is empty string
