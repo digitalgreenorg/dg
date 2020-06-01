@@ -23,7 +23,7 @@ from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
 
-from coco_api_utils import Utils
+from coco_api_utils import Utils, CustomPagination
 
 from django.contrib.auth.models import User
 
@@ -65,6 +65,8 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
+    pagination_class = CustomPagination
+    serializer_class = FarmerSerializer
 
 
     # GET request 
@@ -112,10 +114,19 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
             serializer = FarmerSerializer(queryset, many=True)
         
         response = Response(serializer.data)
+
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data) 
+            processing_time = time.time() - start_time
+            utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
+            return paginated_response
+
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
-   
-        # JSON Response is provided by default
+        # JSON Response is provided
         return response
 
     # POST request
@@ -127,7 +138,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
         phone_numbers = request.POST.get('phoneNumbers', '') # POST param 'fields', default value is empty string
 
-        phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'filter_phone_no', default value is empty string
+        phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'phoneNumberExists', default value is empty string
 
         # phone number exists or not    
         if phoneNumberExists in ["true","t","yes","y"]:
@@ -160,14 +171,23 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
             serializer = FarmerSerializer(queryset, many=True)
        
         response = Response(serializer.data)
+
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data) 
+            processing_time = time.time() - start_time
+            utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
+            return paginated_response
+
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
-   
-        # JSON Response is provided by default
+        # JSON Response is provided
         return response
 
 
-class FarmersCsvAPIView(APIView):
+class FarmersCsvAPIView(viewsets.GenericViewSet):
     ''' 
     coco_api class-based view to query Person model and provide CSV response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
@@ -182,6 +202,8 @@ class FarmersCsvAPIView(APIView):
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
+    serializer_class = FarmerSerializer
+
 
     # GET request 
     def get(self, request):
@@ -231,6 +253,5 @@ class FarmersCsvAPIView(APIView):
         response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
-   
-        # JSON Response is provided by default
+        # JSON Response is provided
         return response

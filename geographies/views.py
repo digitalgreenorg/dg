@@ -18,7 +18,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
-from coco_api_utils import Utils
+from coco_api_utils import Utils, CustomPagination
 import time
 
 class DefaultView(generics.ListAPIView):
@@ -60,6 +60,8 @@ class VillageAPIView(generics.ListAPIView):
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
+    pagination_class = CustomPagination
+    serializer_class = VillageSerializer
 
     # GET request 
     def get(self, request):
@@ -94,10 +96,19 @@ class VillageAPIView(generics.ListAPIView):
             serializer = VillageSerializer(queryset, many=True)
         
         response = Response(serializer.data)
+
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data) 
+            processing_time = time.time() - start_time
+            utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
+            return paginated_response
+
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
-   
-        # JSON Response is provided by default
+        # JSON Response is provided
         return response
 
 
@@ -113,6 +124,8 @@ class BlockAPIView(generics.ListAPIView):
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
+    pagination_class = CustomPagination
+    serializer_class = BlockSerializer
 
     # GET request 
     def get(self, request):
@@ -147,10 +160,19 @@ class BlockAPIView(generics.ListAPIView):
             serializer = BlockSerializer(queryset, many=True)
         
         response = Response(serializer.data)
+
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data) 
+            processing_time = time.time() - start_time
+            utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
+            return paginated_response
+
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
-   
-        # JSON Response is provided by default
+        # JSON Response is provided
         return response
 
 class DistrictAPIView(generics.ListAPIView):
@@ -165,6 +187,8 @@ class DistrictAPIView(generics.ListAPIView):
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
+    pagination_class = CustomPagination
+    serializer_class = DistrictSerializer
 
     # GET request 
     def get(self, request):
@@ -199,10 +223,19 @@ class DistrictAPIView(generics.ListAPIView):
             serializer = DistrictSerializer(queryset, many=True)
         
         response = Response(serializer.data)
+
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data) 
+            processing_time = time.time() - start_time
+            utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
+            return paginated_response
+
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
-   
-        # JSON Response is provided by default
+        # JSON Response is provided
         return response
 
 class StateAPIView(generics.ListAPIView):
@@ -217,6 +250,8 @@ class StateAPIView(generics.ListAPIView):
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
+    pagination_class = CustomPagination
+    serializer_class = StateSerializer
 
     # GET request 
     def get(self, request):
@@ -251,10 +286,19 @@ class StateAPIView(generics.ListAPIView):
             serializer = StateSerializer(queryset, many=True)
         
         response = Response(serializer.data)
+
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data) 
+            processing_time = time.time() - start_time
+            utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
+            return paginated_response
+
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
-   
-        # JSON Response is provided by default
+        # JSON Response is provided
         return response
 
 class CountryAPIView(generics.ListAPIView):
@@ -269,6 +313,8 @@ class CountryAPIView(generics.ListAPIView):
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
+    pagination_class = CustomPagination
+    serializer_class = CountrySerializer
 
     # GET request 
     def get(self, request):
@@ -303,8 +349,17 @@ class CountryAPIView(generics.ListAPIView):
             serializer = CountrySerializer(queryset, many=True)
         
         response = Response(serializer.data)
+
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data) 
+            processing_time = time.time() - start_time
+            utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
+            return paginated_response
+
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
-   
-        # JSON Response is provided by default
+        # JSON Response is provided
         return response

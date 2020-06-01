@@ -17,7 +17,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
-from coco_api_utils import Utils
+from coco_api_utils import Utils, CustomPagination
 import time
 
 class VideoAPIView(generics.ListCreateAPIView):
@@ -32,6 +32,8 @@ class VideoAPIView(generics.ListCreateAPIView):
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
     permissions_classes =[IsAuthenticated]
+    pagination_class = CustomPagination
+    serializer_class = VideoSerializer
 
     # GET request 
     def get(self, request):
@@ -68,9 +70,18 @@ class VideoAPIView(generics.ListCreateAPIView):
             serializer = VideoSerializer(queryset, many=True)
         
         response = Response(serializer.data)
+
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data) 
+            processing_time = time.time() - start_time
+            utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
+            return paginated_response
+
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
-   
-        # JSON Response is provided by default
+        # JSON Response is provided
         return response
   
