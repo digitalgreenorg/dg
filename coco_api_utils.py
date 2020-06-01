@@ -1,3 +1,9 @@
+from django.contrib.auth.models import User
+from django.utils import importlib
+import time
+import logging
+
+
 
 class Utils:
 
@@ -12,3 +18,15 @@ class Utils:
 
         return queryset
 
+
+
+    def logRequest(self, request, class_instance, view_fun, processing_time, status_code ):
+        logger = logging.getLogger('coco_api')
+        user_obj = User.objects.get(username=request.user)
+        ip_addr = request.META['REMOTE_ADDR']
+        method = request.method
+        user_id = user_obj.id
+        class_name = class_instance.__class__.__name__
+        module_name = class_instance.__module__
+        # method_name = fun.
+        logger.info("accessed: %s.%s.%s, user_id: %s, username: %s, ip_address: %s, method: %s, processing_time: %s seconds, status_code: %s" % ( module_name, class_name, view_fun, user_id, user_obj, ip_addr, method, processing_time, status_code))

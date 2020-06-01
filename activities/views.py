@@ -18,10 +18,8 @@ from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from django.contrib.auth.models import User
-
-import logging
-logger = logging.getLogger('coco_api')
+import time
+from coco_api_utils import Utils
 
 class ScreeningAPIView( generics.ListCreateAPIView):
     ''' 
@@ -42,9 +40,9 @@ class ScreeningAPIView( generics.ListCreateAPIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
-        user_obj = User.objects.get(username=request.user)
-        logger.info("accessed: %s.ScreeningAPIView.post, user: %s" % ( __name__,user_obj))
-
+        start_time = time.time()
+        utils = Utils()
+        
         queryset = Screening.objects.get_queryset().order_by('id')
 
         uc_id = request.POST.get('user_created') # POST param 'user_created', default value is empty string
@@ -54,7 +52,7 @@ class ScreeningAPIView( generics.ListCreateAPIView):
         start_day = request.POST.get('start_day')
         start_month = request.POST.get('start_month')
         start_year = request.POST.get('start_year')
-        end_day = request.POST.get('end_day')
+        end_day = request.POST.get('1end_day')
         end_month = request.POST.get('end_month')
         end_year = request.POST.get('end_year')
 
@@ -86,12 +84,7 @@ class ScreeningAPIView( generics.ListCreateAPIView):
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
 
         # limits the total response count        
-        if start_limit and end_limit: # case1: both are present
-            queryset = queryset[int(start_limit)-1:int(end_limit)]
-        elif start_limit: # case2: only start_limit is present
-            queryset = queryset[int(start_limit)-1:]
-        elif end_limit: # case3: only end_limit is present
-            queryset = queryset[:int(end_limit)] 
+        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
 
         count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
         # returns count only if param value matched
@@ -107,10 +100,9 @@ class ScreeningAPIView( generics.ListCreateAPIView):
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = ScreeningSerializer(queryset, many=True)
 
-        # context = RequestContext(request)
-        # context_dict = {}
-        # # Update the dictionary with csrf_token 
-        # conext_dict.update(csrf(request))
-
+        response = Response(serializer.data)
+        processing_time = time.time() - start_time
+        utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
+   
         # JSON Response is provided by default
-        return Response(serializer.data) #, context_dict, context)
+        return response

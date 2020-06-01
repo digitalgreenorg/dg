@@ -18,9 +18,8 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
-
-import logging
-logger = logging.getLogger('coco_api')
+from coco_api_utils import Utils
+import time
 
 class DefaultView(generics.ListAPIView):
     ''' 
@@ -68,8 +67,8 @@ class VillageAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
-        user_obj = User.objects.get(username=request.user)
-        logger.info("accessed: %s.VillageAPIView.post, user: %s" % ( __name__,user_obj))
+        start_time = time.time()
+        utils = Utils()
 
         queryset = Village.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
 
@@ -78,12 +77,8 @@ class VillageAPIView(generics.ListAPIView):
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
 
         # limits the total response count        
-        if start_limit and end_limit: # case1: both are present
-            queryset = queryset[int(start_limit)-1:int(end_limit)]
-        elif start_limit: # case2: only start_limit is present
-            queryset = queryset[int(start_limit)-1:]
-        elif end_limit: # case3: only end_limit is present
-            queryset = queryset[:int(end_limit)] 
+        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
+
 
         count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
         # returns count only if param value matched
@@ -97,8 +92,13 @@ class VillageAPIView(generics.ListAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = VillageSerializer(queryset, many=True)
+        
+        response = Response(serializer.data)
+        processing_time = time.time() - start_time
+        utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
+   
         # JSON Response is provided by default
-        return Response(serializer.data) 
+        return response
 
 
 class BlockAPIView(generics.ListAPIView):
@@ -120,8 +120,8 @@ class BlockAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
-        user_obj = User.objects.get(username=request.user)
-        logger.info("accessed: %s.BlockAPIView.post, user: %s" % ( __name__,user_obj))
+        start_time = time.time()
+        utils = Utils()
 
         queryset = Block.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
@@ -130,12 +130,8 @@ class BlockAPIView(generics.ListAPIView):
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
 
         # limits the total response count        
-        if start_limit and end_limit: # case1: both are present
-            queryset = queryset[int(start_limit)-1:int(end_limit)]
-        elif start_limit: # case2: only start_limit is present
-            queryset = queryset[int(start_limit)-1:]
-        elif end_limit: # case3: only end_limit is present
-            queryset = queryset[:int(end_limit)]
+        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
+
         
         count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
         # returns count only if param value matched
@@ -149,8 +145,13 @@ class BlockAPIView(generics.ListAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = BlockSerializer(queryset, many=True)
+        
+        response = Response(serializer.data)
+        processing_time = time.time() - start_time
+        utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
+   
         # JSON Response is provided by default
-        return Response(serializer.data) 
+        return response
 
 class DistrictAPIView(generics.ListAPIView):
     ''' 
@@ -171,8 +172,8 @@ class DistrictAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
-        user_obj = User.objects.get(username=request.user)
-        logger.info("accessed: %s.DistrictAPIView.post, user: %s" % ( __name__,user_obj))
+        start_time = time.time()
+        utils = Utils()
 
         queryset = District.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
@@ -181,12 +182,8 @@ class DistrictAPIView(generics.ListAPIView):
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
 
         # limits the total response count        
-        if start_limit and end_limit: # case1: both are present
-            queryset = queryset[int(start_limit)-1:int(end_limit)]
-        elif start_limit: # case2: only start_limit is present
-            queryset = queryset[int(start_limit)-1:]
-        elif end_limit: # case3: only end_limit is present
-            queryset = queryset[:int(end_limit)]
+        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
+
 
         count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
         # returns count only if param value matched
@@ -200,8 +197,13 @@ class DistrictAPIView(generics.ListAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = DistrictSerializer(queryset, many=True)
+        
+        response = Response(serializer.data)
+        processing_time = time.time() - start_time
+        utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
+   
         # JSON Response is provided by default
-        return Response(serializer.data) 
+        return response
 
 class StateAPIView(generics.ListAPIView):
     ''' 
@@ -222,8 +224,8 @@ class StateAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
-        user_obj = User.objects.get(username=request.user)
-        logger.info("accessed: %s.StateAPIView.post, user: %s" % ( __name__,user_obj))
+        start_time = time.time()
+        utils = Utils()
 
         queryset = State.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
@@ -232,12 +234,8 @@ class StateAPIView(generics.ListAPIView):
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
 
         # limits the total response count        
-        if start_limit and end_limit: # case1: both are present
-            queryset = queryset[int(start_limit)-1:int(end_limit)]
-        elif start_limit: # case2: only start_limit is present
-            queryset = queryset[int(start_limit)-1:]
-        elif end_limit: # case3: only end_limit is present
-            queryset = queryset[:int(end_limit)]
+        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
+
 
         count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
         # returns count only if param value matched
@@ -251,8 +249,13 @@ class StateAPIView(generics.ListAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = StateSerializer(queryset, many=True)
+        
+        response = Response(serializer.data)
+        processing_time = time.time() - start_time
+        utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
+   
         # JSON Response is provided by default
-        return Response(serializer.data)
+        return response
 
 class CountryAPIView(generics.ListAPIView):
     ''' 
@@ -273,8 +276,8 @@ class CountryAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
-        user_obj = User.objects.get(username=request.user)
-        logger.info("accessed: %s.CountryAPIView.post, user: %s" % ( __name__,user_obj))
+        start_time = time.time()
+        utils = Utils()
 
         queryset = Country.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
@@ -283,12 +286,8 @@ class CountryAPIView(generics.ListAPIView):
         end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
 
         # limits the total response count        
-        if start_limit and end_limit: # case1: both are present
-            queryset = queryset[int(start_limit)-1:int(end_limit)]
-        elif start_limit: # case2: only start_limit is present
-            queryset = queryset[int(start_limit)-1:]
-        elif end_limit: # case3: only end_limit is present
-            queryset = queryset[:int(end_limit)]
+        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
+
 
         count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
         # returns count only if param value matched
@@ -302,5 +301,10 @@ class CountryAPIView(generics.ListAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = CountrySerializer(queryset, many=True)
+        
+        response = Response(serializer.data)
+        processing_time = time.time() - start_time
+        utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
+   
         # JSON Response is provided by default
-        return Response(serializer.data)
+        return response

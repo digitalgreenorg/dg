@@ -27,8 +27,7 @@ from coco_api_utils import Utils
 
 from django.contrib.auth.models import User
 
-import logging
-logger = logging.getLogger('coco_api')
+import time
 
 class DefaultView(generics.ListCreateAPIView):
     ''' 
@@ -74,8 +73,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
     # POST request
     def getAllFarmers(self, request, *args, **kwargs):
-        user_obj = User.objects.get(username=request.user)
-        logger.info("accessed: %s.getAllFarmers, user: %s" % ( __name__,user_obj))
+        start_time = time.time()
 
         country_id = self.request.POST.get('country_id', 0) # POST param 'country_id', default value is 0
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
@@ -112,13 +110,17 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = FarmerSerializer(queryset, many=True)
+        
+        response = Response(serializer.data)
+        processing_time = time.time() - start_time
+        utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
+   
         # JSON Response is provided by default
-        return Response(serializer.data)
+        return response
 
     # POST request
     def getPhoneMatchedResults(self, request, *args, **kwargs):
-        user_obj = User.objects.get(username=request.user)
-        logger.info("accessed: %s.getPhoneMatchedResults, user: %s" % ( __name__,user_obj))
+        start_time = time.time()
 
         queryset = Person.objects.all().order_by('id')
 
@@ -156,8 +158,13 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = FarmerSerializer(queryset, many=True)
-        # JSON Response is provided
-        return Response(serializer.data)
+       
+        response = Response(serializer.data)
+        processing_time = time.time() - start_time
+        utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
+   
+        # JSON Response is provided by default
+        return response
 
 
 class FarmersCsvAPIView(APIView):
@@ -182,8 +189,8 @@ class FarmersCsvAPIView(APIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
-        user_obj = User.objects.get(username=request.user)
-        logger.info("accessed: %s.FarmersCsvAPIView.post, user: %s" % (__name__,user_obj))
+        start_time = time.time()
+
         country_id = self.request.POST.get('country_id', 0) # POST param 'country_id', default value is 0
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
 
@@ -220,5 +227,10 @@ class FarmersCsvAPIView(APIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = FarmerSerializer(queryset, many=True)
-        # CSV Response is provided
-        return Response(serializer.data)
+
+        response = Response(serializer.data)
+        processing_time = time.time() - start_time
+        utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
+   
+        # JSON Response is provided by default
+        return response
