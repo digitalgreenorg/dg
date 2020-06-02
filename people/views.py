@@ -23,7 +23,7 @@ from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
 
-from coco_api_utils import Utils, CustomPagination
+from coco_api_utils import Utils, CustomPagination, IsDGRestricted
 
 from django.contrib.auth.models import User
 
@@ -40,7 +40,7 @@ class DefaultView(generics.ListCreateAPIView):
     
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes = [IsAuthenticated and IsDGRestricted]
 
     # POST request
     def post(self, request, *args, **kwargs):
@@ -64,7 +64,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
     serializer_class = FarmerSerializer
 
@@ -118,7 +118,12 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            if fields_values: # fields provided in POST request and if not empty serves those fields only
+                # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+                serializer = self.get_serializer(page, fields=fields_values, many=True)
+            else:
+                # if fields param is empty then all the fields as mentioned in serializer are served to the response
+                serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data) 
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
@@ -175,7 +180,12 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            if fields_values: # fields provided in POST request and if not empty serves those fields only
+                # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+                serializer = self.get_serializer(page, fields=fields_values, many=True)
+            else:
+                # if fields param is empty then all the fields as mentioned in serializer are served to the response
+                serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data) 
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
@@ -201,7 +211,7 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
     
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = FarmerSerializer
 
 

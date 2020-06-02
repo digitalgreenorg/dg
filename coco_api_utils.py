@@ -7,7 +7,17 @@ import logging
 # pagination
 from rest_framework import pagination
 from rest_framework.response import Response
+from rest_framework import permissions
 
+class IsDGRestricted(permissions.BasePermission):
+    """
+    View-level permission to allow restricted access to the view-based-apis.
+    Assumes the group of external partners exists who can't access it.
+    """
+
+    def has_permission(self, request, view):
+        allowed = request.user.groups.filter(name='AWAAZDE_Group').exists()
+        return not allowed
 
 class CustomPagination(pagination.PageNumberPagination):
     page_size = 2

@@ -14,7 +14,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 import time
-from coco_api_utils import Utils, CustomPagination
+from coco_api_utils import Utils, CustomPagination, IsDGRestricted
 
 class PartnerAPIView(generics.ListCreateAPIView):
     ''' 
@@ -27,7 +27,7 @@ class PartnerAPIView(generics.ListCreateAPIView):
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes = [IsAuthenticated and IsDGRestricted]
     pagination_class = CustomPagination
     serializer_class = PartnerSerializer
 
@@ -74,7 +74,12 @@ class PartnerAPIView(generics.ListCreateAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            if fields_values: # fields provided in POST request and if not empty serves those fields only
+                # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+                serializer = self.get_serializer(page, fields=fields_values, many=True)
+            else:
+                # if fields param is empty then all the fields as mentioned in serializer are served to the response
+                serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data) 
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
@@ -99,7 +104,7 @@ class ProjectAPIView(generics.ListCreateAPIView):
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes = [IsAuthenticated and IsDGRestricted]
     pagination_class = CustomPagination
     serializer_class = ProjectSerializer
 
@@ -146,7 +151,12 @@ class ProjectAPIView(generics.ListCreateAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            if fields_values: # fields provided in POST request and if not empty serves those fields only
+                # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+                serializer = self.get_serializer(page, fields=fields_values, many=True)
+            else:
+                # if fields param is empty then all the fields as mentioned in serializer are served to the response
+                serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data) 
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)

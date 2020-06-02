@@ -18,7 +18,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
-from coco_api_utils import Utils, CustomPagination
+from coco_api_utils import Utils, CustomPagination, IsDGRestricted
 import time
 
 class DefaultView(generics.ListAPIView):
@@ -32,7 +32,7 @@ class DefaultView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes =[IsAuthenticated and IsDGRestricted]
 
     # POST request
     def post(self, request):
@@ -59,7 +59,7 @@ class VillageAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes =[IsAuthenticated and IsDGRestricted]
     pagination_class = CustomPagination
     serializer_class = VillageSerializer
 
@@ -100,7 +100,12 @@ class VillageAPIView(generics.ListAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            if fields_values: # fields provided in POST request and if not empty serves those fields only
+                # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+                serializer = self.get_serializer(page, fields=fields_values, many=True)
+            else:
+                # if fields param is empty then all the fields as mentioned in serializer are served to the response
+                serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data) 
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
@@ -123,7 +128,7 @@ class BlockAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes =[IsAuthenticated and IsDGRestricted]
     pagination_class = CustomPagination
     serializer_class = BlockSerializer
 
@@ -164,7 +169,12 @@ class BlockAPIView(generics.ListAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            if fields_values: # fields provided in POST request and if not empty serves those fields only
+                # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+                serializer = self.get_serializer(page, fields=fields_values, many=True)
+            else:
+                # if fields param is empty then all the fields as mentioned in serializer are served to the response
+                serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data) 
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
@@ -186,7 +196,7 @@ class DistrictAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes =[IsAuthenticated and IsDGRestricted]
     pagination_class = CustomPagination
     serializer_class = DistrictSerializer
 
@@ -227,7 +237,12 @@ class DistrictAPIView(generics.ListAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            if fields_values: # fields provided in POST request and if not empty serves those fields only
+                # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+                serializer = self.get_serializer(page, fields=fields_values, many=True)
+            else:
+                # if fields param is empty then all the fields as mentioned in serializer are served to the response
+                serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data) 
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
@@ -249,7 +264,7 @@ class StateAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes = [IsAuthenticated and IsDGRestricted]
     pagination_class = CustomPagination
     serializer_class = StateSerializer
 
@@ -290,7 +305,12 @@ class StateAPIView(generics.ListAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            if fields_values: # fields provided in POST request and if not empty serves those fields only
+                # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+                serializer = self.get_serializer(page, fields=fields_values, many=True)
+            else:
+                # if fields param is empty then all the fields as mentioned in serializer are served to the response
+                serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data) 
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
@@ -312,7 +332,7 @@ class CountryAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permissions_classes =[IsAuthenticated]
+    permission_classes = [IsAuthenticated and IsDGRestricted]
     pagination_class = CustomPagination
     serializer_class = CountrySerializer
 
@@ -353,7 +373,12 @@ class CountryAPIView(generics.ListAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            if fields_values: # fields provided in POST request and if not empty serves those fields only
+                # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+                serializer = self.get_serializer(page, fields=fields_values, many=True)
+            else:
+                # if fields param is empty then all the fields as mentioned in serializer are served to the response
+                serializer = self.get_serializer(page, many=True)
             paginated_response = self.get_paginated_response(serializer.data) 
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
