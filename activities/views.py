@@ -19,7 +19,8 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 import time
-from coco_api_utils import Utils, CustomPagination, IsDGRestricted
+from coco_api.coco_api_utils import Utils, CustomPagination
+from coco_api.coco_api_permissions import IsDGRestricted
 
 class ScreeningAPIView( generics.ListCreateAPIView):
     ''' 
@@ -82,17 +83,6 @@ class ScreeningAPIView( generics.ListCreateAPIView):
                 queryset = queryset.filter(date__lte=end_date) # filters values less than or equal to end date
             except:
                 print("End Date error occurred")
-
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
-
-        # limits the total response count        
-        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
 
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
         if fields_values: # fields provided in POST request and if not empty serves those fields only

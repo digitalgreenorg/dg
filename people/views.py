@@ -23,8 +23,8 @@ from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
 
-from coco_api_utils import Utils, CustomPagination, IsDGRestricted
-
+from coco_api.coco_api_utils import Utils, CustomPagination
+from coco_api.coco_api_permissions import IsDGRestricted
 from django.contrib.auth.models import User
 
 import time
@@ -64,7 +64,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated and IsDGRestricted]
     pagination_class = CustomPagination
     serializer_class = FarmerSerializer
 
@@ -76,6 +76,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
     # POST request
     def getAllFarmers(self, request, *args, **kwargs):
         start_time = time.time()
+        utils = Utils()
 
         country_id = self.request.POST.get('country_id', 0) # POST param 'country_id', default value is 0
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
@@ -92,18 +93,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
         # phone number exists or not 
         if phoneNumberExists in ["true","t","yes","y"]:
-            queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])
-
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'       
-
-        utils = Utils()
-        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
+            queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])    
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -112,9 +102,6 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = FarmerSerializer(queryset, many=True)
-        
-        response = Response(serializer.data)
-
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -129,6 +116,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
@@ -142,7 +130,6 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
         phone_numbers = request.POST.get('phoneNumbers', '') # POST param 'fields', default value is empty string
-
         phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'phoneNumberExists', default value is empty string
 
         # phone number exists or not    
@@ -154,18 +141,8 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
         if phone_numbers:
             ph_no_values = [ph.strip() for ph in phone_numbers.split(",")]
             queryset = queryset.filter(phone_no__in=ph_no_values)
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
-
-
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'      
+    
         utils = Utils()
-        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-  
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -174,9 +151,6 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = FarmerSerializer(queryset, many=True)
-       
-        response = Response(serializer.data)
-
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -191,6 +165,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
@@ -211,7 +186,7 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
     
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated and IsDGRestricted]
     serializer_class = FarmerSerializer
 
 
@@ -239,18 +214,9 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
 
         # phone number exists or not    
         if phoneNumberExists in ["true","t","yes","y"]:
-            queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])
-
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'       
+            queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])    
 
         utils = Utils()
-        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
             
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]

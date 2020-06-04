@@ -187,6 +187,7 @@ INSTALLED_APPS = (
     'loop_ivr',
     'dataexport',
     'rest_framework',
+    'coco_api',
     # 3rd Party
     'django_extensions',
 

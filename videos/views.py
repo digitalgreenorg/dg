@@ -17,7 +17,8 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
-from coco_api_utils import Utils, CustomPagination, IsDGRestricted
+from coco_api.coco_api_utils import Utils, CustomPagination
+from coco_api.coco_api_permissions import IsDGRestricted
 import time
 
 
@@ -45,8 +46,8 @@ class VideoAPIView(generics.ListCreateAPIView):
         start_time = time.time()
         utils = Utils()
 
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'
+        # start_limit = request.POST.get('start_limit') # POST param 'start_limit'
+        # end_limit = request.POST.get('end_limit') # POST param 'end_limit'
         fields_values = request.POST.get('fields', '') # POST param 'fields'
         video_id = self.request.POST.get('id', 0) # POST param 'id'
         
@@ -55,12 +56,12 @@ class VideoAPIView(generics.ListCreateAPIView):
         else:
             queryset = Video.objects.all().order_by('id')
             # limits the total response count        
-            queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
+            # queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
 
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
+        # count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
+        # # returns count only if param value matched
+        # if count.lower() in ["true","t","yes","y"]:
+        #     return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]

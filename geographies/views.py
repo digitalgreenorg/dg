@@ -18,7 +18,8 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
-from coco_api_utils import Utils, CustomPagination, IsDGRestricted
+from coco_api.coco_api_utils import Utils, CustomPagination
+from coco_api.coco_api_permissions import IsDGRestricted
 import time
 
 class DefaultView(generics.ListAPIView):
@@ -75,17 +76,6 @@ class VillageAPIView(generics.ListAPIView):
         queryset = Village.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
 
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
-
-        # limits the total response count        
-        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -95,9 +85,6 @@ class VillageAPIView(generics.ListAPIView):
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = VillageSerializer(queryset, many=True)
         
-        response = Response(serializer.data)
-
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
@@ -111,6 +98,7 @@ class VillageAPIView(generics.ListAPIView):
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
@@ -144,17 +132,6 @@ class BlockAPIView(generics.ListAPIView):
         queryset = Block.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
         fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
-
-        # limits the total response count        
-        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-        
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -163,9 +140,6 @@ class BlockAPIView(generics.ListAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = BlockSerializer(queryset, many=True)
-        
-        response = Response(serializer.data)
-
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -179,7 +153,8 @@ class BlockAPIView(generics.ListAPIView):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
-
+        
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
@@ -212,17 +187,6 @@ class DistrictAPIView(generics.ListAPIView):
         queryset = District.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
         fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
-
-        # limits the total response count        
-        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -231,9 +195,6 @@ class DistrictAPIView(generics.ListAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = DistrictSerializer(queryset, many=True)
-        
-        response = Response(serializer.data)
-
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -247,7 +208,8 @@ class DistrictAPIView(generics.ListAPIView):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
-
+        
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
@@ -280,17 +242,6 @@ class StateAPIView(generics.ListAPIView):
         queryset = State.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
         fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
-
-        # limits the total response count        
-        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -299,9 +250,6 @@ class StateAPIView(generics.ListAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = StateSerializer(queryset, many=True)
-        
-        response = Response(serializer.data)
-
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -316,6 +264,7 @@ class StateAPIView(generics.ListAPIView):
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
@@ -348,17 +297,6 @@ class CountryAPIView(generics.ListAPIView):
         queryset = Country.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
         fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'  
-
-        # limits the total response count        
-        queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
             
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -367,9 +305,6 @@ class CountryAPIView(generics.ListAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = CountrySerializer(queryset, many=True)
-        
-        response = Response(serializer.data)
-
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -384,6 +319,7 @@ class CountryAPIView(generics.ListAPIView):
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided

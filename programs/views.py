@@ -14,7 +14,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 import time
-from coco_api_utils import Utils, CustomPagination, IsDGRestricted
+from coco_api.coco_api_utils import Utils, CustomPagination
+from coco_api.coco_api_permissions import IsDGRestricted
 
 class PartnerAPIView(generics.ListCreateAPIView):
     ''' 
@@ -37,12 +38,12 @@ class PartnerAPIView(generics.ListCreateAPIView):
         return Response({"detail":"Method \"GET\" not allowed"})
 
     # POST request
-    def post(self, request, *args, **kwargs):
+    def getPartnerById(self, request, *args, **kwargs):
         start_time = time.time()
         utils = Utils()
 
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'
+        # start_limit = request.POST.get('start_limit') # POST param 'start_limit'
+        # end_limit = request.POST.get('end_limit') # POST param 'end_limit'
         fields_values = request.POST.get('fields', '') # POST param 'fields'
         partner_id = self.request.POST.get('id', 0) # POST param 'id'
         
@@ -51,15 +52,6 @@ class PartnerAPIView(generics.ListCreateAPIView):
 
         if partner_id: # checks if video id is present
             queryset = queryset.filter(id__exact=partner_id)
-        else:
-            # limits the total response count        
-            queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -68,9 +60,6 @@ class PartnerAPIView(generics.ListCreateAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = serializer_class(queryset, many=True)
-
-        response = Response(serializer.data)
-
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -85,6 +74,7 @@ class PartnerAPIView(generics.ListCreateAPIView):
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
@@ -118,8 +108,6 @@ class ProjectAPIView(generics.ListCreateAPIView):
         start_time = time.time()
         utils = Utils()
 
-        start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        end_limit = request.POST.get('end_limit') # POST param 'end_limit'
         fields_values = request.POST.get('fields', '') # POST param 'fields'
         project_id = self.request.POST.get('id', 0) # POST param 'id'
         
@@ -128,15 +116,6 @@ class ProjectAPIView(generics.ListCreateAPIView):
 
         if project_id: # checks if video id is present
             queryset = queryset.filter(id__exact=project_id)
-        else:
-            # limits the total response count        
-            queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-
-        count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # returns count only if param value matched
-        if count.lower() in ["true","t","yes","y"]:
-            return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -145,9 +124,6 @@ class ProjectAPIView(generics.ListCreateAPIView):
         else:
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = serializer_class(queryset, many=True)
-        
-        response = Response(serializer.data)
-
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -162,6 +138,7 @@ class ProjectAPIView(generics.ListCreateAPIView):
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
