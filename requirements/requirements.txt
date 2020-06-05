@@ -11,7 +11,7 @@ cffi==1.11.5
 chardet==2.3.0
 cssselect2==0.2.1
 decorator==4.1.2
-Django==1.8.13
+Django==1.11.29
 django-bulk-update==1.1.10
 django-contrib-comments==1.8.0
 django-cors-headers==2.1.0
