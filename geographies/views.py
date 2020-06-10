@@ -17,14 +17,15 @@ from geographies.models import *
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from django.contrib.auth.models import User
-from coco_api.coco_api_utils import Utils, CustomPagination
-from coco_api.coco_api_permissions import IsDGRestricted
+# logging, pagination and permissions
 import time
+from api.utils import Utils, CustomPagination
+from api.permissions import IsAllowed
 
 class DefaultView(generics.ListAPIView):
     ''' 
-    coco_api class-based view to provide default message in JSON format.
+    This view is specifically written for coco api access.
+    This class-based view is to provide default message in JSON format.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -33,7 +34,7 @@ class DefaultView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permission_classes =[IsAuthenticated and IsDGRestricted]
+    permission_classes =[IsAuthenticated and IsAllowed]
 
     # POST request
     def post(self, request):
@@ -60,7 +61,7 @@ class VillageAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permission_classes =[IsAuthenticated and IsDGRestricted]
+    permission_classes =[IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = VillageSerializer
 
@@ -107,7 +108,8 @@ class VillageAPIView(generics.ListAPIView):
 
 class BlockAPIView(generics.ListAPIView):
     ''' 
-    coco_api class-based view to query Block model and provide JSON response.
+    This view is specifically written for coco api access.
+    This class-based view is to query Block model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -116,7 +118,7 @@ class BlockAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permission_classes =[IsAuthenticated and IsDGRestricted]
+    permission_classes =[IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = BlockSerializer
 
@@ -162,7 +164,8 @@ class BlockAPIView(generics.ListAPIView):
 
 class DistrictAPIView(generics.ListAPIView):
     ''' 
-    coco_api class-based view to query District model and provide JSON response.
+    This view is specifically written for coco api access.
+    This class-based view is to query District model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -171,7 +174,7 @@ class DistrictAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permission_classes =[IsAuthenticated and IsDGRestricted]
+    permission_classes =[IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = DistrictSerializer
 
@@ -217,7 +220,8 @@ class DistrictAPIView(generics.ListAPIView):
 
 class StateAPIView(generics.ListAPIView):
     ''' 
-    coco_api class-based view to query State model and provide JSON response.
+    This view is specifically written for coco api access.
+    This class-based view is to query State model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -226,7 +230,7 @@ class StateAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated and IsDGRestricted]
+    permission_classes = [IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = StateSerializer
 
@@ -272,7 +276,8 @@ class StateAPIView(generics.ListAPIView):
 
 class CountryAPIView(generics.ListAPIView):
     ''' 
-    coco_api class-based view to query Country model and provide JSON response.
+    This view is specifically written for coco api access.
+    This class-based view is to query Country model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -281,7 +286,7 @@ class CountryAPIView(generics.ListAPIView):
 
     # django-rest-framework TokenAuthentication  
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated and IsDGRestricted]
+    permission_classes = [IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = CountrySerializer
 

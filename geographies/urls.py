@@ -9,5 +9,4 @@ urlpatterns=[
     url(r'^api/district', views.DistrictAPIView.as_view()),
     url(r'^api/state', views.StateAPIView.as_view()),
     url(r'^api/country', views.CountryAPIView.as_view()),
-    # url('csv', views.CSVView.as_view()),
 ]

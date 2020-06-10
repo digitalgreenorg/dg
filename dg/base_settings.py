@@ -187,7 +187,7 @@ INSTALLED_APPS = (
     'loop_ivr',
     'dataexport',
     'rest_framework',
-    'coco_api',
+    'api',
     # 3rd Party
     'django_extensions',
 
@@ -250,7 +250,7 @@ LOGGING = {
         'api_access_log': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(PROJECT_PATH, '../coco_api/log/logfile'),
+            'filename': os.path.join(PROJECT_PATH, '../api/log/logfile'),
             'formatter': 'standard',
         },
 

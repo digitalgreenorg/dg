@@ -2,7 +2,7 @@
 from django.shortcuts import render
 
 # rest_framework imports
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.response import Response
 
 # app imports
@@ -13,13 +13,15 @@ from serializers import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+# logging, pagination and permissions
 import time
-from coco_api.coco_api_utils import Utils, CustomPagination
-from coco_api.coco_api_permissions import IsDGRestricted
+from api.utils import Utils, CustomPagination
+from api.permissions import IsAllowed
 
 class PartnerAPIView(generics.ListCreateAPIView):
     ''' 
-    coco_api class-based view to query Partner model and provide JSON response.
+    This view is specifically written for coco api access.
+    This class-based view is to query Partner model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -28,7 +30,7 @@ class PartnerAPIView(generics.ListCreateAPIView):
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated and IsDGRestricted]
+    permission_classes = [IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = PartnerSerializer
 
@@ -85,7 +87,8 @@ class PartnerAPIView(generics.ListCreateAPIView):
 
 class ProjectAPIView(generics.ListCreateAPIView):
     ''' 
-    coco_api class-based view to query Project model and provide JSON response.
+    This view is specifically written for coco api access.
+    This class-based view is to query Project model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -94,7 +97,7 @@ class ProjectAPIView(generics.ListCreateAPIView):
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated and IsDGRestricted]
+    permission_classes = [IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = ProjectSerializer
 

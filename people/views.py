@@ -23,15 +23,15 @@ from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
 
-from coco_api.coco_api_utils import Utils, CustomPagination
-from coco_api.coco_api_permissions import IsDGRestricted
-from django.contrib.auth.models import User
-
+# logging, pagination and permissions
 import time
+from api.utils import Utils, CustomPagination
+from api.permissions import IsAllowed
 
 class DefaultView(generics.ListCreateAPIView):
     ''' 
-    coco_api class-based view to provide default message in JSON format.
+    This view is specifically written for coco api access.
+    This class-based view is to provide default message in JSON format.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -40,7 +40,7 @@ class DefaultView(generics.ListCreateAPIView):
     
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated and IsDGRestricted]
+    permission_classes = [IsAuthenticated and IsAllowed]
 
     # POST request
     def post(self, request, *args, **kwargs):
@@ -53,9 +53,10 @@ class DefaultView(generics.ListCreateAPIView):
         return Response({"detail":"Method \"GET\" not allowed."})
 
 
-class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView):
+class FarmersJsonAPIView(viewsets.GenericViewSet): 
     ''' 
-    coco_api class-based view to query Person model and provide JSON response.
+    This view is specifically written for coco api access.
+    This class-based view is to query Person model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -64,7 +65,7 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated and IsDGRestricted]
+    permission_classes = [IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = FarmerSerializer
 
@@ -174,7 +175,8 @@ class FarmersJsonAPIView(viewsets.GenericViewSet): #(generics.ListCreateAPIView)
 
 class FarmersCsvAPIView(viewsets.GenericViewSet):
     ''' 
-    coco_api class-based view to query Person model and provide CSV response.
+    This view is specifically written for coco api access.
+    This class-based view is to query Person model and provide CSV response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -186,7 +188,7 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
     
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated and IsDGRestricted]
+    permission_classes = [IsAuthenticated and IsAllowed]
     serializer_class = FarmerSerializer
 
 

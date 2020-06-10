@@ -94,13 +94,13 @@ urlpatterns = patterns('',
     (r'^videos/', include(videos.urls)),
 
 
-    #coco_api changes starts here
-    (r'^api-token-auth', views.obtain_auth_token), # POST;params: {'username':'','password':''}; generates token 
-    (r'^farmer/', include(people.urls)),  # includes people.urls.py
-    (r'^geo/', include(geographies.urls)), # includes geographies.urls.py
-    (r'^activities/', include(activities.urls)), # includes activities.urls.py
-    (r'^programs/', include(programs.urls)), # includes programs.urls.py
-    #coco_api changes ends here
+    # coco_api changes starts here
+    (r'^api-token-auth', views.obtain_auth_token), 
+    (r'^farmer/', include(people.urls)),  
+    (r'^geo/', include(geographies.urls)), 
+    (r'^activities/', include(activities.urls)),
+    (r'^programs/', include(programs.urls)), 
+    # coco_api changes ends here
 
 
     # ivrsadmin/logout/ should be above admin/ URL

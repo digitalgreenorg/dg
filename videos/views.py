@@ -16,15 +16,16 @@ from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from django.contrib.auth.models import User
-from coco_api.coco_api_utils import Utils, CustomPagination
-from coco_api.coco_api_permissions import IsDGRestricted
+# logging, pagination and permissions
 import time
+from api.utils import Utils, CustomPagination
+from api.permissions import IsAllowed
 
 
 class VideoAPIView(generics.ListCreateAPIView):
     ''' 
-    coco_api class-based view to query Videos model and provide JSON response.
+    This view is specifically written for coco api access.
+    This class-based view is to query Videos model and provide JSON response.
     django-rest-framework based token passed in Header as {'Authorization': 'Token 12345exampleToken'} 
     is required to access data from this View.
     Only POST method is allowed.
@@ -33,7 +34,7 @@ class VideoAPIView(generics.ListCreateAPIView):
 
     # django-rest-framework TokenAuthentication
     authentication_classes = [TokenAuthentication]
-    permission_classes =[IsAuthenticated and IsDGRestricted]
+    permission_classes =[IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = VideoSerializer
 
@@ -46,8 +47,6 @@ class VideoAPIView(generics.ListCreateAPIView):
         start_time = time.time()
         utils = Utils()
 
-        # start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        # end_limit = request.POST.get('end_limit') # POST param 'end_limit'
         fields_values = request.POST.get('fields', '') # POST param 'fields'
         video_id = self.request.POST.get('id', 0) # POST param 'id'
         
@@ -55,13 +54,6 @@ class VideoAPIView(generics.ListCreateAPIView):
             queryset = Video.objects.filter(id__exact=video_id)
         else:
             queryset = Video.objects.all().order_by('id')
-            # limits the total response count        
-            # queryset = utils.limitQueryset(queryset=queryset, start_limit=start_limit, end_limit=end_limit) 
-
-        # count = self.request.POST.get("count", "False") # POST param 'count', default value is string "False"
-        # # returns count only if param value matched
-        # if count.lower() in ["true","t","yes","y"]:
-        #     return Response({"count": queryset.count()})
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
@@ -71,9 +63,6 @@ class VideoAPIView(generics.ListCreateAPIView):
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = VideoSerializer(queryset, many=True)
         
-        response = Response(serializer.data)
-
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
@@ -87,8 +76,8 @@ class VideoAPIView(generics.ListCreateAPIView):
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
-  

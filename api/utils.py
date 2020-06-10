@@ -7,6 +7,7 @@ import logging
 # pagination
 from rest_framework import pagination
 from rest_framework.response import Response
+from collections import OrderedDict
 
 
 class CustomPagination(pagination.PageNumberPagination):
@@ -16,13 +17,15 @@ class CustomPagination(pagination.PageNumberPagination):
     max_page_size = 5
 
     def get_paginated_response(self, data):
-        return Response({
-            'count': self.page.paginator.count,
-            'next': self.get_next_link(),
-            'previous': self.get_previous_link(),
-            'results': data
-        })
+        return Response(OrderedDict([
+            ('count', self.page.paginator.count),
+            ('next', self.get_next_link()),
+            ('previous', self.get_previous_link()),
+            ('results', data)
+        ]))
 
+
+        
 class Utils:
 
     def limitQueryset(self, queryset, start_limit, end_limit):
@@ -48,3 +51,4 @@ class Utils:
         module_name = class_instance.__module__
         # method_name = fun.
         logger.info("Accessed: %s.%s.%s, user_id: %s, username: %s, ip_address: %s, method: %s, processing_time: %s seconds, status_code: %s" % ( module_name, class_name, view_fun, user_id, user_obj, ip_addr, method, processing_time, status_code))
+        
