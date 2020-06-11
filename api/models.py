@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import Group
 
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"
 
 class View(models.Model):
     '''
@@ -13,3 +18,4 @@ class View(models.Model):
     def __str__(self):
         "Returns the view name and groups names mapped together"
         return '%s, %s'%(self.view_name, self.permission_groups)
+

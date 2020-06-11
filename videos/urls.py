@@ -1,22 +1,16 @@
+# django imports
 from django.conf.urls import include, patterns, url
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
-
-from social_website.views import collection_view, video_view, search_view, collection_edit_view, collection_add_view, partner_view
-from social_website.urls import DirectTemplateView
-
+# app imports
 from output.views import video_analytics
-
 from dg.base_settings import VIDEOS_PAGE
 from dg.website_admin import website_admin
-
+from social_website.views import collection_view, video_view, search_view, collection_edit_view, collection_add_view, partner_view
+from social_website.urls import DirectTemplateView
 from activities import urls as acturls
-
 import videokheti.urls
-
-# coco_api specific import
 from videos import views
-
 
 urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url=VIDEOS_PAGE)),
@@ -36,7 +30,7 @@ urlpatterns = patterns('',
     (r'^admin/', include(website_admin.urls)),
 
     # coco_api video urls
-    # as_view method takes type of request as key and class's method name as value 
     url(r'^api/video', views.VideoAPIView.as_view()), 
 
 )
+

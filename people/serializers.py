@@ -3,6 +3,12 @@ from rest_framework import serializers
 from geographies.models import Village, Block, District, State, Country
 from geographies.serializers import VillageSerializer
 
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"
+
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
     """
     A ModelSerializer that takes an additional `fields` argument that
@@ -41,17 +47,7 @@ class FarmerSerializer(DynamicFieldsModelSerializer):
     country_id = serializers.IntegerField(source='village.block.district.state.country.id', read_only=True)
     country_name = serializers.CharField(source='village.block.district.state.country.country_name', read_only=True)
 
-    F_count = serializers.SerializerMethodField() # added for visualization 
-
     class Meta:
         model = Person 
         fields = '__all__'
-
-    # returns 1 to indicate present of a Person object as a numeric field
-    def get_F_count(self, obj):
-        return 1
     
-
-
-
-

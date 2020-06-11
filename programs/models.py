@@ -3,7 +3,6 @@ from coco.base_models import CocoModel
 from django.db.models.signals import post_save, pre_delete
 from training.log.training_log import enter_to_log
 
-
 class Partner(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True, db_index=True)
@@ -17,6 +16,7 @@ class Partner(CocoModel):
 post_save.connect(enter_to_log,sender=Partner)
 pre_delete.connect(enter_to_log,sender=Partner)
 
+
 class Project(CocoModel):
     id = models.AutoField(primary_key=True)
     project_name = models.CharField(max_length=100, unique=True, help_text="Short Name of Project. It will be display on Analytics")
@@ -27,3 +27,4 @@ class Project(CocoModel):
 
     def __unicode__(self):
         return self.project_name
+

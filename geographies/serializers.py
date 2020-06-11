@@ -1,6 +1,12 @@
 from .models import * 
 from rest_framework import serializers
 
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"
+
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
     """
     A ModelSerializer that takes an additional `fields` argument that
@@ -21,11 +27,13 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
+
 class CountrySerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Country
         fields = '__all__'
     
+
 class StateSerializer(DynamicFieldsModelSerializer):
     country_id = serializers.IntegerField(source='country.id', read_only=True)
     country_name = serializers.CharField(source='country.country_name', read_only=True)
@@ -33,6 +41,7 @@ class StateSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = State
         fields = '__all__'
+
 
 class DistrictSerializer(DynamicFieldsModelSerializer):
     country_id = serializers.IntegerField(source='state.country.id', read_only=True)
@@ -43,6 +52,7 @@ class DistrictSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = District
         fields = '__all__'
+
 
 class BlockSerializer(DynamicFieldsModelSerializer):
     country_id = serializers.IntegerField(source='district.state.country.id', read_only=True)
@@ -55,6 +65,7 @@ class BlockSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Block 
         fields = '__all__'
+
 
 class VillageSerializer(DynamicFieldsModelSerializer):
     country_id = serializers.IntegerField(source='block.district.state.country.id', read_only=True)
@@ -69,3 +80,5 @@ class VillageSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Village 
         fields = '__all__'
+
+        

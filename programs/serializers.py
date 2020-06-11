@@ -1,6 +1,7 @@
 from models import *
 from rest_framework import serializers
 
+
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
     """
     A ModelSerializer that takes an additional `fields` argument that
@@ -21,12 +22,18 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
+
 class PartnerSerializer(DynamicFieldsModelSerializer):
+
     class Meta:
         model = Partner
         fields = '__all__'
 
+
 class ProjectSerializer(DynamicFieldsModelSerializer):
+    
     class Meta:
         model = Project
         fields = '__all__'
+
+        

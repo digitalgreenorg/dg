@@ -1,26 +1,25 @@
-#default
+# django imports
 from django.shortcuts import render
-
-# model imports
-from videos.models import *
-
-# serializers imports
-from videos.serializers import *
-
-# drf imports
+# rest framework imports
 from rest_framework import viewsets, generics
 from rest_framework import permissions
 from rest_framework.response import Response
-
 # django-rest-framework TokenAuthentication imports
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
 # logging, pagination and permissions
 import time
 from api.utils import Utils, CustomPagination
 from api.permissions import IsAllowed
+# app imports
+from videos.models import *
+from videos.serializers import *
 
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"
 
 class VideoAPIView(generics.ListCreateAPIView):
     ''' 
@@ -81,3 +80,4 @@ class VideoAPIView(generics.ListCreateAPIView):
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
+

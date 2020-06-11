@@ -1,14 +1,17 @@
 from django.contrib.auth.models import User
 from django.utils import importlib
-
 import time
 import logging
-
-# pagination
+# pagination imports
 from rest_framework import pagination
 from rest_framework.response import Response
 from collections import OrderedDict
 
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"
 
 class CustomPagination(pagination.PageNumberPagination):
     page_size = 2
@@ -24,8 +27,7 @@ class CustomPagination(pagination.PageNumberPagination):
             ('results', data)
         ]))
 
-
-        
+    
 class Utils:
 
     def limitQueryset(self, queryset, start_limit, end_limit):
@@ -36,10 +38,7 @@ class Utils:
             queryset = queryset[int(start_limit)-1:]
         elif end_limit: # case3: only end_limit is present
             queryset = queryset[:int(end_limit)]
-
         return queryset
-
-
 
     def logRequest(self, request, class_instance, view_fun, processing_time, status_code ):
         logger = logging.getLogger('coco_api')

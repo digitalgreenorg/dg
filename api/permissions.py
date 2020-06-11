@@ -1,17 +1,24 @@
-# permissions
-from rest_framework import permissions
-# app
+# rest framework imports
+from rest_framework import viewsets, generics, status, permissions
+from rest_framework.response import Response
+# app imports
 from api.models import View
-# logger
+# logging imports
 import logging
 logger = logging
 logger = logging.getLogger('coco_api')
-            
+
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"       
 
 class IsAllowed(permissions.BasePermission):
     """
     View-level permission to allow group-wise access to the view-based-apis.
     """
+            
     def has_permission(self, request, view):  
         view = View.objects.get(view_name=view.__class__.__name__)
         user_groups = request.user.groups.all()
@@ -22,3 +29,4 @@ class IsAllowed(permissions.BasePermission):
         else:
             logger.info("Permission denied for view: %s to user: %s of groups: %s"%(view.view_name, request.user, user_groups))
             return False
+

@@ -1,22 +1,19 @@
 # default imports
 from django.shortcuts import render
-
 # rest_framework imports
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
-
 # app imports
 from models import *
 from serializers import *
-
 # authentication imports
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
 # logging, pagination and permissions
 import time
 from api.utils import Utils, CustomPagination
 from api.permissions import IsAllowed
+
 
 class PartnerAPIView(generics.ListCreateAPIView):
     ''' 
@@ -33,7 +30,6 @@ class PartnerAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = PartnerSerializer
-
 
     # GET request 
     def get(self, request):
@@ -83,8 +79,6 @@ class PartnerAPIView(generics.ListCreateAPIView):
         return response
 
 
-
-
 class ProjectAPIView(generics.ListCreateAPIView):
     ''' 
     This view is specifically written for coco api access.
@@ -100,7 +94,6 @@ class ProjectAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = ProjectSerializer
-
 
     # GET request 
     def get(self, request):
@@ -146,3 +139,5 @@ class ProjectAPIView(generics.ListCreateAPIView):
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
+
+        

@@ -9,6 +9,7 @@ from coco.base_models import ACTIVITY_CHOICES
 from programs.models import Partner
 from training.log.training_log import enter_to_log
 
+
 class Animator(CocoModel):
     id = models.AutoField(primary_key = True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -48,6 +49,7 @@ class AnimatorAssignedVillage(CocoModel):
     village = models.ForeignKey(Village)
     start_date = models.DateField(null=True, blank=True)
 
+
 class PersonGroup(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -63,6 +65,7 @@ class PersonGroup(CocoModel):
         return  u'%s (%s)' % (self.group_name, self.village)
 post_save.connect(save_log, sender=PersonGroup)
 pre_delete.connect(delete_log, sender=PersonGroup)
+
 
 class Person(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -94,6 +97,7 @@ class Person(CocoModel):
 post_save.connect(save_log, sender=Person)
 pre_delete.connect(delete_log, sender=Person)
 
+
 class JSLPS_Animator(CocoModel):
     id = models.AutoField(primary_key=True)
     animator_code = models.CharField(max_length=100)
@@ -108,6 +112,7 @@ class JSLPS_Animator(CocoModel):
     def __unicode__(self):
         return self.animator_code
 
+
 class JSLPS_AnimatorAssignedVillage(CocoModel):
     id = models.AutoField(primary_key=True)
     animator = models.ForeignKey(JSLPS_Animator)
@@ -118,6 +123,7 @@ class JSLPS_AnimatorAssignedVillage(CocoModel):
         verbose_name = "JSLPS AnimatorAssignedVillage"
         verbose_name_plural = "JSLPS AnimatorAssignedVillage"
 
+
 class JSLPS_Persongroup(CocoModel):
     id = models.AutoField(primary_key=True)
     group_code = models.CharField(max_length=100)
@@ -127,6 +133,7 @@ class JSLPS_Persongroup(CocoModel):
     class Meta:
         verbose_name = "JSLPS Persongroup"
         verbose_name_plural = "JSLPS Persongroup"
+
 
 class JSLPS_Person(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -153,6 +160,7 @@ class AP_Animator(CocoModel):
     def __unicode__(self):
         return self.animator_code
 
+
 class AP_AnimatorAssignedVillage(CocoModel):
     animator = models.ForeignKey(AP_Animator)
     village = models.ForeignKey(AP_Village)
@@ -160,7 +168,6 @@ class AP_AnimatorAssignedVillage(CocoModel):
     class Meta:
         verbose_name = "AP AnimatorAssignedVillage"
         verbose_name_plural = "AP AnimatorAssignedVillage"
-
 
 
 class AP_Person(CocoModel):
@@ -171,5 +178,4 @@ class AP_Person(CocoModel):
     class Meta:
         verbose_name = "AP Person"
         verbose_name_plural = "AP Person"
-
 

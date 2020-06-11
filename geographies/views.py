@@ -1,28 +1,28 @@
-#default imports
+# django imports
 from django.shortcuts import render
-
-# added imports
+# rest framework imports
 from rest_framework import viewsets, generics
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
-
-# serializers import 
-from geographies.serializers import *
-
-# model imports
-from geographies.models import *
-
-# django-rest-framework TokenAuthentication imports
+# rest framework TokenAuthentication imports
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
 # logging, pagination and permissions
 import time
 from api.utils import Utils, CustomPagination
 from api.permissions import IsAllowed
+# app imports 
+from geographies.serializers import *
+from geographies.models import *
 
-class DefaultView(generics.ListAPIView):
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"
+
+class GeoInfoView(generics.ListAPIView):
     ''' 
     This view is specifically written for coco api access.
     This class-based view is to provide default message in JSON format.
@@ -36,6 +36,10 @@ class DefaultView(generics.ListAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes =[IsAuthenticated and IsAllowed]
 
+    # GET request
+    def get(self, request, *args, **kwargs):
+        return Response({"detail":"Method \"GET\" not allowed"})
+
     # POST request
     def post(self, request):
         # dictionary results as JSON format message 
@@ -45,10 +49,7 @@ class DefaultView(generics.ListAPIView):
                     "/geo/api/district",
                     "/geo/api/state",
                     "/geo/api/country"]})
-    # GET request
-    def get(self, request, *args, **kwargs):
-        return Response({"detail":"Method \"GET\" not allowed"})
-          
+        
         
 class VillageAPIView(generics.ListAPIView):
     ''' 
@@ -162,6 +163,7 @@ class BlockAPIView(generics.ListAPIView):
         # JSON Response is provided
         return response
 
+
 class DistrictAPIView(generics.ListAPIView):
     ''' 
     This view is specifically written for coco api access.
@@ -217,6 +219,7 @@ class DistrictAPIView(generics.ListAPIView):
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
+
 
 class StateAPIView(generics.ListAPIView):
     ''' 
@@ -274,6 +277,7 @@ class StateAPIView(generics.ListAPIView):
         # JSON Response is provided
         return response
 
+
 class CountryAPIView(generics.ListAPIView):
     ''' 
     This view is specifically written for coco api access.
@@ -329,3 +333,5 @@ class CountryAPIView(generics.ListAPIView):
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
+
+        

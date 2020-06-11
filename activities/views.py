@@ -1,22 +1,30 @@
+"""
+This file consists of views for activities.models
+"""
 # default imports
 from django.shortcuts import render
-# model imports
-from videos.models import *
-from activities.models import *
-# serializers imports
-from activities.serializers import *
-# drf imports
+# rest framework imports
 from rest_framework import viewsets, generics
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
-# authentication
+# app imports
+from videos.models import *
+from activities.models import *
+from activities.serializers import *
+# authentication imports
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-# logging, pagination and permissions
+# logging, pagination and permission imports
 import time
 from api.utils import Utils, CustomPagination
 from api.permissions import IsAllowed
+
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"
 
 class ScreeningAPIView( generics.ListCreateAPIView):
     ''' 
@@ -33,7 +41,6 @@ class ScreeningAPIView( generics.ListCreateAPIView):
     permission_classes =[IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = ScreeningSerializer
-
 
     # GET request 
     def get(self, request):
@@ -108,3 +115,4 @@ class ScreeningAPIView( generics.ListCreateAPIView):
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
+

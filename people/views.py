@@ -1,34 +1,33 @@
 # default imports
 from django.shortcuts import render
-
-# added imports
+# rest framework imports
 from rest_framework import viewsets, generics
 from rest_framework import permissions, filters
 from rest_framework.response import Response
-
-# serializers import 
+# app import 
 from people.serializers import FarmerSerializer
-
-# model imports
 from people.models import *
 from geographies.models import *
-
 # django-rest-framework TokenAuthentication imports
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
 # CSV View imports
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
-
 # logging, pagination and permissions
 import time
 from api.utils import Utils, CustomPagination
 from api.permissions import IsAllowed
 
-class DefaultView(generics.ListCreateAPIView):
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"
+
+class FarmerInfoView(generics.ListCreateAPIView):
     ''' 
     This view is specifically written for coco api access.
     This class-based view is to provide default message in JSON format.
@@ -68,7 +67,6 @@ class FarmersJsonAPIView(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated and IsAllowed]
     pagination_class = CustomPagination
     serializer_class = FarmerSerializer
-
 
     # GET request 
     def get(self, request):
@@ -191,7 +189,6 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated and IsAllowed]
     serializer_class = FarmerSerializer
 
-
     # GET request 
     def get(self, request):
         return Response({"detail":"Method \"GET\" not allowed"})
@@ -233,3 +230,5 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
+
+        

@@ -1,5 +1,11 @@
-from .models import * 
 from rest_framework import serializers
+from videos.models import * 
+
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__maintainer__ = "Stuti Verma"
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
     """
@@ -20,6 +26,7 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
             existing = set(self.fields)
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
+
 
 class VideoSerializer(DynamicFieldsModelSerializer):
     class Meta:
