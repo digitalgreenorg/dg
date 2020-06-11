@@ -1,23 +1,18 @@
 # default imports
 from django.shortcuts import render
-
 # model imports
 from videos.models import *
 from activities.models import *
-
 # serializers imports
 from activities.serializers import *
-
 # drf imports
 from rest_framework import viewsets, generics
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
-
 # authentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
 # logging, pagination and permissions
 import time
 from api.utils import Utils, CustomPagination
@@ -95,9 +90,6 @@ class ScreeningAPIView( generics.ListCreateAPIView):
             # if fields param is empty then all the fields as mentioned in serializer are served to the response
             serializer = ScreeningSerializer(queryset, many=True)
 
-        response = Response(serializer.data)
-
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
@@ -111,6 +103,7 @@ class ScreeningAPIView( generics.ListCreateAPIView):
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided

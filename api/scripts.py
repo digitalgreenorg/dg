@@ -1,8 +1,8 @@
-# modules
+# app
 from api.views import CreateView
 from api.models import View
 from django.contrib.auth.models import Group
-# view imports
+# view
 from activities.views import ScreeningAPIView
 from geographies.views import VillageAPIView, BlockAPIView, DistrictAPIView, StateAPIView, CountryAPIView
 
@@ -117,5 +117,10 @@ if __name__=="__main__":
         'CreateView': ['cocoadmin','COCOAPI_ALLOWED_USERS' ],
     }
 
-
+    # for key in PERMISSIONS_MAP.keys():
+    #     view_name = key
+    #     group_list = PERMISSIONS_MAP[key]
+    #     for group_name in group_list:
+    #         createAView(view)
+    #         addAGroupByName(view_name, group_name)
 

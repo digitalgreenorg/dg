@@ -1,6 +1,7 @@
+# permissions
 from rest_framework import permissions
+# app
 from api.models import View
-
 # logger
 import logging
 logger = logging
@@ -11,7 +12,6 @@ class IsAllowed(permissions.BasePermission):
     """
     View-level permission to allow group-wise access to the view-based-apis.
     """
-
     def has_permission(self, request, view):  
         view = View.objects.get(view_name=view.__class__.__name__)
         user_groups = request.user.groups.all()
