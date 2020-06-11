@@ -149,6 +149,7 @@ INSTALLED_APPS = (
     'people',
     'videos',
     'activities',
+    'api',
     #'debug_toolbar',
     'output',
     'django.contrib.humanize',
@@ -187,10 +188,8 @@ INSTALLED_APPS = (
     'loop_ivr',
     'dataexport',
     'rest_framework',
-    'api',
     # 3rd Party
     'django_extensions',
-
     #drf TokenAuthentication
     'rest_framework.authtoken',
 )

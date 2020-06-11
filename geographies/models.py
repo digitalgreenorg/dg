@@ -1,7 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
-
 from coco.base_models import CocoModel, ACTIVITY_CHOICES
 from coco.data_log import delete_log, save_log
 from farmerbook.managers import VillageFarmerbookManager

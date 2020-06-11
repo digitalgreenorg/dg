@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
-
 from coco.data_log import delete_log, save_log
 from coco.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES, TYPE_OF_ROLE
 from farmerbook.managers import FarmerbookManager

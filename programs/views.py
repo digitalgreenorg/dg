@@ -4,8 +4,8 @@ from django.shortcuts import render
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
 # app imports
-from models import *
-from serializers import *
+from programs.models import *
+from programs.serializers import *
 # authentication imports
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated

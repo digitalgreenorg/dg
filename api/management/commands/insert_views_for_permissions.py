@@ -14,7 +14,6 @@ from videos.views import VideoAPIView
 
 __author__ = "Stuti Verma"
 __credits__ = ["Sujit Chaurasia", "Sagar Singh"]
-__maintainer__ = "Stuti Verma"
 __email__ = "stuti@digitalgreen.org"
 __status__ = "Development"
 
@@ -36,6 +35,9 @@ PERMISSIONS_MAP = {
 }
 
 class CreateViewAndAddGroups(self):
+    """
+    Class to create views and add groups for View model
+    """
 
     def createAView(self, view_class):
         '''

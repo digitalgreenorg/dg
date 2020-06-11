@@ -18,7 +18,6 @@ from geographies.models import *
 
 __author__ = "Stuti Verma"
 __credits__ = ["Sujit Chaurasia", "Sagar Singh"]
-__maintainer__ = "Stuti Verma"
 __email__ = "stuti@digitalgreen.org"
 __status__ = "Development"
 
@@ -333,5 +332,3 @@ class CountryAPIView(generics.ListAPIView):
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
-
-        

@@ -8,7 +8,6 @@ from dg.base_settings import VIDEOS_PAGE
 from dg.website_admin import website_admin
 from social_website.views import collection_view, video_view, search_view, collection_edit_view, collection_add_view, partner_view
 from social_website.urls import DirectTemplateView
-from activities import urls as acturls
 import videokheti.urls
 from videos import views
 

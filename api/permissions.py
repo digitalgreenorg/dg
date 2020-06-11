@@ -10,7 +10,6 @@ logger = logging.getLogger('coco_api')
 
 __author__ = "Stuti Verma"
 __credits__ = ["Sujit Chaurasia", "Sagar Singh"]
-__maintainer__ = "Stuti Verma"
 __email__ = "stuti@digitalgreen.org"
 __status__ = "Development"       
 

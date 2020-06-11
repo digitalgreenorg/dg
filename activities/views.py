@@ -22,7 +22,6 @@ from api.permissions import IsAllowed
 
 __author__ = "Stuti Verma"
 __credits__ = ["Sujit Chaurasia", "Sagar Singh"]
-__maintainer__ = "Stuti Verma"
 __email__ = "stuti@digitalgreen.org"
 __status__ = "Development"
 
@@ -68,22 +67,22 @@ class ScreeningAPIView( generics.ListCreateAPIView):
         if start_day and start_month and start_year and end_day and end_month and end_year:
             # params type value is string, trimmed spaces,convert to int and then make date by combining values
             try:
-                start_date = datetime.date(int(start_year.strip()),int(start_month.strip()), int(start_day.strip()))
-                end_date = datetime.date(int(end_year.strip()),int(end_month.strip()), int(end_day.strip()))       
+                start_date = datetime.date(int(start_year.strip()), int(start_month.strip()), int(start_day.strip()))
+                end_date = datetime.date(int(end_year.strip()), int(end_month.strip()), int(end_day.strip()))       
                 queryset = queryset.filter(date__range=(start_date, end_date)) # filters values in date range
             except:
                 print("Date error occurred")
         # case2: only start values are present 
         elif start_day and start_month and start_year and not end_day and not end_month and not end_year:
             try:
-                start_date = datetime.date(int(start_year.strip()),int(start_month.strip()), int(start_day.strip()))      
+                start_date = datetime.date(int(start_year.strip()), int(start_month.strip()), int(start_day.strip()))      
                 queryset = queryset.filter(date__gte=start_date) # filters values greater than or equal to start date
             except:
                 print("Start Date error occurred")
         # case3: only end values are present 
         elif not start_day and not start_month and not start_year and  end_day and  end_month and  end_year:
             try:
-                end_date = datetime.date(int(end_year.strip()),int(end_month.strip()), int(end_day.strip()))       
+                end_date = datetime.date(int(end_year.strip()), int(end_month.strip()), int(end_day.strip()))       
                 queryset = queryset.filter(date__lte=end_date) # filters values less than or equal to end date
             except:
                 print("End Date error occurred")
@@ -115,4 +114,3 @@ class ScreeningAPIView( generics.ListCreateAPIView):
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
-
