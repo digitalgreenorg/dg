@@ -17,4 +17,3 @@ class View(models.Model):
     def __str__(self):
         "Returns the view name and groups names mapped together"
         return '%s, %s'%(self.view_name, self.permission_groups)
-
