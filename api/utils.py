@@ -19,10 +19,10 @@ class CustomPagination(pagination.PageNumberPagination):
     Pagination class to paginate queryset
     """
 
-    page_size = 2
+    page_size = 50
     page_size_query_param = 'page_size'
     page_query_param = 'page'
-    max_page_size = 5
+    max_page_size = 100
 
     # overriding of method to get customised paginated response
     def get_paginated_response(self, data):
@@ -85,6 +85,15 @@ class Utils:
         user_id = user_obj.id
         class_name = class_instance.__class__.__name__
         module_name = class_instance.__module__
-        # method_name = fun.
         logger.info("Accessed: %s.%s.%s, user_id: %s, username: %s, ip_address: %s, method: %s, processing_time: %s seconds, status_code: %s" % ( module_name, class_name, view_fun, user_id, user_obj, ip_addr, method, processing_time, status_code))
         
+    def logMessage(self, class_instance, view_fun, message):
+        """
+        Logs the message associated with class and its method
+        """
+       
+        logger = logging.getLogger('coco_api')
+        class_name = class_instance.__class__.__name__
+        module_name = class_instance.__module__
+        logger.info("Log for %s.%s.%s: %s " % ( module_name, class_name, view_fun, message))
+          

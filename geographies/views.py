@@ -8,7 +8,7 @@ from rest_framework import status
 # rest framework TokenAuthentication imports
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-# logging, pagination and permissions
+# pagination and permissions
 import time
 from api.utils import Utils, CustomPagination
 from api.permissions import IsAllowed
@@ -19,7 +19,7 @@ from geographies.models import *
 __author__ = "Stuti Verma"
 __credits__ = ["Sujit Chaurasia", "Sagar Singh"]
 __email__ = "stuti@digitalgreen.org"
-__status__ = "Development"
+__status__ = "Development"      
 
 class GeoInfoView(generics.ListAPIView):
     ''' 
@@ -71,24 +71,31 @@ class VillageAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on Village obects:   
+        1.) id - to find village by id
+        2.) fields - to pass comma separated value to be returned a value for each Village object, e.g. pass
+        fields value as id,village_name to get only these key-value pairs for each Village object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
         utils = Utils()
 
-        queryset = Village.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
-
+        village_id = self.request.POST.get('id', 0) # POST param 'id'
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
 
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = VillageSerializer(queryset, fields=fields_values ,many=True)
+        if village_id: 
+            queryset = Village.objects.filter(id__exact=village_id) # to search by id
         else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = VillageSerializer(queryset, many=True)
+            queryset = Village.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
         
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -98,6 +105,14 @@ class VillageAPIView(generics.ListAPIView):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
+
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = VillageSerializer(queryset, fields=fields_values ,many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = VillageSerializer(queryset, many=True)
 
         response = Response(serializer.data)
         processing_time = time.time() - start_time
@@ -128,24 +143,31 @@ class BlockAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on Block obects:   
+        1.) id - to find block by id
+        2.) fields - to pass comma separated value to be returned a value for each Block object, e.g. pass
+        fields value as id,block_name to get only these key-value pairs for each Block object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
         utils = Utils()
 
-        queryset = Block.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
-        
-        fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
+        block_id = self.request.POST.get('id', 0) # POST param 'id'
+        fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
 
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = BlockSerializer(queryset, fields=fields_values ,many=True)
+        if block_id: 
+            queryset = Block.objects.filter(id__exact=block_id) # to search by id
         else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = BlockSerializer(queryset, many=True)
+            queryset = Block.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
 
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -155,6 +177,14 @@ class BlockAPIView(generics.ListAPIView):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
+
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = BlockSerializer(queryset, fields=fields_values ,many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = BlockSerializer(queryset, many=True)
         
         response = Response(serializer.data)
         processing_time = time.time() - start_time
@@ -185,24 +215,31 @@ class DistrictAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on District obects:   
+        1.) id - to find district by id
+        2.) fields - to pass comma separated value to be returned a value for each District object, e.g. pass
+        fields value as id,district_name to get only these key-value pairs for each District object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
         utils = Utils()
 
-        queryset = District.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
-        
-        fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
+        district_id = self.request.POST.get('id', 0) # POST param 'id'
+        fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
 
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = DistrictSerializer(queryset, fields=fields_values ,many=True)
+        if district_id: 
+            queryset = District.objects.filter(id__exact=district_id) # to search by id
         else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = DistrictSerializer(queryset, many=True)
+            queryset = District.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
 
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -212,7 +249,15 @@ class DistrictAPIView(generics.ListAPIView):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
-        
+
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = DistrictSerializer(queryset, fields=fields_values ,many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = DistrictSerializer(queryset, many=True)
+
         response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
@@ -242,24 +287,31 @@ class StateAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on State obects:   
+        1.) id - to find state by id
+        2.) fields - to pass comma separated value to be returned a value for each State object, e.g. pass
+        fields value as id,state_name to get only these key-value pairs for each State object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
         utils = Utils()
 
-        queryset = State.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
-        
-        fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
+        state_id = self.request.POST.get('id', 0) # POST param 'id'
+        fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
 
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = StateSerializer(queryset, fields=fields_values ,many=True)
+        if state_id: 
+            queryset = State.objects.filter(id__exact=state_id) # to search by id
         else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = StateSerializer(queryset, many=True)
+            queryset = State.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
 
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -269,6 +321,15 @@ class StateAPIView(generics.ListAPIView):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
+        
+
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = StateSerializer(queryset, fields=fields_values ,many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = StateSerializer(queryset, many=True)
 
         response = Response(serializer.data)
         processing_time = time.time() - start_time
@@ -299,24 +360,31 @@ class CountryAPIView(generics.ListAPIView):
 
     # POST request 
     def post(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on Country obects:   
+        1.) id - to find country by id
+        2.) fields - to pass comma separated value to be returned a value for each Country object, e.g. pass
+        fields value as id,country_name to get only these key-value pairs for each Country object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
         utils = Utils()
 
-        queryset = Country.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
-        
-        fields_values = request.POST.get('fields', '') # POST param 'limit', no default value specified so empty string is default value
-            
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = CountrySerializer(queryset, fields=fields_values ,many=True)
+        country_id = self.request.POST.get('id', 0) # POST param 'id'
+        fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
+
+        if country_id: 
+            queryset = Country.objects.filter(id__exact=country_id) # to search by id
         else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = CountrySerializer(queryset, many=True)
+            queryset = Country.objects.get_queryset().order_by('id') # basic query to be filtered later in this method
 
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -326,6 +394,14 @@ class CountryAPIView(generics.ListAPIView):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
+
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = CountrySerializer(queryset, fields=fields_values ,many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = CountrySerializer(queryset, many=True)
 
         response = Response(serializer.data)
         processing_time = time.time() - start_time

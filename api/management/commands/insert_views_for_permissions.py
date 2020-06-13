@@ -1,10 +1,9 @@
 # django imports
 from django.contrib.auth.models import Group
-from django.core.management.base import BaseCommand, call_command
+from django.core.management.base import BaseCommand
 # csv imports
 import unicodecsv as csv
 # app imports
-from api.views import CreateView
 from api.models import View
 from activities.views import ScreeningAPIView
 from geographies.views import VillageAPIView, BlockAPIView, DistrictAPIView, StateAPIView, CountryAPIView, GeoInfoView
@@ -17,24 +16,24 @@ __credits__ = ["Sujit Chaurasia", "Sagar Singh"]
 __email__ = "stuti@digitalgreen.org"
 __status__ = "Development"
 
-# mapping of view class with group permitted to access it
-PERMISSIONS_MAP = {
-    ScreeningAPIView.__name__: ['cocoadmin','api_access' ],
-    VillageAPIView.__name__: ['cocoadmin','api_access' ],
-    BlockAPIView.__name__: ['cocoadmin','api_access' ],
-    DistrictAPIView.__name__: ['cocoadmin','api_access' ],
-    StateAPIView.__name__: ['cocoadmin','api_access' ],
-    CountryAPIView.__name__: ['cocoadmin','api_access' ],
-    GeoInfoView.__name__: ['cocoadmin','api_access' ],
-    FarmersJsonAPIView.__name__: ['cocoadmin','api_access', 'AWAZDE'],
-    FarmersCsvAPIView.__name__: ['cocoadmin','api_access', 'AWAZDE' ],
-    FarmerInfoView.__name__: ['cocoadmin','api_access' ],
-    PartnerAPIView.__name__: ['cocoadmin','api_access' ],
-    ProjectAPIView.__name__: ['cocoadmin','api_access' ],
-    VideoAPIView.__name__: ['cocoadmin','api_access' ]
+# add a view in this list to insert it in database
+VIEWS_LIST = {
+    ScreeningAPIView.__name__,
+    VillageAPIView.__name__,
+    BlockAPIView.__name__,
+    DistrictAPIView.__name__,
+    StateAPIView.__name__,
+    CountryAPIView.__name__,
+    GeoInfoView.__name__,
+    FarmersJsonAPIView.__name__,
+    FarmersCsvAPIView.__name__,
+    FarmerInfoView.__name__,
+    PartnerAPIView.__name__,
+    ProjectAPIView.__name__,
+    VideoAPIView.__name__,
 }
 
-class CreateViewAndAddGroups(self):
+class CreateViewAndAddGroups():
     """
     Class to create views and add groups for View model
     """
@@ -66,18 +65,18 @@ class Command(BaseCommand):
     """
     
     def handle(self, *args, **options):
-		# error_file = open('/home/ubuntu/code/dg_git/api/management/commands/errors.csv', 'wb')
-		# wrtr = csv.writer(error_file, delimiter=',', quotechar='"')
+        prod_path = '/home/ubuntu/code/dg_git/api/management/commands/errors.csv'
+        local_path = '/Users/stuti/Desktop/dg/api/management/commands/errors.csv'
+        error_file = open(local_path, 'wb')
+        wrtr = csv.writer(error_file, delimiter=',', quotechar='"')
         createAdd = CreateViewAndAddGroups()
-        for key in PERMISSIONS_MAP.keys():
-            view_name = key
-            group_list = PERMISSIONS_MAP[key]
-            for group_name in group_list:
-                try:
-                    createAdd.createAView(view_name)
-                    createAdd.addAGroupByName(view_name, group_name)
-                except Exception as e:
-                    wrtr.writerow([key, "**insertion-error**", group_name), e])
-                    print(e, "**insertion-error")
+
+        for (i, view_name) in enumerate(VIEWS_LIST):
+            try:
+                createAdd.createAView(view_name)
+                # createAdd.addAGroupByName(view_name, "cocoadmin")
+            except Exception as e:
+                wrtr.writerow([i, "**insertion-error**", view_name, e])
+                print(e, "**insertion-error")
 		
-		# error_file.close()
+        error_file.close()

@@ -18,7 +18,7 @@ from videos.serializers import *
 __author__ = "Stuti Verma"
 __credits__ = ["Sujit Chaurasia", "Sagar Singh"]
 __email__ = "stuti@digitalgreen.org"
-__status__ = "Development"
+__status__ = "Development"      
 
 class VideoAPIView(generics.ListCreateAPIView):
     ''' 
@@ -42,6 +42,16 @@ class VideoAPIView(generics.ListCreateAPIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on Video obects:   
+        1.) id - to find video by id
+        2.) fields - to pass comma separated value to be returned a value for each Video object, e.g. pass
+                    fields value as id,title to get only these key-value pairs for each Video object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
         utils = Utils()
 
@@ -52,18 +62,11 @@ class VideoAPIView(generics.ListCreateAPIView):
             queryset = Video.objects.filter(id__exact=video_id)
         else:
             queryset = Video.objects.all().order_by('id')
-
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = VideoSerializer(queryset, fields=fields_values, many=True)
-        else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = VideoSerializer(queryset, many=True)
         
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -74,9 +77,16 @@ class VideoAPIView(generics.ListCreateAPIView):
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
 
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = VideoSerializer(queryset, fields=fields_values, many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = VideoSerializer(queryset, many=True)
+
         response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
-

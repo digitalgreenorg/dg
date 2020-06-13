@@ -9,11 +9,15 @@ from programs.serializers import *
 # authentication imports
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-# logging, pagination and permissions
+# pagination and permissions
 import time
 from api.utils import Utils, CustomPagination
 from api.permissions import IsAllowed
 
+__author__ = "Stuti Verma"
+__credits__ = ["Sujit Chaurasia", "Sagar Singh"]
+__email__ = "stuti@digitalgreen.org"
+__status__ = "Development"      
 
 class PartnerAPIView(generics.ListCreateAPIView):
     ''' 
@@ -36,32 +40,34 @@ class PartnerAPIView(generics.ListCreateAPIView):
         return Response({"detail":"Method \"GET\" not allowed"})
 
     # POST request
-    def getPartnerById(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on Partner obects:   
+        1.) id - to find partner by id
+        2.) fields - to pass comma separated value to be returned a value for each Partner object, e.g. pass
+                    fields value as id,partner_name to get only these key-value pairs for each Partner object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
         utils = Utils()
 
-        # start_limit = request.POST.get('start_limit') # POST param 'start_limit'
-        # end_limit = request.POST.get('end_limit') # POST param 'end_limit'
         fields_values = request.POST.get('fields', '') # POST param 'fields'
         partner_id = self.request.POST.get('id', 0) # POST param 'id'
         
-        queryset = Partner.objects.all().order_by('id')
         serializer_class = PartnerSerializer
 
-        if partner_id: # checks if video id is present
-            queryset = queryset.filter(id__exact=partner_id)
-
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = serializer_class(queryset, fields=fields_values, many=True)
+        if partner_id: # checks if partner id is present
+            queryset = Partner.objects.filter(id__exact=partner_id)
         else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = serializer_class(queryset, many=True)
+            queryset = Partner.objects.all().order_by('id')
 
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -71,6 +77,14 @@ class PartnerAPIView(generics.ListCreateAPIView):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
+
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = serializer_class(queryset, fields=fields_values, many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = serializer_class(queryset, many=True)
 
         response = Response(serializer.data)
         processing_time = time.time() - start_time
@@ -101,29 +115,33 @@ class ProjectAPIView(generics.ListCreateAPIView):
 
     # POST request
     def post(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on Project obects:   
+        1.) id - to find project by id
+        2.) fields - to pass comma separated value to be returned a value for each Project object, e.g. pass
+                    fields value as id,project_name to get only these key-value pairs for each Project object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
         utils = Utils()
 
         fields_values = request.POST.get('fields', '') # POST param 'fields'
         project_id = self.request.POST.get('id', 0) # POST param 'id'
         
-        queryset = Project.objects.all().order_by('id')
         serializer_class = ProjectSerializer
 
-        if project_id: # checks if video id is present
-            queryset = queryset.filter(id__exact=project_id)
-
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = serializer_class(queryset, fields=fields_values, many=True)
+        if project_id: # checks if project id is present
+            queryset = Project.objects.filter(id__exact=project_id)
         else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = serializer_class(queryset, many=True)
+            queryset = Project.objects.all().order_by('id')
 
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -133,11 +151,18 @@ class ProjectAPIView(generics.ListCreateAPIView):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
+        
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = serializer_class(queryset, fields=fields_values, many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = serializer_class(queryset, many=True)
 
         response = Response(serializer.data)
         processing_time = time.time() - start_time
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
-
-        
+       

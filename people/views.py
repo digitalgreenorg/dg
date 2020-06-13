@@ -24,7 +24,7 @@ from api.permissions import IsAllowed
 __author__ = "Stuti Verma"
 __credits__ = ["Sujit Chaurasia", "Sagar Singh"]
 __email__ = "stuti@digitalgreen.org"
-__status__ = "Development"
+__status__ = "Development"      
 
 class FarmerInfoView(generics.ListCreateAPIView):
     ''' 
@@ -73,6 +73,17 @@ class FarmersJsonAPIView(viewsets.GenericViewSet):
 
     # POST request
     def getAllFarmers(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on Person obects:   
+        1.) country_id - to find people belonging to a country
+        2.) phoneNumberExists - to find people with valid phone numbers
+        3.) fields - to pass comma separated value to be returned a value for each Person object, e.g. pass
+                        fields value as id,person_name to get only these key-value pairs for each Person object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
         utils = Utils()
 
@@ -90,20 +101,13 @@ class FarmersJsonAPIView(viewsets.GenericViewSet):
             queryset = Person.objects.all().order_by('id')
 
         # phone number exists or not 
-        if phoneNumberExists in ["true","t","yes","y"]:
+        if phoneNumberExists.lower() in ["true","t","yes","y"]:
             queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])    
-
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = FarmerSerializer(queryset, fields=fields_values, many=True)
-        else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = FarmerSerializer(queryset, many=True)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -113,6 +117,14 @@ class FarmersJsonAPIView(viewsets.GenericViewSet):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
+
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = FarmerSerializer(queryset, fields=fields_values, many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = FarmerSerializer(queryset, many=True)
 
         response = Response(serializer.data)
         processing_time = time.time() - start_time
@@ -122,7 +134,20 @@ class FarmersJsonAPIView(viewsets.GenericViewSet):
 
     # POST request
     def getPhoneMatchedResults(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on Person obects:   
+        1.) country_id - to find people belonging to a country
+        2.) phoneNumberExists - to find people with valid phone numbers
+        3.) phone_numbers - to pass comma separated value to search for exact phone numbers
+        4.) fields - to pass comma separated value to be returned a value for each Person object, e.g. pass
+                    fields value as id,person_name to get only these key-value pairs for each Person object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
+        utils = Utils()
 
         queryset = Person.objects.all().order_by('id')
 
@@ -131,28 +156,18 @@ class FarmersJsonAPIView(viewsets.GenericViewSet):
         phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'phoneNumberExists', default value is empty string
 
         # phone number exists or not    
-        if phoneNumberExists in ["true","t","yes","y"]:
+        if phoneNumberExists.lower() in ["true","t","yes","y"]:
             queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])
-
 
         # phone number matches     
         if phone_numbers:
             ph_no_values = [ph.strip() for ph in phone_numbers.split(",")]
             queryset = queryset.filter(phone_no__in=ph_no_values)
     
-        utils = Utils()
-
-        if fields_values: # fields provided in POST request and if not empty serves those fields only
-            fields_values = [val.strip() for val in fields_values.split(",")]
-            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
-            serializer = FarmerSerializer(queryset, fields=fields_values, many=True)
-        else:
-            # if fields param is empty then all the fields as mentioned in serializer are served to the response
-            serializer = FarmerSerializer(queryset, many=True)
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             if fields_values: # fields provided in POST request and if not empty serves those fields only
+                fields_values = [val.strip() for val in fields_values.split(",")]
                 # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
                 serializer = self.get_serializer(page, fields=fields_values, many=True)
             else:
@@ -162,6 +177,14 @@ class FarmersJsonAPIView(viewsets.GenericViewSet):
             processing_time = time.time() - start_time
             utils.logRequest(request, self, self.post.__name__ , processing_time, paginated_response.status_code)
             return paginated_response
+
+        if fields_values: # fields provided in POST request and if not empty serves those fields only
+            fields_values = [val.strip() for val in fields_values.split(",")]
+            # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
+            serializer = FarmerSerializer(queryset, fields=fields_values, many=True)
+        else:
+            # if fields param is empty then all the fields as mentioned in serializer are served to the response
+            serializer = FarmerSerializer(queryset, many=True)
 
         response = Response(serializer.data)
         processing_time = time.time() - start_time
@@ -194,28 +217,37 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
 
     # POST request
     def post(self, request, *args, **kwargs):
+        """
+        This function can take following optional POST params to filter on Person obects:   
+        1.) country_id - to find people belonging to a country
+        2.) phoneNumberExists - to find people with valid phone numbers
+        3.) fields - to pass comma separated value to be returned a value for each Person object, e.g. pass
+                    fields value as id,person_name to get only these key-value pairs for each Person object
+
+        If none of the above parameters are provided, then all the objects from respective model
+        will be sent to the response.
+        """
+
         start_time = time.time()
+        utils = Utils()
 
         country_id = self.request.POST.get('country_id', 0) # POST param 'country_id', default value is 0
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
+        phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'filter_phone_no', default value is empty string
 
         try:
             # fetches country id from database model Country to verify param value
             got_country_id = Country.objects.get(id=country_id).id 
             # if the country id is found same as param value entered, filters Person model  
-            queryset = Person.objects.all().filter(village__block__district__state__country__exact=got_country_id).order_by('id')
+            queryset = Person.objects.all().filter(village__block__district__state__country__exact=got_country_id).order_by('id')     
         except:
             # in case of failure of above try statement, all Person objects are retrieved
             queryset = Person.objects.all().order_by('id')
 
-        phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'filter_phone_no', default value is empty string
-
         # phone number exists or not    
-        if phoneNumberExists in ["true","t","yes","y"]:
+        if phoneNumberExists.lower() in ["true","t","yes","y"]:
             queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])    
 
-        utils = Utils()
-            
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
             # updated queryset is passed and fields provided in POST request is passed to the dynamic serializer
@@ -229,5 +261,3 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
         utils.logRequest(request, self, self.post.__name__ , processing_time, response.status_code)
         # JSON Response is provided
         return response
-
-        

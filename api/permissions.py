@@ -5,13 +5,14 @@ from rest_framework.response import Response
 from api.models import View
 # logging imports
 import logging
-logger = logging
-logger = logging.getLogger('coco_api')
 
 __author__ = "Stuti Verma"
 __credits__ = ["Sujit Chaurasia", "Sagar Singh"]
 __email__ = "stuti@digitalgreen.org"
-__status__ = "Development"       
+__status__ = "Development"      
+
+logger = logging
+logger = logging.getLogger('coco_api')
 
 class IsAllowed(permissions.BasePermission):
     """
@@ -28,4 +29,3 @@ class IsAllowed(permissions.BasePermission):
         else:
             logger.info("Permission denied for view: %s to user: %s of groups: %s"%(view.view_name, request.user, user_groups))
             return False
-
