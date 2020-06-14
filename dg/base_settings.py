@@ -249,7 +249,7 @@ LOGGING = {
         'api_access_log': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(PROJECT_PATH, '../api/log/logfile'),
+            'filename': os.path.join(PROJECT_PATH, '../api/management/log/logfile'),
             'formatter': 'standard',
         },
 

@@ -96,10 +96,10 @@ urlpatterns = patterns('',
 
     # coco api changes start here
     (r'^api-token-auth', views.obtain_auth_token), 
-    (r'^farmer/', include(people.urls)),  
-    (r'^geo/', include(geographies.urls)), 
-    (r'^activities/', include(activities.urls)),
-    (r'^programs/', include(programs.urls)), 
+    (r'^farmer/', include('people.urls', namespace='farmer')),  
+    (r'^geo/', include('geographies.urls', namespace='geographies')), 
+    (r'^activities/', include('activities.urls', namespace='activities')),
+    (r'^programs/', include('programs.urls', namespace='programs')), 
     # coco api changes end here
 
 

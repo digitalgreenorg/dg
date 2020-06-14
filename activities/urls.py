@@ -9,6 +9,6 @@ __email__ = "stuti@digitalgreen.org"
 __status__ = "Development"
 
 urlpatterns=[
-    url(r'^api/screening', views.ScreeningAPIView.as_view()),
+    url(r'^api/screening', views.ScreeningAPIView.as_view(), name='upavan'),
 ]
 
