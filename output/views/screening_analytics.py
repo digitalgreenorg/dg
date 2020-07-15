@@ -19,8 +19,11 @@ def screening_module(request):
 
     adjusted_to_date = to_date if to_date else datetime.date.today()
     tot_active_vid_data = run_query(screening_analytics_sql.average_video_by_active_data(geog, id, from_date, adjusted_to_date, partners))[0]
-    if tot_active_vid_data['tot_active_per']:
-        avg_vid_by_active = tot_active_vid_data['tot_vid_by_active']/tot_active_vid_data['tot_active_per']
+    data_tot_per = run_query(shared_sql.get_total_active_attendees(geog, id, from_date,to_date, partners))[0]
+    tot_active_vid_data.update(data_tot_per)
+    
+    if tot_active_vid_data['tot_per']:
+        avg_vid_by_active = tot_active_vid_data['tot_vid_by_active']/tot_active_vid_data['tot_per']
     else:
         avg_vid_by_active = 0
 
@@ -193,7 +196,11 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
         sql_values_to_fetch.add('tot_scr')
 
 
-    tot_val = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, sql_values_to_fetch))[0];
+    tot_val = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, set(['tot_scr']) ))[0];
+    if values_to_fetch is None or 'avg_att_per_sc' in values_to_fetch:
+        tot_val_next = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, set(['tot_att']) ))[0];
+        tot_val.update(tot_val_next)
+    
     # for ap screening
     if settings.AP_PARTNER_ID in partners or partners == []:
         tot_ap_per = shared_sql.ap_screening_overview(geog, id, from_date, to_date, partners) 
@@ -203,6 +210,8 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
     
     if tot_val['tot_scr'] is None:
         tot_val['tot_scr'] = 0
+
+    # import pdb; pdb.set_trace()
 
     if(values_to_fetch==None or 'dist_att' in values_to_fetch):
         query_result = run_query_raw(screening_analytics_sql.distinct_attendees(geog, id, from_date, to_date, partners))[0];
@@ -222,5 +231,7 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
                 from_date = datetime.date.today()
             tot_days = (datetime.date.today() - from_date).days + 1
         return_dict['avg_sc_per_day'] = float(tot_val['tot_scr'])/tot_days if tot_days and tot_val['tot_scr'] else 0
+
+    
 
     return return_dict
