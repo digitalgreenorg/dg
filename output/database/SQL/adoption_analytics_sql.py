@@ -6,7 +6,7 @@ def adoption_tot_ado(geog, id, from_date, to_date, partners):
 
     sql_ds['select'].extend(["COUNT(DISTINCT pap.person_id) as tot_farmers", "COUNT(DISTINCT pap.video_id) as tot_prac "])
     sql_ds['from'].append("activities_personadoptpractice pap")
-    sql_ds['join'].append(["people_person pp", "pp.id=pap.person_id AND pap.date_of_adoption > DATE_ADD(Now(), Interval -1 year) "])
+    sql_ds['join'].append(["people_person pp", "pp.id=pap.person_id "])
     sql_ds['join'].append(["geographies_village gv", "gv.id=pp.village_id "])
     sql_ds["join"].append(["geographies_block gb", "gb.id=gv.block_id "])
     sql_ds["join"].append(["geographies_district gd", "gd.id=gb.district_id "])

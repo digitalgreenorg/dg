@@ -21,16 +21,22 @@ def adoption_module(request):
     tot_scr = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, values_to_fetch=['tot_scr']))[0]
     totals.update(tot_ado)
     totals.update(tot_scr)
-    
+
     #total adoptions, total distinct practice adopted, distinct farmer adopting
     main_stats = run_query(adoption_analytics_sql.adoption_tot_ado(geog, id, from_date, to_date, partners))[0]
     main_stats['tot_ado'] = totals['tot_ado'] if totals['tot_ado'] is not None else 0
 
     #Adoption rate
     date_var = to_date if to_date else (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
-    adopt_rate_data = run_query(shared_sql.get_total_active_attendees(geog, id, from_date,date_var, partners))[0]
-    tot_adopt_per = run_query(shared_sql.get_total_adopted_attendees(geog, id, from_date,date_var, partners))[0]
-    tot_active_adop = run_query(shared_sql.get_total_adoption_by_active_attendees(geog, id, from_date,date_var, partners))[0]
+
+    if type(to_date) != datetime.datetime:
+        sixty_days_past = (datetime.datetime.strptime(date_var, '%Y-%m-%d') - datetime.timedelta(60)).strftime('%Y-%m-%d')
+    else:
+        sixty_days_past = (date_var - datetime.timedelta(60)).strftime('%Y-%m-%d')
+
+    adopt_rate_data = run_query(shared_sql.get_total_active_attendees(geog, id, sixty_days_past, date_var, partners))[0]
+    tot_adopt_per = run_query(shared_sql.get_total_adopted_attendees(geog, id, sixty_days_past, date_var, partners))[0]
+    tot_active_adop = run_query(shared_sql.get_total_adoption_by_active_attendees(geog, id, sixty_days_past, date_var, partners))[0]
     adopt_rate_data.update(tot_adopt_per)
     adopt_rate_data.update(tot_active_adop)
     
@@ -161,8 +167,14 @@ def adoption_rate_line(request):
 def adoption_rate(geog, id,from_date, to_date, partners):
     if not to_date:
         to_date = datetime.date.today()
-    adopt_rate_data = run_query(shared_sql.get_total_adopted_attendees(geog, id, from_date,to_date, partners))[0]
-    adopt_rate_data_tot_per = run_query(shared_sql.get_total_active_attendees(geog, id, from_date,to_date, partners))[0]
+
+    if type(to_date) != datetime.datetime:
+        sixty_days_past = (datetime.datetime.strptime(to_date, '%Y-%m-%d') - datetime.timedelta(60)).strftime('%Y-%m-%d')
+    else:
+        sixty_days_past = (to_date - datetime.timedelta(60)).strftime('%Y-%m-%d')
+
+    adopt_rate_data = run_query(shared_sql.get_total_adopted_attendees(geog, id, sixty_days_past, to_date, partners))[0]
+    adopt_rate_data_tot_per = run_query(shared_sql.get_total_active_attendees(geog, id, sixty_days_past, to_date, partners))[0]
     print(adopt_rate_data_tot_per)
     adopt_rate_data.update(adopt_rate_data_tot_per)
 

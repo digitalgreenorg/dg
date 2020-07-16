@@ -402,7 +402,6 @@ def get_total_adopted_attendees(geog, id, from_date,to_date,partners):
     return join_sql_ds(sql_ds);
 
 def get_total_active_attendees(geog, id, from_date,to_date,partners):
-    sixty_days = (datetime.datetime.strptime(to_date, '%Y-%m-%d') - datetime.timedelta(60)).strftime('%Y-%m-%d')
     sql_ds = get_init_sql_ds()
     sql_ds['select'].append('COUNT(DISTINCT pma.person_id) as tot_per')
     sql_ds['from'].append('activities_personmeetingattendance pma ')
@@ -412,14 +411,12 @@ def get_total_active_attendees(geog, id, from_date,to_date,partners):
     sql_ds["join"].append(["geographies_district gd", "gd.id=gb.district_id "])
     sql_ds["join"].append(["geographies_state gs", "gs.id=gd.state_id "])
     sql_ds["join"].append(["geographies_country gc", "gc.id=gs.country_id "]) 
-    sql_ds['where'].append("scr.date BETWEEN '"+str(sixty_days)+"' AND '"+str(to_date)+"'")
+    sql_ds['where'].append("scr.date BETWEEN '"+str(from_date)+"' AND '"+str(to_date)+"'")
 
     par_table = "pap"
     date_field = "DUMMY"
     filter_partner_geog_date(sql_ds, par_table, date_field, geog, id, None, None, partners)
-    q = join_sql_ds(sql_ds)
-    print("----------------------------- tot_per -------------------------")
-    print(q)
+
     return join_sql_ds(sql_ds);
 
 def get_total_adoption_by_active_attendees(geog, id, from_date,to_date,partners):
