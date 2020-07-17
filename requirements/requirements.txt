@@ -39,7 +39,8 @@ isodate==0.5.4
 jdcal==1.3
 Mezzanine==4.1.0
 mysql-connector==2.2.9
-mysqlclient==1.4.6
+#mysqlclient==1.4.6
+mysql-python
 newrelic==2.82.0.62
 numpy==1.12.0
 oauth2==1.5.211
