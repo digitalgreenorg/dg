@@ -354,6 +354,17 @@ def get_totals(geog, id, from_date, to_date, partners, values_to_fetch=None):
         
         par_table = "pap"
         date_field = "pap.date_of_adoption"
+
+    elif(values_to_fetch==None or 'tot_nonunique_ado' in values_to_fetch or 'tot_nonunique_fem_ado' in values_to_fetch or 'tot_nonunique_male_ado' in values_to_fetch):
+        sql_ds['select'].append('COUNT(pp.id) as tot_nonunique_ado')
+        sql_ds["select"].append("COUNT(CASE WHEN pp.gender = 'F' THEN pp.id END) tot_nonunique_fem_ado")
+        sql_ds["select"].append("COUNT(CASE WHEN pp.gender = 'M' THEN pp.id END) tot_nonunique_male_ado")
+        sql_ds['from'].append('activities_personadoptpractice pap')
+        sql_ds['join'].append(["people_person pp", "pp.id = pap.person_id "])
+        sql_ds['join'].append(["geographies_village gv", "gv.id=pp.village_id "])
+        
+        par_table = "pap"
+        date_field = "pap.date_of_adoption"
  
     elif(values_to_fetch==None or 'tot_att' in values_to_fetch or 'tot_fem_att' in values_to_fetch or 'tot_male_att' in values_to_fetch):
         sql_ds["select"].append("COUNT(DISTINCT pma.person_id) as tot_att")
@@ -435,7 +446,7 @@ def get_total_adoption_by_active_attendees(geog, id, from_date,to_date,partners)
     par_table = "pap"
     date_field = "pap.date_of_adoption"
     filter_partner_geog_date(sql_ds, par_table, date_field, geog, id, from_date, to_date, partners)
-    
+
     return join_sql_ds(sql_ds);
 
 

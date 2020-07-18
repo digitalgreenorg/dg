@@ -19,12 +19,15 @@ def adoption_module(request):
     totals = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, values_to_fetch=['tot_att']))[0]
     tot_ado = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, values_to_fetch=['tot_ado']))[0]
     tot_scr = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, values_to_fetch=['tot_scr']))[0]
+    tot_nonunique_ado = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, values_to_fetch=['tot_nonunique_ado']))[0]
     totals.update(tot_ado)
     totals.update(tot_scr)
+    totals.update(tot_nonunique_ado)
 
     #total adoptions, total distinct practice adopted, distinct farmer adopting
     main_stats = run_query(adoption_analytics_sql.adoption_tot_ado(geog, id, from_date, to_date, partners))[0]
     main_stats['tot_ado'] = totals['tot_ado'] if totals['tot_ado'] is not None else 0
+    main_stats['tot_nonunique_ado'] = totals['tot_nonunique_ado'] if totals['tot_nonunique_ado'] is not None else 0
 
     #Adoption rate
     date_var = to_date if to_date else (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
@@ -36,10 +39,10 @@ def adoption_module(request):
 
     adopt_rate_data = run_query(shared_sql.get_total_active_attendees(geog, id, sixty_days_past, date_var, partners))[0]
     tot_adopt_per = run_query(shared_sql.get_total_adopted_attendees(geog, id, sixty_days_past, date_var, partners))[0]
-    tot_active_adop = run_query(shared_sql.get_total_adoption_by_active_attendees(geog, id, sixty_days_past, date_var, partners))[0]
+    tot_active_adop = run_query(shared_sql.get_total_adoption_by_active_attendees(geog, id, from_date, date_var, partners))[0]
     adopt_rate_data.update(tot_adopt_per)
     adopt_rate_data.update(tot_active_adop)
-    
+
     if(adopt_rate_data and adopt_rate_data['tot_per']):
         main_stats.update(adopt_rate = (adopt_rate_data['tot_adopt_per']*100)/adopt_rate_data['tot_per'])
         main_stats.update(avg_ado_per_farmer = adopt_rate_data['tot_active_adop'] / adopt_rate_data['tot_per'])
@@ -72,8 +75,8 @@ def adoption_module(request):
         main_stats.update(avg_ado_per_scr = float(main_stats['tot_ado']) / float(totals['tot_scr']))
     else:
         main_stats.update(avg_ado_per_scr = 0)
-    if(adopt_rate_data['tot_adopt_per'] and main_stats['tot_ado']):
-        main_stats.update(avg_ado_per_adop = float(main_stats['tot_ado']) / float(adopt_rate_data['tot_adopt_per']))
+    if(main_stats['tot_ado'] and main_stats['tot_nonunique_ado']):
+        main_stats.update(avg_ado_per_adop = float(main_stats['tot_nonunique_ado']) / float(main_stats['tot_ado']))
     else:
         main_stats.update(avg_ado_per_adop = 0)
 
