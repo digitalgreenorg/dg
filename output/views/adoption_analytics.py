@@ -24,12 +24,12 @@ def adoption_module(request):
     totals.update(tot_scr)
     totals.update(tot_nonunique_ado)
 
-    #total adoptions, total distinct practice adopted, distinct farmer adopting
+    # Total adoptions, total distinct practice adopted, distinct farmer adopting
     main_stats = run_query(adoption_analytics_sql.adoption_tot_ado(geog, id, from_date, to_date, partners))[0]
     main_stats['tot_ado'] = totals['tot_ado'] if totals['tot_ado'] is not None else 0
     main_stats['tot_nonunique_ado'] = totals['tot_nonunique_ado'] if totals['tot_nonunique_ado'] is not None else 0
 
-    #Adoption rate
+    # Adoption rate
     date_var = to_date if to_date else (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
 
     if type(to_date) != datetime.datetime:
@@ -43,38 +43,45 @@ def adoption_module(request):
     adopt_rate_data.update(tot_adopt_per)
     adopt_rate_data.update(tot_active_adop)
 
-    if(adopt_rate_data and adopt_rate_data['tot_per']):
+    # Adoption rate
+    if(adopt_rate_data['tot_adopt_per'] and adopt_rate_data['tot_per']):
         main_stats.update(adopt_rate = (adopt_rate_data['tot_adopt_per']*100)/adopt_rate_data['tot_per'])
-        main_stats.update(avg_ado_per_farmer = adopt_rate_data['tot_active_adop'] / adopt_rate_data['tot_per'])
     else:
         main_stats.update(adopt_rate = 0)
+    
+    # Average adoption per active viewer
+    if(adopt_rate_data['tot_active_adop_nonunique'] and adopt_rate_data['tot_active_adop']):
+        main_stats.update(avg_ado_per_farmer = adopt_rate_data['tot_active_adop_nonunique'] / adopt_rate_data['tot_active_adop'])
+    else:
         main_stats.update(avg_ado_per_farmer = 0)
 
-    #Probability of Adoption
+    # Probability of Adoption
     if(totals['tot_att'] and main_stats['tot_ado']):
         main_stats.update(adopt_prob = float(main_stats['tot_ado'])/float(totals['tot_att']) * 100)
     else:
         main_stats.update(adopt_prob = 0)
 
-    #Number of practices repeated adopted by same farmer
+    # Number of practices repeated adopted by same farmer
     repeat_pract_per = run_query_raw(adoption_analytics_sql.adoption_repeat_adoption_practice_count(geog, id, from_date, to_date, partners))
     if repeat_pract_per != None and main_stats['tot_farmers']:
         main_stats.update(repeat_pract = float(repeat_pract_per[0][0] * 100)/main_stats['tot_farmers'])
     else:
         main_stats.update(repeat_pract = 0)
 
-    #Avg adoption per Video
+    # Average adoption per Video
     tot_vids_seen = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
     if tot_vids_seen and main_stats['tot_ado']:
-        main_stats.update(avg_ado_per_vid = float(main_stats['tot_ado']) / tot_vids_seen)
+        main_stats.update(avg_ado_per_vid = float(main_stats['tot_nonunique_ado']) / tot_vids_seen)
     else:
         main_stats.update(avg_ado_per_vid = 0)
 
-    #Avg adoption per Screening
-    if(totals['tot_scr'] and main_stats['tot_ado']):
-        main_stats.update(avg_ado_per_scr = float(main_stats['tot_ado']) / float(totals['tot_scr']))
+    # Average adoption per Screening
+    if(totals['tot_scr'] and main_stats['tot_nonunique_ado']):
+        main_stats.update(avg_ado_per_scr = float(main_stats['tot_nonunique_ado']) / float(totals['tot_scr']))
     else:
         main_stats.update(avg_ado_per_scr = 0)
+    
+    # Average adoption per adopter
     if(main_stats['tot_ado'] and main_stats['tot_nonunique_ado']):
         main_stats.update(avg_ado_per_adop = float(main_stats['tot_nonunique_ado']) / float(main_stats['tot_ado']))
     else:
@@ -107,7 +114,7 @@ def adoption_pie_graph_mf_ratio(request):
                                       {"M":"Male","F":"Female"}, 'Ratio of Adoption for {{value}} farmers', \
                                       geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners)
 
-#Data generator to generate Geography Wise Pie.
+# Data generator to generate Geography Wise Pie
 def adoption_geog_pie_data(request):
     geog, id = get_geog_id(request)
     from_date, to_date, partners = get_dates_partners(request)
@@ -150,7 +157,7 @@ def adoption_monthwise_bar_data(request):
     return views.common.month_bar_data(adoption_analytics_sql.adoption_month_bar, setting_from_date = from_date, setting_to_date = to_date, \
                                        geog = geog, id = id, from_date=from_date, to_date = to_date, partners= partners);
 
-#Settings generator for Month-wise Bar graph
+# Settings generator for Month-wise Bar graph
 
 
 def adoption_rate_line(request):
@@ -178,10 +185,7 @@ def adoption_rate(geog, id,from_date, to_date, partners):
 
     adopt_rate_data = run_query(shared_sql.get_total_adopted_attendees(geog, id, sixty_days_past, to_date, partners))[0]
     adopt_rate_data_tot_per = run_query(shared_sql.get_total_active_attendees(geog, id, sixty_days_past, to_date, partners))[0]
-    print(adopt_rate_data_tot_per)
     adopt_rate_data.update(adopt_rate_data_tot_per)
-
-    print(adopt_rate_data)
     
     if(adopt_rate_data and adopt_rate_data['tot_per']):
         return (adopt_rate_data['tot_adopt_per']*100)/adopt_rate_data['tot_per']

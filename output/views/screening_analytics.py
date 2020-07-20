@@ -3,7 +3,7 @@ from django.db.models import Count, Min, Max, Sum
 from django.http import Http404, HttpResponse
 from django.conf import settings
 import datetime,json
-from output.database.SQL import screening_analytics_sql, shared_sql
+from output.database.SQL import screening_analytics_sql, shared_sql, video_analytics_sql
 from output import views
 from output.views.common import get_geog_id
 from output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
@@ -18,12 +18,10 @@ def screening_module(request):
     tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
 
     adjusted_to_date = to_date if to_date else datetime.date.today()
-    tot_active_vid_data = run_query(screening_analytics_sql.average_video_by_active_data(geog, id, from_date, adjusted_to_date, partners))[0]
-    data_tot_per = run_query(shared_sql.get_total_active_attendees(geog, id, from_date,to_date, partners))[0]
-    tot_active_vid_data.update(data_tot_per)
+    vid_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
     
-    if tot_active_vid_data['tot_per']:
-        avg_vid_by_active = tot_active_vid_data['tot_vid_by_active']/tot_active_vid_data['tot_per']
+    if vid_screened and tot_val['dist_att']:
+        avg_vid_by_active = (vid_screened/tot_val['dist_att'])
     else:
         avg_vid_by_active = 0
 

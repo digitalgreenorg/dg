@@ -190,8 +190,6 @@ def overview(geog, id, from_date, to_date, partners, type):
     sql_ds["group by"].append(geog_table_abb+"."+"id")
     sql_ds["order by"].append(geog_table_abb+"."+"id")
 
-    # import pdb; pdb.set_trace()
-
     return join_sql_ds(sql_ds);
 
 
@@ -432,7 +430,8 @@ def get_total_active_attendees(geog, id, from_date,to_date,partners):
 
 def get_total_adoption_by_active_attendees(geog, id, from_date,to_date,partners):
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].append('COUNT(DISTINCT pp.id) as tot_active_adop')
+    sql_ds['select'].extend(['COUNT(DISTINCT pp.id) AS tot_active_adop',
+                             'COUNT(pp.id) AS tot_active_adop_nonunique ', ])
     sql_ds['from'].append('activities_personadoptpractice pap ')
     sql_ds['join'].append(["people_person pp", "pp.id = pap.person_id "])
     sql_ds['join'].append(["activities_personmeetingattendance pma", "pma.person_id = pp.id "])
