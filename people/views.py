@@ -234,6 +234,8 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
         country_id = self.request.POST.get('country_id', 0) # POST param 'country_id', default value is 0
         fields_values = request.POST.get('fields', '') # POST param 'fields', default value is empty string
         phoneNumberExists = request.POST.get('phoneNumberExists','') # POST param 'filter_phone_no', default value is empty string
+        start_limit = request.POST.get('start_limit','') # POST param 'filter_phone_no', default value is empty string
+        end_limit = request.POST.get('end_limit','') # POST param 'filter_phone_no', default value is empty string
 
         try:
             # fetches country id from database model Country to verify param value
@@ -247,6 +249,8 @@ class FarmersCsvAPIView(viewsets.GenericViewSet):
         # phone number exists or not    
         if phoneNumberExists.lower() in ["true","t","yes","y"]:
             queryset = queryset.filter(phone_no__isnull=False).exclude(phone_no__in=[''])    
+
+        queryset = utils.limitQueryset(queryset, start_limit, end_limit)
 
         if fields_values: # fields provided in POST request and if not empty serves those fields only
             fields_values = [val.strip() for val in fields_values.split(",")]
