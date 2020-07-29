@@ -83,9 +83,9 @@ def get_init_sql_ds():
 #Attaches geography tables to filter the pass 'geog' with given 'id'
 #If Modified, shoudl use the first letter of table names( e.g B for BLOCK). Other functions depend on this.
     #sql_ds = datastructure of sql that will be modified (see get_init_sql_ds() above)
-    #par_table_id = table's alias in the query, which has village foreign key
+    #geog_table_abb = table's alias in the query, which has village foreign key
     #date_filter_field = field which will be use to attached date filter in case 'from_date' and 'to_date' is not None
-def attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date):
+def attach_geog_date(sql_ds, geog_table_abb, date_filter_field,geog,id,from_date,to_date):
     if(from_date and to_date):
         sql_ds['where'].append(date_filter_field +" BETWEEN '"+from_date+"' AND '"+to_date+"'")
     geog_list = ["VILLAGE","BLOCK","DISTRICT","STATE", "COUNTRY"];
@@ -93,9 +93,9 @@ def attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_
         return
 
     if(type(id) == types.ListType):
-        sql_ds['where'].append("%s.%s_id in (%s)" %(par_table_id, geog.lower(), ','.join(id)))
+        sql_ds['where'].append("%s.%s_id in (%s)" %(geog_table_abb, geog.lower(), ','.join(id)))
     else:
-        sql_ds['where'].append("%s.%s_id = %s" %(par_table_id, geog.lower(), str(id)))
+        sql_ds['where'].append("%s.%s_id = %s" %(geog_table_abb, geog.lower(), str(id)))
 
 #Function to get from_date and to_date from Request object
 def get_dates_partners(request):
@@ -129,12 +129,22 @@ def get_projects(request):
         project_id=['5']
     return project_id
 
-def filter_partner_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date,partners):
+def filter_partner_geog_date(sql_ds, par_table_id, date_filter_field, geog, id, from_date, to_date, partners):
     if(partners):
         # filtering on partners
         sql_ds['where'].append("%s.partner_id in (%s)" %(par_table_id, ','.join([str(i) for i in partners])))
 
-    attach_geog_date(sql_ds,par_table_id,date_filter_field,geog,id,from_date,to_date)
+    geog_list = [None, 'COUNTRY','STATE','DISTRICT','BLOCK','VILLAGE']
+    geog_table_abb_list = [None, 'gc', 'gs', 'gd', 'gb', 'gv']
+
+    if(geog == 'VILLAGE'):
+        geog_child = 'VILLAGE'
+        geog_table_abb = 'gv'
+    else:
+        geog_child = geog_list[geog_list.index(geog)+1]
+        geog_table_abb = geog_table_abb_list[geog_list.index(geog)+1]
+
+    attach_geog_date(sql_ds, geog_table_abb, date_filter_field, geog,id, from_date, to_date)
 
 
 def join_sql_ds(sql_ds):

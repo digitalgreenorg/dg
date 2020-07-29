@@ -2,19 +2,41 @@ from output.database.utility import *
 
 def distinct_attendees(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("COUNT(DISTINCT PMAM.person_id) as tot_dist_per")
-    sql_ds['from'].append("person_meeting_attendance_myisam PMAM")
-    sql_ds['force index'].append("(person_meeting_attendance_myisam_village_id)")
-    filter_partner_geog_date(sql_ds,"PMAM","PMAM.date",geog,id,from_date,to_date,partners);
+
+    sql_ds["select"].append("COUNT(DISTINCT pma.person_id) as tot_per")
+    sql_ds["from"].append("activities_personmeetingattendance pma")
+    sql_ds["join"].append(["activities_screening scr", "scr.id=pma.screening_id "])
+    sql_ds["join"].append(["people_person pp", "pp.id = pma.person_id "])
+    sql_ds["join"].append(["geographies_village gv", "gv.id=pp.village_id "])
+    sql_ds["join"].append(["geographies_block gb", "gb.id=gv.block_id "])
+    sql_ds["join"].append(["geographies_district gd", "gd.id=gb.district_id "])
+    sql_ds["join"].append(["geographies_state gs", "gs.id=gd.state_id "])
+    sql_ds["join"].append(["geographies_country gc", "gc.id=gs.country_id "])
+    par_table = "scr"
+    date_field = "scr.date"
+    filter_partner_geog_date(sql_ds, par_table, date_field,geog,id,from_date,to_date,partners)
+    
     return join_sql_ds(sql_ds);
 
 def average_video_by_active_data(geog, id, from_date, to_date, partners):
+    """ This function returns total number of videos seen by unique viewers who are active. 
+        We say a person is active if she/he has attended atleast one screening in last 60 days."""
+    
     sql_ds = get_init_sql_ds()
-    sql_ds['select'].extend(['SUM(total_video_seen_by_active) AS tot_vid_by_active ', 
-                             'SUM(total_active_attendees) AS tot_active_per'])
-    sql_ds['from'].append("village_precalculation_copy VPC")
-    sql_ds['where'].append("date = '%s'" % str(to_date))
-    filter_partner_geog_date(sql_ds, "VPC", "DUMMY", geog, id, None, None, partners)
+    sql_ds['select'].append('COUNT(svs.video_id) as tot_vid_by_active')
+    sql_ds['from'].append('activities_personmeetingattendance pma ')
+    sql_ds['join'].append(["activities_screening scr", "scr.id=pma.screening_id "])
+    sql_ds['join'].append(["activities_screening_videoes_screened svs", "svs.screening_id=scr.id "])
+    sql_ds['join'].append(["geographies_village gv", "gv.id=scr.village_id "])
+    sql_ds["join"].append(["geographies_block gb", "gb.id=gv.block_id "])
+    sql_ds["join"].append(["geographies_district gd", "gd.id=gb.district_id "])
+    sql_ds["join"].append(["geographies_state gs", "gs.id=gd.state_id "])
+    sql_ds["join"].append(["geographies_country gc", "gc.id=gs.country_id "]) 
+    sql_ds['where'].append("scr.date between date_sub('"+str(to_date)+"', INTERVAL 60 DAY) AND '"+str(to_date)+"'")
+
+    par_table = "pap"
+    date_field = "DUMMY"
+    filter_partner_geog_date(sql_ds, par_table, date_field, geog, id, None, None, partners)
     
     return join_sql_ds(sql_ds);
 

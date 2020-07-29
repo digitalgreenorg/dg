@@ -54,11 +54,19 @@ def get_csp_identified(geog, id, from_date, to_date, partners):
 
 def get_village_operational(geog, id, date_var, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("COUNT(DISTINCT village_id) as count")
-    sql_ds['from'].append("screening_myisam SCM")
-    sql_ds['force index'].append('(screening_myisam_village_id)')
+    sql_ds['select'].append('COUNT(DISTINCT gv.id) as count')
+    sql_ds['from'].append('activities_screening scr')
+    sql_ds['join'].append(["geographies_village gv", "gv.id=scr.village_id"])
+    
     prev_date = str(datetime.date(*[int(i) for i in str(date_var).split('-')]) - datetime.timedelta(days=60))
-    filter_partner_geog_date(sql_ds,"SCM","SCM.date",geog,id,prev_date,date_var,partners)
+    
+    filter_partner_geog_date(sql_ds,"scr","scr.date",geog,id,prev_date,date_var,partners)
+    
+    sql_ds["join"].append(["geographies_block gb", "gb.id=gv.block_id "])
+    sql_ds["join"].append(["geographies_district gd", "gd.id=gb.district_id "])
+    sql_ds["join"].append(["geographies_state gs", "gs.id=gd.state_id "])
+    sql_ds["join"].append(["geographies_country gc", "gc.id=gs.country_id "])
+    
     return join_sql_ds(sql_ds);
 
 def get_storyboard_prepared(geog, id, from_date, to_date, partners):
