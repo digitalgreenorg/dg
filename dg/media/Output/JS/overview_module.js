@@ -18,13 +18,13 @@ function drawCharts() {
 
   $.getJSON('/coco/analytics/overview_line_graph/' + search_params, {
     type: ['prod', 'screen', 'prac', 'person', 'adopt']
-  }, function(analytics_data) {
-    overview_line(analytics_data);
+  }, function(json) {
+    overview_line(json);
   });
 }
 
-function overview_line(analytics_data) {
-  var total_line_chart_data = google.visualization.arrayToDataTable(analytics_data, false);
+function overview_line(json) {
+  var total_line_chart_data = google.visualization.arrayToDataTable(json, false);
   var options = jQuery.extend(true, {}, line_options);
   options['legend'] = {
     position: 'bottom',
