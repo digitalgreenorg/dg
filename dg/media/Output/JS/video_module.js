@@ -1,5 +1,6 @@
 // google.load("visualization", "1", { packages: ["controls"] });
 // google.setOnLoadCallback(drawCharts);
+
 google.charts.load("current", "1", {
     packages: ["controls"]
 });
@@ -53,8 +54,6 @@ function remove_loader(div_id) {
 
 function monthwise_column(json) {
     if (json.length > 1) {
-
-
         var monthwise_column_chart_data = google.visualization.arrayToDataTable(json, false);
         var options = jQuery.extend(true, {}, column_options);
         options['chartArea'] = { left: 70, top: 20, width: "80%", height: "80%" };
