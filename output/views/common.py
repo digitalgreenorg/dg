@@ -483,22 +483,22 @@ class MyDate:
 def month_bar_data(sqlFunc, setting_from_date, setting_to_date, **args):
     rs = run_query(sqlFunc(**args));
     if rs:
-        min = int(rs[0]['YEAR'])
-        max = int(rs[-1]['YEAR'])+1
+        min = int(rs[0]['year'])
+        max = int(rs[-1]['year'])+1
     
         dic = {}
         for y in range(min,max):
             dic[y] = {}
             for item in rs:
-                if int(item['YEAR'])>y:
+                if int(item['year'])>y:
                     break
-                if int(item['YEAR'])==y:
-                    dic[y][int(item['MONTH'])] = item['count']
+                if int(item['year'])==y:
+                    dic[y][int(item['month'])] = item['count']
     else:
         return HttpResponse(json.dumps([['Name','Value']]));
 
     if(not(setting_from_date and setting_to_date)):
-        setting_from_date = str(rs[0]['YEAR'])+'-'+str(rs[0]['MONTH'])+'-01'
+        setting_from_date = str(rs[0]['year'])+'-'+str(rs[0]['month'])+'-01'
         setting_to_date = (datetime.datetime.utcnow() - datetime.timedelta(1)).strftime('%Y-%m-%d')
     setting_from_date = MyDate(* [int(x) for x in reversed(setting_from_date.split('-')[:2])])
     setting_to_date = MyDate(* [int(x) for x in reversed(setting_to_date.split('-')[:2])])
