@@ -10,6 +10,8 @@ def construct_query(var, context_dict):
 #This abstracts away sql part to return everything by cursor.fetchall()
 #which is a tuple of tuples containing row-values
 def run_query_raw(query_string, *query_args):
+    # change query to lower case
+    query_string = query_string.lower()
     if(not query_string):
         return ()
     cursor = connection.cursor()
@@ -18,6 +20,8 @@ def run_query_raw(query_string, *query_args):
 
 #This generates a list of dictionaries of key=column_header_name, value = row_value
 def run_query(query_string, *query_args):
+    # change query to lower case
+    query_string = query_string.lower()
     if(not query_string):
         return []
     return_list = []
@@ -33,6 +37,8 @@ def run_query(query_string, *query_args):
 #{ dict_key : (tuple of remaing columns), ...}
 #dict_key should be the first column in returned value.
 def run_query_dict(query_string, dict_key, *query_args):
+    # change query to lower case
+    query_string = query_string.lower()
     if(not query_string):
         return {}
     return_list = {}
@@ -51,6 +57,8 @@ def run_query_dict(query_string, dict_key, *query_args):
 #{ dict_key : [list of remaing columns], ...}
 #dict_key should be the first column in returned value.
 def run_query_dict_list(query_string, dict_key, *query_args):
+    # change query to lower case
+    query_string = query_string.lower()
     if(not query_string):
         return {}
     return_list = {}

@@ -1,5 +1,9 @@
-google.load("visualization", "1", { packages: ["controls"] });
-google.setOnLoadCallback(drawCharts);
+// google.load("visualization", "1", { packages: ["controls"] });
+// google.setOnLoadCallback(drawCharts);
+google.charts.load("current", "1", {
+    packages: ["controls"]
+});
+google.charts.setOnLoadCallback(drawCharts);
 
 function drawCharts() {
     $.getJSON('/coco/analytics/adoption_geog_pie_data/' + search_params, function(json) { geog_pie(json); });

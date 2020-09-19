@@ -1,5 +1,10 @@
-google.load("visualization", "1", { packages: ["controls"] });
-google.setOnLoadCallback(drawCharts);
+// google.load("visualization", "1", { packages: ["controls"] });
+// google.setOnLoadCallback(drawCharts);
+
+google.charts.load("current", "1", {
+    packages: ["controls"]
+});
+google.charts.setOnLoadCallback(drawCharts);
 
 var geog_pie_chart;
 var geog_pie_chart_data;
