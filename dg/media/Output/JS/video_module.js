@@ -1,6 +1,7 @@
 // google.load("visualization", "1", { packages: ["controls"] });
 // google.setOnLoadCallback(drawCharts);
 
+// add file
 google.charts.load("current", "1", {
     packages: ["controls"]
 });

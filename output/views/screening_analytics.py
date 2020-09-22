@@ -3,7 +3,7 @@ from django.db.models import Count, Min, Max, Sum
 from django.http import Http404, HttpResponse
 from django.conf import settings
 import datetime,json
-from output.database.SQL import screening_analytics_sql, shared_sql
+from output.database.SQL import screening_analytics_sql, shared_sql, video_analytics_sql
 from output import views
 from output.views.common import get_geog_id
 from output.database.utility import run_query, run_query_raw, run_query_dict, run_query_dict_list, construct_query, get_dates_partners
@@ -18,9 +18,10 @@ def screening_module(request):
     tot_val = get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners)
 
     adjusted_to_date = to_date if to_date else datetime.date.today()
-    tot_active_vid_data = run_query(screening_analytics_sql.average_video_by_active_data(geog, id, from_date, adjusted_to_date, partners))[0]
-    if tot_active_vid_data['tot_active_per']:
-        avg_vid_by_active = tot_active_vid_data['tot_vid_by_active']/tot_active_vid_data['tot_active_per']
+    vid_screened = run_query(video_analytics_sql.video_tot_scr(geog=geog,id=id,from_date=from_date,to_date=to_date,partners=partners))[0]['count']
+    
+    if vid_screened and tot_val['dist_att']:
+        avg_vid_by_active = (vid_screened/tot_val['dist_att'])
     else:
         avg_vid_by_active = 0
 
@@ -193,7 +194,11 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
         sql_values_to_fetch.add('tot_scr')
 
 
-    tot_val = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, sql_values_to_fetch))[0];
+    tot_val = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, set(['tot_scr']) ))[0];
+    if values_to_fetch is None or 'avg_att_per_sc' in values_to_fetch:
+        tot_val_next = run_query(shared_sql.get_totals(geog, id, from_date, to_date, partners, set(['tot_att']) ))[0];
+        tot_val.update(tot_val_next)
+    
     # for ap screening
     if settings.AP_PARTNER_ID in partners or partners == []:
         tot_ap_per = shared_sql.ap_screening_overview(geog, id, from_date, to_date, partners) 
@@ -203,6 +208,8 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
     
     if tot_val['tot_scr'] is None:
         tot_val['tot_scr'] = 0
+
+    # import pdb; pdb.set_trace()
 
     if(values_to_fetch==None or 'dist_att' in values_to_fetch):
         query_result = run_query_raw(screening_analytics_sql.distinct_attendees(geog, id, from_date, to_date, partners))[0];
@@ -222,5 +229,7 @@ def get_dist_attendees_avg_att_avg_sc(geog, id, from_date, to_date, partners, va
                 from_date = datetime.date.today()
             tot_days = (datetime.date.today() - from_date).days + 1
         return_dict['avg_sc_per_day'] = float(tot_val['tot_scr'])/tot_days if tot_days and tot_val['tot_scr'] else 0
+
+    
 
     return return_dict

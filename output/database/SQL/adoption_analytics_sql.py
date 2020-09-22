@@ -3,11 +3,18 @@ from output.database.utility import *
 
 def adoption_tot_ado(geog, id, from_date, to_date, partners):
     sql_ds = get_init_sql_ds();
-    sql_ds['select'].append("COUNT(DISTINCT person_id) as tot_farmers")
-    sql_ds['select'].append("COUNT(DISTINCT video_id) as tot_prac")
-    sql_ds['from'].append("person_adopt_practice_myisam PAPM")
-    sql_ds['force index'].append("(person_adopt_practice_myisam_village_id)")
-    filter_partner_geog_date(sql_ds,'PAPM','PAPM.date_of_adoption',geog,id,from_date,to_date,partners)
+
+    sql_ds['select'].extend(["COUNT(DISTINCT pap.person_id) as tot_farmers", "COUNT(DISTINCT pap.video_id) as tot_prac "])
+    sql_ds['from'].append("activities_personadoptpractice pap")
+    sql_ds['join'].append(["people_person pp", "pp.id=pap.person_id "])
+    sql_ds['join'].append(["geographies_village gv", "gv.id=pp.village_id "])
+    sql_ds["join"].append(["geographies_block gb", "gb.id=gv.block_id "])
+    sql_ds["join"].append(["geographies_district gd", "gd.id=gb.district_id "])
+    sql_ds["join"].append(["geographies_state gs", "gs.id=gd.state_id "])
+    sql_ds["join"].append(["geographies_country gc", "gc.id=gs.country_id "]) 
+
+    filter_partner_geog_date(sql_ds,'pap','pap.date_of_adoption', geog, id, from_date, to_date, partners)
+    
     return join_sql_ds(sql_ds)
 
 def adoption_month_bar(geog,id, from_date, to_date, partners):
@@ -63,11 +70,20 @@ def adoption_practice_wise_scatter(geog, id, from_date, to_date, partners):
 
 def adoption_repeat_adoption_practice_count(geog, id, from_date, to_date, partners):
     inner_sql_ds = get_init_sql_ds();
-    inner_sql_ds['select'].append("PAPM.person_id AS person_id")
-    inner_sql_ds['from'].append("person_adopt_practice_myisam PAPM")
-    filter_partner_geog_date(inner_sql_ds,'PAPM','PAPM.date_of_adoption',geog,id,from_date,to_date,partners)
-    inner_sql_ds['group by'].append("PAPM.person_id")
-    inner_sql_ds['group by'].append("PAPM.video_id")
+
+    inner_sql_ds['select'].append("pap.person_id as person_id")
+    inner_sql_ds['from'].append("activities_personadoptpractice pap")
+    inner_sql_ds['join'].append(["people_person pp", "pp.id=pap.person_id  "])
+    inner_sql_ds['join'].append(["geographies_village gv", "gv.id=pp.village_id "])
+    inner_sql_ds["join"].append(["geographies_block gb", "gb.id=gv.block_id "])
+    inner_sql_ds["join"].append(["geographies_district gd", "gd.id=gb.district_id "])
+    inner_sql_ds["join"].append(["geographies_state gs", "gs.id=gd.state_id "])
+    inner_sql_ds["join"].append(["geographies_country gc", "gc.id=gs.country_id "]) 
+
+    
+    filter_partner_geog_date(inner_sql_ds,'pap','pap.date_of_adoption',geog,id,from_date,to_date,partners)
+    inner_sql_ds['group by'].append("pap.person_id")
+    inner_sql_ds['group by'].append("pap.video_id")
     inner_sql_ds['having'].append("COUNT(*) > 1")
     
     sql_ds = get_init_sql_ds();
