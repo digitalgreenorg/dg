@@ -30,6 +30,7 @@ def refresh_online_stats():
     url = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id='
     for vid in Video.objects.all():
         yt_entry = get_youtube_entry(vid.youtubeID, url)
+        print(yt_entry)
         if yt_entry:
             online_stats = get_online_stats(yt_entry)
             vid.onlineViews = online_stats['views']
