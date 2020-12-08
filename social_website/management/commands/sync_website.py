@@ -78,8 +78,8 @@ class Command(BaseCommand):
 
     def only_online(self):
         refresh_online_stats()
-        refresh_collection_partner_stats()
-        setup_elastic_search()
+        # refresh_collection_partner_stats()
+        # setup_elastic_search()
 
     def fast(self):
         sync_with_serverlog()
