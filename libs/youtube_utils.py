@@ -2,7 +2,7 @@ import os
 import logging
 from datetime import timedelta, date, datetime
 import json
-import urllib
+import urllib2
 
 import isodate
 from boto.s3.connection import S3Connection
@@ -17,8 +17,7 @@ def get_youtube_entry(youtubeid, url='https://www.googleapis.com/youtube/v3/vide
     logger = logging.getLogger('social_website')
     if youtubeid != "":
         try:
-            response = urllib.urlopen(''.join([url, youtubeid, '&key=', GOOGLE_API_KEY]))
-            # print(response.read())
+            response = urllib2.urlopen(''.join([url, youtubeid, '&key=', GOOGLE_API_KEY]))
             data = json.loads(response.read())
             if int(data['pageInfo']['totalResults']) > 0:
                 return data

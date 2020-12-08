@@ -37,7 +37,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
 from social_website.utils.refresh_stats import refresh_collection_partner_stats, refresh_offline_stats, refresh_online_stats
-# from social_website.utils.elastic_search.setup import setup_elastic_search
+from social_website.utils.elastic_search.setup import setup_elastic_search
 from social_website.utils.sync_with_coco import recreate_person_video_record, sync_with_serverlog
 
 
