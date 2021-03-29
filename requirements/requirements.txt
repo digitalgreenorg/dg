@@ -55,7 +55,7 @@ pyasn1==0.3.3
 pyasn1-modules==0.1.1
 pycparser==2.18
 pyes==0.20.0
-Pygments==2.2.0
+Pygments==2.7.4
 pyparsing==2.2.0
 Pyphen==0.9.4
 python-dateutil==2.6.0
