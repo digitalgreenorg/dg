@@ -65,7 +65,7 @@ python-social-auth==0.1.17
 pytz==2016.4
 requests==2.6.0
 requests-oauthlib==0.3.2
-rsa==3.4.2
+rsa==4.7
 scandir==1.6
 simplegeneric==0.8.1
 six==1.10.0
