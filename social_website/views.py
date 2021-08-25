@@ -49,7 +49,7 @@ def social_home(request):
 
 def collection_view(request, partner, country, state, language, title, video=1):
     try:
-        collection = Collection.objects.get(partner__name__iexact = partner, country__iexact = country, state__iexact = state, language__iexact = language, title__iexact = title)
+        collection = Collection.objects.get(partner__name__iexact = partner, country__iexact = country, state__iexact = state, language__iexact = language, title__iexact = title, is_active=True)
     except Collection.DoesNotExist:
         return HttpResponseRedirect(reverse('discover'))
     try:
