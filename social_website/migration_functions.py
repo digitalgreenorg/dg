@@ -117,9 +117,7 @@ def update_website_video(vid):
             # There is just one result for a filter, but we want to use update here.
             website_vid = Video.objects.filter(coco_id = str(vid.id))
             
-            if website_vid.is_active: # update video only if used/required
-
-                website_vid.update(title = vid.title, description = vid.benefit, youtubeID = vid.youtubeid, date = vid.production_date,
+            website_vid.update(title = vid.title, description = vid.benefit, youtubeID = vid.youtubeid, date = vid.production_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state, country = country,
                                 offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
