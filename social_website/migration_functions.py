@@ -10,7 +10,7 @@ from libs.youtube_utils import cleanup_youtubeid, get_youtube_entry, get_online_
 from social_website.models import Collection, Comment, Partner, Person, Animator, PersonVideoRecord, Video
 
 
-S3_VIDEO_BUCKET = r'https://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/'
+S3_VIDEO_BUCKET = r'https://s3.amazonaws.com/digitalgreen-vid/video_thumbnail/raw/'
 DEVELOPER_KEY = 'AI39si74a5fwzrBsgSxjgImSsImXHfGgt8IpozLxty9oGP7CH0ky4Hf1eetV10IBi2KlgcgkAX-vmtmG86fdAX2PaG2CQPtkpA'
 S3_FARMERBOOK_URL = "https://s3.amazonaws.com/dg-farmerbook/2/"
 S3_FARMERBOOK_URL_ANIMATOR = "https://s3.amazonaws.com/dg-farmerbook/csp/"
@@ -116,21 +116,24 @@ def update_website_video(vid):
             website_vid = Video.objects.get(coco_id = str(vid.id))
             # There is just one result for a filter, but we want to use update here.
             website_vid = Video.objects.filter(coco_id = str(vid.id))
-            website_vid.update(title = vid.title, description = vid.benefit, youtubeID = vid.youtubeid, date = vid.production_date,
+            
+            if website_vid.is_active: # update video only if used/required
+
+                website_vid.update(title = vid.title, description = vid.benefit, youtubeID = vid.youtubeid, date = vid.production_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state, country = country,
                                 offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                                 onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
-                                thumbnailURL = "https://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
-                                thumbnailURL16by9 = "https://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
+                                thumbnailURL = "https://s3.amazonaws.com/digitalgreen-vid/video_thumbnail/raw/%s.jpg" % str(vid.id),
+                                thumbnailURL16by9 = "https://s3.amazonaws.com/digitalgreen-vid/video_thumbnail/16by9/%s.jpg" % str(vid.id))
         except Video.DoesNotExist:
             website_vid = Video(coco_id = str(vid.id), title = vid.title, description = vid.benefit, youtubeID = vid.youtubeid, date = vid.production_date,
                                 category = sector, subcategory = subsector, topic = topic, subtopic = subtopic, subject = subject,
                                 language = language, partner = partner, state = state, country = country,
                                 offlineViews = offline_stats['views__sum'], adoptions = offline_stats['adopted__sum'], 
                                 onlineLikes = online_stats['likes'], duration = duration, onlineViews = online_stats['views'],
-                                thumbnailURL = "https://s3.amazonaws.com/digitalgreen/video_thumbnail/raw/%s.jpg" % str(vid.id),
-                                thumbnailURL16by9 = "https://s3.amazonaws.com/digitalgreen/video_thumbnail/16by9/%s.jpg" % str(vid.id))
+                                thumbnailURL = "https://s3.amazonaws.com/digitalgreen-vid/video_thumbnail/raw/%s.jpg" % str(vid.id),
+                                thumbnailURL16by9 = "https://s3.amazonaws.com/digitalgreen-vid/video_thumbnail/16by9/%s.jpg" % str(vid.id))
             website_vid.save()
         
 def get_collection_pracs(videos,field1,field2,field3,field4,field5):
