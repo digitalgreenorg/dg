@@ -61,6 +61,7 @@ class Video(models.Model):
     language = models.CharField(max_length=20)
     state = models.CharField(max_length=100)
     country = models.CharField(max_length=100,null=True)
+    is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.title, self.coco_id)
@@ -123,6 +124,7 @@ class Collection(models.Model):
     adoptions = models.IntegerField(default=0)
     featured = models.BooleanField(default=False)
     description = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
     
     def __unicode__(self):
         return ("%s (%s,%s, %s, %s)" % (self.title, str(self.partner.name), self.country, self.state, self.language))

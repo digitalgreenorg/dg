@@ -171,7 +171,7 @@ class PartnerFarmerResource(BaseResource):
 class VideoResource(BaseResource):
     partner = fields.ForeignKey(PartnerResource, 'partner', null=True)
     class Meta:
-        queryset = Video.objects.all()
+        queryset = Video.objects.filter(is_active=True)
         resource_name = 'video'
         excludes = ['category','subcategory','topic','subtopic','subject']
         filtering={
@@ -202,7 +202,7 @@ class CollectionResource(BaseCorsResource):
 
     class Meta:
         always_return_data = True
-        queryset = Collection.objects.all()
+        queryset = Collection.objects.filter(is_active=True)
         resource_name = 'collections'
         ordering = {'likes', 'views', 'adoptions'}
         authentication = WebsiteSessionAuthentication()
