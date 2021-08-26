@@ -274,7 +274,7 @@ def make_sub_filter(filters, field, active_filter_list, facet_dict):
     filters[field]['title'] = field.title()
     filters[field]['options'] = []
     facet_dict = {k.lower():v for k,v in facet_dict.items()}
-    for obj in sorted(set(Collection.objects.exclude(**kwargs).values_list(field, flat=True))): #works same as .exclude(field = '')
+    for obj in sorted(set(Collection.objects.filter(is_active=True).exclude(**kwargs).values_list(field, flat=True))): #works same as .exclude(field = '')
         facet_count = facet_dict[obj.lower()] if facet_dict.has_key(obj.lower()) else 0
         if facet_count or facet_dict == {}:
             filters[field]['options'].append({"title" : obj,"value" : obj, "filterActive" : obj in active_filter_list, "count" : facet_count})
