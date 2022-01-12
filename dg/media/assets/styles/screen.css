@@ -2161,6 +2161,12 @@ Layout Styles > Vertical Rhythm (vr) spacing between sections & components
     padding-left: 20px;
 }
 
+.get-connector {
+    padding-left: 20px;
+    border: 1px solid #FFD700;
+
+}
+
 .filterOptions-star .icon {
     width: 13px;
     height: 13px;
