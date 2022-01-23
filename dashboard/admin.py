@@ -27,6 +27,7 @@ class PersonMeetingAttendanceForm(forms.ModelForm):
         model = PersonMeetingAttendance
         exclude = ()
 
+
 class FarmerAttendanceInline(admin.TabularInline):
     model = PersonMeetingAttendance
     raw_id_fields = ("person",)
@@ -57,6 +58,7 @@ class ScreeningForm(forms.ModelForm):
     class Meta:
         model = Screening
         exclude = ()
+
 
 class ScreeningAdmin(admin.ModelAdmin):
     filter_horizontal = ('videoes_screened',)
@@ -106,9 +108,9 @@ class DirectBeneficiariesAdmin(admin.ModelAdmin):
     list_display = ['id', 'direct_beneficiaries_category']
     search_fields = ['direct_beneficiaries_category']
 
+
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ['id', 'partner_name']
-
 
 
 class VideoAdmin(admin.ModelAdmin):
@@ -134,6 +136,7 @@ class VideoAdmin(admin.ModelAdmin):
                 settings.STATIC_URL + "js/qa_video.js",
         )
 
+
 class AnimatorAssignedVillages(admin.StackedInline):
     model = AnimatorAssignedVillage
 
@@ -149,10 +152,12 @@ class PersonGroupInline(admin.TabularInline):
     model = PersonGroup
     extra = 5
 
+
 class AnimatorInline(admin.TabularInline):
     model = Animator
     extra = 5
     exclude = ('assigned_villages',)
+
 
 class VillageAdmin(admin.ModelAdmin):
     list_display = ('id', 'village_name', 'block', 'active')
@@ -184,7 +189,6 @@ class PersonGroupForm(forms.ModelForm):
         #}
 
 
-
 class PersonGroupAdmin(admin.ModelAdmin):
     inlines = [PersonInline]
     list_display = ('group_name','village')
@@ -200,6 +204,7 @@ class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
 class PersonAdoptPracticeInline(admin.StackedInline):
     model = PersonAdoptPractice
     extra = 3
+
 
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     formfield_overrides = {
@@ -229,54 +234,68 @@ class PersonAdmin(admin.ModelAdmin):
     search_fields = ['person_name','village__village_name','group__group_name']
     raw_id_fields = ('village','group')
 
+
 class BlockAdmin(admin.ModelAdmin):
     list_display = ('id', 'block_name', 'district', 'active')
     search_fields = ['block_name', 'district__district_name', 'district__state__state_name']
+
 
 class DistrictAdmin(admin.ModelAdmin):
     list_display = ('id', 'district_name', 'state', 'active')
     search_fields = ['district_name', 'state__state_name']
 
+
 class StateAdmin(admin.ModelAdmin):
     list_display = ('id', 'state_name','active')
     search_fields = ['state_name', 'country__country_name']
+
 
 class SubCategoryAdmin(admin.ModelAdmin):
     list_display = ('subcategory_name', 'category')
     search_fields = ['subcategory_name', 'category__category_name']
 
+
 class VideoPracticeAdmin(admin.ModelAdmin):
     list_display = ('videopractice_name', 'subcategory')
     search_fields = ['videopractice_name', 'subcategory__subcategory_name']
+
 
 class PracticesAdmin(admin.ModelAdmin):
     list_display = ('id', 'practice_name', 'practice_sector', 'practice_subject', 'practice_subsector', 'practice_topic', 'practice_subtopic')
     search_fields = ['id', 'practice_name', 'practice_sector__name', 'practice_subject__name', 'practice_subsector__name', 'practice_topic__name', 'practice_subtopic__name']
 
+
 class PracticeSectorAdmin(admin.ModelAdmin):
     search_fields = ['name']
+
 
 class PracticeSubSectorAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
+
 class PracticeTopicAdmin(admin.ModelAdmin):
     search_fields = ['name']
+
 
 class PracticeSubtopicAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
+
 class PracticeSubjectAdmin(admin.ModelAdmin):
     search_fields = ['name']
+
 
 class CocoUserAdmin(admin.ModelAdmin):
     form = CocoUserForm
     list_display = ('id', 'user', 'partner','get_villages')
     search_fields = ['user__username']
 
+
 class QACocoUserAdmin(admin.ModelAdmin):
     form = QACocoUserForm
     list_display = ('user','partner','get_blocks')
     search_fields = ['user__username']
+
 
 class ProjectAdmin(admin.ModelAdmin):
     filter_horizontal = ('associate_partner',)
@@ -297,8 +316,6 @@ class VideoForm(forms.ModelForm):
             instance_video_id = kwargs.get('instance').video_id
             mapped_videos.remove(instance_video_id)        
         self.fields['video'].queryset = Video.objects.filter(partner_id__in=(50,72),village__block__district__state_id= 6).exclude(id__in=mapped_videos)
-
-
 
 
 class BluefrogSubcategoryAdmin(admin.ModelAdmin):
@@ -329,10 +346,6 @@ class APVideoAdmin(admin.ModelAdmin):
         if tag_id_to_be_removed:
             form.instance.video.tags.remove(*tag_id_to_be_removed)
         form.instance.video.tags.add(*current_instance_tag)
-
-
-
-
 
 
 class AP_DistrictAdmin(admin.ModelAdmin):
@@ -426,10 +439,10 @@ class AP_AnimatorAdmin(admin.ModelAdmin):
     _animator.allow_tags = True
     _animator.short_description = "COCO-DB-Animator-ID"
 
+
 class AP_AnimatorAssignedVillageAdmin(admin.ModelAdmin):
     list_display = ['id', 'animator', 'village', 'user_created', 'time_created']
     search_fields = ['animator']
-
 
 
 class JSLPS_AnimatorAdmin(admin.ModelAdmin):
@@ -525,6 +538,7 @@ class JSLPS_VillageAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+
 class JSLPS_VideoAdmin(admin.ModelAdmin):
     list_display = ['id', 'vc', 'title', 'user_created', 'time_created',
                     '_video', 'activity']
@@ -564,7 +578,6 @@ class AP_AdoptionAdmin(admin.ModelAdmin):
         return False
 
 
-
 class JSLPS_ScreeningAdmin(admin.ModelAdmin):
     list_display = ['id', 'screenig_code', 'activity', 
                     'screening', '_village', '_dg_screening_id',
@@ -597,4 +610,7 @@ class JSLPS_AdoptionAdmin(admin.ModelAdmin):
         return False
 
 
+class ViewAdmin(admin.ModelAdmin):
+    list_display = ('id', 'view_name', 'permission_groups')
+    search_fields = ['id', 'view_name']
 

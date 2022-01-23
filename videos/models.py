@@ -238,6 +238,7 @@ class Video(CocoModel):
 post_save.connect(save_log, sender=Video)
 pre_delete.connect(delete_log, sender=Video)
 
+
 class NonNegotiable(CocoModel):
     id = models.AutoField(primary_key=True)
     video = models.ForeignKey(Video)

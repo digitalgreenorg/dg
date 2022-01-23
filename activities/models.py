@@ -33,8 +33,8 @@ from videos.models import ParentCategory
 
 
 class VRPpayment(models.Manager):
-
     "Custom manager filters standard query set with given args."
+    
     def __init__(self, partner_id, block_id, start_period, end_period):
         super(VRPpayment, self).__init__()
         self.start_yyyy = start_period[-4:]
@@ -95,6 +95,7 @@ class FrontLineWorkerPresent(models.Model):
     def __unicode__(self):
         return self.worker_type
 
+
 class Screening(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -147,6 +148,7 @@ class PersonMeetingAttendance(CocoModel):
     def __unicode__(self):
         return  u'%s' % (self.id)
 
+
 class PersonAdoptPractice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -173,8 +175,10 @@ class PersonAdoptPractice(CocoModel):
 
     class Meta:
         unique_together = ("person", "video", "date_of_adoption")
+
 post_save.connect(save_log, sender=PersonAdoptPractice)
 pre_delete.connect(delete_log, sender=PersonAdoptPractice)
+
 
 class JSLPS_Screening(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -213,7 +217,6 @@ class JSLPS_Adoption(CocoModel):
         verbose_name_plural = "JSLPS Adoption"
 
 
-
 class AP_Screening(CocoModel):
     screening_code = models.CharField(max_length=100)
     screening = models.ForeignKey(Screening, null=True, blank=True)
@@ -239,5 +242,4 @@ class AP_Adoption(CocoModel):
     class Meta:
         verbose_name = "Adoption"
         verbose_name_plural = "Adoption"
-
 

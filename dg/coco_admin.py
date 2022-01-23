@@ -1,4 +1,5 @@
 from django.contrib.admin.sites import AdminSite
+# admin
 from django.contrib.auth.admin import Group, GroupAdmin, User, UserAdmin
 from dashboard.admin import AnimatorAdmin
 from dashboard.admin import AnimatorAssignedVillageAdmin
@@ -24,6 +25,9 @@ from dashboard.admin import ParentCategoryAdmin
 from dashboard.admin import ProjectAdmin
 from dashboard.admin import TagAdmin
 from dashboard.admin import PartnerAdmin
+from dashboard.admin import ViewAdmin
+# models
+from api.models import View
 from activities.models import PersonAdoptPractice, Screening
 from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
@@ -55,10 +59,10 @@ coco_admin = CocoAdmin(name="admin_coco")
 coco_admin.index_template = 'social_website/index.html'
 coco_admin.login_template = 'social_website/login.html'
 coco_admin.logout_template = 'social_website/home.html'
-
+# default admin
 coco_admin.register(User, UserAdmin)
 coco_admin.register(Group, GroupAdmin)
-
+# custom admin
 coco_admin.register(AnimatorAssignedVillage, AnimatorAssignedVillageAdmin)
 coco_admin.register(Video, VideoAdmin)
 coco_admin.register(Country)
@@ -86,3 +90,4 @@ coco_admin.register(PracticeTopic, PracticeTopicAdmin)
 coco_admin.register(PracticeSubtopic, PracticeSubtopicAdmin)
 coco_admin.register(PracticeSubject, PracticeSubjectAdmin)
 coco_admin.register(CocoUser, CocoUserAdmin)
+coco_admin.register(View, ViewAdmin)

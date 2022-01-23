@@ -1,7 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
-
 from coco.base_models import CocoModel, ACTIVITY_CHOICES
 from coco.data_log import delete_log, save_log
 from farmerbook.managers import VillageFarmerbookManager
@@ -73,6 +72,7 @@ class District(CocoModel):
 post_save.connect(enter_to_log, sender=District)
 pre_delete.connect(enter_to_log, sender=District)
 
+
 class Block(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -111,6 +111,7 @@ class Village(CocoModel):
 
     def __unicode__(self):
         return self.village_name
+
 post_save.connect(save_log, sender = Village)
 pre_delete.connect(delete_log, sender = Village)
 

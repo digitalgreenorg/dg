@@ -149,6 +149,7 @@ INSTALLED_APPS = (
     'people',
     'videos',
     'activities',
+    'api',
     #'debug_toolbar',
     'output',
     'django.contrib.humanize',
@@ -185,8 +186,12 @@ INSTALLED_APPS = (
     'mrppayment',
     'smart_selects',
     'loop_ivr',
-    'dataexport'
+    'dataexport',
+    'rest_framework',
     # 3rd Party
+    'django_extensions',
+    #drf TokenAuthentication
+    'rest_framework.authtoken',
 )
 
 # Store these package names here as they may change in the future since
@@ -241,6 +246,12 @@ LOGGING = {
             'class':'logging.StreamHandler',
             'formatter': 'standard'
         },
+        'api_access_log': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(PROJECT_PATH, '../api/management/log/logfile'),
+            'formatter': 'standard',
+        },
 
     },
     'loggers': {
@@ -259,6 +270,10 @@ LOGGING = {
         'geographies': {
             'handlers': ['ap_migration_log'],
             'level' : 'INFO',
+        },
+        'coco_api':{
+            'handlers': ['api_access_log'],
+            'level': 'INFO',
         }
     }
 }
@@ -270,3 +285,13 @@ TRAINING_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'training/')
 VIDEOS_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'videos/')
 LOOP_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=loop.org.digitalgreen.loop')
 TRAINING_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=org.digitalgreen.trainingapp')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [        
+        'rest_framework.permissions.IsAuthenticated', 
+    ],
+}

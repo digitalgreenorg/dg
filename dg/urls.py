@@ -20,6 +20,10 @@ import videokheti.urls
 import ivr.urls
 import training.urls
 import videos.urls
+import people.urls
+import activities.urls
+import geographies.urls
+import programs.urls
 
 from django.contrib import admin
 admin.autodiscover()
@@ -65,6 +69,13 @@ ivr_admin.logout_template = 'social_website/home.html'
 # loop_ivr_admin.login_template = 'social_website/login.html'
 # loop_ivr_admin.logout_template = 'social_website/home.html'
 
+from django.conf.urls import url, include
+from django.contrib.auth.models import User
+from rest_framework import routers, serializers, viewsets
+
+#drf token authentication
+from rest_framework.authtoken import views
+
 urlpatterns = patterns('',
     (r'^', include(social_website.urls)),
     #(r'^', include(website_archive_urls)),
@@ -81,6 +92,17 @@ urlpatterns = patterns('',
     (r'^qacoco/', include(qacoco.urls)),
     (r'^dimagi/', include(dimagi.urls)),
     (r'^videos/', include(videos.urls)),
+
+
+    # coco api changes start here
+    (r'^api-token-auth', views.obtain_auth_token), 
+    (r'^farmer/', include('people.urls', namespace='farmer')),  
+    (r'^geo/', include('geographies.urls', namespace='geographies')), 
+    (r'^activities/', include('activities.urls', namespace='activities')),
+    (r'^programs/', include('programs.urls', namespace='programs')), 
+    # coco api changes end here
+
+
     # ivrsadmin/logout/ should be above admin/ URL
     url(r'^ivrsadmin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/ivrsadmin'}),
     (r'^ivrsadmin/', include(ivr_admin.urls)),
@@ -140,8 +162,10 @@ urlpatterns = patterns('',
     #(r'^agri/', include(videokheti.urls)),
     #AJAX for Feedback
     #url(r'^feedbacksubmit_json$', 'dg.feedback_view.ajax'),
+
+
+
+
+
 )
 
-# Static files serving locally
-if settings.DEBUG:
-    urlpatterns += staticfiles_urlpatterns()

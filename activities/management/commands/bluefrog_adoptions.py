@@ -78,4 +78,3 @@ class Command(BaseCommand):
 					wtr.writerow(['Not able to Save Adoption in AP Adoption TABLE', member_code, ap_adopt_practice, e])
 
 
-
