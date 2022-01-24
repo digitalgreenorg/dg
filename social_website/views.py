@@ -536,4 +536,4 @@ def save_email_and_get_data(request):
     file_object = open(filename, append_write)
     file_object.write("Email: " + email + '\n')
     file_object.close()
-    return JsonResponse({"data": "https://github.com/digitalgreenorg/farmstack-open"})
+    return JsonResponse({"data": "https://docs.farmstack.co/deploying-farmstack/setting-up-video-library-connector"})

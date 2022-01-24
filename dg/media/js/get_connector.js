@@ -1,14 +1,11 @@
 function getConnector() {
   var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   let email = $('#recipient-name').attr('value')
-         console.log(email)
-        if (filter.test(email))  {
-                url = window.location.href
-                url = url+ '/get_data?email=' + email;
-                $.get(url, function(data, status){
-                    console.log(data)
-                    console.log(status)
-                    window.location = data['data']
+    if (filter.test(email))  {
+            url = window.location.href
+            url = url+ '/get_data?email=' + email;
+            $.get(url, function(data, status){
+                window.location = data['data']
 
     });
    }
