@@ -528,12 +528,7 @@ def signup_view(request, template_name='social_website/signup.html',
 
 def save_email_and_get_data(request):
     email = request.GET.get("email", "")
-    filename = 'connector_emails.txt'
-    if os.path.exists(filename):
-        append_write = 'a'  # append if already exists
-    else:
-        append_write = 'w'  # make a new file if not:
-    file_object = open(filename, append_write)
+    file_object = open('connector_emails.txt', 'a')
     file_object.write("Email: " + email + '\n')
     file_object.close()
     return JsonResponse({"data": "https://docs.farmstack.co/deploying-farmstack/setting-up-video-library-connector"})
