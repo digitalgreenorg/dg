@@ -1,4 +1,5 @@
 import ast
+import os
 import datetime
 import json
 import random
@@ -12,7 +13,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.views import login as django_login_view
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.response import TemplateResponse
@@ -25,6 +26,8 @@ from social_website.models import  Collection, Partner, FeaturedCollection, Vide
 from videos.models import Practice, Video as Dashboard_Video
 
 from mezzanine.blog.models import BlogPost
+from django.shortcuts import redirect
+
 import logging
 class CustomUserCreationForm(UserCreationForm):
     username = forms.EmailField(label=("Username"), help_text=("Enter Email Address"))
@@ -381,7 +384,7 @@ def resource_view(request, uid=None):
 
 def footer_view(request):
     response = urllib2.urlopen('https://graph.facebook.com/digitalgreenorg')
-    data = data = json.loads(response.read())
+    data = json.loads(response.read())
     footer_dict={
         'likes':data['likes'],
         }
@@ -391,7 +394,7 @@ def footer_view(request):
             'loggedIn':False},
         'footer_dict':footer_dict
         }
-    return render_to_response('footer.html' , context,context_instance = RequestContext(request))
+    return render_to_response('footer.html' , context, context_instance = RequestContext(request))
 
 
 @login_required()
@@ -522,3 +525,10 @@ def signup_view(request, template_name='social_website/signup.html',
 
     return TemplateResponse(request, template_name, context,
                             current_app=current_app)
+
+def save_email_and_get_data(request):
+    email = request.GET.get("email", "")
+    file_object = open('connector_emails.txt', 'a')
+    file_object.write("Email: " + email + '\n')
+    file_object.close()
+    return JsonResponse({"data": "https://docs.farmstack.co/deploying-farmstack/setting-up-video-library-connector"})

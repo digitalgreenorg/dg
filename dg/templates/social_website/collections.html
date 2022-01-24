@@ -3,7 +3,32 @@
     {% include "includes/partials/search.html" %}
     
     <!-- Main page content -->
-    
+    <div class="connectorModal">
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Enter a valid email to get FarmStack installation instructions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Email:</label>
+                    <input type="gmail" class="form-control" id="recipient-name">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a onclick="getConnector()"  type="button" class="btn btn-primary">Get Data</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
     <section id="main" role="main" class="wrapper">
         <div class="inner-wrapper js-collections-wrapper" data-searchstring="{{searchString}}" data-country={{country}} data-partner="{{partner}}" data-title="{{title}}" data-state="{{state}}" data-language="{{language}}" data-category="{{category}}" data-subcategory="{{subcategory}}" data-topic="{{topic}}" data-subject="{{subject}}" data-order="{{order}}">
             <header class="clearfix layout-vr-lg">

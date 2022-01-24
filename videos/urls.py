@@ -2,7 +2,8 @@ from django.conf.urls import include, patterns, url
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 
-from social_website.views import collection_view, video_view, search_view, collection_edit_view, collection_add_view, partner_view
+from social_website.views import collection_view, video_view, search_view, collection_edit_view,\
+    collection_add_view, partner_view, save_email_and_get_data
 from social_website.urls import DirectTemplateView
 
 from output.views import video_analytics
@@ -28,4 +29,5 @@ urlpatterns = patterns('',
     # admin/logout/ should be above admin/ URL
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/videos/admin/'}),
     (r'^admin/', include(website_admin.urls)),
+    url(r'^library/get_data/$', save_email_and_get_data, name='Connector_Data'),
 )
