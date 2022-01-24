@@ -6,7 +6,6 @@ function getConnector() {
             url = url+ '/get_data?email=' + email;
             $.get(url, function(data, status){
                 window.location = data['data']
-
     });
    }
    else {
