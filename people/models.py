@@ -74,8 +74,6 @@ class PersonGroup(CocoModel):
 post_save.connect(save_log, sender=PersonGroup)
 pre_delete.connect(delete_log, sender=PersonGroup)
 
-# creating a validator function
-
 
 class Person(CocoModel):
     id = models.AutoField(primary_key=True)

@@ -3,6 +3,7 @@ import dg.settings
 import json
 import StringIO
 import re
+import chardet
 from os.path import join, dirname, abspath
 # django imports
 from datetime import datetime
@@ -179,7 +180,7 @@ def upload_data(request):
                 user_data = json.loads(data.get('user'))
                 format_data(request, data_from_uploadqueue, user_data)
             except:
-                add_message(request, 25, "Data has been tampered")
+                add_message(request, 25, "Data has been tampered with.")
                 pass
             return redirect(".")
         else:
@@ -299,7 +300,10 @@ def upload_csv_data(request):
             cd = form_data.cleaned_data
             csv_file = request.FILES.get('datafile').read()
             try:
-                file_data = csv_file.decode('utf-8')
+                # Detect the encoding of the csv_file and decode it based on the detection
+                file_data = csv_file.decode(
+                    chardet.detect(csv_file)['encoding'])
+
                 header = str(file_data.split('\n')[0])
                 if '\r' in header:
                     header = header.strip('\r')
@@ -382,6 +386,7 @@ def upload_csv_data(request):
             except (IntegrityError, ValidationError) as e:
                 add_message(request, 40, e.messages[0])
             except Exception as e:
+                print(e)
                 add_message(
                     request, 40, 'Unable to upload data, please contact system@digitalgreen.org for any issues')
             return redirect(".")
