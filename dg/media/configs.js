@@ -1564,7 +1564,6 @@
           maxlength: 100,
           // allowedChar:true
         },
-
         father_name: {
           // required: true,
           minlength: 2,
@@ -1574,7 +1573,7 @@
         age: {
           digits: true,
           min: 10,
-          max: 99,
+          max: 120,
         },
         gender: "required",
         phone_no: {
@@ -1602,9 +1601,9 @@
             "Father's name should contain only english and local language characters",
         },
         age: {
-          digits: "Age should contain only digits",
-          min: "Age should not be less than 10 year",
-          max: "Age should not be less than 100 years",
+          digits: "Age should contain digits only",
+          min: "Age should not be less than 10 years",
+          max: "Age should not be greater than 120 years",
         },
         gender: {
           required: "Gender is required",
