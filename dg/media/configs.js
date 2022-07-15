@@ -122,6 +122,7 @@
         gender: "required",
         phone_no: {
           digits: true,
+          minlength: 9,
           maxlength: 10,
         },
         assigned_villages: "required",
@@ -137,8 +138,9 @@
         },
         gender: "Gender is required",
         phone_no: {
-          digits: "Phone number should contain only digits",
-          maxlength: "Phone number should not contain more than 10 digits",
+          digits: "Phone number should contain digits only",
+          minlength: "Phone number should not be less than 9 digits",
+          maxlength: "Phone number should not be more than 10 digits",
         },
         assigned_villages: "Assigned villages are required",
         district: "District is required",
@@ -1577,7 +1579,7 @@
         gender: "required",
         phone_no: {
           digits: true,
-          minlength: 10,
+          minlength: 9,
           maxlength: 10,
         },
         village: {
@@ -1609,7 +1611,8 @@
         },
         phone_number_person: {
           digits: "Phone number should contain digits only",
-          maxlength: "Phone number should not contain more than 10 digits",
+          minlength: "Phone number should not be less than 9 digits",
+          maxlength: "Phone number should not be more than 10 digits",
         },
         village: {
           required: "Village is required",
