@@ -336,14 +336,9 @@ def upload_csv_data(request):
                                         # NUllify incorrect phone numbers if the village is in Ethiopia
                                         if country_id == 2:
                                             if phone_num != None and phone_num != "":
-                                                if not (len(phone_num) == 10 and phone_num.startswith('09')):
-                                                    if not (len(phone_num) == 9 and phone_num.startswith('9')):
-                                                        # Nullify
-                                                        # phone_num = ""
-                                                        pass
-                                                    else:
-                                                        # Append '0' to the number
-                                                        phone_num = '0'+phone_num
+                                                if not (len(phone_num) == 9 and phone_num.startswith('9')):
+                                                    # Nullify
+                                                    phone_num = ""
 
                                         if row[9] != '' and row[9] != '\r':
                                             row[9] = row[9].strip('\r')
