@@ -1571,6 +1571,7 @@
           // allowedChar:true
         },
         age: {
+          required: true,
           digits: true,
           min: 10,
           max: 120,
