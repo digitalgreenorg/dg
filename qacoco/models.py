@@ -108,11 +108,11 @@ class VideoQualityReview(QACocoModel):
 
     # Abandoned fields below
     interview = models.CharField(
-        max_length=1, choices=SCORE_CHOICES, blank=True, default=None)
+        max_length=1, choices=SCORE_CHOICES, null=True, blank=True, default=None)
     technical = models.CharField(
-        max_length=1, choices=SCORE_CHOICES, blank=True, default=None)
+        max_length=1, choices=SCORE_CHOICES, null=True, blank=True, default=None)
     style_guide = models.CharField(
-        max_length=1, choices=SCORE_CHOICES, blank=True, default=None)
+        max_length=1, choices=SCORE_CHOICES, null=True, blank=True, default=None)
     # End of abandoned fields
     total_score = models.IntegerField()
     video_grade = models.CharField(max_length=1, choices=VIDEO_GRADE)
