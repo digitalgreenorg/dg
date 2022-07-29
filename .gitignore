@@ -327,4 +327,4 @@ training_env/*
 geographies/management/commands/log/ap_migration_log
 .vscode
 venv/
-qacoco/files/
+qacoco/files/*
