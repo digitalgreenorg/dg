@@ -701,6 +701,10 @@ class ScreeningResource(BaseResource):
             for pma in pma_list:
                 try:
                     person_obj = Person.objects.get(id=pma['person_id'])
+                    # Save the phone number of the farmer while inserting screening
+                    # i.e. It will be saved only if the phone number is empty
+                    if (pma.get('phone_no') and not person_obj.phone_no):
+                        person_obj.phone_no = str(pma.get('phone_no'))
                     person_obj.age = int(
                         pma.get('age')) if pma.get('age') else None
                     person_obj.gender = pma.get(
@@ -737,6 +741,10 @@ class ScreeningResource(BaseResource):
         pma_list = bundle.data.get('farmers_attendance')
         for pma in pma_list:
             person_obj = Person.objects.get(id=pma['person_id'])
+            # Save the phone number of the farmer while inserting screening
+            # i.e. It will be saved only if the farmer doesn't have phone number already
+            if (pma.get('phone_no') and not person_obj.phone_no):
+                person_obj.phone_no = str(pma.get('phone_no'))
             person_obj.age = int(pma.get('age')) if pma.get('age') else None
             person_obj.gender = pma.get(
                 'gender') if pma.get('gender') else None
@@ -803,6 +811,7 @@ class ScreeningResource(BaseResource):
         list_queryset = list(queryset)
         return [{'person_id': pma.get('person_id'),
                  'person_name': pma.get('person__person_name'),
+                 'phone_no': pma.get('person__phone_no'),
                  'category': [item for item in self.all_category(bundle, list_queryset) if item['person_id'] == pma.get('person_id')]
                  }
                 for pma in list_queryset]

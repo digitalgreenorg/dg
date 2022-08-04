@@ -795,7 +795,7 @@
       start_time: "Start Time",
       end_time: "End Time",
       village: "Village",
-      mediator: "mediator",
+      mediator: "Mediator",
       videos_screened: "Videos Screened",
       groups_attended: "Groups Attended",
       person: "Person",
@@ -804,6 +804,7 @@
       sr_no: "Sr. No.",
       person_attended: "Person",
       parentcategory: "Category",
+      phone_no: "Phone Number",
       age: "Age",
       gender: "Gender",
       category: "Category",
@@ -905,7 +906,7 @@
     afterSave: function (off_json, Offline) {
       var dfd = new $.Deferred();
       var videos_shown = off_json.videoes_screened;
-      console.log("recvd off_json in afterSave - " + JSON.stringify(off_json));
+
       update_attendees()
         .done(function () {
           dfd.resolve();
@@ -913,6 +914,7 @@
         .fail(function () {
           dfd.reject();
         });
+
       return dfd.promise();
 
       function update_attendees() {
@@ -927,8 +929,8 @@
         var p_dfd = new $.Deferred();
         Offline.fetch_object("person", "id", parseInt(per.person_id))
           .done(function (p_model) {
-            console.log("old p -" + JSON.stringify(p_model));
             var videos_seen = p_model.get("videos_seen");
+
             if (videos_seen) {
               var videos_seen_ids = _.pluck(videos_seen, "id");
               $.each(videos_shown, function (index, vid) {
@@ -936,10 +938,16 @@
                   videos_seen.push(vid);
               });
             } else videos_seen = videos_shown;
+
             p_model.set("videos_seen", videos_seen);
+
+            // Save phone number offline if provided with screening and previous value of the p_model.phone_no is empty
+            if (per.phone_no && !p_model.phone_no) {
+              p_model.set("phone_no", per.phone_no);
+            }
+
             Offline.save(p_model, "person", p_model.toJSON())
               .done(function (p_model) {
-                console.log("new p -" + JSON.stringify(p_model));
                 p_dfd.resolve();
               })
               .fail(function (error) {
@@ -951,6 +959,7 @@
             console.log("error fetching person in after save - " + error);
             p_dfd.reject(error);
           });
+
         return p_dfd;
       }
     },
@@ -1023,6 +1032,7 @@
           name_field_extra_info: "group",
           name_field_group_name: "group_name",
           name_field_person_id: "online_id",
+          name_field_phone_no: "phone_no",
 
           dependency: [
             {
@@ -1087,6 +1097,11 @@
         village: "required",
         videoes_screened: "required",
         farmer_groups_targeted: "required",
+        phone_no: {
+          digits: true,
+          minlength: 9,
+          maxlength: 10,
+        },
       },
       messages: {
         date: {

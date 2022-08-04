@@ -655,7 +655,6 @@
               </div>
           </div>
 
-
           <div class="form-group" id="frontlineworkerpresent">
               <label class="control-label col-sm-2" id="label_id_frontlineworkerpresent"><%= frontlineworkerpresent%></label>
               <div class="col-sm-4">
@@ -664,7 +663,6 @@
                   </select>
               </div>
           </div>
-
 
           <div class="form-group" id="id_meeting_topic">
               <label class="control-label col-sm-2" id="label_id_meeting_topics"><%= meeting_topics%></label>
@@ -682,10 +680,6 @@
                   </select>
               </div>
           </div>
-
-
-
-
 
           <div class="form-group">
               <label class="control-label col-sm-2"><%= date %></label>
@@ -740,24 +734,28 @@
                   </select>
               </div>
           </div>
+
           <div class="form-group">
               <label class="control-label col-sm-2"><%= groups_attended %></label>
               <div class="col-sm-4">
                   <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple" class="chosen-select form-control"></select>
               </div>
           </div>
+
           <div class="form-group">
           	<label class="control-label col-sm-2 notbold"><%= person %></label>
           	<div class="col-sm-4">
                   <select id="id_person" name = "person" class="chosen-select form-control" multiple="multiple"></select>
               </div>
           </div>
+
           <div class="form-group">
               <label class="col-sm-2 control-label notbold"><%= questions_asked %></label>
               <div class="col-sm-4">
                   <textarea name="questions_asked" class="input-xlarge form-control" rows="4"></textarea>
               </div>
           </div>
+
           <div class="form-group">
               <label class="control-label col-sm-2 hidden" id="label_health_provider_present"><%= health_provider_present %></label>
               <div class="col-sm-4">
@@ -766,7 +764,7 @@
               </label>
               </div>
           </div>
-              <br>
+
       </fieldset>
       <fieldset class = "inline_table">
           <table id="pma_table" class="table">
@@ -781,7 +779,10 @@
                       <th id="id_person_label" class="notbold">
                           <%= person %>
                       </th>
-                      <th id="id_age" class="notbold">
+                      <th id="id_phone_no" class="notbold">
+                          <%= phone_no %>
+                      </th>
+                      <!-- <th id="id_age" class="notbold">
                           <%= age %>
                       </th>
                       <th id="id_gender" class="notbold">
@@ -789,7 +790,7 @@
                       </th>
                       <th id="id_category" class="notbold">
                           <%= category %>
-                      </th>
+                      </th> -->
                   </tr>
               </thead>
               <tbody id="pmas">
@@ -800,76 +801,80 @@
 
     <script type="text/template" id="person_pma_template">
       <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("screeningadd_"+class_ln);%>
-          <tr class="stack-table" id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%>>
-              <td>
-                  <div class="form-group">
-                      <div class="controls">
-                          <i class="glyphicon glyphicon-remove remove pointer-hand" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('slow',function(){
-                              $('tr[index = <%=index%>]').remove();
-                          });"></i>
-                      </div>
-                  </div>
-              </td>
-              <td>
-                  <div class="form-group">
-                      <div class="controls">
-                      <input type="text"  class="form-control" style="display:none;" id="person_row7" name="person_id" value = "<%=id%>" disabled>
-                      <%=index+1%>
-                      </div>
-                  </div>
-              </td>
-              <td>
-                  <div class="form-group">
-                      <div class="controls">
-                          <%
-                              var person_label="";
-                              if(typeof(online_id)!="undefined"){
-                                  if(group.group_name!=null){
-                                      person_label = person_name+"("+father_name+")"+"("+group.group_name+")"+"("+online_id+")";
-                                  }
-                                  else{
-                                      person_label = person_name+"("+father_name+")"+"("+online_id+")";
-                                  }
-                              }
-                              else{
-                                  person_label = person_name+"("+father_name+")"
-                              }
-                          %>
-                          <input type="text" class="input-sm form-control" disabled id="person_row7" name="person_name" value = "<%=person_label%>">
-                      </div>
-                  </div>
-              </td>
-              <td>
-                  <div class="form-group">
-                      <div class="controls">
-                      <input type="text"  class="form-control" style="width: 50px;"  id="age_row7" name="age" value="<%=age%>">
-                      </div>
-                  </div>
-              </td>
-              <td>
-                  <div class="form-group">
-                      <div class="controls">
-                      <input type="text"  class="form-control" style="width: 50px;"  id="gender_row7" name="gender" value="<%=gender%>">
-                      </div>
-                  </div>
-              </td>
-              <td>
-                  <div class="form-group">
-                      <div class="controls">
-                          <select name="category<%=index%>" id="category_row7" class="chosen-select form-control category_row7_<%=index%>" multiple="multiple">
-                              <option value='1' class="hnn">Woman of reproductive age (15-49 years)</option>
-                              <option value='2' class="hnn">Adolescent girl (10-19 years)</option>
-                              <option value='3' class="hnn">Mother of a child 2 to 5 years</option>
-                              <option value='4'>Mother of a child 6 months to 2 years</option>
-                              <option value='5'>Mother of a child up to 6 months</option>
-                              <option value='6'>Pregnant Women</option>
-                          </select>
-
-
-                      </div>
-                  </div>
-              </td>
-          </tr>
+        <tr class="stack-table" id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%>>
+            <td>
+                <div class="form-group">
+                    <div class="controls">
+                        <i class="glyphicon glyphicon-remove remove pointer-hand" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('slow',function(){
+                            $('tr[index = <%=index%>]').remove();
+                        });"></i>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <div class="controls">
+                    <input type="text"  class="form-control" style="display:none;" id="person_row7" name="person_id" value = "<%=id%>" disabled>
+                    <%=index+1%>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <div class="controls">
+                        <%
+                            var person_label="";
+                            if(typeof(online_id)!="undefined"){
+                                if(group.group_name!=null){
+                                    person_label = person_name+"("+father_name+")"+"("+group.group_name+")"+"("+online_id+")";
+                                }
+                                else{
+                                    person_label = person_name+"("+father_name+")"+"("+online_id+")";
+                                }
+                            }
+                            else{
+                                person_label = person_name+"("+father_name+")"
+                            }
+                        %>
+                        <input type="text" class="input-sm form-control" disabled id="person_row7" name="person_name" value = "<%=person_label%>">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <div class="controls col-xs-3">
+                    <input type="text"  class="form-control" style="width: 200px;"  id="phone_no_row7" name="phone_no" value="<%=phone_no%>" <%= phone_no ? "disabled":""%>>
+                    </div>
+                </div>
+            <!-- </td>
+                <div class="form-group">
+                    <div class="controls">
+                    <input type="text"  class="form-control" style="width: 50px;"  id="age_row7" name="age" value="<%=age%>">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <div class="controls">
+                    <input type="text"  class="form-control" style="width: 50px;"  id="gender_row7" name="gender" value="<%=gender%>">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <div class="controls">
+                        <select name="category<%=index%>" id="category_row7" class="chosen-select form-control category_row7_<%=index%>" multiple="multiple">
+                            <option value='1' class="hnn">Woman of reproductive age (15-49 years)</option>
+                            <option value='2' class="hnn">Adolescent girl (10-19 years)</option>
+                            <option value='3' class="hnn">Mother of a child 2 to 5 years</option>
+                            <option value='4'>Mother of a child 6 months to 2 years</option>
+                            <option value='5'>Mother of a child up to 6 months</option>
+                            <option value='6'>Pregnant Women</option>
+                        </select>
+                    </div>
+                </div>
+            </td> -->
+        </tr>
     </script>
 
     <script language="javascript">
@@ -905,7 +910,7 @@
 
               <div class="form-group">
                   <label class="control-label col-sm-2"><%= person%></label>
-              	<div class="col-sm-4">
+              	  <div class="col-sm-4">
                       <select name="person" id="id_person" class="chosen-select form-control">
                       <option value="">---------- </option>
                       </select>
