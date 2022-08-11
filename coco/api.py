@@ -705,10 +705,13 @@ class ScreeningResource(BaseResource):
                     # i.e. It will be saved only if the phone number is empty
                     if (pma.get('phone_no') and not person_obj.phone_no):
                         person_obj.phone_no = str(pma.get('phone_no'))
-                    person_obj.age = int(
-                        pma.get('age')) if pma.get('age') else None
-                    person_obj.gender = pma.get(
-                        'gender') if pma.get('gender') else None
+                    # Make sure age and gender are not overwritten
+                    if not person_obj.age:
+                        person_obj.age = int(
+                            pma.get('age')) if pma.get('age') else None
+                    if not person_obj.gender:
+                        person_obj.gender = pma.get(
+                            'gender') if pma.get('gender') else None
                     person_obj.save()
                     if pma.get('category'):
                         category = json.dumps(pma.get('category'))
@@ -745,9 +748,13 @@ class ScreeningResource(BaseResource):
             # i.e. It will be saved only if the farmer doesn't have phone number already
             if (pma.get('phone_no') and not person_obj.phone_no):
                 person_obj.phone_no = str(pma.get('phone_no'))
-            person_obj.age = int(pma.get('age')) if pma.get('age') else None
-            person_obj.gender = pma.get(
-                'gender') if pma.get('gender') else None
+            # Make sure age and gender are not overwritten
+            if not person_obj.age:
+                person_obj.age = int(
+                    pma.get('age')) if pma.get('age') else None
+            if not person_obj.gender:
+                person_obj.gender = pma.get(
+                    'gender') if pma.get('gender') else None
             person_obj.save()
             if pma.get('category'):
                 category = json.dumps(pma.get('category'))
@@ -887,7 +894,7 @@ class PersonAdoptVideoResource(BaseResource):
         foreign_key_to_id, field_name='video', sub_field_names=['id', 'title'])
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
-    #dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
+    # dehydrate_person = partial(foreign_key_to_id, field_name='person',sub_field_names=['id','person_name'])
     # dehydrate_parentcategory = partial(foreign_key_to_id, field_name='parentcategory',sub_field_names=['id','parent_category_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     dehydrate_animator = partial(
