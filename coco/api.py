@@ -706,10 +706,10 @@ class ScreeningResource(BaseResource):
                     if (pma.get('phone_no') and not person_obj.phone_no):
                         person_obj.phone_no = str(pma.get('phone_no'))
                     # Make sure age and gender are not overwritten
-                    if not person_obj.age:
+                    if (pma.get('age') and not person_obj.age):
                         person_obj.age = int(
                             pma.get('age')) if pma.get('age') else None
-                    if not person_obj.gender:
+                    if (pma.get('gender') and not person_obj.gender):
                         person_obj.gender = pma.get(
                             'gender') if pma.get('gender') else None
                     person_obj.save()
@@ -749,10 +749,10 @@ class ScreeningResource(BaseResource):
             if (pma.get('phone_no') and not person_obj.phone_no):
                 person_obj.phone_no = str(pma.get('phone_no'))
             # Make sure age and gender are not overwritten
-            if not person_obj.age:
+            if (pma.get('age') and not person_obj.age):
                 person_obj.age = int(
                     pma.get('age')) if pma.get('age') else None
-            if not person_obj.gender:
+            if (pma.get('gender') and not person_obj.gender):
                 person_obj.gender = pma.get(
                     'gender') if pma.get('gender') else None
             person_obj.save()
