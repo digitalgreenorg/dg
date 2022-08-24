@@ -737,7 +737,7 @@
 
           <div class="form-group">
               <label class="control-label col-sm-2"><%= groups_attended %></label>
-              <div class="col-sm-4">
+              <div class="col-sm-4" tabindex="-1">
                   <select id="id_group"  name = "farmer_groups_targeted" multiple="multiple" class="chosen-select form-control"></select>
               </div>
           </div>
@@ -766,6 +766,10 @@
           </div>
 
       </fieldset>
+
+      <button id="btn_clr_group_atendees" type="button" class="btn btn-warning col-sm-offset-2 mb-2" data-loading-text="Clearing..."
+      onClick="clear_group_attendance()" style="display: none">Clear Group Atendees</button>
+
       <fieldset class = "inline_table">
           <table id="pma_table" class="table">
               <thead class="hide-header">
@@ -801,11 +805,11 @@
 
     <script type="text/template" id="person_pma_template">
       <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("screeningadd_"+class_ln);%>
-        <tr class="stack-table" id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%>>
+        <tr class="stack-table" id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%> group_id = <%= group.id %> source_form_element = <%= source %>>
             <td>
                 <div class="form-group">
                     <div class="controls">
-                        <i class="glyphicon glyphicon-remove remove pointer-hand" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('slow',function(){
+                        <i class="glyphicon glyphicon-remove remove pointer-hand" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('fast',function(){
                             $('tr[index = <%=index%>]').remove();
                         });"></i>
                     </div>
@@ -879,6 +883,19 @@
     </script>
 
     <script language="javascript">
+      function clear_group_attendance() {
+        $("#pmas")
+          .find("tr")
+          .each(function () {
+            if (
+              $(this).attr("source_form_element") === "farmer_groups_targeted"
+            ) {
+              $(this).fadeOut("fast", function () {
+                $(this).remove();
+              });
+            }
+          });
+      }
       function get_val() {
         $("#id_type_of_video").change(function () {
           var type_of_video = this.value;
@@ -1414,9 +1431,7 @@
     <script type="text/template" id="nonnegotiable_inline">
       <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("videoadd_"+class_ln);%>
           <tr class="stack-table" index = <%=index%> name="row<%=index%>">
-          <td>
-                      <%=index+1%>.</td>
-
+          <td><%=index+1%>.</td>
           <td>
               <div class="form-group"><div class="controls">
                   <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="10" maxlength="500" rows="1" style="resize:vertical; width:82%;" ></textarea>
@@ -1429,7 +1444,6 @@
                   </div>
               </div>
           </td>
-
           </tr>
     </script>
 
@@ -1447,66 +1461,66 @@
     <!--//////////////////////////////////////////////////// PERSON ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->
 
     <script type="text/template" id="person_add_edit_template">
-           <fieldset class="form-horizontal">
-               <legend><%= person %></legend>
+      <fieldset class="form-horizontal">
+          <legend><%= person %></legend>
 
-               <div class="form-group">
-                   <label class="control-label col-sm-2"><%= name %></label>
-               	<div class="col-sm-4">
-                       <input type="text" name="person_name" class="form-control">
-                	</div>
-               </div>
-               <div class="form-group">
-                   <label class="control-label col-sm-2"><%= father_name %></label>
-                   <div class="col-sm-4">
-                       <input type="text" name="father_name" class="form-control">
-                   </div>
-               </div>
-               <div class="form-group">
-                   <label class="control-label col-sm-2"><%= village %></label>
-                   <div class="col-sm-4">
-                       <select id = "id_village" name="village" class="chosen-select form-control">
+          <div class="form-group">
+              <label class="control-label col-sm-2"><%= name %></label>
+          	<div class="col-sm-4">
+                  <input type="text" name="person_name" class="form-control">
+           	</div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2"><%= father_name %></label>
+              <div class="col-sm-4">
+                  <input type="text" name="father_name" class="form-control">
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2"><%= village %></label>
+              <div class="col-sm-4">
+                  <select id = "id_village" name="village" class="chosen-select form-control">
 
-                       </select>
-                   </div>
-               </div>
-               <div class="form-group">
-                   <label class="control-label col-sm-2"><%= gender %></label>
-                   <div class="col-sm-4">
-                       <select name="gender" class="form-control">
-                           <option value='' selected='selected'>---------</option>
-                           <option value='M'>Male</option>
-                           <option value='F'>Female</option>
-                       </select>
-                   </div>
-               </div>
-               <div class="form-group">
-               	<label class="control-label col-sm-2 notbold"><%= age %></label>
-               	<div class="col-sm-4">
-                       <input class="input-mini form-control" name="age" type="text">
-               	</div>
-               </div>
-               <div class="form-group">
-                   <label class="control-label col-sm-2 notbold"><%= phone_no %></label>
-                   <div class="col-sm-4">
-                       <input name="phone_no" type="text" class="form-control">
-                   </div>
-               </div>
-      <div class="form-group">
-                   <label class="control-label col-sm-2 notbold"><%= group %></label>
-                   <div class="col-sm-4">
-                       <select id = "id_group" name="group" class="chosen-select form-control">
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2"><%= gender %></label>
+              <div class="col-sm-4">
+                  <select name="gender" class="form-control">
+                      <option value='' selected='selected'>---------</option>
+                      <option value='M'>Male</option>
+                      <option value='F'>Female</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+          	<label class="control-label col-sm-2 notbold"><%= age %></label>
+          	<div class="col-sm-4">
+                  <input class="input-mini form-control" name="age" type="text">
+          	</div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 notbold"><%= phone_no %></label>
+              <div class="col-sm-4">
+                  <input name="phone_no" type="text" class="form-control">
+              </div>
+          </div>
+           <div class="form-group">
+              <label class="control-label col-sm-2 notbold"><%= group %></label>
+              <div class="col-sm-4">
+                  <select id = "id_group" name="group" class="chosen-select form-control">
 
-                       </select>
-                   </div>
-               </div>
-               <div class="form-group" id="is_modelfarmer">
-                   <label class="col-sm-2 control-label notbold"><%= is_modelfarmer %></label>
-                   <div class="col-sm-4">
-                       <input type="checkbox" name="is_modelfarmer">
-                   </div>
-               </div>
-           </fieldset>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group" id="is_modelfarmer">
+              <label class="col-sm-2 control-label notbold"><%= is_modelfarmer %></label>
+              <div class="col-sm-4">
+                  <input type="checkbox" name="is_modelfarmer">
+              </div>
+          </div>
+      </fieldset>
     </script>
     <!--//////////////////////////////////////////////////// PERSON ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
   </head>

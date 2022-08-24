@@ -16462,6 +16462,22 @@ define("views/form", [
         start_change_events: function () {
             for (element in this.source_dependents_map) {
                 console.log("creating changeevent for - " + element);
+
+                // Save the value of the select item before change to identify what changed
+                if (element === "farmer_groups_targeted") {
+                    this.$("[name=" + element + "]")
+                        .parent()
+                        .on("focus", function (event) {
+                            // Get the previous value of the select element when the parent of the select element (the div)
+                            // recieves focus (because the select element itself is hidden, and then set it on the prev_dat attribute
+                            $(this)
+                                .find("select")
+                                .attr({
+                                    prev_dat: $(this).find("select").val(),
+                                });
+                        });
+                }
+
                 // put change-event listeners on source elements
                 this.$("[name=" + element + "]").change(
                     this.render_dep_for_elements
@@ -16488,7 +16504,6 @@ define("views/form", [
                     },
                 }
             );
-            console.log();
             this.$("form").validate(validate_obj);
         },
 
@@ -16598,7 +16613,10 @@ define("views/form", [
             _.each(
                 this.source_dependents_map[source],
                 function (dep_el) {
-                    var filtered_models = this.filter_dep_for_element(dep_el);
+                    var filtered_models = this.filter_dep_for_element(
+                        dep_el,
+                        source
+                    );
                     this.render_foreign_element(dep_el, filtered_models);
                     // var arr = this.entity_config.combination_display_field_with_value
                     var combination_field_to_display =
@@ -16660,7 +16678,10 @@ define("views/form", [
             _.each(
                 this.source_filter_dependent_map[source],
                 function (dep_el) {
-                    var filtered_models = this.filter_dep_for_element(dep_el);
+                    var filtered_models = this.filter_dep_for_element(
+                        dep_el,
+                        source
+                    );
                     this.render_foreign_element(dep_el, filtered_models);
                 },
                 this
@@ -16668,7 +16689,7 @@ define("views/form", [
         },
 
         // Fully Reset the dependent foreign element by looking at all its sources.
-        filter_dep_for_element: function (element) {
+        filter_dep_for_element: function (element, source = false) {
             //get dependent element's entity's collection - to be filtered
             var dep_collection = this.get_collection_of_element(element);
             // get all sources of this element - to filter by
@@ -16772,8 +16793,126 @@ define("views/form", [
                         }
                     });
                 }
+
+                // Make sure that this only applies to screening page
+                if (
+                    that.entity_name === "screening" &&
+                    element === "farmers_attendance"
+                ) {
+                    // Deep copying the items in the array because the elements in the array are references of person models
+                    // and change to a later item is reflected to a duplicate previous
+                    filtered_models = JSON.parse(
+                        JSON.stringify(filtered_models)
+                    );
+                    // Add the source form element to the model
+                    filtered_models.filter(function (person_model) {
+                        person_model.source = source_form_element;
+                        return person_model;
+                    });
+                }
+
                 final_models = final_models.concat(filtered_models);
             });
+
+            // Make sure that this only applies to screening page
+            if (
+                that.entity_name === "screening" &&
+                element === "farmers_attendance"
+            ) {
+                // Get the current items rendered on DOM
+                var dom_list = [];
+                $("#pmas")
+                    .find("tr")
+                    .each(function (index, elemnt) {
+                        dom_list.push({
+                            index: index,
+                            person_id: $(this).attr("person_id"),
+                            group_id: $(this).attr("group_id"),
+                            source_form_element: $(this).attr(
+                                "source_form_element"
+                            ),
+                        });
+                    });
+
+                // Get group list from the attendees on the dom just to be sure what has be represented
+                var prev_groups_on_dom = [];
+                dom_list.forEach(function (atendee_on_dom) {
+                    prev_groups_on_dom.push(parseInt(atendee_on_dom.group_id));
+                });
+                prev_groups_on_dom = _.uniq(prev_groups_on_dom);
+
+                // Groups before
+                var prev_dat = $(
+                    '#id_group[name="farmer_groups_targeted"]'
+                ).attr("prev_dat");
+                var prev_groups = [];
+                // Read on stackoverflow that some browsers set it to false, so worth checking
+                if (typeof prev_dat !== "undefined" && prev_dat !== false) {
+                    prev_groups = $('#id_group[name="farmer_groups_targeted"]')
+                        .attr("prev_dat")
+                        .split(",");
+                }
+
+                // Curent groups on group field
+                var current_groups = $(
+                    '#id_group[name="farmer_groups_targeted"]'
+                ).val();
+
+                // Filter the final models
+                final_models = final_models.filter(function (atendee) {
+                    // If item exists in both lists and it's source form element is the same, keep it
+                    const item_in_dom = dom_list.some(function (
+                        atendee_on_dom
+                    ) {
+                        return (
+                            atendee.id === parseInt(atendee_on_dom.person_id) &&
+                            atendee.source ===
+                                atendee_on_dom.source_form_element
+                        );
+                    });
+                    if (item_in_dom) {
+                        return true;
+                    }
+                    // *** End of item in DOM ***
+
+                    // Keep the item if it doesn't exist on DOM AND the source form element is farmer_groups_targeted
+                    // AND the atendee's source form element is farmer_groups_targeted
+                    if (source === "farmer_groups_targeted") {
+                        // Check if a new group is added
+                        const group_added =
+                            current_groups.length > prev_groups.length;
+                        // Keep all the members of the new group
+                        if (group_added) {
+                            var new_group = parseInt(
+                                current_groups.filter(function (group) {
+                                    return prev_groups.indexOf(group) == -1;
+                                })[0]
+                            );
+                            if (atendee.group.id === new_group) return true;
+                        }
+                    }
+                    // *** End of member of new group ***
+
+                    // If the source form element that triggered the re-render is 'person' & the atendee's source form element
+                    // is person, keep it (Hoping the users remove it from the source form element themselves if they want to)
+                    if (atendee.source === "person") {
+                        return true;
+                    }
+                    // *** End of sourced by 'person' form field ***
+
+                    // If the above conditions aren't met, remove the item from the final_models list
+                    return false;
+                });
+
+                // Remove duplicates
+                final_models = _.uniq(
+                    // Reversing here to keep those items sourced by 'person' form element
+                    _.sortBy(final_models, (person) => person.source).reverse(),
+                    (person) => person.id
+                );
+
+                final_models = _.sortBy(final_models, (person) => person.id);
+            }
             return final_models;
         },
 
@@ -16783,7 +16922,7 @@ define("views/form", [
             var filter_value = filter.value;
             filtered = [];
             $.each(model_array, function (index, obj) {
-                //LIMIT: assumed to be an object
+                // LIMIT: assumed to be an object
                 if (obj.get(filter_attr).id == filter_value) {
                     filtered.push(obj);
                 }
@@ -16971,7 +17110,7 @@ define("views/form", [
                         this.foreign_elements_rendered[element] = true;
                 } else {
                     $.each(model_array, function (index, f_model) {
-                        var t_json = f_model.toJSON();
+                        var t_json = JSON.parse(JSON.stringify(f_model));
                         t_json["index"] = index;
 
                         $f_el.append(expanded_template(t_json));
@@ -17039,6 +17178,13 @@ define("views/form", [
                 }
 
                 this.initiate_form_widgets();
+                // Making sure we're not attempting to look for the element in other forms
+                if (
+                    that.entity_name === "screening" &&
+                    element === "farmers_attendance"
+                )
+                    $("#btn_clr_group_atendees").show();
+
                 $(".inline_table").show();
 
                 // if (this.$el.find('#id_'+ this.entity_config.fetch_element_that_manipulate).val() == this.agg_variable){
@@ -30315,7 +30461,6 @@ define("views/list", [
                                 User.get("type_of_cocouser")) |
                             (model.get("parentcategory").id == null)
                         );
-                        entity_collection = entity_collection;
                     })
                 );
             } else {
