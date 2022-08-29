@@ -31348,15 +31348,18 @@ define("views/status", [
             return dfd;
         },
 
+        // TODO: Continute....
         afterRender: function () {
-            if (User.isOnline()) {
-                $("#export").attr("disabled", true);
+            // if (User.isOnline()) {
+            //     $("#export").attr("disabled", true);
+            // } else {
+            // }
+            // Moved out the below code from the else statement to always enable the export button whenever
+            // upload queue has items inside
+            if (upload_collection.length >= 1) {
+                $("#export").removeAttr("disabled");
             } else {
-                if (upload_collection.length >= 1) {
-                    $("#export").removeAttr("disabled");
-                } else {
-                    $("#export").attr("disabled", true);
-                }
+                $("#export").attr("disabled", true);
             }
         },
 

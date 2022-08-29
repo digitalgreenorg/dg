@@ -539,8 +539,8 @@ define([], function () {
       line_9: "We value your feedback",
       line_10:
         "Do share your feedback by mailing us at <a href='mailto:system@digitalgreen.org'>system@digitalgreen.org</a>",
-      line_11: "Database last deleted and downloaded at",
-      line_12: "Database last synced at",
+      line_11: "Database last deleted and downloaded at ",
+      line_12: "Database last synced at ",
       line_13: "Entries to upload",
     },
     background_download_interval: 5 * 60 * 1000,
