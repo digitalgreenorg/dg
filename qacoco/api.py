@@ -438,7 +438,7 @@ class VideoQualityReviewResource(BaseResource):
 class DisseminationQualityResource(BaseResource):
     block = fields.ForeignKey(BlockResource, 'block')
     village = fields.ForeignKey(VillageResource, 'village')
-    group = fields.ForeignKey(PersonGroupResource, 'group')
+    group = fields.ForeignKey(PersonGroupResource, 'group', null=True)
     mediator = fields.ForeignKey(MediatorResource, 'mediator')
     video = fields.ForeignKey(VideoResource, 'video')
     qareviewername = fields.ForeignKey(

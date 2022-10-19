@@ -46,6 +46,9 @@
       href="/media/coco/app/images/favicon.ico"
     />
 
+    <!-- PWA Addition -->
+    <!-- <link rel="manifest" href="/media/assets/manifest.json" /> -->
+
     <script
       data-main="/media/coco/dist/scripts/qa_main"
       src="/media/coco/app/scripts/libs/require.js"
@@ -1148,5 +1151,30 @@
       id="notifications"
       class="col-xs-10 col-xs-push-1 col-sm-3 col-sm-push-8"
     ></div>
+    <!-- PWA Addition -->
+    <!-- <script type="text/javascript">
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log(
+                "Service worker registration succeeded:",
+                registration
+              );
+              navigator.serviceWorker.ready.then(function (registration) {
+                console.log("Service worker is active:", registration.active);
+              });
+            })
+            .catch((registrationError) => {
+              console.log(
+                "Service worker registration failed: ",
+                registrationError
+              );
+            });
+        });
+      }
+    </script> -->
+    <!-- End of PWA Addition -->
   </body>
 </html>

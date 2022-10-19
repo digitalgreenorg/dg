@@ -1,15 +1,11 @@
 <!DOCTYPE html>
-<!-- manifest="/media/coco/coco-offline.appcache" manifest="/media/coco/coco-offline.appcache"-->
-<html
-  xml:lang="en-us"
-  xmlns="http://www.w3.org/1999/xhtml"
-  lang="en-us"
-  manifest="/media/coco/coco-offline.appcache"
->
+
+<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="robots" content="NONE,NOARCHIVE" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#51b9e5" />
 
     <title>COCO</title>
 
@@ -46,10 +42,14 @@
       href="/media/coco/app/images/favicon.ico"
     />
 
+    <!-- PWA Addition -->
+    <link rel="manifest" href="/media/assets/manifest.json" />
+
     <script
       data-main="/media/coco/dist/scripts/main"
       src="/media/coco/app/scripts/libs/require.js"
     ></script>
+
     <script type="text/javascript">
       require.config({
         paths: {
@@ -1552,5 +1552,34 @@
         >
       </p>
     </div>
+    <!-- PWA addition -->
+    <script type="text/javascript">
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js", { scope: "/" })
+            .then((registration) => {
+              console.log("Service worker registration succeeded.");
+              // console.table(registration);
+              navigator.serviceWorker.ready.then(function (registration) {
+                console.log(
+                  "Service worker is",
+                  registration.active.state,
+                  "with scope:",
+                  registration.scope
+                );
+                // console.log(registration, navigator);
+              });
+            })
+            .catch((registrationError) => {
+              console.log(
+                "Service worker registration failed: ",
+                registrationError
+              );
+            });
+        });
+      }
+    </script>
+    <!-- End of PWA addition -->
   </body>
 </html>

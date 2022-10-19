@@ -1,0 +1,36 @@
+{
+  "name": "CoCo",
+  "short_name": "CoCo",
+  "description": "CoCo captures data related to the key processes of the Digital Green approach - video production, dissemination and adoption of practices - having the unique ability to accept data while offline for areas with intermittent internet connectivity.",
+  "start_url": "/coco/coco/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#51b9e5",
+  "icons": [
+    {
+      "src": "/media/assets/images/icons/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/media/assets/images/icons/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/media/assets/images/icons/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/media/assets/images/icons/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -31348,7 +31348,6 @@ define("views/status", [
             return dfd;
         },
 
-        // TODO: Continute....
         afterRender: function () {
             // if (User.isOnline()) {
             //     $("#export").attr("disabled", true);
@@ -31948,27 +31947,28 @@ define("app", ["router", "user_initialize", "views/app_layout"], function (
 
     var update_appcache = function () {
         $(window).load(function () {
-            window.applicationCache.addEventListener(
-                "updateready",
-                function (e) {
-                    if (
-                        window.applicationCache.status ==
-                        window.applicationCache.UPDATEREADY
-                    ) {
-                        // Browser downloaded a new app cache.
-                        // Swap it in and reload the page to get the new hotness.
-                        window.applicationCache.swapCache();
+            if (typeof window.applicationCache !== "undefined")
+                window.applicationCache.addEventListener(
+                    "updateready",
+                    function (e) {
                         if (
-                            confirm(
-                                "A new version of this site is available. Load it?"
-                            )
+                            window.applicationCache.status ==
+                            window.applicationCache.UPDATEREADY
                         ) {
-                            window.location.reload();
+                            // Browser downloaded a new app cache.
+                            // Swap it in and reload the page to get the new hotness.
+                            window.applicationCache.swapCache();
+                            if (
+                                confirm(
+                                    "A new version of this site is available. Load it?"
+                                )
+                            ) {
+                                window.location.reload();
+                            }
                         }
-                    }
-                },
-                false
-            );
+                    },
+                    false
+                );
         });
     };
 
