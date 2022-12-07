@@ -6,7 +6,7 @@ bleach==2.1.3
 boto==2.8.0
 cairocffi==0.8.0
 CairoSVG==1.0.22
-certifi==2017.11.5
+certifi==2022.12.7
 cffi==1.11.5
 chardet==2.3.0
 cssselect2==0.2.1
