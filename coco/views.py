@@ -163,7 +163,7 @@ def format_data(request, data_from_uploadqueue, user_data):
             # formatting for screening
             format_data_or_saving_in_adoption(
                 request, item.get('data'), user_id, partner_id)
-    add_message(request, 25, "Data has been uploaded Successfully")
+    add_message(request, 25, "Data has been successfully uploaded!")
     return redirect(".")
 
 
@@ -180,11 +180,11 @@ def upload_data(request):
                 user_data = json.loads(data.get('user'))
                 format_data(request, data_from_uploadqueue, user_data)
             except:
-                add_message(request, 25, "Data has been tampered with.")
+                add_message(request, 40, "The file has been tampered with.")
                 pass
             return redirect(".")
         else:
-            add_message(request, 25, "Please correct the errors below.")
+            add_message(request, 40, "Please correct the errors below.")
     else:
         form_data = DataUploadForm()
     context = {'form': form_data}

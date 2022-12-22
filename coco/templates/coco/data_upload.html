@@ -1,68 +1,82 @@
 {% include "internal-tools/header.html" %}
-<script type="text/javascript"  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"></script>
-<script type="text/javascript"  src="{{STATIC_URL}}coco/app/scripts/libs/jquery.validate.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}coco/app/scripts/libs/additional-methods.js"></script>
-<style type="text/css">
-  .errorlist{
-    color: red;
-  }
-  .error{
-    color: red;
-  }
-</style>
+<script
+  type="text/javascript"
+  src="{{STATIC_URL}}social_website/scripts/libs/external/jquery-1.12.4.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="{{STATIC_URL}}coco/app/scripts/libs/jquery.validate.js"
+></script>
+<script
+  type="text/javascript"
+  src="{{STATIC_URL}}coco/app/scripts/libs/additional-methods.js"
+></script>
 
 <section id="upload-data" class="about-bg">
-
   <div class="wrapper">
     <div class="inner-wrapper">
       <h2 class="hdg-a hdg-source-lt layout-vr-md">COCO - Upload Data</h2>
-        {% for message in messages %}
-          <div class="errorlist alert alert-success" role="alert">
-              {{ message }}
-          </div>
-        {% endfor %}
+      {% for message in messages %}
+      <div
+        class="{% if message.tags == 'success' %} form-result {% else %} errorlist {% endif %} alert alert-success"
+        role="alert"
+      >
+        {{ message }}
+      </div>
+      {% endfor %}
       <div class="row">
         <div class="col-sm-12">
-            <form id="data-upload" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              <div class="control-group">
-                {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
-                <label class="control-label col-sm-2" for="datafile">DataFile</label>
-                <div {% if form.datafile.errors %} class="col-sm-8" {% else %} class="col-sm-8" {% endif %} style="margin-top: 7px;">
-                  {{ form.datafile }}
-                </div>
+          <form
+            id="data-upload"
+            class="form-horizontal"
+            action=""
+            method="post"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <div class="control-group">
+              {% if form.datafile.errors %}{{ form.datafile.errors}}{% endif %}
+              <!-- <label class="control-label col-sm-2" for="datafile"
+                >DataFile</label
+              > -->
+              <div class="col-sm-8" style="margin-top: 7px">
+                {{ form.datafile }}
               </div>
-              <br>
-              <br>
-              <button type="submit" id="upload" class="btn btn-success">Submit</button>
-
-            </form>
+            </div>
+            <br />
+            <br />
+            <button type="submit" id="upload" class="btn btn-success">
+              Submit
+            </button>
+          </form>
         </div>
-        <br>
+        <br />
       </div>
-    </div> <!-- End .inner-wrapper -->
-  </div> <!-- End .wrapper -->
+    </div>
+    <!-- End .inner-wrapper -->
+  </div>
+  <!-- End .wrapper -->
 </section>
 
 <script>
-$('form').validate({
-   ignore: [],
-   rules:{
-       datafile: {
-            required: true,
-            extension: "json"
-        }
-   },
-   messages:{
-       datafile:{
-          required:"Please upload the file",
-          extension:"Please upload a Valid file"
-        }
-   },
-   submitHandler: function(form) {
+  $("form").validate({
+    ignore: [],
+    rules: {
+      datafile: {
+        required: true,
+        extension: "json",
+      },
+    },
+    messages: {
+      datafile: {
+        required: "Please upload the file",
+        extension: "Please upload a Valid file",
+      },
+    },
+    submitHandler: function (form) {
       form.submit();
-    }
-})
+    },
+  });
 </script>
 
 {% include "internal-tools/footer.html" %}
