@@ -17075,19 +17075,22 @@ define("views/form", [
                     if (f_entity_desc.id_field)
                         id_field = f_entity_desc.id_field;
                     var collection = this.get_collection_of_element(element);
-                    var cat = [];
+
                     $.each(this.model_json[element], function (index, f_json) {
                         model = collection.get(f_json[id_field]);
                         if (!model) return;
                         var t_json = model.toJSON();
                         t_json["index"] = index;
+
                         $.each(
                             f_entity_desc.expanded.extra_fields,
                             function (index, field) {
                                 t_json[field] = f_json[field];
                             }
                         );
+
                         $f_el.append(expanded_template(t_json));
+
                         if (t_json.category && t_json.category.length >= 1) {
                             _.each(t_json.category, function (iterable, idx) {
                                 if (iterable.id != "undefined") {
@@ -17254,12 +17257,15 @@ define("views/form", [
                         var extra_info_group_name = "";
                         var extra_info_person_id = "";
                         var extra_info_father_name = "";
+                        var extra_info_block_name = "";
+                        // Add father name
                         if (
                             f_json[f_entity_desc.name_field_father_name] != null
                         ) {
                             extra_info_father_name =
                                 f_json[f_entity_desc.name_field_father_name];
                         }
+                        // Add group name
                         if (
                             f_json[f_entity_desc.name_field_extra_info][
                                 f_entity_desc.name_field_group_name
@@ -17270,11 +17276,20 @@ define("views/form", [
                                     f_entity_desc.name_field_group_name
                                 ];
                         }
+                        // Add person Id
                         if (
                             f_json[f_entity_desc.name_field_person_id] != null
                         ) {
                             extra_info_person_id =
                                 f_json[f_entity_desc.name_field_person_id];
+                        }
+                        // Added block name as an identifier as some villages have similar name and can properly
+                        // be identified with their block name
+                        if (
+                            f_json[f_entity_desc.name_field_block_name] != null
+                        ) {
+                            extra_info_block_name =
+                                f_json[f_entity_desc.name_field_block_name];
                         }
                         $f_el.append(
                             that.options_inner_template({
@@ -17289,6 +17304,9 @@ define("views/form", [
                                         : "") +
                                     (extra_info_person_id != ""
                                         ? " (" + extra_info_person_id + ")"
+                                        : "") +
+                                    (extra_info_block_name != ""
+                                        ? " (" + extra_info_block_name + ")"
                                         : ""),
                             })
                         );
@@ -31556,7 +31574,7 @@ define("views/app_layout", [
         serialize: function () {
             // send username to the template
             var username = User.get("username");
-            console.log(User);
+            // console.log(User);
             return {
                 username: username,
             };

@@ -101,6 +101,8 @@
         assigned_villages: {
           placeholder: "id_ass_villages",
           name_field: "village_name",
+          name_field_extra_info: "block_name",
+          name_field_block_name: "block_name",
         }, //name of html element in form/ attribute name in json: {placeholder: "id of html element in form", name_field: "attribute in foreign entity's json "}
       },
       district: {
@@ -276,11 +278,12 @@
           name_field: "name",
         },
       },
-
       village: {
         village: {
           placeholder: "id_village",
           name_field: "village_name",
+          name_field_extra_info: "block_name",
+          name_field_block_name: "block_name",
         },
       },
       language: {
@@ -397,6 +400,7 @@
           validateDate: true,
         },
         youtubeid: {
+          required: true,
           maxlength: 20,
         },
       },
@@ -665,6 +669,8 @@
         village: {
           placeholder: "id_village",
           name_field: "village_name",
+          name_field_extra_info: "block_name",
+          name_field_block_name: "block_name",
         },
       },
     },
@@ -690,6 +696,8 @@
           village: {
             placeholder: "id_village",
             name_field: "village_name",
+            name_field_extra_info: "block_name",
+            name_field_block_name: "block_name",
           },
         },
         group: {
@@ -968,6 +976,8 @@
         village: {
           placeholder: "id_village",
           name_field: "village_name",
+          name_field_extra_info: "block_name",
+          name_field_block_name: "block_name",
         },
       },
 
@@ -1301,6 +1311,8 @@
           village: {
             placeholder: "id_village",
             name_field: "village_name",
+            name_field_extra_info: "block_name",
+            name_field_block_name: "block_name",
           },
         },
 
@@ -1553,6 +1565,8 @@
         village: {
           placeholder: "id_village",
           name_field: "village_name",
+          name_field_extra_info: "block_name",
+          name_field_block_name: "block_name",
         },
       },
       group: {
@@ -1588,7 +1602,7 @@
         age: {
           required: true,
           digits: true,
-          min: 10,
+          min: 13,
           max: 120,
         },
         gender: "required",
@@ -1618,7 +1632,7 @@
         },
         age: {
           digits: "Age should contain digits only",
-          min: "Age should not be less than 10 years",
+          min: "Age should not be less than 13 years",
           max: "Age should not be greater than 120 years",
         },
         gender: {
