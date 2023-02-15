@@ -116,9 +116,10 @@ class Person(CocoModel):
             # Validate phone number if the village is in Ethiopia
             if country_id == 2:
                 # if not (len(phone_no) == 10 and phone_no.startswith('09')):
-                if not (len(phone_no) == 9 and phone_no.startswith('9')):
+                allowed_phone_prefixes = ('7', '9')
+                if not (len(phone_no) == 9 and phone_no.startswith(allowed_phone_prefixes)):
                     raise forms.ValidationError(
-                        {'phone_no': ('Phone number must be of nine digits and start with \'9\'.')})
+                        {'phone_no': ('Phone number must be of nine digits and start with either \'7\' or \'9\'.')})
         # A unique together validation for Ethiopia with ("person_name", "group", "village") fields
         if country_id == 2:
             # Find the duplicates
