@@ -17082,6 +17082,12 @@ define("views/form", [
                         var t_json = model.toJSON();
                         t_json["index"] = index;
 
+                        // HACK: t_json is missing the source attribute so add it here from model_array
+                        const prsn = model_array.find(
+                            ({ id }) => id === t_json.id
+                        );
+                        t_json["source"] = prsn ? prsn.source : "person";
+
                         $.each(
                             f_entity_desc.expanded.extra_fields,
                             function (index, field) {

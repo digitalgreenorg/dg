@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict, ModelChoiceField
+from django.db.models import Q
 # tastypie imports
 from tastypie import fields
 from tastypie.models import ApiKey
@@ -240,7 +241,7 @@ def assign_partner(bundle):
     return bundle
 
 
-class VillagePartnerAuthorization(Authorization):
+class StrictVillagePartnerAuthorization(Authorization):
     def __init__(self, field):
         self.village_field = field
 
@@ -259,6 +260,34 @@ class VillagePartnerAuthorization(Authorization):
             user_id=bundle.request.user.id).get_villages()
         kwargs['partner_id'] = get_user_partner_id(bundle.request.user.id)
         obj = object_list.filter(**kwargs).distinct()
+        if obj:
+            return True
+        else:
+            raise NotFound("Not allowed to download")
+
+
+class VillagePartnerAuthorization(Authorization):
+    def __init__(self, field):
+        self.village_field = field
+
+    def read_list(self, object_list, bundle):
+        villages = CocoUser.objects.get(
+            user_id=bundle.request.user.id).get_villages()
+        user_partner = get_user_partner_id(bundle.request.user.id)
+        kwargs = {}
+        kwargs[self.village_field] = villages
+        
+        # Fetch the person if it's assigned an additional partner
+        return object_list.filter(**kwargs).filter(Q(partner_id=user_partner) | Q(partners__id=user_partner)).distinct()
+
+    def read_detail(self, object_list, bundle):
+        # Is the requested object owned by the user?
+        user_partner = get_user_partner_id(bundle.request.user.id)
+        kwargs = {}
+        kwargs[self.village_field] = CocoUser.objects.get(
+            user_id=bundle.request.user.id).get_villages()
+        # kwargs['partner_id'] = get_user_partner_id(bundle.request.user.id)
+        obj = object_list.filter(**kwargs).filter(Q(partner_id=user_partner) | Q(partners__id=user_partner)).distinct()
         if obj:
             return True
         else:
@@ -597,11 +626,12 @@ class PersonGroupResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group_label = fields.CharField()
     partner = fields.ForeignKey(PartnerResource, 'partner')
+    partners = fields.ToManyField(PartnerResource, 'partners', null=True)
 
     class Meta:
         max_limit = None
         queryset = PersonGroup.objects.prefetch_related(
-            'village', 'partner').all()
+            'village', 'partner', 'partners').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
@@ -683,7 +713,7 @@ class ScreeningResource(BaseResource):
                                                       'personmeetingattendance_set__person', 'partner').filter(date__gte=datetime.now().date() - timedelta(days=365))
         resource_name = 'screening'
         authentication = SessionAuthentication()
-        authorization = VillagePartnerAuthorization('village__in')
+        authorization = StrictVillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class=ScreeningForm)
         always_return_data = True
         excludes = ['location', 'time_created', 'time_modified',
@@ -831,11 +861,12 @@ class PersonResource(BaseResource):
     group = fields.ForeignKey(PersonGroupResource, 'group', null=True)
     videos_seen = fields.DictField(null=True)
     partner = fields.ForeignKey(PartnerResource, 'partner')
+    partners = fields.ToManyField(PartnerResource, 'partners', null=True)
 
     class Meta:
         max_limit = None
         queryset = Person.objects.prefetch_related(
-            'village', 'group', 'personmeetingattendance_set__screening__videoes_screened', 'partner').all()
+            'village', 'group', 'personmeetingattendance_set__screening__videoes_screened', 'partner', 'partners').all()
         resource_name = 'person'
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class=PersonForm)
@@ -885,7 +916,7 @@ class PersonAdoptVideoResource(BaseResource):
             date_of_adoption__gte=datetime.now().date() - timedelta(days=365))
         resource_name = 'adoption'
         authentication = SessionAuthentication()
-        authorization = VillagePartnerAuthorization('person__village__in')
+        authorization = StrictVillagePartnerAuthorization('person__village__in')
         validation = ModelFormValidation(form_class=PersonAdoptPracticeForm)
         always_return_data = True
         excludes = ['time_created', 'time_modified',

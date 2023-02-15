@@ -8,7 +8,7 @@ from coco.base_models import CocoModel, DAY_CHOICES, GENDER_CHOICES, TYPE_OF_ROL
 from farmerbook.managers import FarmerbookManager
 from geographies.models import *
 from coco.base_models import ACTIVITY_CHOICES
-from programs.models import Partner
+from programs.models import Partner  # , Project
 from training.log.training_log import enter_to_log
 
 
@@ -62,6 +62,7 @@ class PersonGroup(CocoModel):
     group_name = models.CharField(max_length=100)
     village = models.ForeignKey(Village)
     partner = models.ForeignKey(Partner)
+    partners = models.ManyToManyField(Partner, related_name='farmer_groups', blank=True)
 
     class Meta:
         verbose_name = "Person group"
@@ -89,6 +90,7 @@ class Person(CocoModel):
     date_of_joining = models.DateField(null=True, blank=True)
     image_exists = models.BooleanField(default=False)
     partner = models.ForeignKey(Partner)
+    partners = models.ManyToManyField(Partner, related_name='farmers', blank=True)
     is_modelfarmer = models.BooleanField(default=False)
     objects = models.Manager()  # The default manager
     farmerbook_objects = FarmerbookManager()  # The manager for farmerbook
