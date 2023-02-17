@@ -14,7 +14,7 @@ from coco.base_models import VIDEO_REVIEW
 from coco.base_models import REVIEW_BY
 from coco.base_models import PARENT_CATEGORY
 from coco.base_models import ACTIVITY_CHOICES
-from geographies.models import Village
+from geographies.models import Village, Country
 from programs.models import Partner
 from people.models import Animator
 from people.models import Person
@@ -140,6 +140,7 @@ class DirectBeneficiaries(models.Model):
     def __unicode__(self):
         return self.direct_beneficiaries_category
 
+
 class SubCategory(CocoModel):
     id = models.AutoField(primary_key=True)
     category = models.ForeignKey(Category)
@@ -157,6 +158,7 @@ class SubCategory(CocoModel):
     def __unicode__(self):
         return self.subcategory_name
 
+
 class VideoPractice(CocoModel):
     id = models.AutoField(primary_key=True)
     subcategory = models.ForeignKey(SubCategory)
@@ -171,10 +173,12 @@ class VideoPractice(CocoModel):
     def __unicode__(self):
         return self.videopractice_name
 
+
 class Language(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     language_name = models.CharField(max_length=100, unique='True')
+    countries = models.ManyToManyField(Country)
 
     def get_village(self):
         return None
@@ -184,6 +188,7 @@ class Language(CocoModel):
 
     def __unicode__(self):
         return self.language_name
+        
 post_save.connect(save_log, sender=Language)
 pre_delete.connect(delete_log, sender=Language)
 post_save.connect(enter_to_log, sender=Language)
@@ -235,8 +240,10 @@ class Video(CocoModel):
 
     def location(self):
         return u'%s (%s) (%s) (%s)' % (self.village.village_name, self.village.block.block_name, self.village.block.district.district_name, self.village.block.district.state.state_name)
+
 post_save.connect(save_log, sender=Video)
 pre_delete.connect(delete_log, sender=Video)
+
 
 class NonNegotiable(CocoModel):
     id = models.AutoField(primary_key=True)
@@ -246,6 +253,7 @@ class NonNegotiable(CocoModel):
 
     def __unicode__(self):
         return  u'%s' % self.non_negotiable
+
 post_save.connect(save_log, sender=NonNegotiable)
 pre_delete.connect(delete_log, sender=NonNegotiable)
 
@@ -265,7 +273,6 @@ class JSLPS_Video(CocoModel):
 
     def __unicode__(self):
         return self.vc
-
 
 
 class APCrop(CocoModel):
@@ -295,7 +302,6 @@ class APPractice(CocoModel):
         verbose_name_plural = "Bluefrog Practice"
 
 
-
 class APVideo(CocoModel):
     video = models.ForeignKey(Video, null=True, blank=True)
     video_short_name = models.CharField(max_length=40)
@@ -305,7 +311,6 @@ class APVideo(CocoModel):
     practice = models.ManyToManyField(APPractice, blank=True)
     aptags = models.ManyToManyField(Tag, blank=True)
 
-    
     class Meta:
         verbose_name = "Video"
         verbose_name_plural = "Video"

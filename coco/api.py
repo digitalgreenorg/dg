@@ -368,6 +368,15 @@ class NonNegotiableAuthorization(Authorization):
             raise NotFound("Not allowed to download Non-Negotiable")
 
 
+class LanguageUserCountryAuthorization(Authorization):
+    def read_list(self, object_list, bundle):
+        sample_village = CocoUser.objects.get(user_id=bundle.request.user.id).get_villages().first()
+        if sample_village != None:
+            if sample_village.block.district.state.country.country_name == 'Ethiopia':
+                return object_list.filter(countries__id=2)
+        return object_list
+
+
 class BaseResource(ModelResource):
 
     # override for update to save Empty data
@@ -957,7 +966,7 @@ class LanguageResource(ModelResource):
         queryset = Language.objects.all()
         resource_name = 'language'
         authentication = SessionAuthentication()
-        authorization = Authorization()
+        authorization = LanguageUserCountryAuthorization()
 
 
 class TagResource(ModelResource):
