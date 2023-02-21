@@ -1,4 +1,3 @@
-const CACHE_NAME = "coco-cache-v1";
 const urlsToCache = [
   "/coco/coco/",
   "/qacoco/",
@@ -69,8 +68,13 @@ const urlsToCache = [
   "/media/assets/fonts/sourcesanspro-semibolditalic-webfont.woff",
 ];
 
+// Name of the cache to store the above resources to
+const CACHE_NAME = "coco-cache-v2";
+// Specify allowed cache keys
+const ALLOWED_CACHES_LIST = ["coco-cache-v2"];
+
 self.addEventListener("install", function (event) {
-  // console.log("service worker install event");
+  // Add all the assets in the array to the cache instance for later use.
   event.waitUntil(
     caches
       .open(CACHE_NAME)
@@ -84,11 +88,23 @@ self.addEventListener("install", function (event) {
 });
 
 self.addEventListener("activate", function (event) {
-  console.log("SW now active and ready to handle fetches!");
+  // Get all the currently active `Cache` instances.
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      // Delete all caches that aren't in the allow list:
+      return Promise.all(
+        keys.map((key) => {
+          if (!ALLOWED_CACHES_LIST.includes(key)) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
 });
 
 self.addEventListener("fetch", (event) => {
-  // console.log("service worker received fetch event");
+  // Serve from cache if the request is same-origin else fetch from server
   event.respondWith(
     caches
       .match(event.request)
