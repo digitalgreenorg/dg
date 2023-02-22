@@ -3,8 +3,8 @@ from django.db import models
 
 # Variables
 TYPE_OF_ROLE = (
-	(1, 'MRP'),
-	(0, 'Animator'),
+    (0, 'Animator'),
+    (1, 'MRP'),
     (2, 'Video Producer')
 )
 
@@ -16,13 +16,13 @@ ACTIVITY_CHOICES = (
 )
 
 DAY_CHOICES = (
-                ('Monday', 'Monday'),
-                ('Tuesday', 'Tuesday'),
-                ('Wednesday', 'Wednesday'),
-                ('Thursday', 'Thursday'),
-                ('Friday', 'Friday'),
-                ('Saturday', 'Saturday'),
-                ('Sunday', 'Sunday'),
+    ('Monday', 'Monday'),
+    ('Tuesday', 'Tuesday'),
+    ('Wednesday', 'Wednesday'),
+    ('Thursday', 'Thursday'),
+    ('Friday', 'Friday'),
+    ('Saturday', 'Saturday'),
+    ('Sunday', 'Sunday'),
 )
 
 GENDER_CHOICES = (
@@ -31,14 +31,14 @@ GENDER_CHOICES = (
 )
 
 VIDEO_TYPE = (
-        (1, 'Eligible for Adoption'),
-        (2, 'Not Eligible for adoption')
+    (1, 'Eligible for Adoption'),
+    (2, 'Not Eligible for adoption')
 )
 
 STORYBASE = (
-        (1, 'Agricultural'),
-        (2, 'Institutional'),
-        (3, 'Health'),
+    (1, 'Agricultural'),
+    (2, 'Institutional'),
+    (3, 'Health'),
 )
 
 ADOPTION_VERIFICATION = (
@@ -71,22 +71,22 @@ VIDEO_GRADE = (
 )
 
 VERIFIED_BY = (
-    (0,'Digital Green'),
-    (1,'Partner'),
-    (2,'Third Party'),
+    (0, 'Digital Green'),
+    (1, 'Partner'),
+    (2, 'Third Party'),
 )
 
 REVIEW_BY = (
-    (0,'Digital Green'),
-    (1,'Partner'),
+    (0, 'Digital Green'),
+    (1, 'Partner'),
 )
 
 NONNEGOTIABLE_OPTION = (
-    (1,1),
-    (2,2),
-    (3,3),
-    (4,4),
-    (5,5),
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4),
+    (5, 5),
 )
 
 TYPE_OF_COCOUSER = (
@@ -94,32 +94,32 @@ TYPE_OF_COCOUSER = (
     (2, 'AGRICULTURE'),
     (3, 'BOTH'),
     (4, 'UPAVAN'),
-    )
+)
 
 PARENT_CATEGORY = (
     (1, 'HNN'),
     (2, 'AGRICULTURE'),
-    )
+)
 
 ATTENDED_PERSON_CATEGORY = (
-    (0,'Pregnant Woman'),
-    (1,'Mother of a child up to 6 months'),
-    (2,'Mother of a child 6 months to 2 years'),
-    (3,'Mother of a child  2 to 5 years'),
-    (4,'Adolescent girl (10-19 years)'),
+    (0, 'Pregnant Woman'),
+    (1, 'Mother of a child up to 6 months'),
+    (2, 'Mother of a child 6 months to 2 years'),
+    (3, 'Mother of a child  2 to 5 years'),
+    (4, 'Adolescent girl (10-19 years)'),
     (5, 'Woman of reproductive age (15-49 years)'),
 )
 
 ADOPT_PRACTICE_CATEGORY = (
-    ("1",'Yes'),
-    ("2",'No'),
-    ("3",'Not Applicable'),
+    ("1", 'Yes'),
+    ("2", 'No'),
+    ("3", 'Not Applicable'),
 )
 
 FRONTLINE_WORKER_PRESENT = (
-    ("1",'ANM'),
-    ("2",'ASHA'),
-    ("3",'AWW'),
+    ("1", 'ANM'),
+    ("2", 'ASHA'),
+    ("3", 'AWW'),
 )
 
 TYPE_OF_VENUE = (
@@ -139,7 +139,7 @@ TYPE_OF_VIDEO = (
     ('4', 'PLA meeting'),
 )
 
-TOPICS   = (
+TOPICS = (
 
     ('1', 'Introduction and understanding social inequities'),
     ('2', 'Understanding underlying causes of under nutrition'),
@@ -153,9 +153,12 @@ TOPICS   = (
 
 
 class CocoModel(models.Model):
-    user_created = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_created", editable = False, null=True, blank=True)
-    time_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    user_modified = models.ForeignKey(User, related_name ="%(app_label)s_%(class)s_related_modified",editable = False, null=True, blank=True)
+    user_created = models.ForeignKey(
+        User, related_name="%(app_label)s_%(class)s_created", editable=False, null=True, blank=True)
+    time_created = models.DateTimeField(
+        auto_now_add=True, null=True, blank=True)
+    user_modified = models.ForeignKey(
+        User, related_name="%(app_label)s_%(class)s_related_modified", editable=False, null=True, blank=True)
     time_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:

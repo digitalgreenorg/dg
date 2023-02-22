@@ -46,20 +46,20 @@ FILE_UPLOAD_PERMISSIONS = 0644
 STATIC_URL = '/media/'
 STATIC_ROOT = "/static/"
 STATICFILES_DIRS = (
-   # Put strings here, like "/home/html/static" or "C:/www/django/static".
-   # Always use forward slashes, even on Windows.
-   # Don't forget to use absolute paths, not relative paths.
-   os.path.join(PROJECT_PATH, 'media'),
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_PATH, 'media'),
 )
 
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL='/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/'
 PERMISSION_DENIED_URL = '/denied/'
 
@@ -73,7 +73,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'mezzanine.core.request.CurrentRequestMiddleware',
     'mezzanine.core.middleware.RedirectFallbackMiddleware',
     'mezzanine.core.middleware.TemplateForDeviceMiddleware',
@@ -91,8 +91,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'dg.urls'
 
 # Google ID is required for fetching the user profile image
-SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [ ('id', 'id'), ('picture', 'picture') ]
-
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [('id', 'id'), ('picture', 'picture')]
 
 
 TEMPLATES = [
@@ -142,17 +141,17 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'django.contrib.admindocs',
-    #'django.contrib.comments',
+    # 'django.contrib.comments',
     # 'corsheaders',
     'programs',
     'geographies',
     'people',
     'videos',
     'activities',
-    #'debug_toolbar',
+    # 'debug_toolbar',
     'output',
     'django.contrib.humanize',
-    #'south',
+    # 'south',
     'farmerbook',
     'fbconnect',
     'dimagi',
@@ -185,7 +184,8 @@ INSTALLED_APPS = (
     'mrppayment',
     'smart_selects',
     'loop_ivr',
-    'dataexport'
+    'dataexport',
+    'coco_pwa'
     # 3rd Party
 )
 
@@ -197,11 +197,11 @@ GRAPPELLI_INSTALLED = True
 TESTING = True
 ADMIN_MENU_COLLAPSED = False
 COMMENTS_USE_RATINGS = False
-COMMENTS_ACCOUNT_REQUIRED  = True
+COMMENTS_ACCOUNT_REQUIRED = True
 RICHTEXT_FILTER_LEVEL = 2
 BLOG_USE_FEATURED_IMAGE = True
 #ADMIN_REMOVAL = []
-#following line makes sessionid cookie accessible to in-browser javascript
+# following line makes sessionid cookie accessible to in-browser javascript
 SESSION_COOKIE_HTTPONLY = False
 
 AUTHENTICATION_BACKENDS = (
@@ -215,30 +215,30 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'standard': {
-            'format' : "[%(levelname)s] [%(asctime)s] [%(name)s] %(message)s",
-            'datefmt' : "%d/%b/%Y %H:%M:%S"
+            'format': "[%(levelname)s] [%(asctime)s] [%(name)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
         },
     },
     'handlers': {
         'null': {
-            'level':'DEBUG',
-            'class':'django.utils.log.NullHandler',
+            'level': 'DEBUG',
+            'class': 'django.utils.log.NullHandler',
         },
         'logfile': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(PROJECT_PATH, 'media/social_website/uploads/log/logfile'),
             'formatter': 'standard',
         },
         'ap_migration_log': {
             'level': 'INFO',
-            'class':'logging.handlers.RotatingFileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(PROJECT_PATH, '../geographies/management/commands/log/ap_migration_log'),
             'formatter': 'standard',
         },
-        'console':{
-            'level':'INFO',
-            'class':'logging.StreamHandler',
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
             'formatter': 'standard'
         },
 
@@ -258,15 +258,17 @@ LOGGING = {
         },
         'geographies': {
             'handlers': ['ap_migration_log'],
-            'level' : 'INFO',
+            'level': 'INFO',
         }
     }
 }
 
-PRODUCT_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'solutions/')
-LOOP_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'loop/')
-COCO_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'coco/')
-TRAINING_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'training/')
-VIDEOS_PAGE = ('%s%s')%(WEBSITE_DOMAIN, 'videos/')
-LOOP_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=loop.org.digitalgreen.loop')
-TRAINING_APP_PAGE = ('%s')%('https://play.google.com/store/apps/details?id=org.digitalgreen.trainingapp')
+PRODUCT_PAGE = ('%s%s') % (WEBSITE_DOMAIN, 'solutions/')
+LOOP_PAGE = ('%s%s') % (WEBSITE_DOMAIN, 'loop/')
+COCO_PAGE = ('%s%s') % (WEBSITE_DOMAIN, 'coco/')
+TRAINING_PAGE = ('%s%s') % (WEBSITE_DOMAIN, 'training/')
+VIDEOS_PAGE = ('%s%s') % (WEBSITE_DOMAIN, 'videos/')
+LOOP_APP_PAGE = ('%s') % (
+    'https://play.google.com/store/apps/details?id=loop.org.digitalgreen.loop')
+TRAINING_APP_PAGE = ('%s') % (
+    'https://play.google.com/store/apps/details?id=org.digitalgreen.trainingapp')
