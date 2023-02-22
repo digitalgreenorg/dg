@@ -31800,6 +31800,7 @@ define("user_initialize", [
             dateOrder,
             "End date should be later than start date"
         );
+        $.validator.addMethod("pattern", validatePattern, "Invalid format.");
 
         //onLogin callback ... used to check for reset database trigger
         //this thing belongs somewhere else...in app initialize probably...its a framework's thing
@@ -31889,6 +31890,16 @@ define("user_initialize", [
             }
         }
         return check;
+    }
+
+    function validatePattern(value, element, param) {
+        if (this.optional(element)) {
+            return true;
+        }
+        if (typeof param === "string") {
+            param = new RegExp("^(?:" + param + ")$");
+        }
+        return param.test(value);
     }
 
     function timeOrder(value, element, options) {
@@ -32054,11 +32065,9 @@ require.config({
         form_field_validator: {
             deps: ["jquery"],
         },
-
         syphon: {
             deps: ["jquery", "backbone"],
         },
-
         bootstrapjs: {
             deps: ["jquery"],
         },

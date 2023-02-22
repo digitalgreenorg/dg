@@ -401,7 +401,7 @@
         },
         youtubeid: {
           required: true,
-          maxlength: 20,
+          pattern: /^[a-zA-Z0-9_-]{11}$/,
         },
       },
       messages: {
@@ -432,7 +432,7 @@
           dateOrder: "Approval date should be later than production date",
         },
         youtubeid: {
-          maxlength: "YoutubeID should contain at most 20 characters",
+          pattern: "Please enter a valid YouTube ID",
         },
       },
 
