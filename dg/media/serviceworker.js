@@ -69,9 +69,9 @@ const urlsToCache = [
 ];
 
 // Name of the cache to store the above resources to
-const CACHE_NAME = "coco-cache-v2";
+const CACHE_NAME = "coco-cache-v3";
 // Specify allowed cache keys
-const ALLOWED_CACHES_LIST = ["coco-cache-v2"];
+const ALLOWED_CACHES_LIST = [CACHE_NAME];
 
 self.addEventListener("install", function (event) {
   // Add all the assets in the array to the cache instance for later use.
