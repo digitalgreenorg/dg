@@ -135,8 +135,7 @@
           required: "Mediator name is required",
           minlength: "Mediator name should contain at least 2 characters",
           maxlength: "Mediator name should contain at most 100 characters",
-          allowedChar:
-            "Mediator name should contain only english and local language characters",
+          allowedChar: "Mediator name should contain only english and local language characters",
         },
         gender: "Gender is required",
         phone_no: {
@@ -724,8 +723,7 @@
           required: "Group name is required",
           minlength: "Group name  should contain at least 2 characters",
           maxlength: "Group name should contain at most 100 characters",
-          allowedChar:
-            "Group name should contain only english and local language characters",
+          allowedChar: "Group name should contain only english and local language characters",
         },
         village: "Village is required",
       },
@@ -898,10 +896,7 @@
     // 'headers_to_hide': ['th#id_age', 'th#id_gender', 'th#id_category', "#label_health_provider_present"],
     parent_id_for_inline: "row7",
     remove_attribute_field: "select#category_row7",
-    fields_to_hide_arr_for_hnn: [
-      "#label_health_provider_present",
-      "#id_health_provider_present",
-    ],
+    fields_to_hide_arr_for_hnn: ["#label_health_provider_present", "#id_health_provider_present"],
     download_chunk_size: 1000,
     unique_together_fields: ["date", "start_time", "village.id", "animator.id"],
     text_to_select_display_hack: true,
@@ -942,8 +937,7 @@
             if (videos_seen) {
               var videos_seen_ids = _.pluck(videos_seen, "id");
               $.each(videos_shown, function (index, vid) {
-                if ($.inArray(vid.id, videos_seen_ids) == -1)
-                  videos_seen.push(vid);
+                if ($.inArray(vid.id, videos_seen_ids) == -1) videos_seen.push(vid);
               });
             } else videos_seen = videos_shown;
 
@@ -1046,17 +1040,13 @@
 
           dependency: [
             {
-              source_form_element: "village",
-              dep_attr: "village",
+              source_form_element: "farmer_groups_targeted",
+              dep_attr: "group",
             },
           ],
         },
         farmers_attendance: {
           dependency: [
-            {
-              source_form_element: "farmer_groups_targeted",
-              dep_attr: "group",
-            },
             {
               source_form_element: "person",
               dep_attr: "id",
@@ -1082,12 +1072,7 @@
                 },
               },
             },
-            extra_fields: [
-              "category",
-              "expressed_question",
-              "interested",
-              "expressed_adoption_video",
-            ],
+            extra_fields: ["category", "expressed_question", "interested", "expressed_adoption_video"],
           },
         },
       },
@@ -1107,6 +1092,7 @@
         village: "required",
         videoes_screened: "required",
         farmer_groups_targeted: "required",
+        person: "required",
         phone_no: {
           digits: true,
           minlength: 9,
@@ -1120,13 +1106,13 @@
         },
         start_time: {
           required: "Screening start time is required",
-          validateTime:
-            "Enter the start time in the form of HH:MM. Use 24 hour format",
+          validateTime: "Enter the start time in the form of HH:MM. Use 24 hour format",
         },
         animator: "Mediator is required",
         village: "Village is required",
         videoes_screened: "Videos screened is required",
         farmer_groups_targeted: "Groups attended is required",
+        person: "Attendees are required",
       },
 
       highlight: function (element, errorClass, validClass) {
@@ -1261,50 +1247,6 @@
       "td#id_recall_nonnegotiable",
       "th#id_member_adopt",
     ],
-    form_field_validation: {
-      ignore: [],
-      rules: {
-        person: {
-          required: true,
-        },
-        video: {
-          required: true,
-        },
-        animator: {
-          required: true,
-        },
-        date_of_adoption: {
-          required: true,
-          validateDate: true,
-        },
-      },
-      messages: {
-        person: {
-          required: "person is required",
-        },
-        video: {
-          required: "video is required",
-        },
-        animator: {
-          required: "Mediator is required",
-        },
-        date_of_adoption: {
-          required: "Date of Adoption is required",
-        },
-      },
-      highlight: function (element, errorClass, validClass) {
-        $(element).parent("div").parent("div").addClass("error");
-      },
-      unhighlight: function (element, errorClass, validClass) {
-        $(element).parent("div").parent("div").removeClass("error");
-      },
-      errorElement: "span",
-      errorClass: "help-block red-color",
-      errorPlacement: function (label, element) {
-        element.parent().append(label);
-      },
-      display: "block",
-    },
     add: {
       foreign_entities: {
         village: {
@@ -1371,17 +1313,13 @@
             name_field_person_id: "online_id",
             dependency: [
               {
-                source_form_element: "village",
-                dep_attr: "village",
+                source_form_element: "group",
+                dep_attr: "group",
               },
             ],
           },
           farmers_attendance: {
             dependency: [
-              {
-                source_form_element: "group",
-                dep_attr: "group",
-              },
               {
                 source_form_element: "float_person",
                 dep_attr: "id",
@@ -1436,13 +1374,7 @@
             },
           },
         },
-        borrow_fields: [
-          "village",
-          "group",
-          "video",
-          "animator",
-          "parentcategory",
-        ],
+        borrow_fields: ["village", "group", "video", "animator", "parentcategory"],
       },
     },
     edit: {
@@ -1494,6 +1426,74 @@
           },
         },
       },
+    },
+    form_field_validation: {
+      ignore: [],
+      rules: {
+        village: {
+          required: true,
+        },
+        group: {
+          required: true,
+        },
+        parentcategory: {
+          required: true,
+        },
+        float_person: {
+          required: true,
+        },
+        person: {
+          required: true,
+        },
+        video: {
+          required: true,
+        },
+        animator: {
+          required: true,
+        },
+        date_of_adoption: {
+          required: true,
+          validateDate: true,
+        },
+      },
+      messages: {
+        village: {
+          required: "Village is required",
+        },
+        group: {
+          required: "Group is required",
+        },
+        parentcategory: {
+          required: "Category is required",
+        },
+        person: {
+          required: "Person is required",
+        },
+        float_person: {
+          required: "Person is required",
+        },
+        video: {
+          required: "Video is required",
+        },
+        animator: {
+          required: "Mediator is required",
+        },
+        date_of_adoption: {
+          required: "Date of Adoption is required",
+        },
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).parent("div").parent("div").addClass("error");
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).parent("div").parent("div").removeClass("error");
+      },
+      errorElement: "span",
+      errorClass: "help-block red-color",
+      errorPlacement: function (label, element) {
+        element.parent().append(label);
+      },
+      display: "block",
     },
   };
 
@@ -1620,15 +1620,13 @@
           required: "Person name is required",
           minlength: "Person name  should contain at least 2 characters",
           maxlength: "Person Name should contain at most 100 characters",
-          allowedChar:
-            "Person name should contain only english and local language characters",
+          allowedChar: "Person name should contain only english and local language characters",
         },
         father_name: {
           required: "Father's name is required",
           minlength: "Father's name should contain at least 2 characters",
           maxlength: "Father's name should contain at most 100 characters",
-          allowedChar:
-            "Father's name should contain only english and local language characters",
+          allowedChar: "Father's name should contain only english and local language characters",
         },
         age: {
           digits: "Age should contain digits only",
@@ -1707,15 +1705,13 @@
       "#non_nego": "Non Negotiables",
     },
     inline_upavan_label_dict: {
-      "th#id_label_recall_nonnegotiable":
-        "Did the member recall the knowledge recall points ?",
+      "th#id_label_recall_nonnegotiable": "Did the member recall the knowledge recall points ?",
       "th#id_member_adopt": "Is the beneficiary practicing the behavior1 ?",
       "#id_dob": "Date of Home Visit",
       "th#non_nego": "Knowledge Recall Points",
     },
     inline_label_dict: {
-      "th#id_label_recall_nonnegotiable":
-        "Did the member recall the non negotiable ?",
+      "th#id_label_recall_nonnegotiable": "Did the member recall the non negotiable ?",
       "th#id_member_adopt": "Did member adopt the practice? ?",
       "#id_dob": "Date of Verification",
       "th#non_nego": "Non Negotiables",
@@ -1756,17 +1752,13 @@
       total_enteries: "Total Enteries: ",
       next: "Next",
       previous: "Previous",
-      list_page_help:
-        "For multiple column sorting, press and hold the shift key while sorting each column.",
+      list_page_help: "For multiple column sorting, press and hold the shift key while sorting each column.",
       line_1: "Welcome to COCO",
-      line_2:
-        "COCO helps you to seamlessly enter data in conditions of intermittent connectivity.",
+      line_2: "COCO helps you to seamlessly enter data in conditions of intermittent connectivity.",
       line_3: "Add data",
-      line_4:
-        "To add some data, click on (+) sign next to the type of data that you want to add.",
+      line_4: "To add some data, click on (+) sign next to the type of data that you want to add.",
       line_5: "View Data",
-      line_6:
-        "To view, sort and search through your data, click on the data link in the sidebar.",
+      line_6: "To view, sort and search through your data, click on the data link in the sidebar.",
       line_7: "Sync data",
       line_8:
         "To sync data with the server, click on the sync button. While syncing, if some data is rejected by the server, you will get the opportunity to correct the data, or in case of duplicate entries, to discard it. The number in the button shows how many entries are yet to be uploaded. Clicking on the sync button will also download the database if it is not completely downloaded.",
@@ -1797,8 +1789,7 @@
       upload_done: "डेटा अपलोड हो गया है",
       upload_pending: "डेटा अपलोड होना बाकी है",
       error: "त्रुटि!!",
-      upload_error:
-        "अभी इंटरनेट की सुविधा नही है। कृपया कुछ देर बाद प्रयास करें!",
+      upload_error: "अभी इंटरनेट की सुविधा नही है। कृपया कुछ देर बाद प्रयास करें!",
       copy_clipboard: "क्लिपबोर्ड पर कॉपी करें",
       excel_download: "एक्सेल में डाउनलोड करें",
       search: "खोजें: ",
@@ -1806,22 +1797,18 @@
       total_enteries: "कुल डेटा: ",
       next: "अगला",
       previous: "पिछला",
-      list_page_help:
-        "एक से जादा श्रेणी के डेटा को क्रम मे लाने के लिए एक से अधिक श्रेणी चुनते समय शिफ्ट बटन दबाए रख़े",
+      list_page_help: "एक से जादा श्रेणी के डेटा को क्रम मे लाने के लिए एक से अधिक श्रेणी चुनते समय शिफ्ट बटन दबाए रख़े",
       line_1: "आपका COCO मे स्वागत है",
       line_2: "COCO आपको अनिरंतर इंटरनेट में भी डेटा जोड़ने में मदद करता है",
       line_3: "डेटा जोड़े",
-      line_4:
-        "जो डेटा जोड़ना है उसके बगल में डेटा जोड़ने के लिए (+) पर क्लिक करें",
+      line_4: "जो डेटा जोड़ना है उसके बगल में डेटा जोड़ने के लिए (+) पर क्लिक करें",
       line_5: "डेटा देखें",
-      line_6:
-        "डेटा देखने, खोजने और क्रम में लाने के लिए, बाँई तरफ उनके नाम पे क्लिक करें",
+      line_6: "डेटा देखने, खोजने और क्रम में लाने के लिए, बाँई तरफ उनके नाम पे क्लिक करें",
       line_7: "डेटा सिंक करें",
       line_8:
         "डेटा सिंक करने के लिए सिंक बटन पर क्लिक करें। सिंक करते समय अगर डेटा किसी कारण अपलोड नहीं हो रहा है तोह आपको डेटा सुधरने या अगर दोहरा डेटा है तो डेटा हटाने का मौका मिलेगा। सिंक बटन पर जो संख्या है वह ये बताता है की कितना डेटा अभी अपलोड करना बाकी है। सिंक बटन पे क्लिक करने पर अगर डेटा डाउनलोड नहीं हुआ है तोह डेटा पूरा डाउनलोड हो जाएगा।",
       line_9: "हम आपके सुझाव का मूल्य समझते हैं",
-      line_10:
-        "अपने सुझाव हमें <a href='mailto:system@digitalgreen.org'>system@digitalgreen.org</a> पर भेजें",
+      line_10: "अपने सुझाव हमें <a href='mailto:system@digitalgreen.org'>system@digitalgreen.org</a> पर भेजें",
       line_11: "पिछली बार डेटा हटाया और जोड़ा गया था",
       line_12: "पिछली बार डेटा सिंक हुआ था",
       line_13: "अपलोड करने वाले प्रविष्टियों",
@@ -1846,8 +1833,7 @@
       upload_done: "Les données téléchargées",
       upload_pending: "Données en attente d' être téléchargées",
       error: "Erreur!!",
-      upload_error:
-        "Connectivité Internet perdue. Essayez après un certain temps!",
+      upload_error: "Connectivité Internet perdue. Essayez après un certain temps!",
       copy_clipboard: "Copier dans le presse-papier",
       excel_download: "Télécharger Excel",
       search: "Chercher: ",
@@ -1861,8 +1847,7 @@
       line_2:
         "COCO vous aide à saisir de façon transparente des données dans des conditions de connectivité intermittente",
       line_3: "Ajouter des données",
-      line_4:
-        "Pour ajouter des données, cliquez sur (+) cochez à côté du type de données que vous souhaitez ajouter",
+      line_4: "Pour ajouter des données, cliquez sur (+) cochez à côté du type de données que vous souhaitez ajouter",
       line_5: "Voir les données",
       line_6:
         "Pour afficher, trier et rechercher dans vos données, cliquez sur le lien de données dans la barre latérale",
@@ -1900,9 +1885,7 @@
         }).done(function (resp) {
           console.log(resp);
           if (resp == "1") {
-            alert(
-              "Your database will be redownloaded because of some changes in data."
-            );
+            alert("Your database will be redownloaded because of some changes in data.");
             Offline.reset_database();
           }
         });

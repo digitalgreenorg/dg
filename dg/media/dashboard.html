@@ -1,54 +1,65 @@
 <!DOCTYPE html>
 
-<html xml:lang="en-us" xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+<html
+  xml:lang="en-us"
+  xmlns="http://www.w3.org/1999/xhtml"
+  lang="en-us">
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <meta name="robots" content="NONE,NOARCHIVE" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#51b9e5" />
+    <meta
+      http-equiv="content-type"
+      content="text/html; charset=UTF-8" />
+    <meta
+      name="robots"
+      content="NONE,NOARCHIVE" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="theme-color"
+      content="#51b9e5" />
 
     <title>COCO</title>
 
     <link
       rel="stylesheet"
-      href="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css"
-    />
+      href="/media/coco/app/scripts/libs/datatablejs_media/css/demo_table.css" />
     <link
       rel="stylesheet"
-      href="/media/coco/app/scripts/libs/tabletools_media/css/dataTables.tableTools.css"
-    />
+      href="/media/coco/app/scripts/libs/tabletools_media/css/dataTables.tableTools.css" />
     <link
       rel="stylesheet"
-      href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css"
-    />
+      href="/media/coco/app/scripts/libs/bootstrap/css/bootstrap.css" />
     <link
       rel="stylesheet"
-      href="/media/coco/app/scripts/libs/chosen-select/chosen.css"
-    />
-    <link rel="stylesheet" href="/media/coco/app/styles/css/coco.css" />
-    <link rel="stylesheet" href="/media/coco/app/styles/css/chosen-magic.css" />
-    <link rel="stylesheet" href="/media/coco/app/styles/css/datepicker.css" />
+      href="/media/coco/app/scripts/libs/chosen-select/chosen.css" />
     <link
       rel="stylesheet"
-      href="/media/coco/app/styles/css/bootstrap-timepicker.css"
-    />
+      href="/media/coco/app/styles/css/coco.css" />
     <link
       rel="stylesheet"
-      href="/media/coco/app/styles/css/tabletools_custom.css"
-    />
+      href="/media/coco/app/styles/css/chosen-magic.css" />
+    <link
+      rel="stylesheet"
+      href="/media/coco/app/styles/css/datepicker.css" />
+    <link
+      rel="stylesheet"
+      href="/media/coco/app/styles/css/bootstrap-timepicker.css" />
+    <link
+      rel="stylesheet"
+      href="/media/coco/app/styles/css/tabletools_custom.css" />
     <link
       rel="icon"
       type="image/x-icon"
-      href="/media/coco/app/images/favicon.ico"
-    />
+      href="/media/coco/app/images/favicon.ico" />
 
     <!-- PWA Addition -->
-    <link rel="manifest" href="/media/assets/manifest.json" />
+    <link
+      rel="manifest"
+      href="/media/assets/manifest.json" />
 
     <script
       data-main="/media/coco/dist/scripts/main"
-      src="/media/coco/app/scripts/libs/require.js"
-    ></script>
+      src="/media/coco/app/scripts/libs/require.js"></script>
 
     <script type="text/javascript">
       require.config({
@@ -62,8 +73,7 @@
     <!-- Global Site Tag (gtag.js) - Google Analytics -->
     <script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-106595309-1"
-    ></script>
+      src="https://www.googletagmanager.com/gtag/js?id=UA-106595309-1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -76,11 +86,7 @@
 
     <script language="JavaScript">
       select_unselect_all = function (select_all) {
-        var index =
-          $(select_all)
-            .closest("tr")
-            .children()
-            .index($(select_all).closest("th")) + 1;
+        var index = $(select_all).closest("tr").children().index($(select_all).closest("th")) + 1;
         $(select_all)
           .closest("table")
           .find("td:nth-child(" + index + ") input:checkbox")
@@ -91,7 +97,9 @@
     <!--Core Framework templates end here -->
     <!--Page layout, full download, incremental download, background inc download, upload, notifications, status, dashboard,    form page, list page, login, select-options template, -->
 
-    <script type="text/template" id="header">
+    <script
+      type="text/template"
+      id="header">
       <div class="page-header" style="margin-bottom:0px;">
           <h1 ><a href="#">COCO</a></h1>
           <ul class="breadcrumb">
@@ -99,25 +107,33 @@
           </ul>
       </div>
     </script>
-    <script type="text/template" id="error_notifcation_template">
+    <script
+      type="text/template"
+      id="error_notifcation_template">
       <div class="alert alert-danger fade in">
         <a class="close" data-dismiss="alert">×</a>
         <strong>Error! </strong><%= msg%>
       </div>
     </script>
-    <script type="text/template" id="success_notifcation_template">
+    <script
+      type="text/template"
+      id="success_notifcation_template">
       <div class="alert alert-success fade in">
         <a class="close" data-dismiss="alert">×</a>
         <strong>Success! </strong><%= msg%>
       </div>
     </script>
-    <script type="text/template" id="info_notifcation_template">
+    <script
+      type="text/template"
+      id="info_notifcation_template">
       <div class="alert alert-info fade in">
         <a class="close" data-dismiss="alert">×</a>
         <strong>Info! </strong><%= msg%>
       </div>
     </script>
-    <script type="text/template" id="upload_template">
+    <script
+      type="text/template"
+      id="upload_template">
       <div id="upload_modal" class="modal fade" >
           <div class="modal-dialog">
               <div class="modal-content">
@@ -147,7 +163,9 @@
           </div>
       </div>
     </script>
-    <script type="text/template" id="upload_status_template">
+    <script
+      type="text/template"
+      id="upload_status_template">
       <div id="upload_status_modal" class="modal" >
           <div class="modal-dialog">
               <div class="modal-content">
@@ -175,7 +193,9 @@
           </div>
       </div>
     </script>
-    <script type="text/template" id="incremental_download_template">
+    <script
+      type="text/template"
+      id="incremental_download_template">
       <div id="incremental_download_modal" class="modal fade" >
           <div class="modal-dialog">
               <div class="modal-content">
@@ -200,7 +220,9 @@
           </div>
       </div>
     </script>
-    <script type="text/template" id="incremental_download_background_template">
+    <script
+      type="text/template"
+      id="incremental_download_background_template">
       <!--div class="row">
           <!--div id="incremental_download_back" class="col-xs-5 col-sm-3 col-md-2">
             <!--p>Downloading...</p>
@@ -212,7 +234,9 @@
           <!--/div>
       <!--/div>
     </script>
-    <script type="text/template" id="download_template">
+    <script
+      type="text/template"
+      id="download_template">
       <div id="full_download_modal" class="modal fade" tabindex="-1" >
           <div class="modal-dialog">
               <div class="modal-content">
@@ -247,11 +271,15 @@
           </div> <!-- modal-dialog -->
       </div>
     </script>
-    <script type="text/template" id="dashboard_item_template">
+    <script
+      type="text/template"
+      id="dashboard_item_template">
       <li class="list_items"><a href="#<%= name%>"><%= title%></a></li>
     </script>
 
-    <script type="text/template" id="dashboard">
+    <script
+      type="text/template"
+      id="dashboard">
       <div id="coco_sidebar" class="coco_sidebar">
           <!-- <table border = '0'>
               <tr>
@@ -321,7 +349,9 @@
       </div>
     </script>
 
-    <script type="text/template" id="page_layout">
+    <script
+      type="text/template"
+      id="page_layout">
       <div id="header" class="row global-header" style="background-color:rgba(38, 167, 223,0.8)"></div>
       <div class="row">
           <div id="side_panel" class="side_panel col-lg-3 col-md-4 col-sm-5"></div>
@@ -329,7 +359,9 @@
       </div>
     </script>
 
-    <script type="text/template" id="page_header">
+    <script
+      type="text/template"
+      id="page_header">
       <div class="col-xs-4">
           <a href="{{ WEBSITE_DOMAIN }}" target="_blank">
               <img src="/media/coco/app/images/logo.png" style="height:40px" class="img-responsive mrg-lt-5 big-logo">
@@ -369,7 +401,9 @@
       </div>
     </script>
 
-    <script type="text/template" id="status">
+    <script
+      type="text/template"
+      id="status">
          <div id="modal"></div>
       <div class="page-header mrg-top-0">
           <h1 style = "color:#26A7DF;"> <%= configs['misc']['meta_'+language]['line_1'] %>
@@ -468,7 +502,9 @@
                                  </button>
     </script>
 
-    <script type="text/template" id="form_template">
+    <script
+      type="text/template"
+      id="form_template">
       <div id = "form_div">
           <form name="<%=entity_name%>" class="">
 
@@ -497,20 +533,28 @@
       </div>
     </script>
 
-    <script type="text/template" id="dashboard_breadcrumb">
+    <script
+      type="text/template"
+      id="dashboard_breadcrumb">
       <li class='active' >Dashboard</li>
     </script>
 
-    <script type="text/template" id="list_breadcrumb">
+    <script
+      type="text/template"
+      id="list_breadcrumb">
       <li><a href='#'>Dashboard</a> <span class='divider'>/</span></li><li class='active'><%= bread %></li>
     </script>
 
-    <script type="text/template" id="add_edit_breadcrumb">
+    <script
+      type="text/template"
+      id="add_edit_breadcrumb">
       <li><a href="#">Dashboard</a> <span class="divider">/</span></li>
       <li><a href="#<%=bread1%>"><%=bread2%></a> <span class="divider">/</span></li>
       <li class="active"><%=add_or_edit%></li>
     </script>
-    <script type="text/template" id="list_view_template">
+    <script
+      type="text/template"
+      id="list_view_template">
          <div id="legend">
          	<legend class=""><%= page_header %></legend>
          </div>
@@ -523,10 +567,14 @@
       <p id="sort-helptext" style="margin-top:50px; font-size:11px; color:grey; font-style:italic; display:none;"><%= list_page_help %>
     </script>
 
-    <script type="text/template" id="options_template">
+    <script
+      type="text/template"
+      id="options_template">
       <option value=<%=id%>><%=name%></option>
     </script>
-    <script type="text/template" id="login">
+    <script
+      type="text/template"
+      id="login">
 
       <div id="login_modal" class="modal fade" >
           <div class="modal-dialog modal-sm">
@@ -570,7 +618,9 @@
     <!--Core Framework templates end here -->
 
     <!--///////////////////////////////////////////////////// MEDIATOR ADD/EDIT TEMPLATES START ///////////////////////////////////////////-->
-    <script type="text/template" id="mediator_add_edit_template">
+    <script
+      type="text/template"
+      id="mediator_add_edit_template">
       <fieldset class="form-horizontal">
           <legend><%= mediator %></legend>
 
@@ -624,7 +674,9 @@
     <!--/////////////////////////////////////////////////// MEDIATOR ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
 
     <!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
-    <script type="text/template" id="screening_add_edit_template">
+    <script
+      type="text/template"
+      id="screening_add_edit_template">
       <fieldset class="form-horizontal">
           <legend><%= screening %></legend>
 
@@ -743,7 +795,7 @@
           </div>
 
           <div class="form-group">
-          	<label class="control-label col-sm-2 notbold"><%= person %></label>
+          	<label class="control-label col-sm-2"><%= person %></label>
           	<div class="col-sm-4">
                   <select id="id_person" name = "person" class="chosen-select form-control" multiple="multiple"></select>
               </div>
@@ -803,7 +855,9 @@
       </fieldset>
     </script>
 
-    <script type="text/template" id="person_pma_template">
+    <script
+      type="text/template"
+      id="person_pma_template">
       <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("screeningadd_"+class_ln);%>
         <tr class="stack-table" id="row7" index = <%=index%> person_id = <%=id%> model_id = <%=id%> group_id = <%= group.id %> source_form_element = <%= source %>>
             <td>
@@ -887,9 +941,7 @@
         $("#pmas")
           .find("tr")
           .each(function () {
-            if (
-              $(this).attr("source_form_element") === "farmer_groups_targeted"
-            ) {
+            if ($(this).attr("source_form_element") === "farmer_groups_targeted") {
               $(this).fadeOut("fast", function () {
                 $(this).remove();
               });
@@ -914,7 +966,9 @@
     <!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES END //////////////////////////////////////////////-->
 
     <!--///////////////////////////////////////////////// ADOPTION ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
-    <script type="text/template" id="adoption_edit_template">
+    <script
+      type="text/template"
+      id="adoption_edit_template">
       <fieldset class="form-horizontal">
               <legend><%= adoption %></legend>
               <div class="form-group">
@@ -1008,7 +1062,9 @@
               </div>
       </fieldset>
     </script>
-    <script type="text/template" id="adoption_add_template">
+    <script
+      type="text/template"
+      id="adoption_add_template">
       <fieldset class="form-horizontal">
           <legend><%= adoption %></legend>
 
@@ -1054,7 +1110,7 @@
               </div>
           </div>
           <div class="form-group">
-              <label class="control-label col-sm-2 notbold"><%= person %></label>
+              <label class="control-label col-sm-2"><%= person %></label>
               <div class="col-sm-4">
                   <select name="float_person" id="id_person" multiple="multiple" class="chosen-select form-control"></select>
               </div>
@@ -1095,11 +1151,15 @@
       </fieldset>
     </script>
 
-    <script type="text/template" id="adoption_inline_header">
+    <script
+      type="text/template"
+      id="adoption_inline_header">
       <tr> <th> Delete?</th><th> Sr. No.</th><th> Person*</th><th> Date Of Adoption</th><th>Did the member 'recall' non-negotiable points ?</th><th>Did member adopt the practice?</th></tr>
     </script>
 
-    <script type="text/template" id="adoption_inline">
+    <script
+      type="text/template"
+      id="adoption_inline">
       <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("adoptionadd_"+class_ln);%>
           <tr class="stack-table" index = <%=index%> person_id = <%=id%> name="row<%=index%>">
           <td>
@@ -1199,7 +1259,9 @@
     <!--////////////////////////////////////////////////// ADOPTION ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
 
     <!--////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
-    <script type="text/template" id="group_add_edit_template">
+    <script
+      type="text/template"
+      id="group_add_edit_template">
       <fieldset class="form-horizontal">
           <legend><%= group %></legend>
 
@@ -1221,7 +1283,9 @@
       </fieldset>
     </script>
 
-    <script type="text/template" id="person_inline">
+    <script
+      type="text/template"
+      id="person_inline">
       <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("groupadd_"+class_ln);%>
       <tr class="stack-table " index = <%=index%> name="row<%=index%>">
           <td><div class="form-group"><div class="controls">
@@ -1251,14 +1315,18 @@
       </tr>
     </script>
 
-    <script type="text/template" id="person_inline_header">
+    <script
+      type="text/template"
+      id="person_inline_header">
       <tr class="hide-header"> <th> <%= person_name %></th><th id="fhname" class = "notbold"> Father/Husband Name</th><th class = "notbold"> <%= age %></th><th> <%= gender %></th><th class="notbold"> <%= phone_no %></th></tr>
     </script>
 
     <!--//////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
 
     <!--///////////////////////////////////////////////////// VIDEO ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
-    <script type="text/template" id="video_add_edit_template">
+    <script
+      type="text/template"
+      id="video_add_edit_template">
       <fieldset class="form-horizontal">
           <legend><%= video %></legend>
 
@@ -1428,7 +1496,9 @@
       </fieldset>
     </script>
 
-    <script type="text/template" id="nonnegotiable_inline">
+    <script
+      type="text/template"
+      id="nonnegotiable_inline">
       <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("videoadd_"+class_ln);%>
           <tr class="stack-table" index = <%=index%> name="row<%=index%>">
           <td><%=index+1%>.</td>
@@ -1447,7 +1517,9 @@
           </tr>
     </script>
 
-    <script type="text/template" id="nonnegotiable_inline_header">
+    <script
+      type="text/template"
+      id="nonnegotiable_inline_header">
       <tr class="hide-header">
          <th class="col-md-1 control-label notbold"><%= sr_no %></th>
          <th id="non_nego" class="col-md-6 control-label notbold"><%=non_n%></th>
@@ -1460,7 +1532,9 @@
 
     <!--//////////////////////////////////////////////////// PERSON ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->
 
-    <script type="text/template" id="person_add_edit_template">
+    <script
+      type="text/template"
+      id="person_add_edit_template">
       <fieldset class="form-horizontal">
           <legend><%= person %></legend>
 
@@ -1528,11 +1602,12 @@
   <body>
     {% csrf_token %}
 
-    <div id="app" class="container-fluid"></div>
+    <div
+      id="app"
+      class="container-fluid"></div>
     <div
       id="notifications"
-      class="col-xs-10 col-xs-push-1 col-sm-3 col-sm-push-8"
-    ></div>
+      class="col-xs-10 col-xs-push-1 col-sm-3 col-sm-push-8"></div>
     <div class="new_footer">
       <p style="text-align: center">
         &#169; 2017 Digital Green. All rights reserved.
@@ -1562,20 +1637,12 @@
               console.log("Service worker registration succeeded.");
               // console.table(registration);
               navigator.serviceWorker.ready.then(function (registration) {
-                console.log(
-                  "Service worker is",
-                  registration.active.state,
-                  "with scope:",
-                  registration.scope
-                );
+                console.log("Service worker is", registration.active.state, "with scope:", registration.scope);
                 // console.log(registration, navigator);
               });
             })
             .catch((registrationError) => {
-              console.log(
-                "Service worker registration failed: ",
-                registrationError
-              );
+              console.log("Service worker registration failed: ", registrationError);
             });
         });
       }
