@@ -103,7 +103,7 @@ def foreign_key_to_id(bundle, field_name, sub_field_names):
 
 def dict_to_foreign_uri(bundle, field_name, resource_name=None):
     field_dict = bundle.data.get(field_name)
-    if field_dict.get('id'):
+    if field_dict and field_dict.get('id'):
         bundle.data[field_name] = "/qa/api/v1/%s/%s/" % (resource_name if resource_name else field_name,
                                                          str(field_dict.get('id')))
     else:
@@ -278,8 +278,7 @@ class BaseResource(ModelResource):
         for key, value in kwargs.items():
             setattr(bundle.obj, key, value)
 
-        self.authorized_create_detail(
-            self.get_object_list(bundle.request), bundle)
+        self.authorized_create_detail(self.get_object_list(bundle.request), bundle)
         bundle = self.full_hydrate(bundle)
         bundle.obj.user_created_id = bundle.request.user.id
         return self.save(bundle)
@@ -440,9 +439,9 @@ class DisseminationQualityResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupResource, 'group', null=True)
     mediator = fields.ForeignKey(MediatorResource, 'mediator')
-    video = fields.ForeignKey(VideoResource, 'video')
-    qareviewername = fields.ForeignKey(
-        QAReviewerNameResource, 'qareviewername')
+    video = fields.ForeignKey(VideoResource, 'video', null=True, blank=True)
+    videoes_screened = fields.ToManyField('coco.api.VideoResource', 'videoes_screened', related_name='dissemination_observations')
+    qareviewername = fields.ForeignKey(QAReviewerNameResource, 'qareviewername')
 
     class Meta:
         queryset = DisseminationQuality.objects.all()
@@ -451,28 +450,32 @@ class DisseminationQualityResource(BaseResource):
         authorization = BlockAuthorization('block_id__in')
         authentication = Authentication()
         validation = ModelFormValidation(form_class=DisseminationQualityForm)
+
     dehydrate_block = partial(
         foreign_key_to_id, field_name='block', sub_field_names=['id', 'block_name'])
-    hydrate_block = partial(dict_to_foreign_uri, field_name='block')
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
-    hydrate_village = partial(
-        dict_to_foreign_uri, field_name='village', resource_name='village')
     dehydrate_group = partial(
         foreign_key_to_id, field_name='group', sub_field_names=['id', 'group_name'])
-    hydrate_group = partial(dict_to_foreign_uri,
-                            field_name='group', resource_name='group')
     dehydrate_mediator = partial(
         foreign_key_to_id, field_name='mediator', sub_field_names=['id', 'name'])
-    hydrate_mediator = partial(
-        dict_to_foreign_uri, field_name='mediator', resource_name='mediator')
     dehydrate_video = partial(
         foreign_key_to_id, field_name='video', sub_field_names=['id', 'title'])
-    hydrate_video = partial(dict_to_foreign_uri, field_name='video')
+    def dehydrate_videoes_screened(self, bundle):
+        return [{'id': video.id, 'title': video.title, } for video in bundle.obj.videoes_screened.all()]
+
     dehydrate_qareviewername = partial(
         foreign_key_to_id, field_name='qareviewername', sub_field_names=['id', 'name'])
-    hydrate_qareviewername = partial(
-        dict_to_foreign_uri, field_name='qareviewername')
+    hydrate_block = partial(dict_to_foreign_uri, field_name='block')
+    hydrate_village = partial(
+        dict_to_foreign_uri, field_name='village', resource_name='village')
+    hydrate_group = partial(dict_to_foreign_uri,
+                            field_name='group', resource_name='group')
+    hydrate_mediator = partial(
+        dict_to_foreign_uri, field_name='mediator', resource_name='mediator')
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video', resource_name='video')
+    hydrate_videoes_screened = partial(dict_to_foreign_uri_m2m, field_name='videoes_screened', resource_name='video')
+    hydrate_qareviewername = partial(dict_to_foreign_uri, field_name='qareviewername')
 
 
 class AdoptionVerificationResource(BaseResource):

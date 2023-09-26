@@ -135,7 +135,8 @@ class DisseminationQuality(QACocoModel):
     block = models.ForeignKey(Block)
     village = models.ForeignKey(Village)
     mediator = models.ForeignKey(Animator)
-    video = models.ForeignKey(Video)
+    video = models.ForeignKey(Video, null=True, blank=True)
+    videoes_screened = models.ManyToManyField(Video, related_name="dissemination_observations")
     date = models.DateField()
     equipments_setup_handling = models.CharField(
         max_length=1, choices=SCORE_CHOICES, blank=True)

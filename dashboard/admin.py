@@ -163,7 +163,6 @@ class PersonInline(admin.TabularInline):
     model = Person
     extra = 0
 
-
 class PersonGroupForm(forms.ModelForm):
     class Meta:
         model = PersonGroup

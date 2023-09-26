@@ -696,6 +696,20 @@ class ScreeningResource(BaseResource):
         'coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
     farmers_attendance = fields.ListField()
     category = fields.ListField()
+
+    # For Network and Client Side Optimization Sending Screenings after 1 Jan 2013
+    class Meta:
+        max_limit = None
+        queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
+                                                      'personmeetingattendance_set__person', 'partner').filter(date__gte=datetime.now().date() - timedelta(days=365))
+        resource_name = 'screening'
+        authentication = SessionAuthentication()
+        authorization = StrictVillagePartnerAuthorization('village__in')
+        validation = ModelFormValidation(form_class=ScreeningForm)
+        always_return_data = True
+        excludes = ['location', 'time_created', 'time_modified',
+                    'observation_status', 'screening_grade', 'observer']
+
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
     dehydrate_parentcategory = partial(
@@ -714,19 +728,6 @@ class ScreeningResource(BaseResource):
     hydrate_partner = partial(assign_partner)
     hydrate_parentcategory = partial(
         dict_to_foreign_uri, field_name='parentcategory')
-
-    # For Network and Client Side Optimization Sending Screenings after 1 Jan 2013
-    class Meta:
-        max_limit = None
-        queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
-                                                      'personmeetingattendance_set__person', 'partner').filter(date__gte=datetime.now().date() - timedelta(days=365))
-        resource_name = 'screening'
-        authentication = SessionAuthentication()
-        authorization = StrictVillagePartnerAuthorization('village__in')
-        validation = ModelFormValidation(form_class=ScreeningForm)
-        always_return_data = True
-        excludes = ['location', 'time_created', 'time_modified',
-                    'observation_status', 'screening_grade', 'observer']
 
     def obj_create(self, bundle, **kwargs):
         pma_list = bundle.data.get('farmers_attendance')
