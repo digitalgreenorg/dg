@@ -6,7 +6,7 @@ from django.forms.extras.widgets import *
 from activities.models import PersonAdoptPractice, PersonMeetingAttendance, Screening
 from coco.base_models import CocoModel
 from geographies.models import Village, Block, District, State, Country
-from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup, Household
 from programs.models import Partner
 from videos.models import Language, Practice, Video, NonNegotiable, Category, SubCategory
 
@@ -105,6 +105,11 @@ class PersonGroupForm(CocoModelForm):
 #    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
         model = PersonGroup
+        exclude = ()
+
+class HouseholdForm(CocoModelForm):
+    class Meta:
+        model = Household
         exclude = ()
       
 class PersonAdoptPracticeForm(CocoModelForm):

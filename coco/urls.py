@@ -5,7 +5,7 @@ from django.views.generic.base import RedirectView
 # tastypie imports
 from tastypie.api import Api
 # django imports
-from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource, TagResource
+from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, HouseholdResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource, TagResource
 from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, APVideoGenerator, upload_csv_data, getFileHeader, ap_geography_mapping, GetGeography
 
 from dg.base_settings import COCO_PAGE
@@ -34,6 +34,7 @@ v1_api.register(VillageResource())
 v1_api.register(MediatorResource())
 v1_api.register(PersonAdoptVideoResource())
 v1_api.register(PersonResource())
+v1_api.register(HouseholdResource())
 v1_api.register(PersonGroupResource())
 v1_api.register(ScreeningResource())
 v1_api.register(VideoResource())
@@ -58,24 +59,15 @@ urlpatterns = patterns('',
                        (r'^upload/data/', upload_data),
                        (r'^uploaddata/', upload_csv_data),
                        (r'^geo_mapping/', ap_geography_mapping),
-                       url(r'^get/geography/(?P<selected_geography>[\w\-]+)/$',
-                           GetGeography.as_view(), name="get-geography"),
-
-                       url(r'^getfileheader/', getFileHeader,
-                           name='getfileheader'),
-                       (r'^admin/coco/cocouser/add/state_wise_district',
-                           'coco.admin_views.state_wise_district'),
-                       (r'^admin/coco/cocouser/add/district_wise_village',
-                           'coco.admin_views.district_wise_village'),
-                       (r'^admin/coco/cocouser/add/partner_wise_video',
-                           'coco.admin_views.partner_wise_video'),
-                       (r'^admin/coco/cocouser/add',
-                        'coco.admin_views.add_cocouser'),
-                       (r'^admin/coco/cocouser/[0-9]',
-                        'coco.admin_views.add_cocouser'),
+                       url(r'^get/geography/(?P<selected_geography>[\w\-]+)/$', GetGeography.as_view(), name="get-geography"),
+                       url(r'^getfileheader/', getFileHeader, name='getfileheader'),
+                       (r'^admin/coco/cocouser/add/state_wise_district', 'coco.admin_views.state_wise_district'),
+                       (r'^admin/coco/cocouser/add/district_wise_village', 'coco.admin_views.district_wise_village'),
+                       (r'^admin/coco/cocouser/add/partner_wise_video', 'coco.admin_views.partner_wise_video'),
+                       (r'^admin/coco/cocouser/add', 'coco.admin_views.add_cocouser'),
+                       (r'^admin/coco/cocouser/[0-9]', 'coco.admin_views.add_cocouser'),
                        # admin/logout/ should be above admin/ URL
-                       url(r'^admin/logout/?$', 'django.contrib.auth.views.logout',
-                           {'next_page': '/coco/admin/'}),
+                       url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/coco/admin/'}),
                        url(r'^admin/', include(coco_admin.urls)),
                        url(r'^apadmin/', include(ap_admin.urls)),
                        url(r'^jslpsadmin/', include(jslps_admin.urls)),
@@ -93,17 +85,13 @@ urlpatterns = patterns('',
                        (r'^dataupload/', include(data_upload.urls)),
                        # Imports from farmerbook
                        (r'^farmerbook/$', farmer_book_views.get_home_page),
-                       (r'^farmerbook/(?P<type>\D*)/(?P<id>\d*)/$',
-                        farmer_book_views.get_home_page),
+                       (r'^farmerbook/(?P<type>\D*)/(?P<id>\d*)/$',farmer_book_views.get_home_page),
                        (r'^trial/?$', farmer_book_views.get_admin_panel),
                        (r'^getvillagepage/?$', farmer_book_views.get_village_page),
-                       (r'^getserviceproviderpage/?$',
-                        farmer_book_views.get_csp_page),
+                       (r'^getserviceproviderpage/?$',farmer_book_views.get_csp_page),
                        (r'^getpartnerpage/?$', farmer_book_views.get_partner_page),
                        (r'^getpersonpage/?$', farmer_book_views.get_person_page),
                        (r'^getgrouppage/?$', farmer_book_views.get_group_page),
                        (r'^getvillages/?$', farmer_book_views.get_villages_with_images),
-                       (r'^getvideosproduced/?$',
-                        farmer_book_views.get_videos_produced),
-                       (r'^api/v2/apvideo/?$', APVideoGenerator.as_view()),
-                       )
+                       (r'^getvideosproduced/?$', farmer_book_views.get_videos_produced),
+                       (r'^api/v2/apvideo/?$', APVideoGenerator.as_view()),)

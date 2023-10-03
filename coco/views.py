@@ -315,7 +315,7 @@ def upload_csv_data(request):
                         try:
                             row = row.split(',')
                             block_obj, created = Block.objects.get_or_create(block_name=row[2].strip(),                                                                             district_id=int(
-                                row[1]), defaults={'block_name': row[2].strip(),                                                   'district_id': int(row[1].strip())})
+                                row[1]), defaults={'block_name': row[2].strip(), 'district_id': int(row[1].strip())})
                             if block_obj or created:
                                 village_obj, created = Village.objects.get_or_create(village_name=row[3].strip(), block_id=block_obj.id,
                                                                                      defaults={'village_name': row[3].strip(),

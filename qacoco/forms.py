@@ -66,7 +66,7 @@ class DisseminationQualityAdminForm(forms.ModelForm):
     #     super(DisseminationQualityAdminForm, self).__init__(*args, **kwargs)
     #     # Get the currently signed-in user
     #     user = self.request.user TODO: Filter the querysets based on the logged-in user
-        
+
 
 class QACocoModelForm(ModelForm):
     def save(self, commit=True, user=None, id=None,  *args, **kwargs):

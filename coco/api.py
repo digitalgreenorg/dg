@@ -1,6 +1,5 @@
 # python imports
-import ast
-import json
+import ast, json
 from datetime import datetime, timedelta
 from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,42 +9,21 @@ from django.db.models import Q
 from tastypie import fields
 from tastypie.models import ApiKey
 from tastypie.authentication import SessionAuthentication, MultiAuthentication
-from custom_authentication import AnonymousGETAuthentication
 from tastypie.authorization import Authorization
 from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
+from custom_authentication import AnonymousGETAuthentication
 # app imports
 from models import CocoUser
-from activities.models import Screening
-from activities.models import PersonAdoptPractice
-from activities.models import PersonMeetingAttendance
-from geographies.models import Village
-from geographies.models import District
-from geographies.models import State
+from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance, FrontLineWorkerPresent
+from geographies.models import Village, District, State
 from programs.models import Partner
-from people.models import Animator
-from people.models import AnimatorAssignedVillage
-from people.models import Person
-from people.models import PersonGroup
-from videos.models import Video
-from videos.models import Language
-from videos.models import NonNegotiable
-from videos.models import Category
-from videos.models import SubCategory
-from videos.models import VideoPractice
-from videos.models import ParentCategory
-from videos.models import DirectBeneficiaries
-from videos.models import Tag
+from people.models import Animator, AnimatorAssignedVillage, Person, Household, PersonGroup
+from videos.models import Video, Language, NonNegotiable, Category, SubCategory, VideoPractice, ParentCategory, DirectBeneficiaries, Tag
 from activities.models import FrontLineWorkerPresent
 # Will need to changed when the location of forms.py is changed
-from dashboard.forms import AnimatorForm
-from dashboard.forms import NonNegotiableForm
-from dashboard.forms import PersonAdoptPracticeForm
-from dashboard.forms import PersonForm
-from dashboard.forms import PersonGroupForm
-from dashboard.forms import ScreeningForm
-from dashboard.forms import VideoForm
+from dashboard.forms import AnimatorForm, NonNegotiableForm, PersonAdoptPracticeForm, PersonForm, HouseholdForm, PersonGroupForm, ScreeningForm, VideoForm
 
 
 class PMANotSaved(Exception):
@@ -60,9 +38,9 @@ class PartnerDoesNotExist(Exception):
 
 class ModelFormValidation(FormValidation):
     """
-        Override tastypie's standard ``FormValidation`` since this does not care
-        about URI to PK conversion for ``ToOneField`` or ``ToManyField``.
-        """
+    Override tastypie's standard ``FormValidation`` since this does not care
+    about URI to PK conversion for ``ToOneField`` or ``ToManyField``.
+    """
 
     def uri_to_pk(self, uri):
         """
@@ -271,8 +249,7 @@ class VillagePartnerAuthorization(Authorization):
         self.village_field = field
 
     def read_list(self, object_list, bundle):
-        villages = CocoUser.objects.get(
-            user_id=bundle.request.user.id).get_villages()
+        villages = CocoUser.objects.get(user_id=bundle.request.user.id).get_villages()
         user_partner = get_user_partner_id(bundle.request.user.id)
         kwargs = {}
         kwargs[self.village_field] = villages
@@ -670,6 +647,24 @@ class PersonGroupResource(BaseResource):
                 bundle.data['village'] = None
         return bundle
 
+class HouseholdResource(BaseResource):
+    village = fields.ForeignKey(VillageResource, 'village')
+    # household_name = fields.CharField()
+    # head_gender = fields.CharField()
+
+    class Meta:
+        max_limit = None
+        queryset = Household.objects.prefetch_related('village').all()
+        resource_name = 'household'
+        authentication = SessionAuthentication()
+        authorization = VillageAuthorization('village__in')
+        validation = ModelFormValidation(form_class=HouseholdForm)
+        excludes = ['time_created', 'time_modified']
+        always_return_data = True
+
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+
 
 def map_dict():
     data_dict = {}
@@ -678,7 +673,6 @@ def map_dict():
     for item in dobj:
         data_dict[item.get('id')] = item.get('direct_beneficiaries_category')
     return data_dict
-
 
 class ScreeningResource(BaseResource):
     global mapping_dict

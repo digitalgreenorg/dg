@@ -1660,6 +1660,102 @@
     },
   };
 
+  var household_configs = {
+    page_header: "Household",
+    config_English: "Households",
+    config_हिन्दी: "परिवारों",
+    config_Français: "Ménages",
+    labels_हिन्दी: {
+      household: "परिवार",
+      household_name: "घरेलू नाम",
+      village: "गाँव",
+      head_gender: "परिवार के मुखिया का लिंग",
+    },
+    labels_Français: {
+      household: "Ménage",
+      household_name: "Nom du ménage",
+      village: "Nom du village",
+      head_gender: "Sexe du chef de ménage",
+    },
+    labels_English: {
+      household: "Household",
+      household_name: "Household Name",
+      village: "Village",
+      head_gender: "Household head gender",
+    },
+    list_elements_हिन्दी: [
+      { header: "आईडी", element: "online_id" },
+      { header: "घरेलू नाम", element: "household_name" },
+      { header: "परिवार के मुखिया का लिंग", element: "head_gender" },
+      { header: "गाँव", element: "village.village_name" },
+    ],
+    list_elements_Français: [
+      { header: "Identité", element: "online_id" },
+      { header: "Nom du ménage", element: "household_name" },
+      { header: "Sexe du chef de ménage", element: "head_gender" },
+      { header: "Nom du village", element: "village.village_name" },
+    ],
+    list_elements_English: [
+      { header: "ID", element: "online_id" },
+      { element: "household_name" },
+      { element: "head_gender" },
+      { element: "village.village_name" },
+    ],
+    add_template_name: "household_add_edit_template",
+    edit_template_name: "household_add_edit_template",
+    rest_api_url: "/coco/api/v2/household/",
+    entity_name: "household",
+    foreign_entities: {
+      village: {
+        village: {
+          placeholder: "id_village",
+          name_field: "village_name",
+          name_field_extra_info: "block_name",
+          name_field_block_name: "block_name",
+        },
+      },
+    },
+    // unique_together_fields: ["household_name", "village.id"],
+    sort_field: "household_name",
+    form_field_validation: {
+      ignore: [],
+      rules: {
+        household_name: {
+          required: true,
+          minlength: 2,
+          maxlength: 100,
+        },
+        head_gender: "required",
+        village: "required",
+      },
+      messages: {
+        household_name: {
+          required: "Household name is required",
+          minlength: "Household name  should contain at least 2 characters",
+          maxlength: "Household name should contain at most 100 characters",
+          allowedChar: "Household name should contain only english and local language characters",
+        },
+        head_gender: {
+          required: "Household head gender is required",
+        },
+        village: {
+          required: "Village is required",
+        },
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).parent("div").parent("div").addClass("error");
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).parent("div").parent("div").removeClass("error");
+      },
+      errorElement: "span",
+      errorClass: "help-inline red-color",
+      errorPlacement: function (label, element) {
+        element.parent().append(label);
+      },
+    },
+  };
+
   var misc = {
     download_chunk_size: 2000,
     data_transfer_schema: "uploadqueue",
@@ -1908,6 +2004,7 @@
     directbeneficiaries: directbeneficiaries_configs,
     video: video_configs,
     group: group_configs,
+    household: household_configs,
     person: person_configs,
     screening: screening_configs,
     adoption: adoption_configs,

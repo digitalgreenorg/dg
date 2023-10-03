@@ -6592,7 +6592,7 @@
                 return this._wrapped;
             },
         });
-}.call(this));
+}).call(this);
 define("underscore", function () {});
 
 (function () {
@@ -7664,7 +7664,7 @@ define("underscore", function () {});
             t.trigger("error", t, r, e);
         };
     };
-}.call(this));
+}).call(this);
 
 define("backbone", function () {});
 
@@ -27855,9 +27855,9 @@ var TableTools;
                 /**
 	 * Retreieve the settings object from an instance
 	 *  @returns {array} List of TR nodes which are currently selected
-	 *  @param {boolean} [filtered=false] Get only selected rows which are  
+	 *  @param {boolean} [filtered=false] Get only selected rows which are
 	 *    available given the filtering applied to the table. By default
-	 *    this is false -  i.e. all rows, regardless of filtering are 
+	 *    this is false -  i.e. all rows, regardless of filtering are
 	      selected.
 	 */
                 fnGetSelected: function (filtered) {
@@ -27908,9 +27908,9 @@ var TableTools;
                 /**
 	 * Get the indexes of the selected rows
 	 *  @returns {array} List of row indexes
-	 *  @param {boolean} [filtered=false] Get only selected rows which are  
+	 *  @param {boolean} [filtered=false] Get only selected rows which are
 	 *    available given the filtering applied to the table. By default
-	 *    this is false -  i.e. all rows, regardless of filtering are 
+	 *    this is false -  i.e. all rows, regardless of filtering are
 	      selected.
 	 */
                 fnGetSelectedIndexes: function (filtered) {

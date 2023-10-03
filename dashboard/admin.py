@@ -11,7 +11,7 @@ from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
 from coco.base_models import NONNEGOTIABLE_OPTION
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, FrontLineWorkerPresent
-from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup, Household
 from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
@@ -177,21 +177,31 @@ class PersonGroupForm(forms.ModelForm):
                 #settings.STATIC_URL + "js/dynamic_inlines_with_sort.js",
         )
 
-        #css = {
-        #        'all':('/media/css/dynamic_inlines_with_sort.css',)
-        #}
+# class HouseholdForm(forms.ModelForm):
+#     class Meta:
+#         model = Household
+#         fields = ("__all__")
+
+    # class Media:
+    #     js = (settings.STATIC_URL + "js/filter_village.js",)
 
 
 class PersonGroupAdmin(admin.ModelAdmin):
     inlines = [PersonInline]
-    list_display = ('group_name','village')
-    search_fields = ['group_name','village__village_name']
+    list_display = ('group_name', 'village')
+    search_fields = ['group_name', 'village__village_name']
     form = PersonGroupForm
+
+class HouseholdAdmin(admin.ModelAdmin):
+    list_display = ('household_name', 'head_gender', 'village')
+    list_filter = ('head_gender','village')
+    search_fields = ['household_name']
+    # form = HouseholdForm
 
 
 class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
     list_display = ('animator','village')
-    search_fields = ['animator__name','village__village_name']
+    search_fields = ['animator__name', 'village__village_name']
 
 
 class PersonAdoptPracticeInline(admin.StackedInline):
