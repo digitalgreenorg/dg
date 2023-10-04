@@ -616,14 +616,14 @@ class PersonGroupResource(BaseResource):
 
     class Meta:
         max_limit = None
-        queryset = PersonGroup.objects.prefetch_related(
-            'village', 'partner', 'partners').all()
+        queryset = PersonGroup.objects.prefetch_related('village', 'partner', 'partners').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class=PersonGroupForm)
         excludes = ['time_created', 'time_modified']
         always_return_data = True
+
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
@@ -701,8 +701,7 @@ class ScreeningResource(BaseResource):
         authorization = StrictVillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class=ScreeningForm)
         always_return_data = True
-        excludes = ['location', 'time_created', 'time_modified',
-                    'observation_status', 'screening_grade', 'observer']
+        excludes = ['location', 'time_created', 'time_modified', 'observation_status', 'screening_grade', 'observer']
 
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
@@ -726,8 +725,7 @@ class ScreeningResource(BaseResource):
     def obj_create(self, bundle, **kwargs):
         pma_list = bundle.data.get('farmers_attendance')
         if pma_list:
-            bundle = super(ScreeningResource, self).obj_create(
-                bundle, **kwargs)
+            bundle = super(ScreeningResource, self).obj_create(bundle, **kwargs)
             user_id = None
             if bundle.request.user:
                 user_id = bundle.request.user.id
@@ -735,22 +733,26 @@ class ScreeningResource(BaseResource):
             for pma in pma_list:
                 try:
                     person_obj = Person.objects.get(id=pma['person_id'])
+
                     # Save the phone number of the farmer while inserting screening
                     # i.e. It will be saved only if the phone number is empty
                     if (pma.get('phone_no') and not person_obj.phone_no):
                         person_obj.phone_no = str(pma.get('phone_no'))
+
                     # Make sure age and gender are not overwritten
                     if (pma.get('age') and not person_obj.age):
                         person_obj.age = int(
                             pma.get('age')) if pma.get('age') else None
+
                     if (pma.get('gender') and not person_obj.gender):
-                        person_obj.gender = pma.get(
-                            'gender') if pma.get('gender') else None
+                        person_obj.gender = pma.get('gender') if pma.get('gender') else None
                     person_obj.save()
+
                     if pma.get('category'):
                         category = json.dumps(pma.get('category'))
                     else:
                         category = None
+
                     attendance = PersonMeetingAttendance(screening_id=screening_id,
                                                          person_id=pma['person_id'],
                                                          user_created_id=user_id,
@@ -759,7 +761,6 @@ class ScreeningResource(BaseResource):
                 except Exception, e:
                     raise PMANotSaved('For Screening with id: ' + str(screening_id) +
                                       ' pma is not getting saved. pma details: ' + str(e))
-
             return bundle
         else:
             raise PMANotSaved('Screening with details: ' + str(bundle.data) +
@@ -863,6 +864,7 @@ class PersonResource(BaseResource):
     category = fields.ListField()
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupResource, 'group', null=True)
+    household = fields.ForeignKey(HouseholdResource, 'household', null=True)
     videos_seen = fields.DictField(null=True)
     partner = fields.ForeignKey(PartnerResource, 'partner')
     partners = fields.ToManyField(PartnerResource, 'partners', null=True)
@@ -870,7 +872,7 @@ class PersonResource(BaseResource):
     class Meta:
         max_limit = None
         queryset = Person.objects.prefetch_related(
-            'village', 'group', 'personmeetingattendance_set__screening__videoes_screened', 'partner', 'partners').all()
+            'village', 'group', 'household', 'personmeetingattendance_set__screening__videoes_screened', 'partner', 'partners').all()
         resource_name = 'person'
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class=PersonForm)
@@ -878,12 +880,12 @@ class PersonResource(BaseResource):
         excludes = ['date_of_joining', 'image_exists',
                     'time_created', 'time_modified']
 
-    dehydrate_village = partial(
-        foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
-    dehydrate_group = partial(
-        foreign_key_to_id, field_name='group', sub_field_names=['id', 'group_name'])
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
+    dehydrate_group = partial(foreign_key_to_id, field_name='group', sub_field_names=['id', 'group_name'])
+    dehydrate_household = partial(foreign_key_to_id, field_name='household', sub_field_names=['id', 'household_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     hydrate_group = partial(dict_to_foreign_uri, field_name='group')
+    hydrate_household = partial(dict_to_foreign_uri, field_name='household')
     hydrate_partner = partial(assign_partner)
 
     def dehydrate_label(self, bundle):
@@ -911,8 +913,7 @@ class PersonAdoptVideoResource(BaseResource):
     animator = fields.ForeignKey(MediatorResource, 'animator')
     group = fields.DictField(null=True)
     village = fields.ForeignKey(VillageResource, 'village', null=True)
-    parentcategory = fields.ForeignKey(
-        ParentCategoryResource, 'parentcategory', null=True)
+    parentcategory = fields.ForeignKey(ParentCategoryResource, 'parentcategory', null=True)
 
     class Meta:
         max_limit = None

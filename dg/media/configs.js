@@ -741,6 +741,7 @@
       },
     },
   };
+
   var screening_configs = {
     page_header: "Screening",
     config_English: "Screenings",
@@ -1511,6 +1512,7 @@
       age: "आयु",
       phone_no: "फ़ोन नंबर",
       group: "ग्राम संगठन का नाम",
+      household: "परिवार",
       is_modelfarmer: "मॉडल किसान",
     },
     labels_Français: {
@@ -1522,6 +1524,7 @@
       age: "Age",
       phone_no: "Numéro de téléphone",
       group: "Groupe",
+      household: "Ménage",
       is_modelfarmer: "Modèle Agriculteur",
     },
     labels_English: {
@@ -1533,6 +1536,7 @@
       age: "Age",
       phone_no: "Phone Number",
       group: "Group",
+      household: "Household",
       is_modelfarmer: "Model Farmer",
     },
     list_elements_हिन्दी: [
@@ -1541,6 +1545,7 @@
       { header: "पिता/पति का नाम", element: "father_name" },
       { header: "गाँव", element: "village.village_name" },
       { header: "ग्राम संगठन का नाम", element: "group.group_name" },
+      { header: "घरेलू नाम", element: "household.household_name" },
     ],
     list_elements_Français: [
       { header: "Identité", element: "online_id" },
@@ -1548,6 +1553,7 @@
       { header: "Nom du père", element: "father_name" },
       { header: "Nom du village", element: "village.village_name" },
       { header: "Groupe", element: "group.group_name" },
+      { header: "Nom du ménage", element: "household.household_name" },
     ],
     list_elements_English: [
       { header: "ID", element: "online_id" },
@@ -1555,6 +1561,7 @@
       { element: "father_name" },
       { element: "village.village_name" },
       { element: "group.group_name" },
+      { element: "household.household_name" },
     ],
     add_template_name: "person_add_edit_template",
     edit_template_name: "person_add_edit_template",
@@ -1573,6 +1580,18 @@
         group: {
           placeholder: "id_group",
           name_field: "group_name",
+          dependency: [
+            {
+              source_form_element: "village",
+              dep_attr: "village",
+            },
+          ],
+        },
+      },
+      household: {
+        household: {
+          placeholder: "id_household",
+          name_field: "household_name",
           dependency: [
             {
               source_form_element: "village",
@@ -1698,7 +1717,7 @@
     list_elements_English: [
       { header: "ID", element: "online_id" },
       { element: "household_name" },
-      { element: "head_gender" },
+      { header: "Household head gender", element: "head_gender" },
       { element: "village.village_name" },
     ],
     add_template_name: "household_add_edit_template",
