@@ -612,6 +612,7 @@
       group: "ग्राम संगठन",
       name: "नाम",
       village: "गाँव",
+      household: "परिवार",
       person_name: "सदस्य का नाम",
       father_name: "पिता/पति का नाम",
       age: "आयु",
@@ -623,6 +624,7 @@
       group: "Groupes",
       name: "Nom",
       village: "Village",
+      household: "Ménage",
       person_name: "Nom de la personne",
       father_name: "Nom du père",
       age: "Age",
@@ -634,6 +636,7 @@
       group: "Group",
       name: "Name",
       village: "Village",
+      household: "Household",
       person_name: "Person Name",
       father_name: "Father Name",
       age: "Age",
@@ -705,7 +708,20 @@
             name_field: "group_name",
           },
         },
+        household: {
+          household: {
+            placeholder: "id_household",
+            name_field: "household_name",
+          },
+        },
       },
+      preset_option_entities: [
+        {
+          entity_name: "household",
+          name_field: "household_name",
+          dependency: ["village"],
+        },
+      ],
     },
     form_field_validation: {
       ignore: ".donotvalidate",
@@ -1664,7 +1680,6 @@
           required: "Village is required",
         },
       },
-
       highlight: function (element, errorClass, validClass) {
         $(element).parent("div").parent("div").addClass("error");
       },

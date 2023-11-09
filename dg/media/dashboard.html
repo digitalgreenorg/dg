@@ -617,7 +617,7 @@
 
     <!--Core Framework templates end here -->
 
-    <!--///////////////////////////////////////////////////// MEDIATOR ADD/EDIT TEMPLATES START ///////////////////////////////////////////-->
+    <!--/ MEDIATOR ADD/EDIT TEMPLATES START -->
     <script
       type="text/template"
       id="mediator_add_edit_template">
@@ -671,9 +671,9 @@
       </fieldset>
     </script>
 
-    <!--/////////////////////////////////////////////////// MEDIATOR ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
+    <!-- MEDIATOR ADD/EDIT TEMPLATES END -->
 
-    <!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
+    <!-- SCREENING ADD/EDIT TEMPLATES START -->
     <script
       type="text/template"
       id="screening_add_edit_template">
@@ -963,9 +963,10 @@
         });
       }
     </script>
-    <!--///////////////////////////////////////////////// SCREENING ADD/EDIT TEMPLATES END //////////////////////////////////////////////-->
+    <!-- SCREENING ADD/EDIT TEMPLATES END -->
 
-    <!--///////////////////////////////////////////////// ADOPTION ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
+    <!-- ADOPTION ADD/EDIT TEMPLATES START -->
+
     <script
       type="text/template"
       id="adoption_edit_template">
@@ -1062,6 +1063,7 @@
               </div>
       </fieldset>
     </script>
+
     <script
       type="text/template"
       id="adoption_add_template">
@@ -1163,13 +1165,13 @@
       <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("adoptionadd_"+class_ln);%>
           <tr class="stack-table" index = <%=index%> person_id = <%=id%> name="row<%=index%>">
           <td>
-          <div class="form-group">
-              <div class="controls">
-                  <i class="glyphicon glyphicon-remove remove" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('slow',function(){
-                              $('tr[index = <%=index%>]').remove();
-                          });"></i>
-              </div>
-          </div>
+            <div class="form-group">
+                <div class="controls">
+                    <i class="glyphicon glyphicon-remove remove" onClick = "javascript:$('tr[index = <%=index%>]').fadeOut('slow',function(){
+                                $('tr[index = <%=index%>]').remove();
+                            });"></i>
+                </div>
+            </div>
           </td>
           <td>
           <div class="form-group">
@@ -1250,15 +1252,12 @@
                   </div>
               </td>
 
-
-
-
           </tr>
     </script>
 
-    <!--////////////////////////////////////////////////// ADOPTION ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
+    <!-- ADOPTION ADD/EDIT TEMPLATES END -->
 
-    <!--////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
+    <!-- GROUP ADD/EDIT TEMPLATES START -->
     <script
       type="text/template"
       id="group_add_edit_template">
@@ -1274,7 +1273,7 @@
           <div class="form-group">
               <label class="control-label col-sm-2"><b><%= village %></b></label>
               <div class="col-sm-4">
-                  <select id = "id_village" name="village" class="chosen-select form-control">
+                  <select id="id_village" name="village" class="chosen-select form-control">
                       <option value='' selected='selected'>---------</option>
 
                   </select>
@@ -1286,31 +1285,62 @@
     <script
       type="text/template"
       id="person_inline">
-      <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("groupadd_"+class_ln);%>
-      <tr class="stack-table " index = <%=index%> name="row<%=index%>">
-          <td><div class="form-group"><div class="controls">
-                  <input type="text" name="person_name<%=index%>" required minlength="2" allowedChar maxlength="100" class="donotvalidate form-control input-sm" >
-              </div></div>
+      <%
+        var class_ln = $.trim($('#language').text());
+        $(".stack-table").addClass("groupadd_" + class_ln);
+      %>
+      <tr class="stack-table" index=<%=index%> name="row<%=index%>">
+          <td>
+            <div class="form-group">
+                <div class="controls">
+                    <input type="text" name="person_name<%=index%>" required minlength="2" allowedChar maxlength="100" class="donotvalidate form-control input-sm">
+                </div>
+            </div>
           </td>
-          <td><div class="form-group"><div class="controls">
-              <input type="text" name="father_name<%=index%>" minlength="2" allowedChar maxlength="100" class="donotvalidate form-control input-sm">
-              </div></div>
+          <td>
+            <div class="form-group">
+                <div class="controls">
+                    <input type="text" name="father_name<%=index%>" minlength="2" allowedChar maxlength="100" class="donotvalidate form-control input-sm">
+                </div>
+            </div>
           </td>
-          <td><div class="form-group"><div class="controls">
+          <td>
+            <div class="form-group">
+                <div class="controls">
                   <input class="input-mini donotvalidate form-control input-sm" type="text"  name="age<%=index%>" digits min="1" max="100">
-              </div></div>
+                </div>
+            </div>
           </td>
-          <td><div class="form-group"><div class="controls">
-                  <select value = 'M'  class="donotvalidate form-control input-sm" name="gender<%=index%>" required >
-                  <option value='' selected='selected'>---------</option>
-                  <option value='M'>Male</option>
-                  <option value='F'>Female</option>
+          <td>
+            <div class="form-group">
+                <div class="controls">
+                  <select class="donotvalidate form-control input-sm" name="gender<%=index%>" required>
+                    <option value='' selected='selected'>---------</option>
+                    <option value='M'>Male</option>
+                    <option value='F'>Female</option>
                   </select>
-              </div></div>
+              </div>
+            </div>
           </td>
-          <td><div class="form-group"><div class="controls">
+          <td>
+            <div class="form-group">
+                <div class="controls">
+                    <!-- TODO: The selector should be a class -->
+                    <select class="form-control chosen-select input-sm" name="household<%=index%>">
+                        <option value='' selected='selected'>---------</option>
+                        <% _.each(households, function(household) { %>
+                        <option value="<%= household.id %>"><%= household.household_name %></option>
+                        <% }); %>
+                    </select>
+                </div>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+                <div class="controls">
                   <input  name="phone_no<%=index%>" type="text" maxlength="10" digits class="donotvalidate form-control input-sm">
-              </div></div>
+              </div>
+            </div>
           </td>
       </tr>
     </script>
@@ -1318,12 +1348,18 @@
     <script
       type="text/template"
       id="person_inline_header">
-      <tr class="hide-header"> <th> <%= person_name %></th><th id="fhname" class = "notbold"> Father/Husband Name</th><th class = "notbold"> <%= age %></th><th> <%= gender %></th><th class="notbold"> <%= phone_no %></th></tr>
+        <tr class="hide-header">
+          <th> <%= person_name %></th>
+          <th id="fhname" class = "notbold"> Father/Husband Name</th>
+          <th class = "notbold"> <%= age %></th><th> <%= gender %></th>
+          <th class="notbold"> <%= household %></th>
+          <th class="notbold"> <%= phone_no %></th>
+      </tr>
     </script>
 
-    <!--//////////////////////////////////////////////////// GROUP ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
+    <!-- GROUP ADD/EDIT TEMPLATES END -->
 
-    <!--///////////////////////////////////////////////////// VIDEO ADD/EDIT TEMPLATES START //////////////////////////////////////////////-->
+    <!--/ VIDEO ADD/EDIT TEMPLATES START -->
     <script
       type="text/template"
       id="video_add_edit_template">
@@ -1501,19 +1537,19 @@
       id="nonnegotiable_inline">
       <% var class_ln = $.trim($('#language').text()); $( ".stack-table").addClass("videoadd_"+class_ln);%>
           <tr class="stack-table" index = <%=index%> name="row<%=index%>">
-          <td><%=index+1%>.</td>
-          <td>
-              <div class="form-group"><div class="controls">
-                  <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="10" maxlength="500" rows="1" style="resize:vertical; width:82%;" ></textarea>
+            <td><%=index+1%>.</td>
+            <td>
+                <div class="form-group"><div class="controls">
+                    <textarea name="non_negotiable<%=index%>" id="non_negotiable<%=index%>" class=" input-xlarge form-control donotvalidate" required minlength="10" maxlength="500" rows="1" style="resize:vertical; width:82%;" ></textarea>
 
-                  </div>
-              </div>
-          </td>
-          <td id="phy_check"><div class="form-group"><div class="controls">
-                  <input class="mrg-lt-auto" type="checkbox" name="physically_verifiable">
-                  </div>
-              </div>
-          </td>
+                    </div>
+                </div>
+            </td>
+            <td id="phy_check"><div class="form-group"><div class="controls">
+                    <input class="mrg-lt-auto" type="checkbox" name="physically_verifiable">
+                    </div>
+                </div>
+            </td>
           </tr>
     </script>
 
@@ -1528,9 +1564,9 @@
       </tr>
     </script>
 
-    <!--//////////////////////////////////////////////////// VIDEO ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
+    <!--  VIDEO ADD/EDIT TEMPLATES END -->
 
-    <!--//////////////////////////////////////////////////// HOUSEHOLD ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->
+    <!-- HOUSEHOLD ADD/EDIT TEMPLATES START -->
     <script
       type="text/template"
       id="household_add_edit_template">
@@ -1563,9 +1599,9 @@
           </div>
       </fieldset>
     </script>
-    <!--//////////////////////////////////////////////////// HOUSEHOLD ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
+    <!-- HOUSEHOLD ADD/EDIT TEMPLATES END -->
 
-    <!--//////////////////////////////////////////////////// PERSON ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->
+    <!-- PERSON ADD/EDIT TEMPLATES START -->
 
     <script
       type="text/template"
@@ -1633,7 +1669,7 @@
           </div>
       </fieldset>
     </script>
-    <!--//////////////////////////////////////////////////// PERSON ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
+    <!-- PERSON ADD/EDIT TEMPLATES END -->
   </head>
 
   <body>

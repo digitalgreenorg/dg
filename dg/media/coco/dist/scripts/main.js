@@ -1,5 +1,7 @@
-/*! jQuery v2.1.1 | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license */
-!(function (a, b) {
+/*! jQuery v2.1.1 | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license */ !(function (
+    a,
+    b
+) {
     "object" == typeof module && "object" == typeof module.exports
         ? (module.exports = a.document
               ? b(a, !0)
@@ -266,6 +268,7 @@
                 h["[object " + b + "]"] = b.toLowerCase();
             }
         );
+
     function s(a) {
         var b = a.length,
             c = n.type(a);
@@ -424,6 +427,7 @@
                       },
             };
         }
+
         function fb(a, b, d, e) {
             var f, h, j, k, l, o, r, s, w, x;
             if (
@@ -488,8 +492,10 @@
             }
             return i(a.replace(R, "$1"), b, d, e);
         }
+
         function gb() {
             var a = [];
+
             function b(c, e) {
                 return (
                     a.push(c + " ") > d.cacheLength && delete b[a.shift()],
@@ -498,9 +504,11 @@
             }
             return b;
         }
+
         function hb(a) {
             return (a[u] = !0), a;
         }
+
         function ib(a) {
             var b = n.createElement("div");
             try {
@@ -511,11 +519,13 @@
                 b.parentNode && b.parentNode.removeChild(b), (b = null);
             }
         }
+
         function jb(a, b) {
             var c = a.split("|"),
                 e = a.length;
             while (e--) d.attrHandle[c[e]] = b;
         }
+
         function kb(a, b) {
             var c = b && a,
                 d =
@@ -527,18 +537,21 @@
             if (c) while ((c = c.nextSibling)) if (c === b) return -1;
             return a ? 1 : -1;
         }
+
         function lb(a) {
             return function (b) {
                 var c = b.nodeName.toLowerCase();
                 return "input" === c && b.type === a;
             };
         }
+
         function mb(a) {
             return function (b) {
                 var c = b.nodeName.toLowerCase();
                 return ("input" === c || "button" === c) && b.type === a;
             };
         }
+
         function nb(a) {
             return hb(function (b) {
                 return (
@@ -552,6 +565,7 @@
                 );
             });
         }
+
         function ob(a) {
             return a && typeof a.getElementsByTagName !== C && a;
         }
@@ -891,10 +905,20 @@
                     attrHandle: {},
                     find: {},
                     relative: {
-                        ">": { dir: "parentNode", first: !0 },
-                        " ": { dir: "parentNode" },
-                        "+": { dir: "previousSibling", first: !0 },
-                        "~": { dir: "previousSibling" },
+                        ">": {
+                            dir: "parentNode",
+                            first: !0,
+                        },
+                        " ": {
+                            dir: "parentNode",
+                        },
+                        "+": {
+                            dir: "previousSibling",
+                            first: !0,
+                        },
+                        "~": {
+                            dir: "previousSibling",
+                        },
                     },
                     preFilter: {
                         ATTR: function (a) {
@@ -1289,7 +1313,12 @@
             image: !0,
         })
             d.pseudos[b] = lb(b);
-        for (b in { submit: !0, reset: !0 }) d.pseudos[b] = mb(b);
+        for (b in {
+            submit: !0,
+            reset: !0,
+        })
+            d.pseudos[b] = mb(b);
+
         function pb() {}
         (pb.prototype = d.filters = d.pseudos),
             (d.setFilters = new pb()),
@@ -1321,16 +1350,22 @@
                             !(e = X[g].exec(h)) ||
                                 (j[g] && !(e = j[g](e))) ||
                                 ((c = e.shift()),
-                                f.push({ value: c, type: g, matches: e }),
+                                f.push({
+                                    value: c,
+                                    type: g,
+                                    matches: e,
+                                }),
                                 (h = h.slice(c.length)));
                         if (!c) break;
                     }
                     return b ? h.length : h ? fb.error(a) : z(a, i).slice(0);
                 });
+
         function qb(a) {
             for (var b = 0, c = a.length, d = ""; c > b; b++) d += a[b].value;
             return d;
         }
+
         function rb(a, b, c) {
             var d = b.dir,
                 e = c && "parentNode" === d,
@@ -1361,6 +1396,7 @@
                               }
                   };
         }
+
         function sb(a) {
             return a.length > 1
                 ? function (b, c, d) {
@@ -1370,15 +1406,18 @@
                   }
                 : a[0];
         }
+
         function tb(a, b, c) {
             for (var d = 0, e = b.length; e > d; d++) fb(a, b[d], c);
             return c;
         }
+
         function ub(a, b, c, d, e) {
             for (var f, g = [], h = 0, i = a.length, j = null != b; i > h; h++)
                 (f = a[h]) && (!c || c(f, d, e)) && (g.push(f), j && b.push(h));
             return g;
         }
+
         function vb(a, b, c, d, e, f) {
             return (
                 d && !d[u] && (d = vb(d)),
@@ -1414,6 +1453,7 @@
                 })
             );
         }
+
         function wb(a) {
             for (
                 var b,
@@ -1474,6 +1514,7 @@
                 }
             return sb(m);
         }
+
         function xb(a, b) {
             var c = b.length > 0,
                 e = a.length > 0,
@@ -1657,6 +1698,7 @@
     var u = n.expr.match.needsContext,
         v = /^<(\w+)\s*\/?>(?:<\/\1>|)$/,
         w = /^.[^:#\[\.,]*$/;
+
     function x(a, b, c) {
         if (n.isFunction(b))
             return n.grep(a, function (a, d) {
@@ -1780,7 +1822,12 @@
         });
     (A.prototype = n.fn), (y = n(l));
     var B = /^(?:parents|prev(?:Until|All))/,
-        C = { children: !0, contents: !0, next: !0, prev: !0 };
+        C = {
+            children: !0,
+            contents: !0,
+            next: !0,
+            prev: !0,
+        };
     n.extend({
         dir: function (a, b, c) {
             var d = [],
@@ -1851,6 +1898,7 @@
                 );
             },
         });
+
     function D(a, b) {
         while ((a = a[b]) && 1 !== a.nodeType);
         return a;
@@ -1910,6 +1958,7 @@
     );
     var E = /\S+/g,
         F = {};
+
     function G(a) {
         var b = (F[a] = {});
         return (
@@ -2160,6 +2209,7 @@
                             (n(l).triggerHandler("ready"), n(l).off("ready"))));
             },
         });
+
     function I() {
         l.removeEventListener("DOMContentLoaded", I, !1),
             a.removeEventListener("load", I, !1),
@@ -2203,6 +2253,7 @@
     n.acceptData = function (a) {
         return 1 === a.nodeType || 9 === a.nodeType || !+a.nodeType;
     };
+
     function K() {
         Object.defineProperty((this.cache = {}), 0, {
             get: function () {
@@ -2221,7 +2272,9 @@
                 if (!c) {
                     c = K.uid++;
                     try {
-                        (b[this.expando] = { value: c }),
+                        (b[this.expando] = {
+                            value: c,
+                        }),
                             Object.defineProperties(a, b);
                     } catch (d) {
                         (b[this.expando] = c), n.extend(a, b);
@@ -2280,6 +2333,7 @@
         M = new K(),
         N = /^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,
         O = /([A-Z])/g;
+
     function P(a, b, c) {
         var d;
         if (void 0 === c && 1 === a.nodeType)
@@ -2497,12 +2551,15 @@
         W = /^(?:mouse|pointer|contextmenu)|click/,
         X = /^(?:focusinfocus|focusoutblur)$/,
         Y = /^([^.]*)(?:\.(.+)|)$/;
+
     function Z() {
         return !0;
     }
+
     function $() {
         return !1;
     }
+
     function _() {
         try {
             return l.activeElement;
@@ -2760,10 +2817,19 @@
                                         ? n(e, this).index(i) >= 0
                                         : n.find(e, this, null, [i]).length),
                                 d[e] && d.push(f);
-                        d.length && g.push({ elem: i, handlers: d });
+                        d.length &&
+                            g.push({
+                                elem: i,
+                                handlers: d,
+                            });
                     }
             return (
-                h < b.length && g.push({ elem: this, handlers: b.slice(h) }), g
+                h < b.length &&
+                    g.push({
+                        elem: this,
+                        handlers: b.slice(h),
+                    }),
+                g
             );
         },
         props: "altKey bubbles cancelable ctrlKey currentTarget eventPhase metaKey relatedTarget shiftKey target timeStamp view which".split(
@@ -2836,7 +2902,9 @@
             );
         },
         special: {
-            load: { noBubble: !0 },
+            load: {
+                noBubble: !0,
+            },
             focus: {
                 trigger: function () {
                     return this !== _() && this.focus
@@ -2954,26 +3022,33 @@
             }
         ),
         k.focusinBubbles ||
-            n.each({ focus: "focusin", blur: "focusout" }, function (a, b) {
-                var c = function (a) {
-                    n.event.simulate(b, a.target, n.event.fix(a), !0);
-                };
-                n.event.special[b] = {
-                    setup: function () {
-                        var d = this.ownerDocument || this,
-                            e = L.access(d, b);
-                        e || d.addEventListener(a, c, !0),
-                            L.access(d, b, (e || 0) + 1);
-                    },
-                    teardown: function () {
-                        var d = this.ownerDocument || this,
-                            e = L.access(d, b) - 1;
-                        e
-                            ? L.access(d, b, e)
-                            : (d.removeEventListener(a, c, !0), L.remove(d, b));
-                    },
-                };
-            }),
+            n.each(
+                {
+                    focus: "focusin",
+                    blur: "focusout",
+                },
+                function (a, b) {
+                    var c = function (a) {
+                        n.event.simulate(b, a.target, n.event.fix(a), !0);
+                    };
+                    n.event.special[b] = {
+                        setup: function () {
+                            var d = this.ownerDocument || this,
+                                e = L.access(d, b);
+                            e || d.addEventListener(a, c, !0),
+                                L.access(d, b, (e || 0) + 1);
+                        },
+                        teardown: function () {
+                            var d = this.ownerDocument || this,
+                                e = L.access(d, b) - 1;
+                            e
+                                ? L.access(d, b, e)
+                                : (d.removeEventListener(a, c, !0),
+                                  L.remove(d, b));
+                        },
+                    };
+                }
+            ),
         n.fn.extend({
             on: function (a, b, c, d, e) {
                 var f, g;
@@ -3065,6 +3140,7 @@
     (ib.optgroup = ib.option),
         (ib.tbody = ib.tfoot = ib.colgroup = ib.caption = ib.thead),
         (ib.th = ib.td);
+
     function jb(a, b) {
         return n.nodeName(a, "table") &&
             n.nodeName(11 !== b.nodeType ? b : b.firstChild, "tr")
@@ -3072,17 +3148,21 @@
                   a.appendChild(a.ownerDocument.createElement("tbody"))
             : a;
     }
+
     function kb(a) {
         return (a.type = (null !== a.getAttribute("type")) + "/" + a.type), a;
     }
+
     function lb(a) {
         var b = gb.exec(a.type);
         return b ? (a.type = b[1]) : a.removeAttribute("type"), a;
     }
+
     function mb(a, b) {
         for (var c = 0, d = a.length; d > c; c++)
             L.set(a[c], "globalEval", !b || L.get(b[c], "globalEval"));
     }
+
     function nb(a, b) {
         var c, d, e, f, g, h, i, j;
         if (1 === b.nodeType) {
@@ -3099,6 +3179,7 @@
                 ((h = M.access(a)), (i = n.extend({}, h)), M.set(b, i));
         }
     }
+
     function ob(a, b) {
         var c = a.getElementsByTagName
             ? a.getElementsByTagName(b || "*")
@@ -3107,6 +3188,7 @@
             : [];
         return void 0 === b || (b && n.nodeName(a, b)) ? n.merge([a], c) : c;
     }
+
     function pb(a, b) {
         var c = b.nodeName.toLowerCase();
         "input" === c && T.test(a.type)
@@ -3427,6 +3509,7 @@
         );
     var qb,
         rb = {};
+
     function sb(b, c) {
         var d,
             e = n(c.createElement(b)).appendTo(c.body),
@@ -3437,6 +3520,7 @@
                     : n.css(e[0], "display");
         return e.detach(), f;
     }
+
     function tb(a) {
         var b = l,
             c = rb[a];
@@ -3462,6 +3546,7 @@
         wb = function (a) {
             return a.ownerDocument.defaultView.getComputedStyle(a, null);
         };
+
     function xb(a, b, c) {
         var d,
             e,
@@ -3488,6 +3573,7 @@
             void 0 !== g ? g + "" : g
         );
     }
+
     function yb(a, b) {
         return {
             get: function () {
@@ -3510,6 +3596,7 @@
                 (e.style.cssText =
                     "border:0;width:0;height:0;top:0;left:-9999px;margin-top:1px;position:absolute"),
                 e.appendChild(f);
+
             function g() {
                 (f.style.cssText =
                     "-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;display:block;margin-top:1%;top:1%;border:1px;padding:1px;width:4px;position:absolute"),
@@ -3557,9 +3644,17 @@
     var zb = /^(none|table(?!-c[ea]).+)/,
         Ab = new RegExp("^(" + Q + ")(.*)$", "i"),
         Bb = new RegExp("^([+-])=(" + Q + ")", "i"),
-        Cb = { position: "absolute", visibility: "hidden", display: "block" },
-        Db = { letterSpacing: "0", fontWeight: "400" },
+        Cb = {
+            position: "absolute",
+            visibility: "hidden",
+            display: "block",
+        },
+        Db = {
+            letterSpacing: "0",
+            fontWeight: "400",
+        },
         Eb = ["Webkit", "O", "Moz", "ms"];
+
     function Fb(a, b) {
         if (b in a) return b;
         var c = b[0].toUpperCase() + b.slice(1),
@@ -3568,10 +3663,12 @@
         while (e--) if (((b = Eb[e] + c), b in a)) return b;
         return d;
     }
+
     function Gb(a, b, c) {
         var d = Ab.exec(b);
         return d ? Math.max(0, d[1] - (c || 0)) + (d[2] || "px") : b;
     }
+
     function Hb(a, b, c, d, e) {
         for (
             var f =
@@ -3595,6 +3692,7 @@
                           (g += n.css(a, "border" + R[f] + "Width", !0, e)));
         return g;
     }
+
     function Ib(a, b, c) {
         var d = !0,
             e = "width" === b ? a.offsetWidth : a.offsetHeight,
@@ -3612,6 +3710,7 @@
         }
         return e + Hb(a, b, c || (g ? "border" : "content"), d, f) + "px";
     }
+
     function Jb(a, b) {
         for (var c, d, e, f = [], g = 0, h = a.length; h > g; g++)
             (d = a[g]),
@@ -3668,7 +3767,9 @@
             zIndex: !0,
             zoom: !0,
         },
-        cssProps: { float: "cssFloat" },
+        cssProps: {
+            float: "cssFloat",
+        },
         style: function (a, b, c, d) {
             if (a && 3 !== a.nodeType && 8 !== a.nodeType && a.style) {
                 var e,
@@ -3753,25 +3854,39 @@
         }),
         (n.cssHooks.marginRight = yb(k.reliableMarginRight, function (a, b) {
             return b
-                ? n.swap(a, { display: "inline-block" }, xb, [a, "marginRight"])
+                ? n.swap(
+                      a,
+                      {
+                          display: "inline-block",
+                      },
+                      xb,
+                      [a, "marginRight"]
+                  )
                 : void 0;
         })),
-        n.each({ margin: "", padding: "", border: "Width" }, function (a, b) {
-            (n.cssHooks[a + b] = {
-                expand: function (c) {
-                    for (
-                        var d = 0,
-                            e = {},
-                            f = "string" == typeof c ? c.split(" ") : [c];
-                        4 > d;
-                        d++
-                    )
-                        e[a + R[d] + b] = f[d] || f[d - 2] || f[0];
-                    return e;
-                },
-            }),
-                ub.test(a) || (n.cssHooks[a + b].set = Gb);
-        }),
+        n.each(
+            {
+                margin: "",
+                padding: "",
+                border: "Width",
+            },
+            function (a, b) {
+                (n.cssHooks[a + b] = {
+                    expand: function (c) {
+                        for (
+                            var d = 0,
+                                e = {},
+                                f = "string" == typeof c ? c.split(" ") : [c];
+                            4 > d;
+                            d++
+                        )
+                            e[a + R[d] + b] = f[d] || f[d - 2] || f[0];
+                        return e;
+                    },
+                }),
+                    ub.test(a) || (n.cssHooks[a + b].set = Gb);
+            }
+        ),
         n.fn.extend({
             css: function (a, b) {
                 return J(
@@ -3809,6 +3924,7 @@
                       });
             },
         });
+
     function Kb(a, b, c, d, e) {
         return new Kb.prototype.init(a, b, c, d, e);
     }
@@ -3925,6 +4041,7 @@
                 },
             ],
         };
+
     function Sb() {
         return (
             setTimeout(function () {
@@ -3933,14 +4050,18 @@
             (Lb = n.now())
         );
     }
+
     function Tb(a, b) {
         var c,
             d = 0,
-            e = { height: a };
+            e = {
+                height: a,
+            };
         for (b = b ? 1 : 0; 4 > d; d += 2 - b)
             (c = R[d]), (e["margin" + c] = e["padding" + c] = a);
         return b && (e.opacity = e.width = a), e;
     }
+
     function Ub(a, b, c) {
         for (
             var d, e = (Rb[b] || []).concat(Rb["*"]), f = 0, g = e.length;
@@ -3949,6 +4070,7 @@
         )
             if ((d = e[f].call(c, b, a))) return d;
     }
+
     function Vb(a, b, c) {
         var d,
             e,
@@ -4034,6 +4156,7 @@
                                 "width" === d || "height" === d ? 1 : 0)));
         }
     }
+
     function Wb(a, b) {
         var c, d, e, f, g;
         for (c in a)
@@ -4050,6 +4173,7 @@
                 for (c in f) c in a || ((a[c] = f[c]), (b[c] = e));
             } else b[d] = e;
     }
+
     function Xb(a, b, c) {
         var d,
             e,
@@ -4079,7 +4203,13 @@
             j = h.promise({
                 elem: a,
                 props: n.extend({}, b),
-                opts: n.extend(!0, { specialEasing: {} }, c),
+                opts: n.extend(
+                    !0,
+                    {
+                        specialEasing: {},
+                    },
+                    c
+                ),
                 originalProperties: b,
                 originalOptions: c,
                 startTime: Lb || Sb(),
@@ -4112,7 +4242,13 @@
         return (
             n.map(k, Ub, j),
             n.isFunction(j.opts.start) && j.opts.start.call(a, j),
-            n.fx.timer(n.extend(i, { elem: a, anim: j, queue: j.opts.queue })),
+            n.fx.timer(
+                n.extend(i, {
+                    elem: a,
+                    anim: j,
+                    queue: j.opts.queue,
+                })
+            ),
             j
                 .progress(j.opts.progress)
                 .done(j.opts.done, j.opts.complete)
@@ -4158,11 +4294,14 @@
         }),
         n.fn.extend({
             fadeTo: function (a, b, c, d) {
-                return this.filter(S)
-                    .css("opacity", 0)
-                    .show()
-                    .end()
-                    .animate({ opacity: b }, a, c, d);
+                return this.filter(S).css("opacity", 0).show().end().animate(
+                    {
+                        opacity: b,
+                    },
+                    a,
+                    c,
+                    d
+                );
             },
             animate: function (a, b, c, d) {
                 var e = n.isEmptyObject(a),
@@ -4242,9 +4381,15 @@
                 slideDown: Tb("show"),
                 slideUp: Tb("hide"),
                 slideToggle: Tb("toggle"),
-                fadeIn: { opacity: "show" },
-                fadeOut: { opacity: "hide" },
-                fadeToggle: { opacity: "toggle" },
+                fadeIn: {
+                    opacity: "show",
+                },
+                fadeOut: {
+                    opacity: "hide",
+                },
+                fadeToggle: {
+                    opacity: "toggle",
+                },
             },
             function (a, b) {
                 n.fn[a] = function (a, c, d) {
@@ -4271,7 +4416,11 @@
         (n.fx.stop = function () {
             clearInterval(Mb), (Mb = null);
         }),
-        (n.fx.speeds = { slow: 600, fast: 200, _default: 400 }),
+        (n.fx.speeds = {
+            slow: 600,
+            fast: 200,
+            _default: 400,
+        }),
         (n.fn.delay = function (a, b) {
             return (
                 (a = n.fx ? n.fx.speeds[a] || a : a),
@@ -4396,7 +4545,10 @@
         },
     }),
         n.extend({
-            propFix: { for: "htmlFor", class: "className" },
+            propFix: {
+                for: "htmlFor",
+                class: "className",
+            },
             prop: function (a, b, c) {
                 var d,
                     e,
@@ -4759,6 +4911,7 @@
         (fc = l.createElement("a")), (fc.href = ""), (fc = fc.href);
     }
     ec = mc.exec(fc.toLowerCase()) || [];
+
     function rc(a) {
         return function (b, c) {
             "string" != typeof b && ((c = b), (b = "*"));
@@ -4773,9 +4926,11 @@
                         : (a[d] = a[d] || []).push(c);
         };
     }
+
     function sc(a, b, c, d) {
         var e = {},
             f = a === oc;
+
         function g(h) {
             var i;
             return (
@@ -4793,6 +4948,7 @@
         }
         return g(b.dataTypes[0]) || (!e["*"] && g("*"));
     }
+
     function tc(a, b) {
         var c,
             d,
@@ -4800,6 +4956,7 @@
         for (c in b) void 0 !== b[c] && ((e[c] ? a : d || (d = {}))[c] = b[c]);
         return d && n.extend(!0, a, d), a;
     }
+
     function uc(a, b, c) {
         var d,
             e,
@@ -4830,6 +4987,7 @@
         }
         return f ? (f !== i[0] && i.unshift(f), c[f]) : void 0;
     }
+
     function vc(a, b, c, d) {
         var e,
             f,
@@ -4879,7 +5037,10 @@
                                 };
                             }
                 }
-        return { state: "success", data: b };
+        return {
+            state: "success",
+            data: b,
+        };
     }
     n.extend({
         active: 0,
@@ -4900,7 +5061,11 @@
                 xml: "application/xml, text/xml",
                 json: "application/json, text/javascript",
             },
-            contents: { xml: /xml/, html: /html/, json: /json/ },
+            contents: {
+                xml: /xml/,
+                html: /html/,
+                json: /json/,
+            },
             responseFields: {
                 xml: "responseXML",
                 text: "responseText",
@@ -4912,7 +5077,10 @@
                 "text json": n.parseJSON,
                 "text xml": n.parseXML,
             },
-            flatOptions: { url: !0, context: !0 },
+            flatOptions: {
+                url: !0,
+                context: !0,
+            },
         },
         ajaxSetup: function (a, b) {
             return b ? tc(tc(a, n.ajaxSettings), b) : tc(n.ajaxSettings, a);
@@ -5041,7 +5209,12 @@
             if (k.beforeSend && (k.beforeSend.call(l, v, k) === !1 || 2 === t))
                 return v.abort();
             u = "abort";
-            for (j in { success: 1, error: 1, complete: 1 }) v[j](k[j]);
+            for (j in {
+                success: 1,
+                error: 1,
+                complete: 1,
+            })
+                v[j](k[j]);
             if ((c = sc(oc, k, b, v))) {
                 (v.readyState = 1),
                     i && m.trigger("ajaxSend", [v, k]),
@@ -5057,6 +5230,7 @@
                     x(-1, w);
                 }
             } else x(-1, "No Transport");
+
             function x(a, b, f, h) {
                 var j,
                     r,
@@ -5214,6 +5388,7 @@
         yc = /\r?\n/g,
         zc = /^(?:submit|button|image|reset|file)$/i,
         Ac = /^(?:input|select|textarea|keygen)/i;
+
     function Bc(a, b, c, d) {
         var e;
         if (n.isArray(b))
@@ -5278,7 +5453,10 @@
                                       value: a.replace(yc, "\r\n"),
                                   };
                               })
-                            : { name: b.name, value: c.replace(yc, "\r\n") };
+                            : {
+                                  name: b.name,
+                                  value: c.replace(yc, "\r\n"),
+                              };
                     })
                     .get();
             },
@@ -5290,7 +5468,10 @@
         });
     var Cc = 0,
         Dc = {},
-        Ec = { 0: 200, 1223: 204 },
+        Ec = {
+            0: 200,
+            1223: 204,
+        },
         Fc = n.ajaxSettings.xhr();
     a.ActiveXObject &&
         n(a).on("unload", function () {
@@ -5338,7 +5519,9 @@
                                                 f.statusText,
                                                 "string" ==
                                                     typeof f.responseText
-                                                    ? { text: f.responseText }
+                                                    ? {
+                                                          text: f.responseText,
+                                                      }
                                                     : void 0,
                                                 f.getAllResponseHeaders()
                                             ));
@@ -5363,7 +5546,9 @@
             accepts: {
                 script: "text/javascript, application/javascript, application/ecmascript, application/x-ecmascript",
             },
-            contents: { script: /(?:java|ecma)script/ },
+            contents: {
+                script: /(?:java|ecma)script/,
+            },
             converters: {
                 "text script": function (a) {
                     return n.globalEval(a), a;
@@ -5482,7 +5667,12 @@
                 : b && "object" == typeof b && (e = "POST"),
             g.length > 0 &&
                 n
-                    .ajax({ url: a, type: e, dataType: "html", data: b })
+                    .ajax({
+                        url: a,
+                        type: e,
+                        dataType: "html",
+                        data: b,
+                    })
                     .done(function (a) {
                         (f = arguments),
                             g.html(
@@ -5506,6 +5696,7 @@
             }).length;
         });
     var Jc = a.document.documentElement;
+
     function Kc(a) {
         return n.isWindow(a) ? a : 9 === a.nodeType && a.defaultView;
     }
@@ -5548,7 +5739,10 @@
                 var b,
                     c,
                     d = this[0],
-                    e = { top: 0, left: 0 },
+                    e = {
+                        top: 0,
+                        left: 0,
+                    },
                     f = d && d.ownerDocument;
                 if (f)
                     return (
@@ -5569,7 +5763,10 @@
                     var a,
                         b,
                         c = this[0],
-                        d = { top: 0, left: 0 };
+                        d = {
+                            top: 0,
+                            left: 0,
+                        };
                     return (
                         "fixed" === n.css(c, "position")
                             ? (b = c.getBoundingClientRect())
@@ -5599,7 +5796,10 @@
             },
         }),
         n.each(
-            { scrollLeft: "pageXOffset", scrollTop: "pageYOffset" },
+            {
+                scrollLeft: "pageXOffset",
+                scrollTop: "pageYOffset",
+            },
             function (b, c) {
                 var d = "pageYOffset" === c;
                 n.fn[b] = function (e) {
@@ -5634,45 +5834,59 @@
                     : void 0;
             });
         }),
-        n.each({ Height: "height", Width: "width" }, function (a, b) {
-            n.each(
-                { padding: "inner" + a, content: b, "": "outer" + a },
-                function (c, d) {
-                    n.fn[d] = function (d, e) {
-                        var f =
-                                arguments.length &&
-                                (c || "boolean" != typeof d),
-                            g =
-                                c ||
-                                (d === !0 || e === !0 ? "margin" : "border");
-                        return J(
-                            this,
-                            function (b, c, d) {
-                                var e;
-                                return n.isWindow(b)
-                                    ? b.document.documentElement["client" + a]
-                                    : 9 === b.nodeType
-                                    ? ((e = b.documentElement),
-                                      Math.max(
-                                          b.body["scroll" + a],
-                                          e["scroll" + a],
-                                          b.body["offset" + a],
-                                          e["offset" + a],
-                                          e["client" + a]
-                                      ))
-                                    : void 0 === d
-                                    ? n.css(b, c, g)
-                                    : n.style(b, c, d, g);
-                            },
-                            b,
-                            f ? d : void 0,
-                            f,
-                            null
-                        );
-                    };
-                }
-            );
-        }),
+        n.each(
+            {
+                Height: "height",
+                Width: "width",
+            },
+            function (a, b) {
+                n.each(
+                    {
+                        padding: "inner" + a,
+                        content: b,
+                        "": "outer" + a,
+                    },
+                    function (c, d) {
+                        n.fn[d] = function (d, e) {
+                            var f =
+                                    arguments.length &&
+                                    (c || "boolean" != typeof d),
+                                g =
+                                    c ||
+                                    (d === !0 || e === !0
+                                        ? "margin"
+                                        : "border");
+                            return J(
+                                this,
+                                function (b, c, d) {
+                                    var e;
+                                    return n.isWindow(b)
+                                        ? b.document.documentElement[
+                                              "client" + a
+                                          ]
+                                        : 9 === b.nodeType
+                                        ? ((e = b.documentElement),
+                                          Math.max(
+                                              b.body["scroll" + a],
+                                              e["scroll" + a],
+                                              b.body["offset" + a],
+                                              e["offset" + a],
+                                              e["client" + a]
+                                          ))
+                                        : void 0 === d
+                                        ? n.css(b, c, g)
+                                        : n.style(b, c, d, g);
+                                },
+                                b,
+                                f ? d : void 0,
+                                f,
+                                null
+                            );
+                        };
+                    }
+                );
+            }
+        ),
         (n.fn.size = function () {
             return this.length;
         }),
@@ -5901,11 +6115,18 @@
             if (!t && w.isArray(n) && n[0] === +n[0] && 65535 > n.length)
                 return Math.max.apply(Math, n);
             if (!t && w.isEmpty(n)) return -1 / 0;
-            var e = { computed: -1 / 0, value: -1 / 0 };
+            var e = {
+                computed: -1 / 0,
+                value: -1 / 0,
+            };
             return (
                 A(n, function (n, u, i) {
                     var a = t ? t.call(r, n, u, i) : n;
-                    a >= e.computed && (e = { value: n, computed: a });
+                    a >= e.computed &&
+                        (e = {
+                            value: n,
+                            computed: a,
+                        });
                 }),
                 e.value
             );
@@ -5914,11 +6135,18 @@
             if (!t && w.isArray(n) && n[0] === +n[0] && 65535 > n.length)
                 return Math.min.apply(Math, n);
             if (!t && w.isEmpty(n)) return 1 / 0;
-            var e = { computed: 1 / 0, value: 1 / 0 };
+            var e = {
+                computed: 1 / 0,
+                value: 1 / 0,
+            };
             return (
                 A(n, function (n, u, i) {
                     var a = t ? t.call(r, n, u, i) : n;
-                    e.computed > a && (e = { value: n, computed: a });
+                    e.computed > a &&
+                        (e = {
+                            value: n,
+                            computed: a,
+                        });
                 }),
                 e.value
             );
@@ -5946,7 +6174,11 @@
         return w.pluck(
             w
                 .map(n, function (n, t, u) {
-                    return { value: n, index: t, criteria: e.call(r, n, t, u) };
+                    return {
+                        value: n,
+                        index: t,
+                        criteria: e.call(r, n, t, u),
+                    };
                 })
                 .sort(function (n, t) {
                     var r = n.criteria,
@@ -6623,7 +6855,11 @@ define("underscore", function () {});
             if (!l(this, "on", t, [e, i]) || !e) return this;
             this._events || (this._events = {});
             var r = this._events[t] || (this._events[t] = []);
-            r.push({ callback: e, context: i, ctx: i || this });
+            r.push({
+                callback: e,
+                context: i,
+                ctx: i || this,
+            });
             return this;
         },
         once: function (t, e, i) {
@@ -6731,7 +6967,10 @@ define("underscore", function () {});
                 while (++r < s) (i = t[r]).callback.apply(i.ctx, e);
         }
     };
-    var f = { listenTo: "on", listenToOnce: "once" };
+    var f = {
+        listenTo: "on",
+        listenToOnce: "once",
+    };
     h.each(f, function (t, e) {
         o[e] = function (e, i, r) {
             var s = this._listeners || (this._listeners = {});
@@ -6831,12 +7070,23 @@ define("underscore", function () {});
             return this;
         },
         unset: function (t, e) {
-            return this.set(t, void 0, h.extend({}, e, { unset: true }));
+            return this.set(
+                t,
+                void 0,
+                h.extend({}, e, {
+                    unset: true,
+                })
+            );
         },
         clear: function (t) {
             var e = {};
             for (var i in this.attributes) e[i] = void 0;
-            return this.set(e, h.extend({}, t, { unset: true }));
+            return this.set(
+                e,
+                h.extend({}, t, {
+                    unset: true,
+                })
+            );
         },
         hasChanged: function (t) {
             if (t == null) return !h.isEmpty(this.changed);
@@ -6885,7 +7135,12 @@ define("underscore", function () {});
                 (r = {})[t] = e;
             }
             if (r && (!i || !i.wait) && !this.set(r, i)) return false;
-            i = h.extend({ validate: true }, i);
+            i = h.extend(
+                {
+                    validate: true,
+                },
+                i
+            );
             if (!this._validate(r, i)) return false;
             if (r && i.wait) {
                 this.attributes = h.extend({}, a, r);
@@ -6953,7 +7208,12 @@ define("underscore", function () {});
             return this.id == null;
         },
         isValid: function (t) {
-            return this._validate({}, h.extend(t || {}, { validate: true }));
+            return this._validate(
+                {},
+                h.extend(t || {}, {
+                    validate: true,
+                })
+            );
         },
         _validate: function (t, e) {
             if (!e.validate || !this.validate) return true;
@@ -6964,7 +7224,9 @@ define("underscore", function () {});
                 "invalid",
                 this,
                 i,
-                h.extend(e || {}, { validationError: i })
+                h.extend(e || {}, {
+                    validationError: i,
+                })
             );
             return false;
         },
@@ -6984,10 +7246,27 @@ define("underscore", function () {});
         if (e.comparator !== void 0) this.comparator = e.comparator;
         this._reset();
         this.initialize.apply(this, arguments);
-        if (t) this.reset(t, h.extend({ silent: true }, e));
+        if (t)
+            this.reset(
+                t,
+                h.extend(
+                    {
+                        silent: true,
+                    },
+                    e
+                )
+            );
     });
-    var m = { add: true, remove: true, merge: true };
-    var y = { add: true, merge: false, remove: false };
+    var m = {
+        add: true,
+        remove: true,
+        merge: true,
+    };
+    var y = {
+        add: true,
+        merge: false,
+        remove: false,
+    };
     h.extend(g.prototype, o, {
         model: d,
         initialize: function () {},
@@ -7063,7 +7342,10 @@ define("underscore", function () {});
                     r.apply(this.models, p);
                 }
             }
-            if (l) this.sort({ silent: true });
+            if (l)
+                this.sort({
+                    silent: true,
+                });
             if (e.silent) return this;
             for (i = 0, s = p.length; i < s; i++) {
                 (a = p[i]).trigger("add", a, this, e);
@@ -7078,13 +7360,29 @@ define("underscore", function () {});
             }
             e.previousModels = this.models;
             this._reset();
-            this.add(t, h.extend({ silent: true }, e));
+            this.add(
+                t,
+                h.extend(
+                    {
+                        silent: true,
+                    },
+                    e
+                )
+            );
             if (!e.silent) this.trigger("reset", this, e);
             return this;
         },
         push: function (t, e) {
             t = this._prepareModel(t, e);
-            this.add(t, h.extend({ at: this.length }, e));
+            this.add(
+                t,
+                h.extend(
+                    {
+                        at: this.length,
+                    },
+                    e
+                )
+            );
             return t;
         },
         pop: function (t) {
@@ -7094,7 +7392,15 @@ define("underscore", function () {});
         },
         unshift: function (t, e) {
             t = this._prepareModel(t, e);
-            this.add(t, h.extend({ at: 0 }, e));
+            this.add(
+                t,
+                h.extend(
+                    {
+                        at: 0,
+                    },
+                    e
+                )
+            );
             return t;
         },
         shift: function (t) {
@@ -7359,7 +7665,10 @@ define("underscore", function () {});
             emulateHTTP: a.emulateHTTP,
             emulateJSON: a.emulateJSON,
         });
-        var s = { type: r, dataType: "json" };
+        var s = {
+            type: r,
+            dataType: "json",
+        };
         if (!i.url) {
             s.url = h.result(e, "url") || U();
         }
@@ -7373,7 +7682,11 @@ define("underscore", function () {});
         }
         if (i.emulateJSON) {
             s.contentType = "application/x-www-form-urlencoded";
-            s.data = s.data ? { model: s.data } : {};
+            s.data = s.data
+                ? {
+                      model: s.data,
+                  }
+                : {};
         }
         if (i.emulateHTTP && (r === "PUT" || r === "DELETE" || r === "PATCH")) {
             s.type = "POST";
@@ -7504,7 +7817,14 @@ define("underscore", function () {});
             if (I.started)
                 throw new Error("Backbone.history has already been started");
             I.started = true;
-            this.options = h.extend({}, { root: "/" }, this.options, t);
+            this.options = h.extend(
+                {},
+                {
+                    root: "/",
+                },
+                this.options,
+                t
+            );
             this.root = this.options.root;
             this._wantsHashChange = this.options.hashChange !== false;
             this._wantsPushState = !!this.options.pushState;
@@ -7575,7 +7895,10 @@ define("underscore", function () {});
             I.started = false;
         },
         route: function (t, e) {
-            this.handlers.unshift({ route: t, callback: e });
+            this.handlers.unshift({
+                route: t,
+                callback: e,
+            });
         },
         checkUrl: function (t) {
             var e = this.getFragment();
@@ -7598,7 +7921,10 @@ define("underscore", function () {});
         },
         navigate: function (t, e) {
             if (!I.started) return false;
-            if (!e || e === true) e = { trigger: e };
+            if (!e || e === true)
+                e = {
+                    trigger: e,
+                };
             t = this.getFragment(t || "");
             if (this.fragment === t) return;
             this.fragment = t;
@@ -7794,7 +8120,9 @@ define("indexeddb_backbone_config", ["jquery", "configs"], function (
         window.mozIndexedDB ||
         window.msIndexedDB;
     var IDBTransaction = window.IDBTransaction ||
-        window.webkitIDBTransaction || { READ_WRITE: "readwrite" }; // No prefix in moz
+        window.webkitIDBTransaction || {
+            READ_WRITE: "readwrite",
+        }; // No prefix in moz
     var IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange; // No prefix in moz
 
     window.IDBCursor =
@@ -7918,6 +8246,7 @@ define("indexeddb_backbone_config", ["jquery", "configs"], function (
         // Tracks transactions. Mostly for debugging purposes. TO-IMPROVE
         _track_transaction: function (transaction) {
             this.transactions.push(transaction);
+
             function removeIt() {
                 var idx = this.transactions.indexOf(transaction);
                 if (idx !== -1) {
@@ -8632,7 +8961,9 @@ define("collections/upload_collection", [
                 // If an array of views was passed it should be inserted into the
                 // root view. Much like calling insertView without a selector.
                 if (_.isArray(views)) {
-                    return this.setViews({ "": views });
+                    return this.setViews({
+                        "": views,
+                    });
                 }
 
                 _.each(views, function (view, selector) {
@@ -9561,6 +9892,7 @@ define("layoutmanager", function () {});
                         // prevent form submit to be able to see console output
                         event.preventDefault();
                     }
+
                     function handle() {
                         var hidden, result;
                         if (validator.settings.submitHandler) {
@@ -9695,7 +10027,12 @@ define("layoutmanager", function () {});
             if (data.required) {
                 param = data.required;
                 delete data.required;
-                data = $.extend({ required: param }, data);
+                data = $.extend(
+                    {
+                        required: param,
+                    },
+                    data
+                );
                 $(element).attr("aria-required", "true");
             }
 
@@ -9703,7 +10040,9 @@ define("layoutmanager", function () {});
             if (data.remote) {
                 param = data.remote;
                 delete data.remote;
-                data = $.extend(data, { remote: param });
+                data = $.extend(data, {
+                    remote: param,
+                });
             }
 
             return data;
@@ -10210,7 +10549,10 @@ define("layoutmanager", function () {});
                     rule;
 
                 for (method in rules) {
-                    rule = { method: method, parameters: rules[method] };
+                    rule = {
+                        method: method,
+                        parameters: rules[method],
+                    };
                     try {
                         result = $.validator.methods[method].call(
                             this,
@@ -10612,14 +10954,30 @@ define("layoutmanager", function () {});
         },
 
         classRuleSettings: {
-            required: { required: true },
-            email: { email: true },
-            url: { url: true },
-            date: { date: true },
-            dateISO: { dateISO: true },
-            number: { number: true },
-            digits: { digits: true },
-            creditcard: { creditcard: true },
+            required: {
+                required: true,
+            },
+            email: {
+                email: true,
+            },
+            url: {
+                url: true,
+            },
+            date: {
+                date: true,
+            },
+            dateISO: {
+                dateISO: true,
+            },
+            number: {
+                number: true,
+            },
+            digits: {
+                digits: true,
+            },
+            creditcard: {
+                creditcard: true,
+            },
         },
 
         addClassRules: function (className, rules) {
@@ -11015,7 +11373,11 @@ define("layoutmanager", function () {});
                     this.settings.messages[element.name].remote;
                 this.settings.messages[element.name].remote = previous.message;
 
-                param = (typeof param === "string" && { url: param }) || param;
+                param =
+                    (typeof param === "string" && {
+                        url: param,
+                    }) ||
+                    param;
 
                 if (previous.old === value) {
                     return previous.valid;
@@ -11528,7 +11890,9 @@ define("models/user_model", [
         },
     });
     var user_model = new generic_model_offline();
-    user_model.set({ key: "user_info" });
+    user_model.set({
+        key: "user_info",
+    });
 
     return user_model;
 });
@@ -11877,7 +12241,9 @@ define("offline_utils", [
                 .fail(function () {
                     dfd.reject();
                     //navigate to login url if not logged in
-                    window.Router.navigate("login", { trigger: true });
+                    window.Router.navigate("login", {
+                        trigger: true,
+                    });
                 });
             return dfd;
         },
@@ -12968,7 +13334,9 @@ define("denormalize", [
                                         "chosen-container-single-nosearch"
                                     ))),
                         this.update_results_content(
-                            this.results_option_build({ first: !0 })
+                            this.results_option_build({
+                                first: !0,
+                            })
                         ),
                         this.search_field_disabled(),
                         this.show_search_field_default(),
@@ -13022,7 +13390,9 @@ define("denormalize", [
                           this.winnow_results(),
                           this.form_field_jq.trigger(
                               "chosen:showing_dropdown",
-                              { chosen: this }
+                              {
+                                  chosen: this,
+                              }
                           ));
                 }),
                 (Chosen.prototype.update_results_content = function (a) {
@@ -13035,7 +13405,9 @@ define("denormalize", [
                             this.container.removeClass("chosen-with-drop"),
                             this.form_field_jq.trigger(
                                 "chosen:hiding_dropdown",
-                                { chosen: this }
+                                {
+                                    chosen: this,
+                                }
                             )),
                         (this.results_showing = !1)
                     );
@@ -13111,9 +13483,9 @@ define("denormalize", [
                         d,
                         e = this;
                     return (
-                        (c = a("<li />", { class: "search-choice" }).html(
-                            "<span>" + b.html + "</span>"
-                        )),
+                        (c = a("<li />", {
+                            class: "search-choice",
+                        }).html("<span>" + b.html + "</span>")),
                         b.disabled
                             ? c.addClass("search-choice-disabled")
                             : ((d = a("<a />", {
@@ -13176,7 +13548,9 @@ define("denormalize", [
                           this.max_selected_options <= this.choices_count()
                               ? (this.form_field_jq.trigger(
                                     "chosen:maxselected",
-                                    { chosen: this }
+                                    {
+                                        chosen: this,
+                                    }
                                 ),
                                 !1)
                               : (this.is_multiple
@@ -13410,14 +13784,18 @@ define("denormalize", [
                             (e = g[i]),
                                 (f += e + ":" + this.search_field.css(e) + ";");
                         return (
-                            (b = a("<div />", { style: f })),
+                            (b = a("<div />", {
+                                style: f,
+                            })),
                             b.text(this.search_field.val()),
                             a("body").append(b),
                             (h = b.width() + 25),
                             b.remove(),
                             (c = this.container.outerWidth()),
                             h > c - 10 && (h = c - 10),
-                            this.search_field.css({ width: h + "px" })
+                            this.search_field.css({
+                                width: h + "px",
+                            })
                         );
                     }
                 }),
@@ -13451,6 +13829,7 @@ define("chosen", function () {});
     function UTCDate() {
         return new Date(Date.UTC.apply(Date, arguments));
     }
+
     function UTCToday() {
         var today = new Date();
         return UTCDate(
@@ -13797,19 +14176,25 @@ define("chosen", function () {});
         },
 
         setStartDate: function (startDate) {
-            this._process_options({ startDate: startDate });
+            this._process_options({
+                startDate: startDate,
+            });
             this.update();
             this.updateNavArrows();
         },
 
         setEndDate: function (endDate) {
-            this._process_options({ endDate: endDate });
+            this._process_options({
+                endDate: endDate,
+            });
             this.update();
             this.updateNavArrows();
         },
 
         setDaysOfWeekDisabled: function (daysOfWeekDisabled) {
-            this._process_options({ daysOfWeekDisabled: daysOfWeekDisabled });
+            this._process_options({
+                daysOfWeekDisabled: daysOfWeekDisabled,
+            });
             this.update();
             this.updateNavArrows();
         },
@@ -14054,9 +14439,13 @@ define("chosen", function () {});
                 var before = this.o.beforeShowDay(prevMonth);
                 if (before === undefined) before = {};
                 else if (typeof before === "boolean")
-                    before = { enabled: before };
+                    before = {
+                        enabled: before,
+                    };
                 else if (typeof before === "string")
-                    before = { classes: before };
+                    before = {
+                        classes: before,
+                    };
                 if (before.enabled === false) clsName.push("disabled");
                 if (before.classes)
                     clsName = clsName.concat(before.classes.split(/\s+/));
@@ -14139,22 +14528,26 @@ define("chosen", function () {});
                         year <= this.o.startDate.getUTCFullYear() &&
                         month <= this.o.startDate.getUTCMonth()
                     ) {
-                        this.picker.find(".prev").css({ visibility: "hidden" });
+                        this.picker.find(".prev").css({
+                            visibility: "hidden",
+                        });
                     } else {
-                        this.picker
-                            .find(".prev")
-                            .css({ visibility: "visible" });
+                        this.picker.find(".prev").css({
+                            visibility: "visible",
+                        });
                     }
                     if (
                         this.o.endDate !== Infinity &&
                         year >= this.o.endDate.getUTCFullYear() &&
                         month >= this.o.endDate.getUTCMonth()
                     ) {
-                        this.picker.find(".next").css({ visibility: "hidden" });
+                        this.picker.find(".next").css({
+                            visibility: "hidden",
+                        });
                     } else {
-                        this.picker
-                            .find(".next")
-                            .css({ visibility: "visible" });
+                        this.picker.find(".next").css({
+                            visibility: "visible",
+                        });
                     }
                     break;
                 case 1:
@@ -14163,21 +14556,25 @@ define("chosen", function () {});
                         this.o.startDate !== -Infinity &&
                         year <= this.o.startDate.getUTCFullYear()
                     ) {
-                        this.picker.find(".prev").css({ visibility: "hidden" });
+                        this.picker.find(".prev").css({
+                            visibility: "hidden",
+                        });
                     } else {
-                        this.picker
-                            .find(".prev")
-                            .css({ visibility: "visible" });
+                        this.picker.find(".prev").css({
+                            visibility: "visible",
+                        });
                     }
                     if (
                         this.o.endDate !== Infinity &&
                         year >= this.o.endDate.getUTCFullYear()
                     ) {
-                        this.picker.find(".next").css({ visibility: "hidden" });
+                        this.picker.find(".next").css({
+                            visibility: "hidden",
+                        });
                     } else {
-                        this.picker
-                            .find(".next")
-                            .css({ visibility: "visible" });
+                        this.picker.find(".next").css({
+                            visibility: "visible",
+                        });
                     }
                     break;
             }
@@ -14336,14 +14733,12 @@ define("chosen", function () {});
             dir = dir > 0 ? 1 : -1;
             if (mag == 1) {
                 test =
-                    dir == -1
-                        ? // If going back one month, make sure month is not current month
-                          // (eg, Mar 31 -> Feb 31 == Feb 28, not Mar 02)
+                    dir == -1 // If going back one month, make sure month is not current month
+                        ? // (eg, Mar 31 -> Feb 31 == Feb 28, not Mar 02)
                           function () {
                               return new_date.getUTCMonth() == month;
-                          }
-                        : // If going forward one month, make sure month is as expected
-                          // (eg, Jan 31 -> Feb 31 == Feb 28, not Mar 02)
+                          } // If going forward one month, make sure month is as expected
+                        : // (eg, Jan 31 -> Feb 31 == Feb 28, not Mar 02)
                           function () {
                               return new_date.getUTCMonth() != new_month;
                           };
@@ -14770,7 +15165,10 @@ define("chosen", function () {});
             ) {
                 throw new Error("Invalid date format.");
             }
-            return { separators: separators, parts: parts };
+            return {
+                separators: separators,
+                parts: parts,
+            };
         },
         parseDate: function (date, format, language) {
             if (date instanceof Date) return date;
@@ -15766,7 +16164,7 @@ define("views/form", [
         },
 
         // Refactor possible
-        //         Reads entity_config and sets basic properties on view object for easy access
+        // Reads entity_config and sets basic properties on view object for easy access
         read_form_config: function (params) {
             var language = User.get("language");
             var cocousertype = User.get("type_of_cocouser");
@@ -15955,7 +16353,7 @@ define("views/form", [
             //if inline case - render inlines
             if (this.inline) this.render_inlines();
 
-            // call validator on the form
+            //call validator on the form
             this.initiate_form_field_validation();
 
             this.initiate_form_widgets();
@@ -16010,7 +16408,7 @@ define("views/form", [
             }
         },
 
-        //fetches all foreign collections and renders them when all are fetched
+        // fetches all foreign collections and renders them when all are fetched
         fetch_and_render_foreign_entities: function () {
             var for_entities_fetch_dfds = [];
             for (var i = 0; i < this.f_colls.length; i++) {
@@ -16026,9 +16424,10 @@ define("views/form", [
                     //TODO: handle error callback
                     alert("At least one foreign entity could not be fetched!");
                 });
+            console.log(for_entities_fetch_dfds);
         },
 
-        //fill non-dependent foreign elements - dependent gets filled on change events
+        // fill non-dependent foreign elements - dependent gets filled on change events
         render_non_dep_for_elements: function () {
             console.log("Rendering non dependent f elements");
             _.each(
@@ -16303,52 +16702,152 @@ define("views/form", [
                     }
                 );
             }
-            //if add case put in empty inlines
-            if (!this.edit_case)
-                this.append_new_inlines(this.inline.default_num_rows);
-            else if (this.edit_case_id) {
-                console.log("FORM:EDIT: Fteching inline collection");
-                // fetch inline entity's whole collection! can be improved
-                Offline.fetch_collection(this.inline.entity)
-                    .done(function (collection) {
-                        // id-json dictionary of inline models - later used to extend the modified inlines
-                        that.inl_models_dict = {};
-                        // filter inline collection to get only the ones related to the parent object
-                        var inl_models = collection.filter(function (model) {
-                            if (
-                                model.get(
-                                    that.inline.joining_attribute
-                                        .inline_attribute
-                                ).id == that.edit_id
-                            ) {
-                                that.inl_models_dict[model.get("id")] =
-                                    model.toJSON();
+
+            // Check if the inline has preset option entities
+            if (that.inline.preset_option_entities) {
+                let preset_option_entities = {};
+                let promises = that.inline.preset_option_entities.map(function (
+                    preset_option_entity
+                ) {
+                    return Offline.fetch_collection(
+                        preset_option_entity.entity_name
+                    ).done(function (collection) {
+                        if (that.edit_case) {
+                            // filter inline collection to get only the ones related to the parent object
+                            collection = collection.filter(function (model) {
+                                // filter the collection based on the dependencies the entity has
+                                for (const dependency of preset_option_entity.dependency) {
+                                    if (
+                                        model.get(dependency).id !==
+                                        that.model_json[dependency]
+                                    )
+                                        return false;
+                                }
                                 return true;
-                            }
-                            return false;
+                            });
+                        }
+
+                        // convert the items to json
+                        collection = collection.map(function (item) {
+                            return item.toJSON();
                         });
-                        console.log(inl_models);
-                        // render the inlines into the form
-                        that.fill_inlines(inl_models);
-                    })
-                    .fail(function () {
-                        console.log(
-                            "ERROR: EDIT: Inline collection could not be fetched!"
-                        );
+
+                        // Add the filtered collection to the preset_option_entities object
+                        preset_option_entities[
+                            preset_option_entity.entity_name + "s" // pluralize
+                        ] = collection;
                     });
+                });
+
+                // Make sure that all the preset option entities are loaded before rendering/filling the inlines
+                Promise.all(promises)
+                    // This block of code will be executed after all fetch_collection statements have resolved
+                    .then(function () {
+                        //if add case put in empty inlines
+                        if (!that.edit_case)
+                            that.append_new_inlines(
+                                that.inline.default_num_rows,
+                                preset_option_entities
+                            );
+                        else if (that.edit_case_id) {
+                            // fetch inline entity's whole collection! can be improved
+                            Offline.fetch_collection(that.inline.entity)
+                                .done(function (collection) {
+                                    // id-json dictionary of inline models - later used to extend the modified inlines
+                                    that.inl_models_dict = {};
+                                    // filter inline collection to get only the ones related to the parent object
+                                    var inl_models = collection.filter(
+                                        function (model) {
+                                            if (
+                                                model.get(
+                                                    that.inline
+                                                        .joining_attribute
+                                                        .inline_attribute
+                                                ).id == that.edit_id
+                                            ) {
+                                                that.inl_models_dict[
+                                                    model.get("id")
+                                                ] = model.toJSON();
+                                                return true;
+                                            }
+                                            return false;
+                                        }
+                                    );
+
+                                    // render the inlines into the form
+                                    that.fill_inlines(
+                                        inl_models,
+                                        preset_option_entities
+                                    );
+                                })
+                                .fail(function () {
+                                    console.log(
+                                        "ERROR: EDIT: Inline collection could not be fetched!"
+                                    );
+                                });
+                        }
+                        //not showing the inlines in case of edit_case_json
+                    })
+                    .catch(function (error) {
+                        // This block of code will be executed if any of the fetch_collection statements reject
+                        console.error(error);
+                    });
+            } else {
+                //if add case put in empty inlines
+                if (!this.edit_case)
+                    this.append_new_inlines(this.inline.default_num_rows);
+                else if (this.edit_case_id) {
+                    console.log("FORM:EDIT: Fetching inline collection");
+                    // fetch inline entity's whole collection! can be improved
+                    Offline.fetch_collection(this.inline.entity)
+                        .done(function (collection) {
+                            // id-json dictionary of inline models - later used to extend the modified inlines
+                            that.inl_models_dict = {};
+                            // filter inline collection to get only the ones related to the parent object
+                            var inl_models = collection.filter(function (
+                                model
+                            ) {
+                                if (
+                                    model.get(
+                                        that.inline.joining_attribute
+                                            .inline_attribute
+                                    ).id == that.edit_id
+                                ) {
+                                    that.inl_models_dict[model.get("id")] =
+                                        model.toJSON();
+                                    return true;
+                                }
+                                return false;
+                            });
+
+                            // render the inlines into the form
+                            that.fill_inlines(inl_models);
+                        })
+                        .fail(function () {
+                            console.log(
+                                "ERROR: EDIT: Inline collection could not be fetched!"
+                            );
+                        });
+                }
+                //not showing the inlines in case of edit_case_json
             }
-            //not showing the inlines in case of edit_case_json
         },
 
         // fills the inline objects in their templates and puts them into form
-        fill_inlines: function (model_array) {
+        fill_inlines: function (model_array, preset_option_entities = {}) {
             console.log("Filling inlines");
             var that = this;
+
+            /* Compiles JavaScript templates into functions that can be evaluated for rendering.
+            Template functions can both interpolate variables, using <%= ... %>, as well as execute
+            arbitrary JavaScript code, with <% ... %>. */
+
             var inline_t = _.template($("#" + this.inline.template).html());
 
             $.each(model_array, function (index, model) {
                 var tr = inline_t({
                     index: index,
+                    ...preset_option_entities,
                 });
                 var filled_tr = that.fill_form_elements($(tr), model.toJSON());
                 $(filled_tr).find(":input").removeClass("donotvalidate");
@@ -16358,43 +16857,136 @@ define("views/form", [
         },
 
         // appends new empty inlines into form
-        append_new_inlines: function (num_rows) {
-            // compile the template of inline
+        append_new_inlines: function (num_rows, preset_option_entities = {}) {
+            var that = this;
             var inline_t = _.template($("#" + this.inline.template).html());
+
             if (typeof num_rows != "number") num_rows = this.inline.add_row;
+
             var start_index = get_index_to_start_from();
-            // append the new inlines
-            for (var i = start_index; i < start_index + num_rows; i++) {
-                var tr = $(
-                    inline_t({
-                        index: i,
-                    })
-                );
-                this.$("#inline_body").append(tr);
-                // switch validation on/off based on whether the inline is empty or not
-                if (this.cocousertype == 4) {
-                    // force hiding of upavan field
-                    _.each(
-                        all_configs.misc.inline_var_to_be_hidden,
-                        function (val, key) {
-                            this.$("#inline_body").find(key).addClass("hidden");
-                            this.$("#inline_body").find(val).addClass("hidden");
+
+            if (
+                Object.keys(preset_option_entities).length === 0 &&
+                this.inline.preset_option_entities
+            ) {
+                let promises = that.inline.preset_option_entities.map(function (
+                    preset_option_entity
+                ) {
+                    return Offline.fetch_collection(
+                        preset_option_entity.entity_name
+                    ).done(function (collection) {
+                        if (that.edit_case) {
+                            // filter inline collection to get only the ones related to the parent object
+                            collection = collection.filter(function (model) {
+                                // filter the collection based on the dependencies the entity has
+                                for (const dependency of preset_option_entity.dependency) {
+                                    if (
+                                        model.get(dependency).id !==
+                                        that.model_json[dependency]
+                                    )
+                                        return false;
+                                }
+                                return true;
+                            });
                         }
-                    );
-                } else {
-                    _.each(
-                        all_configs.misc.inline_var_to_be_hidden,
-                        function (val, key) {
-                            this.$("#inline_body")
-                                .find(key)
-                                .removeClass("hidden");
-                            this.$("#inline_body")
-                                .find(val)
-                                .removeClass("hidden");
+
+                        // convert the items to json
+                        collection = collection.map(function (item) {
+                            return item.toJSON();
+                        });
+
+                        // Add the filtered collection to the preset_option_entities object
+                        preset_option_entities[
+                            preset_option_entity.entity_name + "s" // pluralize
+                        ] = collection;
+                    });
+                });
+
+                // Make sure that all the preset option entities are loaded before rendering/filling the inlines
+                Promise.all(promises)
+                    // This block of code will be executed after all fetch_collection statements have resolved
+                    .then(function () {
+                        for (
+                            var i = start_index;
+                            i < start_index + num_rows;
+                            i++
+                        ) {
+                            var tr = $(
+                                inline_t({
+                                    index: i,
+                                    ...preset_option_entities,
+                                })
+                            );
+                            this.$("#inline_body").append(tr);
+                            // switch validation on/off based on whether the inline is empty or not
+                            if (this.cocousertype == 4) {
+                                // force hiding of upavan field
+                                _.each(
+                                    all_configs.misc.inline_var_to_be_hidden,
+                                    function (val, key) {
+                                        this.$("#inline_body")
+                                            .find(key)
+                                            .addClass("hidden");
+                                        this.$("#inline_body")
+                                            .find(val)
+                                            .addClass("hidden");
+                                    }
+                                );
+                            } else {
+                                _.each(
+                                    all_configs.misc.inline_var_to_be_hidden,
+                                    function (val, key) {
+                                        this.$("#inline_body")
+                                            .find(key)
+                                            .removeClass("hidden");
+                                        this.$("#inline_body")
+                                            .find(val)
+                                            .removeClass("hidden");
+                                    }
+                                );
+                            }
+                            tr.on("change", this.switch_validation_for_inlines);
                         }
+                    });
+            } else {
+                // append the new inlines
+                for (var i = start_index; i < start_index + num_rows; i++) {
+                    var tr = $(
+                        inline_t({
+                            index: i,
+                            ...preset_option_entities,
+                        })
                     );
+                    this.$("#inline_body").append(tr);
+                    // switch validation on/off based on whether the inline is empty or not
+                    if (this.cocousertype == 4) {
+                        // force hiding of upavan field
+                        _.each(
+                            all_configs.misc.inline_var_to_be_hidden,
+                            function (val, key) {
+                                this.$("#inline_body")
+                                    .find(key)
+                                    .addClass("hidden");
+                                this.$("#inline_body")
+                                    .find(val)
+                                    .addClass("hidden");
+                            }
+                        );
+                    } else {
+                        _.each(
+                            all_configs.misc.inline_var_to_be_hidden,
+                            function (val, key) {
+                                this.$("#inline_body")
+                                    .find(key)
+                                    .removeClass("hidden");
+                                this.$("#inline_body")
+                                    .find(val)
+                                    .removeClass("hidden");
+                            }
+                        );
+                    }
+                    tr.on("change", this.switch_validation_for_inlines);
                 }
-                tr.on("change", this.switch_validation_for_inlines);
             }
 
             // get last index of already existing inlines
@@ -16434,7 +17026,7 @@ define("views/form", [
             }
         },
 
-        //takes a jquery object containgg form elements and a json. Fills all elements with the corrsponding value in json
+        //takes a jquery object containing form elements and a json. Fills all elements with the corrsponding value in json
         fill_form_elements: function (container, o_json) {
             container.attr("model_id", o_json.id);
             container.find(":input").each(function () {
@@ -16448,7 +17040,12 @@ define("views/form", [
                     case "select-one":
                     case "text":
                     case "textarea":
-                        $(this).val(o_json[attr_name]);
+                        if (
+                            o_json[attr_name] !== null &&
+                            typeof o_json[attr_name] === "object"
+                        )
+                            $(this).val(o_json[attr_name]["id"]);
+                        else $(this).val(o_json[attr_name]);
                         break;
                     case "checkbox":
                     case "radio":
@@ -17259,6 +17856,8 @@ define("views/form", [
                     var f_json = f_model;
                     if (f_model instanceof Backbone.Model)
                         f_json = f_model.toJSON();
+
+                    // Checking for extra information fields in the model data
                     if (f_json[f_entity_desc.name_field_extra_info]) {
                         var extra_info_group_name = "";
                         var extra_info_person_id = "";
@@ -17316,7 +17915,9 @@ define("views/form", [
                                         : ""),
                             })
                         );
-                    } else {
+                    }
+                    // No need to add extra information fields
+                    else {
                         $f_el.append(
                             that.options_inner_template({
                                 id: parseInt(f_json["id"]),
@@ -17328,7 +17929,7 @@ define("views/form", [
                 $f_el.prop("disabled", false);
                 $f_el.trigger("chosen:updated");
 
-                //select the options selected in edit model
+                // Select the options selected in edit model
                 if (
                     this.edit_case &&
                     !this.foreign_elements_rendered[element]
@@ -17350,6 +17951,7 @@ define("views/form", [
                             "chosen:updated"
                         );
                     } else {
+                        // Select the element by it's name and sets it's value
                         this.$("form [name=" + element + "]")
                             .val(this.model_json[element])
                             .change();
@@ -18264,7 +18866,13 @@ define("views/upload_status", [
         }
 
         // Must not alter options, thus extending a fresh object...
-        $.cookie(key, "", $.extend({}, options, { expires: -1 }));
+        $.cookie(
+            key,
+            "",
+            $.extend({}, options, {
+                expires: -1,
+            })
+        );
         return !$.cookie(key);
     };
 });
@@ -18453,6 +19061,7 @@ if ("undefined" == typeof jQuery)
     throw new Error("Bootstrap's JavaScript requires jQuery");
 +(function (t) {
     "use strict";
+
     function e(e) {
         return this.each(function () {
             var i = t(this),
@@ -18495,6 +19104,7 @@ if ("undefined" == typeof jQuery)
 })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(e) {
             return this.each(function () {
                 var o = t(this),
@@ -18510,7 +19120,9 @@ if ("undefined" == typeof jQuery)
                 (this.isLoading = !1);
         };
         (i.VERSION = "3.2.0"),
-            (i.DEFAULTS = { loadingText: "loading..." }),
+            (i.DEFAULTS = {
+                loadingText: "loading...",
+            }),
             (i.prototype.setState = function (e) {
                 var i = "disabled",
                     o = this.$element,
@@ -18569,6 +19181,7 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(e) {
             return this.each(function () {
                 var o = t(this),
@@ -18610,7 +19223,11 @@ if ("undefined" == typeof jQuery)
                         );
         };
         (i.VERSION = "3.2.0"),
-            (i.DEFAULTS = { interval: 5e3, pause: "hover", wrap: !0 }),
+            (i.DEFAULTS = {
+                interval: 5e3,
+                pause: "hover",
+                wrap: !0,
+            }),
             (i.prototype.keydown = function (t) {
                 switch (t.which) {
                     case 37:
@@ -18778,12 +19395,15 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(e) {
             (e && 3 === e.which) ||
                 (t(s).remove(),
                 t(n).each(function () {
                     var o = i(t(this)),
-                        s = { relatedTarget: this };
+                        s = {
+                            relatedTarget: this,
+                        };
                     o.hasClass("open") &&
                         (o.trigger((e = t.Event("hide.bs.dropdown", s))),
                         e.isDefaultPrevented() ||
@@ -18792,6 +19412,7 @@ if ("undefined" == typeof jQuery)
                                 .trigger("hidden.bs.dropdown", s));
                 }));
         }
+
         function i(e) {
             var i = e.attr("data-target");
             i ||
@@ -18803,6 +19424,7 @@ if ("undefined" == typeof jQuery)
             var o = i && t(i);
             return o && o.length ? o : e.parent();
         }
+
         function o(e) {
             return this.each(function () {
                 var i = t(this),
@@ -18828,7 +19450,9 @@ if ("undefined" == typeof jQuery)
                             t('<div class="dropdown-backdrop"/>')
                                 .insertAfter(t(this))
                                 .on("click", e);
-                        var a = { relatedTarget: this };
+                        var a = {
+                            relatedTarget: this,
+                        };
                         if (
                             (n.trigger((o = t.Event("show.bs.dropdown", a))),
                             o.isDefaultPrevented())
@@ -18895,6 +19519,7 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(e, o) {
             return this.each(function () {
                 var s = t(this),
@@ -18924,13 +19549,19 @@ if ("undefined" == typeof jQuery)
                     );
         };
         (i.VERSION = "3.2.0"),
-            (i.DEFAULTS = { backdrop: !0, keyboard: !0, show: !0 }),
+            (i.DEFAULTS = {
+                backdrop: !0,
+                keyboard: !0,
+                show: !0,
+            }),
             (i.prototype.toggle = function (t) {
                 return this.isShown ? this.hide() : this.show(t);
             }),
             (i.prototype.show = function (e) {
                 var i = this,
-                    o = t.Event("show.bs.modal", { relatedTarget: e });
+                    o = t.Event("show.bs.modal", {
+                        relatedTarget: e,
+                    });
                 this.$element.trigger(o),
                     this.isShown ||
                         o.isDefaultPrevented() ||
@@ -19109,7 +19740,9 @@ if ("undefined" == typeof jQuery)
                         r = n.data("bs.modal")
                             ? "toggle"
                             : t.extend(
-                                  { remote: !/#/.test(s) && s },
+                                  {
+                                      remote: !/#/.test(s) && s,
+                                  },
                                   n.data(),
                                   o.data()
                               );
@@ -19126,6 +19759,7 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(e) {
             return this.each(function () {
                 var o = t(this),
@@ -19158,7 +19792,10 @@ if ("undefined" == typeof jQuery)
                 delay: 0,
                 html: !1,
                 container: !1,
-                viewport: { selector: "body", padding: 0 },
+                viewport: {
+                    selector: "body",
+                    padding: 0,
+                },
             }),
             (i.prototype.init = function (e, i, o) {
                 (this.enabled = !0),
@@ -19218,7 +19855,10 @@ if ("undefined" == typeof jQuery)
                     )),
                     e.delay &&
                         "number" == typeof e.delay &&
-                        (e.delay = { show: e.delay, hide: e.delay }),
+                        (e.delay = {
+                            show: e.delay,
+                            hide: e.delay,
+                        }),
                     e
                 );
             }),
@@ -19304,7 +19944,11 @@ if ("undefined" == typeof jQuery)
                     l && (r = r.replace(a, "") || "top"),
                         s
                             .detach()
-                            .css({ top: 0, left: 0, display: "block" })
+                            .css({
+                                top: 0,
+                                left: 0,
+                                display: "block",
+                            })
                             .addClass(r)
                             .data("bs." + this.type, this),
                         this.options.container
@@ -19439,7 +20083,12 @@ if ("undefined" == typeof jQuery)
                         width: o ? t(window).width() : e.outerWidth(),
                         height: o ? t(window).height() : e.outerHeight(),
                     },
-                    o ? { top: 0, left: 0 } : e.offset()
+                    o
+                        ? {
+                              top: 0,
+                              left: 0,
+                          }
+                        : e.offset()
                 );
             }),
             (i.prototype.getCalculatedOffset = function (t, e, i, o) {
@@ -19449,16 +20098,25 @@ if ("undefined" == typeof jQuery)
                           left: e.left + e.width / 2 - i / 2,
                       }
                     : "top" == t
-                    ? { top: e.top - o, left: e.left + e.width / 2 - i / 2 }
+                    ? {
+                          top: e.top - o,
+                          left: e.left + e.width / 2 - i / 2,
+                      }
                     : "left" == t
-                    ? { top: e.top + e.height / 2 - o / 2, left: e.left - i }
+                    ? {
+                          top: e.top + e.height / 2 - o / 2,
+                          left: e.left - i,
+                      }
                     : {
                           top: e.top + e.height / 2 - o / 2,
                           left: e.left + e.width,
                       };
             }),
             (i.prototype.getViewportAdjustedDelta = function (t, e, i, o) {
-                var s = { top: 0, left: 0 };
+                var s = {
+                    top: 0,
+                    left: 0,
+                };
                 if (!this.$viewport) return s;
                 var n =
                         (this.options.viewport &&
@@ -19545,6 +20203,7 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(e) {
             return this.each(function () {
                 var o = t(this),
@@ -19624,6 +20283,7 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(e) {
             return this.each(function () {
                 var o = t(this),
@@ -19647,7 +20307,9 @@ if ("undefined" == typeof jQuery)
                     !e.parent("li").hasClass("active"))
                 ) {
                     var s = i.find(".active:last a")[0],
-                        n = t.Event("show.bs.tab", { relatedTarget: s });
+                        n = t.Event("show.bs.tab", {
+                            relatedTarget: s,
+                        });
                     if ((e.trigger(n), !n.isDefaultPrevented())) {
                         var r = t(o);
                         this.activate(e.closest("li"), i),
@@ -19695,6 +20357,7 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(e) {
             return this.each(function () {
                 var o = t(this),
@@ -19721,7 +20384,10 @@ if ("undefined" == typeof jQuery)
         };
         (i.VERSION = "3.2.0"),
             (i.RESET = "affix affix-top affix-bottom"),
-            (i.DEFAULTS = { offset: 0, target: window }),
+            (i.DEFAULTS = {
+                offset: 0,
+                target: window,
+            }),
             (i.prototype.getPinnedOffset = function () {
                 if (this.pinnedOffset) return this.pinnedOffset;
                 this.$element.removeClass(i.RESET).addClass("affix");
@@ -19795,6 +20461,7 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(e) {
             return this.each(function () {
                 var o = t(this),
@@ -19818,7 +20485,9 @@ if ("undefined" == typeof jQuery)
                 this.options.toggle && this.toggle();
         };
         (i.VERSION = "3.2.0"),
-            (i.DEFAULTS = { toggle: !0 }),
+            (i.DEFAULTS = {
+                toggle: !0,
+            }),
             (i.prototype.dimension = function () {
                 var t = this.$element.hasClass("width");
                 return t ? "width" : "height";
@@ -19927,6 +20596,7 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e(i, o) {
             var s = t.proxy(this.process, this);
             (this.$body = t("body")),
@@ -19941,6 +20611,7 @@ if ("undefined" == typeof jQuery)
                 this.refresh(),
                 this.process();
         }
+
         function i(i) {
             return this.each(function () {
                 var o = t(this),
@@ -19951,7 +20622,9 @@ if ("undefined" == typeof jQuery)
             });
         }
         (e.VERSION = "3.2.0"),
-            (e.DEFAULTS = { offset: 10 }),
+            (e.DEFAULTS = {
+                offset: 10,
+            }),
             (e.prototype.getScrollHeight = function () {
                 return (
                     this.$scrollElement[0].scrollHeight ||
@@ -20041,6 +20714,7 @@ if ("undefined" == typeof jQuery)
     })(jQuery),
     +(function (t) {
         "use strict";
+
         function e() {
             var t = document.createElement("bootstrap"),
                 e = {
@@ -20049,7 +20723,11 @@ if ("undefined" == typeof jQuery)
                     OTransition: "oTransitionEnd otransitionend",
                     transition: "transitionend",
                 };
-            for (var i in e) if (void 0 !== t.style[i]) return { end: e[i] };
+            for (var i in e)
+                if (void 0 !== t.style[i])
+                    return {
+                        end: e[i],
+                    };
             return !1;
         }
         (t.fn.emulateTransitionEnd = function (e) {
@@ -22356,7 +23034,9 @@ define("views/app_header", [
             var language_chosen = $(e.currentTarget).text();
             var language_current = User.get("language");
             if (language_chosen != language_current) {
-                User.save({ language: language_chosen });
+                User.save({
+                    language: language_chosen,
+                });
             }
         },
     });
@@ -22384,6 +23064,7 @@ define("views/app_header", [
             });
             a._hungarianMap = d;
         }
+
         function G(a, b, c) {
             a._hungarianMap || T(a);
             var d;
@@ -22397,6 +23078,7 @@ define("views/app_header", [
                         : (b[d] = b[e]);
             });
         }
+
         function N(a) {
             var b = p.defaults.oLanguage,
                 c = a.sZeroRecords;
@@ -22411,6 +23093,7 @@ define("views/app_header", [
             a.sInfoThousands && (a.sThousands = a.sInfoThousands);
             (a = a.sDecimal) && cb(a);
         }
+
         function db(a) {
             w(a, "ordering", "bSort");
             w(a, "orderMulti", "bSortMulti");
@@ -22426,12 +23109,14 @@ define("views/app_header", [
                 for (var b = 0, c = a.length; b < c; b++)
                     a[b] && G(p.models.oSearch, a[b]);
         }
+
         function eb(a) {
             w(a, "orderable", "bSortable");
             w(a, "orderData", "aDataSort");
             w(a, "orderSequence", "asSorting");
             w(a, "orderDataType", "sortDataType");
         }
+
         function fb(a) {
             var a = a.oBrowser,
                 b = h("<div/>")
@@ -22465,6 +23150,7 @@ define("views/app_header", [
             a.bScrollbarLeft = 1 !== c.offset().left;
             b.remove();
         }
+
         function gb(a, b, c, d, e, f) {
             var g,
                 j = !1;
@@ -22474,6 +23160,7 @@ define("views/app_header", [
                     ((g = j ? b(g, a[d], d, a) : a[d]), (j = !0), (d += f));
             return g;
         }
+
         function Aa(a, b) {
             var c = p.defaults.column,
                 d = a.aoColumns.length,
@@ -22489,6 +23176,7 @@ define("views/app_header", [
             c[d] = h.extend({}, p.models.oSearch, c[d]);
             fa(a, d, null);
         }
+
         function fa(a, b, c) {
             var b = a.aoColumns[b],
                 d = a.oClasses,
@@ -22541,6 +23229,7 @@ define("views/app_header", [
                 : ((b.sSortingClass = d.sSortable),
                   (b.sSortingClassJUI = d.sSortJUI));
         }
+
         function V(a) {
             if (!1 !== a.oFeatures.bAutoWidth) {
                 var b = a.aoColumns;
@@ -22552,18 +23241,22 @@ define("views/app_header", [
             ("" !== b.sY || "" !== b.sX) && W(a);
             u(a, null, "column-sizing", [a]);
         }
+
         function ga(a, b) {
             var c = X(a, "bVisible");
             return "number" === typeof c[b] ? c[b] : null;
         }
+
         function Y(a, b) {
             var c = X(a, "bVisible"),
                 c = h.inArray(b, c);
             return -1 !== c ? c : null;
         }
+
         function Z(a) {
             return X(a, "bVisible").length;
         }
+
         function X(a, b) {
             var c = [];
             h.map(a.aoColumns, function (a, e) {
@@ -22571,6 +23264,7 @@ define("views/app_header", [
             });
             return c;
         }
+
         function Da(a) {
             var b = a.aoColumns,
                 c = a.aoData,
@@ -22608,6 +23302,7 @@ define("views/app_header", [
                     m.sType || (m.sType = "string");
                 }
         }
+
         function hb(a, b, c, d) {
             var e,
                 f,
@@ -22641,6 +23336,7 @@ define("views/app_header", [
                 for (a = c.length; e < a; e++) d(e, c[e]);
             }
         }
+
         function I(a, b, c, d) {
             var e = a.aoData.length,
                 f = h.extend(!0, {}, p.models.oRow, {
@@ -22654,6 +23350,7 @@ define("views/app_header", [
             (c || !a.oFeatures.bDeferRender) && Fa(a, e, c, d);
             return e;
         }
+
         function ha(a, b) {
             var c;
             b instanceof h || (b = h(b));
@@ -22662,12 +23359,17 @@ define("views/app_header", [
                 return I(a, c.data, e, c.cells);
             });
         }
+
         function A(a, b, c, d) {
             var e = a.iDraw,
                 f = a.aoColumns[c],
                 g = a.aoData[b]._aData,
                 j = f.sDefaultContent,
-                c = f.fnGetData(g, d, { settings: a, row: b, col: c });
+                c = f.fnGetData(g, d, {
+                    settings: a,
+                    row: b,
+                    col: c,
+                });
             if (c === l)
                 return (
                     a.iDrawError != e &&
@@ -22690,6 +23392,7 @@ define("views/app_header", [
             else if ("function" === typeof c) return c.call(g);
             return null === c && "display" == d ? "" : c;
         }
+
         function Ea(a, b, c, d) {
             a.aoColumns[c].fnSetData(a.aoData[b]._aData, d, {
                 settings: a,
@@ -22697,11 +23400,13 @@ define("views/app_header", [
                 col: c,
             });
         }
+
         function Ga(a) {
             return h.map(a.match(/(\\.|[^\.])+/g), function (a) {
                 return a.replace(/\\./g, ".");
             });
         }
+
         function U(a) {
             if (h.isPlainObject(a)) {
                 var b = {};
@@ -22765,6 +23470,7 @@ define("views/app_header", [
                 return b[a];
             };
         }
+
         function Ba(a) {
             if (h.isPlainObject(a)) return Ba(a._);
             if (null === a) return function () {};
@@ -22811,19 +23517,23 @@ define("views/app_header", [
                 b[a] = d;
             };
         }
+
         function Ha(a) {
             return C(a.aoData, "_aData");
         }
+
         function ja(a) {
             a.aoData.length = 0;
             a.aiDisplayMaster.length = 0;
             a.aiDisplay.length = 0;
         }
+
         function ka(a, b, c) {
             for (var d = -1, e = 0, f = a.length; e < f; e++)
                 a[e] == b ? (d = e) : a[e] > b && a[e]--;
             -1 != d && c === l && a.splice(d, 1);
         }
+
         function la(a, b, c, d) {
             var e = a.aoData[b],
                 f;
@@ -22851,6 +23561,7 @@ define("views/app_header", [
             }
             Ia(e);
         }
+
         function ia(a, b) {
             var c = [],
                 d = [],
@@ -22872,7 +23583,9 @@ define("views/app_header", [
                     g = m[i];
                     n = h.trim(a.innerHTML);
                     g && g._bAttrSrc
-                        ? ((j = { display: n }),
+                        ? ((j = {
+                              display: n,
+                          }),
                           o(g.mData.sort, j, a),
                           o(g.mData.type, j, a),
                           o(g.mData.filter, j, a),
@@ -22891,8 +23604,12 @@ define("views/app_header", [
                 e = 0;
                 for (f = d.length; e < f; e++) k(d[e]);
             }
-            return { data: c, cells: d };
+            return {
+                data: c,
+                cells: d,
+            };
         }
+
         function Fa(a, b, c, d) {
             var e = a.aoData[b],
                 f = e._aData,
@@ -22933,6 +23650,7 @@ define("views/app_header", [
             }
             e.nTr.setAttribute("role", "row");
         }
+
         function Ia(a) {
             var b = a.nTr,
                 c = a._aData;
@@ -22948,6 +23666,7 @@ define("views/app_header", [
                 c.DT_RowData && h(b).data(c.DT_RowData);
             }
         }
+
         function ib(a) {
             var b,
                 c,
@@ -22987,6 +23706,7 @@ define("views/app_header", [
                         f.sClass && h(f.nTf).addClass(f.sClass);
             }
         }
+
         function ba(a, b, c) {
             var d,
                 e,
@@ -23036,6 +23756,7 @@ define("views/app_header", [
                 }
             }
         }
+
         function K(a) {
             var b = u(a, "aoPreDrawCallback", "preDraw", [a]);
             if (-1 !== h.inArray(!1, b)) B(a, !1);
@@ -23088,7 +23809,9 @@ define("views/app_header", [
                             : f.sEmptyTable &&
                               0 === a.fnRecordsTotal() &&
                               (c = f.sEmptyTable),
-                        (b[0] = h("<tr/>", { class: e ? d[0] : "" }).append(
+                        (b[0] = h("<tr/>", {
+                            class: e ? d[0] : "",
+                        }).append(
                             h("<td />", {
                                 valign: "top",
                                 colSpan: Z(a),
@@ -23118,6 +23841,7 @@ define("views/app_header", [
                 a.bDrawing = !1;
             }
         }
+
         function L(a, b) {
             var c = a.oFeatures,
                 d = c.bFilter;
@@ -23130,6 +23854,7 @@ define("views/app_header", [
             K(a);
             a._drawHold = !1;
         }
+
         function lb(a) {
             var b = a.oClasses,
                 c = h(a.nTable),
@@ -23193,6 +23918,7 @@ define("views/app_header", [
             }
             c.replaceWith(e);
         }
+
         function aa(a, b) {
             var c = h(b).children("tr"),
                 d,
@@ -23226,13 +23952,17 @@ define("views/app_header", [
                         k = 1 === m ? !0 : !1;
                         for (j = 0; j < m; j++)
                             for (g = 0; g < o; g++)
-                                (a[f + g][n + j] = { cell: e, unique: k }),
+                                (a[f + g][n + j] = {
+                                    cell: e,
+                                    unique: k,
+                                }),
                                     (a[f + g].nTr = d);
                     }
                     e = e.nextSibling;
                 }
             }
         }
+
         function ma(a, b, c) {
             var d = [];
             c || ((c = a.aoHeader), b && ((c = []), aa(c, b)));
@@ -23242,6 +23972,7 @@ define("views/app_header", [
                         d[f] = c[b][f].cell;
             return d;
         }
+
         function na(a, b, c) {
             u(a, "aoServerParams", "serverParams", [b]);
             if (b && h.isArray(b)) {
@@ -23291,17 +24022,25 @@ define("views/app_header", [
                       j,
                       a.sAjaxSource,
                       h.map(b, function (a, b) {
-                          return { name: b, value: a };
+                          return {
+                              name: b,
+                              value: a,
+                          };
                       }),
                       c,
                       a
                   )
                 : a.sAjaxSource || "string" === typeof g
-                ? (a.jqXHR = h.ajax(h.extend(i, { url: g || a.sAjaxSource })))
+                ? (a.jqXHR = h.ajax(
+                      h.extend(i, {
+                          url: g || a.sAjaxSource,
+                      })
+                  ))
                 : h.isFunction(g)
                 ? (a.jqXHR = g.call(j, b, c, a))
                 : ((a.jqXHR = h.ajax(h.extend(i, g))), (g.data = f));
         }
+
         function jb(a) {
             return a.bAjaxDataGet
                 ? (a.iDraw++,
@@ -23312,6 +24051,7 @@ define("views/app_header", [
                   !1)
                 : !0;
         }
+
         function sb(a) {
             var b = a.aoColumns,
                 c = b.length,
@@ -23327,7 +24067,10 @@ define("views/app_header", [
             g = a._iDisplayStart;
             i = !1 !== d.bPaginate ? a._iDisplayLength : -1;
             var k = function (a, b) {
-                j.push({ name: a, value: b });
+                j.push({
+                    name: a,
+                    value: b,
+                });
             };
             k("sEcho", a.iDraw);
             k("iColumns", c);
@@ -23340,7 +24083,10 @@ define("views/app_header", [
                 order: [],
                 start: g,
                 length: i,
-                search: { value: e.sSearch, regex: e.bRegex },
+                search: {
+                    value: e.sSearch,
+                    regex: e.bRegex,
+                },
             };
             for (g = 0; g < c; g++)
                 (n = b[g]),
@@ -23351,7 +24097,10 @@ define("views/app_header", [
                         name: n.sName,
                         searchable: n.bSearchable,
                         orderable: n.bSortable,
-                        search: { value: m.sSearch, regex: m.bRegex },
+                        search: {
+                            value: m.sSearch,
+                            regex: m.bRegex,
+                        },
                     }),
                     k("mDataProp_" + g, i),
                     d.bFilter &&
@@ -23362,7 +24111,10 @@ define("views/app_header", [
             d.bFilter && (k("sSearch", e.sSearch), k("bRegex", e.bRegex));
             d.bSort &&
                 (h.each(o, function (a, b) {
-                    l.order.push({ column: b.col, dir: b.dir });
+                    l.order.push({
+                        column: b.col,
+                        dir: b.dir,
+                    });
                     k("iSortCol_" + a, b.col);
                     k("sSortDir_" + a, b.dir);
                 }),
@@ -23370,6 +24122,7 @@ define("views/app_header", [
             b = p.ext.legacy.ajax;
             return null === b ? (a.sAjaxSource ? j : l) : b ? j : l;
         }
+
         function tb(a, b) {
             var c = b.sEcho !== l ? b.sEcho : b.draw,
                 d = b.iTotalRecords !== l ? b.iTotalRecords : b.recordsTotal,
@@ -23394,6 +24147,7 @@ define("views/app_header", [
             a.bAjaxDataGet = !0;
             B(a, !1);
         }
+
         function oa(a, b) {
             var c =
                 h.isPlainObject(a.ajax) && a.ajax.dataSrc !== l
@@ -23401,6 +24155,7 @@ define("views/app_header", [
                     : a.sAjaxDataProp;
             return "data" === c ? b.aaData || b[c] : "" !== c ? U(c)(b) : b;
         }
+
         function nb(a) {
             var b = a.oClasses,
                 c = a.sTableId,
@@ -23445,6 +24200,7 @@ define("views/app_header", [
             });
             return b[0];
         }
+
         function ca(a, b, c) {
             var d = a.oPreviousSearch,
                 e = a.aoPreSearchCols,
@@ -23481,6 +24237,7 @@ define("views/app_header", [
             a.bFiltered = !0;
             u(a, null, "search", [a]);
         }
+
         function wb(a) {
             for (
                 var b = p.ext.search,
@@ -23500,6 +24257,7 @@ define("views/app_header", [
                 c.push.apply(c, j);
             }
         }
+
         function vb(a, b, c, d, e, f) {
             if ("" !== b)
                 for (
@@ -23510,6 +24268,7 @@ define("views/app_header", [
                     (b = a.aoData[g[e]]._aFilterData[c]),
                         d.test(b) || g.splice(e, 1);
         }
+
         function ub(a, b, c, d, e, f) {
             var d = Na(b, d, e, f),
                 e = a.oPreviousSearch.sSearch,
@@ -23532,6 +24291,7 @@ define("views/app_header", [
                     d.test(a.aoData[b[c]]._sFilterRow) || b.splice(c, 1);
             }
         }
+
         function Na(a, b, c, d) {
             a = b ? a : Oa(a);
             c &&
@@ -23547,9 +24307,11 @@ define("views/app_header", [
                     ").*$");
             return RegExp(a, d ? "i" : "");
         }
+
         function Oa(a) {
             return a.replace(Vb, "\\$1");
         }
+
         function xb(a) {
             var b = a.aoColumns,
                 c,
@@ -23589,6 +24351,7 @@ define("views/app_header", [
                 }
             return c;
         }
+
         function yb(a) {
             return {
                 search: a.sSearch,
@@ -23597,6 +24360,7 @@ define("views/app_header", [
                 caseInsensitive: a.bCaseInsensitive,
             };
         }
+
         function zb(a) {
             return {
                 sSearch: a.search,
@@ -23605,6 +24369,7 @@ define("views/app_header", [
                 bCaseInsensitive: a.caseInsensitive,
             };
         }
+
         function qb(a) {
             var b = a.sTableId,
                 c = a.aanFeatures.i,
@@ -23613,11 +24378,15 @@ define("views/app_header", [
                     id: !c ? b + "_info" : null,
                 });
             c ||
-                (a.aoDrawCallback.push({ fn: Ab, sName: "information" }),
+                (a.aoDrawCallback.push({
+                    fn: Ab,
+                    sName: "information",
+                }),
                 d.attr("role", "status").attr("aria-live", "polite"),
                 h(a.nTable).attr("aria-describedby", b + "_info"));
             return d[0];
         }
+
         function Ab(a) {
             var b = a.aanFeatures.i;
             if (0 !== b.length) {
@@ -23635,6 +24404,7 @@ define("views/app_header", [
                 h(b).html(j);
             }
         }
+
         function Bb(a, b) {
             var c = a.fnFormatNumber,
                 d = a._iDisplayStart + 1,
@@ -23649,6 +24419,7 @@ define("views/app_header", [
                 .replace(/_PAGE_/g, c.call(a, g ? 1 : Math.ceil(d / e)))
                 .replace(/_PAGES_/g, c.call(a, g ? 1 : Math.ceil(f / e)));
         }
+
         function ra(a) {
             var b,
                 c,
@@ -23689,17 +24460,20 @@ define("views/app_header", [
                     ra(a);
                 }, 200);
         }
+
         function pa(a, b) {
             a._bInitComplete = !0;
             b && V(a);
             u(a, "aoInitComplete", "init", [a, b]);
         }
+
         function Pa(a, b) {
             var c = parseInt(b, 10);
             a._iDisplayLength = c;
             Qa(a);
             u(a, null, "length", [a, c]);
         }
+
         function mb(a) {
             for (
                 var b = a.oClasses,
@@ -23735,6 +24509,7 @@ define("views/app_header", [
             });
             return i[0];
         }
+
         function rb(a) {
             var b = a.sPaginationType,
                 c = p.ext.pager[b],
@@ -23767,6 +24542,7 @@ define("views/app_header", [
                 }));
             return b;
         }
+
         function Ra(a, b, c) {
             var d = a._iDisplayStart,
                 e = a._iDisplayLength,
@@ -23789,6 +24565,7 @@ define("views/app_header", [
             b && (u(a, null, "page", [a]), c && K(a));
             return b;
         }
+
         function ob(a) {
             return h("<div/>", {
                 id: !a.aanFeatures.r ? a.sTableId + "_processing" : null,
@@ -23797,11 +24574,13 @@ define("views/app_header", [
                 .html(a.oLanguage.sProcessing)
                 .insertBefore(a.nTable)[0];
         }
+
         function B(a, b) {
             a.oFeatures.bProcessing &&
                 h(a.aanFeatures.r).css("display", b ? "block" : "none");
             u(a, null, "processing", [a, b]);
         }
+
         function pb(a) {
             var b = h(a.nTable);
             b.attr("role", "grid");
@@ -23817,9 +24596,13 @@ define("views/app_header", [
                 m = b.children("tfoot");
             c.sX && "100%" === b.attr("width") && b.removeAttr("width");
             m.length || (m = null);
-            c = h("<div/>", { class: f.sScrollWrapper })
+            c = h("<div/>", {
+                class: f.sScrollWrapper,
+            })
                 .append(
-                    h("<div/>", { class: f.sScrollHead })
+                    h("<div/>", {
+                        class: f.sScrollHead,
+                    })
                         .css({
                             overflow: "hidden",
                             position: "relative",
@@ -23827,7 +24610,9 @@ define("views/app_header", [
                             width: d ? (!d ? null : s(d)) : "100%",
                         })
                         .append(
-                            h("<div/>", { class: f.sScrollHeadInner })
+                            h("<div/>", {
+                                class: f.sScrollHeadInner,
+                            })
                                 .css({
                                     "box-sizing": "content-box",
                                     width: c.sXInner || "100%",
@@ -23842,7 +24627,9 @@ define("views/app_header", [
                         .append("top" === j ? g : null)
                 )
                 .append(
-                    h("<div/>", { class: f.sScrollBody })
+                    h("<div/>", {
+                        class: f.sScrollBody,
+                    })
                         .css({
                             overflow: "auto",
                             height: !e ? null : s(e),
@@ -23852,14 +24639,18 @@ define("views/app_header", [
                 );
             m &&
                 c.append(
-                    h("<div/>", { class: f.sScrollFoot })
+                    h("<div/>", {
+                        class: f.sScrollFoot,
+                    })
                         .css({
                             overflow: "hidden",
                             border: 0,
                             width: d ? (!d ? null : s(d)) : "100%",
                         })
                         .append(
-                            h("<div/>", { class: f.sScrollFootInner }).append(
+                            h("<div/>", {
+                                class: f.sScrollFootInner,
+                            }).append(
                                 n
                                     .removeAttr("id")
                                     .css("margin-left", 0)
@@ -23881,9 +24672,13 @@ define("views/app_header", [
             a.nScrollHead = o;
             a.nScrollBody = f;
             a.nScrollFoot = k;
-            a.aoDrawCallback.push({ fn: W, sName: "scrolling" });
+            a.aoDrawCallback.push({
+                fn: W,
+                sName: "scrolling",
+            });
             return c[0];
         }
+
         function W(a) {
             var b = a.oScroll,
                 c = b.sX,
@@ -24030,6 +24825,7 @@ define("views/app_header", [
             o.scroll();
             if ((a.bSorted || a.bFiltered) && !a._drawHold) i.scrollTop = 0;
         }
+
         function F(a, b, c) {
             for (var d = 0, e = 0, f = b.length, g, j; e < f; ) {
                 g = b[e].firstChild;
@@ -24040,6 +24836,7 @@ define("views/app_header", [
                 e++;
             }
         }
+
         function Ca(a) {
             var b = a.nTable,
                 c = a.aoColumns,
@@ -24125,6 +24922,7 @@ define("views/app_header", [
                 ),
                     (a._reszEvt = !0);
         }
+
         function Ma(a, b) {
             var c = b || 200,
                 d,
@@ -24144,6 +24942,7 @@ define("views/app_header", [
                     : (d = g);
             };
         }
+
         function Cb(a, b) {
             if (!a) return 0;
             var c = h("<div/>")
@@ -24153,12 +24952,14 @@ define("views/app_header", [
             c.remove();
             return d;
         }
+
         function Eb(a, b) {
             var c = a.oScroll;
             if (c.sX || c.sY)
                 (c = !c.sX ? c.iBarWidth : 0),
                     (b.style.width = s(h(b).outerWidth() - c));
         }
+
         function Db(a, b) {
             var c = Fb(a, b);
             if (0 > c) return null;
@@ -24167,6 +24968,7 @@ define("views/app_header", [
                 ? h("<td/>").html(A(a, c, b, "display"))[0]
                 : d.anCells[b];
         }
+
         function Fb(a, b) {
             for (var c, d = -1, e = -1, f = 0, g = a.aoData.length; f < g; f++)
                 (c = A(a, f, b, "display") + ""),
@@ -24174,6 +24976,7 @@ define("views/app_header", [
                     c.length > d && ((d = c.length), (e = f));
             return e;
         }
+
         function s(a) {
             return null === a
                 ? "0px"
@@ -24185,6 +24988,7 @@ define("views/app_header", [
                 ? a + "px"
                 : a;
         }
+
         function Gb() {
             if (!p.__scrollbarWidth) {
                 var a = h("<p/>").css({
@@ -24214,6 +25018,7 @@ define("views/app_header", [
             }
             return p.__scrollbarWidth;
         }
+
         function R(a) {
             var b,
                 c,
@@ -24251,6 +25056,7 @@ define("views/app_header", [
             }
             return d;
         }
+
         function kb(a) {
             var b,
                 c,
@@ -24318,6 +25124,7 @@ define("views/app_header", [
             }
             a.bSorted = !0;
         }
+
         function Ib(a) {
             for (
                 var b,
@@ -24347,6 +25154,7 @@ define("views/app_header", [
                 i.setAttribute("aria-label", b);
             }
         }
+
         function Sa(a, b, c, d) {
             var e = a.aaSorting,
                 f = a.aoColumns[b].asSorting,
@@ -24370,6 +25178,7 @@ define("views/app_header", [
             L(a);
             "function" == typeof d && d(a);
         }
+
         function Ka(a, b, c, d) {
             var e = a.aoColumns[c];
             Ta(b, {}, function (b) {
@@ -24383,6 +25192,7 @@ define("views/app_header", [
                         : Sa(a, c, b.shiftKey, d));
             });
         }
+
         function sa(a) {
             var b = a.aLastSort,
                 c = a.oClasses.sSortColumn,
@@ -24406,6 +25216,7 @@ define("views/app_header", [
             }
             a.aLastSort = d;
         }
+
         function Hb(a, b) {
             var c = a.aoColumns[b],
                 d = p.ext.order[c.sSortDataType],
@@ -24427,6 +25238,7 @@ define("views/app_header", [
                     (f = d ? e[j] : A(a, j, b, "sort")),
                         (c._aSortData[b] = g ? g(f) : f);
         }
+
         function ta(a) {
             if (a.oFeatures.bStateSave && !a.bDestroying) {
                 var b = {
@@ -24447,6 +25259,7 @@ define("views/app_header", [
                 a.fnStateSaveCallback.call(a.oInstance, a, b);
             }
         }
+
         function Jb(a) {
             var b,
                 c,
@@ -24481,11 +25294,13 @@ define("views/app_header", [
                 }
             }
         }
+
         function ua(a) {
             var b = p.settings,
                 a = h.inArray(a, C(b, "nTable"));
             return -1 !== a ? b[a] : null;
         }
+
         function P(a, b, c, d) {
             c =
                 "DataTables warning: " +
@@ -24500,6 +25315,7 @@ define("views/app_header", [
                 alert(c);
             else throw Error(c);
         }
+
         function D(a, b, c, d) {
             h.isArray(c)
                 ? h.each(c, function (c, d) {
@@ -24507,6 +25323,7 @@ define("views/app_header", [
                   })
                 : (d === l && (d = c), b[c] !== l && (a[d] = b[c]));
         }
+
         function Kb(a, b, c) {
             var d, e;
             for (e in b)
@@ -24524,6 +25341,7 @@ define("views/app_header", [
                                   : d));
             return a;
         }
+
         function Ta(a, b, c) {
             h(a)
                 .bind("click.DT", b, function (b) {
@@ -24537,9 +25355,15 @@ define("views/app_header", [
                     return !1;
                 });
         }
+
         function x(a, b, c, d) {
-            c && a[b].push({ fn: c, sName: d });
+            c &&
+                a[b].push({
+                    fn: c,
+                    sName: d,
+                });
         }
+
         function u(a, b, c, d) {
             var e = [];
             b &&
@@ -24549,6 +25373,7 @@ define("views/app_header", [
             null !== c && h(a.nTable).trigger(c + ".dt", d);
             return e;
         }
+
         function Qa(a) {
             var b = a._iDisplayStart,
                 c = a.fnDisplayEnd(),
@@ -24557,6 +25382,7 @@ define("views/app_header", [
             if (-1 === d || 0 > b) b = 0;
             a._iDisplayStart = b;
         }
+
         function La(a, b) {
             var c = a.renderer,
                 d = p.ext.renderer[b];
@@ -24566,6 +25392,7 @@ define("views/app_header", [
                 ? d[c] || d._
                 : d._;
         }
+
         function z(a) {
             return a.oFeatures.bServerSide
                 ? "ssp"
@@ -24573,6 +25400,7 @@ define("views/app_header", [
                 ? "ajax"
                 : "dom";
         }
+
         function Ua(a, b) {
             var c = [],
                 c = Lb.numbers_length,
@@ -24591,6 +25419,7 @@ define("views/app_header", [
             c.DT_el = "span";
             return c;
         }
+
         function cb(a) {
             h.each(
                 {
@@ -24612,6 +25441,7 @@ define("views/app_header", [
                 }
             );
         }
+
         function Mb(a) {
             return function () {
                 var b = [ua(this[p.ext.iApiIndex])].concat(
@@ -25138,7 +25968,11 @@ define("views/app_header", [
             else d(a);
             this.context = Ja(c);
             b && this.push.apply(this, b.toArray ? b.toArray() : b);
-            this.selector = { rows: null, cols: null, opts: null };
+            this.selector = {
+                rows: null,
+                cols: null,
+                opts: null,
+            };
             q.extend(this, this, Rb);
         };
         p.Api = q;
@@ -25318,7 +26152,12 @@ define("views/app_header", [
                         i = null;
                     }
                     i ||
-                        ((i = { name: g, val: {}, methodExt: [], propExt: [] }),
+                        ((i = {
+                            name: g,
+                            val: {},
+                            methodExt: [],
+                            propExt: [],
+                        }),
                         f.push(i));
                     c === d - 1
                         ? (i.val = b)
@@ -25700,7 +26539,9 @@ define("views/app_header", [
                             (f.on("draw.dt.DT_details", function (a, b) {
                                 e === b &&
                                     f
-                                        .rows({ page: "current" })
+                                        .rows({
+                                            page: "current",
+                                        })
                                         .eq(0)
                                         .each(function (a) {
                                             a = g[a];
@@ -25942,7 +26783,10 @@ define("views/app_header", [
                             for (r = g.length; p < r; p++) {
                                 i = g[p];
                                 for (q = 0; q < m; q++)
-                                    n.push({ row: i, column: q });
+                                    n.push({
+                                        row: i,
+                                        column: q,
+                                    });
                             }
                             return n;
                         }
@@ -25973,11 +26817,18 @@ define("views/app_header", [
                     for (j = e[b].length; g < j; g++) {
                         i = 0;
                         for (n = d[b].length; i < n; i++)
-                            f.push({ row: e[b][g], column: d[b][i] });
+                            f.push({
+                                row: e[b][g],
+                                column: d[b][i],
+                            });
                     }
                     return f;
                 });
-            h.extend(m.selector, { cols: b, rows: a, opts: c });
+            h.extend(m.selector, {
+                cols: b,
+                rows: a,
+                opts: c,
+            });
             return m;
         });
         v("cells().nodes()", "cell().node()", function () {
@@ -25998,7 +26849,11 @@ define("views/app_header", [
         });
         v("cells().indexes()", "cell().index()", function () {
             return this.iterator("cell", function (a, b, c) {
-                return { row: b, column: c, columnVisible: Y(a, c) };
+                return {
+                    row: b,
+                    column: c,
+                    columnVisible: Y(a, c),
+                };
             });
         });
         r(["cells().invalidate()", "cell().invalidate()"], function (a) {
@@ -26432,8 +27287,13 @@ define("views/app_header", [
                 sXInner: null,
                 sY: null,
             },
-            oLanguage: { fnInfoCallback: null },
-            oBrowser: { bScrollOversize: !1, bScrollbarLeft: !1 },
+            oLanguage: {
+                fnInfoCallback: null,
+            },
+            oBrowser: {
+                bScrollOversize: !1,
+                bScrollbarLeft: !1,
+            },
             ajax: null,
             aanFeatures: [],
             aoData: [],
@@ -26539,11 +27399,20 @@ define("views/app_header", [
             feature: [],
             search: [],
             internal: {},
-            legacy: { ajax: null },
+            legacy: {
+                ajax: null,
+            },
             pager: {},
-            renderer: { pageButton: {}, header: {} },
+            renderer: {
+                pageButton: {},
+                header: {},
+            },
             order: {},
-            type: { detect: [], search: {}, order: {} },
+            type: {
+                detect: [],
+                search: {},
+                order: {},
+            },
             _unique: 0,
             fnVersionCheck: p.fnVersionCheck,
             iApiIndex: 0,
@@ -26739,7 +27608,13 @@ define("views/app_header", [
                                         })
                                             .html(i)
                                             .appendTo(b);
-                                        Ta(r, { action: q }, s);
+                                        Ta(
+                                            r,
+                                            {
+                                                action: q,
+                                            },
+                                            s
+                                        );
                                         m++;
                                     }
                                 }
@@ -28518,8 +29393,18 @@ var TableTools;
                      * much smoother. If you don't want the animation, then the setTimeout can be removed
                      */
                     setTimeout(function () {
-                        $(nHidden).animate({ opacity: 1 }, 500);
-                        $(nBackground).animate({ opacity: 0.25 }, 500);
+                        $(nHidden).animate(
+                            {
+                                opacity: 1,
+                            },
+                            500
+                        );
+                        $(nBackground).animate(
+                            {
+                                opacity: 0.25,
+                            },
+                            500
+                        );
                     }, 10);
 
                     /* Resize the buttons to the Flash contents fit */
@@ -28545,7 +29430,9 @@ var TableTools;
 
                     if (this.dom.collection.collection !== null) {
                         $(this.dom.collection.collection).animate(
-                            { opacity: 0 },
+                            {
+                                opacity: 0,
+                            },
                             500,
                             function (e) {
                                 this.style.display = "none";
@@ -28553,7 +29440,9 @@ var TableTools;
                         );
 
                         $(this.dom.collection.background).animate(
-                            { opacity: 0 },
+                            {
+                                opacity: 0,
+                            },
                             500,
                             function (e) {
                                 this.parentNode.removeChild(this);
@@ -30089,7 +30978,12 @@ var TableTools;
                         var sData = this.fnGetTableData(oConfig);
                         $.ajax({
                             url: oConfig.sAjaxUrl,
-                            data: [{ name: "tableData", value: sData }],
+                            data: [
+                                {
+                                    name: "tableData",
+                                    value: sData,
+                                },
+                            ],
                             success: oConfig.fnAjaxComplete,
                             dataType: "json",
                             type: "POST",
@@ -30396,7 +31290,9 @@ define("views/list", [
                         .replace(/_/g, " ");
                     header = element[0].toUpperCase() + element.slice(1);
                 }
-                return { sTitle: header };
+                return {
+                    sTitle: header,
+                };
             });
             if (
                 !("dashboard_display" in this.entity_config) ||
