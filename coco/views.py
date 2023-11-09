@@ -21,13 +21,11 @@ from forms import DataUploadForm, GeographyMappingForm
 from models import CocoUser
 from videos.models import APVideo
 from coco.models import FullDownloadStats, CocoUser
-from people.models import Person, Animator, AnimatorAssignedVillage
-from people.models import PersonGroup
+from people.models import Person, Animator, AnimatorAssignedVillage, PersonGroup, Household
 from geographies.models import Village, District, Block, AP_District, AP_Mandal, AP_Village, AP_COCO_Mapping
 from programs.models import Partner
 from videos.models import Video, Language, Category, Practice, SubCategory
-from activities.models import Screening
-from activities.models import PersonAdoptPractice
+from activities.models import Screening, PersonAdoptPractice
 from coco.prepare_data import *
 from django.views.generic import View
 from tastypie.models import ApiKey
@@ -294,7 +292,7 @@ class GetGeography(View):
 @login_required
 def upload_csv_data(request):
     if request.method == 'POST':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Father/Husband Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Household Name,Member Name,Father/Husband Name,Gender,Phone Number,Age'
         form_data = DataUploadForm(request.POST, request.FILES)
         if form_data.is_valid():
             cd = form_data.cleaned_data
@@ -314,7 +312,7 @@ def upload_csv_data(request):
                     for index, row in enumerate(filter_lines):
                         try:
                             row = row.split(',')
-                            block_obj, created = Block.objects.get_or_create(block_name=row[2].strip(),                                                                             district_id=int(
+                            block_obj, created = Block.objects.get_or_create(block_name=row[2].strip(),district_id=int(
                                 row[1]), defaults={'block_name': row[2].strip(), 'district_id': int(row[1].strip())})
                             if block_obj or created:
                                 village_obj, created = Village.objects.get_or_create(village_name=row[3].strip(), block_id=block_obj.id,
@@ -330,10 +328,10 @@ def upload_csv_data(request):
                                                   'partner_id': int(row[0].strip())},)
                                     if person_group or created:
 
-                                        phone_num = row[8].strip()
+                                        phone_num = row[9].strip()
 
                                         country_id = village_obj.block.district.state.country.id
-                                        # NUllify incorrect phone numbers if the village is in Ethiopia
+                                        # Nullify incorrect phone numbers if the village is in Ethiopia
                                         if country_id == 2:
                                             if phone_num != None and phone_num != "":
                                                 allowed_phone_prefixes = ('7', '9')
@@ -341,26 +339,28 @@ def upload_csv_data(request):
                                                     # Nullify
                                                     phone_num = ""
 
-                                        if row[9] != '' and row[9] != '\r':
-                                            row[9] = row[9].strip('\r')
+                                        household_obj, created = Household.objects.get_or_create(household_name__iexact=row[5].strip(), village_id=village_obj.id, 
+                                            defaults={'household_name':row[5].strip(), 'village_id':village_obj.id, 'head_gender':row[8].strip()})
+
+                                        if row[10] != '' and row[10] != '\r':
+                                            row[10] = row[10].strip('\r')
                                             person_obj, created = \
-                                                Person.objects.get_or_create(person_name__iexact=row[5].strip(),
-                                                                             village_id=village_obj.id, group_id=person_group.id,
-                                                                             partner_id=int(row[0].strip()), defaults={'person_name': row[5].strip(), 'father_name': row[6].strip(),
-                                                                                                                       'gender': row[7].strip(), 'village_id': village_obj.id, 'group_id': person_group.id,
-                                                                                                                       'partner_id': int(row[0].strip()), 'age': int(row[9].strip()), 'phone_no': phone_num})
-                                            person_obj.age = int(
-                                                row[9].strip())
+                                                Person.objects.get_or_create(person_name__iexact=row[6].strip(),
+                                                                             village_id=village_obj.id, group_id=person_group.id,partner_id=int(row[0].strip()),
+                                                                             defaults={'person_name': row[6].strip(), 'father_name': row[7].strip(),'gender': row[8].strip(),
+                                                                                'village_id': village_obj.id, 'household_id': household_obj.id,'group_id': person_group.id, 
+                                                                                'partner_id': int(row[0].strip()), 'age': int(row[10].strip()), 'phone_no': phone_num})
+                                            person_obj.age = int(row[10].strip())
                                         else:
-                                            row[9] = row[9].strip('\r')
+                                            row[10] = row[10].strip('\r')
                                             person_obj, created = \
-                                                Person.objects.get_or_create(person_name__iexact=row[5].strip(),
-                                                                             village_id=village_obj.id, group_id=person_group.id,
-                                                                             partner_id=int(row[0].strip()), defaults={'person_name': row[5].strip(), 'father_name': row[6].strip(),
-                                                                                                                       'gender': row[7].strip(), 'village_id': village_obj.id, 'group_id': person_group.id,
-                                                                                                                       'partner_id': int(row[0]), 'phone_no': phone_num})
-                                        person_obj.father_name = row[6].strip()
-                                        person_obj.gender = row[7].strip()
+                                                Person.objects.get_or_create(person_name__iexact=row[6].strip(),
+                                                                             village_id=village_obj.id, group_id=person_group.id,partner_id=int(row[0].strip()),
+                                                                             defaults={'person_name': row[6].strip(), 'father_name': row[7].strip(),'gender': row[8].strip(),
+                                                                             'village_id': village_obj.id, 'household_id': household_obj.id, 'group_id': person_group.id,
+                                                                             'partner_id': int(row[0]), 'phone_no': phone_num})
+                                        person_obj.father_name = row[7].strip()
+                                        person_obj.gender = row[8].strip()
                                         person_obj.phone_no = phone_num
                                         person_obj.full_clean()
                                         person_obj.save()
@@ -398,7 +398,7 @@ def upload_csv_data(request):
 @login_required
 def getFileHeader(request):
     if request.method == 'GET':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Father/Husband Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Household Name,Member Name,Father/Husband Name,Gender,Phone Number,Age'
         output = StringIO.StringIO()
         try:
             output.write(columns)
