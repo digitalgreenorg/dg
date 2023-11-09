@@ -139,11 +139,11 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
 
 
 def get_user_partner_id(user_id):
+    partner_id = None
     if user_id:
         try:
             partner_id = CocoUser.objects.get(user_id=user_id).partner.id
         except Exception as e:
-            partner_id = None
             raise PartnerDoesNotExist(
                 'partner does not exist for user ' + user_id+" : " + e)
 
@@ -649,8 +649,6 @@ class PersonGroupResource(BaseResource):
 
 class HouseholdResource(BaseResource):
     village = fields.ForeignKey(VillageResource, 'village')
-    # household_name = fields.CharField()
-    # head_gender = fields.CharField()
 
     class Meta:
         max_limit = None
