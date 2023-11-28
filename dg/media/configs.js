@@ -1065,6 +1065,10 @@
         farmers_attendance: {
           dependency: [
             {
+              source_form_element: "farmer_groups_targeted",
+              dep_attr: "group",
+            },
+            {
               source_form_element: "person",
               dep_attr: "id",
             },
@@ -1109,7 +1113,7 @@
         village: "required",
         videoes_screened: "required",
         farmer_groups_targeted: "required",
-        person: "required",
+        // person: "required",
         phone_no: {
           digits: true,
           minlength: 9,
@@ -1129,7 +1133,7 @@
         village: "Village is required",
         videoes_screened: "Videos screened is required",
         farmer_groups_targeted: "Groups attended is required",
-        person: "Attendees are required",
+        // person: "Attendees are required",
       },
 
       highlight: function (element, errorClass, validClass) {

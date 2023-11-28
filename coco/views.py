@@ -299,7 +299,7 @@ class GetGeography(View):
 @login_required
 def upload_csv_data(request):
     if request.method == 'POST':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Household Head Full Name,Household Head Sex,Member Name,Father/Husband Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Household Head Full Name,Sex of Household Head,Farmer Name,Father/Husband Name,Sex of the Farmer,Phone Number,Age'
         form_data = DataUploadForm(request.POST, request.FILES)
         if form_data.is_valid():
             cd = form_data.cleaned_data
@@ -345,8 +345,13 @@ def upload_csv_data(request):
                                                     # Nullify
                                                     phone_num = ""
 
-                                        household_obj, created = Household.objects.get_or_create(household_name__iexact=row[5].strip(),village_id=village_obj.id,
-                                            defaults={'household_name':row[5].strip(), 'village_id':village_obj.id, 'head_gender':row[6].strip()})
+                                        household_name = row[5].strip()
+                                        # Check if household_name is empty
+                                        if household_name:
+                                            household_obj, created = Household.objects.get_or_create(household_name__iexact=household_name,village_id=village_obj.id,
+                                                defaults={'household_name':household_name, 'village_id':village_obj.id, 'head_gender':row[6].strip()})
+                                        else:
+                                            household_obj = None  # Set household_obj to None if household_name is empty
 
                                         if row[11] != '' and row[11] != '\r':
                                             row[11] = row[11].strip('\r')
@@ -356,7 +361,7 @@ def upload_csv_data(request):
                                                         'father_name': row[8].strip(), 
                                                         'gender': row[9].strip(),
                                                         'village_id': village_obj.id, 
-                                                        'household_id': household_obj.id, 
+                                                        'household_id': household_obj.id if household_obj else None, 
                                                         'group_id': person_group.id,
                                                         'partner_id': int(row[0].strip()), 
                                                         'age': int(row[11].strip()), 
@@ -372,7 +377,7 @@ def upload_csv_data(request):
                                                         'father_name': row[8].strip(), 
                                                         'gender': row[9].strip(), 
                                                         'village_id': village_obj.id, 
-                                                        'household_id': household_obj.id, 
+                                                        'household_id': household_obj.id if household_obj else None, 
                                                         'group_id': person_group.id, 
                                                         'partner_id': int(row[0]), 
                                                         'phone_no': phone_num
@@ -412,7 +417,7 @@ def upload_csv_data(request):
 @login_required
 def getFileHeader(request):
     if request.method == 'GET':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Household Head Full Name,Household Head Sex,Member Name,Father/Husband Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Household Head Full Name,Sex of Household Head,Farmer Name,Father/Husband Name,Sex of the Farmer,Phone Number,Age'
         output = StringIO.StringIO()
         try:
             output.write(columns)
