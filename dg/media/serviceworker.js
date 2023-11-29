@@ -69,7 +69,7 @@ const urlsToCache = [
 ];
 
 // Name of the cache to store the above resources to
-const CACHE_NAME = "coco-cache-v3";
+const CACHE_NAME = "coco-cache-v4";
 // Specify allowed cache keys
 const ALLOWED_CACHES_LIST = [CACHE_NAME];
 
