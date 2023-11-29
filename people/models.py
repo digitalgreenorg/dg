@@ -76,16 +76,33 @@ post_save.connect(save_log, sender=PersonGroup)
 pre_delete.connect(delete_log, sender=PersonGroup)
 
 
+class Household(CocoModel):
+    id = models.AutoField(primary_key=True)
+    household_name = models.CharField(max_length=100)
+    head_gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    village = models.ForeignKey(Village)
+
+    class Meta:
+        unique_together = ("household_name", "village")
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.household_name, self.village)
+
+
+post_save.connect(save_log, sender=Household)
+pre_delete.connect(delete_log, sender=Household)
+
+
 class Person(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
     person_name = models.CharField(max_length=100)
     father_name = models.CharField(max_length=100, null=True, blank=True)
-    age = models.IntegerField(null=True, blank=True, validators=[
-                              MinValueValidator(13), MaxValueValidator(120)])
+    age = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(13), MaxValueValidator(120)])
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     phone_no = models.CharField(max_length=100, blank=True)
     village = models.ForeignKey(Village)
+    household = models.ForeignKey(Household, null=True, blank=True)
     group = models.ForeignKey(PersonGroup, null=True, blank=True)
     date_of_joining = models.DateField(null=True, blank=True)
     image_exists = models.BooleanField(default=False)

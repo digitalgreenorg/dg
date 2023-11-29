@@ -21,13 +21,11 @@ from forms import DataUploadForm, GeographyMappingForm
 from models import CocoUser
 from videos.models import APVideo
 from coco.models import FullDownloadStats, CocoUser
-from people.models import Person, Animator, AnimatorAssignedVillage
-from people.models import PersonGroup
+from people.models import Person, Animator, AnimatorAssignedVillage, PersonGroup, Household
 from geographies.models import Village, District, Block, AP_District, AP_Mandal, AP_Village, AP_COCO_Mapping
 from programs.models import Partner
 from videos.models import Video, Language, Category, Practice, SubCategory
-from activities.models import Screening
-from activities.models import PersonAdoptPractice
+from activities.models import Screening, PersonAdoptPractice
 from coco.prepare_data import *
 from django.views.generic import View
 from tastypie.models import ApiKey
@@ -260,15 +258,18 @@ class GetGeography(View):
                 'block_id', flat=True).distinct()
 
             # removing already mapped COCO blocks to remove them from the list
-            results_coco = list(Block.objects.filter(district__state_id=6).exclude(id__in=ap_blocks).exclude(id__in=mapped_blocks_coco).annotate(value=F('id'), text=Concat(
-                F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id', 'value', 'text'))
+            results_coco = list(Block.objects.filter(district__state_id=6).exclude(id__in=ap_blocks)
+                .exclude(id__in=mapped_blocks_coco)
+                .annotate(value=F('id'),text=Concat(F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'),output_field=CharField()))
+                .values('id', 'value', 'text'))
             ap_blocks = filter(lambda x: x not in mapped_blocks_ap, ap_blocks)
-            results_ap = list(Block.objects.filter(id__in=ap_blocks).annotate(value=F('id'), text=Concat(F('block_name'), Value('( '), F(
-                'district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id', 'value', 'text'))
+            results_ap = list(Block.objects
+                .filter(id__in=ap_blocks)
+                .annotate(value=F('id'), text=Concat(F('block_name'), Value('( '), F('district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField()))
+                .values('id', 'value', 'text'))
 
         else:
-            mapped_villages = AP_COCO_Mapping.objects.filter(
-                geo_type=selected_geography)
+            mapped_villages = AP_COCO_Mapping.objects.filter(geo_type=selected_geography)
 
             # fetching already mapped bluefrog villages to remove them from the list
             mapped_villages_ap = mapped_villages.values_list(
@@ -279,12 +280,16 @@ class GetGeography(View):
                 'village_id', flat=True).distinct()
 
             # removing already mapped COCO villages to remove them from the list
-            results_coco = list(Village.objects.filter(block__district__state_id=6).exclude(id__in=ap_villages).exclude(id__in=mapped_villages_coco).annotate(value=F('id'), text=Concat(F('village_name'), Value(
-                '( '), F('block__block_name'), Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id', 'text', 'value'))
-            ap_villages = filter(
-                lambda x: x not in mapped_villages_ap, ap_villages)
-            results_ap = list(Village.objects.filter(id__in=ap_villages).annotate(value=F('id'), text=Concat(F('village_name'), Value('( '), F('block__block_name'), Value(
-                ' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField())).values('id', 'text', 'value'))
+            results_coco = list(Village.objects
+                .filter(block__district__state_id=6)
+                .exclude(id__in=ap_villages)
+                .exclude(id__in=mapped_villages_coco)
+                .annotate(value=F('id'),text=Concat(F('village_name'),Value('( '), F('block__block_name'), Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField()))
+                .values('id', 'text', 'value'))
+            ap_villages = filter(lambda x: x not in mapped_villages_ap, ap_villages)
+            results_ap = list(Village.objects.filter(id__in=ap_villages)
+                .annotate(value=F('id'), text=Concat(F('village_name'), Value('( '),F('block__block_name'),Value(' )'), Value('( '), F('block__district__district_name'), Value(' )'), Value('( '), F('id'), Value(' )'), output_field=CharField()))
+                .values('id''text', 'value'))
 
         results_list = [results_ap, results_coco]
         data = {'results': results_list}
@@ -294,7 +299,7 @@ class GetGeography(View):
 @login_required
 def upload_csv_data(request):
     if request.method == 'POST':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Father/Husband Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Household Head Full Name,Sex of Household Head,Farmer Name,Father/Husband Name,Sex of the Farmer,Phone Number,Age'
         form_data = DataUploadForm(request.POST, request.FILES)
         if form_data.is_valid():
             cd = form_data.cleaned_data
@@ -314,26 +319,25 @@ def upload_csv_data(request):
                     for index, row in enumerate(filter_lines):
                         try:
                             row = row.split(',')
-                            block_obj, created = Block.objects.get_or_create(block_name=row[2].strip(),                                                                             district_id=int(
-                                row[1]), defaults={'block_name': row[2].strip(),                                                   'district_id': int(row[1].strip())})
+                            block_obj, created = Block.objects.get_or_create(block_name=row[2].strip(),district_id=int(
+                                row[1]), defaults={'block_name': row[2].strip(), 'district_id': int(row[1].strip())})
                             if block_obj or created:
                                 village_obj, created = Village.objects.get_or_create(village_name=row[3].strip(), block_id=block_obj.id,
                                                                                      defaults={'village_name': row[3].strip(),
                                                                                                'block_id': block_obj.id})
                                 if village_obj or created:
-                                    person_group, created = PersonGroup.objects.get_or_create(group_name=row[4].strip(),
-                                                                                              village_id=village_obj.id,
-                                                                                              partner_id=int(
-                                        row[0]),
+                                    person_group, created = PersonGroup.objects.get_or_create(
+                                        group_name=row[4].strip(), village_id=village_obj.id,partner_id=int(row[0]),
                                         defaults={'group_name': row[4].strip(),
                                                   'village_id': village_obj.id,
-                                                  'partner_id': int(row[0].strip())},)
+                                                  'partner_id': int(row[0].strip())},
+                                                )
                                     if person_group or created:
 
-                                        phone_num = row[8].strip()
+                                        phone_num = row[10].strip()
 
                                         country_id = village_obj.block.district.state.country.id
-                                        # NUllify incorrect phone numbers if the village is in Ethiopia
+                                        # Nullify incorrect phone numbers if the village is in Ethiopia
                                         if country_id == 2:
                                             if phone_num != None and phone_num != "":
                                                 allowed_phone_prefixes = ('7', '9')
@@ -341,50 +345,65 @@ def upload_csv_data(request):
                                                     # Nullify
                                                     phone_num = ""
 
-                                        if row[9] != '' and row[9] != '\r':
-                                            row[9] = row[9].strip('\r')
-                                            person_obj, created = \
-                                                Person.objects.get_or_create(person_name__iexact=row[5].strip(),
-                                                                             village_id=village_obj.id, group_id=person_group.id,
-                                                                             partner_id=int(row[0].strip()), defaults={'person_name': row[5].strip(), 'father_name': row[6].strip(),
-                                                                                                                       'gender': row[7].strip(), 'village_id': village_obj.id, 'group_id': person_group.id,
-                                                                                                                       'partner_id': int(row[0].strip()), 'age': int(row[9].strip()), 'phone_no': phone_num})
-                                            person_obj.age = int(
-                                                row[9].strip())
+                                        household_name = row[5].strip()
+                                        # Check if household_name is empty
+                                        if household_name:
+                                            household_obj, created = Household.objects.get_or_create(household_name__iexact=household_name,village_id=village_obj.id,
+                                                defaults={'household_name':household_name, 'village_id':village_obj.id, 'head_gender':row[6].strip()})
                                         else:
-                                            row[9] = row[9].strip('\r')
-                                            person_obj, created = \
-                                                Person.objects.get_or_create(person_name__iexact=row[5].strip(),
-                                                                             village_id=village_obj.id, group_id=person_group.id,
-                                                                             partner_id=int(row[0].strip()), defaults={'person_name': row[5].strip(), 'father_name': row[6].strip(),
-                                                                                                                       'gender': row[7].strip(), 'village_id': village_obj.id, 'group_id': person_group.id,
-                                                                                                                       'partner_id': int(row[0]), 'phone_no': phone_num})
-                                        person_obj.father_name = row[6].strip()
-                                        person_obj.gender = row[7].strip()
+                                            household_obj = None  # Set household_obj to None if household_name is empty
+
+                                        if row[11] != '' and row[11] != '\r':
+                                            row[11] = row[11].strip('\r')
+                                            person_obj, created = Person.objects.get_or_create(
+                                                    person_name__iexact=row[7].strip(), village_id=village_obj.id, group_id=person_group.id, partner_id=int(row[0].strip()),
+                                                    defaults={'person_name': row[7].strip(), 
+                                                        'father_name': row[8].strip(), 
+                                                        'gender': row[9].strip(),
+                                                        'village_id': village_obj.id, 
+                                                        'household_id': household_obj.id if household_obj else None, 
+                                                        'group_id': person_group.id,
+                                                        'partner_id': int(row[0].strip()), 
+                                                        'age': int(row[11].strip()), 
+                                                        'phone_no': phone_num
+                                                    }
+                                                )
+                                            person_obj.age = int(row[11].strip())
+                                        else:
+                                            row[11] = row[11].strip('\r')
+                                            person_obj, created = Person.objects.get_or_create(
+                                                    person_name__iexact=row[7].strip(), village_id=village_obj.id, group_id=person_group.id, partner_id=int(row[0].strip()),
+                                                    defaults={'person_name': row[7].strip(), 
+                                                        'father_name': row[8].strip(), 
+                                                        'gender': row[9].strip(), 
+                                                        'village_id': village_obj.id, 
+                                                        'household_id': household_obj.id if household_obj else None, 
+                                                        'group_id': person_group.id, 
+                                                        'partner_id': int(row[0]), 
+                                                        'phone_no': phone_num
+                                                    }
+                                                )
+                                        person_obj.father_name = row[8].strip()
+                                        person_obj.gender = row[9].strip()
                                         person_obj.phone_no = phone_num
                                         person_obj.full_clean()
                                         person_obj.save()
                         # Handle Integrity and Validation Error
                         except (IntegrityError, ValidationError) as e:
-                            msg = "Invalid value in row {}. ".format(
-                                index + 1)
+                            msg = "Invalid value in row {}. ".format(index + 1)
                             for key in e.error_dict:
                                 for x in range(len(e.error_dict[key])):
-                                    msg = msg + " # " + key + " - " + \
-                                        e.error_dict[key][x].messages[0]+" "
+                                    msg = msg + " # " + key + " - " + e.error_dict[key][x].messages[0] + " "
                             raise ValidationError(msg)
-                    add_message(
-                        request, 25, 'Your data has been successfully uploaded. Please login in to COCO to view this data.')
+                    add_message(request, 25, 'Your data has been successfully uploaded. Please login in to COCO to view this data.')
                 else:
-                    add_message(
-                        request, 40, "File Header is not of the correct format")
+                    add_message(request, 40, "File Header is not of the correct format")
             # Handle Integrity and Validation Error
             except (IntegrityError, ValidationError) as e:
                 add_message(request, 40, e.messages[0])
             except Exception as e:
                 print(e)
-                add_message(
-                    request, 40, 'Unable to upload data, please contact system@digitalgreen.org for any issues')
+                add_message(request, 40, 'Unable to upload data, please contact system@digitalgreen.org for any issues')
             return redirect(".")
         else:
             add_message(request, 40, "Please correct the errors below.")
@@ -398,17 +417,15 @@ def upload_csv_data(request):
 @login_required
 def getFileHeader(request):
     if request.method == 'GET':
-        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Member Name,Father/Husband Name,Gender,Phone Number,Age'
+        columns = 'Partner ID,District ID,Block Name,Village Name,Person Group,Household Head Full Name,Sex of Household Head,Farmer Name,Father/Husband Name,Sex of the Farmer,Phone Number,Age'
         output = StringIO.StringIO()
         try:
             output.write(columns)
-            response = HttpResponse(output.getvalue().encode(
-                'utf-8'), content_type='text/csv', charset='utf-8')
+            response = HttpResponse(output.getvalue().encode('utf-8'), content_type='text/csv', charset='utf-8')
             response['Content-Disposition'] = 'attachment; filename=header_format.csv'
             return response
         except Exception as e:
-            add_message(
-                request, 40, 'Unable to download header format, contact system@digitalgreen.org for further information')
+            add_message(request, 40, 'Unable to download header format, contact system@digitalgreen.org for further information')
 
 
 class APVideoGenerator(View):
@@ -436,53 +453,33 @@ class APVideoGenerator(View):
                             dg_practice = video_iterable.video.videopractice.all()
                             for item in dg_practice:
                                 try:
-                                    dg_practice_list.append({'id': item.id,
-                                                             'practice_name': item.videopractice_name,
-                                                             })
+                                    dg_practice_list.append({'id': item.id,'practice_name': item.videopractice_name,})
                                 except:
-                                    dg_practice_list.append({'id': None,
-                                                             'practice_name': None,
-                                                             })
+                                    dg_practice_list.append({'id': None,'practice_name': None,})
 
                             practice_q = video_iterable.practice.all()
                             for item in practice_q:
                                 try:
-                                    practice_list.append({'id': item.id,
-                                                          'practice_name': item.pest_name,
-                                                          'practice_code': item.pest_code,
-                                                          'practice_name_telgu': item.pest_name_telgu})
+                                    practice_list.append({'id': item.id,'practice_name': item.pest_name,'practice_code': item.pest_code,'practice_name_telgu': item.pest_name_telgu})
                                 except:
-                                    practice_list.append({'id': None,
-                                                          'practice_name': None,
-                                                          'practice_code': None,
-                                                          'practice_name_telgu': None})
+                                    practice_list.append({'id': None,'practice_name': None,'practice_code': None,'practice_name_telgu': None})
 
                             tags_q = video_iterable.video.tags.all()
                             for tag_item in tags_q:
                                 try:
-                                    tags.append({'id': tag_item.id,
-                                                 'tag_name': tag_item.tag_name,
-                                                 'tag_code': tag_item.tag_code,
-                                                 'tag_regional_name': tag_item.tag_regional_name})
+                                    tags.append({'id': tag_item.id,'tag_name': tag_item.tag_name,'tag_code': tag_item.tag_code,'tag_regional_name': tag_item.tag_regional_name})
                                 except:
-                                    tags.append({'id': None,
-                                                 'tag_name': None,
-                                                 'tag_code': None,
-                                                 'tag_regional_name': None})
+                                    tags.append({'id': None,'tag_name': None,'tag_code': None,'tag_regional_name': None})
                             category = []
                             try:
-                                category.append({'id': video_iterable.video.category.id,
-                                                'category_name': video_iterable.video.category.category_name})
+                                category.append({'id': video_iterable.video.category.id,'category_name': video_iterable.video.category.category_name})
                             except:
-                                category.append({'id': None,
-                                                'category_name': None})
+                                category.append({'id': None,'category_name': None})
                             sub_category = []
                             try:
-                                sub_category.append({'id': video_iterable.video.subcategory.id,
-                                                     'subcategory_name': video_iterable.video.subcategory.subcategory_name})
+                                sub_category.append({'id': video_iterable.video.subcategory.id,'subcategory_name': video_iterable.video.subcategory.subcategory_name})
                             except:
-                                sub_category.append({'id': None,
-                                                     'subcategory_name': None})
+                                sub_category.append({'id': None,'subcategory_name': None})
 
                             data_list.append({'id': video_iterable.video.id,
                                               'video_title': video_iterable.video.title,

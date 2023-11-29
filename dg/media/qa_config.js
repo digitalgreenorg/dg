@@ -137,8 +137,8 @@ define([], function () {
 
     foreign_entities: {
       video: {
-        video: {
-          placeholder: "id_video",
+        videoes_screened: {
+          placeholder: "id_videoes_screened",
           name_field: "title",
         },
       },
@@ -199,7 +199,8 @@ define([], function () {
         group: "required",
         mediator: "required",
         qareviewername: "required",
-        video: "required",
+        // video: "required",
+        videoes_screened: "required",
         date: "required",
         equipments_setup_handling: "required",
         maintained_ideal_darkness: "required",
@@ -218,7 +219,8 @@ define([], function () {
         village: "Village name is required",
         group: "Group is required",
         mediator: "Mediator name is required",
-        video: "Video name is required",
+        // video: "Video name is required",
+        videoes_screened: "Videoes screened is required",
         date: "Date is required",
         qareviewername: "Reviewer name is required",
         equipments_setup_handling: "Required",
@@ -522,17 +524,13 @@ define([], function () {
       total_enteries: "Total Enteries: ",
       next: "Next",
       previous: "Previous",
-      list_page_help:
-        "For multiple column sorting, press and hold the shift key while sorting each column.",
+      list_page_help: "For multiple column sorting, press and hold the shift key while sorting each column.",
       line_1: "Welcome to QACOCO",
-      line_2:
-        "COCO helps you to seamlessly enter data in conditions of intermittent connectivity.",
+      line_2: "COCO helps you to seamlessly enter data in conditions of intermittent connectivity.",
       line_3: "Add data",
-      line_4:
-        "To add some data, click on (+) sign next to the type of data that you want to add.",
+      line_4: "To add some data, click on (+) sign next to the type of data that you want to add.",
       line_5: "View Data",
-      line_6:
-        "To view, sort and search through your data, click on the data link in the sidebar.",
+      line_6: "To view, sort and search through your data, click on the data link in the sidebar.",
       line_7: "Sync data",
       line_8:
         "To sync data with the server, click on the sync button. While syncing, if some data is rejected by the server, you will get the opportunity to correct the data, or in case of duplicate entries, to discard it. The number in the button shows how many entries are yet to be uploaded. Clicking on the sync button will also download the database if it is not completely downloaded.",
@@ -567,9 +565,7 @@ define([], function () {
         }).done(function (resp) {
           console.log(resp);
           if (resp == "1") {
-            alert(
-              "Your database will be redownloaded because of some changes in data."
-            );
+            alert("Your database will be redownloaded because of some changes in data.");
             Offline.reset_database();
           }
         });

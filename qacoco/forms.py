@@ -8,7 +8,6 @@ from models import VideoQualityReview, DisseminationQuality, AdoptionVerificatio
 from geographies.models import District, Block
 from videos.models import Video, Category, SubCategory, NonNegotiable
 
-
 def save_all(instances, user, id):
     for instance in instances:
         if(id):
@@ -47,6 +46,26 @@ class QACocoUserForm(forms.ModelForm):
         queryset=Video.objects.all().prefetch_related('language', 'village__block'),
         required=False
     )
+
+
+class DisseminationQalityVideosMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return obj.title  # Customize the display of video objects if needed
+
+
+class DisseminationQualityAdminForm(forms.ModelForm):
+    videoes_screened = DisseminationQalityVideosMultipleChoiceField(
+        widget=FilteredSelectMultiple(
+            verbose_name='videos',
+            is_stacked=False
+        ),
+        queryset=Video.objects.all()
+    )
+
+    # def __init__(self, *args, **kwargs):
+    #     super(DisseminationQualityAdminForm, self).__init__(*args, **kwargs)
+    #     # Get the currently signed-in user
+    #     user = self.request.user TODO: Filter the querysets based on the logged-in user
 
 
 class QACocoModelForm(ModelForm):

@@ -1,6 +1,5 @@
 # python imports
-import ast
-import json
+import ast, json
 from datetime import datetime, timedelta
 from functools import partial
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,42 +9,21 @@ from django.db.models import Q
 from tastypie import fields
 from tastypie.models import ApiKey
 from tastypie.authentication import SessionAuthentication, MultiAuthentication
-from custom_authentication import AnonymousGETAuthentication
 from tastypie.authorization import Authorization
 from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource
 from tastypie.validation import FormValidation
+from custom_authentication import AnonymousGETAuthentication
 # app imports
 from models import CocoUser
-from activities.models import Screening
-from activities.models import PersonAdoptPractice
-from activities.models import PersonMeetingAttendance
-from geographies.models import Village
-from geographies.models import District
-from geographies.models import State
+from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance, FrontLineWorkerPresent
+from geographies.models import Village, District, State
 from programs.models import Partner
-from people.models import Animator
-from people.models import AnimatorAssignedVillage
-from people.models import Person
-from people.models import PersonGroup
-from videos.models import Video
-from videos.models import Language
-from videos.models import NonNegotiable
-from videos.models import Category
-from videos.models import SubCategory
-from videos.models import VideoPractice
-from videos.models import ParentCategory
-from videos.models import DirectBeneficiaries
-from videos.models import Tag
+from people.models import Animator, AnimatorAssignedVillage, Person, Household, PersonGroup
+from videos.models import Video, Language, NonNegotiable, Category, SubCategory, VideoPractice, ParentCategory, DirectBeneficiaries, Tag
 from activities.models import FrontLineWorkerPresent
 # Will need to changed when the location of forms.py is changed
-from dashboard.forms import AnimatorForm
-from dashboard.forms import NonNegotiableForm
-from dashboard.forms import PersonAdoptPracticeForm
-from dashboard.forms import PersonForm
-from dashboard.forms import PersonGroupForm
-from dashboard.forms import ScreeningForm
-from dashboard.forms import VideoForm
+from dashboard.forms import AnimatorForm, NonNegotiableForm, PersonAdoptPracticeForm, PersonForm, HouseholdForm, PersonGroupForm, ScreeningForm, VideoForm
 
 
 class PMANotSaved(Exception):
@@ -60,9 +38,9 @@ class PartnerDoesNotExist(Exception):
 
 class ModelFormValidation(FormValidation):
     """
-        Override tastypie's standard ``FormValidation`` since this does not care
-        about URI to PK conversion for ``ToOneField`` or ``ToManyField``.
-        """
+    Override tastypie's standard ``FormValidation`` since this does not care
+    about URI to PK conversion for ``ToOneField`` or ``ToManyField``.
+    """
 
     def uri_to_pk(self, uri):
         """
@@ -161,11 +139,11 @@ def dict_to_foreign_uri_m2m(bundle, field_name, resource_name):
 
 
 def get_user_partner_id(user_id):
+    partner_id = None
     if user_id:
         try:
             partner_id = CocoUser.objects.get(user_id=user_id).partner.id
         except Exception as e:
-            partner_id = None
             raise PartnerDoesNotExist(
                 'partner does not exist for user ' + user_id+" : " + e)
 
@@ -271,8 +249,7 @@ class VillagePartnerAuthorization(Authorization):
         self.village_field = field
 
     def read_list(self, object_list, bundle):
-        villages = CocoUser.objects.get(
-            user_id=bundle.request.user.id).get_villages()
+        villages = CocoUser.objects.get(user_id=bundle.request.user.id).get_villages()
         user_partner = get_user_partner_id(bundle.request.user.id)
         kwargs = {}
         kwargs[self.village_field] = villages
@@ -639,14 +616,14 @@ class PersonGroupResource(BaseResource):
 
     class Meta:
         max_limit = None
-        queryset = PersonGroup.objects.prefetch_related(
-            'village', 'partner', 'partners').all()
+        queryset = PersonGroup.objects.prefetch_related('village', 'partner', 'partners').all()
         resource_name = 'group'
         authentication = SessionAuthentication()
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class=PersonGroupForm)
         excludes = ['time_created', 'time_modified']
         always_return_data = True
+
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
@@ -670,6 +647,22 @@ class PersonGroupResource(BaseResource):
                 bundle.data['village'] = None
         return bundle
 
+class HouseholdResource(BaseResource):
+    village = fields.ForeignKey(VillageResource, 'village')
+
+    class Meta:
+        max_limit = None
+        queryset = Household.objects.prefetch_related('village').all()
+        resource_name = 'household'
+        authentication = SessionAuthentication()
+        authorization = VillageAuthorization('village__in')
+        validation = ModelFormValidation(form_class=HouseholdForm)
+        excludes = ['time_created', 'time_modified']
+        always_return_data = True
+
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
+    hydrate_village = partial(dict_to_foreign_uri, field_name='village')
+
 
 def map_dict():
     data_dict = {}
@@ -678,7 +671,6 @@ def map_dict():
     for item in dobj:
         data_dict[item.get('id')] = item.get('direct_beneficiaries_category')
     return data_dict
-
 
 class ScreeningResource(BaseResource):
     global mapping_dict
@@ -696,6 +688,19 @@ class ScreeningResource(BaseResource):
         'coco.api.PersonGroupResource', 'farmer_groups_targeted', related_name='screening')
     farmers_attendance = fields.ListField()
     category = fields.ListField()
+
+    # For Network and Client Side Optimization Sending Screenings after 1 Jan 2013
+    class Meta:
+        max_limit = None
+        queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
+                                                      'personmeetingattendance_set__person', 'partner').filter(date__gte=datetime.now().date() - timedelta(days=365))
+        resource_name = 'screening'
+        authentication = SessionAuthentication()
+        authorization = StrictVillagePartnerAuthorization('village__in')
+        validation = ModelFormValidation(form_class=ScreeningForm)
+        always_return_data = True
+        excludes = ['location', 'time_created', 'time_modified', 'observation_status', 'screening_grade', 'observer']
+
     dehydrate_village = partial(
         foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
     dehydrate_parentcategory = partial(
@@ -715,24 +720,10 @@ class ScreeningResource(BaseResource):
     hydrate_parentcategory = partial(
         dict_to_foreign_uri, field_name='parentcategory')
 
-    # For Network and Client Side Optimization Sending Screenings after 1 Jan 2013
-    class Meta:
-        max_limit = None
-        queryset = Screening.objects.prefetch_related('village', 'animator', 'videoes_screened', 'farmer_groups_targeted',
-                                                      'personmeetingattendance_set__person', 'partner').filter(date__gte=datetime.now().date() - timedelta(days=365))
-        resource_name = 'screening'
-        authentication = SessionAuthentication()
-        authorization = StrictVillagePartnerAuthorization('village__in')
-        validation = ModelFormValidation(form_class=ScreeningForm)
-        always_return_data = True
-        excludes = ['location', 'time_created', 'time_modified',
-                    'observation_status', 'screening_grade', 'observer']
-
     def obj_create(self, bundle, **kwargs):
         pma_list = bundle.data.get('farmers_attendance')
         if pma_list:
-            bundle = super(ScreeningResource, self).obj_create(
-                bundle, **kwargs)
+            bundle = super(ScreeningResource, self).obj_create(bundle, **kwargs)
             user_id = None
             if bundle.request.user:
                 user_id = bundle.request.user.id
@@ -740,22 +731,26 @@ class ScreeningResource(BaseResource):
             for pma in pma_list:
                 try:
                     person_obj = Person.objects.get(id=pma['person_id'])
+
                     # Save the phone number of the farmer while inserting screening
                     # i.e. It will be saved only if the phone number is empty
                     if (pma.get('phone_no') and not person_obj.phone_no):
                         person_obj.phone_no = str(pma.get('phone_no'))
+
                     # Make sure age and gender are not overwritten
                     if (pma.get('age') and not person_obj.age):
                         person_obj.age = int(
                             pma.get('age')) if pma.get('age') else None
+
                     if (pma.get('gender') and not person_obj.gender):
-                        person_obj.gender = pma.get(
-                            'gender') if pma.get('gender') else None
+                        person_obj.gender = pma.get('gender') if pma.get('gender') else None
                     person_obj.save()
+
                     if pma.get('category'):
                         category = json.dumps(pma.get('category'))
                     else:
                         category = None
+
                     attendance = PersonMeetingAttendance(screening_id=screening_id,
                                                          person_id=pma['person_id'],
                                                          user_created_id=user_id,
@@ -764,7 +759,6 @@ class ScreeningResource(BaseResource):
                 except Exception, e:
                     raise PMANotSaved('For Screening with id: ' + str(screening_id) +
                                       ' pma is not getting saved. pma details: ' + str(e))
-
             return bundle
         else:
             raise PMANotSaved('Screening with details: ' + str(bundle.data) +
@@ -868,6 +862,7 @@ class PersonResource(BaseResource):
     category = fields.ListField()
     village = fields.ForeignKey(VillageResource, 'village')
     group = fields.ForeignKey(PersonGroupResource, 'group', null=True)
+    household = fields.ForeignKey(HouseholdResource, 'household', null=True)
     videos_seen = fields.DictField(null=True)
     partner = fields.ForeignKey(PartnerResource, 'partner')
     partners = fields.ToManyField(PartnerResource, 'partners', null=True)
@@ -875,7 +870,7 @@ class PersonResource(BaseResource):
     class Meta:
         max_limit = None
         queryset = Person.objects.prefetch_related(
-            'village', 'group', 'personmeetingattendance_set__screening__videoes_screened', 'partner', 'partners').all()
+            'village', 'group', 'household', 'personmeetingattendance_set__screening__videoes_screened', 'partner', 'partners').all()
         resource_name = 'person'
         authorization = VillagePartnerAuthorization('village__in')
         validation = ModelFormValidation(form_class=PersonForm)
@@ -883,12 +878,12 @@ class PersonResource(BaseResource):
         excludes = ['date_of_joining', 'image_exists',
                     'time_created', 'time_modified']
 
-    dehydrate_village = partial(
-        foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
-    dehydrate_group = partial(
-        foreign_key_to_id, field_name='group', sub_field_names=['id', 'group_name'])
+    dehydrate_village = partial(foreign_key_to_id, field_name='village', sub_field_names=['id', 'village_name'])
+    dehydrate_group = partial(foreign_key_to_id, field_name='group', sub_field_names=['id', 'group_name'])
+    dehydrate_household = partial(foreign_key_to_id, field_name='household', sub_field_names=['id', 'household_name'])
     hydrate_village = partial(dict_to_foreign_uri, field_name='village')
     hydrate_group = partial(dict_to_foreign_uri, field_name='group')
+    hydrate_household = partial(dict_to_foreign_uri, field_name='household')
     hydrate_partner = partial(assign_partner)
 
     def dehydrate_label(self, bundle):
@@ -916,8 +911,7 @@ class PersonAdoptVideoResource(BaseResource):
     animator = fields.ForeignKey(MediatorResource, 'animator')
     group = fields.DictField(null=True)
     village = fields.ForeignKey(VillageResource, 'village', null=True)
-    parentcategory = fields.ForeignKey(
-        ParentCategoryResource, 'parentcategory', null=True)
+    parentcategory = fields.ForeignKey(ParentCategoryResource, 'parentcategory', null=True)
 
     class Meta:
         max_limit = None

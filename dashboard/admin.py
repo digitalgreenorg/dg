@@ -11,7 +11,7 @@ from django.utils.encoding import smart_str
 from django.forms import TextInput, Textarea
 from coco.base_models import NONNEGOTIABLE_OPTION
 from activities.models import PersonMeetingAttendance, Screening, PersonAdoptPractice, FrontLineWorkerPresent
-from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup, Household
 from dashboard.forms import CocoUserForm
 from qacoco.forms import QACocoUserForm
 from qacoco.admin import QACocoUserAdmin
@@ -110,7 +110,6 @@ class PartnerAdmin(admin.ModelAdmin):
     list_display = ['id', 'partner_name']
 
 
-
 class VideoAdmin(admin.ModelAdmin):
     inlines = [NonNegotiablesInline]
     fieldsets = [
@@ -162,8 +161,7 @@ class VillageAdmin(admin.ModelAdmin):
 
 class PersonInline(admin.TabularInline):
     model = Person
-    extra = 30
-
+    extra = 0
 
 class PersonGroupForm(forms.ModelForm):
     class Meta:
@@ -179,27 +177,37 @@ class PersonGroupForm(forms.ModelForm):
                 #settings.STATIC_URL + "js/dynamic_inlines_with_sort.js",
         )
 
-        #css = {
-        #        'all':('/media/css/dynamic_inlines_with_sort.css',)
-        #}
+# class HouseholdForm(forms.ModelForm):
+#     class Meta:
+#         model = Household
+#         fields = ("__all__")
 
+    # class Media:
+    #     js = (settings.STATIC_URL + "js/filter_village.js",)
 
 
 class PersonGroupAdmin(admin.ModelAdmin):
     inlines = [PersonInline]
-    list_display = ('group_name','village')
-    search_fields = ['group_name','village__village_name']
+    list_display = ('group_name', 'village')
+    search_fields = ['group_name', 'village__village_name']
     form = PersonGroupForm
+
+class HouseholdAdmin(admin.ModelAdmin):
+    list_display = ('household_name', 'head_gender', 'village')
+    list_filter = ('head_gender','village')
+    search_fields = ['household_name']
+    # form = HouseholdForm
 
 
 class AnimatorAssignedVillageAdmin(admin.ModelAdmin):
     list_display = ('animator','village')
-    search_fields = ['animator__name','village__village_name']
+    search_fields = ['animator__name', 'village__village_name']
 
 
 class PersonAdoptPracticeInline(admin.StackedInline):
     model = PersonAdoptPractice
     extra = 3
+
 
 class PersonAdoptPracticeAdmin(admin.ModelAdmin):
     formfield_overrides = {
@@ -299,8 +307,6 @@ class VideoForm(forms.ModelForm):
         self.fields['video'].queryset = Video.objects.filter(partner_id__in=(50,72),village__block__district__state_id= 6).exclude(id__in=mapped_videos)
 
 
-
-
 class BluefrogSubcategoryAdmin(admin.ModelAdmin):
     list_display = ['crop_id', 'crop_name', 'crop_name_telgu']
     search_fields = ['crop_id', 'crop_name', 'crop_name_telgu']
@@ -329,10 +335,6 @@ class APVideoAdmin(admin.ModelAdmin):
         if tag_id_to_be_removed:
             form.instance.video.tags.remove(*tag_id_to_be_removed)
         form.instance.video.tags.add(*current_instance_tag)
-
-
-
-
 
 
 class AP_DistrictAdmin(admin.ModelAdmin):
@@ -426,10 +428,10 @@ class AP_AnimatorAdmin(admin.ModelAdmin):
     _animator.allow_tags = True
     _animator.short_description = "COCO-DB-Animator-ID"
 
+
 class AP_AnimatorAssignedVillageAdmin(admin.ModelAdmin):
     list_display = ['id', 'animator', 'village', 'user_created', 'time_created']
     search_fields = ['animator']
-
 
 
 class JSLPS_AnimatorAdmin(admin.ModelAdmin):
@@ -525,6 +527,7 @@ class JSLPS_VillageAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+
 class JSLPS_VideoAdmin(admin.ModelAdmin):
     list_display = ['id', 'vc', 'title', 'user_created', 'time_created',
                     '_video', 'activity']
@@ -564,7 +567,6 @@ class AP_AdoptionAdmin(admin.ModelAdmin):
         return False
 
 
-
 class JSLPS_ScreeningAdmin(admin.ModelAdmin):
     list_display = ['id', 'screenig_code', 'activity', 
                     'screening', '_village', '_dg_screening_id',
@@ -595,6 +597,4 @@ class JSLPS_AdoptionAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
-
-
 

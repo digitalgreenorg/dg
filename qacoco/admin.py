@@ -14,34 +14,42 @@ from videos.models import Video
 from geographies.models import State, District, Block, Village
 from people.models import Animator, PersonGroup, Person
 from models import QACocoUser, QAReviewerCategory, QAReviewerName, VideoQualityReview, DisseminationQuality, AdoptionVerification, AdoptionNonNegotiableVerfication
-from forms import QACocoUserForm
+from forms import QACocoUserForm, DisseminationQualityAdminForm
 
 class QACocoUserAdmin(admin.ModelAdmin):
     # For use custom QACocoUserForm 
     form = QACocoUserForm
     list_display = ('user', 'partner', 'get_blocks')
     search_fields = ['user__username']
-    #filter_horizontal = ('blocks','videos') 
+    #filter_horizontal = ('blocks','videos')
 
     def get_queryset(self, request):
         if request.user.is_superuser:
             return QACocoUser.objects.all()
         return QACocoUser.objects.filter(user=request.user)
-    
+
     def get_readonly_fields(self, request, obj=None):
          self.readonly_fields = []
          if not request.user.is_superuser:
             self.readonly_fields = ['user', 'partner', 'blocks',]
          return self.readonly_fields
-    
+
 class VideoQualityReviewAdmin(admin.ModelAdmin):
-    list_display=('video','qareviewername', 'total_score', 'video_grade')
+    list_display=('video', 'qareviewername', 'total_score', 'video_grade')
     raw_id_fields = ('video')
 
 class DisseminationQualityAdmin(admin.ModelAdmin):
+    form = DisseminationQualityAdminForm
     list_display = ('date', 'mediator','village', 'total_score', 'video_grade')
     search_fields = ['mediator', 'village', 'total_score', 'video_grade']
     raw_id_fields = ('block', 'village', 'mediator', 'video')
+
+    # So the form can have access to the request
+    # def get_form(self, request, obj=None, **kwargs):
+    #     # Pass the request object to the form
+    #     form = super(DisseminationQualityAdmin, self).get_form(request, obj, **kwargs)
+    #     form.request = request
+    #     return form
 
 class AdoptionNonNegotiableVerfication(admin.StackedInline):
     model = AdoptionNonNegotiableVerfication
@@ -51,7 +59,7 @@ class AdoptionVerificationAdmin(admin.ModelAdmin):
     search_fields = ['verification_date', 'person', 'village', 'mediator']
     raw_id_fields = ('block', 'village', 'mediator', 'person', 'group', 'video')
     inlines = [AdoptionNonNegotiableVerfication]
-    
+
 class QAReviewerNameAdmin(admin.ModelAdmin):
     list_display = ('reviewer_category', 'name')
     search_fields = ['reviewer_category', 'name']

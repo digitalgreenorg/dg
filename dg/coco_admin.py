@@ -5,6 +5,7 @@ from dashboard.admin import AnimatorAssignedVillageAdmin
 from dashboard.admin import BlockAdmin
 from dashboard.admin import CocoUserAdmin
 from dashboard.admin import DistrictAdmin
+from dashboard.admin import HouseholdAdmin
 from dashboard.admin import PersonAdmin
 from dashboard.admin import PersonAdoptPracticeAdmin
 from dashboard.admin import PersonGroupAdmin
@@ -27,7 +28,7 @@ from dashboard.admin import PartnerAdmin
 from activities.models import PersonAdoptPractice, Screening
 from coco.models import CocoUser
 from geographies.models import Block, Country, District, State, Village
-from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup
+from people.models import Animator, AnimatorAssignedVillage, Person, PersonGroup, Household
 from programs.models import Partner
 from programs.models import Project
 from videos.models import Language
@@ -69,6 +70,7 @@ coco_admin.register(Village, VillageAdmin)
 coco_admin.register(Partner, PartnerAdmin)
 coco_admin.register(Project, ProjectAdmin)
 coco_admin.register(Person, PersonAdmin)
+coco_admin.register(Household, HouseholdAdmin)
 coco_admin.register(PersonGroup, PersonGroupAdmin)
 coco_admin.register(Animator, AnimatorAdmin)
 coco_admin.register(Language)
