@@ -334,60 +334,49 @@ def upload_csv_data(request):
                                                 )
                                     if person_group or created:
 
-                                        phone_num = row[10].strip()
-
-                                        country_id = village_obj.block.district.state.country.id
                                         # Nullify incorrect phone numbers if the village is in Ethiopia
-                                        if country_id == 2:
-                                            if phone_num != None and phone_num != "":
-                                                allowed_phone_prefixes = ('7', '9')
-                                                if not (len(phone_num) == 9 and phone_num.startswith(allowed_phone_prefixes)):
-                                                    # Nullify
-                                                    phone_num = ""
+                                        country_id = village_obj.block.district.state.country.id
+                                        phone_num = row[10].strip()
+                                        if country_id == 2 and phone_num and not (len(phone_num) == 9 and phone_num.startswith(('7', '9'))):
+                                            phone_num = ""
 
+                                        # Create or get Household
                                         household_name = row[5].strip()
-                                        # Check if household_name is empty
-                                        if household_name:
-                                            household_obj, created = Household.objects.get_or_create(household_name__iexact=household_name,village_id=village_obj.id,
-                                                defaults={'household_name':household_name, 'village_id':village_obj.id, 'head_gender':row[6].strip()})
-                                        else:
-                                            household_obj = None  # Set household_obj to None if household_name is empty
+                                        household_obj, _ = (Household.objects.get_or_create(
+                                            household_name__iexact=household_name,
+                                            village_id=village_obj.id,
+                                            defaults={'household_name': household_name, 'village_id': village_obj.id, 'head_gender': row[6].strip()}
+                                        ) if household_name else (None, None))
 
-                                        if row[11] != '' and row[11] != '\r':
-                                            row[11] = row[11].strip('\r')
-                                            person_obj, created = Person.objects.get_or_create(
-                                                    person_name__iexact=row[7].strip(), village_id=village_obj.id, group_id=person_group.id, partner_id=int(row[0].strip()),
-                                                    defaults={'person_name': row[7].strip(), 
-                                                        'father_name': row[8].strip(), 
-                                                        'gender': row[9].strip(),
-                                                        'village_id': village_obj.id, 
-                                                        'household_id': household_obj.id if household_obj else None, 
-                                                        'group_id': person_group.id,
-                                                        'partner_id': int(row[0].strip()), 
-                                                        'age': int(row[11].strip()), 
-                                                        'phone_no': phone_num
-                                                    }
-                                                )
-                                            person_obj.age = int(row[11].strip())
-                                        else:
-                                            row[11] = row[11].strip('\r')
-                                            person_obj, created = Person.objects.get_or_create(
-                                                    person_name__iexact=row[7].strip(), village_id=village_obj.id, group_id=person_group.id, partner_id=int(row[0].strip()),
-                                                    defaults={'person_name': row[7].strip(), 
-                                                        'father_name': row[8].strip(), 
-                                                        'gender': row[9].strip(), 
-                                                        'village_id': village_obj.id, 
-                                                        'household_id': household_obj.id if household_obj else None, 
-                                                        'group_id': person_group.id, 
-                                                        'partner_id': int(row[0]), 
-                                                        'phone_no': phone_num
-                                                    }
-                                                )
+                                        age = int(row[11].strip('\r')) if row[11] != '' and row[11] != '\r' else None
+
+                                        person_data = {
+                                            'person_name__iexact': row[7].strip(),
+                                            'village_id': village_obj.id,
+                                            'group_id': person_group.id,
+                                            'partner_id': int(row[0].strip()),
+                                            'defaults': {
+                                                'person_name': row[7].strip(),
+                                                'father_name': row[8].strip(),
+                                                'gender': row[9].strip(),
+                                                'village_id': village_obj.id,
+                                                'household_id': household_obj.id if household_obj else None,
+                                                'group_id': person_group.id,
+                                                'partner_id': int(row[0].strip()),
+                                                'age': age,
+                                                'phone_no': phone_num,
+                                            }
+                                        }
+
+                                        person_obj, _ = Person.objects.get_or_create(**person_data)
+
+                                        # Update Person attributes
                                         person_obj.father_name = row[8].strip()
                                         person_obj.gender = row[9].strip()
                                         person_obj.phone_no = phone_num
                                         person_obj.full_clean()
                                         person_obj.save()
+
                         # Handle Integrity and Validation Error
                         except (IntegrityError, ValidationError) as e:
                             msg = "Invalid value in row {}. ".format(index + 1)
