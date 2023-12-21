@@ -1342,6 +1342,10 @@
           farmers_attendance: {
             dependency: [
               {
+                source_form_element: "group",
+                dep_attr: "group",
+              },
+              {
                 source_form_element: "float_person",
                 dep_attr: "id",
               },
@@ -1412,14 +1416,12 @@
             name_field: "person_name",
           },
         },
-
         parentcategory: {
           parentcategory: {
             placeholder: "id_parentcategory",
             name_field: "parent_category_name",
           },
         },
-
         video: {
           video: {
             placeholder: "id_video",
@@ -1460,9 +1462,9 @@
         parentcategory: {
           required: true,
         },
-        float_person: {
-          required: true,
-        },
+        // float_person: {
+        //   required: true,
+        // },
         person: {
           required: true,
         },
@@ -1490,9 +1492,9 @@
         person: {
           required: "Person is required",
         },
-        float_person: {
-          required: "Person is required",
-        },
+        // float_person: {
+        //   required: "Person is required",
+        // },
         video: {
           required: "Video is required",
         },
