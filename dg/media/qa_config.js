@@ -24,6 +24,7 @@ define([], function () {
       { header: "Q12", element: "story_board" },
       { header: "Q13", element: "ease_of_understanding" },
       { header: "Q14", element: "gender_sensitivity" },
+      { header: "Q15", element: "csa_sensitivity" },
       { header: "Total Score", element: "total_score" },
     ],
     entity_name: "VideoQualityReview",
@@ -66,6 +67,7 @@ define([], function () {
         story_board: "required",
         ease_of_understanding: "required",
         gender_sensitivity: "required",
+        csa_sensitivity: "required",
         date: "required",
       },
       messages: {
@@ -87,6 +89,7 @@ define([], function () {
         story_board: "This field is required",
         ease_of_understanding: "This field is required",
         gender_sensitivity: "This field is required",
+        csa_sensitivity: "This field is required",
       },
       highlight: function (element, errorClass, validClass) {
         $(element).parent("div").parent("div").addClass("error");

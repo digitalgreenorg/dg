@@ -104,6 +104,8 @@ class VideoQualityReview(QACocoModel):
         max_length=1, choices=SCORE_CHOICES, blank=True)
     gender_sensitivity = models.CharField(
         max_length=1, choices=SCORE_CHOICES, blank=True)
+    csa_sensitivity = models.CharField(
+        max_length=1, choices=SCORE_CHOICES, blank=True)
     # End of newly added fields
 
     # Abandoned fields below
