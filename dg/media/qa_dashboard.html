@@ -584,7 +584,7 @@
 
     <!--//////////////////////////////////////////////////// VIDEO QUALITY REVIEW ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->
     <script language="javascript">
-      function cal_score(name) {
+      function cal_vq_score(name) {
         var score = 0;
         var grade;
         var m = document.getElementById("scores").children.length;
@@ -599,11 +599,11 @@
         }
         document.getElementsByName("total_score")[0].value = score;
 
-        if (score >= 20) {
+        if (score >= 25) {
           grade = "A";
-        } else if (score >= 15 && score <= 19) {
+        } else if (score >= 15) {
           grade = "B";
-        } else if (score < 15) {
+        } else {
           grade = "C";
         }
 
@@ -614,190 +614,205 @@
     <script
       type="text/template"
       id="Video_Quality_Review_add_edit_template">
-        <fieldset class="form-horizontal">
-            <legend>Video Quality Review</legend>
-            <p class="bold-helptext">All fields in bold are required</p>
-            <div class="form-group">
 
-                <label class="control-label col-sm-2"><b>Video</b></label>
-                <div class="col-sm-4">
-                    <select id = "id_video" name="video" class = "chosen-select form-control">
+      <fieldset class="form-horizontal">
 
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                    <label class="dis-block control-label col-sm-2 notbold"><b>Date</b></label>
-                    <div class="col-sm-4">
-                        <input class="date-picker form-control" id="id_date" name="date" type="text" placeholder="YYYY-MM-DD" onkeydown="return false">
-                    </div>
-            </div>
-            <hr/>
+          <legend>Video Quality Review</legend>
 
-            <div id="scores">
-              <!-- TECHNICAL ASPECTS -->
-              <div class="form-group">
-                  <label class="control-label col-sm-3">Q1. &nbsp; Story Structure</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="storystructure" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('storystructure')">0
-                      <input type="radio" name="storystructure" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('storystructure')">1
-                      <input type="radio" name="storystructure" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('storystructure')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q2. &nbsp; Framing</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="framing" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('framing')">0
-                      <input type="radio" name="framing" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('framing')">1
-                      <input type="radio" name="framing" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('framing')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q3. &nbsp; Continuity</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="continuity" style="margin: 10px 10px 0 10px;" value='0' onchange ="cal_score('continuity')">0
-                      <input type="radio" name="continuity" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('continuity')">1
-                      <input type="radio" name="continuity" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('continuity')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q4. &nbsp; Camera Angles</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="camera_angles" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('camera_angles')">0
-                      <input type="radio" name="camera_angles" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('camera_angles')">1
-                      <input type="radio" name="camera_angles" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('camera_angles')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q5. &nbsp; Camera Movement</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="camera_movement" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('camera_movement')">0
-                      <input type="radio" name="camera_movement" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('camera_movement')">1
-                      <input type="radio" name="camera_movement" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('camera_movement')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q6. &nbsp; Light (Contrast, Brightness)</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="light" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('light')">0
-                      <input type="radio" name="light" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('light')">1
-                      <input type="radio" name="light" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('light')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q7. &nbsp; Editing</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="editing" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('editing')">0
-                      <input type="radio" name="editing" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('editing')">1
-                      <input type="radio" name="editing" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('editing')">2
-                  </div>
-              </div>
-              <div class="form-group">
-              <label class="control-label dis-block col-sm-3">Q8. &nbsp; Audio Quality</label>
-              <div class="col-sm-6">
-                  <input type="radio" name="audio_sound" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('audio_sound')">0
-                  <input type="radio" name="audio_sound" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('audio_sound')">1
-                  <input type="radio" name="audio_sound" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('audio_sound')">2
-              </div>
-              </div>
-              <!-- END OF TECHNICAL ASPECTS -->
-              <!-- CONTENT ASPECTS -->
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q9. &nbsp; Introduction & Importance of the Practice</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="intro_and_importance" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('intro_and_importance')">0
-                      <input type="radio" name="intro_and_importance" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('intro_and_importance')">1
-                      <input type="radio" name="intro_and_importance" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('intro_and_importance')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q10. &nbsp; Facilitation of Content</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="facilitation" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('facilitation')">0
-                      <input type="radio" name="facilitation" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('facilitation')">1
-                      <input type="radio" name="facilitation" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('facilitation')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q11. &nbsp; Non-negotiable Points</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="non_negotiable_pts" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('non_negotiable_pts')">0
-                      <input type="radio" name="non_negotiable_pts" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('non_negotiable_pts')">1
-                      <input type="radio" name="non_negotiable_pts" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('non_negotiable_pts')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q12. &nbsp; Story Board</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="story_board" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('story_board')">0
-                      <input type="radio" name="story_board" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('story_board')">1
-                      <input type="radio" name="story_board" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('story_board')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q13. &nbsp; Ease of Understanding</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="ease_of_understanding" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('ease_of_understanding')">0
-                      <input type="radio" name="ease_of_understanding" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('ease_of_understanding')">1
-                      <input type="radio" name="ease_of_understanding" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('ease_of_understanding')">2
-                  </div>
-              </div>
-              <div class="form-group">
-                  <label class="control-label dis-block col-sm-3">Q14. &nbsp; Gender Sensitivity</label>
-                  <div class="col-sm-6">
-                      <input type="radio" name="gender_sensitivity" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_score('gender_sensitivity')">0
-                      <input type="radio" name="gender_sensitivity" style="margin: 0 10px 0 30px;" value='1' onchange="cal_score('gender_sensitivity')">1
-                      <input type="radio" name="gender_sensitivity" style="margin: 0 10px 0 30px;" value='2' onchange="cal_score('gender_sensitivity')">2
-                  </div>
+          <p class="bold-helptext">All fields in bold are required</p>
+
+          <div class="form-group">
+
+              <label class="control-label col-sm-2"><b>Video</b></label>
+              <div class="col-sm-4">
+                  <select id = "id_video" name="video" class = "chosen-select form-control">
+
+                  </select>
               </div>
           </div>
-                <!-- END OF CONTENT ASPECTS -->
-      </div>
-                <hr/>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Total Score</label>
-                    <div class="col-sm-4">
-                        <input readonly type="text" name="total_score" class="form-control">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Video Grade</label>
-                    <div class="col-sm-4">
-                        <input readonly type="text" name="video_grade" class="form-control">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label dis-block col-sm-2">Approve for Dissemination</label>
-                    <div class="col-sm-4">
-                        <input type="radio" name="approval" value='1' style="margin: 0 10px 0 10px;">Yes
-                        <input type="radio" name="approval" value='0' style="margin: 0 10px 0 30px;">No
-
-                    </div>
-                </div>
-            <div class="form-group">
-
-                <label class="control-label col-sm-2">Reviewed By</label>
-                <div class="col-sm-4">
-                    <select id = "id_qareviewername" name="qareviewername" class = "chosen-select form-control">
-
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                  <label class="col-sm-2 control-label">Remarks</label>
+          <div class="form-group">
+                  <label class="dis-block control-label col-sm-2 notbold"><b>Date</b></label>
                   <div class="col-sm-4">
-                      <textarea required name="remarks" class="input-xlarge form-control" rows="4" placeholder="Remarks"></textarea>
+                      <input class="date-picker form-control" id="id_date" name="date" type="text" placeholder="YYYY-MM-DD" onkeydown="return false">
                   </div>
+          </div>
+
+          <hr/>
+
+          <div id="scores">
+            <!-- TECHNICAL ASPECTS -->
+            <div class="form-group">
+                <label class="control-label col-sm-3">Q1. &nbsp; Story Structure</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="storystructure" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('storystructure')">0
+                    <input type="radio" name="storystructure" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('storystructure')">1
+                    <input type="radio" name="storystructure" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('storystructure')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q2. &nbsp; Framing</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="framing" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('framing')">0
+                    <input type="radio" name="framing" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('framing')">1
+                    <input type="radio" name="framing" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('framing')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q3. &nbsp; Continuity</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="continuity" style="margin: 10px 10px 0 10px;" value='0' onchange ="cal_vq_score('continuity')">0
+                    <input type="radio" name="continuity" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('continuity')">1
+                    <input type="radio" name="continuity" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('continuity')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q4. &nbsp; Camera Angles</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="camera_angles" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('camera_angles')">0
+                    <input type="radio" name="camera_angles" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('camera_angles')">1
+                    <input type="radio" name="camera_angles" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('camera_angles')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q5. &nbsp; Camera Movement</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="camera_movement" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('camera_movement')">0
+                    <input type="radio" name="camera_movement" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('camera_movement')">1
+                    <input type="radio" name="camera_movement" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('camera_movement')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q6. &nbsp; Light (Contrast, Brightness)</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="light" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('light')">0
+                    <input type="radio" name="light" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('light')">1
+                    <input type="radio" name="light" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('light')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q7. &nbsp; Editing</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="editing" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('editing')">0
+                    <input type="radio" name="editing" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('editing')">1
+                    <input type="radio" name="editing" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('editing')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q8. &nbsp; Audio Quality</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="audio_sound" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('audio_sound')">0
+                    <input type="radio" name="audio_sound" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('audio_sound')">1
+                    <input type="radio" name="audio_sound" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('audio_sound')">2
+                </div>
+            </div>
+            <!-- END OF TECHNICAL ASPECTS -->
+            <!-- CONTENT ASPECTS -->
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q9. &nbsp; Introduction & Importance of the Practice</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="intro_and_importance" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('intro_and_importance')">0
+                    <input type="radio" name="intro_and_importance" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('intro_and_importance')">1
+                    <input type="radio" name="intro_and_importance" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('intro_and_importance')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q10. &nbsp; Facilitation of Content</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="facilitation" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('facilitation')">0
+                    <input type="radio" name="facilitation" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('facilitation')">1
+                    <input type="radio" name="facilitation" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('facilitation')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q11. &nbsp; Non-negotiable Points</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="non_negotiable_pts" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('non_negotiable_pts')">0
+                    <input type="radio" name="non_negotiable_pts" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('non_negotiable_pts')">1
+                    <input type="radio" name="non_negotiable_pts" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('non_negotiable_pts')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q12. &nbsp; Story Board</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="story_board" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('story_board')">0
+                    <input type="radio" name="story_board" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('story_board')">1
+                    <input type="radio" name="story_board" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('story_board')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q13. &nbsp; Ease of Understanding</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="ease_of_understanding" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('ease_of_understanding')">0
+                    <input type="radio" name="ease_of_understanding" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('ease_of_understanding')">1
+                    <input type="radio" name="ease_of_understanding" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('ease_of_understanding')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q14. &nbsp; Gender Sensitivity</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="gender_sensitivity" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('gender_sensitivity')">0
+                    <input type="radio" name="gender_sensitivity" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('gender_sensitivity')">1
+                    <input type="radio" name="gender_sensitivity" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('gender_sensitivity')">2
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label dis-block col-sm-3">Q15. &nbsp; Climate Smart Agriculture Sensitivity</label>
+                <div class="col-sm-6">
+                    <input type="radio" name="csa_sensitivity" style="margin: 10px 10px 0 10px;" value='0' onchange="cal_vq_score('csa_sensitivity')">0
+                    <input type="radio" name="csa_sensitivity" style="margin: 0 10px 0 30px;" value='1' onchange="cal_vq_score('csa_sensitivity')">1
+                    <input type="radio" name="csa_sensitivity" style="margin: 0 10px 0 30px;" value='2' onchange="cal_vq_score('csa_sensitivity')">2
+                </div>
             </div>
 
-        </fieldset>
+          </div>
+
+          <!-- END OF CONTENT ASPECTS -->
+
+          <hr/>
+
+          <div class="form-group">
+              <label class="col-sm-2 control-label">Total Score</label>
+              <div class="col-sm-4">
+                  <input readonly type="text" name="total_score" class="form-control">
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="col-sm-2 control-label">Video Grade</label>
+              <div class="col-sm-4">
+                  <input readonly type="text" name="video_grade" class="form-control">
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label dis-block col-sm-2">Approve for Dissemination</label>
+              <div class="col-sm-4">
+                  <input type="radio" name="approval" value='1' style="margin: 0 10px 0 10px;">Yes
+                  <input type="radio" name="approval" value='0' style="margin: 0 10px 0 30px;">No
+
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2">Reviewed By</label>
+              <div class="col-sm-4">
+                  <select id = "id_qareviewername" name="qareviewername" class = "chosen-select form-control">
+
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+                <label class="col-sm-2 control-label">Remarks</label>
+                <div class="col-sm-4">
+                    <textarea required name="remarks" class="input-xlarge form-control" rows="4" placeholder="Remarks"></textarea>
+                </div>
+          </div>
+
+      </fieldset>
     </script>
 
     <!--//////////////////////////////////////////////////// VIDEO QUALITY REVIEW ADD/EDIT TEMPLATES END ///////////////////////////////////////////////-->
     <!--//////////////////////////////////////////////////// DISSEMINATION QUALITY ADD/EDIT TEMPLATES START ///////////////////////////////////////////////-->
 
     <script language="javascript">
-      function cal_score1(name) {
+      function cal_dq_score(name) {
         var score = 0;
         var m = document.getElementById("scores1").children.length;
         var methods = document.getElementById("scores1").children;
@@ -812,9 +827,9 @@
         document.getElementsByName("total_score")[0].value = score;
         if (score >= 18) {
           grade = "A";
-        } else if (13 <= score && score <= 17) {
+        } else if (score >= 13) {
           grade = "B";
-        } else if (score <= 12) {
+        } else {
           grade = "C";
         }
 
@@ -920,89 +935,89 @@
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q1. &nbsp; Connected and handled equipment properly</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="equipments_setup_handling" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('equipments_setup_handling')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="equipments_setup_handling" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('equipments_setup_handling')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="equipments_setup_handling" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('equipments_setup_handling')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="equipments_setup_handling" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('equipments_setup_handling')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="equipments_setup_handling" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('equipments_setup_handling')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="equipments_setup_handling" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('equipments_setup_handling')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q2. &nbsp; Maintained the desired <u>Darkness</u> during dissemination</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="maintained_ideal_darkness" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('maintained_ideal_darkness')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="maintained_ideal_darkness" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('maintained_ideal_darkness')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="maintained_ideal_darkness" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('maintained_ideal_darkness')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="maintained_ideal_darkness" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('maintained_ideal_darkness')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="maintained_ideal_darkness" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('maintained_ideal_darkness')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="maintained_ideal_darkness" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('maintained_ideal_darkness')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q3. &nbsp; Maintained the desired <u>Screen Size</u> during dissemination</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="maintained_ideal_screen_size" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('maintained_ideal_screen_size')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="maintained_ideal_screen_size" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('maintained_ideal_screen_size')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="maintained_ideal_screen_size" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('maintained_ideal_screen_size')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="maintained_ideal_screen_size" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('maintained_ideal_screen_size')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="maintained_ideal_screen_size" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('maintained_ideal_screen_size')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="maintained_ideal_screen_size" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('maintained_ideal_screen_size')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q4. &nbsp; Maintained the desired <u>Audio Visual Quality</u> during dissemination</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="maintained_ideal_av_quality" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('maintained_ideal_av_quality')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="maintained_ideal_av_quality" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('maintained_ideal_av_quality')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="maintained_ideal_av_quality" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('maintained_ideal_av_quality')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="maintained_ideal_av_quality" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('maintained_ideal_av_quality')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="maintained_ideal_av_quality" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('maintained_ideal_av_quality')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="maintained_ideal_av_quality" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('maintained_ideal_av_quality')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q5. &nbsp; Introduced the topic and reason for choosing it along with the benefits of the practice</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="introduce_topic" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('introduce_topic')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="introduce_topic" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('introduce_topic')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="introduce_topic" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('introduce_topic')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="introduce_topic" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('introduce_topic')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="introduce_topic" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('introduce_topic')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="introduce_topic" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('introduce_topic')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q6. &nbsp; Paused the video at important places for active discussions on non-negotiables</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="paused_video" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('paused_video')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="paused_video" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('paused_video')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="paused_video" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('paused_video')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="paused_video" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('paused_video')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="paused_video" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('paused_video')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="paused_video" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('paused_video')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q7. &nbsp; Established a logical connection with the previous / next video to set up a sequence</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="established_logical_conn" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('established_logical_conn')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="established_logical_conn" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('established_logical_conn')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="established_logical_conn" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('established_logical_conn')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="established_logical_conn" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('established_logical_conn')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="established_logical_conn" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('established_logical_conn')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="established_logical_conn" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('established_logical_conn')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q8. &nbsp; Encouraged for adoption by two way interaction</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="encouraged_adoption" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('encouraged_adoption')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="encouraged_adoption" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('encouraged_adoption')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="encouraged_adoption" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('encouraged_adoption')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="encouraged_adoption" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('encouraged_adoption')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="encouraged_adoption" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('encouraged_adoption')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="encouraged_adoption" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('encouraged_adoption')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q9. &nbsp; Summarized video focusing on the non-negotiables</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="summarized_video" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('summarized_video')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="summarized_video" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('summarized_video')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="summarized_video" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('summarized_video')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="summarized_video" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('summarized_video')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="summarized_video" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('summarized_video')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="summarized_video" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('summarized_video')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q10. &nbsp; Has subject knowledge about the practice</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="subject_knowledge" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('subject_knowledge')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="subject_knowledge" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('subject_knowledge')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="subject_knowledge" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('subject_knowledge')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="subject_knowledge" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('subject_knowledge')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="subject_knowledge" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('subject_knowledge')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="subject_knowledge" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('subject_knowledge')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
               <div class="form-group">
                   <label class="control-label dis-block col-sm-3">Q11. &nbsp; Completed the documentation process (farmers attendance, and questions raised from farmers) at the end of dissemination</label>
                   <div class="col-sm-6">
-                      <input type="radio" name="filled_dissemination" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_score1('filled_dissemination')"><label class="notbold">Bad(0)</label>
-                      <input type="radio" name="filled_dissemination" value='1' style="margin: 0 10px 0 30px;" onchange="cal_score1('filled_dissemination')"><label class="notbold">Fair(1)</label>
-                      <input type="radio" name="filled_dissemination" value='2' style="margin: 0 10px 0 30px;" onchange="cal_score1('filled_dissemination')"><label class="notbold">Very Good(2)</label>
+                      <input type="radio" name="filled_dissemination" value='0' style="margin: 10px 10px 0 10px;" onchange="cal_dq_score('filled_dissemination')"><label class="notbold">Bad(0)</label>
+                      <input type="radio" name="filled_dissemination" value='1' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('filled_dissemination')"><label class="notbold">Fair(1)</label>
+                      <input type="radio" name="filled_dissemination" value='2' style="margin: 0 10px 0 30px;" onchange="cal_dq_score('filled_dissemination')"><label class="notbold">Very Good(2)</label>
                   </div>
               </div>
           </div>

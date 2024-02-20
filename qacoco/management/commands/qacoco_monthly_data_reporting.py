@@ -64,6 +64,7 @@ class Command(BaseCommand):
                 qr.story_board 'Story Board',
                 qr.ease_of_understanding 'Ease of Understanding',
                 qr.gender_sensitivity 'Gender Sensitivity',
+                qr.csa_sensitivity 'CSA Sensitivity',
                 qr.total_score 'Total Score',
                 qr.video_grade 'Video Grade',
                 qr.total_score 'Total Score',
