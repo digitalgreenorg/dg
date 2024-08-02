@@ -16,7 +16,7 @@ class Command(BaseCommand):
         subject = "QA COCO: Data as of %s" % (till_date)
         from_email = dg.settings.EMAIL_HOST_USER
         to_email = ['eth_qacoco_monthly_report_recipients@digitalgreen.org']
-        body = "Dear Team,\n\nPlease find the attached QA COCO data entered as of %s.\nYou may reach out to system@digitalgreen.org for any question or clarification.\n\nThank you." % (
+        body = "Dear Team,\n\nPlease find the attached QA COCO data entered as of %s.\n\nThank you." % (
             till_date)
         msg = EmailMessage(subject, body, from_email, to_email)
         for file in attached_files:
@@ -112,8 +112,14 @@ class Command(BaseCommand):
                 gv.VILLAGE_NAME Village,
                 pg.group_name 'Group Name',
                 dq.date Date,
-                vv.id 'Video ID',
-                vv.title 'Video Title',
+                videos.id 'Video ID',
+                COALESCE(videos.title,
+                        (SELECT 
+                                title
+                            FROM
+                                videos_video
+                            WHERE
+                                id = videos.id)) 'Video Title',
                 pa.id AS 'Mediator Id',
                 pa.name AS 'Mediator',
                 CASE dq.pico
@@ -150,8 +156,23 @@ class Command(BaseCommand):
                 au.username 'Created By'
             FROM
                 qacoco_disseminationquality dq
-                    JOIN
-                videos_video vv ON vv.id = dq.video_id
+                    LEFT JOIN
+                (SELECT 
+                    dqvs.disseminationquality_id,
+                        vv.id,
+                        vv.title,
+                        'Junction' AS source
+                FROM
+                    qacoco_disseminationquality_videoes_screened dqvs
+                JOIN videos_video vv ON vv.id = dqvs.video_id UNION ALL SELECT 
+                    id AS disseminationquality_id,
+                        video_id AS id,
+                        NULL AS title,
+                        'Direct' AS source
+                FROM
+                    qacoco_disseminationquality
+                WHERE
+                    video_id IS NOT NULL) videos ON dq.id = videos.disseminationquality_id
                     JOIN
                 qacoco_qareviewername rn ON rn.id = dq.qareviewername_id
                     JOIN
@@ -172,7 +193,7 @@ class Command(BaseCommand):
                 auth_user au ON dq.user_created_id = au.id
             WHERE
                 gc.id = 2
-            ORDER BY dq.date DESC
+            ORDER BY dq.date DESC , dq.id , 'Video ID'
         '''
 
         adoption_verification_query = '''
