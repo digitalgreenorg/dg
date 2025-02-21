@@ -63,7 +63,7 @@ python-mimeparse==1.6.0
 python-openid==2.2.5
 python-social-auth==0.1.17
 pytz==2016.4
-requests==2.6.0
+requests==2.20.0
 requests-oauthlib==0.3.2
 rsa==3.4.2
 scandir==1.6
