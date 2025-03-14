@@ -18062,13 +18062,13 @@ define("views/form", [
                 var personId = this.model_json.person;
                 var videoId = this.model_json.video;
                 setAdoptionDateStart(personId, videoId);
-            }
 
-            this.$("[name='person'], [name='video']").change(function () {
-                var personId = parseInt(that.$("[name='person']").val());
-                var videoId = parseInt(that.$("[name='video']").val());
-                setAdoptionDateStart(personId, videoId);
-            });
+                this.$("[name='person'], [name='video']").change(function () {
+                    var personId = parseInt(that.$("[name='person']").val());
+                    var videoId = parseInt(that.$("[name='video']").val());
+                    setAdoptionDateStart(personId, videoId);
+                });
+            }
 
             Backbone.Syphon.deserialize(this, this.model_json);
         },
