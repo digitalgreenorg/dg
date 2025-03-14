@@ -17118,15 +17118,32 @@ define("views/form", [
                 (eDate.getMonth() + 1) +
                 "-" +
                 eDate.getDate();
-            $(".date-picker")
-                .datepicker({
-                    format: "yyyy-mm-dd",
-                    startDate: "2009-01-01",
-                    endDate: enddate,
-                })
-                .on("changeDate", function (ev) {
-                    $(this).datepicker("hide");
-                });
+
+            // $(".date-picker")
+            //     .datepicker({
+            //         format: "yyyy-mm-dd",
+            //         startDate: "2009-01-01",
+            //         endDate: enddate,
+            //     })
+            //     .on("changeDate", function (ev) {
+            //         $(this).datepicker("hide");
+            //     });
+
+            $(".date-picker").each(function () {
+                var $this = $(this);
+                // Use the provided data-date-start-date or default to "2009-01-01"
+                var startDate = $this.data("date-start-date") || "2009-01-01";
+
+                $this
+                    .datepicker({
+                        format: "yyyy-mm-dd",
+                        startDate: startDate,
+                        endDate: enddate,
+                    })
+                    .on("changeDate", function (ev) {
+                        $this.datepicker("hide");
+                    });
+            });
 
             $(".time-picker").timepicker({
                 minuteStep: 1,
@@ -17719,18 +17736,21 @@ define("views/form", [
                         var t_json = JSON.parse(JSON.stringify(f_model));
                         t_json["index"] = index;
 
+                        if (
+                            that.entity_name === "adoption" &&
+                            element === "farmers_attendance"
+                        ) {
+                            const videoId = parseInt(
+                                that.$("form [name=video]").val()
+                            );
+                            const video = t_json.videos_seen.find(
+                                (v) => v.id === videoId
+                            );
+                            if (video) {
+                                t_json["screening_date"] = video.screening_date;
+                            }
+                        }
                         $f_el.append(expanded_template(t_json));
-                        // Offline.fetch_collection("directbeneficiaries")
-                        //     .done(function(collection) {
-                        //         $.each(collection.models, function (i, item) {
-                        //             $f_el.find("."+inline_var + index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
-                        //             $("."+inline_var+index).trigger("chosen:updated");
-                        //         })
-
-                        //     })
-                        //     .fail(function() {
-                        //         console.log("ERROR: EDIT: Inline collection could not be fetched!");
-                        //     });
                     });
                 }
                 if (cocousertype == 4) {
@@ -18000,6 +18020,56 @@ define("views/form", [
                 "FORM: filling form with the model - " +
                     JSON.stringify(this.model_json)
             );
+            var that = this;
+
+            var setAdoptionDateStart = function (personId, videoId) {
+                console.log("Setting adoption date start");
+                Offline.fetch_object("person", "id", personId)
+                    .done(function (person) {
+                        var video = person
+                            .get("videos_seen")
+                            .find(function (v) {
+                                return v.id === videoId;
+                            });
+                        var minDate = "2009-01-01";
+                        if (video && video.screening_date) {
+                            that.$("[name='date_of_adoption']").datepicker(
+                                "setStartDate",
+                                video.screening_date
+                            );
+                        } else {
+                            that.$("[name='date_of_adoption']").datepicker(
+                                "setStartDate",
+                                minDate
+                            );
+                        }
+                    })
+                    .fail(function (e) {
+                        var minDate = "2009-01-01";
+                        console.error(
+                            `Failed to fetch person with id ${personId} or video with id ${videoId}. Defaulting to ${minDate}. Error: ${JSON.stringify(
+                                e
+                            )}`
+                        );
+                        that.$("[name='date_of_adoption']").datepicker(
+                            "setStartDate",
+                            minDate
+                        );
+                    });
+            };
+
+            if (this.entity_name === "adoption" && this.edit_case) {
+                var personId = this.model_json.person;
+                var videoId = this.model_json.video;
+                setAdoptionDateStart(personId, videoId);
+            }
+
+            this.$("[name='person'], [name='video']").change(function () {
+                var personId = parseInt(that.$("[name='person']").val());
+                var videoId = parseInt(that.$("[name='video']").val());
+                setAdoptionDateStart(personId, videoId);
+            });
+
             Backbone.Syphon.deserialize(this, this.model_json);
         },
 

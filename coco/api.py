@@ -895,7 +895,7 @@ class PersonResource(BaseResource):
         return p_field+"("+v_field+","+f_field+")"
 
     def dehydrate_videos_seen(self, bundle):
-        videos_seen = [{'id': video.id, 'title': video.title, } for pma in bundle.obj.personmeetingattendance_set.all(
+        videos_seen = [{'id': video.id, 'title': video.title, 'screening_date': pma.screening.date} for pma in bundle.obj.personmeetingattendance_set.all(
         ) for video in pma.screening.videoes_screened.all()]
         return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in videos_seen)]
 

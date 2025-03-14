@@ -1338,6 +1338,13 @@
                 dep_attr: "group",
               },
             ],
+            // Filter the person options based on the videos seen
+            filter_dependency: [
+              {
+                source_form_element: "video",
+                dep_attr: "videos_seen",
+              },
+            ],
           },
           farmers_attendance: {
             dependency: [
