@@ -1668,7 +1668,251 @@
           </div>
       </fieldset>
     </script>
+
     <!-- PERSON ADD/EDIT TEMPLATES END -->
+
+    <!-- FARMER FEEDBACK ADD/EDIT TEMPLATES END -->
+
+    <script
+      type="text/template"
+      id="farmerfeedback_add_edit_template">
+      <fieldset class="form-horizontal">
+        <legend><%= farmerfeedback %></legend>
+
+        <!-- Screening (Foreign Key) -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= screening %></label>
+          <div class="col-sm-4">
+            <select id="id_screening" name="screening" class="chosen-select form-control"></select>
+          </div>
+        </div>
+
+        <!-- Video (Foreign Key) -->
+        <div class="form-group">
+            <label class="control-label col-sm-2"><%= video %></label>
+            <div class="col-sm-4">
+            <select id="id_video" name="video" class="chosen-select form-control"></select>
+            </div>
+        </div>
+
+        <!-- Person (Foreign Key) -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= person %></label>
+          <div class="col-sm-4">
+            <select id="id_person" name="person" class="chosen-select form-control"></select>
+          </div>
+        </div>
+
+        <!-- Video Relevance -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= video_relevance %></label>
+          <div class="col-sm-4">
+            <select name="video_relevance" class="form-control">
+                <option value="">---------</option>
+                <option value="relevant">Relevant to a great extent</option>
+                <option value="relevant_to_som_extnt">Relevant to some extent</option>
+                <option value="not_relevant">Not Relevant</option>
+              </select>
+          </div>
+        </div>
+
+        <!-- Adoption Confidence -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= adoption_confidence %></label>
+          <div class="col-sm-4">
+            <select name="adoption_confidence" class="form-control">
+                <option value="">---------</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Non-Adoption Reasons -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= non_adoption_reasons %></label>
+          <div class="col-sm-4">
+            <select name="non_adoption_reasons" class="form-control">
+                <option value="">---------</option>
+                <option value="a">Since I am not clear and convinced in the importance of the technology</option>
+                <option value="b">The input/technology/service for the recommended practice is not easily accessible</option>
+                <option value="c">The cost of the recommended practice is not affordable, and there is no credit facility in our kebele</option>
+                <option value="d">The risk of the investment in the recommended practice is not acceptable</option>
+                <option value="e">Unavailability of Inputs at the Market</option>
+                <option value="f">The technology needs human power and I don't have that</option>
+                <option value="g">The time has passed to adopt the technology</option>
+                <option value="h">My spouse is the one who makes the decision</option>
+                <option value="i">The DA/Mediator will not provide support after dissemination</option>
+                <option value="j">Other (Please specify)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Non-Adoption Reasons (Other) -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= non_adoption_reasons_other %></label>
+          <div class="col-sm-4">
+            <textarea name="non_adoption_reasons_other" class="form-control"></textarea>
+          </div>
+        </div>
+
+        <!-- Location Convenience -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= location_convenience %></label>
+          <div class="col-sm-4">
+            <select name="location_convenience" class="form-control">
+                <option value="">---------</option>
+                <option value="safe">Safe and convenient</option>
+                <option value="too_far">Too far from my house</option>
+                <option value="isolated">Isolated / not safe to come alone</option>
+                <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Location Convenience Other -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= location_convenience_other %></label>
+          <div class="col-sm-4">
+            <textarea name="location_convenience_other" class="form-control"></textarea>
+          </div>
+        </div>
+
+        <!-- Time Convenience -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= time_convenience %></label>
+          <div class="col-sm-4">
+            <select name="time_convenience" class="form-control">
+                <option value="">---------</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Convenient Time -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= convenient_time %></label>
+          <div class="col-sm-4">
+            <select name="convenient_time" class="form-control">
+                <option value="">---------</option>
+          <option value="early_morning">Early in the Morning</option>
+          <option value="mid_day">Mid Day</option>
+          <option value="afternoon">In the Afternoon</option>
+          <option value="late_afternoon">Late in the Afternoon</option>
+          <option value="evening">In the Evening</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Additional Challenges Encountered -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= additional_challenges_encountered %></label>
+          <div class="col-sm-4">
+            <select name="additional_challenges_encountered" class="form-control">
+                <option value="">---------</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Additional Challenges -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= additional_challenges %></label>
+          <div class="col-sm-4">
+            <select name="additional_challenges" class="form-control">
+                <option value="">---------</option>
+                <option value="a">My husband is not willing to send me for such events</option>
+                <option value="b">Busy with household chores and social/family issues</option>
+                <option value="c">Mostly the dissemination schedules have been organized in Market days</option>
+                <option value="d">I don't have information about the dissemination schedules</option>
+                <option value="e">Have no one to take care of my children</option>
+                <option value="f">Other (Please specify)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Additional Challenges Other -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= additional_challenges_other %></label>
+          <div class="col-sm-4">
+            <textarea name="additional_challenges_other" class="form-control"></textarea>
+          </div>
+        </div>
+
+        <!-- Comfortable Asking -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= comfortable_asking %></label>
+          <div class="col-sm-4">
+            <select name="comfortable_asking" class="form-control">
+                <option value="">---------</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Asking Discomfort Reasons -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= asking_discomfort_reasons %></label>
+          <div class="col-sm-4">
+            <select name="asking_discomfort_reasons" class="form-control">
+                <option value="">---------</option>
+                <option value="a">The DA/Mediator was not encouraging to ask questions</option>
+                <option value="b">The DA/Mediator was only focusing on Model Farmers</option>
+                <option value="c">The DA/Mediator was not encouraging Female Farmers</option>
+                <option value="d">I feel comfortable with Female only group (Female farmers)</option>
+                <option value="e">I am not clear with the topic</option>
+                <option value="f">The topic is not relevant for me</option>
+                <option value="g">The topic is not seasonal</option>
+                <option value="h">I don't have the listed resources to adopt the technology</option>
+                <option value="i">There is not enough time allocated for discussion</option>
+                <option value="j">Other (Please specify)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Asking Discomfort Reasons Other -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= asking_discomfort_reasons_other %></label>
+          <div class="col-sm-4">
+            <textarea name="asking_discomfort_reasons_other" class="form-control"></textarea>
+          </div>
+        </div>
+
+        <!-- Recommendation Rating -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= recommendation_rating %></label>
+          <div class="col-sm-4">
+            <input type="number" name="recommendation_rating" class="form-control" min="0" max="10">
+          </div>
+        </div>
+
+        <!-- NNG Recall -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= nng_recall %></label>
+          <div class="col-sm-4">
+            <select name="nng_recall" class="form-control">
+                <option value="">---------</option>
+                <option value="all">Recalled all NNGs</option>
+                <option value="partial">Recalled partially</option>
+                <option value="none">Did not recall</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="form-group">
+          <label class="control-label col-sm-2"><%= suggestions %></label>
+          <div class="col-sm-4">
+            <textarea name="suggestions" class="form-control"></textarea>
+          </div>
+        </div>
+      </fieldset>
+    </script>
+
+    <!-- FARMER FEEDBACK ADD/EDIT TEMPLATES END -->
   </head>
 
   <body>

@@ -16231,9 +16231,15 @@ define("views/form", [
             for (f_entity in this.foreign_entities) {
                 var f_collection = Offline.create_b_collection(f_entity, {
                     comparator: function (model) {
-                        return model
-                            .get(all_configs[this.storeName].sort_field)
-                            .toLowerCase();
+                        var value = model.get(
+                            all_configs[this.storeName].sort_field
+                        );
+                        // Handle different data types appropriately
+                        if (typeof value === "string") {
+                            return value.toLowerCase(); // Case-insensitive string comparison
+                        } else {
+                            return value; // Return as is for numbers or other types
+                        }
                     },
                 });
                 this.f_index.push(f_entity);
@@ -17319,93 +17325,127 @@ define("views/form", [
                 var source_form_element = dep_desc.source_form_element;
                 var filtered_models = [];
 
-                //LIMITS: source can't be an expanded right now, bcoz won't get its value
+                // Get current value(s) of the source form element
                 var source_curr_value =
                     that.get_curr_value_of_element(source_form_element);
                 if (!source_curr_value) return;
-                else if (!(source_curr_value instanceof Array)) {
-                    //if source is single select - convert its value to array -make it like a multiselect
+
+                // Normalize to array
+                if (!(source_curr_value instanceof Array)) {
                     var temp = source_curr_value;
-                    source_curr_value = [];
-                    source_curr_value.push(temp);
+                    source_curr_value = [temp];
                 }
 
-                // many-to-many relation between source and dependent
-                if (
-                    dep_collection.at(0).get(dep_desc.dep_attr) instanceof Array
-                ) {
+                let related_ids = [];
+
+                // If use_source_attribute is true, derive IDs from attribute of source model(s)
+                if (dep_desc.use_source_attribute) {
+                    $.each(source_curr_value, function (index, val) {
+                        var source_collection =
+                            that.get_collection_of_element(source_form_element);
+                        var source_model = source_collection.get(parseInt(val));
+                        if (!source_model) return;
+
+                        var attr_values = source_model.get(dep_attr);
+
+                        if (attr_values instanceof Array) {
+                            related_ids = related_ids.concat(
+                                attr_values.map(function (v) {
+                                    return String(v.id);
+                                })
+                            );
+                        } else if (attr_values && attr_values.id) {
+                            related_ids.push(String(attr_values.id));
+                        }
+                    });
+
+                    // Remove duplicates
+                    related_ids = [...new Set(related_ids)];
+
+                    // Filter dependent models by their own ID
                     filtered_models = dep_collection.filter(function (model) {
-                        var exists = false;
-                        //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
-                        $.each(
-                            model.get(dep_desc.dep_attr),
-                            function (index, object) {
-                                if (
-                                    $.inArray(
-                                        String(object.id),
-                                        source_curr_value
-                                    ) > -1
-                                )
-                                    exists = true;
-                            }
-                        );
-                        return exists;
+                        return $.inArray(String(model.id), related_ids) > -1;
                     });
                 } else {
-                    filtered_models = dep_collection.filter(function (model) {
-                        var d = dep_desc;
-                        var exists = false;
-                        var compare = null;
-                        if (typeof model.get(dep_desc.dep_attr) == "object")
-                            compare = model.get(dep_desc.dep_attr).id;
-                        else if (dep_desc.parent_attr) {
-                            compare = model.get(dep_desc.parent_attr)[
-                                dep_desc.dep_attr
-                            ];
-                        } else {
-                            compare = model.get(dep_desc.dep_attr);
-                        }
-
-                        if (compare != null) {
-                            if (
-                                dep_desc.src_attr &&
-                                dep_desc.src_attr != "id"
-                            ) {
-                                var s_collection =
-                                    that.get_collection_of_element(
-                                        source_form_element
-                                    );
-                                var s_model = s_collection.get(
-                                    parseInt(source_curr_value[0])
-                                );
-                                if (
-                                    s_model.get(dep_desc.src_attr) instanceof
-                                    Array
-                                ) {
-                                    //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
-                                    $.each(
-                                        s_model.get(dep_desc.src_attr),
-                                        function (index, src_compare) {
-                                            if (compare == src_compare.id)
-                                                exists = true;
-                                        }
-                                    );
-                                }
-                                return exists;
-                            } else {
-                                if (
-                                    !(
+                    if (dep_collection.at(0).get(dep_attr) instanceof Array) {
+                        // many-to-many relation between source and dependent
+                        filtered_models = dep_collection.filter(function (
+                            model
+                        ) {
+                            var exists = false;
+                            //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                            $.each(
+                                model.get(dep_attr),
+                                function (index, object) {
+                                    if (
                                         $.inArray(
-                                            String(compare),
+                                            String(object.id),
                                             source_curr_value
-                                        ) == -1
+                                        ) > -1
                                     )
-                                )
-                                    exists = true;
-                                return exists;
+                                        exists = true;
+                                }
+                            );
+                            return exists;
+                        });
+                    } else {
+                        filtered_models = dep_collection.filter(function (
+                            model
+                        ) {
+                            var exists = false;
+                            var compare = null;
+                            if (typeof model.get(dep_attr) == "object")
+                                compare = model.get(dep_attr).id;
+                            else if (dep_desc.parent_attr) {
+                                compare = model.get(dep_desc.parent_attr)[
+                                    dep_attr
+                                ];
+                            } else {
+                                compare = model.get(dep_attr);
                             }
-                        }
-                    });
+
+                            if (compare != null) {
+                                if (
+                                    dep_desc.src_attr &&
+                                    dep_desc.src_attr != "id"
+                                ) {
+                                    var s_collection =
+                                        that.get_collection_of_element(
+                                            source_form_element
+                                        );
+                                    var s_model = s_collection.get(
+                                        parseInt(source_curr_value[0])
+                                    );
+                                    if (
+                                        s_model.get(
+                                            dep_desc.src_attr
+                                        ) instanceof Array
+                                    ) {
+                                        //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                                        $.each(
+                                            s_model.get(dep_desc.src_attr),
+                                            function (index, src_compare) {
+                                                if (compare == src_compare.id)
+                                                    exists = true;
+                                            }
+                                        );
+                                    }
+                                    return exists;
+                                } else {
+                                    if (
+                                        !(
+                                            $.inArray(
+                                                String(compare),
+                                                source_curr_value
+                                            ) == -1
+                                        )
+                                    )
+                                        exists = true;
+                                    return exists;
+                                }
+                            }
+                        });
+                    }
                 }
 
                 // Make sure that this only applies to screening page

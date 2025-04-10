@@ -16,14 +16,14 @@ from tastypie.validation import FormValidation
 from custom_authentication import AnonymousGETAuthentication
 # app imports
 from models import CocoUser
-from activities.models import Screening, PersonAdoptPractice, PersonMeetingAttendance, FrontLineWorkerPresent
+from activities.models import Screening, FarmerFeedback, PersonAdoptPractice, PersonMeetingAttendance, FrontLineWorkerPresent
 from geographies.models import Village, District, State
 from programs.models import Partner
 from people.models import Animator, AnimatorAssignedVillage, Person, Household, PersonGroup
 from videos.models import Video, Language, NonNegotiable, Category, SubCategory, VideoPractice, ParentCategory, DirectBeneficiaries, Tag
 from activities.models import FrontLineWorkerPresent
 # Will need to changed when the location of forms.py is changed
-from dashboard.forms import AnimatorForm, NonNegotiableForm, PersonAdoptPracticeForm, PersonForm, HouseholdForm, PersonGroupForm, ScreeningForm, VideoForm
+from dashboard.forms import AnimatorForm, NonNegotiableForm, PersonAdoptPracticeForm, PersonForm, HouseholdForm, PersonGroupForm, ScreeningForm, FarmerFeedbackForm, VideoForm
 
 
 class PMANotSaved(Exception):
@@ -901,6 +901,47 @@ class PersonResource(BaseResource):
 
     def dehydrate_category(self, bundle):
         return [{'id': None, 'category': None}]
+
+
+class FarmerFeedbackResource(ModelResource):
+    screening = fields.ForeignKey(ScreeningResource, 'screening')
+    video = fields.ForeignKey(VideoResource, 'video')
+    person = fields.ForeignKey(PersonResource, 'person')
+
+    class Meta:
+        queryset = FarmerFeedback.objects.select_related('screening', 'video','person').all()
+        resource_name = 'farmerfeedback'
+        authentication = SessionAuthentication()
+        authorization = VillageAuthorization('screening __village__in')
+        validation = ModelFormValidation(form_class=FarmerFeedbackForm)
+        always_return_data = True
+        excludes = ['time_created', 'time_modified']
+        max_limit = None
+
+    hydrate_screening = partial(dict_to_foreign_uri, field_name='screening')
+    hydrate_video = partial(dict_to_foreign_uri, field_name='video')
+    hydrate_person = partial(dict_to_foreign_uri, field_name='person')
+
+    def dehydrate_screening(self, bundle):
+        screening_obj = bundle.obj.screening
+        return {
+            'id': screening_obj.id,
+            'date': screening_obj.date.isoformat(),
+        }
+
+    def dehydrate_video(self, bundle):
+        video_obj = bundle.obj.video
+        return {
+            'id': video_obj.id,
+            'title': video_obj.title,
+        }
+    
+    def dehydrate_person(self, bundle):
+        farmer_obj = bundle.obj.person
+        return {
+            'id': farmer_obj.id,
+            'person_name': farmer_obj.person_name,
+        }
 
 
 # For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013

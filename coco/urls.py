@@ -5,7 +5,7 @@ from django.views.generic.base import RedirectView
 # tastypie imports
 from tastypie.api import Api
 # django imports
-from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, PersonAdoptVideoResource, PersonGroupResource, HouseholdResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource, TagResource
+from api import DistrictResource, LanguageResource, MediatorResource, NonNegotiableResource, PartnerResource, FarmerFeedbackResource, PersonAdoptVideoResource, PersonGroupResource, HouseholdResource, PersonResource, ScreeningResource, VideoResource, VillageResource, CategoryResource, SubCategoryResource, VideoPracticeResource, DirectBeneficiariesResource, ParentCategoryResource, FrontLineWorkerPresentResource, TagResource
 from views import coco_v2, debug, login, logout, record_full_download_time, reset_database_check, upload_data, APVideoGenerator, upload_csv_data, getFileHeader, ap_geography_mapping, GetGeography
 
 from dg.base_settings import COCO_PAGE
@@ -37,6 +37,7 @@ v1_api.register(PersonResource())
 v1_api.register(HouseholdResource())
 v1_api.register(PersonGroupResource())
 v1_api.register(ScreeningResource())
+v1_api.register(FarmerFeedbackResource())
 v1_api.register(VideoResource())
 v1_api.register(NonNegotiableResource())
 v1_api.register(CategoryResource())

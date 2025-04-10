@@ -151,6 +151,74 @@ TOPICS = (
     ('8', 'Planning and sharing of responsibilities for Village interface Meeting')
 )
 
+# Choice tuples for Farmer Feedback
+VIDEO_RELEVANCE_CHOICES = (
+    ('relevant', 'Relevant to a great extent'),
+    ('relevant_to_som_extnt', 'Relevant to some extent'),
+    ('not_relevant', 'Not Relevant'),
+)
+
+YES_NO_CHOICES = (
+    ('yes', 'Yes'),
+    ('no', 'No'),
+)
+
+NON_ADOPTION_REASON_CHOICES = (
+    ('a', "Since I am not clear and convinced in the importance of the technology"),
+    ('b', "The input/technology/service for the recommended practice is not easily accessible"),
+    ('c', "The cost of the recommended practice is not affordable, and there is no credit facility in our kebele"),
+    ('d', "The risk of the investment in the recommended practice is not acceptable"),
+    ('e', "Unavailability of Inputs at the Market"),
+    ('f', "The technology needs human power and I don't have that"),
+    ('g', "The time has passed to adopt the technology"),
+    ('h', "My spouse is the one who makes the decision"),
+    ('i', "The DA/Mediator will not provide support after dissemination"),
+    ('j', "Other (Please specify)")
+)
+
+LOCATION_CONVENIENCE_CHOICES = (
+    ('safe', 'Safe and convenient'),
+    ('too_far', 'Too far from my house'),
+    ('isolated', 'Isolated / not safe to come alone'),
+    ('other', 'Other'),
+)
+
+TIME_CONVENIENCE_CHOICES = (
+    ('early_morning', 'Early in the Morning'),
+    ('mid_day', 'Mid Day'),
+    ('afternoon', 'In the Afternoon'),
+    ('late_afternoon', 'Late in the Afternoon'),
+    ('evening', 'In the Evening'),
+)
+
+DISSEMINATION_CHALLENGES_CHOICES = (
+    ('a', "My husband is not willing to send me for such events"),
+    ('b', "Busy with household chores and social/family issues"),
+    ('c', "Mostly the dissemination schedules have been organized in Market days"),
+    ('d', "I don't have information about the dissemination schedules"),
+    ('e', "Have no one to take care of my children"),
+    ('f', "Other (Please specify)")
+)
+
+PARTICIPATION_DISCOMFORT_REASONS_CHOICES = (
+    ('a', "The DA/Mediator was not encouraging to ask questions"),
+    ('b', "The DA/Mediator was only focusing on Model Farmers"),
+    ('c', "The DA/Mediator was not encouraging Female Farmers"),
+    ('d', "I feel comfortable with Female only group (Female farmers)"),
+    ('e', "I am not clear with the topic"),
+    ('f', "The topic is not relevant for me"),
+    ('g', "The topic is not seasonal"),
+    ('h', "I don't have the listed resources to adopt the technology"),
+    ('i', "There is not enough time allocated for discussion"),
+    ('j', "Other (Please specify)")
+)
+
+NNG_RECALL_CHOICES = (
+    ('all', 'Recalled all NNGs'),
+    ('partial', 'Recalled partially'),
+    ('none', 'Did not recall'),
+)
+
 
 class CocoModel(models.Model):
     user_created = models.ForeignKey(
