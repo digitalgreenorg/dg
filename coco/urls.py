@@ -49,7 +49,6 @@ v1_api.register(FrontLineWorkerPresentResource())
 
 urlpatterns = patterns('',
                        url(r'^$', RedirectView.as_view(url=COCO_PAGE)),
-                       #(r'^$', coco_v2),
                        (r'^api/', include(v1_api.urls)),
                        (r'^login/', login),
                        (r'^logout/', logout),

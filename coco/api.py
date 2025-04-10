@@ -912,7 +912,7 @@ class FarmerFeedbackResource(ModelResource):
         queryset = FarmerFeedback.objects.select_related('screening', 'video','person').all()
         resource_name = 'farmerfeedback'
         authentication = SessionAuthentication()
-        authorization = VillageAuthorization('screening __village__in')
+        authorization = VillageAuthorization('screening__village__in')
         validation = ModelFormValidation(form_class=FarmerFeedbackForm)
         always_return_data = True
         excludes = ['time_created', 'time_modified']

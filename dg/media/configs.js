@@ -1432,17 +1432,17 @@
         suggestions: {},
       },
       highlight: function (element, errorClass, validClass) {
-        $(element).closest("div.form-group").addClass("error");
+        $(element).parent("div").addClass("error");
       },
       unhighlight: function (element, errorClass, validClass) {
-        $(element).closest("div.form-group").removeClass("error");
+        $(element).parent("div").removeClass("error");
       },
       errorElement: "span",
-      errorClass: "help-inline red-color",
+      errorClass: "help-block red-color",
       errorPlacement: function (error, element) {
-        element.parent().append(error);
+        element.closest(".form-group").append(error);
       },
-      // display: "block",
+      display: "block",
     },
   };
 

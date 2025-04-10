@@ -1679,233 +1679,253 @@
       <fieldset class="form-horizontal">
         <legend><%= farmerfeedback %></legend>
 
-        <!-- Screening (Foreign Key) -->
+        <!-- Screening -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= screening %></label>
-          <div class="col-sm-4">
+          <label class="control-label col-sm-3"><%= screening %></label>
+          <div class="col-sm-6">
             <select id="id_screening" name="screening" class="chosen-select form-control"></select>
           </div>
         </div>
 
-        <!-- Video (Foreign Key) -->
+        <!-- Video -->
         <div class="form-group">
-            <label class="control-label col-sm-2"><%= video %></label>
-            <div class="col-sm-4">
+          <label class="control-label col-sm-3"><%= video %></label>
+          <div class="col-sm-6">
             <select id="id_video" name="video" class="chosen-select form-control"></select>
-            </div>
+          </div>
         </div>
 
-        <!-- Person (Foreign Key) -->
+        <!-- Person -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= person %></label>
-          <div class="col-sm-4">
+          <label class="control-label col-sm-3"><%= person %></label>
+          <div class="col-sm-6">
             <select id="id_person" name="person" class="chosen-select form-control"></select>
           </div>
         </div>
 
         <!-- Video Relevance -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= video_relevance %></label>
-          <div class="col-sm-4">
-            <select name="video_relevance" class="form-control">
-                <option value="">---------</option>
-                <option value="relevant">Relevant to a great extent</option>
-                <option value="relevant_to_som_extnt">Relevant to some extent</option>
-                <option value="not_relevant">Not Relevant</option>
-              </select>
+          <label class="control-label col-sm-3"><%= video_relevance %></label>
+          <div class="col-sm-6">
+            <label class="radio-inline">
+              <input type="radio" id="video_relevance_relevant" name="video_relevance" value="relevant">
+              Relevant to a great extent
+            </label>
+            <label class="radio-inline">
+              <input type="radio" id="video_relevance_relevant_to_som_extnt" name="video_relevance" value="relevant_to_som_extnt">
+              Relevant to some extent
+            </label>
+            <label class="radio-inline">
+              <input type="radio" id="video_relevance_not_relevant" name="video_relevance" value="not_relevant">
+              Not Relevant
+            </label>
           </div>
         </div>
 
         <!-- Adoption Confidence -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= adoption_confidence %></label>
-          <div class="col-sm-4">
-            <select name="adoption_confidence" class="form-control">
-                <option value="">---------</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
+          <label class="control-label col-sm-3"><%= adoption_confidence %></label>
+          <div class="col-sm-6">
+            <label class="radio-inline">
+              <input type="radio" id="adoption_confidence_yes" name="adoption_confidence" value="yes">
+              Yes
+            </label>
+            <label class="radio-inline">
+              <input type="radio" id="adoption_confidence_no" name="adoption_confidence" value="no">
+              No
+            </label>
           </div>
         </div>
 
         <!-- Non-Adoption Reasons -->
-        <div class="form-group">
-          <label class="control-label col-sm-2"><%= non_adoption_reasons %></label>
-          <div class="col-sm-4">
+        <div class="form-group" id="non_adoption_reasons_group">
+          <label class="control-label col-sm-3 "><%= non_adoption_reasons %></label>
+          <div class="col-sm-6">
             <select name="non_adoption_reasons" class="form-control">
-                <option value="">---------</option>
-                <option value="a">Since I am not clear and convinced in the importance of the technology</option>
-                <option value="b">The input/technology/service for the recommended practice is not easily accessible</option>
-                <option value="c">The cost of the recommended practice is not affordable, and there is no credit facility in our kebele</option>
-                <option value="d">The risk of the investment in the recommended practice is not acceptable</option>
-                <option value="e">Unavailability of Inputs at the Market</option>
-                <option value="f">The technology needs human power and I don't have that</option>
-                <option value="g">The time has passed to adopt the technology</option>
-                <option value="h">My spouse is the one who makes the decision</option>
-                <option value="i">The DA/Mediator will not provide support after dissemination</option>
-                <option value="j">Other (Please specify)</option>
+              <option value="">---------</option>
+              <option value="a">Since I am not clear and convinced in the importance of the technology</option>
+              <option value="b">The input/technology/service for the recommended practice is not easily accessible</option>
+              <option value="c">The cost of the recommended practice is not affordable, and there is no credit facility in our kebele</option>
+              <option value="d">The risk of the investment in the recommended practice is not acceptable</option>
+              <option value="e">Unavailability of Inputs at the Market</option>
+              <option value="f">The technology needs human power and I don't have that</option>
+              <option value="g">The time has passed to adopt the technology</option>
+              <option value="h">My spouse is the one who makes the decision</option>
+              <option value="i">The DA/Mediator will not provide support after dissemination</option>
+              <option value="j">Other (Please specify)</option>
             </select>
           </div>
         </div>
 
-        <!-- Non-Adoption Reasons (Other) -->
-        <div class="form-group">
-          <label class="control-label col-sm-2"><%= non_adoption_reasons_other %></label>
-          <div class="col-sm-4">
+        <div class="form-group" id="non_adoption_reasons_other_group">
+          <label class="control-label col-sm-3"><%= non_adoption_reasons_other %></label>
+          <div class="col-sm-6">
             <textarea name="non_adoption_reasons_other" class="form-control"></textarea>
           </div>
         </div>
 
         <!-- Location Convenience -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= location_convenience %></label>
-          <div class="col-sm-4">
+          <label class="control-label col-sm-3"><%= location_convenience %></label>
+          <div class="col-sm-6">
             <select name="location_convenience" class="form-control">
-                <option value="">---------</option>
-                <option value="safe">Safe and convenient</option>
-                <option value="too_far">Too far from my house</option>
-                <option value="isolated">Isolated / not safe to come alone</option>
-                <option value="other">Other</option>
+              <option value="">---------</option>
+              <option value="safe">Safe and convenient</option>
+              <option value="too_far">Too far from my house</option>
+              <option value="isolated">Isolated / not safe to come alone</option>
+              <option value="other">Other</option>
             </select>
           </div>
         </div>
 
-        <!-- Location Convenience Other -->
-        <div class="form-group">
-          <label class="control-label col-sm-2"><%= location_convenience_other %></label>
-          <div class="col-sm-4">
+        <div class="form-group" id="location_convenience_other_group">
+          <label class="control-label col-sm-3"><%= location_convenience_other %></label>
+          <div class="col-sm-6">
             <textarea name="location_convenience_other" class="form-control"></textarea>
           </div>
         </div>
 
         <!-- Time Convenience -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= time_convenience %></label>
-          <div class="col-sm-4">
-            <select name="time_convenience" class="form-control">
-                <option value="">---------</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
+          <label class="control-label col-sm-3"><%= time_convenience %></label>
+          <div class="col-sm-6">
+            <label class="radio-inline">
+              <input type="radio" id="time_convenience_yes" name="time_convenience" value="yes">
+              Yes
+            </label>
+            <label class="radio-inline">
+              <input type="radio" id="time_convenience_no" name="time_convenience" value="no">
+              No
+            </label>
           </div>
         </div>
 
-        <!-- Convenient Time -->
-        <div class="form-group">
-          <label class="control-label col-sm-2"><%= convenient_time %></label>
-          <div class="col-sm-4">
+        <div class="form-group" id="convenient_time_group">
+          <label class="control-label col-sm-3"><%= convenient_time %></label>
+          <div class="col-sm-6">
             <select name="convenient_time" class="form-control">
-                <option value="">---------</option>
-          <option value="early_morning">Early in the Morning</option>
-          <option value="mid_day">Mid Day</option>
-          <option value="afternoon">In the Afternoon</option>
-          <option value="late_afternoon">Late in the Afternoon</option>
-          <option value="evening">In the Evening</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Additional Challenges Encountered -->
-        <div class="form-group">
-          <label class="control-label col-sm-2"><%= additional_challenges_encountered %></label>
-          <div class="col-sm-4">
-            <select name="additional_challenges_encountered" class="form-control">
-                <option value="">---------</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
+              <option value="">---------</option>
+              <option value="early_morning">Early in the Morning</option>
+              <option value="mid_day">Mid Day</option>
+              <option value="afternoon">In the Afternoon</option>
+              <option value="late_afternoon">Late in the Afternoon</option>
+              <option value="evening">In the Evening</option>
             </select>
           </div>
         </div>
 
         <!-- Additional Challenges -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= additional_challenges %></label>
-          <div class="col-sm-4">
+          <label class="control-label col-sm-3"><%= additional_challenges_encountered %></label>
+          <div class="col-sm-6">
+            <label class="radio-inline">
+              <input type="radio" id="additional_challenges_encountered_yes" name="additional_challenges_encountered" value="yes">
+              Yes
+            </label>
+            <label class="radio-inline">
+              <input type="radio" id="additional_challenges_encountered_no" name="additional_challenges_encountered" value="no">
+              No
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group" id="additional_challenges_group">
+          <label class="control-label col-sm-3"><%= additional_challenges %></label>
+          <div class="col-sm-6">
             <select name="additional_challenges" class="form-control">
-                <option value="">---------</option>
-                <option value="a">My husband is not willing to send me for such events</option>
-                <option value="b">Busy with household chores and social/family issues</option>
-                <option value="c">Mostly the dissemination schedules have been organized in Market days</option>
-                <option value="d">I don't have information about the dissemination schedules</option>
-                <option value="e">Have no one to take care of my children</option>
-                <option value="f">Other (Please specify)</option>
+              <option value="">---------</option>
+              <option value="a">My husband is not willing to send me for such events</option>
+              <option value="b">Busy with household chores and social/family issues</option>
+              <option value="c">Mostly the dissemination schedules have been organized in Market days</option>
+              <option value="d">I don't have information about the dissemination schedules</option>
+              <option value="e">Have no one to take care of my children</option>
+              <option value="f">Other (Please specify)</option>
             </select>
           </div>
         </div>
 
-        <!-- Additional Challenges Other -->
-        <div class="form-group">
-          <label class="control-label col-sm-2"><%= additional_challenges_other %></label>
-          <div class="col-sm-4">
+        <div class="form-group" id="additional_challenges_other_group">
+          <label class="control-label col-sm-3"><%= additional_challenges_other %></label>
+          <div class="col-sm-6">
             <textarea name="additional_challenges_other" class="form-control"></textarea>
           </div>
         </div>
 
         <!-- Comfortable Asking -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= comfortable_asking %></label>
-          <div class="col-sm-4">
-            <select name="comfortable_asking" class="form-control">
-                <option value="">---------</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-            </select>
+          <label class="control-label col-sm-3"><%= comfortable_asking %></label>
+          <div class="col-sm-6">
+            <label class="radio-inline">
+              <input type="radio" id="comfortable_asking_yes" name="comfortable_asking" value="yes">
+              Yes
+            </label>
+            <label class="radio-inline">
+              <input type="radio" id="comfortable_asking_no" name="comfortable_asking" value="no">
+              No
+            </label>
           </div>
         </div>
 
-        <!-- Asking Discomfort Reasons -->
-        <div class="form-group">
-          <label class="control-label col-sm-2"><%= asking_discomfort_reasons %></label>
-          <div class="col-sm-4">
+        <div class="form-group" id="asking_discomfort_reasons_group">
+          <label class="control-label col-sm-3"><%= asking_discomfort_reasons %></label>
+          <div class="col-sm-6">
             <select name="asking_discomfort_reasons" class="form-control">
-                <option value="">---------</option>
-                <option value="a">The DA/Mediator was not encouraging to ask questions</option>
-                <option value="b">The DA/Mediator was only focusing on Model Farmers</option>
-                <option value="c">The DA/Mediator was not encouraging Female Farmers</option>
-                <option value="d">I feel comfortable with Female only group (Female farmers)</option>
-                <option value="e">I am not clear with the topic</option>
-                <option value="f">The topic is not relevant for me</option>
-                <option value="g">The topic is not seasonal</option>
-                <option value="h">I don't have the listed resources to adopt the technology</option>
-                <option value="i">There is not enough time allocated for discussion</option>
-                <option value="j">Other (Please specify)</option>
+              <option value="">---------</option>
+              <option value="a">The DA/Mediator was not encouraging to ask questions</option>
+              <option value="b">The DA/Mediator was only focusing on Model Farmers</option>
+              <option value="c">The DA/Mediator was not encouraging Female Farmers</option>
+              <option value="d">I feel comfortable with Female only group (Female farmers)</option>
+              <option value="e">I am not clear with the topic</option>
+              <option value="f">The topic is not relevant for me</option>
+              <option value="g">The topic is not seasonal</option>
+              <option value="h">I don't have the listed resources to adopt the technology</option>
+              <option value="i">There is not enough time allocated for discussion</option>
+              <option value="j">Other (Please specify)</option>
             </select>
           </div>
         </div>
 
-        <!-- Asking Discomfort Reasons Other -->
-        <div class="form-group">
-          <label class="control-label col-sm-2"><%= asking_discomfort_reasons_other %></label>
-          <div class="col-sm-4">
+        <div class="form-group" id="asking_discomfort_reasons_other_group">
+          <label class="control-label col-sm-3"><%= asking_discomfort_reasons_other %></label>
+          <div class="col-sm-6">
             <textarea name="asking_discomfort_reasons_other" class="form-control"></textarea>
           </div>
         </div>
 
         <!-- Recommendation Rating -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= recommendation_rating %></label>
-          <div class="col-sm-4">
-            <input type="number" name="recommendation_rating" class="form-control" min="0" max="10">
+          <label class="control-label col-sm-3"><%= recommendation_rating %></label>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <input type="range" name="recommendation_rating" class="form-control" min="0" max="10" step="1" value="5" id="id_recommendation_rating_slider" oninput="document.getElementById('rating_display').innerText = this.value">
+              <span class="input-group-addon" id="rating_display"></span>
+            </div>
           </div>
         </div>
 
         <!-- NNG Recall -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= nng_recall %></label>
-          <div class="col-sm-4">
-            <select name="nng_recall" class="form-control">
-                <option value="">---------</option>
-                <option value="all">Recalled all NNGs</option>
-                <option value="partial">Recalled partially</option>
-                <option value="none">Did not recall</option>
-            </select>
+          <label class="control-label col-sm-3"><%= nng_recall %></label>
+          <div class="col-sm-6">
+            <label class="radio-inline">
+              <input type="radio" id="nng_recall_all" name="nng_recall" value="all">
+              Recalled all NNGs
+            </label>
+            <label class="radio-inline">
+              <input type="radio" id="nng_recall_partial" name="nng_recall" value="partial">
+              Recalled partially
+            </label>
+            <label class="radio-inline">
+              <input type="radio" id="nng_recall_none" name="nng_recall" value="none">
+              Did not recall
+            </label>
           </div>
         </div>
 
         <!-- Suggestions -->
         <div class="form-group">
-          <label class="control-label col-sm-2"><%= suggestions %></label>
-          <div class="col-sm-4">
+          <label class="control-label col-sm-3"><%= suggestions %></label>
+          <div class="col-sm-6">
             <textarea name="suggestions" class="form-control"></textarea>
           </div>
         </div>
@@ -1964,5 +1984,104 @@
       }
     </script>
     <!-- End of PWA addition -->
+    <!-- <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("FarmerFeedback script loaded.");
+
+        // Helper: add/remove "hidden" class
+        function toggleHidden(selector, show) {
+          const el = document.querySelector(selector);
+          if (!el) return;
+          if (show) {
+            el.classList.remove("hidden");
+          } else {
+            el.classList.add("hidden");
+          }
+        }
+
+        function triggerChange(name) {
+          const el = document.querySelector(`[name="${name}"]`);
+          if (el) el.dispatchEvent(new Event("change"));
+        }
+
+        // Adoption Confidence → Non-Adoption Reasons
+        document.querySelectorAll("input[name='adoption_confidence']").forEach((radio) => {
+          radio.addEventListener("change", function () {
+            const show = this.value === "no";
+            toggleHidden("#non_adoption_reasons_group", show);
+            toggleHidden("#non_adoption_reasons_other_group", false);
+          });
+        });
+
+        // Non-Adoption Reasons → Show "Other" field
+        const nonAdoptionSelect = document.querySelector("select[name='non_adoption_reasons']");
+        if (nonAdoptionSelect) {
+          nonAdoptionSelect.addEventListener("change", function () {
+            toggleHidden("#non_adoption_reasons_other_group", this.value === "j");
+          });
+        }
+
+        // Location Convenience → Show "Other"
+        const locationSelect = document.querySelector("select[name='location_convenience']");
+        if (locationSelect) {
+          locationSelect.addEventListener("change", function () {
+            toggleHidden("#location_convenience_other_group", this.value === "other");
+          });
+        }
+
+        // Time Convenience → Show "Convenient Time"
+        document.querySelectorAll("input[name='time_convenience']").forEach((radio) => {
+          radio.addEventListener("change", function () {
+            toggleHidden("#convenient_time_group", this.value === "no");
+          });
+        });
+
+        // Additional Challenges Encountered → Show dropdown
+        document.querySelectorAll("input[name='additional_challenges_encountered']").forEach((radio) => {
+          radio.addEventListener("change", function () {
+            const show = this.value === "yes";
+            toggleHidden("#additional_challenges_group", show);
+            toggleHidden("#additional_challenges_other_group", false);
+          });
+        });
+
+        // Additional Challenges → Show "Other"
+        const challengesSelect = document.querySelector("select[name='additional_challenges']");
+        if (challengesSelect) {
+          challengesSelect.addEventListener("change", function () {
+            toggleHidden("#additional_challenges_other_group", this.value === "f");
+          });
+        }
+
+        // Comfortable Asking → Show reasons
+        document.querySelectorAll("input[name='comfortable_asking']").forEach((radio) => {
+          radio.addEventListener("change", function () {
+            const show = this.value === "no";
+            toggleHidden("#asking_discomfort_reasons_group", show);
+            toggleHidden("#asking_discomfort_reasons_other_group", false);
+          });
+        });
+
+        // Asking Discomfort → Show "Other"
+        const askingSelect = document.querySelector("select[name='asking_discomfort_reasons']");
+        if (askingSelect) {
+          askingSelect.addEventListener("change", function () {
+            toggleHidden("#asking_discomfort_reasons_other_group", this.value === "j");
+          });
+        }
+
+        // Trigger all initial states
+        [
+          "adoption_confidence",
+          "time_convenience",
+          "additional_challenges_encountered",
+          "comfortable_asking",
+          "non_adoption_reasons",
+          "location_convenience",
+          "additional_challenges",
+          "asking_discomfort_reasons",
+        ].forEach(triggerChange);
+      });
+    </script> -->
   </body>
 </html>
