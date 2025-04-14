@@ -1,10 +1,11 @@
 # python imports
-import datetime
 import calendar
+import datetime
 # django imports
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
-from django.core.validators import MaxValueValidator
+from django.forms import ValidationError
 # app imports
 from coco.data_log import delete_log, save_log
 from coco.base_models import (ADOPTION_VERIFICATION, ADOPT_PRACTICE_CATEGORY, SCREENING_OBSERVATION, SCREENING_GRADE,
@@ -278,8 +279,26 @@ class PersonAdoptPractice(CocoModel):
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)
 
+    def clean(self):
+        super(PersonAdoptPractice, self).clean()
+        # Only run this if we have person, video, and date_of_adoption
+        if self.person_id and self.video_id and self.date_of_adoption:
+            window_start = self.date_of_adoption - datetime.timedelta(days=30)
+            window_end   = self.date_of_adoption + datetime.timedelta(days=30)
+            qs = PersonAdoptPractice.objects.filter(
+                person=self.person_id,
+                video=self.video_id,
+                date_of_adoption__gte=window_start,
+                date_of_adoption__lte=window_end
+            )
+            # exclude self if updating
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+            if qs.exists():
+                raise ValidationError("An adoption for the same person (%s) & video (%s) already exists within 30 days." % (self.person.person_name, self.video.title))
     class Meta:
         unique_together = ("person", "video", "date_of_adoption")
+
 post_save.connect(save_log, sender=PersonAdoptPractice)
 pre_delete.connect(delete_log, sender=PersonAdoptPractice)
 

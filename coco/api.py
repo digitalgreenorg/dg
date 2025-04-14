@@ -944,7 +944,7 @@ class FarmerFeedbackResource(ModelResource):
 
 
 # For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013
-class PersonAdoptVideoResource(BaseResource):
+class PersonAdoptPracticeResource(BaseResource):
     person = fields.ForeignKey(PersonResource, 'person')
     video = fields.ForeignKey(VideoResource, 'video')
     partner = fields.ForeignKey(PartnerResource, 'partner')

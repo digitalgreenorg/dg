@@ -102,7 +102,6 @@ class BlockForm(CocoModelForm):
         exclude = ()
 
 class PersonGroupForm(CocoModelForm):
-#    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
         model = PersonGroup
         exclude = ()
@@ -113,7 +112,6 @@ class HouseholdForm(CocoModelForm):
         exclude = ()
       
 class PersonAdoptPracticeForm(CocoModelForm):
-#    village = forms.ModelChoiceField(Village.objects, widget=forms.Select(attrs={'onchange':'filter_village();'}))
     class Meta:
         model = PersonAdoptPractice
         exclude = ('practice', 'verification_status', 'non_negotiable_check')
