@@ -1052,7 +1052,12 @@
           name_field: "person_name",
           name_field_father_name: "father_name",
           name_field_extra_info: "group",
-          name_field_group_name: "group_name",
+          name_field_extra_attributes: [
+            {
+              from: "group",
+              attribute: "group_name",
+            },
+          ],
           name_field_person_id: "online_id",
           name_field_phone_no: "phone_no",
 
@@ -1267,7 +1272,20 @@
         screening: {
           placeholder: "id_screening",
           name_field: "date",
-          // name_field_extra_info: "animator",
+          name_field_extra_info: "animator",
+          name_field_extra_attributes: [
+            {
+              from: "animator",
+              attribute: "name",
+              prefix: "by: ",
+            },
+            {
+              from: "village",
+              attribute: "village_name",
+              prefix: "in: ",
+              postfix: " village",
+            },
+          ],
         },
       },
       video: {
@@ -1289,7 +1307,12 @@
           name_field: "person_name",
           name_field_father_name: "father_name",
           name_field_extra_info: "group",
-          name_field_group_name: "group_name",
+          name_field_extra_attributes: [
+            {
+              from: "group",
+              attribute: "group_name",
+            },
+          ],
           name_field_person_id: "online_id",
           dependency: [
             {
@@ -1677,7 +1700,12 @@
             name_field: "person_name",
             name_field_father_name: "father_name",
             name_field_extra_info: "group",
-            name_field_group_name: "group_name",
+            name_field_extra_attributes: [
+              {
+                from: "group",
+                attribute: "group_name",
+              },
+            ],
             name_field_person_id: "online_id",
             dependency: [
               {

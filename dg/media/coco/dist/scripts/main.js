@@ -17938,59 +17938,67 @@ define("views/form", [
 
                     // Checking for extra information fields in the model data
                     if (f_json[f_entity_desc.name_field_extra_info]) {
-                        var extra_info_group_name = "";
-                        var extra_info_person_id = "";
-                        var extra_info_father_name = "";
-                        var extra_info_block_name = "";
-                        // Add father name
+                        // Check if legacy config exists (for backward compatibility)
+                        var extra_parts = [];
+
+                        // New flexible config block
                         if (
-                            f_json[f_entity_desc.name_field_father_name] != null
+                            Array.isArray(
+                                f_entity_desc.name_field_extra_attributes
+                            )
                         ) {
-                            extra_info_father_name =
-                                f_json[f_entity_desc.name_field_father_name];
+                            f_entity_desc.name_field_extra_attributes.forEach(
+                                function (attr) {
+                                    const fromObj = f_json[attr.from];
+                                    if (
+                                        fromObj &&
+                                        fromObj[attr.attribute] != null
+                                    ) {
+                                        const val = fromObj[attr.attribute];
+                                        const prefix = attr.prefix || "";
+                                        const postfix = attr.postfix || "";
+                                        extra_parts.push(
+                                            `${prefix}${val}${postfix}`
+                                        );
+                                    }
+                                }
+                            );
                         }
-                        // Add group name
+
+                        // Also support legacy optional parts
                         if (
-                            f_json[f_entity_desc.name_field_extra_info][
-                                f_entity_desc.name_field_group_name
-                            ] != null
+                            f_entity_desc.name_field_father_name &&
+                            f_json[f_entity_desc.name_field_father_name]
                         ) {
-                            extra_info_group_name =
-                                f_json[f_entity_desc.name_field_extra_info][
-                                    f_entity_desc.name_field_group_name
-                                ];
+                            extra_parts.push(
+                                f_json[f_entity_desc.name_field_father_name]
+                            );
                         }
-                        // Add person Id
                         if (
-                            f_json[f_entity_desc.name_field_person_id] != null
+                            f_entity_desc.name_field_person_id &&
+                            f_json[f_entity_desc.name_field_person_id]
                         ) {
-                            extra_info_person_id =
-                                f_json[f_entity_desc.name_field_person_id];
+                            extra_parts.push(
+                                f_json[f_entity_desc.name_field_person_id]
+                            );
                         }
-                        // Added block name as an identifier as some villages have similar name and can properly
-                        // be identified with their block name
                         if (
-                            f_json[f_entity_desc.name_field_block_name] != null
+                            f_entity_desc.name_field_block_name &&
+                            f_json[f_entity_desc.name_field_block_name]
                         ) {
-                            extra_info_block_name =
-                                f_json[f_entity_desc.name_field_block_name];
+                            extra_parts.push(
+                                f_json[f_entity_desc.name_field_block_name]
+                            );
                         }
+
+                        // Combine base name + extras
                         $f_el.append(
                             that.options_inner_template({
                                 id: parseInt(f_json["id"]),
                                 name:
                                     f_json[f_entity_desc.name_field] +
-                                    (extra_info_father_name != ""
-                                        ? " (" + extra_info_father_name + ")"
-                                        : "") +
-                                    (extra_info_group_name != ""
-                                        ? " (" + extra_info_group_name + ")"
-                                        : "") +
-                                    (extra_info_person_id != ""
-                                        ? " (" + extra_info_person_id + ")"
-                                        : "") +
-                                    (extra_info_block_name != ""
-                                        ? " (" + extra_info_block_name + ")"
+                                    (extra_parts.length
+                                        ? " (" + extra_parts.join(", ") + ")"
                                         : ""),
                             })
                         );
