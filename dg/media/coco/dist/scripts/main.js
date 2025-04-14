@@ -17797,7 +17797,7 @@ define("views/form", [
 
                         if (
                             that.entity_name === "adoption" &&
-                            element === "farmers_attendance"
+                            element === "persons_attendance"
                         ) {
                             const videoId = parseInt(
                                 that.$("form [name=video]").val()

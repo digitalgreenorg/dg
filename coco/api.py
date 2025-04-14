@@ -2,7 +2,6 @@
 import ast, json
 from datetime import datetime, timedelta
 from functools import partial
-from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict, ModelChoiceField
 from django.db.models import Q
 # tastypie imports
