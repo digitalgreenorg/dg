@@ -1312,7 +1312,7 @@
         non_adoption_reasons: {
           required: function (element) {
             // If adoption_confidence is false, require a non-adoption reason.
-            return !$("input[name='adoption_confidence']").val() === "no";
+            return $("input[name='adoption_confidence']:checked").val() === "false";
           },
         },
         non_adoption_reasons_other: {
