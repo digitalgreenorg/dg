@@ -244,7 +244,7 @@ class FarmerFeedback(CocoModel):
     )
     
     def __unicode__(self):
-        return u"Feedback by %s on %s video at %s" % (self.farmer.person_name, self.video.title, self.screening.date)
+        return u"Feedback by %s on %s video at %s" % (self.person.person_name, self.video.title, self.screening.date)
 
     class Meta:
         verbose_name = "Farmer Feedback"
