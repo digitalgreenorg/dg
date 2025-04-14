@@ -16344,6 +16344,7 @@ define("views/form", [
 
             //rendering labels
             this.render_labels();
+
             //no foreign element has been rendered yet so disabling all - they get enabled as and when they get rendered
             this.disable_foreign_elements();
 
@@ -16363,6 +16364,13 @@ define("views/form", [
             this.initiate_form_field_validation();
 
             this.initiate_form_widgets();
+
+            // setup conditional visibility if not edit case. render_edit_model will call it when it's an edit_case
+            if (!this.edit_case)
+                this.setupConditionalVisibility(
+                    this.entity_config,
+                    "#form_template_render"
+                );
         },
 
         render_labels: function () {
@@ -16554,6 +16562,11 @@ define("views/form", [
                 this.normalize_json(this.model_json);
                 // put into form
                 this.fill_form();
+                // setup conditional visibility of fields
+                this.setupConditionalVisibility(
+                    this.entity_config,
+                    "#form_template_render"
+                );
             } else if (this.edit_case_id) {
                 // fetch edit object
                 Offline.fetch_object(
@@ -16647,6 +16660,12 @@ define("views/form", [
                         }
                         // put into form
                         that.fill_form();
+
+                        // setup conditional visibility of fields
+                        that.setupConditionalVisibility(
+                            that.entity_config,
+                            "#form_template_render"
+                        );
                     })
                     .fail(function () {
                         // edit object could not be fetched from offline db
@@ -18111,6 +18130,88 @@ define("views/form", [
             }
 
             Backbone.Syphon.deserialize(this, this.model_json);
+        },
+
+        setupConditionalVisibility: function (config, containerSelector) {
+            const container = document.querySelector(containerSelector);
+            if (!container) return;
+
+            const rules = config.visibility_rules;
+            if (!rules) return;
+
+            Object.keys(rules).forEach((targetId) => {
+                const rule = rules[targetId];
+                const targetEl = container.querySelector(`#${targetId}`);
+                const triggerField = rule.show_if.field;
+                const triggerValue = rule.show_if.value;
+
+                // Attach change listeners to the controlling field
+                const inputs = container.querySelectorAll(
+                    `[name="${triggerField}"]`
+                );
+                inputs.forEach((input) => {
+                    input.addEventListener("change", () => {
+                        const currentVal = getFieldValue(
+                            container,
+                            triggerField
+                        );
+                        const shouldShow = currentVal === triggerValue;
+                        toggleWithBootstrap(targetEl, shouldShow);
+
+                        if (!shouldShow) {
+                            resetFieldValues(targetEl);
+                        }
+                    });
+                });
+
+                // Initial state on load
+                const currentVal = getFieldValue(container, triggerField);
+                const shouldShow = currentVal === triggerValue;
+                toggleWithBootstrap(targetEl, shouldShow);
+                if (!shouldShow) {
+                    resetFieldValues(targetEl);
+                }
+            });
+
+            function getFieldValue(ctx, fieldName) {
+                const radios = ctx.querySelectorAll(
+                    `input[name="${fieldName}"]`
+                );
+                if (radios.length) {
+                    const checked = Array.from(radios).find((r) => r.checked);
+                    return checked ? checked.value : null;
+                }
+                const select = ctx.querySelector(`select[name="${fieldName}"]`);
+                if (select) return select.value;
+
+                const input = ctx.querySelector(`input[name="${fieldName}"]`);
+                return input ? input.value : null;
+            }
+
+            function toggleWithBootstrap(el, show) {
+                if (!el) return;
+                el.classList.toggle("hidden", !show);
+            }
+
+            function resetFieldValues(container) {
+                const inputs = container.querySelectorAll(
+                    "input, select, textarea"
+                );
+
+                inputs.forEach((el) => {
+                    if (el.tagName === "SELECT" || el.tagName === "TEXTAREA") {
+                        el.value = "";
+                    } else if (el.type === "checkbox" || el.type === "radio") {
+                        el.checked = false;
+                    } else {
+                        el.value = "";
+                    }
+
+                    // Trigger change event to notify validators/dependencies
+                    const event = new Event("change", { bubbles: true });
+                    el.dispatchEvent(event);
+                });
+            }
         },
 
         // used to disable the save button while save is in progress

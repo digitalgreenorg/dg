@@ -1444,6 +1444,57 @@
       },
       display: "block",
     },
+
+    visibility_rules: {
+      non_adoption_reasons_group: {
+        show_if: {
+          field: "adoption_confidence",
+          value: "false",
+        },
+      },
+      non_adoption_reasons_other_group: {
+        show_if: {
+          field: "non_adoption_reasons",
+          value: "j",
+        },
+      },
+      location_convenience_other_group: {
+        show_if: {
+          field: "location_convenience",
+          value: "other",
+        },
+      },
+      convenient_time_group: {
+        show_if: {
+          field: "time_convenience",
+          value: "false",
+        },
+      },
+      additional_challenges_group: {
+        show_if: {
+          field: "additional_challenges_encountered",
+          value: "true",
+        },
+      },
+      additional_challenges_other_group: {
+        show_if: {
+          field: "additional_challenges",
+          value: "f",
+        },
+      },
+      asking_discomfort_reasons_group: {
+        show_if: {
+          field: "comfortable_asking",
+          value: "false",
+        },
+      },
+      asking_discomfort_reasons_other_group: {
+        show_if: {
+          field: "asking_discomfort_reasons",
+          value: "j",
+        },
+      },
+    },
   };
 
   var adoption_configs = {
