@@ -139,13 +139,13 @@ class FarmerFeedback(CocoModel):
     Model for capturing farmer feedback during video dissemination sessions.
     """
     id = models.AutoField(primary_key=True)
+    date = models.DateField(default=datetime.date.today)
     screening = models.ForeignKey(
         Screening, on_delete=models.CASCADE,
         help_text="The dissemination session this feedback relates to"
     )
-    video = models.ForeignKey(
-        Video, on_delete=models.CASCADE,
-        help_text="The video shown during the session"
+    videos = models.ManyToManyField(
+        Video, through='FarmerFeedbackVideo', help_text="The videos shown during the session"
     )
     person = models.ForeignKey(
         Person, on_delete=models.CASCADE,
@@ -244,16 +244,27 @@ class FarmerFeedback(CocoModel):
     )
     
     def __unicode__(self):
-        return u"Feedback by %s on %s video at %s" % (self.person.person_name, self.video.title, self.screening.date)
+        videos = self.videos.all()
+        video_titles = ", ".join([v.title for v in videos]) if videos else "no videos"
+        return u"Feedback by %s on [%s] at %s" % (self.person.person_name, video_titles, self.screening.date)
 
     class Meta:
         verbose_name = "Farmer Feedback"
         verbose_name_plural = "Farmer Feedbacks"
-        unique_together = (("screening", "person", "video"),)
 
 # Connect signals for logging
 models.signals.post_save.connect(save_log, sender=FarmerFeedback)
 models.signals.pre_delete.connect(delete_log, sender=FarmerFeedback)
+
+class FarmerFeedbackVideo(CocoModel):
+    id = models.AutoField(primary_key=True)
+    farmerfeedback = models.ForeignKey("FarmerFeedback", on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, help_text="The video shown during the session")
+
+    class Meta:
+        unique_together = (("farmerfeedback", "video"),)
+        verbose_name = "Farmer Feedback Video"
+
 
 class PersonAdoptPractice(CocoModel):
     id = models.AutoField(primary_key=True)

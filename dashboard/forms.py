@@ -166,7 +166,7 @@ class ScreeningForm(CocoModelForm):
 class FarmerFeedbackForm(CocoModelForm):
     class Meta:
         model = FarmerFeedback
-        exclude = ()
+        exclude = ('videos',)
 
 class PersonMeetingAttendanceForm(CocoModelForm):
     class Meta:

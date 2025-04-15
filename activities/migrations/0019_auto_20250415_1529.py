@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import datetime
 from django.conf import settings
 import django.core.validators
 
@@ -22,6 +23,7 @@ class Migration(migrations.Migration):
                 ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
                 ('time_modified', models.DateTimeField(auto_now=True, null=True)),
                 ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('date', models.DateField(default=datetime.date.today)),
                 ('video_relevance', models.CharField(help_text=b'How relevant was the video?', max_length=20, choices=[(b'relevant', b'Relevant to a great extent'), (b'relevant_to_som_extnt', b'Relevant to some extent'), (b'not_relevant', b'Not Relevant')])),
                 ('adoption_confidence', models.BooleanField(help_text=b'Does the farmer feel confident in adopting the practice?')),
                 ('non_adoption_reasons', models.CharField(blank=True, max_length=2, null=True, help_text=b'If No, Why?', choices=[(b'a', b'Since I am not clear and convinced in the importance of the technology'), (b'b', b'The input/technology/service for the recommended practice is not easily accessible'), (b'c', b'The cost of the recommended practice is not affordable, and there is no credit facility in our kebele'), (b'd', b'The risk of the investment in the recommended practice is not acceptable'), (b'e', b'Unavailability of Inputs at the Market'), (b'f', b"The technology needs human power and I don't have that"), (b'g', b'The time has passed to adopt the technology'), (b'h', b'My spouse is the one who makes the decision'), (b'i', b'The DA/Mediator will not provide support after dissemination'), (b'j', b'Other (Please specify)')])),
@@ -43,15 +45,34 @@ class Migration(migrations.Migration):
                 ('screening', models.ForeignKey(help_text=b'The dissemination session this feedback relates to', to='activities.Screening')),
                 ('user_created', models.ForeignKey(related_name='activities_farmerfeedback_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
                 ('user_modified', models.ForeignKey(related_name='activities_farmerfeedback_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
-                ('video', models.ForeignKey(help_text=b'The video shown during the session', to='videos.Video')),
             ],
             options={
                 'verbose_name': 'Farmer Feedback',
                 'verbose_name_plural': 'Farmer Feedbacks',
             },
         ),
+        migrations.CreateModel(
+            name='FarmerFeedbackVideo',
+            fields=[
+                ('time_created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('time_modified', models.DateTimeField(auto_now=True, null=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('farmerfeedback', models.ForeignKey(to='activities.FarmerFeedback')),
+                ('user_created', models.ForeignKey(related_name='activities_farmerfeedbackvideo_created', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_modified', models.ForeignKey(related_name='activities_farmerfeedbackvideo_related_modified', blank=True, editable=False, to=settings.AUTH_USER_MODEL, null=True)),
+                ('video', models.ForeignKey(help_text=b'The video shown during the session', to='videos.Video')),
+            ],
+            options={
+                'verbose_name': 'Farmer Feedback Video',
+            },
+        ),
+        migrations.AddField(
+            model_name='farmerfeedback',
+            name='videos',
+            field=models.ManyToManyField(help_text=b'The videos shown during the session', to='videos.Video', through='activities.FarmerFeedbackVideo'),
+        ),
         migrations.AlterUniqueTogether(
-            name='farmerfeedback',
-            unique_together=set([('screening', 'person', 'video')]),
+            name='farmerfeedbackvideo',
+            unique_together=set([('farmerfeedback', 'video')]),
         ),
     ]

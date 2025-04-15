@@ -15,7 +15,7 @@ from tastypie.validation import FormValidation
 from custom_authentication import AnonymousGETAuthentication
 # app imports
 from models import CocoUser
-from activities.models import Screening, FarmerFeedback, PersonAdoptPractice, PersonMeetingAttendance, FrontLineWorkerPresent
+from activities.models import Screening, FarmerFeedback, FarmerFeedbackVideo, PersonAdoptPractice, PersonMeetingAttendance, FrontLineWorkerPresent
 from geographies.models import Village, District, State
 from programs.models import Partner
 from people.models import Animator, AnimatorAssignedVillage, Person, Household, PersonGroup
@@ -904,21 +904,21 @@ class PersonResource(BaseResource):
 
 class FarmerFeedbackResource(ModelResource):
     screening = fields.ForeignKey(ScreeningResource, 'screening')
-    video = fields.ForeignKey(VideoResource, 'video')
+    # videos = fields.ToManyField(VideoResource, 'videos', related_name='farmerfeedback')
     person = fields.ForeignKey(PersonResource, 'person')
 
     class Meta:
-        queryset = FarmerFeedback.objects.select_related('screening', 'video','person').all()
+        queryset = FarmerFeedback.objects.prefetch_related('screening', 'videos', 'person').all()
         resource_name = 'farmerfeedback'
         authentication = SessionAuthentication()
         authorization = VillageAuthorization('screening__village__in')
         validation = ModelFormValidation(form_class=FarmerFeedbackForm)
         always_return_data = True
-        excludes = ['time_created', 'time_modified']
+        excludes = ['time_created', 'time_modified', 'videos']
         max_limit = None
 
     hydrate_screening = partial(dict_to_foreign_uri, field_name='screening')
-    hydrate_video = partial(dict_to_foreign_uri, field_name='video')
+    hydrate_videos = partial(dict_to_foreign_uri_m2m, field_name='videos', resource_name='video')
     hydrate_person = partial(dict_to_foreign_uri, field_name='person')
 
     def dehydrate_screening(self, bundle):
@@ -927,20 +927,46 @@ class FarmerFeedbackResource(ModelResource):
             'id': screening_obj.id,
             'date': screening_obj.date.isoformat(),
         }
-
-    def dehydrate_video(self, bundle):
-        video_obj = bundle.obj.video
-        return {
-            'id': video_obj.id,
-            'title': video_obj.title,
-        }
-    
+    def dehydrate_videos(self, bundle):
+        return [{'id': video.id, 'title': video.title, } for video in bundle.obj.videos.all()]
     def dehydrate_person(self, bundle):
         farmer_obj = bundle.obj.person
         return {
             'id': farmer_obj.id,
             'person_name': farmer_obj.person_name,
         }
+    
+    def obj_create(self, bundle, **kwargs):
+        bundle = super(FarmerFeedbackResource, self).obj_create(bundle, **kwargs)
+        self._handle_videos(bundle)
+        return bundle
+
+    def obj_update(self, bundle, **kwargs):
+        bundle = super(FarmerFeedbackResource, self).obj_update(bundle, **kwargs)
+        self._handle_videos(bundle)
+        return bundle
+    
+    def _handle_videos(self, bundle):
+
+        video_uris = bundle.data.get('videos', [])
+        video_ids = []
+
+        for uri in video_uris:
+            try:
+                video_id = int(uri.strip('/').split('/')[-1])
+                video_ids.append(video_id)
+            except Exception:
+                pass
+
+        # Clear existing links and re-add
+        FarmerFeedbackVideo.objects.filter(farmerfeedback=bundle.obj).delete()
+        for vid in video_ids:
+            FarmerFeedbackVideo.objects.get_or_create(
+                farmerfeedback=bundle.obj,
+                video_id=vid
+            )
+
+
 
 
 # For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013

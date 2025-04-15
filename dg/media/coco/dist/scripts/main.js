@@ -17370,7 +17370,9 @@ define("views/form", [
                         if (attr_values instanceof Array) {
                             related_ids = related_ids.concat(
                                 attr_values.map(function (v) {
-                                    return String(v.id);
+                                    return String(
+                                        v["id"] ?? v[dep_desc.source_id_field]
+                                    );
                                 })
                             );
                         } else if (attr_values && attr_values.id) {
@@ -17586,6 +17588,7 @@ define("views/form", [
 
                 final_models = _.sortBy(final_models, (person) => person.id);
             }
+
             return final_models;
         },
 

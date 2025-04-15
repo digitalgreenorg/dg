@@ -1165,14 +1165,14 @@
     edit_template_name: "farmerfeedback_add_edit_template",
     rest_api_url: "/coco/api/v2/farmerfeedback/",
     entity_name: "farmerfeedback",
-    unique_together_fields: ["screening.id", "video.id", "person.id"],
     sort_field: "screening.date",
 
     labels_English: {
       farmerfeedback: "Farmer Feedback",
+      date: "Feedback Date",
       screening: "Screening Session",
       person: "Farmer",
-      video: "Video",
+      videos: "Videos",
       video_relevance: "Video Relevance",
       adoption_confidence: "Adoption Confidence",
       non_adoption_reasons: "Non-Adoption Reasons",
@@ -1194,9 +1194,10 @@
 
     labels_हिन्दी: {
       farmerfeedback: "किसान प्रतिक्रिया",
+      date: "प्रतिक्रिया तिथि",
       screening: "प्रसारण सत्र",
       person: "किसान",
-      video: "वीडियो",
+      videos: "वीडियो",
       video_relevance: "वीडियो प्रासंगिकता",
       adoption_confidence: "अपनाने का आत्मविश्वास",
       non_adoption_reasons: "न अपनाने के कारण",
@@ -1218,9 +1219,10 @@
 
     labels_Français: {
       farmerfeedback: "Retour d'information des agriculteurs",
+      date: "Date de retour d'information",
       screening: "Séance de diffusion",
       person: "Agriculteur",
-      video: "Vidéo",
+      videos: "Vidéo",
       video_relevance: "Pertinence de la vidéo",
       adoption_confidence: "Confiance dans l'adoption",
       non_adoption_reasons: "Raisons du non-adoption",
@@ -1244,7 +1246,7 @@
       { header: "ID", element: "online_id" },
       { header: "Screening Date", element: "screening.date" },
       { header: "Farmer", element: "person.person_name" },
-      { header: "Video", element: "video.title" },
+      // { header: "Video", element: "video.title" },
       { header: "Video Relevance", element: "video_relevance" },
       { header: "Recommendation Rating", element: "recommendation_rating" },
     ],
@@ -1253,7 +1255,7 @@
       { header: "आईडी", element: "online_id" },
       { header: "प्रसारण तिथि", element: "screening.date" },
       { header: "किसान", element: "person.person_name" },
-      { header: "वीडियो", element: "video.title" },
+      // { header: "वीडियो", element: "video.title" },
       { header: "वीडियो प्रासंगिकता", element: "video_relevance" },
       { header: "सिफारिश रेटिंग", element: "recommendation_rating" },
     ],
@@ -1262,7 +1264,7 @@
       { header: "ID", element: "online_id" },
       { header: "Date de diffusion", element: "screening.date" },
       { header: "Agriculteur", element: "person.person_name" },
-      { header: "Vidéo", element: "video.title" },
+      // { header: "Vidéo", element: "video.title" },
       { header: "Pertinence de la vidéo", element: "video_relevance" },
       { header: "Note de recommandation", element: "recommendation_rating" },
     ],
@@ -1289,7 +1291,7 @@
         },
       },
       video: {
-        video: {
+        videos: {
           placeholder: "id_video",
           name_field: "title",
           dependency: [
@@ -1316,8 +1318,10 @@
           name_field_person_id: "online_id",
           dependency: [
             {
-              source_form_element: "video",
-              dep_attr: "videos_seen",
+              source_form_element: "screening",
+              dep_attr: "farmers_attendance",
+              use_source_attribute: true,
+              source_id_field: "person_id",
             },
           ],
         },
@@ -1328,7 +1332,8 @@
       ignore: [],
       rules: {
         screening: "required",
-        video: "required",
+        date: "required",
+        videos: "required",
         person: "required",
         video_relevance: "required",
         adoption_confidence: "required",
@@ -1393,14 +1398,17 @@
         suggestions: {},
       },
       messages: {
+        date: {
+          required: "Feedback date is required",
+        },
         screening: {
           required: "Screening session is required",
         },
         person: {
           required: "Farmer is required",
         },
-        video: {
-          required: "Video is required",
+        videos: {
+          required: "Videos are required",
         },
         video_relevance: {
           required: "Video relevance is required",

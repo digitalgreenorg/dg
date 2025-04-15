@@ -1679,6 +1679,14 @@
       <fieldset class="form-horizontal">
         <legend><%= farmerfeedback %></legend>
 
+        <!-- Date -->
+        <div class="form-group">
+            <label class="control-label col-sm-3"><%= date %></label>
+            <div class="col-sm-6">
+                <input class="date-picker form-control" id="date" type="text" placeholder="YYYY-MM-DD" name="date"/>
+             </div>
+        </div>
+
         <!-- Screening -->
         <div class="form-group">
           <label class="control-label col-sm-3"><%= screening %></label>
@@ -1689,9 +1697,9 @@
 
         <!-- Video -->
         <div class="form-group">
-          <label class="control-label col-sm-3"><%= video %></label>
+          <label class="control-label col-sm-3"><%= videos %></label>
           <div class="col-sm-6">
-            <select id="id_video" name="video" class="chosen-select form-control"></select>
+            <select id="id_video" name="videos" class="chosen-select form-control" multiple="multiple" ></select>
           </div>
         </div>
 
