@@ -889,6 +889,7 @@
     edit_template_name: "screening_add_edit_template",
     rest_api_url: "/coco/api/v2/screening/",
     entity_name: "screening",
+    sort_field: "date",
     list_var_check: "screening",
     fetch_element: "person",
     fetch_child_element: "directbeneficiaries",
@@ -1051,7 +1052,12 @@
           name_field: "person_name",
           name_field_father_name: "father_name",
           name_field_extra_info: "group",
-          name_field_group_name: "group_name",
+          name_field_extra_attributes: [
+            {
+              from: "group",
+              attribute: "group_name",
+            },
+          ],
           name_field_person_id: "online_id",
           name_field_phone_no: "phone_no",
 
@@ -1146,6 +1152,370 @@
       errorClass: "help-inline red-color",
       errorPlacement: function (label, element) {
         element.parent().append(label);
+      },
+    },
+  };
+
+  var farmer_feedback_configs = {
+    page_header: "Farmer Feedback",
+    config_English: "Farmer Feedback",
+    config_हिन्दी: "किसान प्रतिक्रिया",
+    config_Français: "Retour d'information des agriculteurs",
+    add_template_name: "farmerfeedback_add_edit_template",
+    edit_template_name: "farmerfeedback_add_edit_template",
+    rest_api_url: "/coco/api/v2/farmerfeedback/",
+    entity_name: "farmerfeedback",
+    unique_together_fields: ["screening.id", "video.id", "person.id"],
+    sort_field: "screening.date",
+
+    labels_English: {
+      farmerfeedback: "Farmer Feedback",
+      screening: "Screening Session",
+      person: "Farmer",
+      video: "Video",
+      video_relevance: "Video Relevance",
+      adoption_confidence: "Adoption Confidence",
+      non_adoption_reasons: "Non-Adoption Reasons",
+      non_adoption_reasons_other: "Other Reason (Non-Adoption)",
+      location_convenience: "Location Convenience",
+      location_convenience_other: "Additional Location Details",
+      time_convenience: "Time Convenience",
+      convenient_time: "Preferred Alternative Time",
+      additional_challenges_encountered: "Additional Challenges Encountered",
+      additional_challenges: "Additional Challenges",
+      additional_challenges_other: "Other Challenges (Please specify)",
+      comfortable_asking: "Comfortable Asking",
+      asking_discomfort_reasons: "Reasons for Discomfort in Asking",
+      asking_discomfort_reasons_other: "Other Reasons (Asking Discomfort)",
+      recommendation_rating: "Recommendation Rating",
+      nng_recall: "NNG Recall",
+      suggestions: "Suggestions",
+    },
+
+    labels_हिन्दी: {
+      farmerfeedback: "किसान प्रतिक्रिया",
+      screening: "प्रसारण सत्र",
+      person: "किसान",
+      video: "वीडियो",
+      video_relevance: "वीडियो प्रासंगिकता",
+      adoption_confidence: "अपनाने का आत्मविश्वास",
+      non_adoption_reasons: "न अपनाने के कारण",
+      non_adoption_reasons_other: "अन्य कारण (न अपनाने के लिए)",
+      location_convenience: "स्थान की सुविधा",
+      location_convenience_other: "स्थान के बारे में अतिरिक्त जानकारी",
+      time_convenience: "समय की सुविधा",
+      convenient_time: "वैकल्पिक पसंदीदा समय",
+      additional_challenges_encountered: "अतिरिक्त चुनौतियां",
+      additional_challenges: "अतिरिक्त समस्याएँ",
+      additional_challenges_other: "अन्य समस्याएँ (कृपया निर्दिष्ट करें)",
+      comfortable_asking: "प्रश्न पूछने में सहजता",
+      asking_discomfort_reasons: "प्रश्न पूछने में असहजता के कारण",
+      asking_discomfort_reasons_other: "अन्य कारण (प्रश्न पूछने में असहजता)",
+      recommendation_rating: "सिफारिश रेटिंग",
+      nng_recall: "मुख्य बिंदुओं की स्मृति",
+      suggestions: "सुझाव",
+    },
+
+    labels_Français: {
+      farmerfeedback: "Retour d'information des agriculteurs",
+      screening: "Séance de diffusion",
+      person: "Agriculteur",
+      video: "Vidéo",
+      video_relevance: "Pertinence de la vidéo",
+      adoption_confidence: "Confiance dans l'adoption",
+      non_adoption_reasons: "Raisons du non-adoption",
+      non_adoption_reasons_other: "Autre raison (Non-adoption)",
+      location_convenience: "Commodité de l'emplacement",
+      location_convenience_other: "Détails supplémentaires sur l'emplacement",
+      time_convenience: "Commodité du temps",
+      convenient_time: "Temps alternatif préféré",
+      additional_challenges_encountered: "Défis supplémentaires rencontrés",
+      additional_challenges: "Défis supplémentaires",
+      additional_challenges_other: "Autres défis (veuillez préciser)",
+      comfortable_asking: "À l'aise pour poser des questions",
+      asking_discomfort_reasons: "Raisons de l'inconfort pour poser des questions",
+      asking_discomfort_reasons_other: "Autres raisons (inconfort)",
+      recommendation_rating: "Note de recommandation",
+      nng_recall: "Rappel des points non négociables",
+      suggestions: "Suggestions",
+    },
+
+    list_elements_English: [
+      { header: "ID", element: "online_id" },
+      { header: "Screening Date", element: "screening.date" },
+      { header: "Farmer", element: "person.person_name" },
+      { header: "Video", element: "video.title" },
+      { header: "Video Relevance", element: "video_relevance" },
+      { header: "Recommendation Rating", element: "recommendation_rating" },
+    ],
+
+    list_elements_हिन्दी: [
+      { header: "आईडी", element: "online_id" },
+      { header: "प्रसारण तिथि", element: "screening.date" },
+      { header: "किसान", element: "person.person_name" },
+      { header: "वीडियो", element: "video.title" },
+      { header: "वीडियो प्रासंगिकता", element: "video_relevance" },
+      { header: "सिफारिश रेटिंग", element: "recommendation_rating" },
+    ],
+
+    list_elements_Français: [
+      { header: "ID", element: "online_id" },
+      { header: "Date de diffusion", element: "screening.date" },
+      { header: "Agriculteur", element: "person.person_name" },
+      { header: "Vidéo", element: "video.title" },
+      { header: "Pertinence de la vidéo", element: "video_relevance" },
+      { header: "Note de recommandation", element: "recommendation_rating" },
+    ],
+
+    foreign_entities: {
+      screening: {
+        screening: {
+          placeholder: "id_screening",
+          name_field: "date",
+          name_field_extra_info: "animator",
+          name_field_extra_attributes: [
+            {
+              from: "animator",
+              attribute: "name",
+              prefix: "by: ",
+            },
+            {
+              from: "village",
+              attribute: "village_name",
+              prefix: "in: ",
+              postfix: " village",
+            },
+          ],
+        },
+      },
+      video: {
+        video: {
+          placeholder: "id_video",
+          name_field: "title",
+          dependency: [
+            {
+              source_form_element: "screening",
+              dep_attr: "videoes_screened",
+              use_source_attribute: true,
+            },
+          ],
+        },
+      },
+      person: {
+        person: {
+          placeholder: "id_person",
+          name_field: "person_name",
+          name_field_father_name: "father_name",
+          name_field_extra_info: "group",
+          name_field_extra_attributes: [
+            {
+              from: "group",
+              attribute: "group_name",
+            },
+          ],
+          name_field_person_id: "online_id",
+          dependency: [
+            {
+              source_form_element: "video",
+              dep_attr: "videos_seen",
+            },
+          ],
+        },
+      },
+    },
+
+    form_field_validation: {
+      ignore: [],
+      rules: {
+        screening: "required",
+        video: "required",
+        person: "required",
+        video_relevance: "required",
+        adoption_confidence: "required",
+        non_adoption_reasons: {
+          required: function (element) {
+            // If adoption_confidence is false, require a non-adoption reason.
+            return $("input[name='adoption_confidence']:checked").val() === "false";
+          },
+        },
+        non_adoption_reasons_other: {
+          required: function (element) {
+            // If non_adoption_reasons is "j" (Other), then require further details.
+            return $("select[name='non_adoption_reasons']").val() === "j";
+          },
+        },
+        location_convenience: "required",
+        location_convenience_other: {
+          required: function (element) {
+            // If location_convenience is "other", require additional details.
+            return $("select[name='location_convenience']").val() === "other";
+          },
+        },
+        time_convenience: "required",
+        convenient_time: {
+          required: function (element) {
+            // If time_convenience is false, require a preferred alternative time.
+            return $("input[name='time_convenience']:checked").val() === "false";
+          },
+        },
+        additional_challenges_encountered: "required",
+        additional_challenges: {
+          required: function (element) {
+            // If additional_challenges_encountered is true, require selecting a challenge.
+            return $("input[name='additional_challenges_encountered']:checked").val() === "true";
+          },
+        },
+        additional_challenges_other: {
+          required: function (element) {
+            // If additional_challenges is "f" (Other), require further details.
+            return $("select[name='additional_challenges']").val() === "f";
+          },
+        },
+        comfortable_asking: "required",
+        asking_discomfort_reasons: {
+          required: function (element) {
+            // If comfortable_asking is false, require a reason.
+            return $("input[name='comfortable_asking']:checked").val() === "false";
+          },
+        },
+        asking_discomfort_reasons_other: {
+          required: function (element) {
+            // If asking_discomfort_reasons is "j" (Other), require further specification.
+            return $("select[name='asking_discomfort_reasons']").val() === "j";
+          },
+        },
+        recommendation_rating: {
+          required: true,
+          min: 0,
+          max: 10,
+        },
+        nng_recall: "required",
+        suggestions: {},
+      },
+      messages: {
+        screening: {
+          required: "Screening session is required",
+        },
+        person: {
+          required: "Farmer is required",
+        },
+        video: {
+          required: "Video is required",
+        },
+        video_relevance: {
+          required: "Video relevance is required",
+        },
+        adoption_confidence: {
+          required: "Adoption confidence is required",
+        },
+        non_adoption_reasons: {
+          required: "Please select a reason for not adopting",
+        },
+        non_adoption_reasons_other: {
+          required: "Please specify the other reason for non-adoption",
+        },
+        location_convenience: {
+          required: "Location convenience is required",
+        },
+        location_convenience_other: {
+          required: "Please provide additional details for location convenience",
+        },
+        time_convenience: {
+          required: "Time convenience is required",
+        },
+        convenient_time: {
+          required: "Please select an alternative preferred time",
+        },
+        additional_challenges_encountered: {
+          required: "Please indicate if additional challenges were encountered",
+        },
+        additional_challenges: {
+          required: "Please select the additional challenges encountered",
+        },
+        additional_challenges_other: {
+          required: "Please specify the other challenges",
+        },
+        comfortable_asking: {
+          required: "Please indicate if you felt comfortable asking questions",
+        },
+        asking_discomfort_reasons: {
+          required: "Please select the reasons for discomfort in asking questions",
+        },
+        asking_discomfort_reasons_other: {
+          required: "Please specify other reasons for discomfort",
+        },
+        recommendation_rating: {
+          required: "Recommendation rating is required",
+          min: "Rating should be at least 0",
+          max: "Rating should be at most 10",
+        },
+        nng_recall: {
+          required: "Please indicate your recall of the non-negotiable points",
+        },
+        suggestions: {},
+      },
+      highlight: function (element, errorClass, validClass) {
+        $(element).parent("div").addClass("error");
+      },
+      unhighlight: function (element, errorClass, validClass) {
+        $(element).parent("div").removeClass("error");
+      },
+      errorElement: "span",
+      errorClass: "help-block red-color",
+      errorPlacement: function (error, element) {
+        element.closest(".form-group").append(error);
+      },
+      display: "block",
+    },
+
+    visibility_rules: {
+      non_adoption_reasons_group: {
+        show_if: {
+          field: "adoption_confidence",
+          value: "false",
+        },
+      },
+      non_adoption_reasons_other_group: {
+        show_if: {
+          field: "non_adoption_reasons",
+          value: "j",
+        },
+      },
+      location_convenience_other_group: {
+        show_if: {
+          field: "location_convenience",
+          value: "other",
+        },
+      },
+      convenient_time_group: {
+        show_if: {
+          field: "time_convenience",
+          value: "false",
+        },
+      },
+      additional_challenges_group: {
+        show_if: {
+          field: "additional_challenges_encountered",
+          value: "true",
+        },
+      },
+      additional_challenges_other_group: {
+        show_if: {
+          field: "additional_challenges",
+          value: "f",
+        },
+      },
+      asking_discomfort_reasons_group: {
+        show_if: {
+          field: "comfortable_asking",
+          value: "false",
+        },
+      },
+      asking_discomfort_reasons_other_group: {
+        show_if: {
+          field: "asking_discomfort_reasons",
+          value: "j",
+        },
       },
     },
   };
@@ -1330,7 +1700,12 @@
             name_field: "person_name",
             name_field_father_name: "father_name",
             name_field_extra_info: "group",
-            name_field_group_name: "group_name",
+            name_field_extra_attributes: [
+              {
+                from: "group",
+                attribute: "group_name",
+              },
+            ],
             name_field_person_id: "online_id",
             dependency: [
               {
@@ -1338,8 +1713,15 @@
                 dep_attr: "group",
               },
             ],
+            // Filter the person options based on the videos seen
+            filter_dependency: [
+              {
+                source_form_element: "video",
+                dep_attr: "videos_seen",
+              },
+            ],
           },
-          farmers_attendance: {
+          persons_attendance: {
             dependency: [
               {
                 source_form_element: "group",
@@ -2019,7 +2401,6 @@
         $.get(that.reset_database_check_url, {
           lastdownloadtimestamp: timestamp,
         }).done(function (resp) {
-          console.log(resp);
           if (resp == "1") {
             alert("Your database will be redownloaded because of some changes in data.");
             Offline.reset_database();
@@ -2047,6 +2428,7 @@
     household: household_configs,
     person: person_configs,
     screening: screening_configs,
+    farmerfeedback: farmer_feedback_configs,
     adoption: adoption_configs,
     language: language_configs,
     tag: tag_configs,

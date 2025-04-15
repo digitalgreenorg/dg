@@ -1,35 +1,21 @@
 # python imports
-import json
-import datetime
 import calendar
+import datetime
 # django imports
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models.signals import pre_delete, post_save
-from django.core.validators import MaxValueValidator
+from django.forms import ValidationError
 # app imports
 from coco.data_log import delete_log, save_log
-from coco.base_models import CocoModel
-from coco.base_models import ADOPTION_VERIFICATION
-from coco.base_models import SCREENING_OBSERVATION
-from coco.base_models import SCREENING_GRADE
-from coco.base_models import VERIFIED_BY
-from coco.base_models import ATTENDED_PERSON_CATEGORY
-from coco.base_models import ADOPT_PRACTICE_CATEGORY
-from coco.base_models import FRONTLINE_WORKER_PRESENT
-from coco.base_models import TYPE_OF_VENUE
-from coco.base_models import TYPE_OF_VIDEO
-from coco.base_models import TOPICS
-from coco.base_models import ACTIVITY_CHOICES
+from coco.base_models import (ADOPTION_VERIFICATION, ADOPT_PRACTICE_CATEGORY, SCREENING_OBSERVATION, SCREENING_GRADE,
+                               VERIFIED_BY, TYPE_OF_VENUE, TYPE_OF_VIDEO, TOPICS, ACTIVITY_CHOICES, VIDEO_RELEVANCE_CHOICES, NON_ADOPTION_REASON_CHOICES,
+                                DISSEMINATION_CHALLENGES_CHOICES, PARTICIPATION_DISCOMFORT_REASONS_CHOICES,
+                                LOCATION_CONVENIENCE_CHOICES, TIME_CONVENIENCE_CHOICES, NNG_RECALL_CHOICES, CocoModel)
 from geographies.models import Village
 from programs.models import Partner
-from people.models import Animator
-from people.models import JSLPS_Animator, AP_Animator
-from people.models import JSLPS_Person
-from people.models import Person
-from people.models import PersonGroup
-from videos.models import Video
-from videos.models import JSLPS_Video, APVideo, APPractice
-from videos.models import ParentCategory
+from people.models import Animator, JSLPS_Animator, AP_Animator, JSLPS_Person, Person, PersonGroup
+from videos.models import Video, JSLPS_Video, APVideo, APPractice, ParentCategory
 
 
 class VRPpayment(models.Manager):
@@ -147,6 +133,128 @@ class PersonMeetingAttendance(CocoModel):
     def __unicode__(self):
         return  u'%s' % (self.id)
 
+
+class FarmerFeedback(CocoModel):
+    """
+    Model for capturing farmer feedback during video dissemination sessions.
+    """
+    id = models.AutoField(primary_key=True)
+    screening = models.ForeignKey(
+        Screening, on_delete=models.CASCADE,
+        help_text="The dissemination session this feedback relates to"
+    )
+    video = models.ForeignKey(
+        Video, on_delete=models.CASCADE,
+        help_text="The video shown during the session"
+    )
+    person = models.ForeignKey(
+        Person, on_delete=models.CASCADE,
+        help_text="The farmer providing the feedback"
+    )
+    # Feedback on the relevance of the video
+    video_relevance = models.CharField(
+        max_length=20,
+        choices=VIDEO_RELEVANCE_CHOICES,
+        help_text="How relevant was the video?"
+    )
+    # Confidence in adopting the practice
+    adoption_confidence = models.BooleanField(
+        help_text="Does the farmer feel confident in adopting the practice?"
+    )
+    # Reasons for not adopting (if any)
+    non_adoption_reasons = models.CharField(
+        max_length=2,  # corrected from 'mas_length'
+        choices=NON_ADOPTION_REASON_CHOICES,
+        blank=True,
+        null=True,
+        help_text="If No, Why?"
+    )
+    non_adoption_reasons_other = models.TextField(
+        blank=True,
+        null=True,
+        help_text="If not confident, reasons for not adopting (e.g., clarity, accessibility, cost, risk, etc.)"
+    )
+    # Feedback on logistics
+    location_convenience = models.CharField(
+        max_length=20,
+        choices=LOCATION_CONVENIENCE_CHOICES,
+        help_text="Feedback on the dissemination location"
+    )
+    location_convenience_other = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Additional details about location convenience"
+    )
+    time_convenience = models.BooleanField(
+        help_text="Was the screening time convenient?"
+    )
+    convenient_time = models.CharField(
+        max_length=20,
+        choices=TIME_CONVENIENCE_CHOICES,
+        blank=True,
+        null=True,
+        help_text="If the screening time was not convenient, which alternative time is preferred?"
+    )
+    additional_challenges_encountered = models.BooleanField(
+        help_text="Do you face any additional challenges in attending video dissemination sessions other than time and location?"
+    )
+    additional_challenges = models.CharField(
+        max_length=20,
+        choices=DISSEMINATION_CHALLENGES_CHOICES,
+        blank=True,
+        null=True,
+        help_text="If yes, what are the potential problems?"
+    )
+    additional_challenges_other = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Additional details for challenges encountered"
+    )
+    # Feedback on participation during the session
+    comfortable_asking = models.BooleanField(
+        help_text="Did the farmer feel comfortable asking questions and participating?"
+    )
+    asking_discomfort_reasons = models.CharField(
+        max_length=2,
+        choices=PARTICIPATION_DISCOMFORT_REASONS_CHOICES,
+        blank=True,
+        null=True,
+        help_text="If not comfortable, what were the reasons?"
+    )
+    asking_discomfort_reasons_other = models.TextField(
+        blank=True,
+        null=True,
+        help_text="If not comfortable, please specify other reasons"
+    )
+    # Overall recommendation and recall of key video points
+    recommendation_rating = models.PositiveIntegerField(
+        validators=[MaxValueValidator(10)],
+        help_text="On a scale of 0-10, how likely is the farmer to recommend the practice?"
+    )
+    nng_recall = models.CharField(
+        max_length=20,
+        choices=NNG_RECALL_CHOICES,
+        help_text="Farmer's recall of the main (non-negotiable) points in the video"
+    )
+    # Open ended suggestions for future video topics/practices
+    suggestions = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Other agricultural practices or topics the farmer would like to see in videos"
+    )
+    
+    def __unicode__(self):
+        return u"Feedback by %s on %s video at %s" % (self.person.person_name, self.video.title, self.screening.date)
+
+    class Meta:
+        verbose_name = "Farmer Feedback"
+        verbose_name_plural = "Farmer Feedbacks"
+        unique_together = (("screening", "person", "video"),)
+
+# Connect signals for logging
+models.signals.post_save.connect(save_log, sender=FarmerFeedback)
+models.signals.pre_delete.connect(delete_log, sender=FarmerFeedback)
+
 class PersonAdoptPractice(CocoModel):
     id = models.AutoField(primary_key=True)
     old_coco_id = models.BigIntegerField(editable=False, null=True)
@@ -171,8 +279,26 @@ class PersonAdoptPractice(CocoModel):
     def __unicode__(self):
         return "%s (%s) (%s) (%s) (%s)" % (self.person.person_name, self.person.father_name, self.person.group.group_name if self.person.group else '', self.person.village.village_name, self.video.title)
 
+    def clean(self):
+        super(PersonAdoptPractice, self).clean()
+        # Only run this if we have person, video, and date_of_adoption
+        if self.person_id and self.video_id and self.date_of_adoption:
+            window_start = self.date_of_adoption - datetime.timedelta(days=30)
+            window_end   = self.date_of_adoption + datetime.timedelta(days=30)
+            qs = PersonAdoptPractice.objects.filter(
+                person=self.person_id,
+                video=self.video_id,
+                date_of_adoption__gte=window_start,
+                date_of_adoption__lte=window_end
+            )
+            # exclude self if updating
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+            if qs.exists():
+                raise ValidationError("An adoption for the same person (%s) & video (%s) already exists within 30 days." % (self.person.person_name, self.video.title))
     class Meta:
         unique_together = ("person", "video", "date_of_adoption")
+
 post_save.connect(save_log, sender=PersonAdoptPractice)
 pre_delete.connect(delete_log, sender=PersonAdoptPractice)
 

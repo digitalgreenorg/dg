@@ -16231,9 +16231,15 @@ define("views/form", [
             for (f_entity in this.foreign_entities) {
                 var f_collection = Offline.create_b_collection(f_entity, {
                     comparator: function (model) {
-                        return model
-                            .get(all_configs[this.storeName].sort_field)
-                            .toLowerCase();
+                        var value = model.get(
+                            all_configs[this.storeName].sort_field
+                        );
+                        // Handle different data types appropriately
+                        if (typeof value === "string") {
+                            return value.toLowerCase(); // Case-insensitive string comparison
+                        } else {
+                            return value; // Return as is for numbers or other types
+                        }
                     },
                 });
                 this.f_index.push(f_entity);
@@ -16338,6 +16344,7 @@ define("views/form", [
 
             //rendering labels
             this.render_labels();
+
             //no foreign element has been rendered yet so disabling all - they get enabled as and when they get rendered
             this.disable_foreign_elements();
 
@@ -16357,6 +16364,13 @@ define("views/form", [
             this.initiate_form_field_validation();
 
             this.initiate_form_widgets();
+
+            // setup conditional visibility if not edit case. render_edit_model will call it when it's an edit_case
+            if (!this.edit_case)
+                this.setupConditionalVisibility(
+                    this.entity_config,
+                    "#form_template_render"
+                );
         },
 
         render_labels: function () {
@@ -16548,6 +16562,11 @@ define("views/form", [
                 this.normalize_json(this.model_json);
                 // put into form
                 this.fill_form();
+                // setup conditional visibility of fields
+                this.setupConditionalVisibility(
+                    this.entity_config,
+                    "#form_template_render"
+                );
             } else if (this.edit_case_id) {
                 // fetch edit object
                 Offline.fetch_object(
@@ -16641,6 +16660,12 @@ define("views/form", [
                         }
                         // put into form
                         that.fill_form();
+
+                        // setup conditional visibility of fields
+                        that.setupConditionalVisibility(
+                            that.entity_config,
+                            "#form_template_render"
+                        );
                     })
                     .fail(function () {
                         // edit object could not be fetched from offline db
@@ -17118,15 +17143,32 @@ define("views/form", [
                 (eDate.getMonth() + 1) +
                 "-" +
                 eDate.getDate();
-            $(".date-picker")
-                .datepicker({
-                    format: "yyyy-mm-dd",
-                    startDate: "2009-01-01",
-                    endDate: enddate,
-                })
-                .on("changeDate", function (ev) {
-                    $(this).datepicker("hide");
-                });
+
+            // $(".date-picker")
+            //     .datepicker({
+            //         format: "yyyy-mm-dd",
+            //         startDate: "2009-01-01",
+            //         endDate: enddate,
+            //     })
+            //     .on("changeDate", function (ev) {
+            //         $(this).datepicker("hide");
+            //     });
+
+            $(".date-picker").each(function () {
+                var $this = $(this);
+                // Use the provided data-date-start-date or default to "2009-01-01"
+                var startDate = $this.data("date-start-date") || "2009-01-01";
+
+                $this
+                    .datepicker({
+                        format: "yyyy-mm-dd",
+                        startDate: startDate,
+                        endDate: enddate,
+                    })
+                    .on("changeDate", function (ev) {
+                        $this.datepicker("hide");
+                    });
+            });
 
             $(".time-picker").timepicker({
                 minuteStep: 1,
@@ -17302,93 +17344,127 @@ define("views/form", [
                 var source_form_element = dep_desc.source_form_element;
                 var filtered_models = [];
 
-                //LIMITS: source can't be an expanded right now, bcoz won't get its value
+                // Get current value(s) of the source form element
                 var source_curr_value =
                     that.get_curr_value_of_element(source_form_element);
                 if (!source_curr_value) return;
-                else if (!(source_curr_value instanceof Array)) {
-                    //if source is single select - convert its value to array -make it like a multiselect
+
+                // Normalize to array
+                if (!(source_curr_value instanceof Array)) {
                     var temp = source_curr_value;
-                    source_curr_value = [];
-                    source_curr_value.push(temp);
+                    source_curr_value = [temp];
                 }
 
-                // many-to-many relation between source and dependent
-                if (
-                    dep_collection.at(0).get(dep_desc.dep_attr) instanceof Array
-                ) {
+                let related_ids = [];
+
+                // If use_source_attribute is true, derive IDs from attribute of source model(s)
+                if (dep_desc.use_source_attribute) {
+                    $.each(source_curr_value, function (index, val) {
+                        var source_collection =
+                            that.get_collection_of_element(source_form_element);
+                        var source_model = source_collection.get(parseInt(val));
+                        if (!source_model) return;
+
+                        var attr_values = source_model.get(dep_attr);
+
+                        if (attr_values instanceof Array) {
+                            related_ids = related_ids.concat(
+                                attr_values.map(function (v) {
+                                    return String(v.id);
+                                })
+                            );
+                        } else if (attr_values && attr_values.id) {
+                            related_ids.push(String(attr_values.id));
+                        }
+                    });
+
+                    // Remove duplicates
+                    related_ids = [...new Set(related_ids)];
+
+                    // Filter dependent models by their own ID
                     filtered_models = dep_collection.filter(function (model) {
-                        var exists = false;
-                        //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
-                        $.each(
-                            model.get(dep_desc.dep_attr),
-                            function (index, object) {
-                                if (
-                                    $.inArray(
-                                        String(object.id),
-                                        source_curr_value
-                                    ) > -1
-                                )
-                                    exists = true;
-                            }
-                        );
-                        return exists;
+                        return $.inArray(String(model.id), related_ids) > -1;
                     });
                 } else {
-                    filtered_models = dep_collection.filter(function (model) {
-                        var d = dep_desc;
-                        var exists = false;
-                        var compare = null;
-                        if (typeof model.get(dep_desc.dep_attr) == "object")
-                            compare = model.get(dep_desc.dep_attr).id;
-                        else if (dep_desc.parent_attr) {
-                            compare = model.get(dep_desc.parent_attr)[
-                                dep_desc.dep_attr
-                            ];
-                        } else {
-                            compare = model.get(dep_desc.dep_attr);
-                        }
-
-                        if (compare != null) {
-                            if (
-                                dep_desc.src_attr &&
-                                dep_desc.src_attr != "id"
-                            ) {
-                                var s_collection =
-                                    that.get_collection_of_element(
-                                        source_form_element
-                                    );
-                                var s_model = s_collection.get(
-                                    parseInt(source_curr_value[0])
-                                );
-                                if (
-                                    s_model.get(dep_desc.src_attr) instanceof
-                                    Array
-                                ) {
-                                    //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
-                                    $.each(
-                                        s_model.get(dep_desc.src_attr),
-                                        function (index, src_compare) {
-                                            if (compare == src_compare.id)
-                                                exists = true;
-                                        }
-                                    );
-                                }
-                                return exists;
-                            } else {
-                                if (
-                                    !(
+                    if (dep_collection.at(0).get(dep_attr) instanceof Array) {
+                        // many-to-many relation between source and dependent
+                        filtered_models = dep_collection.filter(function (
+                            model
+                        ) {
+                            var exists = false;
+                            //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                            $.each(
+                                model.get(dep_attr),
+                                function (index, object) {
+                                    if (
                                         $.inArray(
-                                            String(compare),
+                                            String(object.id),
                                             source_curr_value
-                                        ) == -1
+                                        ) > -1
                                     )
-                                )
-                                    exists = true;
-                                return exists;
+                                        exists = true;
+                                }
+                            );
+                            return exists;
+                        });
+                    } else {
+                        filtered_models = dep_collection.filter(function (
+                            model
+                        ) {
+                            var exists = false;
+                            var compare = null;
+                            if (typeof model.get(dep_attr) == "object")
+                                compare = model.get(dep_attr).id;
+                            else if (dep_desc.parent_attr) {
+                                compare = model.get(dep_desc.parent_attr)[
+                                    dep_attr
+                                ];
+                            } else {
+                                compare = model.get(dep_attr);
                             }
-                        }
-                    });
+
+                            if (compare != null) {
+                                if (
+                                    dep_desc.src_attr &&
+                                    dep_desc.src_attr != "id"
+                                ) {
+                                    var s_collection =
+                                        that.get_collection_of_element(
+                                            source_form_element
+                                        );
+                                    var s_model = s_collection.get(
+                                        parseInt(source_curr_value[0])
+                                    );
+                                    if (
+                                        s_model.get(
+                                            dep_desc.src_attr
+                                        ) instanceof Array
+                                    ) {
+                                        //LIMITS: array assumed to contain objects - its an array so possibly other case not possible
+                                        $.each(
+                                            s_model.get(dep_desc.src_attr),
+                                            function (index, src_compare) {
+                                                if (compare == src_compare.id)
+                                                    exists = true;
+                                            }
+                                        );
+                                    }
+                                    return exists;
+                                } else {
+                                    if (
+                                        !(
+                                            $.inArray(
+                                                String(compare),
+                                                source_curr_value
+                                            ) == -1
+                                        )
+                                    )
+                                        exists = true;
+                                    return exists;
+                                }
+                            }
+                        });
+                    }
                 }
 
                 // Make sure that this only applies to screening page
@@ -17719,18 +17795,21 @@ define("views/form", [
                         var t_json = JSON.parse(JSON.stringify(f_model));
                         t_json["index"] = index;
 
+                        if (
+                            that.entity_name === "adoption" &&
+                            element === "persons_attendance"
+                        ) {
+                            const videoId = parseInt(
+                                that.$("form [name=video]").val()
+                            );
+                            const video = t_json.videos_seen.find(
+                                (v) => v.id === videoId
+                            );
+                            if (video) {
+                                t_json["screening_date"] = video.screening_date;
+                            }
+                        }
                         $f_el.append(expanded_template(t_json));
-                        // Offline.fetch_collection("directbeneficiaries")
-                        //     .done(function(collection) {
-                        //         $.each(collection.models, function (i, item) {
-                        //             $f_el.find("."+inline_var + index).append($('<option>', {value: item.attributes.id, text: item.attributes.direct_beneficiaries_category}))
-                        //             $("."+inline_var+index).trigger("chosen:updated");
-                        //         })
-
-                        //     })
-                        //     .fail(function() {
-                        //         console.log("ERROR: EDIT: Inline collection could not be fetched!");
-                        //     });
                     });
                 }
                 if (cocousertype == 4) {
@@ -17859,59 +17938,67 @@ define("views/form", [
 
                     // Checking for extra information fields in the model data
                     if (f_json[f_entity_desc.name_field_extra_info]) {
-                        var extra_info_group_name = "";
-                        var extra_info_person_id = "";
-                        var extra_info_father_name = "";
-                        var extra_info_block_name = "";
-                        // Add father name
+                        // Check if legacy config exists (for backward compatibility)
+                        var extra_parts = [];
+
+                        // New flexible config block
                         if (
-                            f_json[f_entity_desc.name_field_father_name] != null
+                            Array.isArray(
+                                f_entity_desc.name_field_extra_attributes
+                            )
                         ) {
-                            extra_info_father_name =
-                                f_json[f_entity_desc.name_field_father_name];
+                            f_entity_desc.name_field_extra_attributes.forEach(
+                                function (attr) {
+                                    const fromObj = f_json[attr.from];
+                                    if (
+                                        fromObj &&
+                                        fromObj[attr.attribute] != null
+                                    ) {
+                                        const val = fromObj[attr.attribute];
+                                        const prefix = attr.prefix || "";
+                                        const postfix = attr.postfix || "";
+                                        extra_parts.push(
+                                            `${prefix}${val}${postfix}`
+                                        );
+                                    }
+                                }
+                            );
                         }
-                        // Add group name
+
+                        // Also support legacy optional parts
                         if (
-                            f_json[f_entity_desc.name_field_extra_info][
-                                f_entity_desc.name_field_group_name
-                            ] != null
+                            f_entity_desc.name_field_father_name &&
+                            f_json[f_entity_desc.name_field_father_name]
                         ) {
-                            extra_info_group_name =
-                                f_json[f_entity_desc.name_field_extra_info][
-                                    f_entity_desc.name_field_group_name
-                                ];
+                            extra_parts.push(
+                                f_json[f_entity_desc.name_field_father_name]
+                            );
                         }
-                        // Add person Id
                         if (
-                            f_json[f_entity_desc.name_field_person_id] != null
+                            f_entity_desc.name_field_person_id &&
+                            f_json[f_entity_desc.name_field_person_id]
                         ) {
-                            extra_info_person_id =
-                                f_json[f_entity_desc.name_field_person_id];
+                            extra_parts.push(
+                                f_json[f_entity_desc.name_field_person_id]
+                            );
                         }
-                        // Added block name as an identifier as some villages have similar name and can properly
-                        // be identified with their block name
                         if (
-                            f_json[f_entity_desc.name_field_block_name] != null
+                            f_entity_desc.name_field_block_name &&
+                            f_json[f_entity_desc.name_field_block_name]
                         ) {
-                            extra_info_block_name =
-                                f_json[f_entity_desc.name_field_block_name];
+                            extra_parts.push(
+                                f_json[f_entity_desc.name_field_block_name]
+                            );
                         }
+
+                        // Combine base name + extras
                         $f_el.append(
                             that.options_inner_template({
                                 id: parseInt(f_json["id"]),
                                 name:
                                     f_json[f_entity_desc.name_field] +
-                                    (extra_info_father_name != ""
-                                        ? " (" + extra_info_father_name + ")"
-                                        : "") +
-                                    (extra_info_group_name != ""
-                                        ? " (" + extra_info_group_name + ")"
-                                        : "") +
-                                    (extra_info_person_id != ""
-                                        ? " (" + extra_info_person_id + ")"
-                                        : "") +
-                                    (extra_info_block_name != ""
-                                        ? " (" + extra_info_block_name + ")"
+                                    (extra_parts.length
+                                        ? " (" + extra_parts.join(", ") + ")"
                                         : ""),
                             })
                         );
@@ -18000,7 +18087,139 @@ define("views/form", [
                 "FORM: filling form with the model - " +
                     JSON.stringify(this.model_json)
             );
+            var that = this;
+
+            var setAdoptionDateStart = function (personId, videoId) {
+                console.log("Setting adoption date start");
+                Offline.fetch_object("person", "id", personId)
+                    .done(function (person) {
+                        var video = person
+                            .get("videos_seen")
+                            .find(function (v) {
+                                return v.id === videoId;
+                            });
+                        var minDate = "2009-01-01";
+                        if (video && video.screening_date) {
+                            that.$("[name='date_of_adoption']").datepicker(
+                                "setStartDate",
+                                video.screening_date
+                            );
+                        } else {
+                            that.$("[name='date_of_adoption']").datepicker(
+                                "setStartDate",
+                                minDate
+                            );
+                        }
+                    })
+                    .fail(function (e) {
+                        var minDate = "2009-01-01";
+                        console.error(
+                            `Failed to fetch person with id ${personId} or video with id ${videoId}. Defaulting to ${minDate}. Error: ${JSON.stringify(
+                                e
+                            )}`
+                        );
+                        that.$("[name='date_of_adoption']").datepicker(
+                            "setStartDate",
+                            minDate
+                        );
+                    });
+            };
+
+            if (this.entity_name === "adoption" && this.edit_case) {
+                var personId = this.model_json.person;
+                var videoId = this.model_json.video;
+                setAdoptionDateStart(personId, videoId);
+
+                this.$("[name='person'], [name='video']").change(function () {
+                    var personId = parseInt(that.$("[name='person']").val());
+                    var videoId = parseInt(that.$("[name='video']").val());
+                    setAdoptionDateStart(personId, videoId);
+                });
+            }
+
             Backbone.Syphon.deserialize(this, this.model_json);
+        },
+
+        setupConditionalVisibility: function (config, containerSelector) {
+            const container = document.querySelector(containerSelector);
+            if (!container) return;
+
+            const rules = config.visibility_rules;
+            if (!rules) return;
+
+            Object.keys(rules).forEach((targetId) => {
+                const rule = rules[targetId];
+                const targetEl = container.querySelector(`#${targetId}`);
+                const triggerField = rule.show_if.field;
+                const triggerValue = rule.show_if.value;
+
+                // Attach change listeners to the controlling field
+                const inputs = container.querySelectorAll(
+                    `[name="${triggerField}"]`
+                );
+                inputs.forEach((input) => {
+                    input.addEventListener("change", () => {
+                        const currentVal = getFieldValue(
+                            container,
+                            triggerField
+                        );
+                        const shouldShow = currentVal === triggerValue;
+                        toggleWithBootstrap(targetEl, shouldShow);
+
+                        if (!shouldShow) {
+                            resetFieldValues(targetEl);
+                        }
+                    });
+                });
+
+                // Initial state on load
+                const currentVal = getFieldValue(container, triggerField);
+                const shouldShow = currentVal === triggerValue;
+                toggleWithBootstrap(targetEl, shouldShow);
+                if (!shouldShow) {
+                    resetFieldValues(targetEl);
+                }
+            });
+
+            function getFieldValue(ctx, fieldName) {
+                const radios = ctx.querySelectorAll(
+                    `input[name="${fieldName}"]`
+                );
+                if (radios.length) {
+                    const checked = Array.from(radios).find((r) => r.checked);
+                    return checked ? checked.value : null;
+                }
+                const select = ctx.querySelector(`select[name="${fieldName}"]`);
+                if (select) return select.value;
+
+                const input = ctx.querySelector(`input[name="${fieldName}"]`);
+                return input ? input.value : null;
+            }
+
+            function toggleWithBootstrap(el, show) {
+                if (!el) return;
+                el.classList.toggle("hidden", !show);
+            }
+
+            function resetFieldValues(container) {
+                const inputs = container.querySelectorAll(
+                    "input, select, textarea"
+                );
+
+                inputs.forEach((el) => {
+                    if (el.tagName === "SELECT" || el.tagName === "TEXTAREA") {
+                        el.value = "";
+                    } else if (el.type === "checkbox" || el.type === "radio") {
+                        el.checked = false;
+                    } else {
+                        el.value = "";
+                    }
+
+                    // Trigger change event to notify validators/dependencies
+                    const event = new Event("change", { bubbles: true });
+                    el.dispatchEvent(event);
+                });
+            }
         },
 
         // used to disable the save button while save is in progress

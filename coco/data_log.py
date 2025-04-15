@@ -21,7 +21,7 @@ def save_log(sender, **kwargs ):
     previous_time_stamp = get_latest_timestamp()
     try:
         user = User.objects.get(id = instance.user_modified_id) if instance.user_modified_id else User.objects.get(id = instance.user_created_id)
-    except Exception, ex:
+    except Exception as ex:
         user = None
     
     # Adding PersonMeetingAttendance records to the ServerLog. This is required for Mobile COCO, since we need to update a person record, whenever a pma is edited or deleted. We are adding the instance.person.id since the corresponding person record needs to be updated whenever an attendance record is changed.
@@ -34,18 +34,17 @@ def save_log(sender, **kwargs ):
         village_id = instance.person.village.id
     elif sender == "SelfReportedBehaviour":
         village_id = instance.video.village_id
+    elif sender == "FarmerFeedback":
+        # FarmerFeedback doesn't have its own village, so use screening.village
+        village_id = instance.screening.village.id
     else:
         village_id = instance.village.id
-    partner_id = None if sender in ["Household", "Village", 'Language', 'NonNegotiable', 'Category', 'SubCategory', 'VideoPractice', 'SelfReportedBehaviour'] else instance.partner.id
+    partner_id = None if sender in ["Household", "Village", 'Language', 'NonNegotiable', 'Category', 'SubCategory', 'VideoPractice', 'SelfReportedBehaviour', "FarmerFeedback"] else instance.partner.id
     ServerLog = get_model('coco', 'ServerLog')
     log = ServerLog(village=village_id, user=user, action=action, entry_table=sender,
                     model_id=model_id, partner=partner_id)
     log.save()
-    ###Raise an exception if timestamp of latest entry is less than the previously saved data timestamp
-#     if previous_time_stamp:
-#         if previous_time_stamp.timestamp > log.timestamp:
-#             raise TimestampException('timestamp error: Latest entry data time created is less than previous data timecreated')
-# #    
+
 def delete_log(sender, **kwargs ):
     instance = kwargs["instance"]
     sender = sender.__name__    # get the name of the table which sent the request

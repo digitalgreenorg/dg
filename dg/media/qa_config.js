@@ -566,7 +566,6 @@ define([], function () {
         $.get(that.reset_database_check_url, {
           lastdownloadtimestamp: timestamp,
         }).done(function (resp) {
-          console.log(resp);
           if (resp == "1") {
             alert("Your database will be redownloaded because of some changes in data.");
             Offline.reset_database();
