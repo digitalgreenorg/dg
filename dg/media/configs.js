@@ -1340,7 +1340,7 @@
         non_adoption_reasons: {
           required: function (element) {
             // If adoption_confidence is false, require a non-adoption reason.
-            return $("input[name='adoption_confidence']:checked").val() === "false";
+            return $("input[name='adoption_confidence']:checked").val() === "no";
           },
         },
         non_adoption_reasons_other: {
@@ -1360,14 +1360,14 @@
         convenient_time: {
           required: function (element) {
             // If time_convenience is false, require a preferred alternative time.
-            return $("input[name='time_convenience']:checked").val() === "false";
+            return $("input[name='time_convenience']:checked").val() === "no";
           },
         },
         additional_challenges_encountered: "required",
         additional_challenges: {
           required: function (element) {
             // If additional_challenges_encountered is true, require selecting a challenge.
-            return $("input[name='additional_challenges_encountered']:checked").val() === "true";
+            return $("input[name='additional_challenges_encountered']:checked").val() === "yes";
           },
         },
         additional_challenges_other: {
@@ -1380,7 +1380,7 @@
         asking_discomfort_reasons: {
           required: function (element) {
             // If comfortable_asking is false, require a reason.
-            return $("input[name='comfortable_asking']:checked").val() === "false";
+            return $("input[name='comfortable_asking']:checked").val() === "no";
           },
         },
         asking_discomfort_reasons_other: {
@@ -1480,7 +1480,7 @@
       non_adoption_reasons_group: {
         show_if: {
           field: "adoption_confidence",
-          value: "false",
+          value: "no",
         },
       },
       non_adoption_reasons_other_group: {
@@ -1498,13 +1498,13 @@
       convenient_time_group: {
         show_if: {
           field: "time_convenience",
-          value: "false",
+          value: "no",
         },
       },
       additional_challenges_group: {
         show_if: {
           field: "additional_challenges_encountered",
-          value: "true",
+          value: "yes",
         },
       },
       additional_challenges_other_group: {
@@ -1516,7 +1516,7 @@
       asking_discomfort_reasons_group: {
         show_if: {
           field: "comfortable_asking",
-          value: "false",
+          value: "no",
         },
       },
       asking_discomfort_reasons_other_group: {

@@ -1735,11 +1735,11 @@
           <label class="control-label col-sm-3"><%= adoption_confidence %></label>
           <div class="col-sm-6">
             <label class="radio-inline">
-              <input type="radio" id="adoption_confidence_yes" name="adoption_confidence" value="true">
+              <input type="radio" id="adoption_confidence_yes" name="adoption_confidence" value="yes">
               Yes
             </label>
             <label class="radio-inline">
-              <input type="radio" id="adoption_confidence_no" name="adoption_confidence" value="false">
+              <input type="radio" id="adoption_confidence_no" name="adoption_confidence" value="no">
               No
             </label>
           </div>
@@ -1798,11 +1798,11 @@
           <label class="control-label col-sm-3"><%= time_convenience %></label>
           <div class="col-sm-6">
             <label class="radio-inline">
-              <input type="radio" id="time_convenience_yes" name="time_convenience" value="true">
+              <input type="radio" id="time_convenience_yes" name="time_convenience" value="yes">
               Yes
             </label>
             <label class="radio-inline">
-              <input type="radio" id="time_convenience_no" name="time_convenience" value="false">
+              <input type="radio" id="time_convenience_no" name="time_convenience" value="no">
               No
             </label>
           </div>
@@ -1827,11 +1827,11 @@
           <label class="control-label col-sm-3"><%= additional_challenges_encountered %></label>
           <div class="col-sm-6">
             <label class="radio-inline">
-              <input type="radio" id="additional_challenges_encountered_yes" name="additional_challenges_encountered" value="true">
+              <input type="radio" id="additional_challenges_encountered_yes" name="additional_challenges_encountered" value="yes">
               Yes
             </label>
             <label class="radio-inline">
-              <input type="radio" id="additional_challenges_encountered_no" name="additional_challenges_encountered" value="false">
+              <input type="radio" id="additional_challenges_encountered_no" name="additional_challenges_encountered" value="no">
               No
             </label>
           </div>
@@ -1864,11 +1864,11 @@
           <label class="control-label col-sm-3"><%= comfortable_asking %></label>
           <div class="col-sm-6">
             <label class="radio-inline">
-              <input type="radio" id="comfortable_asking_yes" name="comfortable_asking" value="true">
+              <input type="radio" id="comfortable_asking_yes" name="comfortable_asking" value="yes">
               Yes
             </label>
             <label class="radio-inline">
-              <input type="radio" id="comfortable_asking_no" name="comfortable_asking" value="false">
+              <input type="radio" id="comfortable_asking_no" name="comfortable_asking" value="no">
               No
             </label>
           </div>
@@ -1905,7 +1905,7 @@
           <label class="control-label col-sm-3"><%= recommendation_rating %></label>
           <div class="col-sm-6">
             <div class="input-group">
-              <input type="range" name="recommendation_rating" class="form-control" min="0" max="10" step="1" value="5" id="id_recommendation_rating_slider" oninput="document.getElementById('rating_display').innerText = this.value">
+              <input type="range" name="recommendation_rating" class="form-control" min="0" max="10" step="1" id="id_recommendation_rating_slider" oninput="document.getElementById('rating_display').innerText = this.value">
               <span class="input-group-addon" id="rating_display"></span>
             </div>
           </div>

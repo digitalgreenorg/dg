@@ -18201,7 +18201,15 @@ define("views/form", [
 
             function toggleWithBootstrap(el, show) {
                 if (!el) return;
-                el.classList.toggle("hidden", !show);
+
+                const $el = $(el);
+
+                if (show) {
+                    $el.stop(true, true).fadeIn(200);
+                    $el.removeClass("hidden");
+                } else {
+                    $el.addClass("hidden");
+                }
             }
 
             function resetFieldValues(container) {

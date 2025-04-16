@@ -10,7 +10,7 @@ from django.forms import ValidationError
 from coco.data_log import delete_log, save_log
 from coco.base_models import (ADOPTION_VERIFICATION, ADOPT_PRACTICE_CATEGORY, SCREENING_OBSERVATION, SCREENING_GRADE,
                                VERIFIED_BY, TYPE_OF_VENUE, TYPE_OF_VIDEO, TOPICS, ACTIVITY_CHOICES, VIDEO_RELEVANCE_CHOICES, NON_ADOPTION_REASON_CHOICES,
-                                DISSEMINATION_CHALLENGES_CHOICES, PARTICIPATION_DISCOMFORT_REASONS_CHOICES,
+                                DISSEMINATION_CHALLENGES_CHOICES, PARTICIPATION_DISCOMFORT_REASONS_CHOICES, YES_NO_CHOICES,
                                 LOCATION_CONVENIENCE_CHOICES, TIME_CONVENIENCE_CHOICES, NNG_RECALL_CHOICES, CocoModel)
 from geographies.models import Village
 from programs.models import Partner
@@ -158,7 +158,9 @@ class FarmerFeedback(CocoModel):
         help_text="How relevant was the video?"
     )
     # Confidence in adopting the practice
-    adoption_confidence = models.BooleanField(
+    adoption_confidence = models.CharField(
+        max_length=20,
+        choices=YES_NO_CHOICES,
         help_text="Does the farmer feel confident in adopting the practice?"
     )
     # Reasons for not adopting (if any)
@@ -185,7 +187,9 @@ class FarmerFeedback(CocoModel):
         null=True,
         help_text="Additional details about location convenience"
     )
-    time_convenience = models.BooleanField(
+    time_convenience = models.CharField(
+        max_length=20,
+        choices=YES_NO_CHOICES,
         help_text="Was the screening time convenient?"
     )
     convenient_time = models.CharField(
@@ -195,7 +199,9 @@ class FarmerFeedback(CocoModel):
         null=True,
         help_text="If the screening time was not convenient, which alternative time is preferred?"
     )
-    additional_challenges_encountered = models.BooleanField(
+    additional_challenges_encountered = models.CharField(
+        max_length=20,
+        choices=YES_NO_CHOICES,
         help_text="Do you face any additional challenges in attending video dissemination sessions other than time and location?"
     )
     additional_challenges = models.CharField(
@@ -211,7 +217,9 @@ class FarmerFeedback(CocoModel):
         help_text="Additional details for challenges encountered"
     )
     # Feedback on participation during the session
-    comfortable_asking = models.BooleanField(
+    comfortable_asking = models.CharField(
+        max_length=20,
+        choices=YES_NO_CHOICES,
         help_text="Did the farmer feel comfortable asking questions and participating?"
     )
     asking_discomfort_reasons = models.CharField(

@@ -904,7 +904,6 @@ class PersonResource(BaseResource):
 
 class FarmerFeedbackResource(ModelResource):
     screening = fields.ForeignKey(ScreeningResource, 'screening')
-    # videos = fields.ToManyField(VideoResource, 'videos', related_name='farmerfeedback')
     person = fields.ForeignKey(PersonResource, 'person')
 
     class Meta:
@@ -918,7 +917,6 @@ class FarmerFeedbackResource(ModelResource):
         max_limit = None
 
     hydrate_screening = partial(dict_to_foreign_uri, field_name='screening')
-    hydrate_videos = partial(dict_to_foreign_uri_m2m, field_name='videos', resource_name='video')
     hydrate_person = partial(dict_to_foreign_uri, field_name='person')
 
     def dehydrate_screening(self, bundle):
@@ -927,46 +925,42 @@ class FarmerFeedbackResource(ModelResource):
             'id': screening_obj.id,
             'date': screening_obj.date.isoformat(),
         }
+    
     def dehydrate_videos(self, bundle):
         return [{'id': video.id, 'title': video.title, } for video in bundle.obj.videos.all()]
+    
     def dehydrate_person(self, bundle):
         farmer_obj = bundle.obj.person
         return {
             'id': farmer_obj.id,
             'person_name': farmer_obj.person_name,
         }
-    
+
+    def dehydrate(self, bundle):
+        bundle.data['videos'] = self.dehydrate_videos(bundle)
+        return bundle
+
+    def _handle_videos(self, bundle):
+
+        video_data = bundle.data.get("videos", [])
+
+        FarmerFeedbackVideo.objects.filter(farmerfeedback=bundle.obj).delete()
+
+        for video in video_data:
+            FarmerFeedbackVideo.objects.get_or_create(
+                farmerfeedback=bundle.obj,
+                video_id=video["id"]
+            )
+
     def obj_create(self, bundle, **kwargs):
         bundle = super(FarmerFeedbackResource, self).obj_create(bundle, **kwargs)
         self._handle_videos(bundle)
         return bundle
 
     def obj_update(self, bundle, **kwargs):
-        bundle = super(FarmerFeedbackResource, self).obj_update(bundle, **kwargs)
+        bundle = super(FarmerFeedbackResource, self).obj_create(bundle, **kwargs)
         self._handle_videos(bundle)
         return bundle
-    
-    def _handle_videos(self, bundle):
-
-        video_uris = bundle.data.get('videos', [])
-        video_ids = []
-
-        for uri in video_uris:
-            try:
-                video_id = int(uri.strip('/').split('/')[-1])
-                video_ids.append(video_id)
-            except Exception:
-                pass
-
-        # Clear existing links and re-add
-        FarmerFeedbackVideo.objects.filter(farmerfeedback=bundle.obj).delete()
-        for vid in video_ids:
-            FarmerFeedbackVideo.objects.get_or_create(
-                farmerfeedback=bundle.obj,
-                video_id=vid
-            )
-
-
 
 
 # For Network and Client Side Optimization Sending Adoptions after 1 Jan 2013
