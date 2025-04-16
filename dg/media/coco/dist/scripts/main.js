@@ -17370,7 +17370,9 @@ define("views/form", [
                         if (attr_values instanceof Array) {
                             related_ids = related_ids.concat(
                                 attr_values.map(function (v) {
-                                    return String(v.id);
+                                    return String(
+                                        v["id"] ?? v[dep_desc.source_id_field]
+                                    );
                                 })
                             );
                         } else if (attr_values && attr_values.id) {
@@ -17586,6 +17588,7 @@ define("views/form", [
 
                 final_models = _.sortBy(final_models, (person) => person.id);
             }
+
             return final_models;
         },
 
@@ -18198,7 +18201,15 @@ define("views/form", [
 
             function toggleWithBootstrap(el, show) {
                 if (!el) return;
-                el.classList.toggle("hidden", !show);
+
+                const $el = $(el);
+
+                if (show) {
+                    $el.stop(true, true).fadeIn(200);
+                    $el.removeClass("hidden");
+                } else {
+                    $el.addClass("hidden");
+                }
             }
 
             function resetFieldValues(container) {

@@ -10,7 +10,7 @@ from django.forms import ValidationError
 from coco.data_log import delete_log, save_log
 from coco.base_models import (ADOPTION_VERIFICATION, ADOPT_PRACTICE_CATEGORY, SCREENING_OBSERVATION, SCREENING_GRADE,
                                VERIFIED_BY, TYPE_OF_VENUE, TYPE_OF_VIDEO, TOPICS, ACTIVITY_CHOICES, VIDEO_RELEVANCE_CHOICES, NON_ADOPTION_REASON_CHOICES,
-                                DISSEMINATION_CHALLENGES_CHOICES, PARTICIPATION_DISCOMFORT_REASONS_CHOICES,
+                                DISSEMINATION_CHALLENGES_CHOICES, PARTICIPATION_DISCOMFORT_REASONS_CHOICES, YES_NO_CHOICES,
                                 LOCATION_CONVENIENCE_CHOICES, TIME_CONVENIENCE_CHOICES, NNG_RECALL_CHOICES, CocoModel)
 from geographies.models import Village
 from programs.models import Partner
@@ -139,13 +139,13 @@ class FarmerFeedback(CocoModel):
     Model for capturing farmer feedback during video dissemination sessions.
     """
     id = models.AutoField(primary_key=True)
+    date = models.DateField(default=datetime.date.today)
     screening = models.ForeignKey(
         Screening, on_delete=models.CASCADE,
         help_text="The dissemination session this feedback relates to"
     )
-    video = models.ForeignKey(
-        Video, on_delete=models.CASCADE,
-        help_text="The video shown during the session"
+    videos = models.ManyToManyField(
+        Video, through='FarmerFeedbackVideo', help_text="The videos shown during the session"
     )
     person = models.ForeignKey(
         Person, on_delete=models.CASCADE,
@@ -158,7 +158,9 @@ class FarmerFeedback(CocoModel):
         help_text="How relevant was the video?"
     )
     # Confidence in adopting the practice
-    adoption_confidence = models.BooleanField(
+    adoption_confidence = models.CharField(
+        max_length=20,
+        choices=YES_NO_CHOICES,
         help_text="Does the farmer feel confident in adopting the practice?"
     )
     # Reasons for not adopting (if any)
@@ -185,7 +187,9 @@ class FarmerFeedback(CocoModel):
         null=True,
         help_text="Additional details about location convenience"
     )
-    time_convenience = models.BooleanField(
+    time_convenience = models.CharField(
+        max_length=20,
+        choices=YES_NO_CHOICES,
         help_text="Was the screening time convenient?"
     )
     convenient_time = models.CharField(
@@ -195,7 +199,9 @@ class FarmerFeedback(CocoModel):
         null=True,
         help_text="If the screening time was not convenient, which alternative time is preferred?"
     )
-    additional_challenges_encountered = models.BooleanField(
+    additional_challenges_encountered = models.CharField(
+        max_length=20,
+        choices=YES_NO_CHOICES,
         help_text="Do you face any additional challenges in attending video dissemination sessions other than time and location?"
     )
     additional_challenges = models.CharField(
@@ -211,7 +217,9 @@ class FarmerFeedback(CocoModel):
         help_text="Additional details for challenges encountered"
     )
     # Feedback on participation during the session
-    comfortable_asking = models.BooleanField(
+    comfortable_asking = models.CharField(
+        max_length=20,
+        choices=YES_NO_CHOICES,
         help_text="Did the farmer feel comfortable asking questions and participating?"
     )
     asking_discomfort_reasons = models.CharField(
@@ -244,16 +252,27 @@ class FarmerFeedback(CocoModel):
     )
     
     def __unicode__(self):
-        return u"Feedback by %s on %s video at %s" % (self.person.person_name, self.video.title, self.screening.date)
+        videos = self.videos.all()
+        video_titles = ", ".join([v.title for v in videos]) if videos else "no videos"
+        return u"Feedback by %s on [%s] at %s" % (self.person.person_name, video_titles, self.screening.date)
 
     class Meta:
         verbose_name = "Farmer Feedback"
         verbose_name_plural = "Farmer Feedbacks"
-        unique_together = (("screening", "person", "video"),)
 
 # Connect signals for logging
 models.signals.post_save.connect(save_log, sender=FarmerFeedback)
 models.signals.pre_delete.connect(delete_log, sender=FarmerFeedback)
+
+class FarmerFeedbackVideo(CocoModel):
+    id = models.AutoField(primary_key=True)
+    farmerfeedback = models.ForeignKey("FarmerFeedback", on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, help_text="The video shown during the session")
+
+    class Meta:
+        unique_together = (("farmerfeedback", "video"),)
+        verbose_name = "Farmer Feedback Video"
+
 
 class PersonAdoptPractice(CocoModel):
     id = models.AutoField(primary_key=True)
