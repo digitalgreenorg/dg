@@ -1,13 +1,14 @@
 from datetime import datetime, timedelta
 from pytz import timezone
 import calendar
+import sys
 
 from django.core.management.base import BaseCommand
 from django.core.mail import EmailMultiAlternatives
 from django.utils.timezone import now
 from django.db.models import Count, Sum
 
-from loop.models import HelplineIncoming, HelplineCallLog, Farmer, LoopUserAssignedVillage
+from loop.models import Broadcast, BroadcastAudience
 from dg.settings import EMAIL_HOST_USER
 
 class Command(BaseCommand):
@@ -38,6 +39,11 @@ class Command(BaseCommand):
         parser.add_argument('-e',
                             dest='to_email',default=None,
                             help='Enter email id to which you want to mail summary')
+
+        parser.add_argument('-id',
+                            dest='id',default=None,
+                            help='Enter broadcast id')
+                            
 
     # send Email
     def send_mail(self,summary_data,subject):
@@ -82,43 +88,11 @@ class Command(BaseCommand):
                 cluster_wise_call_detail[user['loop_user_id']]['total_calls'] += village_to_call_detail_map[user['village_id']]['total_calls']
         return cluster_wise_call_detail
 
-    def helpline_summary(self,from_date,to_date,include_extra_summary=0):
-        total_calls_received = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).count()
-        total_unique_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values_list('from_number').distinct().count()
-        total_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).count()
-        total_calls_from_repeat_caller = HelplineCallLog.objects.filter(call_type=0,start_time__gte=from_date,start_time__lte=to_date).values('from_number').annotate(call_count=Count('from_number')).filter(call_count__gt=1).aggregate(Sum('call_count')).get('call_count__sum')
-        if total_calls_from_repeat_caller == None:
-            total_calls_from_repeat_caller = 0
-        total_calls_resolved = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).count()
-        cluster_wise_call_detail = self.cluster_wise_bifurcation(from_date,to_date)
-        if total_calls_received > 0:
-            repeat_caller_contribute_percentage = round((total_calls_from_repeat_caller*100.0) / total_calls_received,2)
-        else:
-            repeat_caller_contribute_percentage = 0
-        summary_data = '<html>'
-        summary_data += '<head><style>table, th, td {border: 1px solid black;}</style></head><body>'
-        if from_date == to_date:
-            summary_data += 'Total Calls Received: %s<br/>Total Calls Handled by experts: %s<br/>\
-Total Unique Callers: %s<br/>Cluster-wise bifurcation of calls received:<br/>'%(total_calls_received,total_calls_resolved,
-        total_unique_caller)
-        else:
-            summary_data += 'Total Calls Received: %s<br/>Total Unique Callers: %s<br/>\
-Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
-%% of calls contributed by repeat callers: %s<br/>Cluster-wise bifurcation of calls received:<br/><br/>'%(total_calls_received,
-        total_unique_caller,total_repeat_caller,total_calls_from_repeat_caller,repeat_caller_contribute_percentage)
-        summary_data += '<table><tr><th>Cluster Name</th><th>Farmer Count</th><th>No of calls</th></tr>'
-        for cluster in cluster_wise_call_detail:
-            summary_data += '<tr><td>%s</td><td>%s</td><td>%s</td></tr>'%(cluster_wise_call_detail[cluster]['cluster_name'],cluster_wise_call_detail[cluster]['farmer_count'],cluster_wise_call_detail[cluster]['total_calls'])
-        summary_data += '</table>'
-        if include_extra_summary == 1:
-            call_resoved_per_expert = HelplineIncoming.objects.filter(call_status=1,incoming_time__gte=from_date,incoming_time__lte=to_date).values('resolved_by__name').annotate(call_count=Count('id'))
-            summary_data += '<br/>Total Calls Handled by experts: %s<br/>Bifurcation of calls per expert:<br/><br/>'%(total_calls_resolved,)
-            summary_data += '<table><tr><th>Expert Name</th><th>No of calls handled</th></tr>'
-            for expert in call_resoved_per_expert:
-                summary_data += '<tr><td>%s</td><td>%s</td></tr>'%(expert['resolved_by__name'],expert['call_count'])
-            summary_data += '</table>'
-        summary_data += '</body><html>'
-        return summary_data
+    def broadcast_summary(self,from_date,to_date,include_extra_summary=0):
+        broadcast_obj = Broadcast.objects.filter(broadcast_id=broadcast_id).values('title','start_time')
+        broadcast_detail_per_status = BroadcastAudience.objects.filter(broadcast_id=broadcast_id).values('status').annotate(call_count=Count(id))
+        broadcast_detail = Broadcast.objects.values('title','start_time')
+        broadcast_farmer_detail = BroadcastAudience.objects.filter(broadcast_id=broadcast_id).values('to_number','farmer__name','status','start_time','end_time')
 
     # generate the summary for the given command line arguments
     def handle(self, *args, **options):
@@ -130,7 +104,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
         to_email = options.get('to_email')
 
         if all_data != None:
-            summary_data = self.helpline_summary('2017-01-01',datetime.now().date(),1)
+            summary_data = self.broadcast_summary('2017-01-01',datetime.now().date(),1)
             email_subject = 'Loop helpline Summary from the begining'
             self.send_mail(summary_data,email_subject)
         elif last_month != None:
@@ -142,9 +116,9 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
             else:
                 from_date = '%s-%s-01'%(current_year,current_month-1)
                 to_date = '%s-%s-01'%(current_year,current_month)
-            summary_data = self.helpline_summary(from_date,to_date)
+            summary_data = self.broadcast_summary(from_date,to_date)
             summary_data += '<br/><br/><h2>Helpline Summary from Begining.</h2><br/><br/>'
-            summary_data += self.helpline_summary('2017-01-01',datetime.now().date(),1)
+            summary_data += self.broadcast_summary('2017-01-01',datetime.now().date(),1)
             email_subject = 'Loop helpline Summary from %s to %s'%(from_date,(datetime.strptime(to_date,'%Y-%m-%d')-timedelta(days=1)).strftime("%Y-%m-%d"))
             self.send_mail(summary_data,email_subject)
         elif last_n_days != None:
@@ -154,7 +128,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
                 email_subject = 'Loop helpline Summary for %s'%(from_date,)
             else:
                 email_subject = 'Loop helpline Summary from %s to %s'%(from_date.strftime("%Y-%m-%d"),(datetime.now().date()-timedelta(days=1)).strftime("%Y-%m-%d"))
-            summary_data = self.helpline_summary(from_date,to_date)
+            summary_data = self.broadcast_summary(from_date,to_date)
             self.send_mail(summary_data,email_subject)
         elif from_date != None:
             if not to_date:
@@ -165,7 +139,7 @@ Total number of repeat caller: %s<br/>Total Calls from repeat callers: %s<br/>\
                 return
             email_subject = 'Loop helpline Summary from %s to %s'%(from_date,to_date)
             to_date = (datetime.strptime(to_date,'%Y-%m-%d') + timedelta(days=1)).date()
-            summary_data = self.helpline_summary(from_date,to_date,1)
+            summary_data = self.broadcast_summary(from_date,to_date,1)
             self.send_mail(summary_data,email_subject)
         else:
             print "Please Enter atleast one choice, user -h option for see available options"

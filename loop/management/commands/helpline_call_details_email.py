@@ -117,7 +117,7 @@ class Command(BaseCommand):
             # Count calls of working hours i.e. incoming time and last incoming time between 9 AM to 6 PM
             if (incoming_hour in working_hours) and (last_incoming_hour in working_hours):
                 count += 1   
-        return count     
+        return count
 
     def handle(self, *args, **options):
         working_hours_start = helpline_data['working_hours_start']
