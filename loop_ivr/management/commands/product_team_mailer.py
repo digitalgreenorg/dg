@@ -161,7 +161,7 @@ class Command(BaseCommand):
         no_sms_users = get_active_user_comp_info(today_caller_object_sms_user_count, yesterday_caller_object_sms_user_count, comparison_param_label_str)
 
         # Correct Queries
-        today_caller_object_correct_query_sms_count = today_caller_object.filter(info_status=1).count()
+        today_caller_object_correct_query_sms_count = today_caller_object.filter(info_status=1, call_source=3).count()
         yesterday_caller_object_correct_query_sms_count = yesterday_caller_object.filter(call_source=3, info_status=1).count()
 
         per_correct_code_entered_sms = get_active_user_comp_info(today_caller_object_correct_query_sms_count, yesterday_caller_object_correct_query_sms_count, comparison_param_label_str)
@@ -188,6 +188,12 @@ class Command(BaseCommand):
         no_sms_sent = today_smsstatus_obj.count()
         no_sms_dilivered = today_smsstatus_obj.filter(status='D').count()
 
+        # Total correct code entered for outgoing sms
+        today_caller_object_correct_query_entered_count = today_caller_object.filter(info_status=1).count()
+        yesterday_caller_object_correct_query_entered_count = yesterday_caller_object.filter(info_status=1).count()
+
+        total_correct_code_entered_sms = get_active_user_comp_info(today_caller_object_correct_query_entered_count, yesterday_caller_object_correct_query_entered_count, comparison_param_label_str)
+
         # Queries with rates available
         today_rates_available_count = today_caller_object.filter(is_rate_available=0).count()
 
@@ -206,7 +212,7 @@ class Command(BaseCommand):
         self.send_mail(email_subject=email_subject, start_date=start_date, period_label=period_label_str, no_incoming_sms=no_incoming_sms, no_sms_users=no_sms_users, 
         per_correct_code_entered_sms=per_correct_code_entered_sms, no_incoming_call=no_incoming_call, per_correct_code_entered_call=per_correct_code_entered_call, \
         no_call_backs_time_limit=no_call_backs_time_limit, no_first_attempt_success=no_first_attempt_success, today_caller_object_sms_count=today_caller_object_sms_count, no_sms_sent=no_sms_sent, \
-        no_sms_dilivered=no_sms_dilivered, no_sms_diliver_time_limit=no_sms_diliver_time_limit, total_correct_code_entered_sms=per_correct_code_entered_sms, today_rates_available_count=today_rates_available_count, delay=delay )
+        no_sms_dilivered=no_sms_dilivered, no_sms_diliver_time_limit=no_sms_diliver_time_limit, total_correct_code_entered_sms=total_correct_code_entered_sms, today_rates_available_count=today_rates_available_count, delay=delay )
 
 
 
