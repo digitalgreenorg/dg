@@ -16,6 +16,7 @@ from geographies.models import Village
 from programs.models import Partner
 from people.models import Animator, JSLPS_Animator, AP_Animator, JSLPS_Person, Person, PersonGroup
 from videos.models import Video, JSLPS_Video, APVideo, APPractice, ParentCategory
+from mezzanine.core.fields import MultiChoiceField
 
 
 class VRPpayment(models.Manager):
@@ -164,8 +165,8 @@ class FarmerFeedback(CocoModel):
         help_text="Does the farmer feel confident in adopting the practice?"
     )
     # Reasons for not adopting (if any)
-    non_adoption_reasons = models.CharField(
-        max_length=2,  # corrected from 'mas_length'
+    non_adoption_reasons = MultiChoiceField(
+        max_length=255,  # Increased to accommodate multiple comma-separated values
         choices=NON_ADOPTION_REASON_CHOICES,
         blank=True,
         null=True,
@@ -192,8 +193,8 @@ class FarmerFeedback(CocoModel):
         choices=YES_NO_CHOICES,
         help_text="Was the screening time convenient?"
     )
-    convenient_time = models.CharField(
-        max_length=20,
+    convenient_time = MultiChoiceField(
+        max_length=255,  # Increased to accommodate multiple comma-separated values
         choices=TIME_CONVENIENCE_CHOICES,
         blank=True,
         null=True,
@@ -204,8 +205,8 @@ class FarmerFeedback(CocoModel):
         choices=YES_NO_CHOICES,
         help_text="Do you face any additional challenges in attending video dissemination sessions other than time and location?"
     )
-    additional_challenges = models.CharField(
-        max_length=20,
+    additional_challenges = MultiChoiceField(
+        max_length=255,  # Increased to accommodate multiple comma-separated values
         choices=DISSEMINATION_CHALLENGES_CHOICES,
         blank=True,
         null=True,
@@ -222,8 +223,8 @@ class FarmerFeedback(CocoModel):
         choices=YES_NO_CHOICES,
         help_text="Did the farmer feel comfortable asking questions and participating?"
     )
-    asking_discomfort_reasons = models.CharField(
-        max_length=2,
+    asking_discomfort_reasons = MultiChoiceField(
+        max_length=255,  # Increased to accommodate multiple comma-separated values
         choices=PARTICIPATION_DISCOMFORT_REASONS_CHOICES,
         blank=True,
         null=True,

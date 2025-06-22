@@ -18141,6 +18141,27 @@ define("views/form", [
             }
 
             Backbone.Syphon.deserialize(this, this.model_json);
+
+            this.$("select[multiple]").each(function () {
+                var $select = $(this);
+                var fieldName = $select.attr("name");
+
+                // Check if this field has values in the model
+                if (
+                    that.model_json[fieldName] &&
+                    that.model_json[fieldName] instanceof Array
+                ) {
+                    // For multiselect fields, ensure all selected values are properly set
+                    that.model_json[fieldName].forEach(function (value) {
+                        $select
+                            .find("option[value='" + value + "']")
+                            .prop("selected", true);
+                    });
+
+                    // Trigger change event and update Chosen UI
+                    $select.change().trigger("chosen:updated");
+                }
+            });
         },
 
         setupConditionalVisibility: function (config, containerSelector) {
