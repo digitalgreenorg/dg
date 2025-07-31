@@ -75,7 +75,7 @@ def login(request):
 
         loop_user.update(registration=reg_token, version=version)
 
-        if user is not None and user.is_active and loop_user.count() > 0:
+        if user is not None and user.is_active and loop_user.count() > 0 and loop_user[0].active:
             auth.login(request, user)
 
             try:

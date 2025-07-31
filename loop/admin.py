@@ -70,12 +70,12 @@ class LoopUserAdmin(admin.ModelAdmin):
     'user', 'role', ('name', 'name_en'), 'phone_number', 'village', 'partner', 'mode', 'preferred_language', 'days_count',
     'is_visible', 'farmer_phone_mandatory', 'registration','show_farmer_share','percent_farmer_share', 'version')
     list_display = (
-    '__user__', 'name', 'name_en', 'role', 'phone_number', 'village', 'days_count', 'farmer_phone_mandatory', 'partner' ,'show_farmer_share','percent_farmer_share', 'version')
+    '__user__', 'name', 'name_en', 'role', 'phone_number', 'village', 'days_count', 'farmer_phone_mandatory', 'partner' ,'show_farmer_share','percent_farmer_share', 'version','active')
     search_fields = ['name', 'name_en', 'phone_number', 'village__village_name_en',
                      'village__block__district__state__country__country_name']
     list_filter = ['village__block__district__state__country', 'village__block__district__state__state_name_en',
                    'village__block__district__district_name_en', 'role', 'partner', 'version']
-    list_editable = ['days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share', 'partner', 'role']
+    list_editable = ['days_count', 'farmer_phone_mandatory','show_farmer_share','percent_farmer_share', 'partner', 'role','active']
 
 class AdminAssignedDistricts(admin.StackedInline):
     model = AdminAssignedDistrict

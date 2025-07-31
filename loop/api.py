@@ -23,6 +23,52 @@ import time
 
 from loop_ivr.helper_function import send_sms_using_textlocal
 
+
+from tastypie.compat import get_username_field,get_user_model
+from tastypie.http import HttpUnauthorized
+
+
+#custom ApiKeyAuthentication, added is_active
+class CustomApiKeyAuthentication(ApiKeyAuthentication):
+    def is_authenticated(self,request,**kwargs):
+        """
+        Finds the user and checks their API key.
+        Should return either ``True`` if allowed, ``False`` if not or an
+        ``HttpResponse`` if you need something custom.
+        """
+        try:
+            username, api_key = self.extract_credentials(request)
+        except ValueError:
+            return self._unauthorized()
+
+        if not username or not api_key:
+            return self._unauthorized()
+
+        username_field = get_username_field()
+        User = get_user_model()
+
+        lookup_kwargs = {username_field: username}
+        try:
+            user = User.objects.select_related('api_key').get(**lookup_kwargs)
+            loop_user = LoopUser.objects.filter(user=user)
+        except (User.DoesNotExist, User.MultipleObjectsReturned):
+            return self._unauthorized()
+
+        if not self.check_active(user):
+            return False
+        
+        # checks if loopuser exists and is active
+        if loop_user.count() < 1 or not loop_user[0].active or (loop_user[0].role == 3 and request.method !="GET"):
+            return False
+
+        key_auth_check = self.get_key(user, api_key)
+        if key_auth_check and not isinstance(key_auth_check, HttpUnauthorized):
+            request.user = user
+
+        return key_auth_check    
+
+
+
 class AssignedMandiNotSaved(Exception):
     pass
 
@@ -257,7 +303,7 @@ class StateResource(BaseResource):
         queryset = State.objects.all()
         resource_name = 'state'
         authorization = Authorization()
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
@@ -277,7 +323,7 @@ class DistrictResource(BaseResource):
         queryset = District.objects.all()
         resource_name = 'district'
         authorization = Authorization()
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
@@ -296,7 +342,7 @@ class BlockResource(BaseResource):
         queryset = Block.objects.all()
         resource_name = 'block'
         authorization = Authorization()
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
@@ -319,7 +365,7 @@ class VillageResource(BaseResource):
         queryset = Village.objects.all()
         resource_name = 'village'
         authorization = VillageAuthorization('id__in')
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
@@ -344,7 +390,7 @@ class FarmerResource(BaseResource):
         resource_name = 'farmer'
         always_return_data = True
         authorization = VillageAuthorization('village_id__in')
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
@@ -534,7 +580,7 @@ class CropResource(BaseResource):
         allowed_methods = ['post', 'get']
         resource_name = 'crop'
         authorization = Authorization()
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -592,7 +638,7 @@ class MandiResource(BaseResource):
         queryset = Mandi.objects.all()
         resource_name = 'mandi'
         authorization = MandiAuthorization('id__in')
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
 
@@ -614,7 +660,7 @@ class GaddidarResource(BaseResource):
         queryset = Gaddidar.objects.all()
         resource_name = 'gaddidar'
         authorization = MandiAuthorization('mandi_id__in')
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -652,7 +698,7 @@ class VehicleResource(BaseResource):
         queryset = Vehicle.objects.all()
         resource_name = 'vehicle'
         authorization = Authorization()
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -692,7 +738,7 @@ class TransporterResource(BaseResource):
         queryset = Transporter.objects.all()
         resource_name = 'transporter'
         authorization = BlockAuthorization('block')
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -746,7 +792,7 @@ class TransportationVehicleResource(BaseResource):
         allowed_methods = ["get", "post", "put", "delete"]
         resource_name = 'transportationvehicle'
         authorization = BlockAuthorization('transporter__block')
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -841,7 +887,7 @@ class DayTransportationResource(BaseResource):
         detail_allowed_methods = ["get", "post", "put", "delete","patch"]
         resource_name = 'daytransportation'
         authorization = DayTransportationAuthorization()
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -934,7 +980,7 @@ class GaddidarCommissionResource(BaseResource):
         max_limit = 0
         queryset = GaddidarCommission.objects.all()
         authorization = MandiAuthorization('mandi_id__in')
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         resource_name = 'gaddidarcommission'
         always_return_data = True
         excludes = ('time_created','time_modified')
@@ -956,7 +1002,7 @@ class GaddidarShareOutliersResource(BaseResource):
         queryset =GaddidarShareOutliers.objects.all()
         allowed_methods = ['post','patch','put','get']
         authorization = Authorization()
-        authentication =ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         resource_name = 'gaddidarshareoutliers'
         always_return_data = True
         excludes = ('time_created', 'time_modified')
@@ -993,7 +1039,7 @@ class AggregatorShareOutliersResource(BaseResource):
         allowed_methods = ['post','patch','put','get']
         resource_name = 'aggregatorshareoutliers'
         authorization = Authorization()
-        authentication =ApiKeyAuthentication()
+        authentication =CustomApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
@@ -1031,7 +1077,7 @@ class CombinedTransactionResource(BaseResource):
         queryset = CombinedTransaction.objects.all()
         resource_name = 'combinedtransaction'
         authorization = CombinedTransactionAuthorization()
-        authentication = ApiKeyAuthentication()
+        authentication = CustomApiKeyAuthentication()
         always_return_data = True
         excludes = ('time_created', 'time_modified')
         include_resource_uri = False
