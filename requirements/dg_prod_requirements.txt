@@ -20,7 +20,7 @@ wsgiref==0.1.2
 unicodecsv==0.9.4
 Mezzanine==4.1.0
 pandas==0.18.1
-numpy==1.12.0
+numpy==1.22.0
 isodate
 django-cors-headers
 google-api-python-client==1.6.3
