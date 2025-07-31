@@ -12,6 +12,7 @@ import api,api_admin
 
 from loop.views import *
 from loop.dashboard_views import *
+from loop.mi_views import *
 from loop.utils.send_log.loop_data_log import send_updated_log
 from loop.utils.send_log.send_sms import send_sms, sms_receipt_from_txtlcl, deprecated_send_sms
 from loop.utils.send_log.loop_admin_log import send_updated_admin_log
@@ -109,4 +110,6 @@ urlpatterns = patterns('',
     url(r'^get_partners_list/', get_partners_list),
     url(r'^admin/logout/?$', 'django.contrib.auth.views.logout', {'next_page': '/loop/admin/'}),
     url(r'^admin/', include(loop_admin.urls)),
+    url(r'^get_agg_mi_data/', get_aggregator_mi_related_data),
+    url(r'^get_crop_prices/', get_crop_prices)
     )
